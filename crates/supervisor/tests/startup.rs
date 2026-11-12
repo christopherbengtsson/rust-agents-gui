@@ -21,10 +21,9 @@ fn desktop_client_receives_status_from_a_separate_supervisor_process() {
     // /tmp keeps the socket below macOS's Unix socket path length limit.
     let state = tempfile::tempdir_in("/tmp").unwrap();
     std::fs::set_permissions(state.path(), std::fs::Permissions::from_mode(0o700)).unwrap();
-    let socket = state.path().join("supervisor.sock");
     let mut process = Supervisor(
         Command::new(env!("CARGO_BIN_EXE_workspace-supervisor"))
-            .arg(&socket)
+            .arg(state.path())
             .stdout(Stdio::piped())
             .spawn()
             .unwrap(),
@@ -40,7 +39,7 @@ fn desktop_client_receives_status_from_a_separate_supervisor_process() {
     read.unwrap();
     assert_eq!(ready.trim(), "ready");
 
-    let client = SupervisorClient::new(socket);
+    let client = SupervisorClient::new(state.path().to_owned());
     let status = client.status().unwrap();
     assert_eq!(status.state, SupervisorState::Ready);
     assert_eq!(status.supervisor_pid, process.0.id());

@@ -1,7 +1,5 @@
-// Bootstrap harness only. Product discovery/reconnection and shutdown are ticket 02/09.
+// Development/build launcher. Rust owns supervisor discovery and lifetime.
 import { spawn } from "node:child_process";
-import { chmod, mkdtemp, rm } from "node:fs/promises";
-import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -12,7 +10,6 @@ if (!["dev", "release"].includes(mode)) {
 }
 const children = new Set();
 let stopping = false;
-let privateState;
 
 function launch(command, args, options = {}) {
   const child = spawn(command, args, {
@@ -49,7 +46,7 @@ async function stop(code) {
   if (stopping) return;
   stopping = true;
   for (const child of children) signalGroup(child, "SIGTERM");
-  // These are bootstrap processes with no admitted work or durable storage.
+  // Supervisor is started by Rust in its own process group and is not in this set.
   await Promise.all(
     [...children].map(async (child) => {
       const exited = waitForExit(child);
@@ -63,7 +60,6 @@ async function stop(code) {
       }
     }),
   );
-  if (privateState) await rm(privateState, { recursive: true, force: true });
   process.exitCode = code;
 }
 
@@ -74,45 +70,19 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
 try {
   if (mode === "dev") {
     await waitForExit(
-      launch("cargo", ["build", "--locked", "-p", "workspace-supervisor"]),
+      launch("node", ["scripts/prepare-supervisor.mjs", "debug"]),
     );
   }
   if (!stopping) {
-    // macOS Unix socket paths are short; avoid the long per-user TMPDIR.
-    privateState = await mkdtemp("/tmp/agent-workspace-");
-    await chmod(privateState, 0o700);
-    const socket = path.join(privateState, "supervisor.sock");
-    const supervisor = launch(
-      path.join(
+    const env = {
+      ...process.env,
+      AGENT_WORKSPACE_SUPERVISOR: path.join(
         root,
         "target",
         mode === "dev" ? "debug" : "release",
         "workspace-supervisor",
       ),
-      [socket],
-      { stdio: ["ignore", "pipe", "inherit"] },
-    );
-    let readyCleanup;
-    const ready = new Promise((resolve, reject) => {
-      const lines = createInterface({ input: supervisor.stdout });
-      const deadline = setTimeout(
-        () => reject(new Error("Supervisor startup timed out")),
-        5000,
-      );
-      supervisor.once("error", reject);
-      supervisor.once("exit", () =>
-        reject(new Error("Supervisor exited before startup")),
-      );
-      lines.on("line", (line) => {
-        if (line === "ready") resolve();
-      });
-      lines.once("close", () => clearTimeout(deadline));
-      // Keep draining output after readiness; no unbounded in-memory output.
-      readyCleanup = () => clearTimeout(deadline);
-    });
-    await ready.finally(() => readyCleanup?.());
-    console.log(`Supervisor PID ${supervisor.pid} · ${socket}`);
-    const env = { ...process.env, AGENT_WORKSPACE_SOCKET: socket };
+    };
     const desktop =
       mode === "dev"
         ? launch("corepack", ["pnpm", "tauri", "dev"], { env })
@@ -126,14 +96,6 @@ try {
               env,
             },
           );
-    supervisor.once("exit", () => {
-      if (!stopping) {
-        console.error(
-          "Supervisor exited. Stop and restart the bootstrap to recover.",
-        );
-        void stop(1);
-      }
-    });
     await waitForExit(desktop);
     await stop(0);
   }

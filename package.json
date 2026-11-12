@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node scripts/start.mjs dev",
     "start": "node scripts/start.mjs release",
-    "build": "cargo build --locked --release -p workspace-supervisor && tauri build --bundles app -- --locked",
+    "build": "node scripts/prepare-supervisor.mjs release && tauri build --bundles app -- --locked",
     "frontend:dev": "vite --host 127.0.0.1 --port 1420 --strictPort",
     "frontend:build": "tsc --noEmit && vite build",
     "check": "tsc --noEmit && cargo check --locked --workspace && cargo clippy --locked --workspace --all-targets -- -D warnings",

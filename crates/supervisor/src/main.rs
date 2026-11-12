@@ -1,39 +1,41 @@
 use std::{
-    env, fs,
+    env,
     io::{self, Write},
-    os::unix::{fs::PermissionsExt, net::UnixListener},
     path::PathBuf,
+    sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    },
 };
-use workspace_core::{Core, connection::serve_connection};
+use workspace_core::{Core, connection::serve_connection, supervisor::SupervisorOwner};
 
 fn main() -> io::Result<()> {
     let mut arguments = env::args_os().skip(1);
-    let socket = PathBuf::from(arguments.next().ok_or_else(|| {
-        io::Error::other("usage: workspace-supervisor <socket-in-private-directory>")
+    let state = PathBuf::from(arguments.next().ok_or_else(|| {
+        io::Error::other("usage: workspace-supervisor <private-application-state-directory>")
     })?);
     if arguments.next().is_some() {
-        return Err(io::Error::other("expected exactly one socket path"));
+        return Err(io::Error::other("expected exactly one state directory"));
     }
-    let parent = socket
-        .parent()
-        .ok_or_else(|| io::Error::other("socket needs a private parent directory"))?;
-    let metadata = fs::symlink_metadata(parent)?;
-    if !metadata.is_dir() || metadata.permissions().mode() & 0o077 != 0 {
-        return Err(io::Error::other(
-            "socket parent must be a private directory (chmod 700)",
-        ));
-    }
-    // Never unlink an occupied/stale endpoint to take ownership.
-    let listener = UnixListener::bind(&socket)?;
-    fs::set_permissions(&socket, fs::Permissions::from_mode(0o600))?;
-    let core = Core::new();
+    // Set the process-wide mask before any threads or socket creation.
+    workspace_core::supervisor::restrict_creation_permissions();
+    let owner = SupervisorOwner::bind(&state)?;
+    let core = Arc::new(Core::new());
+    let active = Arc::new(AtomicUsize::new(0));
     println!("ready");
     io::stdout().flush()?;
-    for connection in listener.incoming() {
-        match connection.and_then(|stream| serve_connection(&core, stream)) {
-            Ok(()) => {}
-            Err(error) => eprintln!("supervisor connection failed: {error}"),
+    for stream in owner.listener.incoming() {
+        let stream = stream?;
+        if active.load(Ordering::SeqCst) >= 8 {
+            continue;
         }
+        active.fetch_add(1, Ordering::SeqCst);
+        let (core, active) = (core.clone(), active.clone());
+        std::thread::spawn(move || {
+            // Invalid/abandoned clients are isolated; no peer-controlled output is logged.
+            let _ = serve_connection(&core, stream);
+            active.fetch_sub(1, Ordering::SeqCst);
+        });
     }
     Ok(())
 }

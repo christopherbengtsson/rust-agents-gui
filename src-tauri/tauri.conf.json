@@ -23,5 +23,12 @@
       "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; style-src 'self'; img-src 'self' asset: http://asset.localhost"
     }
   },
-  "bundle": { "active": true, "targets": ["app"], "icon": [] }
+  "bundle": {
+    "active": true,
+    "targets": ["app"],
+    "icon": [],
+    "resources": {
+      "../target/sidecar/workspace-supervisor": "workspace-supervisor"
+    }
+  }
 }

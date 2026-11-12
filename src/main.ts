@@ -16,13 +16,20 @@ async function refreshStatus(): Promise<void> {
   status.textContent = "Connecting…";
   details.replaceChildren();
   try {
-    const observation = await invoke<SupervisorStatus>("supervisor_status");
+    const snapshot = await invoke<{
+      status: SupervisorStatus;
+      cursor: { owner: string; revision: number };
+      reset: boolean;
+    }>("supervisor_status");
+    const observation = snapshot.status;
     status.textContent = "Connected · Supervisor ready";
     status.dataset.state = observation.state;
     for (const [label, value] of [
       ["Supervisor process", observation.supervisor_pid],
       ["Desktop process", await invoke<number>("desktop_pid")],
       ["Application version", observation.application_version],
+      ["Owner identity", snapshot.cursor.owner],
+      ["Snapshot revision", snapshot.cursor.revision],
     ]) {
       const term = document.createElement("dt");
       term.textContent = String(label);
