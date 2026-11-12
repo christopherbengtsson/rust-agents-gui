@@ -37,26 +37,24 @@ async function waitForExit(child) {
   });
 }
 
+function signalGroup(child, signal) {
+  try {
+    process.kill(-child.pid, signal);
+  } catch (error) {
+    if (error.code !== "ESRCH") console.error(error);
+  }
+}
+
 async function stop(code) {
   if (stopping) return;
   stopping = true;
-  for (const child of children) {
-    try {
-      process.kill(-child.pid, "SIGTERM");
-    } catch (error) {
-      if (error.code !== "ESRCH") console.error(error);
-    }
-  }
+  for (const child of children) signalGroup(child, "SIGTERM");
   // These are bootstrap processes with no admitted work or durable storage.
   await Promise.all(
     [...children].map(async (child) => {
       const exited = waitForExit(child);
       const deadline = setTimeout(() => {
-        try {
-          process.kill(-child.pid, "SIGKILL");
-        } catch (error) {
-          if (error.code !== "ESRCH") console.error(error);
-        }
+        signalGroup(child, "SIGKILL");
       }, 3000);
       try {
         await exited;

@@ -68,7 +68,54 @@ Commands ran in this repository. Node commands used the selected Node via
 | `corepack pnpm start`                               | Opened built .app executable against separate release supervisor; observed successful status in native window                            |
 | Release launcher SIGTERM                            | Exited 0; cleanup verified below                                                                                                         |
 
-Final formatting, full-suite, and review results are recorded below after review.
+Final checks after implementation/review:
+
+- `corepack pnpm format`: passed; Prettier and rustfmt applied to source/evidence.
+- `corepack pnpm format:check`: passed; all matched files formatted and rustfmt clean.
+- `corepack pnpm check`: passed; TypeScript, locked workspace Cargo check, and Clippy
+  on all targets with warnings denied.
+- `corepack pnpm test`: passed the full locked Cargo workspace suite, **2 behavior
+  tests, 0 failures** (core status and actual supervisor process). Desktop and crate
+  unit/doc-test harnesses also passed, with no additional tests defined.
+- `corepack pnpm build`: passed again with Cargo's `--locked` forwarded through
+  Tauri; produced release supervisor and .app bundle (9.57 MiB).
+- `node --check scripts/start.mjs`: passed after review cleanup.
+- Launcher cleanup recheck: a Python subprocess harness ran
+  `node scripts/start.mjs release`, requested `"status"` over the emitted Unix
+  socket, confirmed supervisor PID **50257**, sent SIGTERM to the launcher, and
+  asserted exit **0**, supervisor gone, and private directory removed. The earlier
+  observed release run (PIDs **48791/48792**) also exited **0** with both processes
+  gone and private state removed.
+
+## Review
+
+Independent standards and spec reviews examined
+`git diff f8a882ada3a842e1efb188e01c574983b2775316...HEAD` at implementation commit
+`0e6dd04`. The source was compared with AGENTS.md, the product contract, milestone,
+tracker guidance, parent spec, and ticket 01.
+
+### Standards
+
+One documented-standard finding: this evidence initially omitted the final
+formatting/full-suite/review outcomes required by the milestone verification
+instructions. The actual commands and results are now recorded above.
+
+One judgment call, possible Duplicated Code: launcher SIGTERM/SIGKILL handlers
+repeated process-group signaling and ESRCH handling. Consolidated into
+`signalGroup(child, signal)`, then checked script syntax and reran launcher status
+and cleanup. No other documented-standard breaches were reported.
+
+### Spec
+
+One P2 finding: the initial final-results placeholder did not establish that
+formatting/full-suite checks ran, despite the checked ticket requirement to
+record actual commands and results. Replaced with completed verification above.
+The reviewer identified no missing bootstrap implementation, scope creep, or
+incorrectly implemented ticket-01 behavior. Later discovery/recovery and native
+qualification requirements remain explicitly deferred.
+
+Initial findings: Standards **1 requirement + 1 judgment call**; Spec **1 P2**.
+All addressed; no outstanding findings.
 
 ## Observed desktop
 
