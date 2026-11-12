@@ -10,3 +10,15 @@ workspace-core.workspace = true
 
 [dev-dependencies]
 tempfile = "3.27.0"
+
+[features]
+process-qualification = []
+
+# Inherited actual-process qualification stays explicit and outside unit gates.
+[[test]]
+name = "startup"
+required-features = ["process-qualification"]
+
+[[test]]
+name = "discovery"
+required-features = ["process-qualification"]

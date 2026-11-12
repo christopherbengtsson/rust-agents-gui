@@ -10,26 +10,66 @@ use std::{
 };
 
 pub fn prepare_state(state: &Path) -> io::Result<()> {
-    match fs::DirBuilder::new()
-        .recursive(true)
-        .mode(0o700)
-        .create(state)
-    {
+    prepare_state_with(
+        state,
+        |path| {
+            fs::DirBuilder::new()
+                .recursive(true)
+                .mode(0o700)
+                .create(path)
+        },
+        |path| check_private(path, true),
+    )
+}
+
+fn prepare_state_with(
+    state: &Path,
+    create: impl FnOnce(&Path) -> io::Result<()>,
+    check: impl FnOnce(&Path) -> io::Result<()>,
+) -> io::Result<()> {
+    match create(state) {
         Ok(()) => {}
         Err(e) if e.kind() == io::ErrorKind::AlreadyExists => {}
         Err(e) => return Err(e),
     }
-    check_private(state, true)
+    check(state)
 }
 
 pub(crate) fn check_private(path: &Path, directory: bool) -> io::Result<()> {
-    let metadata = fs::symlink_metadata(path)?;
-    // SAFETY: geteuid has no preconditions and does not mutate process state.
-    let uid = unsafe { libc::geteuid() };
-    if metadata.uid() != uid
-        || metadata.permissions().mode() & 0o077 != 0
-        || (directory && !metadata.is_dir())
-        || (!directory && !metadata.file_type().is_socket())
+    validate_private(
+        path,
+        &FileEvidence::from(fs::symlink_metadata(path)?),
+        directory,
+    )
+}
+
+struct FileEvidence {
+    owned_by_user: bool,
+    mode: u32,
+    directory: bool,
+    socket: bool,
+    regular: bool,
+    links: u64,
+}
+impl From<fs::Metadata> for FileEvidence {
+    fn from(metadata: fs::Metadata) -> Self {
+        Self {
+            // SAFETY: geteuid has no preconditions and does not mutate process state.
+            owned_by_user: metadata.uid() == unsafe { libc::geteuid() },
+            mode: metadata.permissions().mode(),
+            directory: metadata.is_dir(),
+            socket: metadata.file_type().is_socket(),
+            regular: metadata.is_file(),
+            links: metadata.nlink(),
+        }
+    }
+}
+
+fn validate_private(path: &Path, metadata: &FileEvidence, directory: bool) -> io::Result<()> {
+    if !metadata.owned_by_user
+        || metadata.mode & 0o077 != 0
+        || (directory && !metadata.directory)
+        || (!directory && !metadata.socket)
     {
         return Err(io::Error::new(
             io::ErrorKind::PermissionDenied,
@@ -51,27 +91,34 @@ fn owner_lock(state: &Path) -> io::Result<File> {
         .mode(0o600)
         .custom_flags(libc::O_NOFOLLOW)
         .open(state.join("owner.lock"))?;
-    let metadata = file.metadata()?;
-    // SAFETY: geteuid has no preconditions.
-    if !metadata.is_file()
-        || metadata.uid() != unsafe { libc::geteuid() }
-        || metadata.permissions().mode() & 0o077 != 0
-        || metadata.nlink() != 1
+    validate_lock(&FileEvidence::from(file.metadata()?))?;
+    Ok(file)
+}
+
+fn validate_lock(metadata: &FileEvidence) -> io::Result<()> {
+    if !metadata.regular
+        || !metadata.owned_by_user
+        || metadata.mode & 0o077 != 0
+        || metadata.links != 1
     {
         return Err(io::Error::new(
             io::ErrorKind::PermissionDenied,
             "Owner lock must be a private regular file owned by this user",
         ));
     }
-    Ok(file)
+    Ok(())
 }
 
 pub(crate) fn owner_present(state: &Path) -> io::Result<bool> {
-    let file = owner_lock(state)?;
-    match file.try_lock() {
+    probe_owner(state, &mut LocalOwner)
+}
+
+fn probe_owner(state: &Path, effects: &mut impl OwnerEffects) -> io::Result<bool> {
+    let lock = effects.open_lock(state)?;
+    match effects.acquire(&lock) {
         Ok(()) => Ok(false),
-        Err(std::fs::TryLockError::WouldBlock) => Ok(true),
-        Err(std::fs::TryLockError::Error(e)) => Err(e),
+        Err(e) if e.kind() == io::ErrorKind::WouldBlock => Ok(true),
+        Err(e) => Err(e),
     }
 }
 
@@ -82,27 +129,77 @@ pub struct SupervisorOwner {
 }
 impl SupervisorOwner {
     pub fn bind(state: &Path) -> io::Result<Self> {
-        prepare_state(state)?;
-        let lock = owner_lock(state)?;
-        lock.try_lock().map_err(|e| io::Error::new(io::ErrorKind::AddrInUse,
-            format!("Another supervisor owns this application state. Reconnect to it; do not remove owner.lock: {e}")))?;
-        let socket = socket_path(state);
-        match fs::symlink_metadata(&socket) {
-            Ok(_) => {
-                check_private(&socket, false)?;
-                fs::remove_file(&socket)?;
-            }
-            Err(e) if e.kind() == io::ErrorKind::NotFound => {}
-            Err(e) => return Err(e),
-        }
-        let listener = UnixListener::bind(&socket).map_err(|e| io::Error::new(e.kind(),
-            format!("Cannot bind {}: {e}. Select a shorter private state path if the Unix socket path is too long.", socket.display())))?;
-        fs::set_permissions(&socket, fs::Permissions::from_mode(0o600))?;
+        let (lock, listener) = admit_owner(state, &mut LocalOwner)?;
         Ok(Self {
             _lock: lock,
             listener,
         })
     }
+}
+
+trait OwnerEffects {
+    type Lock;
+    type Listener;
+    fn prepare(&mut self, state: &Path) -> io::Result<()>;
+    fn open_lock(&mut self, state: &Path) -> io::Result<Self::Lock>;
+    fn acquire(&mut self, lock: &Self::Lock) -> io::Result<()>;
+    fn socket_info(&mut self, socket: &Path) -> io::Result<FileEvidence>;
+    fn remove_socket(&mut self, socket: &Path) -> io::Result<()>;
+    fn bind_socket(&mut self, socket: &Path) -> io::Result<Self::Listener>;
+    fn make_private(&mut self, socket: &Path) -> io::Result<()>;
+}
+
+struct LocalOwner;
+impl OwnerEffects for LocalOwner {
+    type Lock = File;
+    type Listener = UnixListener;
+    fn prepare(&mut self, state: &Path) -> io::Result<()> {
+        prepare_state(state)
+    }
+    fn open_lock(&mut self, state: &Path) -> io::Result<File> {
+        owner_lock(state)
+    }
+    fn acquire(&mut self, lock: &File) -> io::Result<()> {
+        lock.try_lock().map_err(|error| match error {
+            std::fs::TryLockError::WouldBlock => io::ErrorKind::WouldBlock.into(),
+            std::fs::TryLockError::Error(error) => error,
+        })
+    }
+    fn socket_info(&mut self, socket: &Path) -> io::Result<FileEvidence> {
+        Ok(fs::symlink_metadata(socket)?.into())
+    }
+    fn remove_socket(&mut self, socket: &Path) -> io::Result<()> {
+        fs::remove_file(socket)
+    }
+    fn bind_socket(&mut self, socket: &Path) -> io::Result<UnixListener> {
+        UnixListener::bind(socket)
+    }
+    fn make_private(&mut self, socket: &Path) -> io::Result<()> {
+        fs::set_permissions(socket, fs::Permissions::from_mode(0o600))
+    }
+}
+
+fn admit_owner<E: OwnerEffects>(
+    state: &Path,
+    effects: &mut E,
+) -> io::Result<(E::Lock, E::Listener)> {
+    effects.prepare(state)?;
+    let lock = effects.open_lock(state)?;
+    effects.acquire(&lock).map_err(|e| io::Error::new(io::ErrorKind::AddrInUse,
+            format!("Another supervisor owns this application state. Reconnect to it; do not remove owner.lock: {e}")))?;
+    let socket = socket_path(state);
+    match effects.socket_info(&socket) {
+        Ok(metadata) => {
+            validate_private(&socket, &metadata, false)?;
+            effects.remove_socket(&socket)?;
+        }
+        Err(e) if e.kind() == io::ErrorKind::NotFound => {}
+        Err(e) => return Err(e),
+    }
+    let listener = effects.bind_socket(&socket).map_err(|e| io::Error::new(e.kind(),
+            format!("Cannot bind {}: {e}. Select a shorter private state path if the Unix socket path is too long.", socket.display())))?;
+    effects.make_private(&socket)?;
+    Ok((lock, listener))
 }
 
 pub fn socket_path(state: &Path) -> PathBuf {
@@ -116,3 +213,6 @@ pub fn restrict_creation_permissions() {
         libc::umask(0o077);
     }
 }
+
+#[cfg(test)]
+mod tests;

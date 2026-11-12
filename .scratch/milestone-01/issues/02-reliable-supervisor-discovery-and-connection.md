@@ -22,3 +22,7 @@
 ## Comments
 
 Implemented and verified 2026-11-12. See [retained evidence](../../../docs/evidence/milestone-01-discovery.md) for process checks, bundled desktop kill/reopen screenshots, commands, and limits. No live provider submissions. The default triage vocabulary has no completed label; checked acceptance items and this evidence record completion.
+
+2026-11-12: Addressed the follow-up P2 review finding: staging now consumes Cargo's reported executable and retains provenance under `src-tauri/gen/sidecar`; development and release launch paths honor that staging/target selection. See [review-fix evidence](../../../docs/evidence/milestone-01-sidecar-review-fix.md) for six unit tests, fresh private-target preparation, release bundle/hash checks, static checks and qualification limits. Earlier desktop/process evidence remains retained; native qualification was not run.
+
+2026-11-12: Tickets 01–02 were completed before the testing policy was introduced in `7fbaaa9`. Current policy alignment is recorded separately in [policy-alignment evidence](../../../docs/evidence/milestone-01-verification-policy-alignment.md), preserving the original completion evidence and keeping actual-process qualification distinct from the new unit gate.

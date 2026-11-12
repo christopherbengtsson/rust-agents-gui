@@ -25,10 +25,31 @@ application state for qualification and never remove an active owner's lock.
 
 Read [testing and verification](docs/agents/verification.md) before selecting
 commands. The checked-out package scripts define available commands. Tickets
-03–06 must use the current unit-test policy from the start; an isolated unit gate
-is established in ticket 03. Inspect command behavior before assuming a script selects only unit tests.
-Keep compilation, unit execution, static checks, complete verification and release
-packaging separately identifiable.
+01–02 predate that policy; their completed desktop/process evidence is retained.
+The current default test gate is unit-only, with controlled filesystem, process,
+transport and time outcomes. The verification foundation originally planned for
+ticket 03 has been brought forward; repository registration remains unimplemented.
+
+| Command                         | Purpose                                                                                                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `corepack pnpm test`            | Compile the Rust core library unit harness, then execute Rust and tooling unit tests; report compilation and execution separately. No staged sidecar is required. |
+| `corepack pnpm test:measure`    | Compile once; measure one warm-up and five warm executions of each unit harness.                                                                                  |
+| `corepack pnpm compile`         | Check workspace compilation independently.                                                                                                                        |
+| `corepack pnpm check`           | TypeScript and Clippy, including retained qualification targets; no test execution.                                                                               |
+| `corepack pnpm format:check`    | Prettier and rustfmt checks.                                                                                                                                      |
+| `corepack pnpm verify`          | Formatting, static checks and unit tests, each once; excludes packaging and process qualification.                                                                |
+| `corepack pnpm qualify:process` | Opt in to inherited supervisor-process qualification using disposable private state.                                                                              |
+| `corepack pnpm build`           | Prepare the release sidecar and package the macOS app separately.                                                                                                 |
+
+Sidecar preparation stages Cargo's reported supervisor executable under
+`src-tauri/gen/sidecar`, alongside `provenance.json` with source revision, dirty
+state, target directory, profile and SHA-256. Private `CARGO_TARGET_DIR` values
+are supported. Run the isolated staging regression tests with
+`node --test --test-concurrency=1 scripts/prepare-supervisor.test.mjs`.
+Build, static-check and unit scripts reject symlinked Cargo targets and targets
+claimed by another worktree. Each target retains `.agent-workspace-owner.json`;
+choose a fresh private target when moving between worktrees. Run one verification
+or build command at a time per worktree; share download caches rather than targets.
 
 ## Ownership
 

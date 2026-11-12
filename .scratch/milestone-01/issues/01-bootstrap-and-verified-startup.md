@@ -22,3 +22,5 @@
 ## Comments
 
 2026-11-12: Implemented and startup verified. See [bootstrap evidence](../../../docs/evidence/milestone-01-bootstrap.md) for the toolchain, commands, screenshot, and qualification limits. Overall milestone qualification remains incomplete.
+
+2026-11-12: This ticket predates `docs/agents/verification.md`. Its completion evidence remains historical evidence. Current commands, unit coverage and qualification separation are recorded in [policy-alignment evidence](../../../docs/evidence/milestone-01-verification-policy-alignment.md).

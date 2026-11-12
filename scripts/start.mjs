@@ -1,9 +1,8 @@
 // Development/build launcher. Rust owns supervisor discovery and lifetime.
 import { spawn } from "node:child_process";
-import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { cargoMetadata, root } from "./cargo.mjs";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const mode = process.argv[2];
 if (!["dev", "release"].includes(mode)) {
   throw new Error("usage: node scripts/start.mjs <dev|release>");
@@ -74,22 +73,21 @@ try {
     );
   }
   if (!stopping) {
-    const env = {
-      ...process.env,
-      AGENT_WORKSPACE_SUPERVISOR: path.join(
+    const env = { ...process.env };
+    env.CARGO_TARGET_DIR = cargoMetadata().target_directory;
+    if (mode === "dev") {
+      env.AGENT_WORKSPACE_SUPERVISOR = path.join(
         root,
-        "target",
-        mode === "dev" ? "debug" : "release",
-        "workspace-supervisor",
-      ),
-    };
+        "src-tauri/gen/sidecar/workspace-supervisor",
+      );
+    }
     const desktop =
       mode === "dev"
         ? launch("corepack", ["pnpm", "tauri", "dev"], { env })
         : launch(
             path.join(
-              root,
-              "target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop",
+              cargoMetadata().target_directory,
+              "release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop",
             ),
             [],
             {

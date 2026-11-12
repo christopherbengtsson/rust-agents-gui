@@ -5,7 +5,7 @@ use crate::{
 };
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{
-    io::{self, BufRead, BufReader, Write},
+    io::{self, BufRead, BufReader, Read, Write},
     os::unix::{net::UnixStream, process::CommandExt},
     path::{Path, PathBuf},
     process::{Command, Stdio},
@@ -32,7 +32,7 @@ enum Response {
 pub struct SupervisorConnection {
     state: PathBuf,
     executable: PathBuf,
-    client: Option<SupervisorClient>,
+    initialized: bool,
     cursor: Option<SnapshotCursor>,
 }
 impl SupervisorConnection {
@@ -40,19 +40,21 @@ impl SupervisorConnection {
         Self {
             state,
             executable,
-            client: None,
+            initialized: false,
             cursor: None,
         }
     }
 
     pub fn snapshot(&mut self) -> io::Result<SupervisorSnapshot> {
-        if self.client.is_none() {
-            self.client = Some(SupervisorClient::connect_or_start(
-                self.state.clone(),
-                &self.executable,
-            )?);
+        self.snapshot_with(&mut LocalDiscovery::new())
+    }
+
+    fn snapshot_with(&mut self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
+        if !self.initialized {
+            discover(&self.state, &self.executable, effects)?;
+            self.initialized = true;
         }
-        let snapshot = self.client.as_ref().unwrap().snapshot(self.cursor.clone())
+        let snapshot = effects.snapshot(&self.state, self.cursor.clone())
             .map_err(|e| io::Error::new(e.kind(), format!(
                 "Cannot read supervisor observations: {e}. Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.")))?;
         self.cursor = Some(snapshot.cursor.clone());
@@ -70,56 +72,8 @@ impl SupervisorClient {
 
     /// Opening the desktop may start an absent owner. Subsequent observations never start one.
     pub fn connect_or_start(state: PathBuf, executable: &Path) -> io::Result<Self> {
-        prepare_state(&state)?;
-        let client = Self::new(state);
-        match client.status() {
-            Ok(_) => return Ok(client),
-            Err(e)
-                if !matches!(
-                    e.kind(),
-                    io::ErrorKind::NotFound | io::ErrorKind::ConnectionRefused
-                ) =>
-            {
-                return Err(e);
-            }
-            Err(_) => {}
-        }
-        if !owner_present(&client.state)? {
-            let mut child = Command::new(executable).arg(&client.state)
-                .stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null())
-                .process_group(0).spawn().map_err(|e| io::Error::new(e.kind(),
-                    format!("Cannot start supervisor {}: {e}. Rebuild or reinstall the application.", executable.display())))?;
-            // Reap on every exit path without tying the supervisor lifetime to this client.
-            std::thread::spawn(move || {
-                let _ = child.wait();
-            });
-        }
-        let deadline = Instant::now() + Duration::from_secs(5);
-        loop {
-            match client.status() {
-                Ok(_) => {
-                    return Ok(client);
-                }
-                Err(e)
-                    if !matches!(
-                        e.kind(),
-                        io::ErrorKind::NotFound
-                            | io::ErrorKind::ConnectionRefused
-                            | io::ErrorKind::UnexpectedEof
-                    ) =>
-                {
-                    return Err(e);
-                }
-                Err(_) => {}
-            }
-            if Instant::now() >= deadline {
-                return Err(io::Error::new(
-                    io::ErrorKind::TimedOut,
-                    "Supervisor did not become available. An owner may still hold this state; check the installed supervisor and state permissions, then reopen. Do not remove the owner lock.",
-                ));
-            }
-            std::thread::sleep(Duration::from_millis(25));
-        }
+        discover(&state, executable, &mut LocalDiscovery::new())?;
+        Ok(Self::new(state))
     }
 
     pub fn status(&self) -> io::Result<SupervisorStatus> {
@@ -156,14 +110,132 @@ impl SupervisorClient {
     }
 }
 
+// Discovery policy remains here; the local implementation supplies OS outcomes.
+trait Discovery {
+    fn prepare(&mut self, state: &Path) -> io::Result<()>;
+    fn snapshot(
+        &mut self,
+        state: &Path,
+        after: Option<SnapshotCursor>,
+    ) -> io::Result<SupervisorSnapshot>;
+    fn owner_present(&mut self, state: &Path) -> io::Result<bool>;
+    fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()>;
+    fn elapsed(&self) -> Duration;
+    fn wait(&mut self, duration: Duration);
+}
+
+struct LocalDiscovery(Instant);
+impl LocalDiscovery {
+    fn new() -> Self {
+        Self(Instant::now())
+    }
+}
+impl Discovery for LocalDiscovery {
+    fn prepare(&mut self, state: &Path) -> io::Result<()> {
+        prepare_state(state)
+    }
+    fn snapshot(
+        &mut self,
+        state: &Path,
+        after: Option<SnapshotCursor>,
+    ) -> io::Result<SupervisorSnapshot> {
+        SupervisorClient::new(state.to_owned()).snapshot(after)
+    }
+    fn owner_present(&mut self, state: &Path) -> io::Result<bool> {
+        owner_present(state)
+    }
+    fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()> {
+        let mut child = supervisor_command(executable, state).spawn().map_err(|e| {
+            io::Error::new(
+                e.kind(),
+                format!(
+                    "Cannot start supervisor {}: {e}. Rebuild or reinstall the application.",
+                    executable.display()
+                ),
+            )
+        })?;
+        // Reap on every exit path without tying the supervisor lifetime to this client.
+        std::thread::spawn(move || {
+            let _ = child.wait();
+        });
+        Ok(())
+    }
+    fn elapsed(&self) -> Duration {
+        self.0.elapsed()
+    }
+    fn wait(&mut self, duration: Duration) {
+        std::thread::sleep(duration);
+    }
+}
+
+fn supervisor_command(executable: &Path, state: &Path) -> Command {
+    let mut command = Command::new(executable);
+    command
+        .arg(state)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .process_group(0);
+    command
+}
+
+fn discover(state: &Path, executable: &Path, effects: &mut impl Discovery) -> io::Result<()> {
+    effects.prepare(state)?;
+    match effects.snapshot(state, None) {
+        Ok(_) => return Ok(()),
+        Err(e)
+            if !matches!(
+                e.kind(),
+                io::ErrorKind::NotFound | io::ErrorKind::ConnectionRefused
+            ) =>
+        {
+            return Err(e);
+        }
+        Err(_) => {}
+    }
+    if !effects.owner_present(state)? {
+        effects.start(executable, state)?;
+    }
+    let deadline = effects.elapsed() + Duration::from_secs(5);
+    loop {
+        match effects.snapshot(state, None) {
+            Ok(_) => {
+                return Ok(());
+            }
+            Err(e)
+                if !matches!(
+                    e.kind(),
+                    io::ErrorKind::NotFound
+                        | io::ErrorKind::ConnectionRefused
+                        | io::ErrorKind::UnexpectedEof
+                ) =>
+            {
+                return Err(e);
+            }
+            Err(_) => {}
+        }
+        if effects.elapsed() >= deadline {
+            return Err(io::Error::new(
+                io::ErrorKind::TimedOut,
+                "Supervisor did not become available. An owner may still hold this state; check the installed supervisor and state permissions, then reopen. Do not remove the owner lock.",
+            ));
+        }
+        effects.wait(Duration::from_millis(25));
+    }
+}
+
 pub fn serve_connection(core: &Core, mut stream: UnixStream) -> io::Result<()> {
-    configure(&stream)?;
-    let request: Request = read_frame(&mut stream)?;
+    serve_stream(core, &mut stream)
+}
+
+fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
+    configure(stream)?;
+    let request: Request = read_frame(stream)?;
     if request.protocol != PROTOCOL_VERSION
         || request.application_version != env!("CARGO_PKG_VERSION")
     {
         return write_frame(
-            &mut stream,
+            stream,
             &Response::Incompatible {
                 message: format!(
                     "Incompatible desktop/supervisor versions (client protocol {} / app {}, supervisor protocol {} / app {}). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening.",
@@ -176,32 +248,50 @@ pub fn serve_connection(core: &Core, mut stream: UnixStream) -> io::Result<()> {
         );
     }
     write_frame(
-        &mut stream,
+        stream,
         &Response::Snapshot {
             snapshot: core.snapshot(request.after),
         },
     )
 }
 
-fn configure(stream: &UnixStream) -> io::Result<()> {
+trait FrameStream: Read + Write {
+    fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()>;
+    fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()>;
+}
+impl FrameStream for UnixStream {
+    fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
+        UnixStream::set_read_timeout(self, timeout)
+    }
+    fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
+        UnixStream::set_write_timeout(self, timeout)
+    }
+}
+
+fn configure(stream: &impl FrameStream) -> io::Result<()> {
     stream.set_read_timeout(Some(IO_TIMEOUT))?;
     stream.set_write_timeout(Some(IO_TIMEOUT))
 }
 
-fn read_frame<T: DeserializeOwned>(stream: &mut UnixStream) -> io::Result<T> {
-    let deadline = std::time::Instant::now() + IO_TIMEOUT;
+fn read_frame<T: DeserializeOwned>(stream: &mut impl FrameStream) -> io::Result<T> {
+    read_frame_with_clock(stream, Instant::now)
+}
+
+fn read_frame_with_clock<T: DeserializeOwned>(
+    stream: &mut impl FrameStream,
+    mut now: impl FnMut() -> Instant,
+) -> io::Result<T> {
+    let deadline = now() + IO_TIMEOUT;
     let mut reader = BufReader::new(stream);
     let mut frame = Vec::new();
     // read_until alone would allow an unbounded peer-controlled allocation.
     loop {
-        let remaining = deadline
-            .checked_duration_since(std::time::Instant::now())
-            .ok_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::TimedOut,
-                    "Supervisor frame deadline exceeded",
-                )
-            })?;
+        let remaining = deadline.checked_duration_since(now()).ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::TimedOut,
+                "Supervisor frame deadline exceeded",
+            )
+        })?;
         reader.get_ref().set_read_timeout(Some(remaining))?;
         let available = reader.fill_buf()?;
         if available.is_empty() {
@@ -229,7 +319,7 @@ fn read_frame<T: DeserializeOwned>(stream: &mut UnixStream) -> io::Result<T> {
     }
 }
 
-fn write_frame(stream: &mut UnixStream, value: &impl Serialize) -> io::Result<()> {
+fn write_frame(stream: &mut impl Write, value: &impl Serialize) -> io::Result<()> {
     let mut frame = serde_json::to_vec(value)?;
     frame.push(b'\n');
     if frame.len() > MAX_FRAME_BYTES {
@@ -240,3 +330,6 @@ fn write_frame(stream: &mut UnixStream, value: &impl Serialize) -> io::Result<()
     }
     stream.write_all(&frame)
 }
+
+#[cfg(test)]
+mod tests;

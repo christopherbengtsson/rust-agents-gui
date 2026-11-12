@@ -34,6 +34,7 @@ pub struct SupervisorSnapshot {
 
 pub struct Core {
     owner: String,
+    pid: u32,
 }
 
 impl Default for Core {
@@ -53,13 +54,14 @@ impl Core {
                     .expect("system clock before epoch")
                     .as_nanos()
             ),
+            pid: std::process::id(),
         }
     }
 
     pub fn status(&self) -> SupervisorStatus {
         SupervisorStatus {
             state: SupervisorState::Ready,
-            supervisor_pid: std::process::id(),
+            supervisor_pid: self.pid,
             application_version: env!("CARGO_PKG_VERSION").into(),
         }
     }
@@ -75,6 +77,54 @@ impl Core {
             status: self.status(),
             reset: after.as_ref() != Some(&cursor),
             cursor,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn core() -> Core {
+        Core {
+            owner: "test-owner".into(),
+            pid: 42,
+        }
+    }
+
+    #[test]
+    fn initial_status_reports_the_execution_owner_without_starting_work() {
+        let status = core().status();
+        assert_eq!(status.state, SupervisorState::Ready);
+        assert_eq!(status.supervisor_pid, 42);
+        assert_eq!(status.application_version, env!("CARGO_PKG_VERSION"));
+    }
+
+    #[test]
+    fn snapshot_catches_up_or_resets_observations_from_another_owner() {
+        let core = core();
+        let first = core.snapshot(None);
+        assert!(first.reset);
+        let caught_up = core.snapshot(Some(first.cursor.clone()));
+        assert!(!caught_up.reset);
+        assert_eq!(caught_up.cursor, first.cursor);
+        for cursor in [
+            SnapshotCursor {
+                owner: "previous-owner".into(),
+                revision: 1,
+            },
+            SnapshotCursor {
+                owner: first.cursor.owner.clone(),
+                revision: 0,
+            },
+            SnapshotCursor {
+                owner: first.cursor.owner.clone(),
+                revision: 999,
+            },
+        ] {
+            let snapshot = core.snapshot(Some(cursor));
+            assert!(snapshot.reset);
+            assert_eq!(snapshot.cursor, first.cursor);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 
-Implementation baseline: tickets 01–02 are complete. Tickets 03–13 are not implemented.
+Implementation baseline: tickets 01–02 are complete. Product behavior in tickets 03–13 is not implemented; ticket 03's verification gate was brought forward for current testing-policy alignment.
 
 ## Problem Statement
 
@@ -149,5 +149,5 @@ These are sequencing limits. Retain the product contract's ownership and identit
 - Preparation confirmed one spec, separate-session tickets, bootstrap before product behavior, a clear usable desktop, stable reproducible versions, and lasting modules without speculative abstractions. Automated coverage follows the repository testing policy; desktop and native qualification remain separate.
 - Published to the configured local Markdown tracker with `ready-for-agent` status. Implementation tickets are separate files with explicit blockers under this feature's `issues/` directory.
 - Exact stable dependency versions and the supported Codex runtime/schema cohort are selected and recorded during their respective implementation gates. No new framework choice, transport library, message schema, or provider compatibility result is implied by this document.
-- Tickets 01–02 are complete; tickets 03–13 remain unimplemented. Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
+- Tickets 01–02 are complete and predate the testing policy. Product behavior in tickets 03–13 remains unimplemented; the ticket 03 verification gate is in place, with [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
 - Mark the milestone Passed only when its deterministic, desktop, and required native checks succeed. If native checks are unauthorized or fail, retain completed evidence and leave the milestone incomplete. Preserve the completed milestone when defining the next one.

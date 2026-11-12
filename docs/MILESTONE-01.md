@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–02 are complete. Tickets 03–13 are not implemented. Complete workflow and native qualification remain incomplete.
+Status: In progress — tickets 01–02 are complete. Product behavior in tickets 03–13 is not implemented; ticket 03's verification gate is in place. Complete workflow and native qualification remain incomplete.
 
 ## Outcome and authority
 
@@ -62,7 +62,9 @@ PR inbox, automated review preparation/handoffs, PR creation/feedback/merge cont
 
 Ticket 01 established the TypeScript/pnpm + Rust/Tauri baseline, a separate supervisor and a successful desktop status exchange; see [bootstrap evidence](evidence/milestone-01-bootstrap.md). Ticket 02 established private owner admission, versioned snapshots and bundled desktop kill/reconnect; see [discovery evidence](evidence/milestone-01-discovery.md). These remain the completed starting point.
 
-Tickets 03–13 remain unimplemented. Their acceptance items stay open until the required unit, desktop and separately authorized native evidence is recorded.
+Tickets 01–02 predate the testing policy. Current repository alignment brought forward ticket 03's unit-only verification gate while retaining the earlier process/desktop evidence. See [policy-alignment evidence](evidence/milestone-01-verification-policy-alignment.md) for the coverage mapping, separate process qualification and measurements. Repository registration and the remaining product behavior are still unimplemented.
+
+Product behavior in tickets 03–13 remains unimplemented. Remaining acceptance items stay open until the required unit, desktop and separately authorized native evidence is recorded.
 
 During qualification, record:
 

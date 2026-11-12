@@ -10,13 +10,17 @@
   "scripts": {
     "dev": "node scripts/start.mjs dev",
     "start": "node scripts/start.mjs release",
-    "build": "node scripts/prepare-supervisor.mjs release && tauri build --bundles app -- --locked",
+    "build": "node scripts/build.mjs",
     "frontend:dev": "vite --host 127.0.0.1 --port 1420 --strictPort",
     "frontend:build": "tsc --noEmit && vite build",
-    "check": "tsc --noEmit && cargo check --locked --workspace && cargo clippy --locked --workspace --all-targets -- -D warnings",
+    "compile": "node scripts/cargo.mjs check --locked --workspace",
+    "check": "tsc --noEmit && node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
     "format": "prettier --write src scripts package.json tsconfig.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all",
     "format:check": "prettier --check src scripts package.json tsconfig.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check",
-    "test": "cargo test --locked --workspace",
+    "test": "node scripts/test-unit.mjs",
+    "test:measure": "node scripts/test-unit.mjs --measure",
+    "qualify:process": "node scripts/cargo.mjs test --locked -p workspace-supervisor --features process-qualification --test startup --test discovery -- --test-threads=1",
+    "verify": "corepack pnpm format:check && corepack pnpm check && corepack pnpm test",
     "tauri": "tauri"
   },
   "dependencies": {

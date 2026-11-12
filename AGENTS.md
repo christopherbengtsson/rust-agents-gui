@@ -24,6 +24,11 @@ RAT is archived and read-only. Follow its AGENTS.md and required documentation b
 
 ## Agent skills
 
+### Rust engineering
+
+For Rust implementation and review, use [rust-engineering](.agents/skills/rust-engineering/SKILL.md).
+For Rust module or interface design, consult [design principles](https://rust-unofficial.github.io/patterns/additional_resources/design-principles.html) as tradeoffs; ground abstractions in the MVP's concrete modules and required dependency seams.
+
 ### Issue tracker
 
 Specs and tickets use local Markdown under `.scratch/`.

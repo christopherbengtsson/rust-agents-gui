@@ -28,7 +28,7 @@
     "targets": ["app"],
     "icon": [],
     "resources": {
-      "../target/sidecar/workspace-supervisor": "workspace-supervisor"
+      "gen/sidecar/workspace-supervisor": "workspace-supervisor"
     }
   }
 }
