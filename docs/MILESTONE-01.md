@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: Planned — implementation and verification have not started.
+Status: In progress — ticket 01 bootstrap is implemented and startup verified; product workflow and qualification remain incomplete.
 
 ## Outcome and authority
 
@@ -60,7 +60,7 @@ PR inbox, automated review preparation/handoffs, PR creation/feedback/merge cont
 
 ## Results and next milestone
 
-No results yet. Keep this document with the completed code as the milestone's evidence. During qualification, record:
+Ticket 01 established a TypeScript/pnpm + Rust/Tauri baseline, a separately launched supervisor, and an observed successful desktop status exchange. See [bootstrap evidence](evidence/milestone-01-bootstrap.md) for versions, commands, screenshot, and limits. This does not qualify A1–A10 or native-provider behavior. Keep this document with the completed code as the milestone's evidence. During qualification, record:
 
 - Implementation revision or source identity, tool/runtime versions, hardware, and effective test configuration.
 - A1–A10 pass/fail/not-run status with reproducible commands, fixture/native distinction, screenshots, and evidence paths.

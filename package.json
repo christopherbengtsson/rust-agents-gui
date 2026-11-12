@@ -1,0 +1,31 @@
+{
+  "name": "rust-agents-gui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=26.13.1 <27"
+  },
+  "scripts": {
+    "dev": "node scripts/start.mjs dev",
+    "start": "node scripts/start.mjs release",
+    "build": "cargo build --locked --release -p workspace-supervisor && tauri build --bundles app -- --locked",
+    "frontend:dev": "vite --host 127.0.0.1 --port 1420 --strictPort",
+    "frontend:build": "tsc --noEmit && vite build",
+    "check": "tsc --noEmit && cargo check --locked --workspace && cargo clippy --locked --workspace --all-targets -- -D warnings",
+    "format": "prettier --write src scripts package.json tsconfig.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all",
+    "format:check": "prettier --check src scripts package.json tsconfig.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check",
+    "test": "cargo test --locked --workspace",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.12.4"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4",
+    "prettier": "3.10.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.8"
+  }
+}

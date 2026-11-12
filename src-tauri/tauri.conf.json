@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Agent Workspace",
+  "version": "0.1.0",
+  "identifier": "dev.christopherbengtsson.agent-workspace",
+  "build": {
+    "beforeDevCommand": "corepack pnpm frontend:dev",
+    "devUrl": "http://127.0.0.1:1420",
+    "beforeBuildCommand": "corepack pnpm frontend:build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Agent Workspace",
+        "width": 900,
+        "height": 680,
+        "minWidth": 600,
+        "minHeight": 480
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; style-src 'self'; img-src 'self' asset: http://asset.localhost"
+    }
+  },
+  "bundle": { "active": true, "targets": ["app"], "icon": [] }
+}
