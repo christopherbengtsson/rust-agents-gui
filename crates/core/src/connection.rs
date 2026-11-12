@@ -88,10 +88,20 @@ impl SupervisorClient {
         protocol: u32,
         application_version: &str,
     ) -> io::Result<SupervisorSnapshot> {
-        check_private(&self.state, true)?;
+        self.snapshot_with(after, protocol, application_version, &mut LocalClient)
+    }
+
+    fn snapshot_with(
+        &self,
+        after: Option<SnapshotCursor>,
+        protocol: u32,
+        application_version: &str,
+        effects: &mut impl ClientEffects,
+    ) -> io::Result<SupervisorSnapshot> {
+        effects.check_private(&self.state, true)?;
         let socket = socket_path(&self.state);
-        check_private(&socket, false)?;
-        let mut stream = UnixStream::connect(socket)?;
+        effects.check_private(&socket, false)?;
+        let mut stream = effects.connect(&socket)?;
         configure(&stream)?;
         write_frame(
             &mut stream,
@@ -101,12 +111,34 @@ impl SupervisorClient {
                 after,
             },
         )?;
-        match read_frame(&mut stream)? {
+        match read_frame_with_clock(&mut stream, || effects.now())? {
             Response::Snapshot { snapshot } => Ok(snapshot),
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
         }
+    }
+}
+
+// Client policy and protocol stay above this seam; adapters supply only local I/O outcomes.
+trait ClientEffects {
+    type Stream: FrameStream;
+    fn check_private(&mut self, path: &Path, directory: bool) -> io::Result<()>;
+    fn connect(&mut self, socket: &Path) -> io::Result<Self::Stream>;
+    fn now(&mut self) -> Instant;
+}
+
+struct LocalClient;
+impl ClientEffects for LocalClient {
+    type Stream = UnixStream;
+    fn check_private(&mut self, path: &Path, directory: bool) -> io::Result<()> {
+        check_private(path, directory)
+    }
+    fn connect(&mut self, socket: &Path) -> io::Result<Self::Stream> {
+        UnixStream::connect(socket)
+    }
+    fn now(&mut self) -> Instant {
+        Instant::now()
     }
 }
 

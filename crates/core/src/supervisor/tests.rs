@@ -188,6 +188,31 @@ fn competing_owner_is_rejected_before_touching_the_endpoint() {
 }
 
 #[test]
+fn non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint() {
+    for failure in [
+        io::Error::from_raw_os_error(libc::EACCES),
+        io::Error::from_raw_os_error(libc::ENOLCK),
+        io::Error::new(
+            io::ErrorKind::Unsupported,
+            "filesystem does not support owner locking",
+        ),
+    ] {
+        let kind = failure.kind();
+        let raw_os_error = failure.raw_os_error();
+        let message = failure.to_string();
+        let mut scenario = OwnerScenario::new();
+        scenario.acquired = Err(failure);
+
+        let error = admit_owner(Path::new("/private/state"), &mut scenario).unwrap_err();
+
+        assert_eq!(error.kind(), kind);
+        assert_eq!(error.raw_os_error(), raw_os_error);
+        assert_eq!(error.to_string(), message);
+        assert_eq!(scenario.calls, ["prepare", "open_lock", "acquire"]);
+    }
+}
+
+#[test]
 fn admitted_owner_alone_may_replace_a_private_stale_socket() {
     let mut scenario = OwnerScenario::new();
     scenario.existing_socket = Ok(socket());

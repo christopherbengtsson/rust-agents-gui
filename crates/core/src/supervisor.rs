@@ -185,8 +185,14 @@ fn admit_owner<E: OwnerEffects>(
 ) -> io::Result<(E::Lock, E::Listener)> {
     effects.prepare(state)?;
     let lock = effects.open_lock(state)?;
-    effects.acquire(&lock).map_err(|e| io::Error::new(io::ErrorKind::AddrInUse,
-            format!("Another supervisor owns this application state. Reconnect to it; do not remove owner.lock: {e}")))?;
+    effects.acquire(&lock).map_err(|e| {
+        if e.kind() == io::ErrorKind::WouldBlock {
+            io::Error::new(io::ErrorKind::AddrInUse,
+                format!("Another supervisor owns this application state. Reconnect to it; do not remove owner.lock: {e}"))
+        } else {
+            e
+        }
+    })?;
     let socket = socket_path(state);
     match effects.socket_info(&socket) {
         Ok(metadata) => {
