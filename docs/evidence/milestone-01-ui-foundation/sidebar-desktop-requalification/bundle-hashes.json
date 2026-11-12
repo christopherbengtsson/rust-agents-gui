@@ -1,0 +1,10 @@
+{
+  "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": "d269e1f2afba38a93a4724193ae18cf24027ce33eab0abfe4394ea47d043056c",
+  "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor": "c6e672cf42ace6f4c749a1fa64b9386bbc58423ef6927786441b85a46a321abb",
+  "target/release/workspace-desktop": "d269e1f2afba38a93a4724193ae18cf24027ce33eab0abfe4394ea47d043056c",
+  "target/release/workspace-supervisor": "c6e672cf42ace6f4c749a1fa64b9386bbc58423ef6927786441b85a46a321abb",
+  "src-tauri/gen/sidecar/workspace-supervisor": "c6e672cf42ace6f4c749a1fa64b9386bbc58423ef6927786441b85a46a321abb",
+  "dist/index.html": "2de19bb38401116fbaea7a4a3e123afd20cbe094c332ca07e64c6676566b95d4",
+  "dist/assets/index-DzO0iUHb.css": "84a1d530607a88f967d5fa681ec928e7b0338b508a66ece37f2266be4cb4a853",
+  "dist/assets/index-8PWl-ozw.js": "d33c477fe1d43110d857ca05269a992031d6990a0f43c1ac8f5fde7203910ce5"
+}

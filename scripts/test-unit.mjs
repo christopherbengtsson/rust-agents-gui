@@ -1,4 +1,4 @@
-// Compile only the core library unit harness, then execute it and the tooling units.
+// Compile only the core library unit harness; execute core, tooling and mocked-IPC UI units.
 import { spawnSync } from "node:child_process";
 import { readdirSync } from "node:fs";
 import { performance } from "node:perf_hooks";
@@ -41,6 +41,10 @@ const tooling = readdirSync(path.join(root, "scripts"))
 const commands = [
   [artifacts[0].executable, ["--test-threads=1"]],
   [process.execPath, ["--test", "--test-concurrency=1", ...tooling]],
+  [
+    process.execPath,
+    ["node_modules/vitest/vitest.mjs", "run", "--maxWorkers=1"],
+  ],
 ];
 for (const [command, args] of commands) {
   const durations = [];

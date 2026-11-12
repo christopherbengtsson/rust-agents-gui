@@ -11,25 +11,51 @@
     "dev": "node scripts/start.mjs dev",
     "start": "node scripts/start.mjs release",
     "build": "node scripts/build.mjs",
-    "frontend:dev": "vite --host 127.0.0.1 --port 1420 --strictPort",
+    "frontend:dev": "vite",
     "frontend:build": "tsc --noEmit && vite build",
     "compile": "node scripts/cargo.mjs check --locked --workspace",
     "check": "tsc --noEmit && node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
-    "format": "prettier --write src scripts package.json tsconfig.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all",
-    "format:check": "prettier --check src scripts package.json tsconfig.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check",
+    "format": "prettier --write src scripts package.json tsconfig.json vite.config.ts eslint.config.mjs components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all",
+    "format:check": "prettier --check src scripts package.json tsconfig.json vite.config.ts eslint.config.mjs components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check",
     "test": "node scripts/test-unit.mjs",
     "test:measure": "node scripts/test-unit.mjs --measure",
     "qualify:process": "node scripts/cargo.mjs test --locked -p workspace-supervisor --features process-qualification --test startup --test discovery -- --test-threads=1",
-    "verify": "corepack pnpm format:check && corepack pnpm check && corepack pnpm test",
-    "tauri": "tauri"
+    "verify": "corepack pnpm format:check && corepack pnpm lint && corepack pnpm check && corepack pnpm test",
+    "tauri": "tauri",
+    "test:ui": "vitest run --maxWorkers=1",
+    "lint": "eslint src --max-warnings 0"
   },
   "dependencies": {
-    "@tauri-apps/api": "2.12.4"
+    "@base-ui/react": "1.9.0",
+    "@tauri-apps/api": "2.12.4",
+    "class-variance-authority": "0.7.1",
+    "cn": "0.5.2",
+    "lucide-react": "1.72.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tw-animate-css": "1.4.0"
   },
   "devDependencies": {
+    "@babel/core": "8.1.2",
+    "@babel/eslint-parser": "8.1.2",
+    "@rolldown/plugin-babel": "0.3.1",
+    "@tailwindcss/vite": "4.3.5",
     "@tauri-apps/cli": "2.12.4",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.9",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "9.39.5",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "jsdom": "31.0.0",
     "prettier": "3.10.1",
+    "tailwindcss": "4.3.5",
     "typescript": "7.0.2",
-    "vite": "8.3.8"
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
   }
 }

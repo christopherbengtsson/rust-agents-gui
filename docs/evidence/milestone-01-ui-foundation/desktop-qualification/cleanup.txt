@@ -1,0 +1,5 @@
+All qualification-owned desktops and bundled supervisors stopped; zero owners for the three private state paths before removal. Removed only these disposable directories:
+/private/tmp/rag-ui-02a-current-qwo6rsqk
+/private/tmp/rag-ui-02a-initial-error-adajkuw2
+/private/tmp/rag-ui-02a-desktop-ecoe95k3
+Pre-existing debug supervisors were not touched. Initial CUA name lookup launched the retained release app in default state; its newly started desktop 77579 and supervisor 77584 were stopped before qualification. Default state was left on disk.

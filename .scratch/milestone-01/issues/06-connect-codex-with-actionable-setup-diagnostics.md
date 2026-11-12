@@ -12,7 +12,7 @@
 
 **Coverage:** A3 deterministic implementation; protocol/fixture prerequisite for A4–A5 and A7–A9.
 
-- [ ] Present runtime setup and connection/configuration status inside the established shell using shared fields, labels, controls and semantic status styling. Make missing-executable, incompatible-protocol and unavailable-authentication guidance readable and actionable without adding app-owned login or model-selection flows.
+- [ ] Present runtime setup and connection/configuration status in its own product composition within the established shell, distinct from `SupervisorConnection` transport diagnostics, using shared fields, labels, controls and semantic status styling. Make missing-executable, incompatible-protocol and unavailable-authentication guidance readable and actionable without adding app-owned login or model-selection flows.
 - [ ] Before adapter or fixture changes, select/record the supported Codex runtime version, inspect its official protocol/schema and retained evidence, and record schema/source revision and captured-versus-synthetic provenance beside fixtures.
 - [ ] Ground observer/approval-validation assumptions in the selected official schema and retained local evidence, preserving exact operation/request/turn matching. Qualify the selected cohort explicitly; archived repository inspection is not required.
 - [ ] Implement the concrete Codex stdio app-server adapter and deterministic fixture adapter at the same execution seam, using supported-version protocol behavior rather than guessed payloads.

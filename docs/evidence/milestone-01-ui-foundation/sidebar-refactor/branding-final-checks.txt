@@ -1,0 +1,24 @@
+$ corepack pnpm format:check
+$ prettier --check src scripts package.json tsconfig.json vite.config.ts components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+All matched files use Prettier code style!
+
+exit: 0; passed: True; wall_seconds: 0.542315
+$ git diff --check
+
+exit: 0; passed: True; wall_seconds: 0.007316
+$ git diff --cached --check
+
+exit: 0; passed: True; wall_seconds: 0.006641
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/branding-source-sha256.txt
+
+exit: 1; passed: True; wall_seconds: 0.004726
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/branding-frontend-build.txt
+
+exit: 1; passed: True; wall_seconds: 0.004508
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/branding-check-results.json
+
+exit: 1; passed: True; wall_seconds: 0.004622
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/branding-units.txt
+
+exit: 1; passed: True; wall_seconds: 0.003835

@@ -1,0 +1,43 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost#workspace
+			3 container Repository sidebar
+				4 text Connection error
+			5 container
+				6 button
+				7 container Supervisor connection
+					8 heading Supervisor connection, Value: 2
+						9 text Supervisor connection
+					10 text Local connection and process diagnostics.
+					11 text Connection error
+					12 text Cannot read supervisor observations: Connection refused (os error 61). Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.
+					13 container Last successful observation
+						14 heading Last successful observation · may be stale, Value: 3
+							15 text Last successful observation · may be stale
+						16 description list
+							17 text Supervisor process
+							18 text 93566
+							19 text Desktop process
+							20 text 93561
+							21 text Application version
+							22 text 0.1.0
+							23 text Owner identity
+							24 text 93566-1794526246343195000
+							25 text Snapshot revision
+							26 text 1
+					27 button Close
+				28 button
+	29 close button
+	30 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	31 minimize button
+	32 text Agent Workspace
+33 menu bar
+	34 Agent Workspace
+	35 File
+	36 Edit
+	37 View
+	38 Window
+	39 Help
+
+The focused UI element is 27 button Close

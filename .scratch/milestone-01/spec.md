@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 
-Implementation baseline: tickets 01–02 are complete. Product behavior in tickets 03–13 is not implemented; ticket 03's verification gate was brought forward for current testing-policy alignment.
+Implementation baseline: tickets 01–02 and 02a are complete. Product behavior in tickets 03–13 is not implemented; ticket 03's verification gate was brought forward for current testing-policy alignment.
 
 ## Problem Statement
 
@@ -67,9 +67,10 @@ Deliver this as one implementation spec with session-sized implementation ticket
 
 ### Incremental UI foundation
 
-- Insert [ticket 02a](issues/02a-establish-incremental-ui-foundation.md) after completed ticket 02 and before ticket 03. Establish the application shell and preserve its working supervisor connection before adding repository registration.
+- Extend the shell established by completed [ticket 02a](issues/02a-establish-incremental-ui-foundation.md); retain its [desktop qualification](../../docs/evidence/milestone-01-sidebar-refactor.md) and subsequent [shell block refactor evidence](../../docs/evidence/shell-blocks-refactor.md).
 - Use Conductor's compact dark desktop composition as the initial reference, with consistent typography, spacing, surfaces, focus and semantic state styling. Ticket 02a defines the project-specific visual-reference artifacts and how to distinguish proposed content from implemented behavior.
 - Add components as working screens need them. Repository/workspace navigation, change inspection, chat and recovery extend the same shell in their existing tickets; full desktop qualification remains ticket 12.
+- Before extending or reviewing frontend components, read the [component guide](../../src/components/README.md) and use the [React skill](../../.agents/skills/react-engineering/SKILL.md). They own component placement, styling contracts, and observation lifecycles. `App` coordinates shared observations and composes `RepositorySidebar` and `WorkspacePanel`; `SupervisorConnection` owns supervisor status and diagnostics. Keep feature observations and frequent streaming updates near their consumers rather than accumulating them in `App`.
 - For common controls, forms, overlays and status presentation, use the established shadcn/Base UI components and shared tokens under the [repository-local shadcn skill](../../.agents/skills/shadcn/SKILL.md). Keep feature composition and exact operation/identity semantics application-owned; add components only when the working feature needs them.
 - Each behavior ticket delivers its relevant visual states within the shared shell, including empty/loading/error/uncertain states where applicable. Retain feature-level desktop evidence as required by its ticket; ticket 12 qualifies the accumulated UI for consistency, keyboard use and window sizing rather than first composing it. Automated coverage and actual-desktop qualification remain separate under the repository testing policy.
 - Keep presentation state separate from authoritative Rust execution/recovery policy. Bound streaming/history views as those capabilities arrive and qualify responsiveness with representative actual-desktop workloads; framework selection is not performance evidence.
@@ -118,7 +119,7 @@ Deliver this as one implementation spec with session-sized implementation ticket
 
 ## Testing Decisions
 
-Follow [testing and verification](../../docs/agents/verification.md) for automated test design and skill constraints. The A1–A10 table below lists behaviors to cover; it does not choose dependency realism. Actual desktop and native qualification follow the milestone's separate stages. Apply this policy from the first tests of each ticket.
+Follow [testing and verification](../../docs/agents/verification.md) for automated test design and skill constraints. Use the current configured verification gate in `package.json` under that policy. The A1–A10 table below lists behaviors to cover; it does not choose dependency realism. Actual desktop and native qualification follow the milestone's separate stages. Apply this policy from the first tests of each ticket.
 
 | Acceptance               | Required coverage                                                                                                                                                                                                             |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

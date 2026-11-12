@@ -1,0 +1,42 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost#workspace
+			3 container Repository sidebar
+				4 text Connected
+			5 container
+				6 button
+				7 container Supervisor connection
+					8 heading Supervisor connection, Value: 2
+						9 text Supervisor connection
+					10 text Local connection and process diagnostics.
+					11 text Connected
+					12 container Current observation
+						13 heading Current observation, Value: 3
+							14 text Current observation
+						15 description list
+							16 text Supervisor process
+							17 text 88884
+							18 text Desktop process
+							19 text 88878
+							20 text Application version
+							21 text 0.1.0
+							22 text Owner identity
+							23 text 88884-1794524236080516000
+							24 text Snapshot revision
+							25 text 1
+					26 button Close
+				27 button
+	28 close button
+	29 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	30 minimize button
+	31 text Agent Workspace
+32 menu bar
+	33 Agent Workspace
+	34 File
+	35 Edit
+	36 View
+	37 Window
+	38 Help
+
+The focused UI element is 26 button Close

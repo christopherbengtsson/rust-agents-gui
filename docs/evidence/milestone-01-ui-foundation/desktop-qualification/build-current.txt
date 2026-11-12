@@ -1,0 +1,26 @@
+$ node scripts/build.mjs
+    Finished `release` profile [optimized] target(s) in 0.05s
+$ tauri build --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ tsc --noEmit && vite build
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 2251 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.27 kB
+dist/assets/index-CLaiSK3O.css   41.39 kB │ gzip:   8.40 kB
+dist/assets/index-DcNlVMhu.js   328.59 kB │ gzip: 106.50 kB
+
+✓ built in 311ms
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+    Finished `release` profile [optimized] target(s) in 8.01s
+       Built application at: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-desktop
+    Bundling Agent Workspace.app (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app)
+    Finished 1 bundle at:
+        /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app (10.40 MiB)
+
+real 9.52
+user 36.66
+sys 1.63

@@ -1,0 +1,6 @@
+$ prettier --check src scripts package.json tsconfig.json vite.config.ts components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+All matched files use Prettier code style!
+
+exit: 0
+wall_seconds: 0.582787

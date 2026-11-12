@@ -1,0 +1,5 @@
+Initial HEAD 46d8656483f19c19089dd3fa8c3a954f71235dcd; initial tracked, staged, unstaged and untracked status clean.
+Whole working-tree product inputs enumerated from git ls-files plus git ls-files --others --exclude-standard; no checkout/reset/stash/index mutation.
+Before/after product/source SHA-256 manifests match. Full index entries match before snapshot.
+Fresh release packaging rebuilt workspace-desktop after TypeScript/Vite assets. Bundled desktop equals target/release/workspace-desktop; bundled sidecar equals Cargo-reported executable and staged/provenance SHA-256. All binary/dist hashes remain unchanged after actual desktop checks.
+Direct packaged executable launch with AGENT_WORKSPACE_STATE_DIR private state and AGENT_WORKSPACE_SUPERVISOR absent; diagnostics Desktop process matches launched PID. Production tauri://localhost UI contains official Sidebar refactor and nested branding content; unchanged configured production CSP.

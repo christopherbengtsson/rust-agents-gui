@@ -1,0 +1,5 @@
+737cf4841ffddef9776c924b96b8716d3eb6c1d8c2c7f068ba8f7d34e0e7483e  src/App.tsx
+1164a72109ae246b53ddb653299b638784fe0badbd105417ff1164423c231724  src/style.css
+7df12fcfa275b7dbbdb65e3ef89bd507e9f15884517ff680c5891413d4ac7450  src/App.test.tsx
+2ef991901d2ed52a4ceb0c382eabba9a5d7b1ef65b3510c1ad0c1d4caa3f6eaf  src/hooks/use-supervisor-connection.ts
+3643da889b18a118abfcb96de4ccb791e8c04aeeed142e975f7816f058d46969  src/components/supervisor-connection.tsx

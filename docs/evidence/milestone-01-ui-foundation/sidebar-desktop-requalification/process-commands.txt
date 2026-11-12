@@ -1,0 +1,42 @@
+$ python3 (subprocess.Popen)
+{
+  "argv": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop"
+  ],
+  "envChanges": {
+    "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/rag-02a-sidebar-5i4kosut",
+    "AGENT_WORKSPACE_SUPERVISOR": "absent"
+  },
+  "start_new_session": true,
+  "stdout": "desktop.log",
+  "pid": 88878
+}
+$ ps -p 88878,88884 -o pid,ppid,stat,lstart,command
+  PID  PPID STAT STARTED                      COMMAND
+88878     1 Ss   Thu Nov 12 23:57:15 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop
+88884 88878 S    Thu Nov 12 23:57:16 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-02a-sidebar-5i4kosut
+$ kill -STOP 88884
+Validated command: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-02a-sidebar-5i4kosut
+$ kill -CONT 88884
+Validated command: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-02a-sidebar-5i4kosut
+$ kill -KILL 88878
+Validated command: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop
+$ ps -axo pid,ppid,stat,command (exact test-state filter)
+88884     1 S    /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-02a-sidebar-5i4kosut
+$ python3 subprocess.Popen {"argv": ["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop"], "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/rag-02a-sidebar-5i4kosut", "AGENT_WORKSPACE_SUPERVISOR": "absent", "pid": 89299}
+$ ps -p 89299,88884 -o pid,ppid,stat,lstart,command
+  PID  PPID STAT STARTED                      COMMAND
+88884     1 S    Thu Nov 12 23:57:16 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-02a-sidebar-5i4kosut
+89299     1 Ss   Thu Nov 12 23:59:49 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop
+Exact-state supervisor count after reconnect: 1
+$ kill -TERM 88884
+Validated command: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-02a-sidebar-5i4kosut
+$ ps -axo pid,ppid,stat,command (exact test-state filter)
+Supervisor count after failed retry: 0
+$ kill -TERM 89299
+Validated command: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop
+$ python3 tempfile.mkdtemp /private/tmp/rag-02a-sidebar-initial-*
+$ chmod 500 /private/tmp/rag-02a-sidebar-initial-pmqt7jzx
+$ python3 subprocess.Popen {"argv": ["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop"], "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/rag-02a-sidebar-initial-pmqt7jzx", "AGENT_WORKSPACE_SUPERVISOR": "absent", "pid": 89346}
+$ chmod 700 /private/tmp/rag-02a-sidebar-initial-pmqt7jzx
+Supervisor count before explicit initial-error retry: 0

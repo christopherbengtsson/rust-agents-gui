@@ -1,0 +1,15 @@
+$ corepack pnpm frontend:build
+$ tsc --noEmit && vite build
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 2342 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.27 kB
+dist/assets/index-DzO0iUHb.css   64.99 kB │ gzip:  11.86 kB
+dist/assets/index-8PWl-ozw.js   340.59 kB │ gzip: 109.29 kB
+
+✓ built in 380ms
+
+exit: 0
+wall_seconds: 0.817537

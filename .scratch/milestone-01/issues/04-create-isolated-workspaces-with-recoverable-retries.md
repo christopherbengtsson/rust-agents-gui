@@ -12,7 +12,7 @@
 
 **Coverage:** A2 and workspace-creation portion of A10.
 
-- [ ] Extend the shared sidebar/navigation with workspace entries and selected-workspace context. Present base-commit selection and creation actions using the established controls, keeping branch, path and provider readable.
+- [ ] Extend `RepositorySidebar` with workspace entries and `WorkspacePanel` with selected-workspace context. Coordinate selection above its consumers while preserving observation owners across selection changes. Present base-commit selection and creation actions using the established controls, keeping branch, path and provider readable.
 - [ ] Show creation progress, known partial artifacts and failed/uncertain outcomes in the same workspace flow with explicit recovery actions reflecting core observations; retain selection/context so a failed operation remains understandable.
 - [ ] Resolve the selected local base to an identified commit; create the separate branch/worktree and display workspace path, branch, and provider.
 - [ ] Persist workspace identity, pinned base, action intent, and sufficient partial-creation evidence before effects; retain identity across restart.

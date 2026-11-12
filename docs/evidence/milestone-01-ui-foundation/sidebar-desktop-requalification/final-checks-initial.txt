@@ -1,0 +1,14 @@
+$ ['corepack', 'pnpm', 'exec', 'prettier', '--check', 'README.md', 'docs/evidence/milestone-01-ui-foundation.md', 'docs/evidence/milestone-01-sidebar-refactor.md', 'docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification']
+Checking formatting...
+All matched files use Prettier code style!
+exit 0
+
+$ ['git', 'diff', '--check']
+exit 0
+
+$ ['git', 'diff', '--cached', '--check']
+exit 0
+
+Added text files checked with git diff --no-index --check -- /dev/null FILE (0/1 accepted only with no whitespace diagnostics).
+[('docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt', 3, 'docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:1: trailing whitespace.\n+/private/tmp/rag-02a-pixel-inspection.swift:3:17: error: no exact matches in call to initializer \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:5: trailing whitespace.\n+   |                 `- error: no exact matches in call to initializer \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:11: trailing whitespace.\n+ 80 | \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:14: trailing whitespace.\n+ 82 | \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:17: trailing whitespace.\n+ 89 | \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:21: trailing whitespace.\n+ 92 | \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:26: trailing whitespace.\n+ 40 | \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:31: trailing whitespace.\n+ 43 | \ndocs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/geometry-failed.txt:32: trailing whitespace.\n+ 44 | /* Drawing methods. draw is the only primitive.  \n')]
+WALL so far 0.506457 seconds

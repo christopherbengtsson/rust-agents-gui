@@ -1,0 +1,14 @@
+sidebar
+  - docs      https://ui.shadcn.com/docs/components/base/sidebar
+  - examples  https://ui.shadcn.com/code/apps/v4/registry/bases/base/examples/sidebar-example.tsx
+
+dialog
+  - docs      https://ui.shadcn.com/docs/components/base/dialog
+  - examples  https://ui.shadcn.com/code/apps/v4/registry/bases/base/examples/dialog-example.tsx
+  - api       https://base-ui.com/react/components/dialog.md
+
+button
+  - docs      https://ui.shadcn.com/docs/components/base/button
+  - examples  https://ui.shadcn.com/code/apps/v4/registry/bases/base/examples/button-example.tsx
+
+Done in 660ms using pnpm v12.18.0

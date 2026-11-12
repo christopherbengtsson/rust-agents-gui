@@ -1,0 +1,2 @@
+After supervisor SIGTERM and two explicit status retries: zero supervisor processes for /private/tmp/rag-ui-02a-current-qwo6rsqk.
+Desktop 78599 remained running; UI retained stale owner and reopen guidance.

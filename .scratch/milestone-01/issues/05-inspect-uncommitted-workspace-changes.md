@@ -12,7 +12,7 @@
 
 **Coverage:** A6. Full changes against the workspace base and inline feedback remain deferred.
 
-- [ ] Add change inspection to the established workspace composition with keyboard-reachable file selection, a readable selected-file diff and visible comparison identity; preserve access to workspace navigation.
+- [ ] Add change inspection as a focused product block within `WorkspacePanel`, with keyboard-reachable file selection, a readable selected-file diff and visible comparison identity; preserve access to workspace navigation.
 - [ ] Apply the shared empty/loading/error and unsupported-content patterns to the changes region. Keep long diffs/previews bounded and readable, and label a retained last-good result when refresh fails.
 - [ ] Show a changed-file list and readable text diffs for modifications, new files, and deletions in the selected workspace.
 - [ ] Identify the comparison shown and refresh it after further edits, including fixture/agent edits once chat is integrated.

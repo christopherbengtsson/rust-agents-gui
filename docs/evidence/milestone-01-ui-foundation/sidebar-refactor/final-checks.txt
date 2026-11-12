@@ -1,0 +1,48 @@
+Initial wrapper stopped on the new evidence file: no-index --check exit 1, no diagnostics. Corrected handling below: no-index permits normal difference status 1 only with empty diagnostic output.
+$ corepack pnpm exec prettier --check README.md docs/evidence/milestone-01-sidebar-refactor.md docs/evidence/milestone-01-ui-foundation.md .scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md
+Checking formatting...
+All matched files use Prettier code style!
+
+exit: 0; passed: True; wall_seconds: 0.172185
+$ git diff --check
+
+exit: 0; passed: True; wall_seconds: 0.006608
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-sidebar-refactor.md
+
+exit: 1; passed: True; wall_seconds: 0.004487
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/environment-and-registry.txt
+
+exit: 1; passed: True; wall_seconds: 0.004821
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/format-check.txt
+
+exit: 1; passed: True; wall_seconds: 0.003965
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/frontend-build.txt
+
+exit: 1; passed: True; wall_seconds: 0.003670
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/source-sha256.txt
+
+exit: 1; passed: True; wall_seconds: 0.003599
+$ git diff --no-index --check /dev/null docs/evidence/milestone-01-ui-foundation/sidebar-refactor/units.txt
+
+exit: 1; passed: True; wall_seconds: 0.003440
+$ git diff --no-index --check /dev/null src/components/ui/input.tsx
+
+exit: 1; passed: True; wall_seconds: 0.003422
+$ git diff --no-index --check /dev/null src/components/ui/separator.tsx
+
+exit: 1; passed: True; wall_seconds: 0.003401
+$ git diff --no-index --check /dev/null src/components/ui/sheet.tsx
+
+exit: 1; passed: True; wall_seconds: 0.003384
+$ git diff --no-index --check /dev/null src/components/ui/sidebar.tsx
+
+exit: 1; passed: True; wall_seconds: 0.003684
+$ git diff --no-index --check /dev/null src/components/ui/skeleton.tsx
+
+exit: 1; passed: True; wall_seconds: 0.004359
+$ git diff --no-index --check /dev/null src/components/ui/tooltip.tsx
+
+exit: 1; passed: True; wall_seconds: 0.003952
+$ git diff --no-index --check /dev/null src/hooks/use-mobile.ts
+
+exit: 1; passed: True; wall_seconds: 0.003468

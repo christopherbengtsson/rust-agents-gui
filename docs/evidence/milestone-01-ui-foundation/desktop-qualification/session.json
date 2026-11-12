@@ -1,0 +1,31 @@
+{
+  "state": "/private/tmp/rag-ui-02a-current-qwo6rsqk",
+  "desktopPid": 78366,
+  "app": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app",
+  "source": "4420328f2ab2fdf97e0524817d0b94fbafbd99db",
+  "dirty": true,
+  "dirtyScope": "qualification artifacts only; no product source changes",
+  "binaryHashes": {
+    "target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": "44700e9fc5527331e303343d7658195c47f6aef2536a8acde37a8a5f8a62d678",
+    "target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor": "c6e672cf42ace6f4c749a1fa64b9386bbc58423ef6927786441b85a46a321abb"
+  },
+  "supervisorPid": 78396,
+  "owner": "78396-1794521017360729000",
+  "reopenedDesktopPid": 78599,
+  "initialErrorState": "/private/tmp/rag-ui-02a-initial-error-adajkuw2",
+  "initialErrorDesktopPid": 78638,
+  "initialErrorSupervisorPid": 78665,
+  "initialErrorOwner": "78665-1794521277639272000",
+  "cleanup": [
+    {
+      "pid": 78638,
+      "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 78665,
+      "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-ui-02a-initial-error-adajkuw2",
+      "signal": "SIGTERM"
+    }
+  ]
+}

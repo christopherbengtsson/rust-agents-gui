@@ -1,0 +1,17 @@
+$ kill -TERM 89346
+Validated exact bundled desktop command before signaling.
+$ kill -TERM 89374
+Validated exact bundled supervisor command plus /private/tmp/rag-02a-sidebar-initial-pmqt7jzx before signaling.
+Initial cleanup recorder failed parsing ps header PID; signals had succeeded, neither state was removed. Corrected recorder skips header.
+$ ps -axo pid,ppid,stat,command
+All 5 qualification-owned PIDs absent; zero supervisors for either disposable state.
+Before removal /private/tmp/rag-02a-sidebar-5i4kosut: [('supervisor.sock', '0o600'), ('owner.lock', '0o600')]
+$ python3 shutil.rmtree('/private/tmp/rag-02a-sidebar-5i4kosut') AFTER process absence confirmed: removed
+Before removal /private/tmp/rag-02a-sidebar-initial-pmqt7jzx: [('supervisor.sock', '0o600'), ('owner.lock', '0o600')]
+$ python3 shutil.rmtree('/private/tmp/rag-02a-sidebar-initial-pmqt7jzx') AFTER process absence confirmed: removed
+Pre-existing processes left untouched:
+54169     1 S    /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor /tmp/.tmpz9rOZq
+54170     1 S    /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor /tmp/.tmpeqnfcV
+54174     1 S    /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor /tmp/.tmpWYfnCZ
+54175     1 S    /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor /tmp/.tmpEnFasA
+85891     1 S    /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor /Users/christopherbengtsson/Library/Application Support/AgentWorkspace

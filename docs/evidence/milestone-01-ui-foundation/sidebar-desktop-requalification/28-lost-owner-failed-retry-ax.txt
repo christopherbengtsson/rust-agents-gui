@@ -1,0 +1,38 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 text No repositories yet
+				10 text Connection error
+				11 pop up button Connection details
+			12 container
+				13 heading Workspace, Value: 1
+					14 text Workspace
+				15 button Retry connection
+				16 text Cannot reach the supervisor
+				17 text Cannot read supervisor observations: Connection refused (os error 61). Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.
+				18 text After addressing the error, retry the connection to retrieve its status.
+				19 heading A place for your next change, Value: 2
+					20 text A place for your next change
+				21 text Your repositories and workspaces will live here. Repository registration is coming next.
+				22 text Local workspace
+				23 text No workspace selected
+	24 close button
+	25 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	26 minimize button
+	27 text Agent Workspace
+28 menu bar
+	29 Agent Workspace
+	30 File
+	31 Edit
+	32 View
+	33 Window
+	34 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost

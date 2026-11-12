@@ -1,0 +1,28 @@
+$ ['corepack', 'pnpm', 'exec', 'prettier', '--check', 'README.md', 'docs/evidence/milestone-01-ui-foundation.md', 'docs/evidence/milestone-01-sidebar-refactor.md', 'docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification']
+Checking formatting...
+All matched files use Prettier code style!
+exit 0
+
+$ ['git', 'diff', '--check']
+exit 0
+
+$ ['git', 'diff', '--cached', '--check']
+exit 0
+
+PASS 64 added text files: git diff --no-index --check -- /dev/null FILE; 0/1 accepted only without whitespace diagnostics.
+
+PASS 142 local Markdown link targets across 5 touched documents.
+
+PASS 83 product/source hashes unchanged; before/after manifests equal; index unchanged; all bundled binaries/dist hashes unchanged; 37 raw JPEG hashes match retained manifest.
+
+PASS both disposable state directories removed after owned processes stopped (cleanup.txt).
+
+Final status:
+ M .scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md
+ M README.md
+ M docs/MILESTONE-01.md
+ M docs/evidence/milestone-01-sidebar-refactor.md
+ M docs/evidence/milestone-01-ui-foundation.md
+?? docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/
+
+EXIT 0; WALL 0.520817 seconds

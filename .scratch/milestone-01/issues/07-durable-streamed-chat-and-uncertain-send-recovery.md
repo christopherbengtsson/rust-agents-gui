@@ -12,7 +12,7 @@
 
 **Coverage:** A4; active-work desktop reconnect in A8; creation/send identity, admission, and reconciliation in A10.
 
-- [ ] Build the transcript, tool-activity presentation and multiline composer within the established workspace layout using appropriate shadcn composition patterns and shared tokens. Keep the selected workspace/conversation and saved/received/uncertain delivery states legible.
+- [ ] Build the transcript, tool-activity presentation and multiline composer within the established workspace layout using appropriate shadcn composition patterns and shared tokens. Give conversation observations and frequent streaming updates a focused owner near the chat UI. Keep the selected workspace/conversation and saved/received/uncertain delivery states legible.
 - [ ] Keep composer input and workspace navigation usable during streaming. Localize changing-response updates, bound mounted history as needed, and preserve readable scrolling/catch-up feedback without rebuilding unrelated shell views on every text update.
 - [ ] Provide a usable desktop chat/composer and streamed text/tool/error observations through the core interface and real supervisor connection.
 - [ ] Persist separate workspace, application/native conversation, turn, action, and process identities; retain native mapping and durable transcript history outside project files.

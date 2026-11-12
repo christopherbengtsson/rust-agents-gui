@@ -31,6 +31,8 @@ For Rust module or interface design, consult [design principles](https://rust-un
 
 ### UI engineering
 
+Before creating, choosing, styling, moving, updating, or reviewing frontend components, read the [component guide](src/components/README.md). It owns component layers, design tokens, styling contracts, and custom component decisions.
+For React/TypeScript frontend implementation, refactoring, and review, use [react-engineering](.agents/skills/react-engineering/SKILL.md).
 For shadcn/ui component implementation and customization, use [shadcn](.agents/skills/shadcn/SKILL.md). Add components as working screens need them under the agreed milestone scope.
 
 ### Issue tracker

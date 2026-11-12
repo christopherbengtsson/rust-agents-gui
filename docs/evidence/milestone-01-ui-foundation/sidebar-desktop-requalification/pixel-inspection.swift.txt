@@ -1,0 +1,10 @@
+import AppKit
+for file in CommandLine.arguments.dropFirst() {
+    let image = NSBitmapImageRep(data: try Data(contentsOf: URL(fileURLWithPath: file)))!
+    print(file, image.pixelsWide, image.pixelsHigh)
+    let seam = image.pixelsWide == 1800 ? 408 : 344
+    for x in (seam - 5)...(seam + 3) {
+        let c = image.colorAt(x: x, y: 400)!.usingColorSpace(NSColorSpace.deviceRGB)!
+        print(x, Int((c.redComponent * 255).rounded()), Int((c.greenComponent * 255).rounded()), Int((c.blueComponent * 255).rounded()))
+    }
+}

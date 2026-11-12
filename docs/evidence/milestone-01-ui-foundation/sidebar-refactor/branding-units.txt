@@ -1,0 +1,14 @@
+$ corepack pnpm test:ui
+$ vitest run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:52:39
+   Duration  955ms (environment 34%, import 23%, tests 22%, transform 21%)
+
+
+exit: 0
+wall_seconds: 1.189088

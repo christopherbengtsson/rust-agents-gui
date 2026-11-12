@@ -1,0 +1,212 @@
+[
+  {
+    "path": "24-current-ordinary-diagnostics.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "5bc6969b3854a983ee54d6252adfe0531caa11a3a1e6948ff073c0a94aa20396"
+  },
+  {
+    "path": "25-current-skip-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "02fa9bccb8f36bd6278acda2236fadfe3ef522508be7e422b0ca175df8b386df"
+  },
+  {
+    "path": "26-current-workspace-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "46e84b1d9ab0c6c848ba4063d5bbf9be40fdf79d4e8fcb675aa5d9327dce264a"
+  },
+  {
+    "path": "27-current-refresh-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "1dae3560335087e5f2d4a3cb4ebbb8592e22446122391bf0e9c4d717d11824f9"
+  },
+  {
+    "path": "28-current-minimum-connected.jpg",
+    "pixels": [1200, 960],
+    "sha256": "8c9be591e3c4977ce83d1d95279f1c1b44250f4845e7cc439dc2b97ca4598a15"
+  },
+  {
+    "path": "29-current-minimum-diagnostics.jpg",
+    "pixels": [1200, 960],
+    "sha256": "80543b4762f277a16e7b36df7e8ab988c55296c596e3cc39fc170ae126117b76"
+  },
+  {
+    "path": "30-current-content-600x480.jpg",
+    "pixels": [1200, 1024],
+    "sha256": "23f433b18efa9ebab1cf26a2638a00a0ac7df61a1abc97a77011a10819ac4dbb"
+  },
+  {
+    "path": "31-current-minimum-checking.jpg",
+    "pixels": [1200, 960],
+    "sha256": "ebb655cca07faa50a19fc9f0190e719b763c716b353afc87bbf7c87aacd773d0"
+  },
+  {
+    "path": "32-current-minimum-timeout-error.jpg",
+    "pixels": [1200, 960],
+    "sha256": "b594f77f9bec329e235cc62f561368608e570f358c8a329bb7a4fe1f1535a8ea"
+  },
+  {
+    "path": "33-current-minimum-stale-diagnostics.jpg",
+    "pixels": [1200, 960],
+    "sha256": "b1de78d848c5d079dd458d52cb6d2e740c38107432478e43c2e18dc0cb12e840"
+  },
+  {
+    "path": "34-current-ordinary-timeout-error.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "91382fd1ae56a403144c0835e21d74d77fbe01c2af84671b2d5821e6e7ca350e"
+  },
+  {
+    "path": "35-current-content-900x680-error.jpg",
+    "pixels": [1800, 1424],
+    "sha256": "ab12208f2282bfc3beb179ff027648fca79323e66aef680e7ceaa5b56ae5d8a8"
+  },
+  {
+    "path": "36-current-content-900x680-recovered.jpg",
+    "pixels": [1800, 1424],
+    "sha256": "ec88123771c4797f36030affb4b1b4d94a3fa88393346518f4c020e809e717db"
+  },
+  {
+    "path": "37-current-crash-reconnect.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "0ae2dae21ea1eb4f6ea50f8285b3dd212fb7880d469ea68baf58db64eb233f11"
+  },
+  {
+    "path": "38-current-lost-owner-error.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "af47abe5ac104237c25a291cbf48a3a1440b99aa1d17c533c84fe33bbf04460b"
+  },
+  {
+    "path": "39-current-lost-owner-stale-details.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "a2677d9ad80b965fd21ca6c21db0dd92459a39ad16b7cc54dfee6f25a728303f"
+  },
+  {
+    "path": "40-current-initial-permission-error.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "04badc4fd17375329419a2cb7f9e20b70993d4df16c04e30f935a49e5afbfddc"
+  },
+  {
+    "path": "41-current-no-observation-diagnostics.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "4757595dac3293ce281af56a8ad33b837884e6ccf3ff1027e3aea85e0a91f177"
+  },
+  {
+    "path": "42-current-initial-error-retry-recovered.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "c25fd5ecf779e2d026c0ea3ac5ed4184c0102524b635420e12dcca2e243e2e23"
+  },
+  {
+    "path": "early-current-captures/16-current-ordinary-connected.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "1c4cedc0ee8328313b1382c5182beea58ab742a32dfc03e4597884bfdbd7a723"
+  },
+  {
+    "path": "early-current-captures/17-current-skip-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "140c97eb098c6ea5cdd69f2a24bf8cc1ccd97086ac9bd90a55d9bd896c2d5d39"
+  },
+  {
+    "path": "early-current-captures/18-current-workspace-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "aae4c67b371fc3a0c1de6be01c28da439b65a921c671e2b5e7b51299a82eabd1"
+  },
+  {
+    "path": "early-current-captures/19-current-refresh-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "5211ee8366d1754bc666c6bfd83fcabbeef1e194461586895676d86f9dc02777"
+  },
+  {
+    "path": "early-current-captures/20-current-ordinary-diagnostics-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "29483295a2bc32decce67d915222afd9e4d926fa298d7b587164d5941a553522"
+  },
+  {
+    "path": "early-current-captures/21-current-dialog-return-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "a408e29045f14840dab10396c956f8f23ccfb63c3920289546add4b4a65e6ce0"
+  },
+  {
+    "path": "early-current-captures/22-current-ordinary-stable.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "a408e29045f14840dab10396c956f8f23ccfb63c3920289546add4b4a65e6ce0"
+  },
+  {
+    "path": "early-current-captures/23-current-skip-focus-stable.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "066e24c29379af75624fc466182c853c5e525b101c6f028b8a2e055f5afcf71d"
+  },
+  {
+    "path": "pre-rebuild/01-ordinary-connected.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "0622216140135ccbbe9657b7e2d34b449cb87945535375540d938277467084a7"
+  },
+  {
+    "path": "pre-rebuild/02-skip-link-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "25a4cae1b5598d913d74919507e5391a4529ff45a150b7eb2f7a1989612a76b5"
+  },
+  {
+    "path": "pre-rebuild/03-workspace-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "7461ec8689bc52ead0501d85188798ee071fead551d36769ed4363196b5a106a"
+  },
+  {
+    "path": "pre-rebuild/04-refresh-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "55bb820c60a56e6b965201340d7e9743e9d75d02ab6c8cb95dab4bf485488ef0"
+  },
+  {
+    "path": "pre-rebuild/05-details-trigger-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "a408e29045f14840dab10396c956f8f23ccfb63c3920289546add4b4a65e6ce0"
+  },
+  {
+    "path": "pre-rebuild/06-ordinary-diagnostics.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "804e7b8efe6294e7822938af59e732e441b1076211d4e55a79e8e68cdeec49f5"
+  },
+  {
+    "path": "pre-rebuild/07-dialog-return-focus.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "a408e29045f14840dab10396c956f8f23ccfb63c3920289546add4b4a65e6ce0"
+  },
+  {
+    "path": "pre-rebuild/08-minimum-connected.jpg",
+    "pixels": [1200, 960],
+    "sha256": "43d5daf6badd36b28f55681045cc53794876558b3fd1f41b20449974871e885f"
+  },
+  {
+    "path": "pre-rebuild/09-minimum-diagnostics.jpg",
+    "pixels": [1200, 960],
+    "sha256": "6ede090f2386d4ac46ef25937199b61156b5a4b4ee268150d1c287b69ce92a64"
+  },
+  {
+    "path": "pre-rebuild/10-minimum-dialog-keyboard-focus.jpg",
+    "pixels": [1200, 960],
+    "sha256": "050ccf02c7aae9fc6357f3f7bd1de0e67238a305f461bc45f71fb3a48c2ae6f2"
+  },
+  {
+    "path": "pre-rebuild/11-minimum-checking.jpg",
+    "pixels": [1200, 960],
+    "sha256": "649b783a77171423813b57af19ae8d0015dd834c2bfb2dcf5bf790f4cd9b9d20"
+  },
+  {
+    "path": "pre-rebuild/12-minimum-timeout-error.jpg",
+    "pixels": [1200, 960],
+    "sha256": "a901cab8b4802ec128527b9e397eca545ea41fc804cdc647f142857607eeb290"
+  },
+  {
+    "path": "pre-rebuild/13-minimum-stale-diagnostics.jpg",
+    "pixels": [1200, 960],
+    "sha256": "197a052a52e4bb18084879f80782002501943f6def4894bdbf7f1148286777e6"
+  },
+  {
+    "path": "pre-rebuild/14-minimum-retry-recovered.jpg",
+    "pixels": [1200, 960],
+    "sha256": "0e7b7fb4557369fbb03d50f6006dfcab1cc0d007b21e5865bbd0c67f4627d83c"
+  },
+  {
+    "path": "pre-rebuild/15-pre-rebuild-crash-reconnect.jpg",
+    "pixels": [1800, 1360],
+    "sha256": "dbcf18d5b37618de1821b21ede1ae1949019f0ecde9ba7e3a817115b681123f2"
+  }
+]

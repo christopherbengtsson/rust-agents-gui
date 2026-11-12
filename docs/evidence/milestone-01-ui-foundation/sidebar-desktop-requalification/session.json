@@ -1,0 +1,19 @@
+{
+  "source": "46d8656483f19c19089dd3fa8c3a954f71235dcd",
+  "app": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app",
+  "state": "/private/tmp/rag-02a-sidebar-5i4kosut",
+  "desktopPid": 88878,
+  "supervisorOverride": null,
+  "stateMode": "0700",
+  "buildProfile": "release",
+  "target": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+  "supervisorPid": 88884,
+  "owner": "88884-1794524236080516000",
+  "revision": 1,
+  "reopenedDesktopPid": 89299,
+  "initialErrorState": "/private/tmp/rag-02a-sidebar-initial-pmqt7jzx",
+  "initialErrorDesktopPid": 89346,
+  "initialErrorSupervisorPid": 89374,
+  "initialErrorOwner": "89374-1794524475206736000",
+  "cleanup": "all qualification-owned processes stopped/absent before either private state was removed"
+}

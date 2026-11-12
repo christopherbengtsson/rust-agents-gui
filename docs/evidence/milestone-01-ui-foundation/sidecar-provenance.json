@@ -1,0 +1,15 @@
+{
+  "sourceRevision": "31dca30e86d88d13d280733a8ec1234c3f22add9",
+  "dirty": true,
+  "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+  "profile": "release",
+  "cargoProfile": {
+    "opt_level": "3",
+    "debuginfo": 0,
+    "debug_assertions": false,
+    "overflow_checks": false,
+    "test": false
+  },
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "sha256": "c6e672cf42ace6f4c749a1fa64b9386bbc58423ef6927786441b85a46a321abb"
+}

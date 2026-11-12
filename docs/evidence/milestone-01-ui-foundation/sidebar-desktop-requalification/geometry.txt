@@ -1,0 +1,20 @@
+docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/03-ordinary-resized.jpg 1800 1424
+403 30 29 35
+404 30 29 35
+405 30 29 35
+406 73 72 77
+407 73 72 77
+408 36 35 40
+409 36 35 40
+410 36 35 40
+411 36 35 40
+docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/15-content-600x480.jpg 1200 1024
+339 30 29 35
+340 30 29 35
+341 30 29 35
+342 73 72 77
+343 73 72 77
+344 36 35 40
+345 36 35 40
+346 36 35 40
+347 36 35 40

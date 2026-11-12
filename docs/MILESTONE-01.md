@@ -30,7 +30,7 @@ Select the latest compatible stable versions when executing the bootstrap ticket
 
 The desktop should have a clear, usable layout for navigation, chat, approvals, and change inspection. Build lasting, reusable modules with clear ownership under the MVP architecture; introduce abstractions when exercised behavior needs them. Later capabilities should extend these first building blocks.
 
-[Ticket 02a](../.scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md) establishes the agreed React/Vite presentation with shadcn/ui, Base UI and Tailwind before repository registration. Start from a compact dark Conductor-inspired shell and shared visual conventions; subsequent behavior tickets extend it incrementally. This ticket is planned, not implemented, and preserves completed tickets 01–02.
+[Ticket 02a](../.scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md) establishes the agreed React/Vite presentation with shadcn/ui, Base UI and Tailwind before repository registration. Start from a compact dark Conductor-inspired shell and shared visual conventions; subsequent behavior tickets extend it incrementally. Its original shell and deferred actual Tauri desktop qualification cohort are complete; see the appended [UI foundation desktop evidence](evidence/milestone-01-ui-foundation.md#desktop-qualification-follow-up--2026-11-12). The current [official Sidebar refactor and branding fix](evidence/milestone-01-sidebar-refactor.md#actual-tauri-requalification--2026-11-1213) passed actual Tauri requalification on 2026-11-12–13. Completed tickets 01–02 are preserved. Other tickets, the parent spec and this milestone remain open.
 
 ## Observable acceptance
 

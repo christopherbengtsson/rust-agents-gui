@@ -1,0 +1,6 @@
+{
+  "CFBundleExecutable": "workspace-desktop",
+  "CFBundleIdentifier": "dev.christopherbengtsson.agent-workspace",
+  "CFBundleShortVersionString": "0.1.0",
+  "LSMinimumSystemVersion": "13.3"
+}

@@ -1,0 +1,224 @@
+[
+  {
+    "file": "01-ordinary-initial.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1360],
+    "sha256": "78d663dd3d0955b42a7cc52db5e1609a7bd8616919b5f185d04105e0b2e05f71"
+  },
+  {
+    "file": "early-attempts/02-content-900x680.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1360],
+    "sha256": "2a06dcfb2f291d5899029124f241d5309dc4b1d113f350157c564f4711d12ab2"
+  },
+  {
+    "file": "03-ordinary-resized.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "c65d79b69dab526869fd1baef16010f8ad65c1a9c67f0793462b04a5a93a7474"
+  },
+  {
+    "file": "04-skip-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "adce15bb1ae4a433668adcd9fb7dbc08ca25babef1acd8ff26c2a98ce05943ac"
+  },
+  {
+    "file": "05-workspace-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "5823b7abdf70e762650d90706deb5fd80285a5d02dd9add2cf2d872b80be8dfa"
+  },
+  {
+    "file": "06-refresh-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "905438f9f2858381aa4f7a707586f3c76074418beb57c80deb7e121d41d75d58"
+  },
+  {
+    "file": "07-ordinary-shortcuts-unchanged.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "032350e28ae5359262245d46bc478c6e2aa28c2f3aba12ab2285464126b74fe2"
+  },
+  {
+    "file": "early-attempts/08-details-trigger-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "7956ad1ac97500608bdba3a769b38e5722601aa82f9c2e3fa587aff7acbcf0ae"
+  },
+  {
+    "file": "early-attempts/09-ordinary-diagnostics-contained.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "b98e83b864404226c0b713a845952a6cc90e228058b961f5fa74d630fe2c9c64"
+  },
+  {
+    "file": "early-attempts/10-escape-return-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "e37c60bd47f19c83332fa056ef23d290a3a5d0ece602cadf3b937d4fe263fd81"
+  },
+  {
+    "file": "11-details-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "e1e300294df7f826799d363ca7227dc211196c8176452f6cbafbf136f922a591"
+  },
+  {
+    "file": "12-ordinary-diagnostics.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "95c1e2d2f340343ba110b2b8c19eaf332bf6ae077cf8a0ecd01992aa34e2096c"
+  },
+  {
+    "file": "13-dialog-focus-contained.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "37101da25311bdea12dafadfb9701a77d918755a47ab0717f9422303e06aa02b"
+  },
+  {
+    "file": "14-dialog-return-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "265fdeb15775562ce5421cc60be916b480a9d92d7d708938439d2423488cb5d9"
+  },
+  {
+    "file": "15-content-600x480.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "61b154f1f0fe204ab419a0cc9258ee0e1f8235a14c4090483525be6cf202a19f"
+  },
+  {
+    "file": "16-minimum-shortcuts-fixed.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "61b154f1f0fe204ab419a0cc9258ee0e1f8235a14c4090483525be6cf202a19f"
+  },
+  {
+    "file": "17-minimum-diagnostics.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "10c823b5f745bab74ec7c8a3818a00163d1aa7433952caaf3e6341518e1cbaad"
+  },
+  {
+    "file": "18-minimum-pending.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "d8e025587720e7ed4e3dbe59a749bec620ddc5ea52e89cdd57f347c5796cec79"
+  },
+  {
+    "file": "19-minimum-timeout-error.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "8e330baf0eaa924c4f79795613e1035fd426578da42ce33ea835730d845525c1"
+  },
+  {
+    "file": "20-minimum-stale-diagnostics.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "a1e9a885b68a765f578c491a51f7a68db9142fd87562d6e98be5285d1377f169"
+  },
+  {
+    "file": "21-pending-diagnostics.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "79eee4a2bb25b837c5c177dc05025c640caff26a824d3f5ef9b70cd856910dc8"
+  },
+  {
+    "file": "22-resumed-owner-error-retained.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "335b539a7c1e5232862a18fb2293a0a671ec965b98546f20bd376d4e5c4ba4ec"
+  },
+  {
+    "file": "23-ordinary-error.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "9fd9ee0bd71dd73f828054fa56a4e7a1dd15dc7f5482f81b305d07ba29146aa3"
+  },
+  {
+    "file": "24-explicit-retry-recovered.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "9b94c72e6b010f21488cb29a331a197411e1eb144496581f678acb13893daf4c"
+  },
+  {
+    "file": "25-owner-before-crash.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1424],
+    "sha256": "265253098dfc91f21063adeadbae76b024e9d1290d05a139c3555d4152b6d72d"
+  },
+  {
+    "file": "26-crash-reconnect-same-owner.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1360],
+    "sha256": "8f8a6ff7a5f236f290df11c634c99a7516fb42ae608a545ca74a58bd45ed8701"
+  },
+  {
+    "file": "27-lost-owner-error.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1360],
+    "sha256": "0c767c0820fd4212ddeed70ca6c91dc099c88725268e92a89ad8fd6ea5fa34ae"
+  },
+  {
+    "file": "28-lost-owner-failed-retry.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1360],
+    "sha256": "7fc34a04e8f692e8c53084674923ed6873c2902ffc56fb66c5845f0fd8edc372"
+  },
+  {
+    "file": "29-lost-owner-stale-diagnostics.jpg",
+    "format": "JPEG",
+    "pixels": [1800, 1360],
+    "sha256": "4b1fe605868ac69285d552d2addc7d07fa038679652600a0cca24209174a4b3e"
+  },
+  {
+    "file": "30-initial-error-minimum.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "9b10044910174f6a31b8cd6234f2d6aa97ec4d1d3a38fa3d3c3304f06e31785b"
+  },
+  {
+    "file": "31-initial-error-no-observation.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "af62d4a613542b9405959378cf67d0684bccee1ca89eb4998cb77b043e454850"
+  },
+  {
+    "file": "32-permission-restored-error-retained.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "05d57d88160d29eb5bf64782a74c4603c6851f90dc15d0a53aafc6495ccb2304"
+  },
+  {
+    "file": "33-minimum-skip-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "28d0e366a6e9eddc9b80faf4a7b1a7f8f6ed8fe3cea4df4b54271d42042ead44"
+  },
+  {
+    "file": "34-minimum-workspace-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "3295154a623220d23ecf3922761a91c9d06c0ea9d946b0445b3b6bc493f188bf"
+  },
+  {
+    "file": "35-minimum-retry-focus.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "7c30519d9d582257b5af91614d3a64f9d0f01ce4206c6d2a15b08af98a8c7e59"
+  },
+  {
+    "file": "36-initial-error-explicit-recovery.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "ccdc55cc3d486152dae95076033171eb80bb9756d5b82786da378061b6c2c201"
+  },
+  {
+    "file": "37-recovered-current-observation.jpg",
+    "format": "JPEG",
+    "pixels": [1200, 1024],
+    "sha256": "2e503e3f4ea9d3b3bb6cc54632965b3c542ab138aeac6e1ca54ee296c66f9c52"
+  }
+]

@@ -1,0 +1,72 @@
+Actual CUA calls; app binding uses the exact packaged app path in session.json.
+Every action block was followed by app.getAXState() before adaptive decisions.
+capture(name): full AX via app.getAXState({emit:false,disableDiffing:true}), then
+app.getScreenshot({emit:false}); fs.writeFile raw bytes to name.jpg and AX to
+name-ax.txt. No image edit. capture-names.json retains original capture sequence.
+Coordinates below are screenshot pixels. super=Cmd, ctrl=Ctrl on this Mac.
+
+01: cua.getApp(session.app); capture('01-ordinary-initial')
+02: app.drag([899,679],[899,711]); capture('02-content-900x680')
+    Resize attempt did not change frame. Retained under early-attempts.
+03: app.drag([1798,1358],[1798,1422]); capture('03-ordinary-resized')
+04: app.pressKey('Tab'); capture('04-skip-focus')
+05: app.pressKey('Return'); capture('05-workspace-focus')
+06: app.pressKey('Tab'); capture('06-refresh-focus')
+07: app.pressKey('Return'); app.pressKey('super+b'); app.pressKey('ctrl+b');
+    capture('07-ordinary-shortcuts-unchanged')
+08: app.pressKey('shift+Tab'); capture('08-details-trigger-focus')
+09: app.pressKey('Return'); app.pressKey('Tab'); app.pressKey('Tab');
+    app.pressKey('shift+Tab'); capture('09-ordinary-diagnostics-contained')
+10: app.pressKey('Escape'); capture('10-escape-return-focus')
+    08-10 failed to reach intended diagnostics: Refresh disabled itself and
+    focus moved to document. AX showed Refresh at 08 and Skip at 09/10.
+    Kept all 08-10 under early-attempts; no pass inferred from filenames.
+11: app.pressKey('Tab'); AX verified Connection details;
+    capture('11-details-focus')
+12: app.pressKey('Return'); capture('12-ordinary-diagnostics')
+13: app.pressKey('Tab'); AX Close; app.pressKey('Tab'); AX Close;
+    app.pressKey('shift+Tab'); AX Close; capture('13-dialog-focus-contained')
+14: app.pressKey('Escape'); capture('14-dialog-return-focus')
+15: app.drag([1798,1422],[1198,1022]); capture('15-content-600x480')
+16: app.pressKey('super+b'); AX details; app.pressKey('ctrl+b'); AX details;
+    capture('16-minimum-shortcuts-fixed')
+17: app.pressKey('Return'); app.pressKey('Tab'); AX Close;
+    app.pressKey('shift+Tab'); AX Close; capture('17-minimum-diagnostics');
+    app.pressKey('Escape'); AX details
+18: shell validated exact PID/path/state then kill -STOP 88884;
+    app.click(49) [Refresh]; capture('18-minimum-pending')
+19: next AX observed timeout; capture('19-minimum-timeout-error')
+20: app.click(11) [Connection details]; capture('20-minimum-stale-diagnostics')
+21: app.pressKey('Escape'); fresh AX Retry=50, details=46;
+    app.click(50); AX pending; app.click(46); capture('21-pending-diagnostics')
+22: shell validated owner then kill -CONT 88884;
+    AX observed retained timeout; capture('22-resumed-owner-error-retained')
+23: app.pressKey('Escape'); app.drag([1198,1022],[1798,1422]);
+    capture('23-ordinary-error')
+24: app.pressKey('Tab'); AX Retry; app.pressKey('Return'); AX Connected;
+    capture('24-explicit-retry-recovered')
+25: app.click(11); capture('25-owner-before-crash')
+26: shell validated desktop path then kill -KILL 88878;
+    same-state packaged desktop relaunched as 89299;
+    cua.getApp(session.app); app.click(11);
+    capture('26-crash-reconnect-same-owner'); app.pressKey('Escape')
+27: shell validated exact PID/path/state then kill -TERM 88884;
+    app.click(49) [Refresh]; capture('27-lost-owner-error')
+28: app.pressKey('Return') [focused Retry]; capture('28-lost-owner-failed-retry')
+29: app.click(11); capture('29-lost-owner-stale-diagnostics')
+    shell confirmed exact-state supervisor count 0 and stopped desktop 89299.
+30: shell created separate mode-500 state; launched desktop 89346;
+    cua.getApp(session.app); app.drag([1798,1358],[1198,1022]);
+    capture('30-initial-error-minimum')
+31: app.click(11); capture('31-initial-error-no-observation');
+    app.pressKey('Escape')
+32: shell chmod 700 owned initial state, confirmed owner count 0;
+    capture('32-permission-restored-error-retained')
+33: app.pressKey('shift+Tab'); capture('33-minimum-skip-focus')
+34: app.pressKey('Return'); capture('34-minimum-workspace-focus')
+35: app.pressKey('Tab'); capture('35-minimum-retry-focus')
+36: app.pressKey('Return'); capture('36-initial-error-explicit-recovery')
+37: app.click(11); capture('37-recovered-current-observation')
+    CUA completion_summary: Qualified current Tauri desktop shell
+    shell stopped 89346 and 89374, confirmed every owned PID absent, then removed
+    both disposable state directories. See cleanup.txt for recorder correction.

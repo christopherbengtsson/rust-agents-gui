@@ -1,0 +1,40 @@
+/private/tmp/rag-02a-pixel-inspection.swift:3:17: error: no exact matches in call to initializer
+ 1 | import AppKit
+ 2 | for file in CommandLine.arguments.dropFirst() {
+ 3 |     let image = NSBitmapImageRep(contentsOf: URL(fileURLWithPath: file))!
+   |                 `- error: no exact matches in call to initializer
+ 4 |     print(file, image.pixelsWide, image.pixelsHigh)
+ 5 |     let seam = image.pixelsWide == 1800 ? 408 : 344
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSBitmapImageRep.h:81:1: note: candidate expects value of type 'NSRect' (aka 'CGRect') for parameter #1 (got 'URL')
+ 79 | @interface NSBitmapImageRep : NSImageRep <NSSecureCoding>
+ 80 |
+ 81 | - (nullable instancetype)initWithFocusedViewRect:(NSRect)rect API_DEPRECATED("Use -[NSView cacheDisplayInRect:toBitmapImageRep:] to snapshot a view.", macos(10.0, 10.14));
+    | `- note: candidate expects value of type 'NSRect' (aka 'CGRect') for parameter #1 (got 'URL')
+ 82 |
+ 83 | - (nullable instancetype)initWithBitmapDataPlanes:(unsigned char *_Nullable *_Nullable)planes pixelsWide:(NSInteger)width pixelsHigh:(NSInteger)height bitsPerSample:(NSInteger)bps samplesPerPixel:(NSInteger)spp hasAlpha:(BOOL)alpha isPlanar:(BOOL)isPlanar colorSpaceName:(NSColorSpaceName)colorSpaceName bytesPerRow:(NSInteger)rBytes bitsPerPixel:(NSInteger)pBits;
+    :
+ 89 |
+ 90 | + (nullable instancetype)imageRepWithData:(NSData *)data;	/* Convenience of initWithData: */
+ 91 | - (nullable instancetype)initWithData:(NSData *)data;
+    | `- note: candidate expects value of type 'Data' for parameter #1 (got 'URL')
+ 92 |
+ 93 | @property (nullable, readonly) unsigned char *bitmapData NS_RETURNS_INNER_POINTER;
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSImageRep.h:41:1: note: candidate '() -> NSBitmapImageRep' has 1 parameter, but context '() -> NSBitmapImageRep' has 0
+ 39 | @interface NSImageRep : NSObject <NSCopying, NSCoding>
+ 40 |
+ 41 | - (instancetype)init NS_DESIGNATED_INITIALIZER;
+    | `- note: candidate '() -> NSBitmapImageRep' has 1 parameter, but context '() -> NSBitmapImageRep' has 0
+ 42 | - (nullable instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+    | `- note: candidate expects value of type 'NSCoder' for parameter #1 (got 'URL')
+ 43 |
+ 44 | /* Drawing methods. draw is the only primitive.
+
+/private/tmp/rag-02a-pixel-inspection.swift:7:63: error: cannot infer contextual base in reference to member 'deviceRGB'
+ 5 |     let seam = image.pixelsWide == 1800 ? 408 : 344
+ 6 |     for x in (seam - 5)...(seam + 3) {
+ 7 |         let c = image.colorAt(x: x, y: 400)!.usingColorSpace(.deviceRGB)!
+   |                                                               `- error: cannot infer contextual base in reference to member 'deviceRGB'
+ 8 |         print(x, Int((c.redComponent * 255).rounded()), Int((c.greenComponent * 255).rounded()), Int((c.blueComponent * 255).rounded()))
+ 9 |     }

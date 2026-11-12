@@ -1,0 +1,30 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 container Repository sidebar
+				4 text Connection error
+			5 container
+				6 button
+				7 container Supervisor connection
+					8 heading Supervisor connection, Value: 2
+						9 text Supervisor connection
+					10 text Local connection and process diagnostics.
+					11 text Connection error
+					12 text Permission denied (os error 13)
+					13 text No successful observation yet.
+					14 button Close
+				15 button
+	16 close button
+	17 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	18 minimize button
+	19 text Agent Workspace
+20 menu bar
+	21 Agent Workspace
+	22 File
+	23 Edit
+	24 View
+	25 Window
+	26 Help
+
+The focused UI element is 14 button Close

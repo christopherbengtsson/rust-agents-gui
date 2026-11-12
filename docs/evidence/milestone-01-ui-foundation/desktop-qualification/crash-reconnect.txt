@@ -1,0 +1,3 @@
+SIGKILL desktop 77602 only. Owner immediately after kill:
+  PID  PPID STARTED                      COMMAND
+77611 77602 Thu Nov 12 23:00:06 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-ui-02a-desktop-ecoe95k3

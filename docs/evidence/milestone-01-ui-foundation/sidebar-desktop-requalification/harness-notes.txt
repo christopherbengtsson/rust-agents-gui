@@ -1,0 +1,16 @@
+Failed/unavailable ancillary commands:
+- xcodebuild -version exited 1: selected Command Line Tools are not full Xcode.
+  Retained in environment.txt; build succeeded.
+- python3: from PIL import Image failed ModuleNotFoundError: No module named PIL.
+  No image edit or conversion occurred. Replaced optional analysis with:
+  sips -g pixelWidth -g pixelHeight <each raw JPEG>; output in screenshots.json.
+- First swift /private/tmp/rag-02a-pixel-inspection.swift <03.jpg> <15.jpg>
+  exited 1: NSBitmapImageRep(contentsOf: URL) unsupported; geometry-failed.txt.
+  SDK header showed initWithData; corrected NSBitmapImageRep(data: try Data(...)).
+- Corrected exact command:
+  swift /private/tmp/rag-02a-pixel-inspection.swift docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/03-ordinary-resized.jpg docs/evidence/milestone-01-ui-foundation/sidebar-desktop-requalification/15-content-600x480.jpg
+  exit 0, tool wall 0.203656 seconds; geometry.txt and pixel-inspection.swift.txt.
+- CUA resize/focus attempts and correction in cua-commands.txt/early-attempts.
+- Cleanup recorder parsing PID header failed after final SIGTERMs and before
+  removal; correction confirmed all owned PIDs absent before removal, cleanup.txt.
+- Initial final added-file whitespace check detected Swift compiler output trailing spaces (no product source issue). geometry-failed.txt retains the compiler text with line-end whitespace normalized; failure is retained in final-checks-initial.txt. Final corrected checks rerun.

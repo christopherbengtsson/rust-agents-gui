@@ -1,0 +1,16 @@
+{
+  "state": "/private/tmp/rag-ui-02a-desktop-ecoe95k3",
+  "desktopPid": 77602,
+  "app": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app",
+  "source": "4420328f2ab2fdf97e0524817d0b94fbafbd99db",
+  "dirty": true,
+  "supervisorPid": 77611,
+  "owner": "77611-1794520806614058000",
+  "initialProcesses": "  PID  PPID STARTED                      COMMAND\n77602     1 Thu Nov 12 23:00:06 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop\n77611 77602 Thu Nov 12 23:00:06 2026     /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-ui-02a-desktop-ecoe95k3\n",
+  "versions": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56\nv26.13.1\n12.18.0\nrustc 1.99.1 (58cf8f9c3 2026-10-13)\ncargo 1.99.1 (5f94df478 2026-08-27)\nMac16,8\n51539607552\nApple M4 Pro\n",
+  "binaryHashes": {
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": "f8974462da988725927369abfa635959c81281b7a5837517bc92354bdb01da3e",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor": "c6e672cf42ace6f4c749a1fa64b9386bbc58423ef6927786441b85a46a321abb"
+  },
+  "reopenedDesktopPid": 77752
+}
