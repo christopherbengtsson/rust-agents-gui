@@ -8,8 +8,11 @@
 
 **Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
+**UI:** Follow the [incremental UI foundation](../spec.md#incremental-ui-foundation). For shadcn/ui component work, use the repository-local [shadcn skill](../../../.agents/skills/shadcn/SKILL.md) under repository policy.
+
 **Coverage:** A7 and explicit-Quit portion of A8. Integration with pending approvals is verified in the complete workflow.
 
+- [ ] Place exact-turn interrupt controls and their pending/outcome feedback in the established conversation UI. Keep explicit Quit discoverable and show stopping/flushing/shutdown progress or failure clearly while retaining recoverable context; use shared controls and status patterns.
 - [ ] Send interruption against an explicit active conversation/turn identity, separately from runtime stop; delayed requests/replies cannot interrupt a later turn.
 - [ ] Show provider-observed interrupted/completed/failed/unknown outcomes without treating silence or an unqualified exit alone as success.
 - [ ] Verify owned tool work stops when cleanup is confirmed; expose failed/unacknowledged interruption and unconfirmed descendant cleanup with actionable recovery.

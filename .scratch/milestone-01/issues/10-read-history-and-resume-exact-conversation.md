@@ -8,8 +8,11 @@
 
 **Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
+**UI:** Follow the [incremental UI foundation](../spec.md#incremental-ui-foundation). For shadcn/ui component work, use the repository-local [shadcn skill](../../../.agents/skills/shadcn/SKILL.md) under repository policy.
+
 **Coverage:** A9, history/restart portion of A8, and resume reconciliation in A10.
 
+- [ ] Restore readable history in the established navigation/transcript layout with bounded history-loading controls and visible conversation identity. Clearly distinguish observing saved history, explicitly resuming it, failed/unavailable native resume and the separate new-conversation action, using shared controls and status patterns.
 - [ ] After normal Quit/reopen, restore repository/workspace identity, readable durable messages, turn/action evidence, and native conversation mapping without starting or replaying a turn.
 - [ ] Read recent history through a bounded/paged interface independent of native provider history availability.
 - [ ] An explicit Resume targets the saved native conversation and fixture evidence demonstrates recall of an earlier marker.

@@ -8,8 +8,11 @@
 
 **Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
+**UI:** Follow the [incremental UI foundation](../spec.md#incremental-ui-foundation). For shadcn/ui component work, use the repository-local [shadcn skill](../../../.agents/skills/shadcn/SKILL.md) under repository policy.
+
 **Coverage:** Native closure of A1–A10 and verification stages 3–4. This ticket’s ready-for-agent status is not a live-provider allowance.
 
+- [ ] Execute the agreed native scenarios through the same completed React/shadcn desktop controls and state presentations qualified in ticket 12. Record native rendering/interaction issues and uncertainty visibly; preserve the agreed submission/usage bounds rather than adding unapproved scenarios or bypassing the UI to claim desktop success.
 - [ ] Before any real run, obtain agreement on exact scenarios, permitted submissions, selected model/effort, time/usage limits, and stop conditions. Stop before submissions if that allowance is absent.
 - [ ] Use disposable test checkouts and private application state while keeping authentication runtime-owned. Record runtime/schema versions, effective configuration and MCP startup exposure, and source hashes before/after the cohort.
 - [ ] Perform only allowed submissions with no automatic scenario retries, larger-model fallback, archived allowance reuse, or assumed hard dollar cap.

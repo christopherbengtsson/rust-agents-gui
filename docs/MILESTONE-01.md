@@ -30,6 +30,8 @@ Select the latest compatible stable versions when executing the bootstrap ticket
 
 The desktop should have a clear, usable layout for navigation, chat, approvals, and change inspection. Build lasting, reusable modules with clear ownership under the MVP architecture; introduce abstractions when exercised behavior needs them. Later capabilities should extend these first building blocks.
 
+[Ticket 02a](../.scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md) establishes the agreed React/Vite presentation with shadcn/ui, Base UI and Tailwind before repository registration. Start from a compact dark Conductor-inspired shell and shared visual conventions; subsequent behavior tickets extend it incrementally. This ticket is planned, not implemented, and preserves completed tickets 01–02.
+
 ## Observable acceptance
 
 | ID | Required behavior, including failure/recovery |

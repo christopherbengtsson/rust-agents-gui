@@ -29,6 +29,10 @@ RAT is archived and read-only. Follow its AGENTS.md and required documentation b
 For Rust implementation and review, use [rust-engineering](.agents/skills/rust-engineering/SKILL.md).
 For Rust module or interface design, consult [design principles](https://rust-unofficial.github.io/patterns/additional_resources/design-principles.html) as tradeoffs; ground abstractions in the MVP's concrete modules and required dependency seams.
 
+### UI engineering
+
+For shadcn/ui component implementation and customization, use [shadcn](.agents/skills/shadcn/SKILL.md). Add components as working screens need them under the agreed milestone scope.
+
 ### Issue tracker
 
 Specs and tickets use local Markdown under `.scratch/`.

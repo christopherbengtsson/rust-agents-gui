@@ -8,8 +8,12 @@
 
 **Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
+**UI:** Follow the [incremental UI foundation](../spec.md#incremental-ui-foundation). For shadcn/ui component work, use the repository-local [shadcn skill](../../../.agents/skills/shadcn/SKILL.md) under repository policy.
+
 **Coverage:** A6. Full changes against the workspace base and inline feedback remain deferred.
 
+- [ ] Add change inspection to the established workspace composition with keyboard-reachable file selection, a readable selected-file diff and visible comparison identity; preserve access to workspace navigation.
+- [ ] Apply the shared empty/loading/error and unsupported-content patterns to the changes region. Keep long diffs/previews bounded and readable, and label a retained last-good result when refresh fails.
 - [ ] Show a changed-file list and readable text diffs for modifications, new files, and deletions in the selected workspace.
 - [ ] Identify the comparison shown and refresh it after further edits, including fixture/agent edits once chat is integrated.
 - [ ] Label binary and unsupported content honestly rather than presenting an incomplete text rendering as complete.

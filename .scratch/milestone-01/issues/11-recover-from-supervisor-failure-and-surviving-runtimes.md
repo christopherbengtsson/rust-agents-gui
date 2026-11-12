@@ -8,8 +8,11 @@
 
 **Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
+**UI:** Follow the [incremental UI foundation](../spec.md#incremental-ui-foundation). For shadcn/ui component work, use the repository-local [shadcn skill](../../../.agents/skills/shadcn/SKILL.md) under repository policy.
+
 **Coverage:** Supervisor-failure portion of A8 and surviving-owner/action reconciliation in A10; regressions across A4, A5, A7, and A9.
 
+- [ ] Present interrupted/uncertain ownership, blocked execution and storage/recovery failures as persistent, readable shell/conversation states with core-authorized recovery actions. Keep local history accessible where available; a transient toast alone must not be the only place to inspect unresolved recovery state.
 - [ ] In desktop qualification, kill the actual supervisor during meaningful fixture execution/action windows and restore the durable history prefix with interrupted/uncertain observations matching available evidence.
 - [ ] Reconcile surviving runtime ownership and pending sends, approvals, and resumes inside the owning Rust modules. Keep unknown outcomes visible; never invent receipt, completion, permission, or safe cleanup.
 - [ ] Block conflicting execution while surviving work is uncertain; reconnect/status retrieval grants no authority to repeat effects or signal a process based only on saved PIDs.
