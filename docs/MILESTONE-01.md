@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–02 bootstrap and status-only supervisor discovery/reconnect are implemented and verified; product workflow and qualification remain incomplete.
+Status: In progress — tickets 01–02 are complete. Tickets 03–13 are not implemented. Complete workflow and native qualification remain incomplete.
 
 ## Outcome and authority
 
@@ -47,8 +47,8 @@ The desktop should have a clear, usable layout for navigation, chat, approvals, 
 
 ## Verification order
 
-1. **Deterministic core checks first.** Ground fixtures in the supported Codex version's official protocol/schema and retained evidence before implementing the adapter. Record runtime version, schema/source revision, and captured-versus-synthetic provenance beside the fixtures. Use metadata/schema inspection without starting agent sessions or changing authentication. Exercise A1–A10 through the same core interface used by Tauri, with temporary real Git repositories and durable storage. Use protocol fixtures for delays, duplicate/late events, malformed approval payloads, lost replies, connection loss, and storage failures. Include actual supervisor-process tests for owner exclusivity, private connection access, version mismatch, desktop disconnect/reconnect, and supervisor failure. Reuse the proof's deterministic routing work; repair the Codex observer and approval-validation fixtures without weakening exact operation matching. Passing this stage establishes application behavior, not native provider compatibility.
-2. **Desktop workflow with fixtures.** Complete the full sequence in the actual app, including denied approval, interrupt, normal quit/restart, desktop-only crash/reconnect, supervisor failure/recovery, and exact resume. Record screenshots of the working states and errors, plus navigation/history-opening measurements against the MVP targets under this single-conversation workload. Run the implemented repository's build, formatting, static checks, and relevant tests; record exact commands and results.
+1. **Deterministic unit checks first.** Follow the [testing policy](agents/verification.md) for automated coverage of A1–A10 decisions. Ground protocol inputs in the supported Codex schema and record captured-versus-synthetic provenance. Exercise routing, intent-before-effect, lost replies, duplicate/late events, malformed approvals, connection loss and storage/recovery failures with substituted outcomes. Unit success establishes application decisions; actual OS ownership, durability, cleanup and provider compatibility remain separate qualification claims. Apply this policy from the first tests of each ticket and record evidence for the implemented behavior.
+2. **Desktop workflow with fixtures.** Qualify the actual process/desktop behavior separately from unit tests, using the production core/supervisor path and private disposable state. Include A10 owner-exclusivity, private-access and version checks. Complete the full sequence in the actual app, including denied approval, interrupt, normal quit/restart, desktop-only crash/reconnect, supervisor failure/recovery, and exact resume. Record screenshots of the working states and errors, plus navigation/history-opening measurements against the MVP targets under this single-conversation workload. Run the implemented repository's build, formatting, static checks, and relevant tests; record exact commands and results.
 3. **Bounded live-provider qualification.** Before any real run, agree the exact scenarios, permitted submissions, selected model/effort, time/usage limits, and stop conditions. Record runtime/schema versions, effective configuration and MCP startup exposure, and source hashes before/after the cohort. Use disposable test checkouts and private application state while leaving authentication with the runtime. No automatic scenario retries, larger-model fallback, or reuse of archived proof allowances. Codex has no established hard dollar cap in the existing proof.
 4. **Close against evidence.** Demonstrate native streaming, allow/deny, interruption/owned cleanup, restart, and exact resume in the desktop app. Observe subscription-backed execution through the existing account and record non-secret account/billing evidence when available. API-key compatibility remains separately unqualified unless included in the agreed run. Failed or unperformed native checks remain open; fixture success cannot substitute for them.
 
@@ -60,7 +60,11 @@ PR inbox, automated review preparation/handoffs, PR creation/feedback/merge cont
 
 ## Results and next milestone
 
-Ticket 01 established a TypeScript/pnpm + Rust/Tauri baseline, a separately launched supervisor, and an observed successful desktop status exchange. See [bootstrap evidence](evidence/milestone-01-bootstrap.md) for versions, commands, screenshot, and limits. Ticket 02 adds private owner admission, versioned snapshots, and observed bundled desktop kill/reconnect; see [discovery evidence](evidence/milestone-01-discovery.md). These establish the status-only ownership/connection portion of A8/A10, not the full criteria or native-provider behavior. Keep this document with the completed code as the milestone's evidence. During qualification, record:
+Ticket 01 established the TypeScript/pnpm + Rust/Tauri baseline, a separate supervisor and a successful desktop status exchange; see [bootstrap evidence](evidence/milestone-01-bootstrap.md). Ticket 02 established private owner admission, versioned snapshots and bundled desktop kill/reconnect; see [discovery evidence](evidence/milestone-01-discovery.md). These remain the completed starting point.
+
+Tickets 03–13 remain unimplemented. Their acceptance items stay open until the required unit, desktop and separately authorized native evidence is recorded.
+
+During qualification, record:
 
 - Implementation revision or source identity, tool/runtime versions, hardware, and effective test configuration.
 - A1–A10 pass/fail/not-run status with reproducible commands, fixture/native distinction, screenshots, and evidence paths.

@@ -6,7 +6,7 @@
 
 **Status:** ready-for-agent
 
-**Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
+**Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
 **Coverage:** A7 and explicit-Quit portion of A8. Integration with pending approvals is verified in the complete workflow.
 
@@ -16,6 +16,6 @@
 - [ ] Explicit Quit requests owned stop, durable flush, and supervisor shutdown before reporting success; storage/cleanup failures remain visible rather than falsely confirming a clean shutdown.
 - [ ] Hide/minimize and the agreed close-to-hide behavior retain admitted work. Desktop crash remains distinct from explicit Quit.
 - [ ] Keep interruption mechanics/process ownership in runtimes and execution policy in conversations; saved PIDs alone grant no signaling authority.
-- [ ] Exercise actual supervised fixture tool processes, late interrupts, interruption failure, shutdown/flush failure, and successful Quit/reopen through the core and actual supervisor seam; demonstrate desktop controls and retain evidence.
+- [ ] Unit-test exact-turn interruption, late replies, interruption failure and shutdown/flush decisions with controlled outcomes. Separately qualify actual owned fixture-tool cleanup and successful Quit/reopen through desktop controls; retain distinct unit/desktop evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.

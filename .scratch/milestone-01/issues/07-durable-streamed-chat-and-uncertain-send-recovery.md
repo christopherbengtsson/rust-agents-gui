@@ -6,7 +6,7 @@
 
 **Status:** ready-for-agent
 
-**Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
+**Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
 **Coverage:** A4; active-work desktop reconnect in A8; creation/send identity, admission, and reconciliation in A10.
 
@@ -17,6 +17,6 @@
 - [ ] Reconcile uncertain initial conversation creation and sends before potentially duplicate effects. Repeated action IDs retrieve recorded status/outcome; desktop reconnection retrieves status rather than resubmitting.
 - [ ] Route duplicate/late events to exact conversation/turn identities and preserve provider-specific outcome evidence; never infer completion from silence.
 - [ ] Bound output, page history, and keep navigation/control responsive under sustained fixture output. Provide the targeted action interface later interrupt behavior uses.
-- [ ] Test delays, lost replies, duplicate/late events, storage failures, and desktop-only crash/disconnect during active fixture work through the core and actual supervisor-process seam. Show catch-up without duplicate provider submissions and retain deterministic/desktop evidence.
+- [ ] Unit-test send/routing/recovery decisions for delayed or lost replies, duplicate/late events, storage failures and reconnect observations. Distinguish non-delivery from admitted work with an unavailable reply; verify intent-before-send and catch-up without resubmission. Separately demonstrate active-work desktop disconnect/reconnect through the production supervisor path and retain unit/desktop evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.

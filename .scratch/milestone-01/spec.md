@@ -2,11 +2,11 @@
 
 Status: ready-for-agent
 
+Implementation baseline: tickets 01–02 are complete. Tickets 03–13 are not implemented.
+
 ## Problem Statement
 
 Christopher needs a local desktop workspace for coding with his existing Codex runtime and authentication. The first usable workflow must isolate code changes, show agent activity and requested approvals, retain readable history, and recover from failures without silently repeating uncertain work.
-
-The repository currently contains planning documents only. There is no application scaffold, supervisor, storage, provider adapter, fixture suite, or existing test implementation to extend.
 
 ## Solution
 
@@ -109,28 +109,24 @@ Deliver this as one implementation spec with session-sized implementation ticket
 
 ## Testing Decisions
 
-The user confirmed three complementary test interfaces: behavioral tests through the same typed Rust core actions and observations used by Tauri; process tests across the actual supervisor connection; and desktop smoke/workflow tests proving the UI uses those paths. The core interface is the main behavior test surface. Process and desktop checks verify integration that in-process tests cannot establish.
+Follow [testing and verification](../../docs/agents/verification.md) for automated test design and skill constraints. The A1–A10 table below lists behaviors to cover; it does not choose dependency realism. Actual desktop and native qualification follow the milestone's separate stages. Apply this policy from the first tests of each ticket.
 
-There is no existing test code in this repository. The retained proof is evidence and potential fixture prior art, not application qualification. Inspect it only after following the archived repository's own guidance, and preserve its files, Git state, credentials, ledgers, and native conversations.
-
-Good tests assert caller-visible outcomes, durable observations, actual Git effects, and ownership/cleanup behavior. They use temporary real repositories and private application state. Avoid tests coupled to private implementation structure or a simulated process owner in place of the actual supervisor.
-
-| Acceptance | Required coverage |
-| --- | --- |
-| A1 — Register | Valid and invalid/unavailable repositories; no original-file changes or provider start; restored identity after reopening. |
-| A2 — Workspace | Selected commit, separate branch/worktree, untouched original checkout, persistent identity, partial creation failure, and repeat-action reconciliation without duplication or unrelated deletion. |
-| A3 — Connect | Supported protocol/configuration and existing authentication; missing executable, incompatible protocol, unavailable authentication, and actionable setup errors. Native compatibility is separately qualified. |
-| A4 — Chat | Multiline sends, correctly routed streaming/tool activity, saved/received/uncertain delivery, repeated action IDs, late/duplicate events, and usable control during sustained output. |
-| A5 — Approval | Exact operation/request/turn matching, allow effect, denied non-effect, malformed payloads, stale/conflicting answers, and uncertain lost replies without broadened permission. |
-| A6 — Diff | Text modifications, additions, deletions, comparison identity, refresh, unsupported content, and visible Git/read failure retaining the last good result. |
-| A7 — Interrupt | Exact-turn targeting, late response isolation from later turns, observed outcome, failed/unacknowledged interruption, and owned tool cleanup or explicit uncertainty. |
-| A8 — Restart/history | Owned stop/flush/shutdown on Quit, visible failures, history restored without execution, desktop-only crash/reconnect without replay, and durable-prefix recovery after supervisor failure. |
-| A9 — Exact resume | Saved native mapping, earlier-marker recall, reconciliation after uncertain resume, unavailable native history with readable local history, and distinct new-conversation action. |
+| Acceptance               | Required coverage                                                                                                                                                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1 — Register            | Valid and invalid/unavailable repositories; no original-file changes or provider start; restored identity after reopening.                                                                                                    |
+| A2 — Workspace           | Selected commit, separate branch/worktree, untouched original checkout, persistent identity, partial creation failure, and repeat-action reconciliation without duplication or unrelated deletion.                            |
+| A3 — Connect             | Supported protocol/configuration and existing authentication; missing executable, incompatible protocol, unavailable authentication, and actionable setup errors. Native compatibility is separately qualified.               |
+| A4 — Chat                | Multiline sends, correctly routed streaming/tool activity, saved/received/uncertain delivery, repeated action IDs, late/duplicate events, and usable control during sustained output.                                         |
+| A5 — Approval            | Exact operation/request/turn matching, allow effect, denied non-effect, malformed payloads, stale/conflicting answers, and uncertain lost replies without broadened permission.                                               |
+| A6 — Diff                | Text modifications, additions, deletions, comparison identity, refresh, unsupported content, and visible Git/read failure retaining the last good result.                                                                     |
+| A7 — Interrupt           | Exact-turn targeting, late response isolation from later turns, observed outcome, failed/unacknowledged interruption, and owned tool cleanup or explicit uncertainty.                                                         |
+| A8 — Restart/history     | Owned stop/flush/shutdown on Quit, visible failures, history restored without execution, desktop-only crash/reconnect without replay, and durable-prefix recovery after supervisor failure.                                   |
+| A9 — Exact resume        | Saved native mapping, earlier-marker recall, reconciliation after uncertain resume, unavailable native history with readable local history, and distinct new-conversation action.                                             |
 | A10 — Ownership/recovery | Actual process owner exclusivity, private connection access, version mismatch, disconnect/catch-up, repeat-action results, uncertain surviving work blocking conflicts, and no signaling authority inferred from a saved PID. |
 
 Verification follows the milestone's order:
 
-1. **Deterministic checks:** ground fixtures in the supported schema/evidence first. Exercise core behavior, real Git effects, storage failures, and actual supervisor processes. Inject delays, malformed payloads, duplicate/late events, lost replies, connection loss, and supervisor failure. Repair observer/approval fixture defects while retaining strict matching. Synthetic faults prove application recovery, not native provider behavior.
+1. **Deterministic checks:** use the testing policy for application decisions and mocked effect outcomes. Ground protocol inputs in the supported schema/evidence and preserve strict identity/approval matching. Record unit results separately from actual desktop/process and native qualification; synthetic faults do not establish provider behavior.
 2. **Actual desktop with fixtures:** complete the usable workflow, deny approval, interrupt, quit/restart, crash/reconnect the desktop, recover from supervisor failure, and resume exactly. Record working/error-state screenshots, commands, and results. Run build, formatting, static checks, and relevant tests. Measure navigation feedback against 100 ms and recent-history opening against one second on the test Mac under this single-conversation workload; these measurements do not qualify deferred concurrency.
 3. **Separately authorized native cohort:** before any real run, agree exact scenarios, permitted submissions, model/effort, time/usage limits, and stop conditions. Use disposable test checkouts/private application state while authentication stays runtime-owned. Record runtime/schema versions, effective configuration/MCP startup exposure, and source hashes before/after. There are no automatic scenario retries, larger-model fallbacks, or inherited archived allowances; no established hard dollar cap is assumed.
 4. **Evidence closure:** demonstrate native streaming, allow/deny, interrupt/owned cleanup, restart, and exact resume through the desktop. Record non-secret subscription/account/billing evidence when available. API-key execution remains separately unqualified unless included in the allowance. Retain failures and unperformed checks explicitly; fixture success does not substitute for native success.
@@ -150,8 +146,8 @@ These are sequencing limits. Retain the product contract's ownership and identit
 ## Further Notes
 
 - Authority: [MVP product contract](../../docs/MVP.md) defines product scope and architecture; [Milestone 01](../../docs/MILESTONE-01.md) defines A1–A10, verification order, completion gate, and retained results. This spec elaborates implementation without replacing those authorities.
-- Preparation confirmed one spec, separate-session tickets, bootstrap before product behavior, a clear usable desktop, stable reproducible versions, and lasting modules without speculative abstractions. The test interfaces above are also confirmed.
-- Published to the configured local Markdown tracker with `ready-for-agent` status. Ticket generation is the subsequent `/to-tickets` step; implementation tickets will be separate files with explicit blockers under this feature's `issues/` directory.
+- Preparation confirmed one spec, separate-session tickets, bootstrap before product behavior, a clear usable desktop, stable reproducible versions, and lasting modules without speculative abstractions. Automated coverage follows the repository testing policy; desktop and native qualification remain separate.
+- Published to the configured local Markdown tracker with `ready-for-agent` status. Implementation tickets are separate files with explicit blockers under this feature's `issues/` directory.
 - Exact stable dependency versions and the supported Codex runtime/schema cohort are selected and recorded during their respective implementation gates. No new framework choice, transport library, message schema, or provider compatibility result is implied by this document.
-- No application implementation or qualification has started. Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
+- Tickets 01–02 are complete; tickets 03–13 remain unimplemented. Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
 - Mark the milestone Passed only when its deterministic, desktop, and required native checks succeed. If native checks are unauthorized or fail, retain completed evidence and leave the milestone incomplete. Preserve the completed milestone when defining the next one.

@@ -6,7 +6,7 @@
 
 **Status:** ready-for-agent
 
-**Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
+**Context:** Read the [parent spec](../spec.md), [product contract](../../../docs/MVP.md), and [milestone acceptance and verification requirements](../../../docs/MILESTONE-01.md). Follow [testing and verification](../../../docs/agents/verification.md) for automated coverage and skill constraints. Build lasting modules under their existing ownership; keep policy in Rust and presentation thin.
 
 **Coverage:** A6. Full changes against the workspace base and inline feedback remain deferred.
 
@@ -15,6 +15,6 @@
 - [ ] Label binary and unsupported content honestly rather than presenting an incomplete text rendering as complete.
 - [ ] Preserve the last good result with a visible error when Git or file reads fail; distinguish stale/failed inspection from a clean comparison.
 - [ ] Keep blocking Git/file operations away from rendering and attach observations to the correct workspace.
-- [ ] Verify through the core interface with temporary real Git repositories; demonstrate desktop states for changed, clean, unsupported, refreshed, and failed inspection and retain evidence.
+- [ ] Unit-test workspace/comparison selection, parsing, classification, refresh and last-good retention with supplied Git bytes and file metadata/read outcomes. Cover newline, binary/non-UTF-8, symlink/submodule/size and preview-bound cases; test command/environment construction without running Git. Separately demonstrate desktop changed, clean, unsupported, refreshed and failed states with disposable fixture state; retain distinct evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.

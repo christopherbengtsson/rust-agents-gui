@@ -3,6 +3,7 @@
 This repository uses one root GLOSSARY.md and docs/adr/.
 
 Before exploring an area:
+
 - Read GLOSSARY.md if present.
 - Read ADRs relevant to that area.
 - Proceed silently when these documents do not yet exist.
