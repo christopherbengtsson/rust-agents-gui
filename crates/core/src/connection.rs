@@ -93,22 +93,36 @@ impl SupervisorClient {
         &self,
         request: RepositoryRequest,
     ) -> Result<RepositoryReply, RepositoryError> {
-        let result = (|| -> io::Result<Result<RepositoryReply, RepositoryError>> {
-            check_private(&self.state, true)?;
-            let socket = socket_path(&self.state);
+        self.repository_request_with(request, |state, request| {
+            check_private(state, true)?;
+            let socket = socket_path(state);
             check_private(&socket, false)?;
             let mut stream = UnixStream::connect(socket)?;
             configure(&stream)?;
-            write_frame(
-                &mut stream,
+            write_frame(&mut stream, request)?;
+            read_frame(&mut stream)
+        })
+    }
+
+    fn repository_request_with(
+        &self,
+        request: RepositoryRequest,
+        exchange: impl FnOnce(&Path, &Request) -> io::Result<Response>,
+    ) -> Result<RepositoryReply, RepositoryError> {
+        if let RepositoryRequest::Register { request } = &request {
+            // A definite local rejection must not become uncertain delivery in the UI.
+            crate::workspaces::check_registration_path_budget(&request.path)?;
+        }
+        let result = (|| -> io::Result<Result<RepositoryReply, RepositoryError>> {
+            match exchange(
+                &self.state,
                 &Request {
                     protocol: PROTOCOL_VERSION,
                     application_version: env!("CARGO_PKG_VERSION").into(),
                     after: None,
                     repository: Some(request),
                 },
-            )?;
-            match read_frame(&mut stream)? {
+            )? {
                 Response::Repository { result } => Ok(result),
                 Response::Incompatible { message } => {
                     Err(io::Error::new(io::ErrorKind::InvalidData, message))

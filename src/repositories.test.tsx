@@ -1,6 +1,7 @@
 import {
   act,
   cleanup,
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -356,6 +357,84 @@ test("lost registration reply reconciles the retained action without another sub
   expect(registrations()).toHaveLength(1);
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
 });
+
+test.each([false, true])(
+  "capacity rejection allows correction of an oversized registration (restored: %s)",
+  async (restored) => {
+    const user = userEvent.setup();
+    const oversized = `/${"a".repeat(64 * 1024)}`;
+    const action_id = "00000000-0000-4000-8000-000000000010";
+    if (restored) {
+      localStorage.setItem(
+        PENDING_KEY,
+        JSON.stringify({
+          request: { action_id, path: oversized },
+          selection: null,
+        }),
+      );
+    }
+    const submitted: { action_id: string; path: string }[] = [];
+    replies(async (request) => {
+      if (request.operation === "register") {
+        submitted.push(request.request);
+        if (request.request.path === oversized) {
+          throw {
+            code: "capacity",
+            message: "Choose a path within 4096 UTF-8 bytes",
+          };
+        }
+        return {
+          kind: "registration",
+          registration: {
+            ...request.request,
+            state: "completed",
+            repository_id: id,
+          },
+        };
+      }
+      if (request.operation === "action")
+        return { kind: "action", registration: null };
+      if (request.operation === "get")
+        return { kind: "repository", repository };
+      return { kind: "repositories", page: { repositories: [], next: null } };
+    });
+    render(<App />);
+    if (restored) {
+      await screen.findByText(/no recorded registration/);
+      expect(registrations()).toHaveLength(0);
+    }
+    await user.click(
+      await screen.findByRole("button", { name: "Add repository" }),
+    );
+    const path = screen.getByRole("textbox", { name: "Repository folder" });
+    if (restored) {
+      expect((path as HTMLInputElement).value).toBe(oversized);
+      expect(path.hasAttribute("disabled")).toBe(true);
+    } else {
+      fireEvent.change(path, { target: { value: oversized } });
+    }
+    await user.click(
+      screen.getByRole("button", {
+        name: restored ? "Retry registration" : /^Register$/,
+      }),
+    );
+    await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
+    expect(path.hasAttribute("disabled")).toBe(false);
+    expect(
+      within(screen.getByRole("dialog")).getByText(/within 4096 UTF-8 bytes/),
+    ).toBeDefined();
+    expect(submitted).toHaveLength(1);
+    expect(submitted[0].path).toBe(oversized);
+    if (restored) expect(submitted[0].action_id).toBe(action_id);
+    fireEvent.change(path, { target: { value: repository.path } });
+    await user.click(screen.getByRole("button", { name: /^Register$/ }));
+    await screen.findByRole("heading", { level: 1, name: "one" });
+    expect(submitted).toHaveLength(2);
+    expect(submitted[1].path).toBe(repository.path);
+    expect(submitted[1].action_id).not.toBe(submitted[0].action_id);
+    expect(localStorage.getItem(PENDING_KEY)).toBeNull();
+  },
+);
 
 test("selection during registration is not retargeted by its late completion", async () => {
   const user = userEvent.setup();

@@ -107,7 +107,9 @@ This guide does not authorize regenerating or relocating the foundation.
   `onRefreshStatus: () => Promise<void>`; App's Hooks handle errors and pending
   guards. Displays selected repository context, retained/stale observations,
   action/storage errors and availability. Use for workspace content rather than
-  navigation. Ticket 04 adds selected-workspace context; ticket 05 adds change
+  navigation. Long repository names truncate in the header/footer while retaining
+  their full accessible text and keeping Refresh visible. Ticket 04 adds
+  selected-workspace context; ticket 05 adds change
   inspection through concrete interfaces in those tickets.
 
 App owns the single connection observation Hook and composes the blocks inside

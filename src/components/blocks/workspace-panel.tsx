@@ -23,7 +23,9 @@ export function WorkspacePanel({
   return (
     <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
       <header className="workspace-header">
-        <h1>{repositories.selected?.name ?? "Workspace"}</h1>
+        <h1 className="min-w-0 truncate">
+          {repositories.selected?.name ?? "Workspace"}
+        </h1>
         <Button
           variant="outline"
           size="sm"
@@ -130,8 +132,8 @@ export function WorkspacePanel({
         </Empty>
       </div>
       <footer className="workspace-footer">
-        <span>Local workspace</span>
-        <span>
+        <span className="shrink-0">Local workspace</span>
+        <span className="min-w-0 truncate">
           {repositories.selected
             ? repositories.selected.name
             : "No repository selected"}

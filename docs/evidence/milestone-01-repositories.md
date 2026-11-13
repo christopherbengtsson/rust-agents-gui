@@ -181,3 +181,75 @@ real-repository creation was not used for capacity tests. No claim is made for
 oldest-supported macOS, power-loss survival, VoiceOver output, navigation paint
 latency below 100 ms, history-opening latency, provider compatibility or remaining
 milestone capabilities. Earlier milestone evidence remains historical.
+
+## Independent-review follow-up — 2026-11-13
+
+Three fresh independent React, shadcn and Rust reviews at `0e45b9b` found two
+P2 defects: an oversized registration could remain permanently pending in the UI,
+and an unbroken repository name could push Refresh outside the window. Rust had
+no additional findings. Both fixes are scoped to those findings.
+
+`workspaces` now shares its existing 4096-UTF-8-byte registration-path check with
+the connection client. The client rejects oversized requests as typed `capacity`
+before state access, connection or send. Authoritative admission retains the same
+check. Existing UI rejection handling clears the pending preference and restores
+editing; an already retained oversized request recovers through explicit Retry.
+Actual transport errors remain uncertain and retain their action IDs. Header and
+footer names now truncate while preserving full accessible text.
+
+Controlled Rust coverage checks the exact byte boundary, multibyte paths, a path
+larger than the 64 KiB frame limit, absence of transport on rejection, and preserved
+uncertainty for transport failures. Two mocked-IPC UI cases cover fresh/restored
+oversized requests, explicit retry identity and corrected submission with a new
+action ID. Existing lost-reply recovery coverage remains passing.
+
+Same hardware/toolchain as the original cohort: macOS 26.2, Apple M4 Pro, Rust
+1.99.1, pinned Node 26.13.1 and pnpm 12.18.0; warm worktree-default Cargo target,
+test profile, serial Rust/tooling harnesses and one Vitest worker. Source identity
+is the dirty follow-up to `0e45b9b`; [source hashes](milestone-01-repositories/review-fixes-source-manifest.json)
+identify all six changed product/test files.
+
+| Check                           | Result                                                                                                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Focused Rust registration units | 4 passed; exit 0; 1.39 s wall                                                                                                                                             |
+| Focused repository UI units     | 15 passed; exit 0; 1.91 s wall                                                                                                                                            |
+| Complete `pnpm verify`          | 54 Rust + 16 tooling + 24 UI = 94 passed; exit 0; 6.95 s wall                                                                                                             |
+| Warm execution measurement      | One warm-up and five warm executions per harness; exit 0; 15.85 s wall                                                                                                    |
+| Browser layout/keyboard fixture | 600×480, 200-character unbroken name: heading/footer truncate, full heading remains accessible, no horizontal overflow, Refresh visible and Tab/Enter activation observed |
+
+Exact commands, each timed with `/usr/bin/time -p`:
+
+```sh
+fnm exec --using 26.13.1 node scripts/cargo.mjs test --locked -p workspace-core --lib registration -- --test-threads=1
+fnm exec --using 26.13.1 corepack pnpm test:ui src/repositories.test.tsx
+fnm exec --using 26.13.1 corepack pnpm verify
+fnm exec --using 26.13.1 corepack pnpm test:measure
+```
+
+Complete-gate unit compilation/location took 0.121350 s; execution took Rust
+0.020873 s, tooling 0.517919 s and UI 2.133355 s. Measurement-only compilation
+took 0.083486 s. Warm medians/ranges: Rust 0.020422 s / 0.020152–0.020614 s;
+tooling 0.507602 s / 0.505733–0.513162 s; UI 2.023842 s / 1.997409–2.393328 s.
+Fresh-private-target compilation was not measured.
+
+The initial focused Rust compile failed because the new test compared a request
+enum lacking `PartialEq`; the assertion now compares its targeted registration
+payload. That failure is retained alongside passing [Rust](milestone-01-repositories/review-fixes-rust.log),
+[UI](milestone-01-repositories/review-fixes-ui.log),
+[complete verification](milestone-01-repositories/review-fixes-verify.log),
+[measurement](milestone-01-repositories/review-fixes-measure.log) and
+[initial compile failure](milestone-01-repositories/review-fixes-rust-initial-failed.log).
+
+The [browser fixture](milestone-01-repositories/review-fixes-layout-harness.txt)
+served actual current React/CSS through Vite with mocked IPC and a fixed-size
+iframe; native Dia UI supplied Tab/Enter. [Screenshot](milestone-01-repositories/20-review-fixes-long-name.png)
+and [observations](milestone-01-repositories/review-fixes-layout.json) retain the
+result. Browser-host discovery was unavailable, so the native app surface was
+used; its bundle ID was ambiguous until resolved to `/Applications/Dia.app`.
+The disposable server was stopped afterwards.
+
+This follow-up did not rerun production packaging, actual Tauri/process
+qualification, VoiceOver, or live-provider checks. The browser fixture establishes
+layout and keyboard behavior in Dia, not a new native desktop qualification.
+Earlier desktop/process evidence remains historical. No provider was started and
+RAT was not inspected.

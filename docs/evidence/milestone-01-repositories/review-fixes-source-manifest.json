@@ -1,0 +1,12 @@
+{
+  "base_commit": "0e45b9b3853f09e3f5236fdb265e9b585395d95a",
+  "dirty": true,
+  "sha256": {
+    "crates/core/src/connection.rs": "42841387553022856a5be87be24220b219ebe68a86fed33370e3d5137aea56a7",
+    "crates/core/src/connection/tests.rs": "1d1ab311d1343673f4df44732221251f2bc02496d765db7017d2c241f15e492f",
+    "crates/core/src/workspaces.rs": "d674f16bbbc05b70221d4cee435dd69c5351eba4dddd74e9918ff4949dc70cb7",
+    "crates/core/src/workspaces/tests.rs": "865a0e094bc4668540783f897b05d818a76d7ff1594f8b1616d8ee6f6060abc5",
+    "src/components/blocks/workspace-panel.tsx": "9b62d3513d1a26532c51d009808261ca42c31860d8ddac01bc21f6eec683536e",
+    "src/repositories.test.tsx": "b481cf4643bb5ac840a5c4988c1cb46dc1eafeb91009c98928ed768f6caffccd"
+  }
+}

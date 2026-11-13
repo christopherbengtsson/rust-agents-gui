@@ -1,0 +1,14 @@
+{
+  "kind": "browser layout fixture with mocked IPC",
+  "viewport": [600, 480],
+  "repository_name_characters": 200,
+  "headingFullNameRetained": true,
+  "headingTruncated": true,
+  "footerTruncated": true,
+  "refreshVisible": true,
+  "noHorizontalOverflow": true,
+  "keyboard_focus": "Refresh status",
+  "refreshes_before_enter": 1,
+  "refreshes_after_enter": 2,
+  "server_stopped": true
+}

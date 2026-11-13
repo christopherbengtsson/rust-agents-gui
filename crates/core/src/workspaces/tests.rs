@@ -136,6 +136,37 @@ fn conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect() 
 }
 
 #[test]
+fn registration_path_budget_counts_utf8_bytes_before_recording_intent() {
+    for path in [
+        format!("/{}", "a".repeat(4095)),
+        format!("/{}a", "é".repeat(2047)),
+    ] {
+        assert_eq!(path.len(), 4096);
+        let mut store = Store::default();
+        let req = RegisterRepository { path, ..request() };
+        assert_eq!(
+            admit(&mut store, &req).unwrap().state,
+            RegistrationState::Pending
+        );
+        assert_eq!(store.calls, ["read_action", "intent"]);
+    }
+    for path in [
+        format!("/{}", "a".repeat(4096)),
+        format!("/{}", "é".repeat(2048)),
+    ] {
+        assert_eq!(path.len(), 4097);
+        let mut store = Store::default();
+        let req = RegisterRepository { path, ..request() };
+        assert_eq!(
+            admit(&mut store, &req).unwrap_err().code,
+            ErrorCode::Capacity
+        );
+        assert_eq!(store.calls, ["read_action"]);
+        assert!(store.actions.is_empty());
+    }
+}
+
+#[test]
 fn invalid_validation_records_an_actionable_failure_without_a_saved_repository() {
     let mut store = Store::default();
     let action = admit(&mut store, &request()).unwrap();

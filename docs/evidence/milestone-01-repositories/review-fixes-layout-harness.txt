@@ -1,0 +1,59 @@
+import { createServer } from '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/node_modules/vite/dist/node/index.js';
+const repository = {
+  id: '00000000-0000-4000-8000-000000000001',
+  name: 'r'.repeat(200),
+  path: '/fixtures/long-repository',
+  availability: { state: 'available' },
+};
+const fixture = `<!doctype html><html class="dark"><head><meta charset="utf-8" /></head><body><div id="root"></div><script>
+const repository = ${JSON.stringify(repository)};
+window.refreshes = 0;
+window.__TAURI_INTERNALS__ = { invoke: async (command, args) => {
+  if (command === 'desktop_pid') return 42;
+  if (command === 'supervisor_status') {
+    window.refreshes++;
+    return { status: { state: 'ready', supervisor_pid: 41, application_version: '0.1.0' }, cursor: { owner: 'layout-fixture', revision: 1 }, reset: true };
+  }
+  const request = args.request;
+  if (request.operation === 'get') return { kind: 'repository', repository };
+  if (request.operation === 'list') return { kind: 'repositories', page: { repositories: [repository], next: null } };
+  if (request.operation === 'action') return { kind: 'action', registration: null };
+  throw new Error('Layout fixture supports observations only');
+} };
+</script><script type="module" src="/src/main.tsx"></script></body></html>`;
+const wrapper = `<!doctype html><html><head><title>Repository long-name layout check</title></head><body style="background:#ddd;margin:20px;font:14px system-ui"><h1>Repository name · 600 × 480 fixture</h1><iframe id="preview" src="/__review-frame__" style="width:600px;height:480px;border:0"></iframe><pre id="report">Loading…</pre><script>
+setInterval(() => {
+ const frame = document.querySelector('iframe');
+ const win = frame.contentWindow, doc = frame.contentDocument;
+ const heading = doc.querySelector('h1');
+ const refresh = [...doc.querySelectorAll('button')].find(b => b.textContent.includes('Refresh status'));
+ const footer = doc.querySelector('.workspace-footer span:last-child');
+ if (!heading || !refresh || !footer) return;
+ const rect = refresh.getBoundingClientRect();
+ const report = {
+  viewport: [win.innerWidth, win.innerHeight],
+  headingFullNameRetained: heading.textContent.length === 200,
+  headingTruncated: heading.scrollWidth > heading.clientWidth && win.getComputedStyle(heading).textOverflow === 'ellipsis',
+  footerTruncated: footer.scrollWidth > footer.clientWidth && win.getComputedStyle(footer).textOverflow === 'ellipsis',
+  refreshVisible: rect.left >= 0 && rect.right <= win.innerWidth && rect.top >= 0 && rect.bottom <= win.innerHeight,
+  noHorizontalOverflow: doc.documentElement.scrollWidth <= win.innerWidth,
+  focused: doc.activeElement?.textContent?.slice(0, 60),
+  refreshes: win.refreshes
+ };
+ document.querySelector('#report').textContent = JSON.stringify(report, null, 2);
+}, 100);
+</script></body></html>`;
+const server = await createServer({
+  root: '/Users/christopherbengtsson/Documents/dev/rust-agents-gui',
+  server: { port: 15673, strictPort: true, host: '127.0.0.1' },
+  plugins: [{ name: 'disposable-layout-fixture', configureServer(server) {
+    server.middlewares.use(async (req, res, next) => {
+      const html = req.url === '/__review-layout__' ? wrapper : req.url === '/__review-frame__' ? fixture : null;
+      if (!html) return next();
+      res.setHeader('Content-Type', 'text/html');
+      res.end(await server.transformIndexHtml(req.url, html));
+    });
+  } }],
+});
+await server.listen();
+console.log('Disposable layout fixture: http://127.0.0.1:15673/__review-layout__');

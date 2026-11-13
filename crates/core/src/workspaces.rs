@@ -164,6 +164,16 @@ pub(crate) trait RepositoryStore: Send {
     fn list(&mut self, after: Option<RepositoryId>, limit: usize) -> Result<Vec<RepositoryRecord>>;
 }
 
+pub(crate) fn check_registration_path_budget(path: &str) -> Result<()> {
+    if path.len() > 4096 {
+        return Err(RepositoryError::new(
+            ErrorCode::Capacity,
+            "This path exceeds the registration input budget (4096 UTF-8 bytes). Choose a shorter repository path.",
+        ));
+    }
+    Ok(())
+}
+
 fn admit(store: &mut dyn RepositoryStore, request: &RegisterRepository) -> Result<Registration> {
     if let Some(action) = store.action(request.action_id)? {
         if action.path != request.path {
@@ -180,12 +190,7 @@ fn admit(store: &mut dyn RepositoryStore, request: &RegisterRepository) -> Resul
             "Enter an absolute repository folder path, or choose Browse.",
         ));
     }
-    if request.path.len() > 4096 {
-        return Err(RepositoryError::new(
-            ErrorCode::Capacity,
-            "This path exceeds the registration input budget (4096 UTF-8 bytes). Choose a shorter repository path.",
-        ));
-    }
+    check_registration_path_budget(&request.path)?;
     if store.pending_count()? >= 8 {
         return Err(RepositoryError::new(
             ErrorCode::Capacity,
