@@ -112,3 +112,26 @@ durability/migration, kernel ownership/lease/descendant cleanup and native-provi
 qualification are **not run for this source**; 06d owns those results. Native
 provider processes/submissions, login changes and runtime configuration changes:
 **zero**. Parent 06, 06c–06d and the milestone remain open. Stop after this child.
+
+
+### 2026-11-13 — Scoped recovery corrections after independent review
+
+Addressed the three missed 06b cases: lease contention without a quarantined
+handle, confirmed cleanup followed by final persistence failure, and cleanup
+reconciliation targeting mutable active observations. The runtime worker now
+retains exact check ownership through cleanup and completion persistence, with
+readback before completion-only retry and distinct cleanup/storage evidence.
+Controlled regressions also retain queued-request admission and bounded shutdown
+error classification. See the appended [06b correction evidence](../../../docs/evidence/milestone-01-codex-setup.md#06b-recovery-correction--2026-11-13).
+
+The correction preserves public contracts/schema and predecessor results. The
+unrelated research file is excluded from the fix. Broader 06c coverage and all 06d
+qualification remain open; no native processes or submissions were performed.
+Final checks and source identity accompany the correction evidence.
+
+
+Final correction gate: **149 Rust + 25 tooling + 113 UI**, all configured checks
+passed. Required warm measurements and production app packaging passed.
+Independent final re-review: **Standards 0, Spec 0 unresolved**. Exact source
+hashes, command timings, logs and staged-sidecar provenance are linked in the
+correction evidence. Actual desktop/process/native qualification remains unperformed.

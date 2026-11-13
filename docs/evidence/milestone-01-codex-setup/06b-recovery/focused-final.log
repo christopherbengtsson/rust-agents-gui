@@ -1,0 +1,41 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.84s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-36bf8e1346420b1d)
+
+running 34 tests
+test runtimes::process::tests::bounded_cleanup_escalates_and_retains_unconfirmed_stop ... ok
+test runtimes::process::tests::cleanup_signals_only_before_reaping_and_requires_descendant_evidence ... ok
+test runtimes::process::tests::discovery_obeys_override_path_and_standard_locations_without_invalid_override_fallback ... ok
+test runtimes::process::tests::failed_cleanup_reconciliation_retains_each_owned_handle ... ok
+test runtimes::process::tests::fixture_success_uses_real_sequence_parser_and_cleanup ... ok
+test runtimes::process::tests::lease_contention_before_either_launch_is_not_confirmed_by_empty_quarantine ... ok
+test runtimes::process::tests::metadata_only_commands_never_request_threads_turns_refresh_or_login ... ok
+test runtimes::process::tests::output_budget_includes_stdout_and_stderr_and_deadlines_need_no_real_waits ... ok
+test runtimes::process::tests::primary_synthetic_faults_keep_failure_and_cleanup_distinct ... ok
+test runtimes::process::tests::real_command_construction_passes_executable_and_arguments_directly ... ok
+test runtimes::protocol::tests::authentication_and_billing_require_evidence_without_revealing_account_details ... ok
+test runtimes::protocol::tests::chunked_frames_enforce_bounds_and_reject_malformed_json ... ok
+test runtimes::protocol::tests::exact_identifier_types_and_unexpected_requests_fail_closed ... ok
+test runtimes::tests::action_reads_and_restart_markers_do_not_execute_checks ... ok
+test runtimes::tests::admission_serializes_setup_and_fences_changed_owner_and_configuration ... ok
+test runtimes::tests::after_restart_status_reconciles_retained_payload_against_canonical_durable_identity ... ok
+test runtimes::tests::background_finalization_preserves_a_queued_request_lane ... ok
+test runtimes::tests::blocked_storage_reads_reenter_authoritative_storage_even_with_a_cached_action ... ok
+test runtimes::tests::bounded_worker_shutdown_keeps_ownership_on_timeout_and_joins_only_finished_work ... ok
+test runtimes::tests::confirmed_cleanup_retries_only_completion_after_storage_recovers ... ok
+test runtimes::tests::confirmed_save_rollback_preserves_definite_rejection_and_previous_preference ... ok
+test runtimes::tests::delayed_cleanup_keeps_its_check_identity_across_other_requests ... ok
+test runtimes::tests::evicted_conflicting_payload_is_rejected_without_replacing_canonical_identity ... ok
+test runtimes::tests::failed_check_evidence_survives_completion_persistence_recovery ... ok
+test runtimes::tests::failed_intent_or_surviving_cleanup_never_launches_replacement ... ok
+test runtimes::tests::intent_is_durable_before_effect_and_repeated_identity_never_replays ... ok
+test runtimes::tests::lost_completion_reply_is_read_back_without_another_write ... ok
+test runtimes::tests::lost_save_commit_result_is_settled_by_authoritative_read_without_repeated_write ... ok
+test runtimes::tests::pending_finalization_participates_in_bounded_shutdown_without_repeating_cleanup ... ok
+test runtimes::tests::public_repeated_mutations_return_exact_cached_and_evicted_action_status ... ok
+test runtimes::tests::saved_preferences_invalidate_readiness_without_starting_a_process ... ok
+test runtimes::tests::saving_rejects_relative_or_oversized_paths_but_reset_is_valid ... ok
+test runtimes::tests::unconfirmed_cleanup_and_failed_final_persistence_keep_the_replacement_fence ... ok
+test runtimes::tests::unowned_lease_uncertainty_persists_without_claiming_worker_handles ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 115 filtered out; finished in 0.01s

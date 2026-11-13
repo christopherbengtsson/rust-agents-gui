@@ -33,3 +33,12 @@ conversation tickets must implement exact operation matching independently.
 
 The concrete fixture adapter is selected only by an explicit supervisor environment
 variable; see the [private-state instructions](../../../../../docs/evidence/milestone-01-codex-setup/fixture-instructions.md).
+
+06b recovery correction adds `lease-version` and `lease-metadata`: synthetic lease
+acquisition failures before the version or app-server launch, respectively. They
+supply the same `CleanupUnconfirmed` startup outcome as native lease contention;
+production check policy must retain uncertainty without a quarantined handle.
+`timeout-cleanup` combines a synthetic metadata timeout with unconfirmed cleanup;
+its primary timeout must survive while owned handles remain quarantined.
+The pinned schema/source and success transcript are unchanged. These faults prove
+application recovery decisions, not native lock or descendant-cleanup behavior.

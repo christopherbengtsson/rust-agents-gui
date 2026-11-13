@@ -1,0 +1,400 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0277]: expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+   --> crates/core/src/runtimes/tests.rs:582:59
+    |
+582 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+    |     ------- required by a bound introduced by this call   ^^^^^^ expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+    |
+    = help: the trait `for<'a, 'b> Fn(&'a runtimes::Configuration, uuid::Uuid, &'b mut (dyn FnMut(runtimes::Phase) + 'b))` is not implemented for `str`
+    = note: required for `&str` to implement `FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase))`
+note: required by a bound in `runtimes::execute`
+   --> crates/core/src/runtimes.rs:592:17
+    |
+587 | fn execute(
+    |    ------- required by a bound in this function
+...
+592 |     check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `execute`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d.long-type-1629273305499151330.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> crates/core/src/runtimes/tests.rs:582:5
+    |
+582 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+    |     ^^^^^^^                      ------------ unexpected argument #3 of type `&mut std::option::Option<_>`
+    |
+note: expected `&str`, found closure
+   --> crates/core/src/runtimes/tests.rs:582:67
+    |
+582 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: expected reference `&str`
+                 found closure `{closure@crates/core/src/runtimes/tests.rs:582:67: 582:77}`
+note: function defined here
+   --> crates/core/src/runtimes.rs:587:4
+    |
+587 | fn execute(
+    |    ^^^^^^^
+...
+591 |     boot: &str,
+    |     ----------
+help: remove the extra argument
+    |
+582 -     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+582 +     execute(&shared, &mut store, check(id), /* &str */, |c, id, _| success(c, id));
+    |
+
+error[E0425]: cannot find function `reconcile_pending` in this scope
+   --> crates/core/src/runtimes/tests.rs:592:5
+    |
+592 |     reconcile_pending(&shared, &mut store, &mut pending, || panic!("confirmed cleanup repeated"));
+    |     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `reconcile_pending` in this scope
+   --> crates/core/src/runtimes/tests.rs:596:5
+    |
+596 |     reconcile_pending(&shared, &mut store, &mut pending, || panic!("confirmed cleanup repeated"));
+    |     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0277]: expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+   --> crates/core/src/runtimes/tests.rs:610:59
+    |
+610 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+    |     ------- required by a bound introduced by this call   ^^^^^^ expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+    |
+    = help: the trait `for<'a, 'b> Fn(&'a runtimes::Configuration, uuid::Uuid, &'b mut (dyn FnMut(runtimes::Phase) + 'b))` is not implemented for `str`
+    = note: required for `&str` to implement `FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase))`
+note: required by a bound in `runtimes::execute`
+   --> crates/core/src/runtimes.rs:592:17
+    |
+587 | fn execute(
+    |    ------- required by a bound in this function
+...
+592 |     check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `execute`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d.long-type-1629273305499151330.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> crates/core/src/runtimes/tests.rs:610:5
+    |
+610 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+    |     ^^^^^^^                      ------------ unexpected argument #3 of type `&mut std::option::Option<_>`
+    |
+note: expected `&str`, found closure
+   --> crates/core/src/runtimes/tests.rs:610:67
+    |
+610 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: expected reference `&str`
+                 found closure `{closure@crates/core/src/runtimes/tests.rs:610:67: 610:77}`
+note: function defined here
+   --> crates/core/src/runtimes.rs:587:4
+    |
+587 | fn execute(
+    |    ^^^^^^^
+...
+591 |     boot: &str,
+    |     ----------
+help: remove the extra argument
+    |
+610 -     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| success(c, id));
+610 +     execute(&shared, &mut store, check(id), /* &str */, |c, id, _| success(c, id));
+    |
+
+error[E0425]: cannot find function `reconcile_pending` in this scope
+   --> crates/core/src/runtimes/tests.rs:611:5
+    |
+611 |     reconcile_pending(&shared, &mut store, &mut pending, || panic!("cleanup repeated"));
+    |     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0277]: expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+   --> crates/core/src/runtimes/tests.rs:626:58
+    |
+626 |     execute(&shared, &mut store, &mut pending, check(a), "boot", |c, id, _| {
+    |     ------- required by a bound introduced by this call  ^^^^^^ expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+    |
+    = help: the trait `for<'a, 'b> Fn(&'a runtimes::Configuration, uuid::Uuid, &'b mut (dyn FnMut(runtimes::Phase) + 'b))` is not implemented for `str`
+    = note: required for `&str` to implement `FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase))`
+note: required by a bound in `runtimes::execute`
+   --> crates/core/src/runtimes.rs:592:17
+    |
+587 | fn execute(
+    |    ------- required by a bound in this function
+...
+592 |     check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `execute`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d.long-type-11776412323990421842.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `cleanup` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:628:17
+    |
+628 |         outcome.cleanup = CleanupEvidence::Owned;
+    |                 ^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0433]: cannot find type `CleanupEvidence` in this scope
+   --> crates/core/src/runtimes/tests.rs:628:27
+    |
+628 |         outcome.cleanup = CleanupEvidence::Owned;
+    |                           ^^^^^^^^^^^^^^^ use of undeclared type `CleanupEvidence`
+
+error[E0609]: no field `diagnostic` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:629:17
+    |
+629 |         outcome.diagnostic.cleanup_confirmed = false;
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0609]: no field `diagnostic` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:630:17
+    |
+630 |         outcome.diagnostic.passed = false;
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0609]: no field `diagnostic` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:631:17
+    |
+631 |         outcome.diagnostic.error = Some(RuntimeError::cleanup());
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> crates/core/src/runtimes/tests.rs:626:5
+    |
+626 |     execute(&shared, &mut store, &mut pending, check(a), "boot", |c, id, _| {
+    |     ^^^^^^^                      ------------ unexpected argument #3 of type `&mut std::option::Option<_>`
+    |
+note: expected `&str`, found closure
+   --> crates/core/src/runtimes/tests.rs:626:66
+    |
+626 |       execute(&shared, &mut store, &mut pending, check(a), "boot", |c, id, _| {
+    |  __________________________________________________________________^
+627 | |         let mut outcome = success(c, id);
+628 | |         outcome.cleanup = CleanupEvidence::Owned;
+629 | |         outcome.diagnostic.cleanup_confirmed = false;
+...   |
+632 | |         outcome
+633 | |     });
+    | |_____^
+    = note: expected reference `&str`
+                 found closure `{closure@crates/core/src/runtimes/tests.rs:626:66: 626:76}`
+note: function defined here
+   --> crates/core/src/runtimes.rs:587:4
+    |
+587 | fn execute(
+    |    ^^^^^^^
+...
+591 |     boot: &str,
+    |     ----------
+help: remove the extra argument
+    |
+626 -     execute(&shared, &mut store, &mut pending, check(a), "boot", |c, id, _| {
+626 +     execute(&shared, &mut store, check(a), /* &str */, |c, id, _| {
+    |
+
+error[E0277]: expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+   --> crates/core/src/runtimes/tests.rs:635:58
+    |
+635 |     execute(&shared, &mut store, &mut pending, check(b), "boot", |_, _, _| panic!("repeated check launched"));
+    |     ------- required by a bound introduced by this call  ^^^^^^ expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+    |
+    = help: the trait `for<'a, 'b> Fn(&'a runtimes::Configuration, uuid::Uuid, &'b mut (dyn FnMut(runtimes::Phase) + 'b))` is not implemented for `str`
+    = note: required for `&str` to implement `FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase))`
+note: required by a bound in `runtimes::execute`
+   --> crates/core/src/runtimes.rs:592:17
+    |
+587 | fn execute(
+    |    ------- required by a bound in this function
+...
+592 |     check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `execute`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d.long-type-156886418008569736.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> crates/core/src/runtimes/tests.rs:635:5
+    |
+635 |     execute(&shared, &mut store, &mut pending, check(b), "boot", |_, _, _| panic!("repeated check launched"));
+    |     ^^^^^^^                      ------------ unexpected argument #3 of type `&mut std::option::Option<_>`
+    |
+note: expected `&str`, found closure
+   --> crates/core/src/runtimes/tests.rs:635:66
+    |
+635 |     execute(&shared, &mut store, &mut pending, check(b), "boot", |_, _, _| panic!("repeated check launched"));
+    |                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: expected reference `&str`
+                 found closure `{closure@crates/core/src/runtimes/tests.rs:635:66: 635:75}`
+note: function defined here
+   --> crates/core/src/runtimes.rs:587:4
+    |
+587 | fn execute(
+    |    ^^^^^^^
+...
+591 |     boot: &str,
+    |     ----------
+help: remove the extra argument
+    |
+635 -     execute(&shared, &mut store, &mut pending, check(b), "boot", |_, _, _| panic!("repeated check launched"));
+635 +     execute(&shared, &mut store, check(b), /* &str */, |_, _, _| panic!("repeated check launched"));
+    |
+
+error[E0277]: expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+   --> crates/core/src/runtimes/tests.rs:636:82
+    |
+636 |     execute(&shared, &mut store, &mut pending, save(Uuid::from_u128(105), None), "boot", |_, _, _| panic!("fenced effect launched"));
+    |     ------- required by a bound introduced by this call                          ^^^^^^ expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+    |
+    = help: the trait `for<'a, 'b> Fn(&'a runtimes::Configuration, uuid::Uuid, &'b mut (dyn FnMut(runtimes::Phase) + 'b))` is not implemented for `str`
+    = note: required for `&str` to implement `FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase))`
+note: required by a bound in `runtimes::execute`
+   --> crates/core/src/runtimes.rs:592:17
+    |
+587 | fn execute(
+    |    ------- required by a bound in this function
+...
+592 |     check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `execute`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d.long-type-9170879174030693004.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> crates/core/src/runtimes/tests.rs:636:5
+    |
+636 |     execute(&shared, &mut store, &mut pending, save(Uuid::from_u128(105), None), "boot", |_, _, _| panic!("fenced effect launched"));
+    |     ^^^^^^^                      ------------ unexpected argument #3 of type `&mut std::option::Option<_>`
+    |
+note: expected `&str`, found closure
+   --> crates/core/src/runtimes/tests.rs:636:90
+    |
+636 |     execute(&shared, &mut store, &mut pending, save(Uuid::from_u128(105), None), "boot", |_, _, _| panic!("fenced effect launched"));
+    |                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: expected reference `&str`
+                 found closure `{closure@crates/core/src/runtimes/tests.rs:636:90: 636:99}`
+note: function defined here
+   --> crates/core/src/runtimes.rs:587:4
+    |
+587 | fn execute(
+    |    ^^^^^^^
+...
+591 |     boot: &str,
+    |     ----------
+help: remove the extra argument
+    |
+636 -     execute(&shared, &mut store, &mut pending, save(Uuid::from_u128(105), None), "boot", |_, _, _| panic!("fenced effect launched"));
+636 +     execute(&shared, &mut store, save(Uuid::from_u128(105), None), /* &str */, |_, _, _| panic!("fenced effect launched"));
+    |
+
+error[E0425]: cannot find function `reconcile_pending` in this scope
+   --> crates/core/src/runtimes/tests.rs:637:5
+    |
+637 |     reconcile_pending(&shared, &mut store, &mut pending, || true);
+    |     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0277]: expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+   --> crates/core/src/runtimes/tests.rs:656:59
+    |
+656 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| {
+    |     ------- required by a bound introduced by this call   ^^^^^^ expected an `FnOnce(&runtimes::Configuration, uuid::Uuid, &mut dyn FnMut(runtimes::Phase))` closure, found `&str`
+    |
+    = help: the trait `for<'a, 'b> Fn(&'a runtimes::Configuration, uuid::Uuid, &'b mut (dyn FnMut(runtimes::Phase) + 'b))` is not implemented for `str`
+    = note: required for `&str` to implement `FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase))`
+note: required by a bound in `runtimes::execute`
+   --> crates/core/src/runtimes.rs:592:17
+    |
+587 | fn execute(
+    |    ------- required by a bound in this function
+...
+592 |     check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `execute`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d.long-type-1629273305499151330.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `cleanup` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:658:17
+    |
+658 |         outcome.cleanup = CleanupEvidence::Unowned;
+    |                 ^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0433]: cannot find type `CleanupEvidence` in this scope
+   --> crates/core/src/runtimes/tests.rs:658:27
+    |
+658 |         outcome.cleanup = CleanupEvidence::Unowned;
+    |                           ^^^^^^^^^^^^^^^ use of undeclared type `CleanupEvidence`
+
+error[E0609]: no field `diagnostic` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:659:17
+    |
+659 |         outcome.diagnostic.cleanup_confirmed = false;
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0609]: no field `diagnostic` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:660:17
+    |
+660 |         outcome.diagnostic.passed = false;
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0609]: no field `diagnostic` on type `runtimes::Diagnostic`
+   --> crates/core/src/runtimes/tests.rs:661:17
+    |
+661 |         outcome.diagnostic.error = Some(RuntimeError::cleanup());
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `check_id`, `revision`, `timestamp_ms`, `executable`, `version` ... and 7 others
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> crates/core/src/runtimes/tests.rs:656:5
+    |
+656 |     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| {
+    |     ^^^^^^^                      ------------ unexpected argument #3 of type `&mut std::option::Option<_>`
+    |
+note: expected `&str`, found closure
+   --> crates/core/src/runtimes/tests.rs:656:67
+    |
+656 |       execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| {
+    |  ___________________________________________________________________^
+657 | |         let mut outcome = success(c, id);
+658 | |         outcome.cleanup = CleanupEvidence::Unowned;
+659 | |         outcome.diagnostic.cleanup_confirmed = false;
+...   |
+662 | |         outcome
+663 | |     });
+    | |_____^
+    = note: expected reference `&str`
+                 found closure `{closure@crates/core/src/runtimes/tests.rs:656:67: 656:77}`
+note: function defined here
+   --> crates/core/src/runtimes.rs:587:4
+    |
+587 | fn execute(
+    |    ^^^^^^^
+...
+591 |     boot: &str,
+    |     ----------
+help: remove the extra argument
+    |
+656 -     execute(&shared, &mut store, &mut pending, check(id), "boot", |c, id, _| {
+656 +     execute(&shared, &mut store, check(id), /* &str */, |c, id, _| {
+    |
+
+error[E0425]: cannot find function `reconcile_pending` in this scope
+   --> crates/core/src/runtimes/tests.rs:664:5
+    |
+664 |     reconcile_pending(&shared, &mut store, &mut pending, || panic!("unowned process signaled"));
+    |     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+Some errors have detailed explanations: E0061, E0277, E0425, E0433, E0609.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `workspace-core` (lib test) due to 27 previous errors

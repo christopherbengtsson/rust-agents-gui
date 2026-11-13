@@ -1,6 +1,7 @@
 //! Owned nonblocking Codex stdio execution.
 use super::{
-    Configuration, Diagnostic, ErrorCode, Phase, Result, RuntimeError, SUPPORTED_VERSION, protocol,
+    CheckOutcome, CleanupEvidence, Configuration, Diagnostic, ErrorCode, Phase, Result,
+    RuntimeError, SUPPORTED_VERSION, protocol,
 };
 use serde_json::{Value, json};
 use std::{
@@ -270,6 +271,12 @@ impl Runner {
         }
     }
     fn start(&mut self, spec: &CommandSpec) -> Result<Box<dyn Session>> {
+        // Synthetic lease contention is an effect outcome, not cleanup policy.
+        if (self.fixture.as_deref() == Some("lease-version") && spec.args == ["--version"])
+            || (self.fixture.as_deref() == Some("lease-metadata") && spec.args == ["app-server"])
+        {
+            return Err(RuntimeError::cleanup());
+        }
         if let Some(scenario) = &self.fixture {
             return FixtureSession::start(scenario, spec).map(|s| Box::new(s) as Box<dyn Session>);
         }
@@ -293,7 +300,7 @@ impl Runner {
         configuration: &Configuration,
         id: Uuid,
         progress: &mut dyn FnMut(Phase),
-    ) -> Diagnostic {
+    ) -> CheckOutcome {
         let mut diagnostic = Diagnostic {
             check_id: id,
             revision: configuration.revision,
@@ -349,7 +356,7 @@ impl Runner {
             if !clean {
                 self.quarantine.push(session);
                 diagnostic.cleanup_confirmed = false;
-                return Err(RuntimeError::cleanup());
+                return Err(result.err().unwrap_or_else(RuntimeError::cleanup));
             }
             diagnostic.exit_successful = Some(session.successful_exit());
             let spent = session.elapsed();
@@ -381,7 +388,7 @@ impl Runner {
             if !clean {
                 self.quarantine.push(session);
                 diagnostic.cleanup_confirmed = false;
-                return Err(RuntimeError::cleanup());
+                return Err(result.err().unwrap_or_else(RuntimeError::cleanup));
             }
             diagnostic.exit_successful = Some(session.successful_exit());
             let evidence = result?;
@@ -393,15 +400,30 @@ impl Runner {
             diagnostic.billing = evidence.billing;
             Ok(())
         })();
-        diagnostic.cleanup_confirmed &= self.quarantine.is_empty();
+        let cleanup = if !self.quarantine.is_empty() {
+            CleanupEvidence::Owned
+        } else if outcome
+            .as_ref()
+            .is_err_and(|error| error.code == ErrorCode::CleanupUnconfirmed)
+        {
+            // A failed lease acquisition has no owned Session to quarantine.
+            // The lack of handles establishes no authority over that lease.
+            CleanupEvidence::Unowned
+        } else {
+            CleanupEvidence::Confirmed
+        };
+        diagnostic.cleanup_confirmed = cleanup == CleanupEvidence::Confirmed;
         diagnostic.passed = outcome.is_ok() && diagnostic.cleanup_confirmed;
         diagnostic.error = outcome.err();
-        diagnostic
+        CheckOutcome {
+            diagnostic,
+            cleanup,
+        }
     }
-    pub fn cleanup_confirmed(&self) -> bool {
+    pub fn owned_cleanup_complete(&self) -> bool {
         self.quarantine.is_empty()
     }
-    pub fn reconcile_cleanup(&mut self) -> bool {
+    pub fn reconcile_owned_cleanup(&mut self) -> bool {
         let mut retained = Vec::new();
         for mut session in self.quarantine.drain(..) {
             if !session.cleanup() {
@@ -409,7 +431,7 @@ impl Runner {
             }
         }
         self.quarantine = retained;
-        self.cleanup_confirmed()
+        self.owned_cleanup_complete()
     }
 }
 
@@ -776,10 +798,13 @@ impl FixtureSession {
                 | "auth"
                 | "configuration"
                 | "timeout"
+                | "timeout-cleanup"
                 | "cleanup"
                 | "malformed"
                 | "oversized"
                 | "exit"
+                | "lease-version"
+                | "lease-metadata"
         ) {
             return Err(RuntimeError::new(
                 ErrorCode::InvalidRequest,
@@ -812,7 +837,7 @@ impl Session for FixtureSession {
                 .nth(usize::try_from(id - 1).map_err(|_| protocol::failure())?)
                 .ok_or_else(protocol::failure)
                 .and_then(|s| serde_json::from_str(s).map_err(|_| protocol::failure()))?;
-            if self.scenario == "timeout" {
+            if matches!(self.scenario.as_str(), "timeout" | "timeout-cleanup") {
                 self.sent.push(request);
                 return Ok(());
             }
@@ -846,7 +871,7 @@ impl Session for FixtureSession {
         self.elapsed += Duration::from_secs(1);
     }
     fn cleanup(&mut self) -> bool {
-        self.scenario != "cleanup" || self.sent.is_empty()
+        !matches!(self.scenario.as_str(), "cleanup" | "timeout-cleanup") || self.sent.is_empty()
     }
     fn successful_exit(&self) -> bool {
         // Fault exits after synthetic TERM/KILL must not mask the primary error.
@@ -929,9 +954,11 @@ mod tests {
     fn fixture_success_uses_real_sequence_parser_and_cleanup() {
         let mut r = runner("success");
         let mut stages = vec![];
-        let d = r.check(&Configuration::default(), Uuid::from_u128(7), &mut |p| {
-            stages.push(p)
-        });
+        let d = r
+            .check(&Configuration::default(), Uuid::from_u128(7), &mut |p| {
+                stages.push(p)
+            })
+            .diagnostic;
         assert!(d.passed);
         assert!(d.cleanup_confirmed);
         assert_eq!(d.billing, "ChatGPT account");
@@ -955,16 +982,21 @@ mod tests {
             ("auth", ErrorCode::Authentication),
             ("configuration", ErrorCode::Configuration),
             ("timeout", ErrorCode::Timeout),
+            ("timeout-cleanup", ErrorCode::Timeout),
             ("malformed", ErrorCode::Protocol),
             ("oversized", ErrorCode::OutputLimit),
             ("exit", ErrorCode::Process),
             ("cleanup", ErrorCode::CleanupUnconfirmed),
         ] {
-            let d =
-                runner(scenario).check(&Configuration::default(), Uuid::from_u128(7), &mut |_| {});
+            let d = runner(scenario)
+                .check(&Configuration::default(), Uuid::from_u128(7), &mut |_| {})
+                .diagnostic;
             assert!(!d.passed, "{scenario}");
             assert_eq!(d.error.unwrap().code, code, "{scenario}");
-            assert_eq!(d.cleanup_confirmed, scenario != "cleanup");
+            assert_eq!(
+                d.cleanup_confirmed,
+                !matches!(scenario, "cleanup" | "timeout-cleanup")
+            );
         }
     }
     #[test]
@@ -1104,10 +1136,32 @@ mod tests {
     #[test]
     fn failed_cleanup_reconciliation_retains_each_owned_handle() {
         let mut r = runner("cleanup");
-        let d = r.check(&Configuration::default(), Uuid::new_v4(), &mut |_| {});
+        let d = r
+            .check(&Configuration::default(), Uuid::new_v4(), &mut |_| {})
+            .diagnostic;
         assert!(!d.cleanup_confirmed);
         assert_eq!(r.quarantine.len(), 1);
-        assert!(!r.reconcile_cleanup());
+        assert!(!r.reconcile_owned_cleanup());
         assert_eq!(r.quarantine.len(), 1);
+    }
+
+    #[test]
+    fn lease_contention_before_either_launch_is_not_confirmed_by_empty_quarantine() {
+        for scenario in ["lease-version", "lease-metadata"] {
+            let mut r = runner(scenario);
+            let outcome = r.check(&Configuration::default(), Uuid::new_v4(), &mut |_| {});
+            assert_eq!(
+                outcome.diagnostic.error.unwrap().code,
+                ErrorCode::CleanupUnconfirmed
+            );
+            assert!(!outcome.diagnostic.cleanup_confirmed);
+            assert!(!outcome.diagnostic.passed);
+            assert!(outcome.cleanup == CleanupEvidence::Unowned);
+            assert!(r.quarantine.is_empty());
+            assert!(
+                r.reconcile_owned_cleanup(),
+                "no owned handles remain, but that grants no lease authority"
+            );
+        }
     }
 }

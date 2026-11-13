@@ -1,0 +1,23 @@
+[
+  {
+    "phase": "verify",
+    "command": "corepack pnpm verify",
+    "started_utc": "2026-11-13T21:48:30.373191+00:00",
+    "exit_status": 0,
+    "wall_seconds": 9.974416
+  },
+  {
+    "phase": "measure",
+    "command": "corepack pnpm test:measure",
+    "started_utc": "2026-11-13T21:48:40.348194+00:00",
+    "exit_status": 0,
+    "wall_seconds": 47.861941
+  },
+  {
+    "phase": "build",
+    "command": "corepack pnpm build",
+    "started_utc": "2026-11-13T21:49:28.210790+00:00",
+    "exit_status": 0,
+    "wall_seconds": 41.666775
+  }
+]

@@ -164,7 +164,7 @@ impl Phase {
         matches!(self, Self::Completed | Self::Failed | Self::Uncertain)
     }
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Action {
     pub action_id: Uuid,
     pub request: RuntimeRequest,
@@ -219,6 +219,72 @@ pub struct Runtimes {
 struct State {
     reply: RuntimeReply,
     actions: std::collections::VecDeque<Action>,
+    // Observation of the worker's recovery fence, never its ownership source.
+    recovery_blocked: Option<RuntimeError>,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum CleanupEvidence {
+    Confirmed,
+    Owned,
+    Unowned,
+}
+
+struct CheckOutcome {
+    diagnostic: Diagnostic,
+    cleanup: CleanupEvidence,
+}
+
+enum CompletionRecord {
+    Recorded,
+    Pending(RuntimeError),
+}
+
+// Exactly one admitted check owns this record through cleanup and final persistence.
+// Public active/lookup observations may change independently of that lifetime.
+struct PendingCheck {
+    action: Action,
+    diagnostic: Diagnostic,
+    cleanup: CleanupEvidence,
+    record: CompletionRecord,
+}
+
+impl PendingCheck {
+    fn record(&mut self, store: &mut dyn RuntimeStore) {
+        self.record = match store.finish(&self.action, self.cleanup == CleanupEvidence::Confirmed) {
+            Ok(()) => CompletionRecord::Recorded,
+            Err(error) => CompletionRecord::Pending(error),
+        };
+    }
+
+    fn blocked(&self) -> RuntimeError {
+        match &self.record {
+            CompletionRecord::Pending(error) => RuntimeError::new(
+                error.code.clone(),
+                if self.cleanup == CleanupEvidence::Confirmed {
+                    "Owned Codex cleanup is confirmed, but recording the final setup result is pending. Further setup work is blocked while storage is reconciled; no check will be repeated."
+                } else {
+                    "Recording setup recovery is pending and cleanup remains unconfirmed. Further setup work is blocked; no check will be repeated."
+                },
+            ),
+            CompletionRecord::Recorded => RuntimeError::cleanup(),
+        }
+    }
+
+    fn publish(&self, shared: &Mutex<State>) {
+        let blocked = self.blocked();
+        let mut action = self.action.clone();
+        if matches!(self.record, CompletionRecord::Pending(_)) {
+            action.phase = Phase::Uncertain;
+            action.error = Some(blocked.clone());
+        }
+        publish_action(shared, &action);
+        update(shared, |s| {
+            s.recovery_blocked = Some(blocked.clone());
+            s.reply.blocked = Some(blocked);
+            s.reply.diagnostic = Some(self.diagnostic.clone());
+        });
+    }
 }
 
 pub(crate) fn validate_preference(value: Option<&str>) -> Result<()> {
@@ -248,6 +314,7 @@ impl State {
                 rejected: None,
             },
             actions: Default::default(),
+            recovery_blocked: None,
         }
     }
     fn remember(&mut self, action: Action) {
@@ -419,13 +486,14 @@ impl Runtimes {
             refresh_store(&worker_state, &mut store);
             let mut runner = process::Runner::new(directory, worker_stop.clone());
             let mut disconnected = false;
-            let mut pending_cleanup: Option<Action> = None;
+            let mut pending = None;
             loop {
                 if !disconnected {
                     match receiver.recv_timeout(std::time::Duration::from_millis(50)) {
                         Ok(request) => execute(
                             &worker_state,
                             &mut store,
+                            &mut pending,
                             request,
                             &boot,
                             |configuration, id, progress| runner.check(configuration, id, progress),
@@ -434,34 +502,11 @@ impl Runtimes {
                         Err(mpsc::RecvTimeoutError::Timeout) => {}
                     }
                 }
-                if !runner.cleanup_confirmed() && runner.reconcile_cleanup() {
-                    pending_cleanup = worker_state
-                        .lock()
-                        .ok()
-                        .and_then(|s| s.reply.active.clone());
-                    if let Some(action) = &mut pending_cleanup {
-                        action.phase = Phase::Failed;
-                        action.error = Some(RuntimeError::new(
-                            ErrorCode::Process,
-                            "The previous setup check stopped; owned cleanup is now confirmed. Run a new explicit check when ready.",
-                        ));
-                    }
-                }
-                if let Some(action) = &pending_cleanup
-                    && store.finish(action, true).is_ok()
-                {
-                    publish_action(&worker_state, action);
-                    update(&worker_state, |s| {
-                        if let Some(d) = &mut s.reply.diagnostic {
-                            d.cleanup_confirmed = true;
-                            d.error = action.error.clone();
-                        }
-                    });
-                    refresh_store(&worker_state, &mut store);
-                    pending_cleanup = None;
-                }
+                reconcile_pending(&worker_state, &mut store, &mut pending, || {
+                    runner.reconcile_owned_cleanup()
+                });
                 if disconnected {
-                    if runner.cleanup_confirmed() && pending_cleanup.is_none() {
+                    if runner.owned_cleanup_complete() && pending.is_none() {
                         break;
                     }
                     // Shutdown can return uncertainty while this worker continues
@@ -515,6 +560,7 @@ impl Runtimes {
         await_worker(&mut WorkerCompletion {
             worker: &mut self.worker,
             start: std::time::Instant::now(),
+            shared: &self.shared,
         })?;
         let state = self.shared.lock().map_err(|_| RuntimeError::cleanup())?;
         if let Some(error) = &state.reply.blocked {
@@ -529,11 +575,14 @@ trait Completion {
     fn elapsed(&self) -> std::time::Duration;
     fn tick(&mut self);
     fn join(&mut self) -> Result<()>;
+    fn timeout_error(&self) -> RuntimeError {
+        RuntimeError::cleanup()
+    }
 }
 fn await_worker(completion: &mut impl Completion) -> Result<()> {
     while !completion.finished() {
         if completion.elapsed() >= std::time::Duration::from_secs(4) {
-            return Err(RuntimeError::cleanup());
+            return Err(completion.timeout_error());
         }
         completion.tick();
     }
@@ -542,6 +591,21 @@ fn await_worker(completion: &mut impl Completion) -> Result<()> {
 struct WorkerCompletion<'a> {
     worker: &'a mut Option<JoinHandle<()>>,
     start: std::time::Instant,
+    shared: &'a Mutex<State>,
+}
+
+fn shutdown_error(shared: &Mutex<State>) -> RuntimeError {
+    shared
+        .lock()
+        .ok()
+        .and_then(|s| s.recovery_blocked.clone())
+        .filter(|error| {
+            matches!(
+                error.code,
+                ErrorCode::Storage | ErrorCode::PersistenceUncertain
+            )
+        })
+        .unwrap_or_else(RuntimeError::cleanup)
 }
 impl Completion for WorkerCompletion<'_> {
     fn finished(&self) -> bool {
@@ -559,6 +623,9 @@ impl Completion for WorkerCompletion<'_> {
         }
         Ok(())
     }
+    fn timeout_error(&self) -> RuntimeError {
+        shutdown_error(self.shared)
+    }
 }
 
 fn update(shared: &Mutex<State>, change: impl FnOnce(&mut State)) {
@@ -567,15 +634,24 @@ fn update(shared: &Mutex<State>, change: impl FnOnce(&mut State)) {
     }
 }
 fn refresh_store(shared: &Mutex<State>, store: &mut dyn RuntimeStore) {
+    refresh_store_status(shared, store, true);
+}
+
+fn refresh_store_status(shared: &Mutex<State>, store: &mut dyn RuntimeStore, release_lane: bool) {
     let result = store
         .configuration()
         .and_then(|c| store.blocked().map(|b| (c, b)));
     update(shared, |s| {
-        s.reply.busy = false;
+        if release_lane {
+            s.reply.busy = false;
+        }
         match result {
             Ok((c, b)) => {
                 s.reply.configuration = Some(c);
-                s.reply.blocked = b.then(RuntimeError::cleanup);
+                s.reply.blocked = s
+                    .recovery_blocked
+                    .clone()
+                    .or_else(|| b.then(RuntimeError::cleanup));
             }
             Err(error) => {
                 s.reply.blocked = Some(error);
@@ -584,12 +660,81 @@ fn refresh_store(shared: &Mutex<State>, store: &mut dyn RuntimeStore) {
     });
 }
 
+fn reconcile_pending(
+    shared: &Mutex<State>,
+    store: &mut dyn RuntimeStore,
+    pending: &mut Option<PendingCheck>,
+    cleanup: impl FnOnce() -> bool,
+) {
+    let Some(recovery) = pending.as_mut() else {
+        return;
+    };
+    if recovery.cleanup == CleanupEvidence::Owned && cleanup() {
+        recovery.cleanup = CleanupEvidence::Confirmed;
+        recovery.diagnostic.cleanup_confirmed = true;
+        recovery.diagnostic.passed = false;
+        recovery.action.phase = Phase::Failed;
+        if recovery
+            .action
+            .error
+            .as_ref()
+            .is_none_or(|e| e.code == ErrorCode::CleanupUnconfirmed)
+        {
+            recovery.action.error = Some(RuntimeError::new(
+                ErrorCode::Process,
+                "The previous setup check stopped; owned cleanup is now confirmed. Run a new explicit check when ready.",
+            ));
+        }
+        recovery.diagnostic.error = recovery.action.error.clone();
+        recovery.record = CompletionRecord::Pending(RuntimeError::storage());
+    }
+    if matches!(recovery.record, CompletionRecord::Pending(_)) {
+        // Read after every failed/uncertain write. Only a matching, authoritative
+        // record permits finalization; neither process work nor Save is replayed.
+        let result = (|| {
+            let saved = store
+                .action(recovery.action.action_id)?
+                .ok_or_else(RuntimeError::storage)?;
+            if saved.request != recovery.action.request {
+                return Err(RuntimeError::storage());
+            }
+            let complete = saved == recovery.action
+                && (recovery.cleanup != CleanupEvidence::Confirmed || !store.blocked()?);
+            if complete {
+                recovery.record = CompletionRecord::Recorded;
+            } else {
+                recovery.record(store);
+            }
+            Ok(())
+        })();
+        if let Err(error) = result {
+            recovery.record = CompletionRecord::Pending(error);
+        }
+    }
+    if matches!(recovery.record, CompletionRecord::Recorded)
+        && recovery.cleanup != CleanupEvidence::Owned
+    {
+        publish_action(shared, &recovery.action);
+        update(shared, |s| {
+            s.recovery_blocked = None;
+            s.reply.diagnostic = Some(recovery.diagnostic.clone());
+        });
+        *pending = None;
+    } else {
+        recovery.publish(shared);
+    }
+    // A request may have been queued since the last request settled. Background
+    // recovery must never release that request's admission lane.
+    refresh_store_status(shared, store, false);
+}
+
 fn execute(
     shared: &Mutex<State>,
     store: &mut dyn RuntimeStore,
+    pending: &mut Option<PendingCheck>,
     request: RuntimeRequest,
     boot: &str,
-    check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> Diagnostic,
+    check: impl FnOnce(&Configuration, Uuid, &mut dyn FnMut(Phase)) -> CheckOutcome,
 ) {
     if matches!(request, RuntimeRequest::Observe { .. }) {
         refresh_store(shared, store);
@@ -626,6 +771,9 @@ fn execute(
             }
             action = recovered_action(old);
             return Ok(());
+        }
+        if let Some(recovery) = pending {
+            return Err(recovery.blocked());
         }
         if store.blocked()? {
             return Err(RuntimeError::cleanup());
@@ -669,8 +817,9 @@ fn execute(
                     action.phase = phase;
                     publish_action(shared, &action);
                 };
-                let diagnostic = check(&configuration, id, &mut progress);
-                action.phase = if !diagnostic.cleanup_confirmed {
+                let outcome = check(&configuration, id, &mut progress);
+                let diagnostic = outcome.diagnostic;
+                action.phase = if outcome.cleanup != CleanupEvidence::Confirmed {
                     Phase::Uncertain
                 } else if diagnostic.passed {
                     Phase::Completed
@@ -678,10 +827,22 @@ fn execute(
                     Phase::Failed
                 };
                 action.error = diagnostic.error.clone();
-                // Failed final persistence leaves the pre-effect recovery record in place.
-                let persisted = store.finish(&action, diagnostic.cleanup_confirmed);
-                update(shared, |s| s.reply.diagnostic = Some(diagnostic));
-                persisted?;
+                let mut recovery = PendingCheck {
+                    action: action.clone(),
+                    diagnostic,
+                    cleanup: outcome.cleanup,
+                    record: CompletionRecord::Recorded,
+                };
+                recovery.record(store);
+                update(shared, |s| {
+                    s.reply.diagnostic = Some(recovery.diagnostic.clone())
+                });
+                if !matches!(recovery.record, CompletionRecord::Recorded)
+                    || recovery.cleanup == CleanupEvidence::Owned
+                {
+                    recovery.publish(shared);
+                    *pending = Some(recovery);
+                }
             }
             _ => unreachable!(),
         }
@@ -729,7 +890,9 @@ fn execute(
             }
         }
         update(shared, |s| {
-            s.reply.diagnostic = None;
+            if pending.is_none() {
+                s.reply.diagnostic = None;
+            }
             if matches!(
                 error.code,
                 ErrorCode::PersistenceUncertain | ErrorCode::CleanupUnconfirmed
@@ -739,6 +902,9 @@ fn execute(
         });
     }
     publish_action(shared, &action);
+    if let Some(recovery) = pending {
+        recovery.publish(shared);
+    }
     refresh_store(shared, store);
 }
 fn publish_action(shared: &Mutex<State>, action: &Action) {

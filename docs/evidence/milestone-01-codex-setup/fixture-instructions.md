@@ -30,17 +30,25 @@ supervisor/state to observe saved preference and action status without replay.
 For each other scenario use a **fresh private directory and freshly started owner**;
 the fixture mode is captured by that supervisor at startup. Replace `success` with:
 
-| Value           | Expected result                                                         |
-| --------------- | ----------------------------------------------------------------------- |
-| `missing`       | Missing executable and install/reset guidance                           |
-| `version`       | Incompatible version, observed 0.0.0 and supported 0.167.2 guidance     |
-| `auth`          | Existing authentication unavailable; external official sign-in guidance |
-| `configuration` | Configuration-read failure                                              |
-| `timeout`       | Controlled synthetic deadline, confirmed cleanup                        |
-| `malformed`     | Invalid protocol frame                                                  |
-| `oversized`     | Provider frame budget exceeded                                          |
-| `exit`          | Process exit failure                                                    |
-| `cleanup`       | Unconfirmed cleanup, retained fence and blocked Save/Check              |
+| Value             | Expected result                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------ |
+| `missing`         | Missing executable and install/reset guidance                                                          |
+| `version`         | Incompatible version, observed 0.0.0 and supported 0.167.2 guidance                                    |
+| `auth`            | Existing authentication unavailable; external official sign-in guidance                                |
+| `configuration`   | Configuration-read failure                                                                             |
+| `timeout`         | Controlled synthetic deadline, confirmed cleanup                                                       |
+| `timeout-cleanup` | Controlled metadata timeout retained alongside unconfirmed owned cleanup and a fence                   |
+| `malformed`       | Invalid protocol frame                                                                                 |
+| `oversized`       | Provider frame budget exceeded                                                                         |
+| `exit`            | Process exit failure                                                                                   |
+| `cleanup`         | Unconfirmed cleanup, retained fence and blocked Save/Check                                             |
+| `lease-version`   | Synthetic lease contention before version launch; cleanup remains unconfirmed                          |
+| `lease-metadata`  | Synthetic lease contention before app-server launch after version cleanup; cleanup remains unconfirmed |
+
+For either lease fault, expect “Owned cleanup: Unconfirmed” and blocked Save/Check
+even though no process handle was quarantined. Desktop reconnect or supervisor
+restart on the same boot must not clear the durable fence or repeat the check.
+The fixture reports lock outcomes only; it does not establish kernel lock behavior.
 
 The fixture intentionally replaces discovery/process outcomes, so arbitrary saved
 paths need not exist. Native discovery precedence and command construction retain

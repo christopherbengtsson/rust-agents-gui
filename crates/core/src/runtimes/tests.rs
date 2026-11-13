@@ -46,11 +46,15 @@ struct Memory {
     configuration: Configuration,
     actions: std::collections::BTreeMap<Uuid, Action>,
     blocked: bool,
+    recovery_id: Option<Uuid>,
     calls: Vec<&'static str>,
     fail_intent: bool,
     save_uncertain: bool,
     fail_finish: bool,
     reject_save: bool,
+    finish_uncertain: bool,
+    fail_read: bool,
+    finished_ids: Vec<Uuid>,
 }
 impl RuntimeStore for Memory {
     fn configuration(&mut self) -> Result<Configuration> {
@@ -59,6 +63,9 @@ impl RuntimeStore for Memory {
     }
     fn action(&mut self, id: Uuid) -> Result<Option<Action>> {
         self.calls.push("read-action");
+        if self.fail_read {
+            return Err(RuntimeError::storage());
+        }
         Ok(self.actions.get(&id).cloned())
     }
     fn blocked(&mut self) -> Result<bool> {
@@ -72,6 +79,7 @@ impl RuntimeStore for Memory {
         self.actions.insert(a.action_id, a.clone());
         if matches!(a.request, RuntimeRequest::Check { .. }) {
             self.blocked = true;
+            self.recovery_id = Some(a.action_id);
         }
         Ok(())
     }
@@ -97,7 +105,17 @@ impl RuntimeStore for Memory {
             return Err(RuntimeError::storage());
         }
         self.actions.insert(a.action_id, a.clone());
-        self.blocked &= !clean;
+        if clean && self.recovery_id == Some(a.action_id) {
+            self.blocked = false;
+            self.recovery_id = None;
+        }
+        self.finished_ids.push(a.action_id);
+        if self.finish_uncertain {
+            return Err(RuntimeError::new(
+                ErrorCode::PersistenceUncertain,
+                "Synthetic lost completion reply",
+            ));
+        }
         Ok(())
     }
 }
@@ -108,20 +126,23 @@ fn check(id: Uuid) -> RuntimeRequest {
         revision: 1,
     }
 }
-fn success(c: &Configuration, id: Uuid) -> Diagnostic {
-    Diagnostic {
-        check_id: id,
-        revision: c.revision,
-        timestamp_ms: 123,
-        executable: Some("/fixture/codex".into()),
-        version: Some(SUPPORTED_VERSION.into()),
-        authentication: "Unknown".into(),
-        provider: None,
-        billing: "Unknown".into(),
-        passed: true,
-        error: None,
-        cleanup_confirmed: true,
-        exit_successful: Some(true),
+fn success(c: &Configuration, id: Uuid) -> CheckOutcome {
+    CheckOutcome {
+        cleanup: CleanupEvidence::Confirmed,
+        diagnostic: Diagnostic {
+            check_id: id,
+            revision: c.revision,
+            timestamp_ms: 123,
+            executable: Some("/fixture/codex".into()),
+            version: Some(SUPPORTED_VERSION.into()),
+            authentication: "Unknown".into(),
+            provider: None,
+            billing: "Unknown".into(),
+            passed: true,
+            error: None,
+            cleanup_confirmed: true,
+            exit_successful: Some(true),
+        },
     }
 }
 
@@ -130,10 +151,11 @@ fn saved_preferences_invalidate_readiness_without_starting_a_process() {
     let shared = Mutex::new(State::ready(target(), Configuration::default()));
     let mut store = Memory::default();
     shared.lock().unwrap().reply.diagnostic =
-        Some(success(&Configuration::default(), Uuid::new_v4()));
+        Some(success(&Configuration::default(), Uuid::new_v4()).diagnostic);
     execute(
         &shared,
         &mut store,
+        &mut None,
         save(Uuid::from_u128(1), Some("/bin/codex")),
         "boot",
         |_, _, _| panic!("Save started Codex"),
@@ -158,14 +180,26 @@ fn intent_is_durable_before_effect_and_repeated_identity_never_replays() {
     let mut store = Memory::default();
     let id = Uuid::from_u128(1);
     let mut effects = 0;
-    execute(&shared, &mut store, check(id), "boot", |c, id, _| {
-        effects += 1;
-        success(c, id)
-    });
+    execute(
+        &shared,
+        &mut store,
+        &mut None,
+        check(id),
+        "boot",
+        |c, id, _| {
+            effects += 1;
+            success(c, id)
+        },
+    );
     assert_eq!(store.calls.iter().position(|c| *c == "intent"), Some(2));
-    execute(&shared, &mut store, check(id), "boot", |_, _, _| {
-        panic!("duplicate check replayed")
-    });
+    execute(
+        &shared,
+        &mut store,
+        &mut None,
+        check(id),
+        "boot",
+        |_, _, _| panic!("duplicate check replayed"),
+    );
     assert_eq!(effects, 1);
     assert_eq!(
         shared.lock().unwrap().reply.active.as_ref().unwrap().phase,
@@ -184,6 +218,7 @@ fn failed_intent_or_surviving_cleanup_never_launches_replacement() {
         execute(
             &shared,
             &mut store,
+            &mut None,
             check(Uuid::new_v4()),
             "boot",
             |_, _, _| panic!("unrecorded/conflicting effect"),
@@ -211,6 +246,7 @@ fn lost_save_commit_result_is_settled_by_authoritative_read_without_repeated_wri
     execute(
         &shared,
         &mut store,
+        &mut None,
         save(Uuid::new_v4(), Some("/new/codex")),
         "boot",
         |_, _, _| panic!(),
@@ -240,14 +276,16 @@ fn unconfirmed_cleanup_and_failed_final_persistence_keep_the_replacement_fence()
         execute(
             &shared,
             &mut store,
+            &mut None,
             check(Uuid::new_v4()),
             "boot",
             |c, id, _| {
                 let mut d = success(c, id);
                 if !failed_finish {
-                    d.cleanup_confirmed = false;
-                    d.passed = false;
-                    d.error = Some(RuntimeError::cleanup());
+                    d.cleanup = CleanupEvidence::Owned;
+                    d.diagnostic.cleanup_confirmed = false;
+                    d.diagnostic.passed = false;
+                    d.diagnostic.error = Some(RuntimeError::cleanup());
                 }
                 d
             },
@@ -255,7 +293,11 @@ fn unconfirmed_cleanup_and_failed_final_persistence_keep_the_replacement_fence()
         let mut s = shared.lock().unwrap();
         assert_eq!(
             s.reply.blocked.as_ref().unwrap().code,
-            ErrorCode::CleanupUnconfirmed
+            if failed_finish {
+                ErrorCode::Storage
+            } else {
+                ErrorCode::CleanupUnconfirmed
+            }
         );
         assert!(s.admit(&save(Uuid::new_v4(), None)).unwrap());
         // Admission here queues identity resolution only. The owning worker
@@ -280,6 +322,7 @@ fn action_reads_and_restart_markers_do_not_execute_checks() {
     execute(
         &shared,
         &mut store,
+        &mut None,
         RuntimeRequest::Action {
             expected: None,
             target: target(),
@@ -334,6 +377,7 @@ fn blocked_storage_reads_reenter_authoritative_storage_even_with_a_cached_action
     execute(
         &shared,
         &mut store,
+        &mut None,
         RuntimeRequest::Action {
             expected: None,
             target: target(),
@@ -357,6 +401,7 @@ fn confirmed_save_rollback_preserves_definite_rejection_and_previous_preference(
     execute(
         &shared,
         &mut store,
+        &mut None,
         save(id, Some("/new/codex")),
         "boot",
         |_, _, _| panic!(),
@@ -455,7 +500,7 @@ fn public_repeated_mutations_return_exact_cached_and_evicted_action_status() {
         ..Default::default()
     };
     store.actions.insert(old_id, old);
-    execute(&shared, &mut store, queued, "boot", |_, _, _| {
+    execute(&shared, &mut store, &mut None, queued, "boot", |_, _, _| {
         panic!("evicted repeated identity replayed")
     });
     let reply = runtime.request(old_request).unwrap();
@@ -488,6 +533,7 @@ fn evicted_conflicting_payload_is_rejected_without_replacing_canonical_identity(
     execute(
         &shared,
         &mut store,
+        &mut None,
         receiver.try_recv().unwrap(),
         "boot",
         |_, _, _| panic!("conflicting payload executed"),
@@ -550,6 +596,7 @@ fn after_restart_status_reconciles_retained_payload_against_canonical_durable_id
     execute(
         &shared,
         &mut store,
+        &mut None,
         receiver.try_recv().unwrap(),
         "boot",
         |_, _, _| panic!("recovery replayed work"),
@@ -561,4 +608,338 @@ fn after_restart_status_reconciles_retained_payload_against_canonical_durable_id
     );
     assert_eq!(reply.rejected.unwrap().request, conflicting);
     assert!(!store.calls.contains(&"intent"));
+}
+
+#[test]
+fn confirmed_cleanup_retries_only_completion_after_storage_recovers() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory {
+        fail_finish: true,
+        ..Default::default()
+    };
+    let mut pending = None;
+    let id = Uuid::from_u128(101);
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(id),
+        "boot",
+        |c, id, _| success(c, id),
+    );
+    {
+        let state = shared.lock().unwrap();
+        assert!(state.reply.diagnostic.as_ref().unwrap().cleanup_confirmed);
+        assert!(state.reply.diagnostic.as_ref().unwrap().passed);
+        assert_eq!(
+            state.reply.blocked.as_ref().unwrap().code,
+            ErrorCode::Storage
+        );
+    }
+    assert!(pending.is_some());
+    let writes = store.calls.iter().filter(|c| **c == "finish").count();
+    store.fail_read = true;
+    reconcile_pending(&shared, &mut store, &mut pending, || {
+        panic!("confirmed cleanup repeated")
+    });
+    assert_eq!(
+        store.calls.iter().filter(|c| **c == "finish").count(),
+        writes
+    );
+    store.fail_read = false;
+    store.fail_finish = false;
+    reconcile_pending(&shared, &mut store, &mut pending, || {
+        panic!("confirmed cleanup repeated")
+    });
+    assert!(pending.is_none());
+    assert_eq!(store.actions[&id].phase, Phase::Completed);
+    assert!(!store.blocked);
+    assert!(shared.lock().unwrap().reply.blocked.is_none());
+    assert_eq!(store.calls.iter().filter(|c| **c == "intent").count(), 1);
+}
+
+#[test]
+fn lost_completion_reply_is_read_back_without_another_write() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory {
+        finish_uncertain: true,
+        ..Default::default()
+    };
+    let mut pending = None;
+    let id = Uuid::from_u128(102);
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(id),
+        "boot",
+        |c, id, _| success(c, id),
+    );
+    reconcile_pending(&shared, &mut store, &mut pending, || {
+        panic!("cleanup repeated")
+    });
+    assert!(pending.is_none());
+    assert_eq!(store.calls.iter().filter(|c| **c == "finish").count(), 1);
+    assert!(shared.lock().unwrap().reply.blocked.is_none());
+}
+
+#[test]
+fn delayed_cleanup_keeps_its_check_identity_across_other_requests() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory::default();
+    let mut pending = None;
+    let a = Uuid::from_u128(103);
+    let b = Uuid::from_u128(104);
+    let canonical = Action {
+        action_id: b,
+        request: check(b),
+        phase: Phase::Completed,
+        error: None,
+    };
+    store.actions.insert(b, canonical.clone());
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(a),
+        "boot",
+        |c, id, _| {
+            let mut outcome = success(c, id);
+            outcome.cleanup = CleanupEvidence::Owned;
+            outcome.diagnostic.cleanup_confirmed = false;
+            outcome.diagnostic.passed = false;
+            outcome.diagnostic.error = Some(RuntimeError::cleanup());
+            outcome
+        },
+    );
+    // B was evicted/not cached; a repeated mutation resolves its durable identity.
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(b),
+        "boot",
+        |_, _, _| panic!("repeated check launched"),
+    );
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        save(Uuid::from_u128(105), None),
+        "boot",
+        |_, _, _| panic!("fenced effect launched"),
+    );
+    reconcile_pending(&shared, &mut store, &mut pending, || true);
+    assert!(pending.is_none());
+    assert_eq!(store.actions[&b].phase, canonical.phase);
+    assert!(store.actions[&b].error.is_none());
+    assert_eq!(store.finished_ids, [a, a]);
+    assert!(!store.blocked);
+    let state = shared.lock().unwrap();
+    let diagnostic = state.reply.diagnostic.as_ref().unwrap();
+    assert_eq!(diagnostic.check_id, a);
+    assert!(diagnostic.cleanup_confirmed);
+    assert!(!diagnostic.passed);
+}
+
+#[test]
+fn unowned_lease_uncertainty_persists_without_claiming_worker_handles() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory::default();
+    let mut pending = None;
+    let id = Uuid::from_u128(106);
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(id),
+        "boot",
+        |c, id, _| {
+            let mut outcome = success(c, id);
+            outcome.cleanup = CleanupEvidence::Unowned;
+            outcome.diagnostic.cleanup_confirmed = false;
+            outcome.diagnostic.passed = false;
+            outcome.diagnostic.error = Some(RuntimeError::cleanup());
+            outcome
+        },
+    );
+    reconcile_pending(&shared, &mut store, &mut pending, || {
+        panic!("unowned process signaled")
+    });
+    assert!(
+        pending.is_none(),
+        "no handles or unrecorded completion need worker retention"
+    );
+    assert!(store.blocked);
+    assert_eq!(store.actions[&id].phase, Phase::Uncertain);
+    let state = shared.lock().unwrap();
+    assert!(!state.reply.diagnostic.as_ref().unwrap().cleanup_confirmed);
+    assert_eq!(
+        state.reply.blocked.as_ref().unwrap().code,
+        ErrorCode::CleanupUnconfirmed
+    );
+}
+
+#[test]
+fn background_finalization_preserves_a_queued_request_lane() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory {
+        fail_finish: true,
+        ..Default::default()
+    };
+    let mut pending = None;
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(Uuid::from_u128(107)),
+        "boot",
+        |c, id, _| success(c, id),
+    );
+    let queued = RuntimeRequest::Action {
+        target: target(),
+        action_id: Uuid::from_u128(108),
+        expected: None,
+    };
+    assert!(shared.lock().unwrap().admit(&queued).unwrap());
+    store.fail_finish = false;
+    reconcile_pending(&shared, &mut store, &mut pending, || {
+        panic!("cleanup repeated")
+    });
+    assert!(pending.is_none());
+    assert!(
+        shared.lock().unwrap().reply.busy,
+        "background work released another request's lane"
+    );
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        queued,
+        "boot",
+        |_, _, _| panic!("read launched a check"),
+    );
+    assert!(!shared.lock().unwrap().reply.busy);
+}
+
+#[test]
+fn pending_finalization_participates_in_bounded_shutdown_without_repeating_cleanup() {
+    struct Worker {
+        shared: Mutex<State>,
+        store: Memory,
+        pending: Option<PendingCheck>,
+        time: u64,
+        joined: bool,
+    }
+    impl Completion for Worker {
+        fn finished(&self) -> bool {
+            self.pending.is_none()
+        }
+        fn elapsed(&self) -> std::time::Duration {
+            std::time::Duration::from_secs(self.time)
+        }
+        fn tick(&mut self) {
+            reconcile_pending(&self.shared, &mut self.store, &mut self.pending, || {
+                panic!("confirmed cleanup repeated")
+            });
+            self.time += 1;
+        }
+        fn join(&mut self) -> Result<()> {
+            assert!(self.finished());
+            self.joined = true;
+            Ok(())
+        }
+        fn timeout_error(&self) -> RuntimeError {
+            shutdown_error(&self.shared)
+        }
+    }
+    let mut worker = Worker {
+        shared: Mutex::new(State::ready(target(), Configuration::default())),
+        store: Memory {
+            fail_finish: true,
+            ..Default::default()
+        },
+        pending: None,
+        time: 0,
+        joined: false,
+    };
+    execute(
+        &worker.shared,
+        &mut worker.store,
+        &mut worker.pending,
+        check(Uuid::from_u128(109)),
+        "boot",
+        |c, id, _| success(c, id),
+    );
+    assert_eq!(
+        await_worker(&mut worker).unwrap_err().code,
+        ErrorCode::Storage
+    );
+    assert!(worker.pending.is_some());
+    assert!(!worker.joined);
+    assert_eq!(worker.time, 4);
+    worker.store.fail_finish = false;
+    worker.tick();
+    assert!(await_worker(&mut worker).is_ok());
+    assert!(worker.joined);
+    assert_eq!(
+        worker
+            .store
+            .calls
+            .iter()
+            .filter(|call| **call == "intent")
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn failed_check_evidence_survives_completion_persistence_recovery() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory {
+        fail_finish: true,
+        ..Default::default()
+    };
+    let mut pending = None;
+    let id = Uuid::from_u128(110);
+    execute(
+        &shared,
+        &mut store,
+        &mut pending,
+        check(id),
+        "boot",
+        |c, id, _| {
+            let mut outcome = success(c, id);
+            outcome.diagnostic.passed = false;
+            outcome.diagnostic.error = Some(RuntimeError::new(
+                ErrorCode::Timeout,
+                "Synthetic metadata timeout",
+            ));
+            outcome
+        },
+    );
+    assert_eq!(
+        shared
+            .lock()
+            .unwrap()
+            .reply
+            .diagnostic
+            .as_ref()
+            .unwrap()
+            .error
+            .as_ref()
+            .unwrap()
+            .code,
+        ErrorCode::Timeout
+    );
+    store.fail_finish = false;
+    reconcile_pending(&shared, &mut store, &mut pending, || {
+        panic!("cleanup repeated")
+    });
+    assert_eq!(store.actions[&id].phase, Phase::Failed);
+    assert_eq!(
+        store.actions[&id].error.as_ref().unwrap().code,
+        ErrorCode::Timeout
+    );
+    assert!(pending.is_none());
 }

@@ -28,6 +28,10 @@ fn encode(value: &impl serde::Serialize) -> Result<String> {
     serde_json::to_string(value).map_err(|_| RuntimeError::storage())
 }
 
+fn surviving_recovery(previous: Option<&str>, boot: &str) -> bool {
+    previous.is_some_and(|old| old == boot || old.is_empty() || boot.is_empty())
+}
+
 // Outcomes, including COMMIT's resulting transaction state, are substituted in units.
 trait Transaction {
     fn begin(&self) -> bool;
@@ -132,7 +136,7 @@ impl RuntimeStore for RuntimeSqlite {
             })
             .optional()
             .map_err(|_| RuntimeError::storage())?;
-        Ok(previous.is_some_and(|old| old == self.boot || old.is_empty() || self.boot.is_empty()))
+        Ok(surviving_recovery(previous.as_deref(), &self.boot))
     }
     fn intent(&mut self, action: &Action, boot: &str) -> Result<()> {
         let record = encode(action)?;
@@ -196,6 +200,14 @@ impl RuntimeStore for RuntimeSqlite {
 mod tests {
     use super::*;
     use std::cell::Cell;
+    #[test]
+    fn recovery_fence_needs_a_different_known_boot_to_exclude_survivors() {
+        assert!(!surviving_recovery(None, "boot"));
+        assert!(surviving_recovery(Some("boot"), "boot"));
+        assert!(surviving_recovery(Some(""), "boot"));
+        assert!(surviving_recovery(Some("boot"), ""));
+        assert!(!surviving_recovery(Some("previous"), "boot"));
+    }
     struct Commit {
         active: Cell<bool>,
         committed: bool,

@@ -1,0 +1,25 @@
+{
+  "base": "0b2e2879071a38490431374d6a52b47c6326161b",
+  "branch": "feature/m01-codex-setup",
+  "dirty_state": "M .scratch/milestone-01/issues/06b-check-codex-setup-end-to-end.md\n M crates/core/src/runtimes.rs\n M crates/core/src/runtimes/fixtures/README.md\n M crates/core/src/runtimes/process.rs\n M crates/core/src/runtimes/tests.rs\n M crates/core/src/storage/runtime.rs\n M docs/evidence/milestone-01-codex-setup.md\n M docs/evidence/milestone-01-codex-setup/fixture-instructions.md\n?? docs/evidence/milestone-01-codex-setup/06b-recovery/\n?? docs/research/conductor-claude-authentication.md",
+  "source_sha256": {
+    "crates/core/src/runtimes.rs": "810ec7d55e4df7c8ccd531594d1303dd7abec513f8f2cb27766fc3546e28f82b",
+    "crates/core/src/runtimes/process.rs": "76face6b1f9cc4ea012990e9a397ab6f9b71b108278a6b8e73641c3e7887b80e",
+    "crates/core/src/runtimes/tests.rs": "c4f1cf2361a07754c6a79f5f5f1b47810092c3daf666f595858a408b393e1ab0",
+    "crates/core/src/storage/runtime.rs": "e0961ed172058d7111b88bf0e7fff06c4b12517fd3c222fcca24cadd817e3efe",
+    "crates/core/src/runtimes/fixtures/README.md": "c164aa41066e5f9ca20e2793f0fc063910515d9f30494c383730b7cf69425da5"
+  },
+  "machine": "Apple M4 Pro",
+  "memory_bytes": "51539607552",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+  "architecture": "arm64",
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "node": "v26.13.1",
+  "pnpm": "12.18.0",
+  "target": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+  "cache": "warm default worktree target; no fresh private compilation",
+  "unit_profile": "test",
+  "harness_workers": 1,
+  "qualification": "no desktop/process or native-provider qualification"
+}
