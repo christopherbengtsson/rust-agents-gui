@@ -19,10 +19,6 @@ actual interfaces, [MVP](../../../docs/MVP.md),
 shadcn skills where applicable. Reinspect the pinned official cohort before
 adapter/fixture changes and retain all provenance.
 
-Switch to `feature/m01-codex-setup` and continue from 06b's completed commit. Keep
-this child's commits on that branch; do not create a new branch or implement on
-`main`.
-
 ## Acceptance
 
 - [ ] Complete schema-grounded coverage of version/exit failure, authentication and
