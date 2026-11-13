@@ -20,6 +20,11 @@ in order: [06a: Settings and retained context](06a-settings-and-retained-workspa
 Complete only the child requested in each implementation session. This remains
 the acceptance parent; child completion alone does not check its original items.
 
+After 06d, the separate milestone follow-on
+[06e: Deepen supervisor communication](06e-deepen-supervisor-communication.md)
+continues on the same feature branch before 07. It does not add to this parent's
+original setup acceptance; request it in a separate implementation session.
+
 - [ ] Present runtime setup and connection/configuration status in its own product composition within the established shell, distinct from `SupervisorConnection` transport diagnostics, using shared fields, labels, controls and semantic status styling. Make missing-executable, incompatible-protocol and unavailable-authentication guidance readable and actionable without adding app-owned login or model-selection flows.
 - [ ] Before adapter or fixture changes, select/record the supported Codex runtime version, inspect its official protocol/schema and retained evidence, and record schema/source revision and captured-versus-synthetic provenance beside fixtures.
 - [ ] Ground observer/approval-validation assumptions in the selected official schema and retained local evidence, preserving exact operation/request/turn matching. Qualify the selected cohort explicitly; archived repository inspection is not required.
@@ -64,3 +69,12 @@ report zero open findings; the Standards review's ADR gap was resolved by ADR 00
 Product units, the complete product verification gate, packaging and actual
 desktop/process/native qualification were not run for this documentation-only
 change. Existing commit hooks retain their formatting/lint checks.
+
+### 2026-11-13 — architecture follow-on after completed 06b
+
+The accepted milestone sequence puts recovery-policy locality in existing 06c,
+retains 06d setup qualification, and schedules the separate 06e communication
+follow-on before 07. Shutdown orchestration stays in 09 and surviving-conversation
+recovery in 11. See the [milestone sequence](../spec.md#architecture-follow-up-sequence--2026-11-13).
+06b's checked acceptance and correction evidence remain unchanged. This planning
+update claims no additional implementation, qualification or provider execution.

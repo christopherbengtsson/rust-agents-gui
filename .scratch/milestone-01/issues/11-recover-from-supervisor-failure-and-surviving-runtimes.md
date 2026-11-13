@@ -15,6 +15,11 @@
 - [ ] Present interrupted/uncertain ownership, blocked execution and storage/recovery failures as persistent, readable shell/conversation states with core-authorized recovery actions. Keep local history accessible where available; a transient toast alone must not be the only place to inspect unresolved recovery state.
 - [ ] In desktop qualification, kill the actual supervisor during meaningful fixture execution/action windows and restore the durable history prefix with interrupted/uncertain observations matching available evidence.
 - [ ] Reconcile surviving runtime ownership and pending sends, approvals, and resumes inside the owning Rust modules. Keep unknown outcomes visible; never invent receipt, completion, permission, or safe cleanup.
+- [ ] Reuse the runtime-owned recovery interpretation established in 06c and the
+      lifecycle ownership from 09. Storage supplies durable facts; owning modules
+      decide execution authority. Extend that policy to surviving conversation
+      work and interrupted shutdown without duplicating it in storage or Tauri;
+      preserve conservative unknown-boot fencing and exact action identity.
 - [ ] Block conflicting execution while surviving work is uncertain; reconnect/status retrieval grants no authority to repeat effects or signal a process based only on saved PIDs.
 - [ ] Verify repeated action IDs still retrieve authoritative recorded status/outcomes across recovery; preserve operation-level workspace creation reconciliation already established.
 - [ ] Expose recoverable/fenced states and storage/recovery failures in the desktop, keeping local history readable to the extent of its durable prefix.

@@ -41,6 +41,10 @@ implement on `main`.
 - [ ] Verify actual fixture process/worker stop and owned cleanup outcomes within
       the implemented setup slice, including retained uncertainty/fencing. Keep
       wider A7–A10 lifecycle/chat qualification with their owning tickets.
+- [ ] Cross-check 06c's runtime-owned boot-recovery interpretation against its
+      controlled matrix and available fixture/restart evidence. Retain 06b's
+      historical results; label actual boot-change behavior unperformed unless
+      separately exercised. Unit-supplied boot facts do not prove OS survival.
 - [ ] Demonstrate copy success/failure and scoped external documentation opening
       without leaving the application in the WebView; confirm CSP behavior.
 - [ ] Measure navigation feedback against the MVP's 100 ms target under this
@@ -67,4 +71,6 @@ the parent spec or unrelated tickets.
 No live thread/turn, agent submission, automatic scenario retry, login mutation or
 broader native-provider cohort is authorized. Metadata-only observations, if
 performed under parent 06's allowance, remain distinct from fixture and native
-execution qualification. Stop after this child; ticket 07 requires its own session.
+execution qualification. Stop after this child. The separately requested
+[06e communication follow-on](06e-deepen-supervisor-communication.md) precedes
+ticket 07; neither starts automatically after setup qualification.

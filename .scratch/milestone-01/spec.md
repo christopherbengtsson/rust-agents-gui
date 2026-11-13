@@ -2,8 +2,10 @@
 
 Status: ready-for-agent
 
-Implementation baseline: tickets 01–02 and 02a are complete. Tickets 03–04 implement repository registration/navigation and isolated workspace
-creation/recovery. Product behavior in tickets 05–13 remains unimplemented.
+Implementation baseline, 2026-11-13: tickets 01–05, including 02a, are complete.
+06a–06b have completed implementation and controlled-check evidence. Setup
+hardening/qualification in 06c–06d, communication follow-on 06e, chat/lifecycle
+work in 07–11 and whole-workflow qualification in 12–13 remain open.
 
 ## Problem Statement
 
@@ -86,6 +88,12 @@ Deliver this as one implementation spec with session-sized implementation ticket
 - Tauri forwards typed actions and presents typed snapshots/events. Recovery and retry policy remain in Rust; the desktop reconnects to retrieve authoritative observations and recorded action status.
 - Add concrete implementations when exercised behavior needs them. Keep interfaces small and ownership clear; later capabilities extend these modules. Introduce no generic workflow engine, speculative provider framework, or placeholder implementation for deferred features.
 
+### Supervisor communication
+
+- Deepen the existing communication module in [06e](issues/06e-deepen-supervisor-communication.md), after setup qualification and before chat. Share transport mechanics while retaining domain validation/reconciliation with their owning modules. Keep public commands and existing wire representations unchanged in this refactor.
+- Keep shared connection-state locks short; perform socket I/O outside them. Independent requests progress within bounded admission, retaining serialized initial discovery, correct owner/cursor observations and no start/replay authority after transport loss.
+- Ticket 07 adds bounded streamed observations and authoritative catch-up. Slow consumers must leave control progress and supervisor connection capacity available; bound queued and in-flight data. Setup's metadata check loop remains separate from long-lived conversation execution.
+
 ### Identity, durability, and recovery
 
 - Retain separate repository, workspace, application conversation, native conversation, turn, action, and runtime-process identities. A process lifetime is distinct from a conversation or turn lifetime.
@@ -94,12 +102,14 @@ Deliver this as one implementation spec with session-sized implementation ticket
 - Reconcile pending creation, send, resume, and approval outcomes before any potentially duplicate effect. Connection loss alone grants no authority to repeat work or start a competing owner.
 - Restore durable history after supervisor failure and expose interrupted/uncertain execution according to available evidence. An uncertain surviving runtime blocks conflicting execution until reconciled. Saved PIDs alone do not establish authority to signal a process.
 - Treat storage failures as visible failures. Report success only when the durability required for that action is established.
+- In 06c, concentrate recovery interpretation in `runtimes`; storage supplies authoritative facts. Preserve the current conservative boot-evidence policy and exact action finalization. Ticket 11 extends that owning policy to surviving conversation work and uncertain shutdown.
 
 ### Supervisor and desktop lifecycle
 
 - Start or discover one supervisor on demand for the selected application state. Use a user-private local connection with exclusive owner admission, protocol/version compatibility checks, bounded output, and snapshot/event catch-up.
 - Desktop crash or disconnection leaves already admitted work with the supervisor. Reopening reconnects to the same owner and retrieves observations without resubmission.
 - Explicit Quit requests owned stop, durable flush, and supervisor shutdown, and reports cleanup or persistence failures visibly. Hide/minimize keeps work running; retain the product contract's recommended close-to-hide behavior.
+- Ticket 09 gives explicit Quit one supervisor-owned decision path: fence new mutations, account for admitted runtime and workspace/Git work, and confirm required persistence, cleanup and worker completion before owner release. Repeated/lost requests retrieve the same shutdown attempt; failed shutdown retains observable recovery and necessary ownership. Owning modules retain their own cleanup decisions.
 - Keep blocking Git, process, and disk work away from rendering. Bound streams and page history rather than loading unbounded output into the desktop.
 
 ### Repository, workspace, and inspection
@@ -160,8 +170,22 @@ These are sequencing limits. Retain the product contract's ownership and identit
 - Preparation confirmed one spec, separate-session tickets, bootstrap before product behavior, a clear usable desktop, stable reproducible versions, and lasting modules without speculative abstractions. Automated coverage follows the repository testing policy; desktop and native qualification remain separate.
 - Published to the configured local Markdown tracker with `ready-for-agent` status. Implementation tickets are separate files with explicit blockers under this feature's `issues/` directory.
 - Exact stable dependency versions and the supported Codex runtime/schema cohort are selected and recorded during their respective implementation gates. The agreed presentation stack is recorded above; no transport library, message schema, or provider compatibility result is implied by that choice.
-- Tickets 01–02 are complete and predate the testing policy. Tickets 03–04 are complete; product behavior in tickets 05–13 remains unimplemented. The ticket 03 verification gate is in place, with [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
+- Tickets 01–02 predate the testing policy; retain their [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). The current completion checkpoint is summarized above; dated ticket comments and linked evidence distinguish implementation, controlled checks and actual qualification. Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
 - Mark the milestone Passed only when its deterministic, desktop, and required native checks succeed. If native checks are unauthorized or fail, retain completed evidence and leave the milestone incomplete. Preserve the completed milestone when defining the next one.
+
+## Architecture follow-up sequence — 2026-11-13
+
+Continue on `feature/m01-codex-setup` from completed 06b:
+06c runtime recovery locality → 06d setup qualification →
+[06e supervisor communication](issues/06e-deepen-supervisor-communication.md) → 07 chat.
+06e is a separate milestone follow-on; parent 06 still closes only against its
+original setup acceptance through 06d. Keep predecessor acceptance and evidence.
+
+After 07, tickets 08 and 09 remain parallel; 09 → 10, then 08 + 10 → 11 → 12 → 13.
+Ticket 12 owns combined pending-approval-during-Quit qualification. Each requested
+implementation session stops at its ticket's completion gate. Claude/Bun hosting
+and many-agent execution/qualification remain later scope; single-conversation
+admission does not constrain permanent identity or storage.
 
 ## Workspace-flow decision — 2026-11-13
 

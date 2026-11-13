@@ -28,7 +28,7 @@ Inspect the current checkout and predecessor completion comments before each
 session. At the start of 06a, create and switch to `feature/m01-codex-setup` from
 the current `main` preparation baseline before product edits. If that branch
 already exists, inspect it and continue it rather than resetting or recreating it.
-06b–06d switch to and continue on that same feature branch, retaining predecessor
+06b–06e switch to and continue on that same feature branch, retaining predecessor
 commits; do not create separate child branches or implement on `main`.
 Each implementation child ends with relevant verification, review,
 evidence, a commit, and an explicit stop. Parent 06 closes only against its original
@@ -40,13 +40,19 @@ acceptance evidence; child completion alone does not check the parent boxes.
 | --- | --- | --- | --- |
 | 1 | [06a: Settings and retained workspace context](issues/06a-settings-and-retained-workspace-context.md) | Small navigation module, Settings composition, focus/return, retained workbench and late-result fencing. | Existing shell/workspace foundation |
 | 2 | [06b: Codex setup end to end](issues/06b-check-codex-setup-end-to-end.md) | Recorded cohort, deep runtime module, production/fixture adapters, executable persistence and actionable setup observations through existing typed transport. | 06a |
-| 3 | [06c: Protocol and process hardening](issues/06c-harden-codex-protocol-and-process-recovery.md) | Complete adversarial framing, identity, delayed-result, persistence uncertainty, reconnect, timeout and cleanup coverage; fix discovered defects. | 06b |
+| 3 | [06c: Protocol and process hardening](issues/06c-harden-codex-protocol-and-process-recovery.md) | Concentrate recovery interpretation in the runtime owner, preserve behavior, and complete adversarial protocol/process/persistence coverage. | 06b |
 | 4 | [06d: Qualification and review](issues/06d-qualify-codex-setup.md) | Actual desktop/process fixture qualification, accessibility/responsiveness evidence, packaging, final review/fixes and parent acceptance cross-check. | 06c |
+| Follow-on | [06e: Deepen supervisor communication](issues/06e-deepen-supervisor-communication.md) | Independent bounded request progress, shared transport mechanics and focused regression qualification before chat. | 06d |
 
 06b includes production bounds and owned cleanup from its first working check.
 06c expands adversarial coverage; it is not permission to leave a known unsafe
 intermediate implementation. Tickets 07–13, Claude integration and whole-milestone
 qualification remain separate.
+
+The follow-on was accepted after completed 06b. It shares this feature branch but
+belongs directly to the milestone spec; it does not expand parent 06's original
+acceptance or invalidate predecessor evidence. Finish parent 06 through 06d, then
+request 06e as its own session before 07.
 
 ## Settings and application navigation
 
@@ -226,21 +232,14 @@ credentials and provider payloads must not leak through logging, error formattin
 or ordinary setup observations. Keep process work, durable persistence and their
 uncertain outcomes distinguishable.
 
-## Deferred shared supervisor exchange improvement
+## Shared supervisor exchange follow-on
 
-The user chose to document this opportunity for later tickets, not make it a
-prerequisite of 06. Current `connection.rs` repeats privacy checks, socket setup,
-framing and response handling in repository/workspace exchange paths; their
-substitution paths also differ. Runtime requests would add another caller.
-
-Assess consolidation when a later ticket benefits. Keep transport mechanics local
-to `connection` and typed domain errors/decisions in their owning modules.
-Preserve definite local rejection versus unavailable-reply distinctions, version
-compatibility, private access checks and no automatic replay/start-on-action.
-One private shared exchange seam can earn depth if it actually removes repeated
-transport knowledge. Do not introduce a generic RPC framework or broaden this
-ticket into a transport refactor. Adding the necessary runtime forwarding and
-compatibility checks remains part of 06b.
+The original setup sequence deferred exchange consolidation; runtime forwarding
+is now implemented by completed 06b. The user accepted
+[06e](issues/06e-deepen-supervisor-communication.md) after 06d and before chat.
+Follow the [milestone communication decisions](spec.md#supervisor-communication)
+and 06e's acceptance for scope and qualification. Keep 06a–06d's original setup
+delivery intact; stream delivery enters in 07.
 
 ## Verification and evidence
 

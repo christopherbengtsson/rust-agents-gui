@@ -2,6 +2,7 @@
 
 **What to build:** Complete adversarial setup coverage and recovery presentation,
 fixing defects in the existing bounded runtime owner and adapters.
+Concentrate recovery interpretation in that owner before chat builds on it.
 
 **Blocked by:** [06b: Setup end to end](06b-check-codex-setup-end-to-end.md).
 
@@ -25,6 +26,18 @@ this child's commits on that branch; do not create a new branch or implement on
 
 ## Acceptance
 
+- [ ] Storage supplies authoritative saved recovery facts; `runtimes` interprets
+      whether they fence execution. Preserve the existing matrix: an absent
+      marker permits admission; matching known boots or either unknown boot
+      fence; different nonempty boots exclude process survival. A failed read
+      remains a storage failure. Reboot evidence grants no replay, provider
+      completion or signaling authority.
+- [ ] Move boot-policy assertions into runtime-owner coverage, using substituted
+      saved facts with the production interpretation. Keep transaction/readback
+      coverage with storage. Preserve exact-action finalization, intent-before-
+      effect, owned versus unowned cleanup, queued admission and 06b's retained
+      completion/persistence corrections. Keep this relocation internal, preserving
+      SQLite schema and public request/reply representations.
 - [ ] Complete schema-grounded coverage of version/exit failure, authentication and
       configuration, unrelated/differently typed request IDs, duplicate/late frames,
       malformed/oversized input, unexpected server requests, EOF and deadline paths.

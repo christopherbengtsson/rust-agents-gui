@@ -2,7 +2,9 @@
 
 **What to build:** Send multiline text in a workspace, follow streamed replies/tool activity in the correct conversation, and reconnect after desktop loss without replaying uncertain work.
 
-**Blocked by:** 04: Create isolated workspaces with recoverable retries; 06: Connect Codex with actionable setup diagnostics
+**Blocked by:** 04: Create isolated workspaces with recoverable retries;
+06: Connect Codex with actionable setup diagnostics;
+[06e: Deepen supervisor communication](06e-deepen-supervisor-communication.md).
 
 **Status:** ready-for-agent
 
@@ -15,6 +17,15 @@
 - [ ] Build the transcript, tool-activity presentation and multiline composer within the established workspace layout using appropriate shadcn composition patterns and shared tokens. Give conversation observations and frequent streaming updates a focused owner near the chat UI. Keep the selected workspace/conversation and saved/received/uncertain delivery states legible.
 - [ ] Keep composer input and workspace navigation usable during streaming. Localize changing-response updates, bound mounted history as needed, and preserve readable scrolling/catch-up feedback without rebuilding unrelated shell views on every text update.
 - [ ] Provide a usable desktop chat/composer and streamed text/tool/error observations through the core interface and real supervisor connection.
+- [ ] Build bounded observation/catch-up delivery on 06e's independent request
+      progress. Keep a slow or disconnected observation consumer from monopolizing
+      control progress or supervisor connection capacity; account for queued and
+      in-flight bytes and recover observation gaps from authoritative history.
+- [ ] Establish conversation-owned durable execution policy and runtime-owned
+      long-lived session mechanics. Keep setup's bounded metadata check loop
+      separate from chat execution; navigation and targeted control remain
+      responsive while a session awaits output. Extend versioned contracts and
+      TypeScript validation together when adding conversation observations/actions.
 - [ ] Persist separate workspace, application/native conversation, turn, action, and process identities; retain native mapping and durable transcript history outside project files.
 - [ ] Admit one active conversation application-wide as a temporary policy, without permanent one-conversation-per-workspace storage restrictions; reject duplicate native-conversation ownership.
 - [ ] Save action identity/intent before effects and distinguish local durability, provider receipt, and unknown outcome in authoritative observations and the desktop.

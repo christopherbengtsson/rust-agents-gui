@@ -16,6 +16,12 @@
 - [ ] Audit A1–A10 against migrated unit coverage and retained process evidence, fill uncovered application-decision regressions under the testing policy, and pass the deterministic stage before the full desktop verification stage. Mark actual durability, ownership, cleanup and responsiveness unqualified until their separate desktop checks pass.
 - [ ] Complete repository registration, selected-commit workspace creation, streamed chat, allow/deny, diff refresh, interrupt, Quit/restart, readable history, and exact fixture resume in the actual desktop.
 - [ ] Demonstrate desktop-only crash/reconnect without replay, supervisor failure/recovery, uncertain sends/approvals/resumes, pending approval during Quit, stale answers, incompatible owner versions, and actionable storage/shutdown errors.
+- [ ] Cross-check 06e communication and 07 streamed observations under sustained
+      fixture output: slow observation/catch-up must leave targeted interrupt and
+      navigation usable. Verify 09's admission fence and failed stop/flush states,
+      then 11's recovery without competing ownership or duplicate actions. Include
+      pending approval during Quit once 08 and 09 are both complete; retain exact
+      approval semantics and evidence of the outcome.
 - [ ] Use the production core/supervisor interfaces with the deterministic adapter at the supported execution seam; preserve exact matching and fixture provenance.
 - [ ] Record screenshots of working and error states and navigation/history-opening measurements on the test Mac against the 100 ms/one-second targets under this single-conversation workload.
 - [ ] Run repository build, formatting, static checks, and relevant tests; record exact commands/results, implementation revision, hardware, tool/runtime/schema versions, configuration, and evidence locations.

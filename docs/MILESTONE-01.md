@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–04, including 02a, are complete. Repository registration/navigation has unit and actual-desktop evidence. Product behavior in tickets 05–13, the complete workflow and native-provider qualification remain incomplete.
+Status: In progress — tickets 01–05, including 02a, are complete. 06a–06b have completed implementation and controlled-check evidence; setup hardening/qualification in 06c–06d remains open. Communication follow-on 06e, chat/lifecycle tickets 07–11, the complete workflow and native-provider qualification remain incomplete.
 
 ## Outcome and authority
 
@@ -67,7 +67,26 @@ Ticket 01 established the TypeScript/pnpm + Rust/Tauri baseline, a separate supe
 Tickets 01–02 predate the testing policy. Repository alignment brought forward ticket 03's unit-only verification gate while retaining the earlier process/desktop evidence. See [policy-alignment evidence](evidence/milestone-01-verification-policy-alignment.md) for the coverage mapping, separate process qualification and measurements. Repository registration was unimplemented at that checkpoint.
 
 Ticket 03 now implements A1 repository registration, shared Git identity, durable action status, restored selection and per-repository availability/details. Its 89 unit checks, six retained process scenarios, production packaging and actual Tauri workflow passed on 2026-11-13. See [registration evidence](evidence/milestone-01-repositories.md) for commands, failed attempts, measurements, screenshots and limits. No live-provider submissions were performed. Ticket 04 implements isolated workspace creation and recovery, with unit, actual
-desktop, migration and real-process lease evidence. See [workspace evidence](evidence/milestone-01-workspaces.md). No live-provider work was submitted. Product behavior in tickets 05–13 remains unimplemented; those acceptance items and whole-milestone qualification stay open.
+desktop, migration and real-process lease evidence. See [workspace evidence](evidence/milestone-01-workspaces.md). No live-provider work was submitted. The later completion checkpoint below distinguishes the remaining implementation and qualification.
+
+### Current checkpoint and architecture follow-on — 2026-11-13
+
+Ticket 05's uncommitted-change slice has controlled and actual-desktop evidence;
+see [change-inspection qualification](evidence/milestone-01-change-inspection-qualification.md).
+06a's Settings/navigation and 06b's runtime setup have implementation and
+controlled-check evidence, including retained recovery corrections; see
+[Settings evidence](evidence/milestone-01-settings.md) and
+[Codex setup evidence](evidence/milestone-01-codex-setup.md).
+Their pending actual setup qualification remains with 06d; no native-provider
+execution compatibility or completed whole-milestone workflow is established.
+
+The accepted [implementation sequence](../.scratch/milestone-01/spec.md#architecture-follow-up-sequence--2026-11-13)
+puts recovery interpretation with its runtime owner in 06c, then keeps 06d setup
+qualification and adds [06e supervisor communication](../.scratch/milestone-01/issues/06e-deepen-supervisor-communication.md)
+before 07's streamed chat. Supervisor shutdown ownership remains in 09; surviving
+execution reconciliation remains in 11. Existing A1–A10, completed evidence and
+the one-active-conversation allowance remain unchanged. These are pending
+implementation obligations, not new qualification results.
 
 During qualification, record:
 
