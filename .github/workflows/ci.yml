@@ -59,9 +59,9 @@ jobs:
       - name: Prepare supervisor resource
         run: node scripts/prepare-supervisor.mjs debug
 
-      - name: Verify
-        run: corepack pnpm verify
-
-      # verify already typechecks; do not repeat frontend:build's tsc invocation.
+      # Tauri static checks need assets; verify handles the separate typecheck.
       - name: Build frontend assets
         run: corepack pnpm exec vite build
+
+      - name: Verify
+        run: corepack pnpm verify
