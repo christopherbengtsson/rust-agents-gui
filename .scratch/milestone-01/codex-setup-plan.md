@@ -25,8 +25,12 @@ edits and predecessor evidence. Do not treat a later request for one child as
 authorization to start the following child.
 
 Inspect the current checkout and predecessor completion comments before each
-session. Continue on the preparation branch unless the user explicitly chooses
-another branch. Each implementation child ends with relevant verification, review,
+session. At the start of 06a, create and switch to `feature/m01-codex-setup` from
+the current `main` preparation baseline before product edits. If that branch
+already exists, inspect it and continue it rather than resetting or recreating it.
+06b–06d switch to and continue on that same feature branch, retaining predecessor
+commits; do not create separate child branches or implement on `main`.
+Each implementation child ends with relevant verification, review,
 evidence, a commit, and an explicit stop. Parent 06 closes only against its original
 acceptance evidence; child completion alone does not check the parent boxes.
 

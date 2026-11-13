@@ -18,6 +18,10 @@ Read the [accepted plan](../codex-setup-plan.md), all child completion evidence,
 React and shadcn skills and final Standards/Spec review. Use disposable private
 application state; preserve completed milestone evidence and avoid RAT inspection.
 
+Switch to `feature/m01-codex-setup` and continue from 06c's completed commit. Keep
+qualification fixes and evidence on that branch; do not create a new branch or
+implement on `main`.
+
 ## Acceptance
 
 - [ ] Stage/build from identified current source with sidecar provenance, matching

@@ -17,6 +17,10 @@ Read the [accepted plan](../codex-setup-plan.md), 06a's completion comment,
 [component guide](../../../src/components/README.md). Apply repository-local Rust,
 React and shadcn skills. Inspect implemented contracts before extending them.
 
+Switch to `feature/m01-codex-setup`, created by 06a, and continue from its completed
+commit. Keep this child's commits on that branch; do not create a new branch or
+implement on `main`.
+
 ## Acceptance
 
 - [ ] Before changing an adapter/fixture, inspect Codex 0.167.2's official schema

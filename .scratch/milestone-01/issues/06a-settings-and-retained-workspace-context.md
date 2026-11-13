@@ -21,6 +21,11 @@ Read the [accepted plan](../codex-setup-plan.md),
 shadcn and Rust skills where applicable. Inspect the current branch and predecessor
 evidence; follow the plan's branch/session rules.
 
+Before product edits, create and switch to `feature/m01-codex-setup` from the
+current `main` preparation baseline. If it already exists, inspect and continue it
+without resetting or recreating it. Commit this child on that branch; 06b–06d
+continue on the same branch.
+
 ## Acceptance
 
 - [ ] An accessible Settings gear opens a full Settings screen replacing the
