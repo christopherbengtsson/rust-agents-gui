@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: macos-15
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+
+      - name: Install Corepack
+        run: npm install --global corepack@0.36.0
+
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Select repository Rust toolchain
+        run: rustup show active-toolchain
+
+      - name: Report environment
+        run: |
+          node --version
+          corepack --version
+          corepack pnpm --version
+          rustc --version
+          cargo --version
+          cargo fmt --version
+          cargo clippy --version
+          sw_vers
+          uname -m
+
+      - name: Identify Rust cache environment
+        id: rust-cache-env
+        run: |
+          node <<'JS'
+          const { createHash } = require('node:crypto');
+          const { execFileSync } = require('node:child_process');
+          const { appendFileSync } = require('node:fs');
+          const { homedir } = require('node:os');
+          const { resolve } = require('node:path');
+          const command = (file, args) => execFileSync(file, args, { encoding: 'utf8' }).trim();
+          const environment = {
+            compiler: command('rustc', ['-vV']),
+            xcode: command('xcodebuild', ['-version']),
+            sdkPath: command('xcrun', ['--show-sdk-path']),
+            sdkVersion: command('xcrun', ['--show-sdk-version']),
+            imageOS: process.env.ImageOS ?? '',
+            imageVersion: process.env.ImageVersion ?? '',
+            flags: Object.fromEntries(Object.entries(process.env)
+              .filter(([key]) => /^(CARGO_|RUSTC|RUSTFLAGS$)/.test(key))
+              .sort(([a], [b]) => a.localeCompare(b))),
+          };
+          const fingerprint = createHash('sha256').update(JSON.stringify(environment)).digest('hex');
+          const cargoHome = resolve(process.env.CARGO_HOME || `${homedir()}/.cargo`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `fingerprint=${fingerprint}\ncargo-home=${cargoHome}\n`);
+          JS
+
+      - name: Cache Rust dependencies
+        id: rust-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ${{ steps.rust-cache-env.outputs.cargo-home }}/registry/index
+            ${{ steps.rust-cache-env.outputs.cargo-home }}/registry/cache
+            ${{ steps.rust-cache-env.outputs.cargo-home }}/git/db
+            target/debug/deps
+            target/debug/.fingerprint
+            target/debug/build
+          key: rust-deps-v1-${{ runner.os }}-${{ runner.arch }}-macos-15-${{ steps.rust-cache-env.outputs.fingerprint }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock', '**/Cargo.toml', '.cargo/config', '.cargo/config.toml', '**/.cargo/config', '**/.cargo/config.toml', '.github/workflows/ci.yml') }}
+
+      - name: Check restored target ownership
+        run: |
+          marker=target/.agent-workspace-owner.json
+          if [[ -e "$marker" || -L "$marker" ]]; then
+            echo "Rust cache must not restore a target ownership marker." >&2
+            exit 1
+          fi
+
+      # Static Tauri checks require the resource; this builds but never runs it.
+      - name: Prepare supervisor resource
+        run: node scripts/prepare-supervisor.mjs debug
+
+      # Tauri static checks need assets; verify handles the separate typecheck.
+      - name: Build frontend assets
+        run: corepack pnpm exec vite build
+
+      - name: Verify
+        run: corepack pnpm verify

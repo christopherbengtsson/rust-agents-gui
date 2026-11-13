@@ -34,6 +34,10 @@ commands. The checked-out package scripts define available commands. Tickets
 The current default test gate is unit-only, with controlled filesystem, process,
 transport and time outcomes. The verification foundation originally planned for
 ticket 03 was brought forward and remains the default gate.
+The application test gate uses units with controlled filesystem, process,
+transport and time outcomes. The tooling gate also runs bounded native Oxlint CLI
+configuration checks against disposable source fixtures. The verification foundation originally planned for
+ticket 03 has been brought forward; repository registration remains unimplemented.
 
 | Command                         | Purpose                                                                                                                                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -41,7 +45,7 @@ ticket 03 was brought forward and remains the default gate.
 | `corepack pnpm test:measure`    | Compile once; measure one warm-up and five warm executions of each unit harness.                                                                                                           |
 | `corepack pnpm compile`         | Check workspace compilation independently.                                                                                                                                                 |
 | `corepack pnpm check`           | TypeScript and Clippy, including retained qualification targets; no test execution.                                                                                                        |
-| `corepack pnpm format:check`    | Prettier and rustfmt checks.                                                                                                                                                               |
+| `corepack pnpm format:check`    | Oxfmt and rustfmt checks.                                                                                                                                                                  |
 | `corepack pnpm lint`            | Frontend Hook/compiler and JSX accessibility lint; toolkit Tauri dependency restrictions.                                                                                                  |
 | `corepack pnpm verify`          | Formatting, frontend lint, static checks and unit tests, each once; excludes packaging and process qualification.                                                                          |
 | `corepack pnpm qualify:process` | Opt in to inherited supervisor-process qualification using disposable private state.                                                                                                       |
@@ -61,6 +65,25 @@ The Vite server stays on `127.0.0.1:1420` with a strict port and excludes Rust
 sources, sidecar staging and Cargo output from its watcher. The frontend targets
 Safari 16.4 to match Tailwind 4; the macOS bundle minimum is 13.3. These are
 compatibility settings, not qualification of every supported OS.
+
+## Continuous integration
+
+[GitHub Actions CI](.github/workflows/ci.yml) runs on pull requests targeting
+`main`, pushes to `main`, and manual dispatch. One `macos-15` Apple Silicon job
+uses the repository's Node, pnpm and Rust versions. It installs frozen frontend
+dependencies, prepares the debug supervisor resource for Tauri's static checks,
+runs `corepack pnpm verify`, then builds frontend assets without repeating the
+TypeScript check. Resource preparation builds the supervisor without launching it.
+
+CI does not package/sign the app, launch desktop or supervisor processes, run
+provider sessions, or qualify native behavior. Those checks retain their separate
+milestone gates. Actions are pinned to release commits. Rust dependency downloads and selected
+compiled artifacts are cached; the target ownership marker, staged sidecars and
+frontend outputs are excluded. Every cache hit still runs the full checks. pnpm
+caching is deferred. See [cache research](docs/research/github-actions-caching.md)
+for cache boundaries and validation. See the [CI research](docs/research/github-actions-ci.md)
+for versions and sources. Hosted execution remains unverified until this branch
+is pushed and a matching GitHub event runs.
 
 ## Ownership
 
@@ -89,3 +112,21 @@ See the [product contract](docs/MVP.md), [milestone status](docs/MILESTONE-01.md
 [discovery evidence](docs/evidence/milestone-01-discovery.md) and
 [UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md) and
 [repository registration evidence](docs/evidence/milestone-01-repositories.md).
+[UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md).
+
+## Frontend tooling
+
+Oxfmt owns frontend/document formatting at width 80, with import, Tailwind-class
+and package-field sorting disabled. `.prettierignore` remains the shared ignore
+file; commands also pass `.gitignore`. Rust formatting stays with rustfmt.
+
+Oxlint runs native React Hooks/compiler and JSX accessibility checks plus direct
+Tauri dependency restrictions in toolkit layers. Warnings and unused suppressions
+fail lint. Explicit rule configuration avoids broadening scope with tool defaults.
+The table-cell role exception preserves the accepted `td role="gridcell"` case.
+
+Vite uses the experimental native React Compiler with recoverable diagnostics
+visible. `oxc-transform-react` is pinned to 0.156.0 for plugin-react 6.3.0's peer
+range. Unsupported constructs may remain unoptimized: the observation Hook keeps
+its `finally` cleanup. TypeScript checking remains separate. Compiler output and
+mocked IPC checks do not establish actual desktop behavior; see [migration evidence](docs/evidence/native-oxc-toolchain.md).

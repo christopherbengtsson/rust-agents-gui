@@ -51,7 +51,7 @@ export function RepositorySidebar({
             <SidebarGroupLabel
               render={
                 // Base UI supplies the visible children through render composition.
-                // eslint-disable-next-line jsx-a11y/heading-has-content
+                // oxlint-disable-next-line jsx-a11y/heading-has-content
                 <h2 id="repositories-heading" />
               }
               className="h-auto px-0"

@@ -30,6 +30,14 @@ application dependencies. Neither `--lib` nor a move into `src` removes effects.
 Replace expensive checks only after their useful assertions have passing unit
 replacements; record the old-to-new coverage mapping and any lost qualification.
 
+## Tooling configuration checks
+
+The native Oxc migration explicitly permits bounded real Oxlint CLI checks in the
+existing Node tooling gate. They exercise the checked-in configuration against
+temporary source fixtures, with a timeout and cleanup. This exception covers no
+application, Git, supervisor or provider processes and adds no testing framework.
+Application behavior units retain the dependency-substitution policy above.
+
 ## Engineering skills
 
 Use skills under the [repository precedence rule](../../AGENTS.md#instruction-precedence).

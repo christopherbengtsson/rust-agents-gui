@@ -1,0 +1,18 @@
+[
+  {
+    "pid": 12855,
+    "command": "node /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/node_modules/.bin/../.pnpm/@tauri-apps+cli@2.12.4/node_modules/@tauri-apps/cli/tauri.js dev"
+  },
+  {
+    "pid": 13072,
+    "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target/debug/workspace-desktop"
+  },
+  {
+    "pid": 13019,
+    "command": "node /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/node_modules/.bin/../.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/bin/vite.js"
+  },
+  {
+    "pid": 14250,
+    "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/src-tauri/gen/sidecar/workspace-supervisor /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/oxc-hmr-xvk7sdva/state"
+  }
+]
