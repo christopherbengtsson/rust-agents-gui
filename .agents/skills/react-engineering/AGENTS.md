@@ -514,6 +514,9 @@ closing a dialog does not establish that its pending promise was cancelled; guar
 late picker results with the dialog/request generation. Durable outcome and retry
 ownership remains in Rust, not in this illustrative presentation bookkeeping.
 
+Guard action-result eligibility independently when its lifetime differs from the
+current view or read subscription.
+
 Sources: [React async cleanup](https://react.dev/reference/react/useEffect#fetching-data-with-effects),
 [Tauri dialog API](https://v2.tauri.app/reference/javascript/dialog/).
 
@@ -758,6 +761,9 @@ Loading, empty, disconnected, stale, failed, and unknown are distinct where the
 feature produces them. A Transition's pending flag is rendering feedback, not
 provider receipt or completion. Bind action feedback to its actual domain target;
 use discriminated unions when they prevent contradictory combinations.
+
+Keep action-specific errors separate from observation failures so unrelated status
+updates can continue.
 
 Source: [MVP evidence and recovery](../../../docs/MVP.md#starting-architecture).
 

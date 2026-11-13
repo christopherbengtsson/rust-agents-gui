@@ -36,4 +36,7 @@ feature produces them. A Transition's pending flag is rendering feedback, not
 provider receipt or completion. Bind action feedback to its actual domain target;
 use discriminated unions when they prevent contradictory combinations.
 
+Keep action-specific errors separate from observation failures so unrelated status
+updates can continue.
+
 Source: [MVP evidence and recovery](../../../../docs/MVP.md#starting-architecture).

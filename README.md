@@ -22,6 +22,12 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm dev
 ```
 
+Inspect the directory returned by `git rev-parse --git-path hooks` before changing
+hook configuration. Preserve existing custom hooks by adding formatting/lint checks
+to that setup. Otherwise, enable the repository hook with
+`git config --local core.hooksPath .githooks`; an existing `.githooks` setting needs
+no change.
+
 Development logs its freshly built supervisor executable and persistent state:
 `~/.agent-workspace/dev/<canonical-worktree hash>/p<protocol>-<app-version hash>`.
 Compatible restarts reuse it; other worktrees/protocols/versions are isolated.
