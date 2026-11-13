@@ -94,3 +94,13 @@ packaged-desktop qualification are **not run for this source** and remain 06d.
 Native-provider qualification is **not run**; zero provider submissions/processes,
 login changes or runtime configuration changes. 06b owns real setup controls and
 observations. Parent 06 and later children remain open. Stop after this child.
+
+### 2026-11-13 — Settings header alignment follow-up
+
+Moved Back to the full-width header's left and Settings into a sidebar title row
+matching the workbench. Entry still focuses the Settings heading; Tab reaches
+Agent runtimes and Shift+Tab reaches Back. The follow-up commit containing this
+comment includes the change. See the [appended evidence](../../../docs/evidence/milestone-01-settings.md#settings-header-alignment-follow-up--2026-11-13)
+for source hashes, focused checks, the passing complete gate (110 Rust + 25 tooling
++ 99 UI), production frontend build and warm measurements. WebView/desktop
+qualification remains 06d; 06b runtime work is unchanged and remains open.

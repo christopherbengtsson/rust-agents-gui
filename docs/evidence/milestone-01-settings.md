@@ -158,3 +158,40 @@ responsiveness, real process behavior, durable storage or native compatibility.
 The existing predecessor desktop evidence is preserved, not extended to this
 source. Actual WebView qualification and packaging remain 06d; runtime adapter,
 configuration persistence and Check setup remain 06b. Stop after this child.
+
+## Settings header alignment follow-up — 2026-11-13
+
+The follow-up commit containing this section moves Back to the left of the
+full-width top bar and Settings into the existing SidebarHeader composition.
+The title uses the workbench's 49px header height, 16px horizontal padding (12px
+at or below 700px), divider and 12px semibold identity typography. Content padding
+and sidebar widths are unchanged. The heading retains its ref and programmatic
+focusability; entry still focuses Settings. Tab now reaches Agent runtimes;
+Shift+Tab from Settings reaches Back. Enter activates the category or Back,
+returning focus to the section heading or retained Settings trigger respectively.
+No navigation owner, observation, retention or runtime behavior changed.
+
+The revised App unit checks those keyboard decisions alongside its existing
+landmark, skip-target, unique-ID and truthful-content assertions. Existing context,
+late-result, disclosure and reader tests remain in the complete gate. Source
+inspection found no ownership, toolkit composition or accepted-plan discrepancy;
+this is an implementer review, not a new independent Standards/Spec review.
+
+The [follow-up source manifest](milestone-01-settings/header-follow-up/source-identity.json)
+records the base revision, exact source hashes, environment, commands, exit statuses
+and wall times. Hardware and tool versions match the original cohort above.
+Checks ran sequentially with warm caches in the worktree's owned default target,
+test profile, one Rust harness thread, one UI worker and tooling concurrency one.
+
+| Check                              | Result                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Focused navigation/retention units | `corepack pnpm test:ui src/App.test.tsx src/use-app-navigation.test.tsx src/workspace-changes.test.tsx`: exit 0; **47 passed**; 2.474111 s wall. [Log](milestone-01-settings/header-follow-up/focused-units.log).                                                                                                                                                           |
+| Complete gate                      | `corepack pnpm verify`: exit 0; **110 Rust + 25 tooling + 99 UI passed**; 7.597632 s wall. Formatting, lint, TypeScript and Clippy passed. Rust compilation 0.096848 s; execution 0.375066 s, separately. [Log](milestone-01-settings/header-follow-up/verify.log).                                                                                                         |
+| Frontend production build          | `corepack pnpm frontend:build`: exit 0; 0.648238 s wall. Existing Vite chunk-above-500-kB warning remains. [Log](milestone-01-settings/header-follow-up/frontend-build.log).                                                                                                                                                                                                |
+| Warm unit measurements             | `corepack pnpm test:measure`: exit 0; 38.833609 s wall; one warm-up and five warm runs per harness, all passing. Compilation 0.075780 s separately. Median/range: Rust 0.383782 s; range 0.382247–0.388348 s; tooling 0.825030 s; range 0.797033–0.870049 s; UI 5.200252 s; range 5.175711–5.262282 s. [Log](milestone-01-settings/header-follow-up/unit-measurements.log). |
+| Desktop/native qualification       | Actual WebView, fixture-desktop/process, packaged desktop and native provider **not run for this follow-up**. WebView/packaging remain 06d; zero provider processes/submissions, login or runtime configuration changes.                                                                                                                                                    |
+
+Final diff whitespace inspection flagged an extra trailing blank line in the
+captured focused-unit log. Log whitespace was normalized; test results are unchanged.
+Cold compilation and desktop packaging were not measured. Original 06a results remain historical evidence for their source;
+this follow-up does not extend their qualification claims. 06b–06d remain open.

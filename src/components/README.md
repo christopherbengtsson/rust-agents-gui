@@ -251,6 +251,9 @@ when the retained comparison ID has not changed.
   and workspace content in WorkspacePanel. It receives a heading ref and Back
   callback, performs no IPC, and offers no runtime action until 06b implements it.
   The category button focuses its associated section heading.
+  Back sits at the left of the full-width top bar; Settings is the sidebar's
+  focusable h1 in a SidebarHeader matching the workbench header. Entry focuses
+  that title; Tab advances to the category and Shift+Tab reaches Back in DOM order.
 - App owns `useAppNavigation` beside its single shared observation hooks, outside
   one stable workbench Activity. Navigation owns screen transitions, focus return,
   disclosure visits and selection eligibility; repository/workspace hooks remain

@@ -89,17 +89,21 @@ test("Settings replaces the workbench, tells the truth, and returns keyboard foc
   expect(new Set(ids).size).toBe(ids.length);
   await user.tab();
   expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "Agent runtimes" }),
+  );
+  await user.keyboard("{Enter}");
+  expect(document.activeElement).toBe(
+    screen.getByRole("heading", { level: 2, name: "Agent runtimes" }),
+  );
+  heading.focus();
+  await user.tab({ shift: true });
+  expect(document.activeElement).toBe(
     screen.getByRole("button", { name: "Back" }),
   );
   await user.keyboard("{Enter}");
   expect(screen.getByRole("main").id).toBe("workspace");
   expect(document.activeElement).toBe(trigger);
   expect(connectionCalls()).toHaveLength(2);
-  await user.click(trigger);
-  await user.click(screen.getByRole("button", { name: "Agent runtimes" }));
-  expect(document.activeElement).toBe(
-    screen.getByRole("heading", { level: 2, name: "Agent runtimes" }),
-  );
 });
 
 test.each([600, 900])(

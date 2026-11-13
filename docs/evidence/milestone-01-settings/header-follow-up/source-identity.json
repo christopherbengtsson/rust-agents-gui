@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-13",
+  "branch": "feature/m01-codex-setup",
+  "base_revision": "2ca389e780adc729906c9424b39d48b8bf3d65ff",
+  "source_state": "Base plus header follow-up; the commit containing this manifest contains these file hashes. Evidence documents are appended after verification.",
+  "sha256": {
+    "src/components/blocks/settings-screen.tsx": "327607c4e5dfc7d1e221ccc00414b4bdb88f0e114d33357a021012481f96b4ce",
+    "src/style.css": "dcd3c622c23f7fddfd3a8ccaf48bbfcbd6ea088337b24ded5381fc26018f9bc0",
+    "src/App.test.tsx": "88277c69b046c96d7162b96811937c55c5fe78630a1f9029bfa315ac8accbdba",
+    "src/components/README.md": "696a2c0038983aaa257445cdee4806a4736e4238fba46faaa79d0c338d213d0f",
+    "package.json": "cfdbe7c72a605073e28e3d63ba773413b5df89500e4bc72e39c216389fbbc3b0",
+    "pnpm-lock.yaml": "be348f1cbde87368a663f57fe7e31be545cf512ee84f10bcbc8c84a50b163c1a",
+    "Cargo.lock": "73fa135db67dc5cc1292bd667b548217b8ae3c467f7cb7ca36677d30e663581a"
+  },
+  "environment": {
+    "os": "macOS 26.2 / 25C56",
+    "architecture": "arm64",
+    "cpu": "Apple M4 Pro",
+    "memory_bytes": 51539607552,
+    "node": "26.13.1",
+    "pnpm": "12.18.0",
+    "rustc": "1.99.1",
+    "cargo": "1.99.1",
+    "target": "worktree default target; warm existing caches",
+    "rust_harness_threads": 1,
+    "ui_workers": 1
+  },
+  "checks": {
+    "focused-units": {
+      "command": [
+        "corepack",
+        "pnpm",
+        "test:ui",
+        "src/App.test.tsx",
+        "src/use-app-navigation.test.tsx",
+        "src/workspace-changes.test.tsx"
+      ],
+      "exit_status": 0,
+      "wall_seconds": 2.4741113330237567
+    },
+    "verify": {
+      "command": ["corepack", "pnpm", "verify"],
+      "exit_status": 0,
+      "wall_seconds": 7.597631791024469
+    },
+    "frontend-build": {
+      "command": ["corepack", "pnpm", "frontend:build"],
+      "exit_status": 0,
+      "wall_seconds": 0.6482381249079481
+    },
+    "unit-measurements": {
+      "command": ["corepack", "pnpm", "test:measure"],
+      "exit_status": 0,
+      "wall_seconds": 38.833608625107445
+    }
+  }
+}

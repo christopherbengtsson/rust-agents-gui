@@ -6,6 +6,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -22,9 +23,6 @@ export function SettingsScreen({
   return (
     <div className="settings-screen">
       <header className="settings-header">
-        <h1 ref={headingRef} tabIndex={-1}>
-          Settings
-        </h1>
         <Button variant="ghost" size="sm" onClick={onBack}>
           <ArrowLeft data-icon="inline-start" aria-hidden="true" />
           Back
@@ -35,6 +33,11 @@ export function SettingsScreen({
           collapsible="none"
           className="repository-sidebar shrink-0 border-r"
         >
+          <SidebarHeader className="h-(--shell-header-height) shrink-0 justify-center border-b px-4 py-0 [@media(max-width:700px)]:px-3">
+            <h1 ref={headingRef} tabIndex={-1} className="app-identity">
+              Settings
+            </h1>
+          </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
               <nav aria-label="Settings categories">
