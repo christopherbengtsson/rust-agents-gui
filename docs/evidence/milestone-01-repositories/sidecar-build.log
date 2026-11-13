@@ -1,0 +1,9 @@
+   Compiling libsqlite3-sys v0.40.0
+   Compiling uuid v1.29.2
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `release` profile [optimized] target(s) in 13.02s
+real 13.13
+user 15.46
+sys 0.53

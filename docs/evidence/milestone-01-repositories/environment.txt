@@ -1,0 +1,12 @@
+Fri Nov 13 01:10:05 UTC 2026
+ProductName:		macOS
+ProductVersion:		26.2
+BuildVersion:		25C56
+arm64
+Mac16,8
+51539607552
+Apple M4 Pro
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+v26.13.1
+12.18.0
+git version 2.50.0

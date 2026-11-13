@@ -6,8 +6,9 @@ supervisor discovery, status and reconnect. Ticket 02a established the React/sha
 [desktop cohort](docs/evidence/milestone-01-ui-foundation.md#desktop-qualification-follow-up--2026-11-12)
 is preserved. The current [Sidebar refactor and branding fix](docs/evidence/milestone-01-sidebar-refactor.md#actual-tauri-requalification--2026-11-1213)
 passed actual Tauri requalification on 2026-11-12–13.
-Tickets 03–06 are not implemented: repository registration, isolated workspaces, change
-inspection and Codex setup. Chat and the rest of the milestone remain unimplemented.
+Ticket 03 adds existing-repository registration, durable identity, per-repository
+details and restored navigation. Tickets 04–06 (isolated workspaces, change inspection
+and Codex setup), chat and the rest of the milestone remain unimplemented.
 
 ## Development
 
@@ -32,7 +33,7 @@ commands. The checked-out package scripts define available commands. Tickets
 01–02 predate that policy; their completed desktop/process evidence is retained.
 The current default test gate is unit-only, with controlled filesystem, process,
 transport and time outcomes. The verification foundation originally planned for
-ticket 03 has been brought forward; repository registration remains unimplemented.
+ticket 03 was brought forward and remains the default gate.
 
 | Command                         | Purpose                                                                                                                                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -68,11 +69,23 @@ compatibility settings, not qualification of every supported OS.
 - `src-tauri`: forwards targeted requests and presents observations.
 - `src`: React/TypeScript presentation with shadcn Base UI components and Tailwind.
 
-As the remaining tickets add behavior, `workspaces` owns repository/workspace policy,
-`storage` owns authoritative writes and `runtimes` owns provider process mechanics.
+`workspaces` owns repository identity, registration, availability and reconciliation;
+`storage` owns SQLite metadata under private application state. Main and linked
+worktrees share one repository identity; separate clones remain distinct. Reopening
+retrieves saved registrations and action status. Missing locations stay visible,
+and registration performs read-only Git inspection without starting agents.
+
+Desktop preferences remember the last selection and an uncertain registration's
+action ID. Refresh retrieves authoritative status; edited paths are separate explicit
+requests after the pending action is resolved. No repository relocation or removal
+workflow is implemented. Protocol 2 requires matching desktop/supervisor builds.
+
+As remaining tickets add behavior, `workspaces` extends workspace policy and
+`runtimes` owns provider process mechanics.
 Keep these responsibilities in Rust; Tauri remains presentation and forwarding.
 
 See the [product contract](docs/MVP.md), [milestone status](docs/MILESTONE-01.md),
 [bootstrap evidence](docs/evidence/milestone-01-bootstrap.md) and
 [discovery evidence](docs/evidence/milestone-01-discovery.md) and
-[UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md).
+[UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md) and
+[repository registration evidence](docs/evidence/milestone-01-repositories.md).

@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–02 are complete. Product behavior in tickets 03–13 is not implemented; ticket 03's verification gate is in place. Complete workflow and native qualification remain incomplete.
+Status: In progress — tickets 01–03, including 02a, are complete. Repository registration/navigation has unit and actual-desktop evidence. Product behavior in tickets 04–13, the complete workflow and native-provider qualification remain incomplete.
 
 ## Outcome and authority
 
@@ -64,9 +64,9 @@ PR inbox, automated review preparation/handoffs, PR creation/feedback/merge cont
 
 Ticket 01 established the TypeScript/pnpm + Rust/Tauri baseline, a separate supervisor and a successful desktop status exchange; see [bootstrap evidence](evidence/milestone-01-bootstrap.md). Ticket 02 established private owner admission, versioned snapshots and bundled desktop kill/reconnect; see [discovery evidence](evidence/milestone-01-discovery.md). These remain the completed starting point.
 
-Tickets 01–02 predate the testing policy. Current repository alignment brought forward ticket 03's unit-only verification gate while retaining the earlier process/desktop evidence. See [policy-alignment evidence](evidence/milestone-01-verification-policy-alignment.md) for the coverage mapping, separate process qualification and measurements. Repository registration and the remaining product behavior are still unimplemented.
+Tickets 01–02 predate the testing policy. Repository alignment brought forward ticket 03's unit-only verification gate while retaining the earlier process/desktop evidence. See [policy-alignment evidence](evidence/milestone-01-verification-policy-alignment.md) for the coverage mapping, separate process qualification and measurements. Repository registration was unimplemented at that checkpoint.
 
-Product behavior in tickets 03–13 remains unimplemented. Remaining acceptance items stay open until the required unit, desktop and separately authorized native evidence is recorded.
+Ticket 03 now implements A1 repository registration, shared Git identity, durable action status, restored selection and per-repository availability/details. Its 89 unit checks, six retained process scenarios, production packaging and actual Tauri workflow passed on 2026-11-13. See [registration evidence](evidence/milestone-01-repositories.md) for commands, failed attempts, measurements, screenshots and limits. No live-provider submissions were performed. Product behavior in tickets 04–13 remains unimplemented; those acceptance items and whole-milestone qualification stay open.
 
 During qualification, record:
 

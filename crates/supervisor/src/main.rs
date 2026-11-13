@@ -20,7 +20,7 @@ fn main() -> io::Result<()> {
     // Set the process-wide mask before any threads or socket creation.
     workspace_core::supervisor::restrict_creation_permissions();
     let owner = SupervisorOwner::bind(&state)?;
-    let core = Arc::new(Core::new());
+    let core = Arc::new(Core::with_state(&state));
     let active = Arc::new(AtomicUsize::new(0));
     println!("ready");
     io::stdout().flush()?;

@@ -91,8 +91,11 @@ This guide does not authorize regenerating or relocating the foundation.
 - **RepositorySidebar** (`blocks/repository-sidebar.tsx`): owns branding,
   repository navigation, and the connection footer. Use for the application’s
   repository/workspace navigation; use a separate block for workspace content.
-  Receives `Connection` from App and performs no IPC. Ticket 03 extends repository
-  registration/navigation here; ticket 04 adds workspace entries and selection.
+  Receives `Connection` and `Repositories` from App. Each repository has a separate
+  selection button and Collapsible trigger for path/availability details; closure
+  preserves selection. Unavailable records remain selectable. Cursor buttons page
+  the bounded list. Add repository sits above the connection summary. Ticket 04
+  adds workspace children to these groups.
 - **SupervisorConnection** (`blocks/supervisor-connection.tsx`): owns connection
   summary and diagnostics. Use for supervisor observations, not conversation or
   runtime status. Receives `Connection`; dialog disclosure stays local and stale
@@ -100,17 +103,34 @@ This guide does not authorize regenerating or relocating the foundation.
   padding and the divider. `ConnectionDetails` remains private to this block.
 - **WorkspacePanel** (`blocks/workspace-panel.tsx`): owns the main landmark,
   workspace header, refresh/retry feedback, connection alert, empty content, and
-  footer. Receives `Connection` and `onRefreshStatus: () => Promise<void>`; App’s
-  Hook handles errors and pending guards. Use for workspace content rather than
+  footer. Receives `Connection`, `Repositories`, and
+  `onRefreshStatus: () => Promise<void>`; App's Hooks handle errors and pending
+  guards. Displays selected repository context, retained/stale observations,
+  action/storage errors and availability. Use for workspace content rather than
   navigation. Ticket 04 adds selected-workspace context; ticket 05 adds change
-  inspection. Add those concrete interfaces in their tickets, without placeholder
-  slots or data models now.
+  inspection through concrete interfaces in those tickets.
 
 App owns the single connection observation Hook and composes the blocks inside
 SidebarProvider with the skip link. Future selection changes must retain that
 owner and bind pending work to its actual domain target. Blocks add no duplicate
 subscriptions. Shared shell dimensions and typography live in the global theme;
 parents control arrangement, while blocks retain internal layout.
+
+- **RepositoryRegistration** (`blocks/repository-registration.tsx`): owns the
+  registration dialog, draft, native picker interaction and focus lifecycle. Use
+  for explicitly adding an existing repository; creating a workspace is separate.
+  Receives registration observations/intents from App's `useRepositories`; it
+  never interprets durability or decides recovery. Native picker results only fill
+  the path. Late results from a closed dialog are ignored.
+- **Repository observations:** App calls `useRepositories` once alongside the
+  existing connection Hook. It coordinates bounded pages, selected details and
+  retained action-status lookup. Desktop preferences retain selection/action IDs;
+  SQLite remains authoritative. Mount/reconnect reads status and never resubmits.
+- **Registration foundation additions:** Field, Label, Input Group, Textarea,
+  Spinner and Collapsible retain official base-nova composition. InputGroupAddon
+  has a narrow lint exception for mouse focus assistance; Label's exception
+  documents consumer-owned association. Consumers must supply label/help/error
+  relationships, native button semantics, loading text and reduced-motion support.
 
 - **Compact foundation:** current `ui/` controls include local compact sizing and
   styling, including Button variants; Sidebar includes application-shell

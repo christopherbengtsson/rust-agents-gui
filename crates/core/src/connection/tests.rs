@@ -5,6 +5,7 @@ fn snapshot() -> SupervisorSnapshot {
     Core {
         owner: "owner-a".into(),
         pid: 42,
+        workspaces: None,
     }
     .snapshot(None)
 }
@@ -273,6 +274,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
     let after = Core {
         owner: "owner-b".into(),
         pid: 43,
+        workspaces: None,
     }
     .snapshot(Some(before.cursor.clone()));
     let mut scenario = DiscoveryScenario::new(vec![
@@ -392,6 +394,7 @@ fn request(protocol: u32, version: &str, after: Option<SnapshotCursor>) -> Vec<u
         protocol,
         application_version: version.into(),
         after,
+        repository: None,
     })
     .unwrap();
     bytes.push(b'\n');
@@ -403,6 +406,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
     let core = Core {
         owner: "owner-a".into(),
         pid: 42,
+        workspaces: None,
     };
     let mut stream = TransportScenario::new(request(
         PROTOCOL_VERSION,
@@ -434,10 +438,40 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
 }
 
 #[test]
+fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation() {
+    let core = Core {
+        owner: "owner-a".into(),
+        pid: 42,
+        workspaces: None,
+    };
+    let mut input = serde_json::to_vec(&Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        repository: Some(RepositoryRequest::List {
+            after: None,
+            refresh: false,
+        }),
+    })
+    .unwrap();
+    input.push(b'\n');
+    let mut stream = TransportScenario::new(input);
+    serve_stream(&core, &mut stream).unwrap();
+    let Response::Repository { result: Err(error) } =
+        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    else {
+        panic!("storage failure must be an observation error")
+    };
+    assert_eq!(error.code, ErrorCode::Storage);
+    assert!(error.message.contains("execution owner"));
+}
+
+#[test]
 fn oversized_incomplete_and_malformed_frames_are_rejected_without_output() {
     let core = Core {
         owner: "owner-a".into(),
         pid: 42,
+        workspaces: None,
     };
     for input in [
         vec![b'x'; MAX_FRAME_BYTES + 1],

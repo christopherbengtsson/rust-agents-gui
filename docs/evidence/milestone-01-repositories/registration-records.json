@@ -1,0 +1,45 @@
+{
+  "repositories": [
+    {
+      "id": "7ad5db49-b970-4d25-b3bc-b50053d3c9f3",
+      "name": "alpha",
+      "path": "/private/tmp/rag-03-m7m5hrys/repositories/alpha",
+      "common_dir": "/private/tmp/rag-03-m7m5hrys/repositories/alpha/.git"
+    },
+    {
+      "id": "fa5b1f5c-b1ca-4492-aea7-49c257afd5cd",
+      "name": "beta",
+      "path": "/private/tmp/rag-03-m7m5hrys/repositories/beta",
+      "common_dir": "/private/tmp/rag-03-m7m5hrys/repositories/beta/.git"
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "3cab3e6c-5dc4-400b-8238-7f1123d7a5a5",
+      "path": "/private/tmp/rag-03-m7m5hrys/repositories/alpha",
+      "state": "completed",
+      "repository_id": "7ad5db49-b970-4d25-b3bc-b50053d3c9f3"
+    },
+    {
+      "action_id": "a125abfe-6b1d-45a8-9780-065dc095dea4",
+      "path": "/private/tmp/rag-03-m7m5hrys/repositories/plain-folder",
+      "state": "failed",
+      "error": {
+        "code": "git",
+        "message": "Cannot inspect the Git repository: fatal: not a git repository (or any of the parent directories): .git\n. Check the folder, Git installation, access permissions, and Git ownership guidance, then try again."
+      }
+    },
+    {
+      "action_id": "aed11a52-f0e7-4b3c-aad8-c61c2ef9933b",
+      "path": "/private/tmp/rag-03-m7m5hrys/repositories/linked-alpha",
+      "state": "completed",
+      "repository_id": "7ad5db49-b970-4d25-b3bc-b50053d3c9f3"
+    },
+    {
+      "action_id": "c23a8e07-bbcc-4aa7-86ac-61d93ef9820d",
+      "path": "/private/tmp/rag-03-m7m5hrys/repositories/beta",
+      "state": "completed",
+      "repository_id": "fa5b1f5c-b1ca-4492-aea7-49c257afd5cd"
+    }
+  ]
+}

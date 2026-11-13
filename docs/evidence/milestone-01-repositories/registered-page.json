@@ -1,0 +1,29 @@
+{
+  "kind": "repository",
+  "result": {
+    "Ok": {
+      "kind": "repositories",
+      "page": {
+        "repositories": [
+          {
+            "id": "7ad5db49-b970-4d25-b3bc-b50053d3c9f3",
+            "name": "alpha",
+            "path": "/private/tmp/rag-03-m7m5hrys/repositories/alpha",
+            "availability": {
+              "state": "available"
+            }
+          },
+          {
+            "id": "fa5b1f5c-b1ca-4492-aea7-49c257afd5cd",
+            "name": "beta",
+            "path": "/private/tmp/rag-03-m7m5hrys/repositories/beta",
+            "availability": {
+              "state": "available"
+            }
+          }
+        ],
+        "next": null
+      }
+    }
+  }
+}

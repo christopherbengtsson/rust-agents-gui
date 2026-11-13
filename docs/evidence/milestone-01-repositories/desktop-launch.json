@@ -1,0 +1,6 @@
+{
+  "desktop_pid": 19818,
+  "state_directory": "/private/tmp/rag-03-m7m5hrys/state",
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop",
+  "identifier": "dev.christopherbengtsson.agent-workspace.registration-qualification"
+}

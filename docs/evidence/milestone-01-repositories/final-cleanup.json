@@ -1,0 +1,8 @@
+{
+  "desktop_pid": 28165,
+  "supervisor_pid": 28170,
+  "signal": "SIGTERM",
+  "private_copy_unregistered": true,
+  "production_bundle_registration_restored": true,
+  "state_retained": "/private/tmp/rag-03-m7m5hrys/state"
+}

@@ -1,0 +1,238 @@
+{
+  "alpha/.git/COMMIT_EDITMSG": {
+    "sha256": "f22897cb1145c92195365787070452522c0a44294abc766eb2bc6392b6ae11ac",
+    "mode": 420
+  },
+  "alpha/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "alpha/.git/config": {
+    "sha256": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda",
+    "mode": 420
+  },
+  "alpha/.git/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "alpha/.git/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "alpha/.git/hooks/commit-msg.sample": {
+    "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+    "mode": 493
+  },
+  "alpha/.git/hooks/fsmonitor-watchman.sample": {
+    "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+    "mode": 493
+  },
+  "alpha/.git/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "alpha/.git/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "alpha/.git/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "alpha/.git/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "alpha/.git/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "alpha/.git/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "alpha/.git/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "alpha/.git/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "alpha/.git/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "alpha/.git/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "alpha/.git/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "alpha/.git/index": {
+    "sha256": "c3ae8a45553d5b51ec50614053282dc32c25841e452b7912e8837ad66139328f",
+    "mode": 420
+  },
+  "alpha/.git/info/exclude": {
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+    "mode": 420
+  },
+  "alpha/.git/logs/HEAD": {
+    "sha256": "806d5a7ad5d916fc2db92a93be69de4095da9b21fa21b48f50bc0bf30b214785",
+    "mode": 420
+  },
+  "alpha/.git/logs/refs/heads/linked-fixture": {
+    "sha256": "179d3101b6dd781de5126b7ac956dc6a07bc3f7daa7d0d0dee2abba8801a893c",
+    "mode": 420
+  },
+  "alpha/.git/logs/refs/heads/main": {
+    "sha256": "806d5a7ad5d916fc2db92a93be69de4095da9b21fa21b48f50bc0bf30b214785",
+    "mode": 420
+  },
+  "alpha/.git/objects/53/a46d67af32bb262c1be92c37cd2039e20f310f": {
+    "sha256": "9f9620b3a942cd3e7dd543a61b6a77c742db473100834148d689d191493cf1bf",
+    "mode": 292
+  },
+  "alpha/.git/objects/6f/b8ec95072763d52123bafce69f9120fabccb8c": {
+    "sha256": "c2eec9049f92f2ad13680076cfadac46915f972670f8a808fb1d1ec8f3c15316",
+    "mode": 292
+  },
+  "alpha/.git/objects/df/967b96a579e45a18b8251732d16804b2e56a55": {
+    "sha256": "a68879a026ee9eaa8c8eeb0826d1bb255a36e9bb38c76b3e42d892b22d0c4728",
+    "mode": 292
+  },
+  "alpha/.git/objects/df/e836b9cb89ccb01a7e1d49657bf96c8547622c": {
+    "sha256": "4e7ed37b6c10d3aabac7fb014994ecddf0fb7cb3fa7432f4d281b35480885d37",
+    "mode": 292
+  },
+  "alpha/.git/refs/heads/linked-fixture": {
+    "sha256": "f9de424eb4599fa7de0a499a321b135ba057eb27952051c78332107d17fb9ae6",
+    "mode": 420
+  },
+  "alpha/.git/refs/heads/main": {
+    "sha256": "f9de424eb4599fa7de0a499a321b135ba057eb27952051c78332107d17fb9ae6",
+    "mode": 420
+  },
+  "alpha/.git/worktrees/linked-alpha/HEAD": {
+    "sha256": "adda2e34aa0c47e875e19b3236292be5baab90a39456d9ca7e3ff44996e30d8a",
+    "mode": 420
+  },
+  "alpha/.git/worktrees/linked-alpha/ORIG_HEAD": {
+    "sha256": "f9de424eb4599fa7de0a499a321b135ba057eb27952051c78332107d17fb9ae6",
+    "mode": 420
+  },
+  "alpha/.git/worktrees/linked-alpha/commondir": {
+    "sha256": "340ddcb67a6204f742cd1e28e5b462622dde7daaa8ee36001897196aacdc6d47",
+    "mode": 420
+  },
+  "alpha/.git/worktrees/linked-alpha/gitdir": {
+    "sha256": "8d3aec131ca1dd4c0f45abdcf5ae2eeee10d01a03c59cc7becc0e30c3a962ee7",
+    "mode": 420
+  },
+  "alpha/.git/worktrees/linked-alpha/index": {
+    "sha256": "278e7e13966da22de0faf9e1847bd9e635a6b664b82a553a8dfa536be037c05c",
+    "mode": 420
+  },
+  "alpha/.git/worktrees/linked-alpha/logs/HEAD": {
+    "sha256": "8588a92076bc24adfb46b864c843961d9bc2d29fdcf4a699110964d7a2be9af4",
+    "mode": 420
+  },
+  "alpha/tracked.txt": {
+    "sha256": "2b37ec5f09c678e189741fdc867d0d9d8c7c25c3943f4a1c6622abbee8bba634",
+    "mode": 420
+  },
+  "alpha/untracked.txt": {
+    "sha256": "ed127cdc33f7b368b1c2b0f40d84a5159a5753434f4b5279ddc47f404de339dc",
+    "mode": 420
+  },
+  "beta/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "beta/.git/config": {
+    "sha256": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda",
+    "mode": 420
+  },
+  "beta/.git/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "beta/.git/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "beta/.git/hooks/commit-msg.sample": {
+    "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+    "mode": 493
+  },
+  "beta/.git/hooks/fsmonitor-watchman.sample": {
+    "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+    "mode": 493
+  },
+  "beta/.git/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "beta/.git/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "beta/.git/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "beta/.git/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "beta/.git/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "beta/.git/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "beta/.git/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "beta/.git/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "beta/.git/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "beta/.git/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "beta/.git/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "beta/.git/info/exclude": {
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+    "mode": 420
+  },
+  "beta/untracked.txt": {
+    "sha256": "ca96a745d2a559c29ac18b304ac041a9701f591c09dda634fde4ab175101847f",
+    "mode": 420
+  },
+  "linked-alpha/.git": {
+    "sha256": "0771a34d04f75a1dfb141f23f3aecfd177bac135a4c72b81af43e677b307a514",
+    "mode": 420
+  },
+  "linked-alpha/deleted.txt": {
+    "sha256": "a16c2d8cb6af0166bd64093ca7bb75f2f8cb8e02c4338d27fb6d78a1a516e2f3",
+    "mode": 420
+  },
+  "linked-alpha/tracked.txt": {
+    "sha256": "f34848ca92665c342abd5816c9e3eda0e82180671195362bcd0080544a3bc2ac",
+    "mode": 420
+  }
+}

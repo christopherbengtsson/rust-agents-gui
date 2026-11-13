@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "The main window may choose a repository directory using the native open dialog.",
+  "windows": ["main"],
+  "permissions": ["dialog:allow-open"]
+}

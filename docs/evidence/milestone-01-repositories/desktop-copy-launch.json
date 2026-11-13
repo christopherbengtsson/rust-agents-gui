@@ -1,0 +1,6 @@
+{
+  "desktop_pid": 20199,
+  "bundle": "/private/tmp/rag-03-m7m5hrys/Registration Qualification.app",
+  "identifier": "dev.rag.registration",
+  "changes": "Copied packaged application; changed only bundle identifier/display metadata and regenerated ad-hoc signatures for unambiguous native UI discovery. Source code/assets came from packaging; executable whole-file hashes may differ due to code signatures."
+}

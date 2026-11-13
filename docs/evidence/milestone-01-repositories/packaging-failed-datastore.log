@@ -1,0 +1,65 @@
+$ tauri build --config /private/tmp/rag-03-m7m5hrys/tauri-qualification.json --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ tsc --noEmit && vite build
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 2369 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.28 kB
+dist/assets/index-CXhj50RS.css   79.67 kB │ gzip:  13.67 kB
+dist/assets/index-XEIBszYz.js   431.88 kB │ gzip: 137.81 kB
+
+✓ built in 531ms
+   Compiling objc2-core-foundation v0.3.2
+   Compiling tauri-plugin v2.7.2
+   Compiling libsqlite3-sys v0.40.0
+   Compiling rfd v0.17.2
+   Compiling tauri-plugin-fs v2.7.1
+   Compiling tauri-plugin-dialog v2.8.4
+   Compiling objc2-foundation v0.3.2
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+   Compiling objc2-quartz-core v0.3.2
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.37.2
+   Compiling window-vibrancy v0.8.1
+   Compiling muda v0.20.0
+   Compiling tauri-runtime v2.12.2
+   Compiling wry v0.57.2
+   Compiling tauri-runtime-wry v2.12.3
+   Compiling tauri v2.12.5
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0308]: mismatched types
+   --> src-tauri/src/main.rs:78:14
+    |
+ 78 |         .run(tauri::generate_context!())
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |              |
+    |              expected `[u8; 16]`, found `Vec<u8>`
+    |              arguments to this enum variant are incorrect
+    |
+    = note: expected array `[u8; 16]`
+              found struct `Vec<u8>`
+help: the type constructed contains `Vec<u8>` due to the type of the argument passed
+   --> src-tauri/src/main.rs:78:14
+    |
+ 78 |         .run(tauri::generate_context!())
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^ this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/option.rs:606:5
+    |
+606 |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     ^^^^
+    = note: this error originates in the macro `vec` which comes from the expansion of the macro `tauri::generate_context` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `workspace-desktop` (bin "workspace-desktop") due to 1 previous error
+failed to build app: failed to build app
+       Error failed to build app: failed to build app
+[ELIFECYCLE] Command failed with exit code 1.
+real 16.26
+user 47.78
+sys 3.03

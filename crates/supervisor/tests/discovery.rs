@@ -4,7 +4,7 @@ use std::{
     process::{Child, Command, Stdio},
     time::Duration,
 };
-use workspace_core::connection::SupervisorClient;
+use workspace_core::connection::{PROTOCOL_VERSION, SupervisorClient};
 
 struct Owner(u32);
 impl Drop for Owner {
@@ -73,7 +73,7 @@ fn private_endpoint_rejects_incompatible_versions_and_unbounded_frames() {
         0o700
     );
     assert_eq!(std::fs::metadata(&socket).unwrap().mode() & 0o777, 0o600);
-    for (protocol, version) in [(999, "0.1.0"), (1, "99.0.0")] {
+    for (protocol, version) in [(999, "0.1.0"), (PROTOCOL_VERSION, "99.0.0")] {
         let error = client
             .snapshot_with_version(None, protocol, version)
             .unwrap_err();
@@ -85,7 +85,7 @@ fn private_endpoint_rejects_incompatible_versions_and_unbounded_frames() {
     }
     let mut peer = UnixStream::connect(&socket).unwrap();
     peer.set_read_timeout(Some(Duration::from_secs(3))).unwrap();
-    let _ = peer.write_all(&[b'x'; 4097]);
+    let _ = peer.write_all(&vec![b'x'; 64 * 1024 + 1]);
     assert!(matches!(peer.read(&mut [0]), Ok(0) | Err(_)));
     assert_eq!(
         client.status().unwrap().supervisor_pid,
