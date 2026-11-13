@@ -306,7 +306,7 @@ test.each(["success", "failure"])(
       rejectOld = reject;
     });
     let reads = 0;
-    vi.mocked(invoke).mockImplementation((command) => {
+    mockConnection((command) => {
       if (command === "desktop_pid") return Promise.resolve(42);
       return reads++ === 0
         ? oldStatus
@@ -332,7 +332,7 @@ test.each(["success", "failure"])(
     );
     expect(screen.getByRole("dialog").textContent).toContain("current-owner");
     expect(screen.getByRole("dialog").textContent).not.toContain("owner-41");
-    expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
+    expect(connectionCalls().map(([command]) => command)).toEqual([
       "supervisor_status",
       "desktop_pid",
       "supervisor_status",
@@ -342,13 +342,13 @@ test.each(["success", "failure"])(
 );
 
 test("a failed desktop identity read releases the pending guard for explicit retry", async () => {
-  vi.mocked(invoke).mockImplementation(async (command) => {
+  mockConnection(async (command) => {
     if (command === "desktop_pid") throw "Identity unavailable";
     return snapshot;
   });
   render(<App />);
   await screen.findByRole("alert");
-  vi.mocked(invoke).mockImplementation(async (command) =>
+  mockConnection(async (command) =>
     command === "desktop_pid" ? 42 : snapshot,
   );
   await userEvent
@@ -356,5 +356,5 @@ test("a failed desktop identity read releases the pending guard for explicit ret
     .click(screen.getByRole("button", { name: "Retry connection" }));
   await screen.findByRole("button", { name: "Refresh status" });
   expect(screen.queryByRole("alert")).toBeNull();
-  expect(vi.mocked(invoke)).toHaveBeenCalledTimes(4);
+  expect(connectionCalls()).toHaveLength(4);
 });

@@ -1,0 +1,13 @@
+$ vitest run --maxWorkers=1 src/App.test.tsx -t 'an obsolete'
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 10 skipped (12)
+   Start at  07:43:35
+   Duration  562ms (import 39%, environment 33%, tests 19%, transform 9%)
+
+real 0.80
+user 0.88
+sys 0.18
