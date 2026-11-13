@@ -1,0 +1,155 @@
+{
+  "root": "/private/tmp/rag04-process-crid17da",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "binary_sha256": "bf1c675aea3bad64f847497fd4c3f86914d4a9d10a85a6585f75ee2ed6647461",
+  "synthetic_fault": "Git wrapper pauses worktree add; real kernel lease and supervisor restart",
+  "result": "pass",
+  "first_owner": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 81502,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "81502-1794563970932470000",
+      "revision": 1
+    },
+    "reset": true
+  },
+  "replacement_owner": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 81540,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "81540-1794563972557622000",
+      "revision": 1
+    },
+    "reset": true
+  },
+  "registration": {
+    "create_initial_workspace": true,
+    "initial_workspace_id": "4136cbb3-2a07-4ef3-b001-258c59a5c09c",
+    "action_id": "731fd28a-65ce-426d-89ab-289fb5776dc4",
+    "path": "/private/tmp/rag04-process-crid17da/repo",
+    "state": "completed",
+    "repository_id": "bfdab269-b748-437a-aaaf-cddadf70e8b7"
+  },
+  "pending": {
+    "id": "4136cbb3-2a07-4ef3-b001-258c59a5c09c",
+    "repository_id": "bfdab269-b748-437a-aaaf-cddadf70e8b7",
+    "creation_action_id": "fd441537-5d68-4b47-a5a6-a7fe9e80c9b0",
+    "name": "ronaldo-nazario",
+    "branch": "workspace/ronaldo-nazario",
+    "path": "/private/tmp/rag04-process-crid17da/state/workspaces/repo/ronaldo-nazario/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "01892ad96040de580ab0114c8054e3df5050275f"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "running",
+      "stage": "creating_worktree"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "restored": {
+    "id": "4136cbb3-2a07-4ef3-b001-258c59a5c09c",
+    "repository_id": "bfdab269-b748-437a-aaaf-cddadf70e8b7",
+    "creation_action_id": "fd441537-5d68-4b47-a5a6-a7fe9e80c9b0",
+    "name": "ronaldo-nazario",
+    "branch": "workspace/ronaldo-nazario",
+    "path": "/private/tmp/rag04-process-crid17da/state/workspaces/repo/ronaldo-nazario/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "01892ad96040de580ab0114c8054e3df5050275f"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "uncertain",
+      "error": {
+        "code": "unavailable",
+        "message": "Creation stopped before a durable outcome was recorded. Reconcile this workspace explicitly to inspect its saved branch and folder; reopening has not repeated creation."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "lease_blocked": {
+    "id": "4136cbb3-2a07-4ef3-b001-258c59a5c09c",
+    "repository_id": "bfdab269-b748-437a-aaaf-cddadf70e8b7",
+    "creation_action_id": "fd441537-5d68-4b47-a5a6-a7fe9e80c9b0",
+    "name": "ronaldo-nazario",
+    "branch": "workspace/ronaldo-nazario",
+    "path": "/private/tmp/rag04-process-crid17da/state/workspaces/repo/ronaldo-nazario/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "01892ad96040de580ab0114c8054e3df5050275f"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "uncertain",
+      "error": {
+        "code": "cleanup_unconfirmed",
+        "message": "An earlier Git effect still owns this workspace's execution lease. Wait for it to finish, then reconcile. No creation was repeated and no saved PID was signaled."
+      }
+    },
+    "cleanup_unconfirmed": true
+  },
+  "new_creation_denied": {
+    "Err": {
+      "code": "cleanup_unconfirmed",
+      "message": "A workspace in this repository has unconfirmed Git cleanup. Reconcile it before creating another."
+    }
+  },
+  "ready": {
+    "id": "4136cbb3-2a07-4ef3-b001-258c59a5c09c",
+    "repository_id": "bfdab269-b748-437a-aaaf-cddadf70e8b7",
+    "creation_action_id": "fd441537-5d68-4b47-a5a6-a7fe9e80c9b0",
+    "name": "ronaldo-nazario",
+    "branch": "workspace/ronaldo-nazario",
+    "path": "/private/tmp/rag04-process-crid17da/state/workspaces/repo/ronaldo-nazario/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "01892ad96040de580ab0114c8054e3df5050275f"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "conflicting_action": {
+    "Err": {
+      "code": "conflict",
+      "message": "This action ID belongs to a different workspace operation. Retrieve its recorded status."
+    }
+  },
+  "original_file_hashes": {
+    "tracked.txt": "701084b0c91774cccc498fad85c38998330193502a231949fdf9afd8d1228ae2",
+    "untracked.txt": "301cd2869d2924f75e591bf982a3da45fdac17b62d490b3e2879c75008d646ef"
+  },
+  "workspace_branch_count": 1,
+  "worktree_count_including_original": 2,
+  "wall_seconds": 2.2751445829635486
+}

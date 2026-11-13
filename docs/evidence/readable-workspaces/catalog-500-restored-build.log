@@ -1,0 +1,3 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `release` profile [optimized] target(s) in 3.44s

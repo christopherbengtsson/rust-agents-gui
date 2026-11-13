@@ -1,0 +1,155 @@
+{
+  "root": "/private/tmp/rag04-process-tqka_ia9",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "binary_sha256": "7e049402de369bd01a7bbed442b4273e9fee85e0fa2078c914783bee94fbc3ca",
+  "synthetic_fault": "Git wrapper pauses worktree add; real kernel lease and supervisor restart",
+  "result": "pass",
+  "first_owner": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 74232,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "74232-1794563199265414000",
+      "revision": 1
+    },
+    "reset": true
+  },
+  "replacement_owner": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 74487,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "74487-1794563200934154000",
+      "revision": 1
+    },
+    "reset": true
+  },
+  "registration": {
+    "create_initial_workspace": true,
+    "initial_workspace_id": "bdc0c201-330b-4119-a04c-071524a4a485",
+    "action_id": "14615d09-2300-47a6-85fd-9464001c8820",
+    "path": "/private/tmp/rag04-process-tqka_ia9/repo",
+    "state": "completed",
+    "repository_id": "ce1a84b7-0ad4-4bfb-8dba-a34403b70d0d"
+  },
+  "pending": {
+    "id": "bdc0c201-330b-4119-a04c-071524a4a485",
+    "repository_id": "ce1a84b7-0ad4-4bfb-8dba-a34403b70d0d",
+    "creation_action_id": "bc4d2d20-e2f6-4f09-a71f-dfbd0ebdb0b8",
+    "name": "pierre-emerick-aubameyang",
+    "branch": "workspace/pierre-emerick-aubameyang",
+    "path": "/private/tmp/rag04-process-tqka_ia9/state/workspaces/repo/pierre-emerick-aubameyang/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "6f613bff0ebc6876310625f8f1ae4bb3b5074a61"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "running",
+      "stage": "creating_worktree"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "restored": {
+    "id": "bdc0c201-330b-4119-a04c-071524a4a485",
+    "repository_id": "ce1a84b7-0ad4-4bfb-8dba-a34403b70d0d",
+    "creation_action_id": "bc4d2d20-e2f6-4f09-a71f-dfbd0ebdb0b8",
+    "name": "pierre-emerick-aubameyang",
+    "branch": "workspace/pierre-emerick-aubameyang",
+    "path": "/private/tmp/rag04-process-tqka_ia9/state/workspaces/repo/pierre-emerick-aubameyang/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "6f613bff0ebc6876310625f8f1ae4bb3b5074a61"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "uncertain",
+      "error": {
+        "code": "unavailable",
+        "message": "Creation stopped before a durable outcome was recorded. Reconcile this workspace explicitly to inspect its saved branch and folder; reopening has not repeated creation."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "lease_blocked": {
+    "id": "bdc0c201-330b-4119-a04c-071524a4a485",
+    "repository_id": "ce1a84b7-0ad4-4bfb-8dba-a34403b70d0d",
+    "creation_action_id": "bc4d2d20-e2f6-4f09-a71f-dfbd0ebdb0b8",
+    "name": "pierre-emerick-aubameyang",
+    "branch": "workspace/pierre-emerick-aubameyang",
+    "path": "/private/tmp/rag04-process-tqka_ia9/state/workspaces/repo/pierre-emerick-aubameyang/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "6f613bff0ebc6876310625f8f1ae4bb3b5074a61"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "uncertain",
+      "error": {
+        "code": "cleanup_unconfirmed",
+        "message": "An earlier Git effect still owns this workspace's execution lease. Wait for it to finish, then reconcile. No creation was repeated and no saved PID was signaled."
+      }
+    },
+    "cleanup_unconfirmed": true
+  },
+  "new_creation_denied": {
+    "Err": {
+      "code": "cleanup_unconfirmed",
+      "message": "A workspace in this repository has unconfirmed Git cleanup. Reconcile it before creating another."
+    }
+  },
+  "ready": {
+    "id": "bdc0c201-330b-4119-a04c-071524a4a485",
+    "repository_id": "ce1a84b7-0ad4-4bfb-8dba-a34403b70d0d",
+    "creation_action_id": "bc4d2d20-e2f6-4f09-a71f-dfbd0ebdb0b8",
+    "name": "pierre-emerick-aubameyang",
+    "branch": "workspace/pierre-emerick-aubameyang",
+    "path": "/private/tmp/rag04-process-tqka_ia9/state/workspaces/repo/pierre-emerick-aubameyang/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "6f613bff0ebc6876310625f8f1ae4bb3b5074a61"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "conflicting_action": {
+    "Err": {
+      "code": "conflict",
+      "message": "This action ID belongs to a different workspace operation. Retrieve its recorded status."
+    }
+  },
+  "original_file_hashes": {
+    "tracked.txt": "701084b0c91774cccc498fad85c38998330193502a231949fdf9afd8d1228ae2",
+    "untracked.txt": "301cd2869d2924f75e591bf982a3da45fdac17b62d490b3e2879c75008d646ef"
+  },
+  "workspace_branch_count": 1,
+  "worktree_count_including_original": 2,
+  "wall_seconds": 2.3223007090273313
+}

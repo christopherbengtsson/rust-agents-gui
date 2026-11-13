@@ -1,0 +1,36 @@
+{
+  "source_sha256": "335774b9cea065ea4b43ec216b5e522004b3d072bc78b6b13854038f9b24cf39",
+  "catalog_sha256": "8cd789c921fcc71a3cbf41c7fe424f65e5f96e7afb918512fbcffe0ff7dad2d0",
+  "compile_wall_seconds": 0.26008454099064693,
+  "profile": "rustc1.99.1 opt-level3 strip symbols; actual production policy/catalog; inert unused identity/error record types",
+  "warmup_runs": 1,
+  "measured_runs": 5,
+  "selections_per_run": 10000,
+  "scenarios": [
+    {
+      "reserved_plain_names": 0,
+      "median_ns_per_selection": 10125.7416,
+      "min_ns": 9948.4208,
+      "max_ns": 10396.6709
+    },
+    {
+      "reserved_plain_names": 250,
+      "median_ns_per_selection": 13830.5666,
+      "min_ns": 13640.925,
+      "max_ns": 13844.4666
+    },
+    {
+      "reserved_plain_names": 495,
+      "median_ns_per_selection": 13447.1542,
+      "min_ns": 13400.5584,
+      "max_ns": 13803.1958
+    },
+    {
+      "reserved_plain_names": 500,
+      "median_ns_per_selection": 48926.2959,
+      "min_ns": 48654.5041,
+      "max_ns": 49155.75
+    }
+  ],
+  "harness": "/private/tmp/rag-naming-cpu-cw6u8uc1/main.rs"
+}

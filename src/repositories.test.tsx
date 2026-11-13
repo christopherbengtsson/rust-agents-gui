@@ -48,6 +48,8 @@ beforeEach(() => {
     }),
   );
   vi.mocked(invoke).mockImplementation(async (command) => {
+    if (command === "workspace_request")
+      return { kind: "workspaces", page: { workspaces: [], next: null } };
     if (command === "desktop_pid") return 42;
     if (command === "supervisor_status") return snapshot;
     return { kind: "repositories", page: { repositories: [], next: null } };
@@ -92,6 +94,8 @@ function replies(
   handler: (request: RepositoryRequest) => Promise<RepositoryReply>,
 ) {
   vi.mocked(invoke).mockImplementation(async (command, args) => {
+    if (command === "workspace_request")
+      return { kind: "workspaces", page: { workspaces: [], next: null } };
     if (command === "desktop_pid") return 42;
     if (command === "supervisor_status") return snapshot;
     return handler(

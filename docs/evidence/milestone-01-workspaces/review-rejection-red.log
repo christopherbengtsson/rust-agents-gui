@@ -1,0 +1,36 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspaces.test.tsx (7 tests | 1 failed) 175ms
+   × definite admission rejection retains the error but does not block another workspace's recovery 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspaces.test.tsx > definite admission rejection retains the error but does not block another workspace's recovery
+AssertionError: expected { operation: 'create', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "action_id": "9a3e67eb-886e-4fc3-b08a-1c49148fc782",
+  "operation": "create",
+  "repository_id": "00000000-0000-4000-8000-000000000001",
+}
+
+ ❯ src/workspaces.test.tsx:241:33
+    239|  const {result}=renderHook(()=>useWorkspaces("owner",repository_id,rep…
+    240|  await act(async()=>{await result.current.create(repository_id);});
+    241|  expect(result.current.pending).toBeNull();expect(localStorage.getItem…
+       |                                 ^
+    242|  expect(result.current.error?.message).toBe("Reconcile the earlier wor…
+    243|  await act(async()=>{await result.current.reconcile(w);});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  09:14:03
+   Duration  482ms (environment 42%, tests 41%, import 11%, transform 5%)

@@ -37,5 +37,8 @@ closing a dialog does not establish that its pending promise was cancelled; guar
 late picker results with the dialog/request generation. Durable outcome and retry
 ownership remains in Rust, not in this illustrative presentation bookkeeping.
 
+Guard action-result eligibility independently when its lifetime differs from the
+current view or read subscription.
+
 Sources: [React async cleanup](https://react.dev/reference/react/useEffect#fetching-data-with-effects),
 [Tauri dialog API](https://v2.tauri.app/reference/javascript/dialog/).

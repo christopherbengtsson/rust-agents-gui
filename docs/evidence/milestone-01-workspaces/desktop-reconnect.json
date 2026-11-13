@@ -1,0 +1,46 @@
+{
+  "result": "pass",
+  "desktop_before": "/private/tmp/rag04-desktop-iu1f_8u7/Workspace Layout Qualification.app/Contents/MacOS/workspace-desktop",
+  "desktop_after_pid": 59426,
+  "owner_before": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 57855,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "57855-1794557979945105000",
+      "revision": 23
+    },
+    "reset": true
+  },
+  "owner_after": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 57855,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "57855-1794557979945105000",
+      "revision": 25
+    },
+    "reset": true
+  },
+  "counts_before": {
+    "repositories": 2,
+    "registration_actions": 2,
+    "workspaces": 5,
+    "workspace_actions": 8
+  },
+  "counts_after": {
+    "repositories": 2,
+    "registration_actions": 2,
+    "workspaces": 5,
+    "workspace_actions": 8
+  },
+  "original_hashes": {
+    "tracked.txt": "701084b0c91774cccc498fad85c38998330193502a231949fdf9afd8d1228ae2",
+    "untracked.txt": "0967b63182a9178fa55b1b6b6f3db64bb615bc8ed4457d69ceb99faeecbf8ed7"
+  },
+  "restored_git_worktrees_mode": "0o700"
+}

@@ -1,0 +1,72 @@
+Window: "Agent Workspace", App: Workspace Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/rag04-desktop-iu1f_8u7/No Default Available
+							11 button No Default, Help: /private/tmp/rag04-desktop-iu1f_8u7/No Default
+							12 button (expanded) Toggle details for No Default, Secondary Actions: Collapse
+							13 button Create workspace in No Default
+							14 text /private/tmp/rag04-desktop-iu1f_8u7/No Default
+							15 text Available
+							16 content list
+								17 button lisbon-aa96287a-e840-4866-a949-147743766fc3, Help: workspace/lisbon-aa96287a-e840-4866-a949-147743766fc3 · Workspace ready
+						18 container /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha Available
+							19 button Desktop Alpha, Help: /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha
+							20 button (expanded) Toggle details for Desktop Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Desktop Alpha
+							22 text /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha
+							23 text Available
+							24 content list
+								25 button oslo-54e9b56c-686b-4478-9606-a7fd6ba0c80d, Help: workspace/oslo-54e9b56c-686b-4478-9606-a7fd6ba0c80d · Workspace ready
+								26 button vienna-7f27a064-659a-4618-966f-58476aec7029, Help: workspace/vienna-7f27a064-659a-4618-966f-58476aec7029 · Workspace ready
+								27 button lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923, Help: workspace/lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923 · Workspace ready
+				28 pop up button Add repository
+				29 text Connected
+				30 pop up button Connection details
+			31 container
+				32 heading lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923, Value: 1
+					33 text lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923
+				34 button Refresh status
+				35 container Selected repository
+					36 text /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha
+					37 text Repository available
+				38 container Selected workspace
+					39 text Workspace ready Codex
+					40 heading Your workspace is ready, Value: 2
+						41 text Your workspace is ready
+					42 text lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923
+					43 description list
+						44 text Branch
+						45 text workspace/lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923
+						46 text Workspace folder
+						47 text /private/tmp/rag04-desktop-iu1f_8u7/state/workspaces/e2debecd-7b8b-4b94-9f88-824b628639b1/lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923/checkout
+						48 text Local base
+						49 text refs/heads/main · 62f878d32149e838accad88a1548517d65508729
+						50 text Branch artifact
+						51 text Created by this action
+						52 text Folder artifact
+						53 text Worktree created
+					54 container
+						55 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				56 text Local workspace
+				57 text Desktop Alpha
+	58 close button
+	59 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	60 minimize button
+	61 text Agent Workspace
+62 menu bar
+	63 Workspace Qualification
+	64 File
+	65 Edit
+	66 View
+	67 Window
+	68 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost

@@ -1,0 +1,60 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/rag-names-mdcjpxvk/one/Readable Repo Available
+							11 button Readable Repo, Help: /private/tmp/rag-names-mdcjpxvk/one/Readable Repo
+							12 button (expanded) Toggle details for Readable Repo, Secondary Actions: Collapse
+							13 button Create workspace in Readable Repo
+							14 text /private/tmp/rag-names-mdcjpxvk/one/Readable Repo
+							15 text Available
+							16 content list
+								17 button kyoto, Help: Workspace ready
+								18 button kyoto-2, Help: Creation needs attention
+				19 pop up button Add repository
+				20 text Connected
+				21 pop up button Connection details
+			22 container
+				23 heading kyoto, Value: 1
+					24 text kyoto
+				25 button Refresh status
+				26 container Selected repository
+					27 text /private/tmp/rag-names-mdcjpxvk/one/Readable Repo
+					28 text Repository available
+				29 container Selected workspace
+					30 text Workspace ready Codex
+					31 heading Your workspace is ready, Value: 2
+						32 text Your workspace is ready
+					33 text kyoto
+					34 description list
+						35 text Local base
+						36 text refs/heads/main · c8b8fdee808e465e99e059f41a069e619389b486
+						37 text Branch artifact
+						38 text Created by this action
+						39 text Folder artifact
+						40 text Worktree created
+					41 button (collapsed) Show saved branch and folder, Secondary Actions: Expand
+					42 container
+						43 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				44 text Local workspace
+				45 text Readable Repo
+	46 close button
+	47 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	48 minimize button
+	49 text Agent Workspace
+50 menu bar
+	51 Agent Workspace
+	52 File
+	53 Edit
+	54 View
+	55 Window
+	56 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost

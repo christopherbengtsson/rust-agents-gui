@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::{
-    collections::VecDeque,
+    collections::{BTreeMap, VecDeque},
     path::{Path, PathBuf},
     sync::{
         Arc, Mutex, MutexGuard,
@@ -23,6 +23,9 @@ macro_rules! identity {
 }
 identity!(RepositoryId);
 identity!(ActionId);
+mod creation;
+pub(crate) mod naming;
+pub use creation::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -35,6 +38,7 @@ pub enum ErrorCode {
     NotFound,
     Unavailable,
     Connection,
+    CleanupUnconfirmed,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -74,6 +78,8 @@ pub(crate) type Result<T> = std::result::Result<T, RepositoryError>;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RegisterRepository {
+    #[serde(default)]
+    pub create_initial_workspace: bool,
     pub action_id: ActionId,
     pub path: String,
 }
@@ -86,6 +92,10 @@ pub enum RegistrationState {
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Registration {
+    #[serde(default)]
+    pub create_initial_workspace: bool,
+    #[serde(default)]
+    pub initial_workspace_id: Option<WorkspaceId>,
     pub action_id: ActionId,
     pub path: String,
     #[serde(flatten)]
@@ -148,7 +158,7 @@ pub enum RepositoryReply {
     Repository { repository: Option<Repository> },
 }
 
-pub(crate) trait RepositoryStore: Send {
+pub(crate) trait RepositoryStore: CreationStore {
     fn action(&mut self, id: ActionId) -> Result<Option<Registration>>;
     fn intent(&mut self, request: &RegisterRepository) -> Result<Registration>;
     fn pending(&mut self) -> Result<Option<Registration>>;
@@ -159,6 +169,7 @@ pub(crate) trait RepositoryStore: Send {
         action: &Registration,
         repository: Option<&RepositoryRecord>,
         state: &RegistrationState,
+        initial: Option<&Workspace>,
     ) -> Result<Registration>;
     fn repository(&mut self, id: RepositoryId) -> Result<Option<RepositoryRecord>>;
     fn list(&mut self, after: Option<RepositoryId>, limit: usize) -> Result<Vec<RepositoryRecord>>;
@@ -176,13 +187,21 @@ pub(crate) fn check_registration_path_budget(path: &str) -> Result<()> {
 
 fn admit(store: &mut dyn RepositoryStore, request: &RegisterRepository) -> Result<Registration> {
     if let Some(action) = store.action(request.action_id)? {
-        if action.path != request.path {
+        if action.path != request.path
+            || action.create_initial_workspace != request.create_initial_workspace
+        {
             return Err(RepositoryError::new(
                 ErrorCode::Conflict,
                 "This action ID belongs to a different repository path. Retrieve its result; submit an edited path as a new action.",
             ));
         }
         return Ok(action);
+    }
+    if store.workspace_action(request.action_id)?.is_some() {
+        return Err(RepositoryError::new(
+            ErrorCode::Conflict,
+            "This action ID belongs to a workspace operation.",
+        ));
     }
     if !std::path::Path::new(&request.path).is_absolute() || request.path.contains('\0') {
         return Err(RepositoryError::new(
@@ -191,7 +210,7 @@ fn admit(store: &mut dyn RepositoryStore, request: &RegisterRepository) -> Resul
         ));
     }
     check_registration_path_budget(&request.path)?;
-    if store.pending_count()? >= 8 {
+    if store.pending_count()? + store.workspace_count_pending()? >= 8 {
         return Err(RepositoryError::new(
             ErrorCode::Capacity,
             "Registration is busy with eight pending actions. Refresh their status before adding another repository.",
@@ -210,13 +229,28 @@ fn finish_registration(
     store: &mut dyn RepositoryStore,
     action: &Registration,
     validation: Result<ValidatedRepository>,
+    directory: &Path,
 ) -> Result<Registration> {
+    let mut initial = None;
+    let mut action = action.clone();
     let (repository, state) = match validation {
         Err(error) => (None, RegistrationState::Failed { error }),
         Ok(validated) => {
             let existing = store.find_common(&validated.common_dir)?;
+            if existing.is_none() && action.create_initial_workspace {
+                // Allocate the continuation before the registration transaction, never after its reply.
+                let repository_id = RepositoryId(Uuid::new_v4());
+                initial = Some(allocate(
+                    repository_id,
+                    ActionId(Uuid::new_v4()),
+                    directory,
+                )?);
+                action.initial_workspace_id = initial.as_ref().map(|w| w.id);
+            }
             let repository = existing.unwrap_or_else(|| RepositoryRecord {
-                id: RepositoryId(Uuid::new_v4()),
+                id: initial
+                    .as_ref()
+                    .map_or_else(|| RepositoryId(Uuid::new_v4()), |w| w.repository_id),
                 name: validated.name,
                 path: validated.path,
                 common_dir: validated.common_dir,
@@ -228,7 +262,7 @@ fn finish_registration(
                 .len()
                 > 24 * 1024
             {
-                return store.finish(action, None, &RegistrationState::Failed { error: RepositoryError::new(ErrorCode::Capacity, "This repository's location exceeds the navigation byte budget. Use a shorter location.") });
+                return store.finish(&action, None, &RegistrationState::Failed { error: RepositoryError::new(ErrorCode::Capacity, "This repository's location exceeds the navigation byte budget. Use a shorter location.") }, None);
             }
             let state = RegistrationState::Completed {
                 repository_id: repository.id,
@@ -236,7 +270,7 @@ fn finish_registration(
             (Some(repository), state)
         }
     };
-    match store.finish(action, repository.as_ref(), &state) {
+    match store.finish(&action, repository.as_ref(), &state, initial.as_ref()) {
         Ok(recorded) => Ok(recorded),
         Err(error) => {
             // The store exposes only committed reads, including after commit errors.
@@ -262,15 +296,40 @@ const PAGE_SIZE: usize = 32;
 const PAGE_BYTES: usize = 48 * 1024;
 const CACHE_SIZE: usize = 64;
 
-struct WorkspaceState {
+struct OwnerState {
     directory: PathBuf,
     store: Result<Box<dyn RepositoryStore>>,
     cache: VecDeque<(RepositoryId, Availability)>,
     probes: VecDeque<RepositoryRecord>,
     fault: Option<RepositoryError>,
     revision: u64,
+    active_workspace: Option<WorkspaceId>,
+    workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
 }
-impl WorkspaceState {
+impl OwnerState {
+    fn open(
+        directory: &Path,
+        resolve: impl FnOnce(&Path) -> Result<PathBuf>,
+        open: impl FnOnce(&Path) -> Result<Box<dyn RepositoryStore>>,
+    ) -> Result<Self> {
+        let directory = resolve(directory)?;
+        validate_workspace_path(
+            directory
+                .to_str()
+                .ok_or_else(|| RepositoryError::storage("Private state path must be UTF-8"))?,
+        )?;
+        let store = open(&directory);
+        Ok(Self {
+            directory,
+            store,
+            cache: VecDeque::new(),
+            probes: VecDeque::new(),
+            fault: None,
+            revision: 1,
+            active_workspace: None,
+            workspace_faults: BTreeMap::new(),
+        })
+    }
     fn store(&mut self) -> Result<&mut (dyn RepositoryStore + 'static)> {
         if self.store.is_err() {
             self.store = crate::storage::SqliteStore::open(&self.directory)
@@ -353,7 +412,7 @@ impl WorkspaceState {
 
 /// One supervisor-owned worker; requests never create per-repository runtimes.
 pub struct Workspaces {
-    shared: Arc<Mutex<WorkspaceState>>,
+    shared: Arc<Mutex<OwnerState>>,
     wake: Option<SyncSender<()>>,
     worker: Option<JoinHandle<()>>,
 }
@@ -374,16 +433,23 @@ impl Workspaces {
                 .map(|repository| RepositoryReply::Repository { repository }),
         }
     }
-    pub fn open(directory: &Path) -> Self {
-        let shared = Arc::new(Mutex::new(WorkspaceState {
-            directory: directory.to_owned(),
-            store: crate::storage::SqliteStore::open(directory)
-                .map(|s| Box::new(s) as Box<dyn RepositoryStore>),
-            cache: VecDeque::new(),
-            probes: VecDeque::new(),
-            fault: None,
-            revision: 1,
-        }));
+    pub fn open(directory: &Path) -> Result<Self> {
+        let state = OwnerState::open(
+            directory,
+            |path| {
+                crate::supervisor::check_private(path, true).map_err(RepositoryError::storage)?;
+                std::fs::canonicalize(path).map_err(|error| {
+                    RepositoryError::storage(format!(
+                        "Cannot resolve private application state: {error}"
+                    ))
+                })
+            },
+            |path| {
+                crate::storage::SqliteStore::open(path)
+                    .map(|s| Box::new(s) as Box<dyn RepositoryStore>)
+            },
+        )?;
+        let shared = Arc::new(Mutex::new(state));
         let (wake, receiver) = mpsc::sync_channel(1);
         let worker_state = shared.clone();
         let worker = std::thread::spawn(move || {
@@ -391,7 +457,9 @@ impl Workspaces {
                 if matches!(receiver.try_recv(), Err(mpsc::TryRecvError::Disconnected)) {
                     break;
                 }
-                if process_one(&worker_state, crate::git::inspect) {
+                if process_creation(&worker_state, &mut crate::git::LocalCreation)
+                    || process_one(&worker_state, crate::git::inspect)
+                {
                     continue;
                 }
                 if receiver.recv().is_err() {
@@ -399,13 +467,13 @@ impl Workspaces {
                 }
             }
         });
-        Self {
+        Ok(Self {
             shared,
             wake: Some(wake),
             worker: Some(worker),
-        }
+        })
     }
-    fn state(&self) -> Result<MutexGuard<'_, WorkspaceState>> {
+    fn state(&self) -> Result<MutexGuard<'_, OwnerState>> {
         self.shared.lock().map_err(RepositoryError::storage)
     }
     fn notify(&self) {
@@ -470,7 +538,7 @@ impl Drop for Workspaces {
 }
 
 fn process_one(
-    shared: &Mutex<WorkspaceState>,
+    shared: &Mutex<OwnerState>,
     inspect: impl FnOnce(&str) -> Result<ValidatedRepository>,
 ) -> bool {
     enum Work {
@@ -505,10 +573,13 @@ fn process_one(
         return false;
     };
     let result = match work {
-        Work::Register(action) => state
-            .store()
-            .and_then(|store| finish_registration(store, &action, validation))
-            .and_then(|_| state.change()),
+        Work::Register(action) => {
+            let directory = state.directory.clone();
+            state
+                .store()
+                .and_then(|store| finish_registration(store, &action, validation, &directory))
+                .and_then(|_| state.change())
+        }
         Work::Probe(record) => {
             let availability = match validation {
                 Ok(actual)

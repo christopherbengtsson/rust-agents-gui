@@ -1,0 +1,52 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspaces.test.tsx (6 tests | 1 failed) 176ms
+   × a delayed initial-workspace lookup cannot override explicit repository selection 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspaces.test.tsx > a delayed initial-workspace lookup cannot override explicit repository selection
+AssertionError: expected { …(11) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "artifacts": {
+    "branch": "owned",
+    "folder": "worktree",
+  },
+  "base": {
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "reference": "refs/heads/main",
+  },
+  "branch": "workspace/kyoto",
+  "cleanup_unconfirmed": false,
+  "creation_action_id": "00000000-0000-4000-8000-000000000003",
+  "id": "00000000-0000-4000-8000-000000000002",
+  "name": "kyoto",
+  "path": "/state/kyoto/checkout",
+  "provider": "codex",
+  "repository_id": "00000000-0000-4000-8000-000000000001",
+  "status": {
+    "state": "ready",
+  },
+}
+
+ ❯ src/workspaces.test.tsx:226:34
+    224|  act(()=>result.current.selectRepository());
+    225|  await act(async()=>resolveDetail?.({kind:"workspace",workspace:w}));
+    226|  expect(result.current.selected).toBeUndefined();
+       |                                  ^
+    227|  await act(async()=>{await result.current.refresh();});
+    228|  expect(result.current.selected).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  09:13:09
+   Duration  480ms (environment 42%, tests 42%, import 11%, transform 5%)

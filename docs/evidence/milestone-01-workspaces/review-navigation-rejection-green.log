@@ -1,0 +1,57 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+9:16:27 AM [vite] (client) warning: (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+     ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:166:8]
+ 165 |         if (active()) setError(repositoryError(error));
+ 166 |       } finally {
+     :        ^^^^^^^^^
+ 167 |         if (active()) {
+     `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+9:16:27 AM [vite] (client) warning: (BuildHIR::lowerStatement) Support ThrowStatement inside of try/catch
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Support ThrowStatement
+  | inside of try/catch
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:89:15]
+ 88 |                 )
+ 89 | ,->               throw new Error(
+ 90 | |                   "Workspace action payload conflicts with the retained request.",
+ 91 | `->               );
+ 92 |                 if (
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+9:16:27 AM [vite] (client) warning: (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+     ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:275:6]
+ 274 |       }
+ 275 |     } finally {
+     :      ^^^^^^^^^
+ 276 |       sending.current = false;
+     `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  09:16:27
+   Duration  494ms (environment 41%, tests 39%, import 11%, transform 8%)

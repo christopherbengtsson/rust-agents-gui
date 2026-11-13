@@ -1,0 +1,48 @@
+{
+  "before_desktop_crash": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 79531,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "79531-1794563840157520000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "after_dev_relaunch": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 79531,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "79531-1794563840157520000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "old_default_owner": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 85891,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "85891-1794523727777133000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "same_dev_owner": true
+}

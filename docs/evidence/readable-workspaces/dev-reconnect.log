@@ -1,0 +1,17 @@
+$ node scripts/start.mjs dev
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+Dev supervisor: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor
+Dev state: /Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3/p4-6ad9613a
+$ tauri dev
+     Running BeforeDevCommand (`corepack pnpm frontend:dev`)
+$ vite
+
+  VITE v8.3.8  ready in 81 ms
+
+  ➜  Local:   http://127.0.0.1:1420/
+     Running DevCommand (`cargo  run --no-default-features --color always --`)
+        Info Watching /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri for changes...
+        Info Watching /Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core for changes...
+[1m[92m   Compiling[0m workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+[1m[96m    Building[0m [=======================> ] 361/363: workspace-desktop(build)    [1m[96m    Building[0m [=======================> ] 362/363: workspace-desktop(bin)      [K[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 1.10s
+[1m[92m     Running[0m `/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-desktop`

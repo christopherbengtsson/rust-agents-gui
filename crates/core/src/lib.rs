@@ -64,11 +64,11 @@ impl Core {
     }
 
     /// Called only by the admitted supervisor owner, never by presentation clients.
-    pub fn with_state(directory: &std::path::Path) -> Self {
-        Self {
-            workspaces: Some(workspaces::Workspaces::open(directory)),
+    pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
+        Ok(Self {
+            workspaces: Some(workspaces::Workspaces::open(directory)?),
             ..Self::new()
-        }
+        })
     }
 
     pub fn repository_request(
@@ -83,6 +83,20 @@ impl Core {
                 )
             })?
             .request(request)
+    }
+
+    pub fn workspace_request(
+        &self,
+        request: workspaces::WorkspaceRequest,
+    ) -> Result<workspaces::WorkspaceReply, workspaces::RepositoryError> {
+        self.workspaces
+            .as_ref()
+            .ok_or_else(|| {
+                workspaces::RepositoryError::storage(
+                    "Workspace storage has not been opened by the execution owner",
+                )
+            })?
+            .workspace_request(request)
     }
 
     pub fn status(&self) -> SupervisorStatus {

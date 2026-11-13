@@ -14,7 +14,7 @@ use std::{
 };
 const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 2;
+pub const PROTOCOL_VERSION: u32 = 4;
 
 #[derive(Serialize, Deserialize)]
 struct Request {
@@ -23,10 +23,15 @@ struct Request {
     after: Option<SnapshotCursor>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     repository: Option<RepositoryRequest>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    workspace: Option<crate::workspaces::WorkspaceRequest>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
+    Workspace {
+        result: Result<crate::workspaces::WorkspaceReply, RepositoryError>,
+    },
     Snapshot {
         snapshot: SupervisorSnapshot,
     },
@@ -59,6 +64,18 @@ impl SupervisorConnection {
         }
         SupervisorClient::new(self.state.clone()).repository_request(request)
     }
+    pub fn workspace_request(
+        &self,
+        request: crate::workspaces::WorkspaceRequest,
+    ) -> Result<crate::workspaces::WorkspaceReply, RepositoryError> {
+        if !self.initialized {
+            return Err(RepositoryError::new(
+                ErrorCode::Connection,
+                "Connect to the supervisor before submitting workspace actions.",
+            ));
+        }
+        SupervisorClient::new(self.state.clone()).workspace_request(request)
+    }
     pub fn new(state: PathBuf, executable: PathBuf) -> Self {
         Self {
             state,
@@ -89,6 +106,34 @@ pub struct SupervisorClient {
     state: PathBuf,
 }
 impl SupervisorClient {
+    pub fn workspace_request(
+        &self,
+        request: crate::workspaces::WorkspaceRequest,
+    ) -> Result<crate::workspaces::WorkspaceReply, RepositoryError> {
+        let exchange = || -> io::Result<Response> {
+            check_private(&self.state, true)?;
+            let socket = socket_path(&self.state);
+            check_private(&socket, false)?;
+            let mut stream = UnixStream::connect(socket)?;
+            configure(&stream)?;
+            write_frame(
+                &mut stream,
+                &Request {
+                    protocol: PROTOCOL_VERSION,
+                    application_version: env!("CARGO_PKG_VERSION").into(),
+                    after: None,
+                    repository: None,
+                    workspace: Some(request),
+                },
+            )?;
+            read_frame(&mut stream)
+        };
+        match exchange().map_err(|e| RepositoryError::new(ErrorCode::Connection, format!("Workspace reply unavailable: {e}. Refresh its recorded action status; this request has not been replayed.")))? {
+            Response::Workspace { result } => result,
+            Response::Incompatible { message } => Err(RepositoryError::new(ErrorCode::Connection,message)),
+            _ => Err(RepositoryError::new(ErrorCode::Connection,"Unexpected workspace reply. Refresh its recorded action status.")),
+        }
+    }
     pub fn repository_request(
         &self,
         request: RepositoryRequest,
@@ -121,13 +166,14 @@ impl SupervisorClient {
                     application_version: env!("CARGO_PKG_VERSION").into(),
                     after: None,
                     repository: Some(request),
+                    workspace: None,
                 },
             )? {
                 Response::Repository { result } => Ok(result),
                 Response::Incompatible { message } => {
                     Err(io::Error::new(io::ErrorKind::InvalidData, message))
                 }
-                Response::Snapshot { .. } => Err(io::Error::new(
+                Response::Workspace { .. } | Response::Snapshot { .. } => Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "Unexpected status reply to repository request",
                 )),
@@ -179,6 +225,7 @@ impl SupervisorClient {
                 application_version: application_version.into(),
                 after,
                 repository: None,
+                workspace: None,
             },
         )?;
         match read_frame_with_clock(&mut stream, || effects.now())? {
@@ -186,7 +233,7 @@ impl SupervisorClient {
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
-            Response::Repository { .. } => Err(io::Error::new(
+            Response::Workspace { .. } | Response::Repository { .. } => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
                 "Unexpected repository reply to status request",
             )),
@@ -350,6 +397,20 @@ fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
                     PROTOCOL_VERSION,
                     env!("CARGO_PKG_VERSION")
                 ),
+            },
+        );
+    }
+    if request.workspace.is_some() && request.repository.is_some() {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "Only one targeted request is permitted",
+        ));
+    }
+    if let Some(request) = request.workspace {
+        return write_frame(
+            stream,
+            &Response::Workspace {
+                result: core.workspace_request(request),
             },
         );
     }

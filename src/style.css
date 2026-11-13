@@ -262,3 +262,42 @@
   color: var(--muted-foreground);
   font-size: var(--shell-text-caption);
 }
+
+.workspace-details {
+  max-width: 900px;
+}
+.workspace-welcome {
+  font-size: 24px;
+  font-weight: 500;
+}
+.workspace-facts dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-foreground);
+}
+.workspace-facts dt svg {
+  width: 16px;
+  height: 16px;
+}
+.workspace-facts dd {
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.workspace-facts > div {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+.workspace-facts dd {
+  margin-top: 0;
+}
+@media (max-width: 700px) {
+  .workspace-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+corepack pnpm format:check
+corepack pnpm lint

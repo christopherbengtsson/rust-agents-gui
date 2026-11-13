@@ -1,4 +1,10 @@
-import { ChevronDown, FolderGit2, Layers2 } from "lucide-react";
+import {
+  ChevronDown,
+  FolderGit2,
+  Layers2,
+  Plus,
+  GitBranch,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +18,9 @@ import {
   SidebarMenuButton,
   SidebarMenuAction,
   SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
@@ -20,6 +29,9 @@ import {
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { Workspaces } from "@/hooks/use-workspaces";
+import { Spinner } from "@/components/ui/spinner";
+import { workspaceStatus } from "@/lib/workspaces";
 import type { Repositories } from "@/hooks/use-repositories";
 import { RepositoryRegistration } from "./repository-registration";
 import type { Connection } from "@/hooks/use-supervisor-connection";
@@ -28,9 +40,11 @@ import { SupervisorConnection } from "./supervisor-connection";
 export function RepositorySidebar({
   connection,
   repositories,
+  workspaces,
 }: {
   connection: Connection;
   repositories: Repositories;
+  workspaces: Workspaces;
 }) {
   return (
     <Sidebar
@@ -59,14 +73,16 @@ export function RepositorySidebar({
               Repositories
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              {repositories.loading && !repositories.page ? (
+              {repositories.loading &&
+              !repositories.page &&
+              connection.state !== "error" ? (
                 <div aria-label="Loading repositories">
                   <SidebarMenuSkeleton showIcon />
                   <SidebarMenuSkeleton showIcon />
                 </div>
               ) : !repositories.page?.repositories.length ? (
                 <p className="navigation-empty">
-                  {repositories.error
+                  {repositories.error || connection.state === "error"
                     ? "Repository list unavailable"
                     : "No repositories yet"}
                 </p>
@@ -77,20 +93,28 @@ export function RepositorySidebar({
                       <Collapsible defaultOpen>
                         <SidebarMenuButton
                           size="sm"
-                          isActive={repositories.selected?.id === repository.id}
+                          className="pr-14!"
+                          isActive={
+                            repositories.selected?.id === repository.id &&
+                            !workspaces.selected
+                          }
                           aria-current={
-                            repositories.selected?.id === repository.id
+                            repositories.selected?.id === repository.id &&
+                            !workspaces.selected
                               ? "true"
                               : undefined
                           }
-                          onClick={() => repositories.select(repository)}
+                          onClick={() => {
+                            workspaces.selectRepository();
+                            repositories.select(repository);
+                          }}
                           title={repository.path}
                         >
                           <FolderGit2 aria-hidden="true" />
                           <span>{repository.name}</span>
                         </SidebarMenuButton>
                         <CollapsibleTrigger
-                          render={<SidebarMenuAction />}
+                          render={<SidebarMenuAction className="right-8" />}
                           aria-label={`Toggle details for ${repository.name}`}
                         >
                           <ChevronDown
@@ -98,6 +122,21 @@ export function RepositorySidebar({
                             aria-hidden="true"
                           />
                         </CollapsibleTrigger>
+                        <SidebarMenuAction
+                          aria-label={`Create workspace in ${repository.name}`}
+                          disabled={
+                            connection.state !== "connected" ||
+                            workspaces.submitting ||
+                            !!workspaces.pending ||
+                            repository.availability.state !== "available"
+                          }
+                          onClick={() => {
+                            repositories.select(repository);
+                            void workspaces.create(repository.id);
+                          }}
+                        >
+                          <Plus aria-hidden="true" />
+                        </SidebarMenuAction>
                         <CollapsibleContent>
                           <div className="repository-details flex flex-col items-start gap-1 px-2 pb-3 pt-1">
                             <p className="repository-path">{repository.path}</p>
@@ -121,6 +160,73 @@ export function RepositorySidebar({
                               </p>
                             )}
                           </div>
+                          {!!workspaces.pages[repository.id]?.workspaces
+                            .length && (
+                            <SidebarMenuSub>
+                              {workspaces.pages[repository.id].workspaces.map(
+                                (workspace) => (
+                                  <SidebarMenuSubItem key={workspace.id}>
+                                    <SidebarMenuSubButton
+                                      render={<button type="button" />}
+                                      isActive={
+                                        workspaces.selected?.id === workspace.id
+                                      }
+                                      aria-current={
+                                        workspaces.selected?.id === workspace.id
+                                          ? "true"
+                                          : undefined
+                                      }
+                                      title={workspaceStatus(workspace.status)}
+                                      onClick={() => {
+                                        repositories.select(repository);
+                                        workspaces.select(workspace);
+                                      }}
+                                    >
+                                      {workspace.status.state === "queued" ||
+                                      workspace.status.state === "running" ? (
+                                        <Spinner aria-hidden="true" />
+                                      ) : (
+                                        <GitBranch aria-hidden="true" />
+                                      )}
+                                      <span>
+                                        {workspace.name ?? "New workspace"}
+                                      </span>
+                                    </SidebarMenuSubButton>
+                                  </SidebarMenuSubItem>
+                                ),
+                              )}
+                            </SidebarMenuSub>
+                          )}
+                          {(workspaces.hasPrevious(repository.id) ||
+                            workspaces.pages[repository.id]?.next) && (
+                            <div
+                              className="flex gap-1 px-2 pb-2"
+                              aria-label={`Workspace pages for ${repository.name}`}
+                            >
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                disabled={
+                                  !workspaces.hasPrevious(repository.id) ||
+                                  workspaces.loading
+                                }
+                                onClick={() => workspaces.back(repository.id)}
+                              >
+                                Previous
+                              </Button>
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                disabled={
+                                  !workspaces.pages[repository.id]?.next ||
+                                  workspaces.loading
+                                }
+                                onClick={() => workspaces.next(repository.id)}
+                              >
+                                Next
+                              </Button>
+                            </div>
+                          )}
                         </CollapsibleContent>
                       </Collapsible>
                     </SidebarMenuItem>

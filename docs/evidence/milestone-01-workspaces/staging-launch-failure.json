@@ -1,0 +1,9 @@
+{
+  "command": "src-tauri/gen/sidecar/workspace-supervisor /private/tmp/rag04-zvjd29dx/state",
+  "observed_exit_status": 137,
+  "stdout": "",
+  "staged_and_cargo_executable_sha256": "db18b07ba389a5984d7fb1145fec3fdb0ef01a85c647fd2e8f174b5f0b5306ce",
+  "codesign_verification": "valid on disk; satisfies Designated Requirement",
+  "cargo_reported_executable_launch": "target/debug/workspace-supervisor launched and exchanged status successfully",
+  "cause": "Not established. Kept separate from product behavior; final packaged, metadata-isolated signed copies launched successfully."
+}

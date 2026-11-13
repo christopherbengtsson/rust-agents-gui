@@ -1,0 +1,41 @@
+{
+  "stopped_owned_qualification_processes": [
+    {
+      "desktop": 76186
+    },
+    {
+      "supervisor": 75551,
+      "state": "/private/tmp/rag-names-ui-0fznotzt/state"
+    },
+    {
+      "supervisor": 76193,
+      "state": "/private/tmp/rag-names-mdcjpxvk/migration"
+    },
+    {
+      "supervisor": 72547,
+      "state": "/Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3/p4-6ad9613a"
+    }
+  ],
+  "old_default_owner_left_running": 85891,
+  "final_owned_dev_processes_stopped": {
+    "dev_launcher": 79702,
+    "supervisor": 79531,
+    "wrapper_desktop": 79538,
+    "desktop_crash_for_reconnect": 79464
+  },
+  "old_default_owner_final_snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 85891,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "85891-1794523727777133000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  }
+}

@@ -8,6 +8,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { WorkspaceDetails } from "./workspace-details";
+import type { Workspaces } from "@/hooks/use-workspaces";
 import type { Connection } from "@/hooks/use-supervisor-connection";
 import type { Repositories } from "@/hooks/use-repositories";
 
@@ -15,16 +17,20 @@ export function WorkspacePanel({
   connection,
   onRefreshStatus,
   repositories,
+  workspaces,
 }: {
   connection: Connection;
   onRefreshStatus: () => Promise<void>;
   repositories: Repositories;
+  workspaces: Workspaces;
 }) {
   return (
     <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
       <header className="workspace-header">
         <h1 className="min-w-0 truncate">
-          {repositories.selected?.name ?? "Workspace"}
+          {workspaces.selected
+            ? (workspaces.selected.name ?? "New workspace")
+            : (repositories.selected?.name ?? "Workspace")}
         </h1>
         <Button
           variant="outline"
@@ -111,25 +117,80 @@ export function WorkspacePanel({
             </AlertDescription>
           </Alert>
         )}
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FolderGit2 aria-hidden="true" />
-            </EmptyMedia>
-            <EmptyTitle>
-              <h2>
+        {workspaces.error && (
+          <Alert variant="destructive">
+            <AlertTitle>Workspace action needs attention</AlertTitle>
+            <AlertDescription>
+              <p className="error-detail">{workspaces.error.message}</p>
+              {workspaces.pending && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={
+                    workspaces.submitting || connection.state !== "connected"
+                  }
+                  onClick={() => void workspaces.retry()}
+                >
+                  Retry same submission
+                </Button>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
+        {workspaces.preferenceError && (
+          <Alert>
+            <AlertTitle>Desktop preference unavailable</AlertTitle>
+            <AlertDescription>{workspaces.preferenceError}</AlertDescription>
+          </Alert>
+        )}
+        {workspaces.pending && (
+          <p role="status">Retrieving workspace creation status…</p>
+        )}
+        {workspaces.selected ? (
+          <WorkspaceDetails
+            workspace={workspaces.selected}
+            connected={connection.state === "connected"}
+            stale={connection.state !== "connected" || !!workspaces.error}
+            pending={workspaces.submitting || !!workspaces.pending}
+            onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
+          />
+        ) : (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <FolderGit2 aria-hidden="true" />
+              </EmptyMedia>
+              <EmptyTitle>
+                <h2>
+                  {repositories.selected
+                    ? "Repository registered"
+                    : "A place for your next change"}
+                </h2>
+              </EmptyTitle>
+              <EmptyDescription>
                 {repositories.selected
-                  ? "Repository registered"
-                  : "A place for your next change"}
-              </h2>
-            </EmptyTitle>
-            <EmptyDescription>
-              {repositories.selected
-                ? "Choose another repository in the sidebar, or refresh to check its availability."
-                : "Add an existing Git repository from the sidebar to get started."}
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+                  ? "Create an isolated workspace from the local default branch. Your original checkout stays untouched."
+                  : "Add an existing Git repository from the sidebar to get started."}
+              </EmptyDescription>
+            </EmptyHeader>
+            {repositories.selected && (
+              <Button
+                size="sm"
+                disabled={
+                  connection.state !== "connected" ||
+                  repositories.selected.availability.state !== "available" ||
+                  workspaces.submitting ||
+                  !!workspaces.pending
+                }
+                onClick={() =>
+                  void workspaces.create(repositories.selected!.id)
+                }
+              >
+                Create workspace
+              </Button>
+            )}
+          </Empty>
+        )}
       </div>
       <footer className="workspace-footer">
         <span className="shrink-0">Local workspace</span>

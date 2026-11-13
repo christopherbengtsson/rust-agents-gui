@@ -1,0 +1,22 @@
+{
+  "wrapper_bundle": "/private/tmp/rag-dev-wrapper-r9tshd00/Agent Workspace Dev.app",
+  "wrapper_desktop_pid": 79538,
+  "state": "/Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3/p4-6ad9613a",
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 79531,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "79531-1794563840157520000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "purpose": "CUA cannot identify an unbundled dev process. Temporary app bundle contains exact Cargo debug desktop, uses live Vite1420 and same dev state/executable. Default dev launcher also running."
+}

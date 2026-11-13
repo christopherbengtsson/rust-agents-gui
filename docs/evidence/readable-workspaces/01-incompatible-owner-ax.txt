@@ -1,0 +1,37 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 text Repository list unavailable
+				10 pop up button (disabled) Add repository
+				11 text Connection error
+				12 pop up button Connection details
+			13 container
+				14 heading Workspace, Value: 1
+					15 text Workspace
+				16 button Retry connection
+				17 text Cannot reach the supervisor
+				18 text Incompatible desktop/supervisor versions (client protocol 4 / app 0.1.0, supervisor protocol 1 / app 0.1.0). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening.
+				19 text After addressing the error, retry the connection to retrieve its status.
+				20 heading A place for your next change, Value: 2
+					21 text A place for your next change
+				22 text Add an existing Git repository from the sidebar to get started.
+				23 text Local workspace
+				24 text No repository selected
+	25 close button
+	26 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	27 minimize button
+	28 text Agent Workspace
+29 menu bar
+	30 Agent Workspace
+	31 File
+	32 Edit
+	33 View
+	34 Window
+	35 Help

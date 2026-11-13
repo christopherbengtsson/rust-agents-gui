@@ -1,0 +1,240 @@
+{
+  "root": "/private/tmp/rag-names-mdcjpxvk",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "sha256": "7e049402de369bd01a7bbed442b4273e9fee85e0fa2078c914783bee94fbc3ca",
+  "metadata_no_state_effects": true,
+  "result": "pass",
+  "catalog_count": 500,
+  "first": {
+    "id": "db00df1d-ce78-4481-aed5-403b79a56fe4",
+    "repository_id": "d95b1c9d-9011-450f-9a26-078438ca121a",
+    "creation_action_id": "80157bda-016d-4039-bd69-e43d9304ed6e",
+    "name": "alireza-jahanbakhsh-2",
+    "branch": "workspace/alireza-jahanbakhsh-2",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-2/alireza-jahanbakhsh-2/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "c8b8fdee808e465e99e059f41a069e619389b486"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "tier3": {
+    "id": "ce3156cd-777b-4cf4-a406-e9bb06562ce5",
+    "repository_id": "d95b1c9d-9011-450f-9a26-078438ca121a",
+    "creation_action_id": "4540cf9d-9d10-4912-b709-f02ab1386e00",
+    "name": "ji-so-yun-3",
+    "branch": "workspace/ji-so-yun-3",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-2/ji-so-yun-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "c8b8fdee808e465e99e059f41a069e619389b486"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "failed_reserved": {
+    "id": "b363c92a-7a94-46a2-a8fc-c7892e867376",
+    "repository_id": "d95b1c9d-9011-450f-9a26-078438ca121a",
+    "creation_action_id": "4b47578d-389f-40a0-8325-728aec190177",
+    "name": "niklas-sule-3",
+    "branch": "workspace/niklas-sule-3",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-2/niklas-sule-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": null,
+    "artifacts": {
+      "branch": "unknown",
+      "folder": "unknown"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "git",
+        "message": "Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "other_failed_reserved": {
+    "id": "7e2d7617-2b6e-4efe-bc64-d238370ac596",
+    "repository_id": "d95b1c9d-9011-450f-9a26-078438ca121a",
+    "creation_action_id": "29b6a03c-95ee-4feb-977c-d25f714d204a",
+    "name": "steven-nzonzi-3",
+    "branch": "workspace/steven-nzonzi-3",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-2/steven-nzonzi-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": null,
+    "artifacts": {
+      "branch": "unknown",
+      "folder": "unknown"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "git",
+        "message": "Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "recovered": {
+    "id": "b363c92a-7a94-46a2-a8fc-c7892e867376",
+    "repository_id": "d95b1c9d-9011-450f-9a26-078438ca121a",
+    "creation_action_id": "4b47578d-389f-40a0-8325-728aec190177",
+    "name": "niklas-sule-3",
+    "branch": "workspace/niklas-sule-3",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-2/niklas-sule-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "c8b8fdee808e465e99e059f41a069e619389b486"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "second_repository": {
+    "id": "acb549fa-008a-4393-bb6f-def9230f44f6",
+    "repository_id": "1d614815-ad05-4105-a7a1-1d3ff3ce1950",
+    "creation_action_id": "2be365a8-b44e-4e57-b6d4-da67439edba5",
+    "name": "sam-kerr",
+    "branch": "workspace/sam-kerr",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-3/sam-kerr/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "6da26dbce6dc390b5e39b23ae06befb4a11c8199"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "ancestor_conflict": {
+    "id": "ce3094fa-6a06-4efe-a050-09918c4ae792",
+    "repository_id": "10818145-64ce-43c9-b444-101edf967af7",
+    "creation_action_id": "ee3454c5-b73d-4218-be0f-5f78a351d17e",
+    "name": null,
+    "branch": null,
+    "path": null,
+    "legacy": false,
+    "provider": "codex",
+    "base": null,
+    "artifacts": {
+      "branch": "unknown",
+      "folder": "unknown"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "conflict",
+        "message": "A registered Git worktree occupies this managed repository folder or its ancestor. Restore or move that worktree registration, then reconcile; choosing another player cannot resolve this location conflict."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "storage_constraints": [true, true, true, true],
+  "restored": {
+    "id": "db00df1d-ce78-4481-aed5-403b79a56fe4",
+    "repository_id": "d95b1c9d-9011-450f-9a26-078438ca121a",
+    "creation_action_id": "80157bda-016d-4039-bd69-e43d9304ed6e",
+    "name": "alireza-jahanbakhsh-2",
+    "branch": "workspace/alireza-jahanbakhsh-2",
+    "path": "/private/tmp/rag-names-mdcjpxvk/state/workspaces/readable-repo-2/alireza-jahanbakhsh-2/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "c8b8fdee808e465e99e059f41a069e619389b486"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "migration": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "repository_id": "3c110745-a189-4270-be33-7688f48d5c50",
+      "creation_action_id": "d9414e53-26f4-47b7-8439-682c8c84f4ef",
+      "name": "kyoto",
+      "branch": "workspace/kyoto-00000000-0000-0000-0000-000000000001",
+      "path": "/private/tmp/rag-names-mdcjpxvk/migration/workspaces/3c110745-a189-4270-be33-7688f48d5c50/kyoto-00000000-0000-0000-0000-000000000001/checkout",
+      "legacy": true,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "c8b8fdee808e465e99e059f41a069e619389b486"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "repository_id": "3c110745-a189-4270-be33-7688f48d5c50",
+      "creation_action_id": "1cf3d0b7-7185-4b74-aed4-2257171e03e3",
+      "name": "kyoto-2",
+      "branch": "workspace/kyoto-00000000-0000-0000-0000-000000000002",
+      "path": "/private/tmp/rag-names-mdcjpxvk/migration/workspaces/3c110745-a189-4270-be33-7688f48d5c50/kyoto-00000000-0000-0000-0000-000000000002/checkout",
+      "legacy": true,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "c8b8fdee808e465e99e059f41a069e619389b486"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "failed",
+        "error": {
+          "code": "git",
+          "message": "synthetic prior failure"
+        }
+      },
+      "cleanup_unconfirmed": false
+    }
+  ],
+  "original_checkout_unchanged": true,
+  "wall_seconds": 3.806399416003842
+}

@@ -1,3 +1,4 @@
+import { completeOperation } from "@/lib/complete-operation";
 import { useEffect, useId, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { FolderPlus } from "lucide-react";
@@ -61,22 +62,26 @@ export function RepositoryRegistration({
     const current = generation.current;
     setPicking(true);
     setPickerError(undefined);
-    try {
-      const folder = await open({
-        directory: true,
-        multiple: false,
-        title: "Choose an existing Git repository",
-      });
-      if (current === generation.current && typeof folder === "string")
-        setPath(folder);
-    } catch (error) {
-      if (current === generation.current)
-        setPickerError(
-          `Cannot open the folder picker: ${String(error)}. Enter the absolute folder path instead.`,
-        );
-    } finally {
-      if (current === generation.current) setPicking(false);
-    }
+    return completeOperation(
+      async () => {
+        const folder = await open({
+          directory: true,
+          multiple: false,
+          title: "Choose an existing Git repository",
+        });
+        if (current === generation.current && typeof folder === "string")
+          setPath(folder);
+      },
+      (error) => {
+        if (current === generation.current)
+          setPickerError(
+            `Cannot open the folder picker: ${String(error)}. Enter the absolute folder path instead.`,
+          );
+      },
+      () => {
+        if (current === generation.current) setPicking(false);
+      },
+    );
   }
   return (
     <Dialog open={isOpen} onOpenChange={disclose}>
@@ -97,8 +102,8 @@ export function RepositoryRegistration({
         <DialogHeader>
           <DialogTitle>Add repository</DialogTitle>
           <DialogDescription>
-            Register an existing local Git repository. Its files stay untouched
-            and no agent starts.
+            Add an existing local Git repository and create its first isolated
+            workspace from the local default branch. No agent starts.
           </DialogDescription>
         </DialogHeader>
         <form

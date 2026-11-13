@@ -1,0 +1,39 @@
+{
+  "root": "/private/tmp/rag-names-ui-0fznotzt",
+  "repo": "/private/tmp/rag-names-ui-0fznotzt/Great Goals",
+  "state": "/private/tmp/rag-names-ui-0fznotzt/state",
+  "app": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app",
+  "desktop_pid": 76080,
+  "before_reconnect": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 75551,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "75551-1794563312773924000",
+        "revision": 28
+      },
+      "reset": true
+    }
+  },
+  "after_reconnect": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 75551,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "75551-1794563312773924000",
+        "revision": 28
+      },
+      "reset": true
+    }
+  },
+  "legacy_state": "/private/tmp/rag-names-mdcjpxvk/migration",
+  "legacy_desktop_pid": 76186
+}

@@ -1,0 +1,33 @@
+{
+  "root": "/private/tmp/pr4-ui-uf6w9qcb",
+  "state": "/private/tmp/pr4-ui-uf6w9qcb/state",
+  "supervisor_pid": 93310,
+  "supervisor_binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "supervisor_sha256": "3d1e991082ef8db2a9ee9a1e1f39d493fd89d066c7a400c9bffb5fae563fe4de",
+  "repositories": [
+    "/private/tmp/pr4-ui-uf6w9qcb/Alpha Goals",
+    "/private/tmp/pr4-ui-uf6w9qcb/Brave Goals"
+  ],
+  "registrations": [
+    {
+      "create_initial_workspace": true,
+      "initial_workspace_id": "382ced50-b023-4e6f-853a-d6707c79bdd6",
+      "action_id": "c60c6fb0-570e-4ae8-a42b-f7fce5a46797",
+      "path": "/private/tmp/pr4-ui-uf6w9qcb/Alpha Goals",
+      "state": "completed",
+      "repository_id": "f7556ddf-7e11-46e6-b0e8-67bbb35d995d"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "5450953c-7921-4b99-87ad-b87f713c7b5b",
+      "path": "/private/tmp/pr4-ui-uf6w9qcb/Brave Goals",
+      "state": "completed",
+      "repository_id": "36c93b87-78de-418a-ac2b-7a7a91226d3a"
+    }
+  ],
+  "app": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app",
+  "staged_metadata_attempt_exit": -9,
+  "desktop_pid": 93559,
+  "desktop_sha256": "4f263bdc87d3f3ab7186c6cf3fc9b6df8f3c6974c439436111d7df8a79cc7ec0"
+}

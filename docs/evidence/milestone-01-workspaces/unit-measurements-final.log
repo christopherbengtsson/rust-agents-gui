@@ -1,0 +1,699 @@
+$ node scripts/test-unit.mjs --measure
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+Unit compilation: 0.085260 s; target /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target; test profile
+
+running 68 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test git::tests::output_budget_fails_instead_of_parsing_truncated_output ... ok
+test git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup ... ok
+test storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result ... ok
+test storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible ... ok
+test storage::tests::success_requires_commit_and_begin_failure_blocks_the_write ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count ... ok
+test workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect ... ok
+test workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect ... ok
+test workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission ... ok
+test workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor ... ok
+test workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault ... ok
+test workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace ... ok
+test workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository ... ok
+test workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded ... ok
+test workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent ... ok
+test workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect ... ok
+test workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it ... ok
+test workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable ... ok
+test workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name ... ok
+test workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover ... ok
+test workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent ... ok
+test workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location ... ok
+test workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity ... ok
+test workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit ... ok
+
+test result: ok. 68 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+Unit execution warm-up: 0.129036 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d --test-threads=1
+
+running 68 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test git::tests::output_budget_fails_instead_of_parsing_truncated_output ... ok
+test git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup ... ok
+test storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result ... ok
+test storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible ... ok
+test storage::tests::success_requires_commit_and_begin_failure_blocks_the_write ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count ... ok
+test workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect ... ok
+test workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect ... ok
+test workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission ... ok
+test workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor ... ok
+test workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault ... ok
+test workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace ... ok
+test workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository ... ok
+test workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded ... ok
+test workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent ... ok
+test workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect ... ok
+test workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it ... ok
+test workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable ... ok
+test workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name ... ok
+test workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover ... ok
+test workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent ... ok
+test workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location ... ok
+test workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity ... ok
+test workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit ... ok
+
+test result: ok. 68 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+Unit execution 1: 0.130438 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d --test-threads=1
+
+running 68 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test git::tests::output_budget_fails_instead_of_parsing_truncated_output ... ok
+test git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup ... ok
+test storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result ... ok
+test storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible ... ok
+test storage::tests::success_requires_commit_and_begin_failure_blocks_the_write ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count ... ok
+test workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect ... ok
+test workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect ... ok
+test workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission ... ok
+test workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor ... ok
+test workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault ... ok
+test workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace ... ok
+test workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository ... ok
+test workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded ... ok
+test workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent ... ok
+test workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect ... ok
+test workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it ... ok
+test workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable ... ok
+test workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name ... ok
+test workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover ... ok
+test workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent ... ok
+test workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location ... ok
+test workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity ... ok
+test workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit ... ok
+
+test result: ok. 68 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+Unit execution 2: 0.132729 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d --test-threads=1
+
+running 68 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test git::tests::output_budget_fails_instead_of_parsing_truncated_output ... ok
+test git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup ... ok
+test storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result ... ok
+test storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible ... ok
+test storage::tests::success_requires_commit_and_begin_failure_blocks_the_write ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count ... ok
+test workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect ... ok
+test workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect ... ok
+test workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission ... ok
+test workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor ... ok
+test workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault ... ok
+test workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace ... ok
+test workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository ... ok
+test workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded ... ok
+test workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent ... ok
+test workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect ... ok
+test workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it ... ok
+test workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable ... ok
+test workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name ... ok
+test workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover ... ok
+test workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent ... ok
+test workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location ... ok
+test workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity ... ok
+test workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit ... ok
+
+test result: ok. 68 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+Unit execution 3: 0.137346 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d --test-threads=1
+
+running 68 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test git::tests::output_budget_fails_instead_of_parsing_truncated_output ... ok
+test git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup ... ok
+test storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result ... ok
+test storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible ... ok
+test storage::tests::success_requires_commit_and_begin_failure_blocks_the_write ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count ... ok
+test workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect ... ok
+test workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect ... ok
+test workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission ... ok
+test workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor ... ok
+test workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault ... ok
+test workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace ... ok
+test workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository ... ok
+test workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded ... ok
+test workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent ... ok
+test workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect ... ok
+test workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it ... ok
+test workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable ... ok
+test workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name ... ok
+test workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover ... ok
+test workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent ... ok
+test workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location ... ok
+test workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity ... ok
+test workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit ... ok
+
+test result: ok. 68 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+Unit execution 4: 0.131466 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d --test-threads=1
+
+running 68 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test git::tests::output_budget_fails_instead_of_parsing_truncated_output ... ok
+test git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup ... ok
+test storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result ... ok
+test storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible ... ok
+test storage::tests::success_requires_commit_and_begin_failure_blocks_the_write ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count ... ok
+test workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect ... ok
+test workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect ... ok
+test workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission ... ok
+test workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor ... ok
+test workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault ... ok
+test workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace ... ok
+test workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository ... ok
+test workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded ... ok
+test workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent ... ok
+test workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect ... ok
+test workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it ... ok
+test workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable ... ok
+test workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name ... ok
+test workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover ... ok
+test workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent ... ok
+test workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location ... ok
+test workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity ... ok
+test workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit ... ok
+
+test result: ok. 68 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+Unit execution 5: 0.128597 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-36bf8e1346420b1d --test-threads=1
+Warm execution median 0.131466 s; range 0.128597–0.137346 s
+✔ claims an unclaimed target exclusively for this worktree (0.977166ms)
+✔ permits a target already claimed by this worktree (0.088834ms)
+✔ rejects another worktree's target without changing its ownership (0.162583ms)
+✔ rejects a symlinked target before creating or claiming it (0.060209ms)
+✔ rejects a target under a symlinked parent before claiming it (0.069959ms)
+✔ rejects a symlinked ownership marker without following it (0.070333ms)
+✔ frontend lint accepts typed composition and direct UI imports (32.803916ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (63.692ms)
+✔ frontend lint surfaces compiler and accessible-name defects (67.545334ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (343.230958ms)
+✔ native boundary rules cover nested paths, type and namespace exports (31.944125ms)
+✔ warnings fail and native suppression names remain checked (93.480708ms)
+✔ native table-cell compatibility preserves other redundancy checks (33.052209ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.476542ms)
+✔ debug staging records the dev profile and a clean source tree (0.0935ms)
+✔ rejects missing executable without touching staged resources (0.154083ms)
+✔ rejects test executable without touching staged resources (0.069833ms)
+✔ rejects ambiguous executables without touching staged resources (0.397583ms)
+✔ a failed build cannot stage a previously available executable (0.074583ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 772.805167
+Unit execution warm-up: 0.797268 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+✔ claims an unclaimed target exclusively for this worktree (1.1085ms)
+✔ permits a target already claimed by this worktree (0.090209ms)
+✔ rejects another worktree's target without changing its ownership (0.163875ms)
+✔ rejects a symlinked target before creating or claiming it (0.0605ms)
+✔ rejects a target under a symlinked parent before claiming it (0.066833ms)
+✔ rejects a symlinked ownership marker without following it (0.066917ms)
+✔ frontend lint accepts typed composition and direct UI imports (31.989875ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (64.711166ms)
+✔ frontend lint surfaces compiler and accessible-name defects (61.878833ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (344.91425ms)
+✔ native boundary rules cover nested paths, type and namespace exports (33.741083ms)
+✔ warnings fail and native suppression names remain checked (97.43425ms)
+✔ native table-cell compatibility preserves other redundancy checks (31.909333ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.06125ms)
+✔ debug staging records the dev profile and a clean source tree (0.108958ms)
+✔ rejects missing executable without touching staged resources (0.168291ms)
+✔ rejects test executable without touching staged resources (0.06025ms)
+✔ rejects ambiguous executables without touching staged resources (0.14225ms)
+✔ a failed build cannot stage a previously available executable (0.082458ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 774.103041
+Unit execution 1: 0.799995 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+✔ claims an unclaimed target exclusively for this worktree (1.04975ms)
+✔ permits a target already claimed by this worktree (0.0895ms)
+✔ rejects another worktree's target without changing its ownership (0.167ms)
+✔ rejects a symlinked target before creating or claiming it (0.057583ms)
+✔ rejects a target under a symlinked parent before claiming it (0.0705ms)
+✔ rejects a symlinked ownership marker without following it (0.069041ms)
+✔ frontend lint accepts typed composition and direct UI imports (31.688292ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (61.483375ms)
+✔ frontend lint surfaces compiler and accessible-name defects (63.292333ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (339.80975ms)
+✔ native boundary rules cover nested paths, type and namespace exports (32.791583ms)
+✔ warnings fail and native suppression names remain checked (91.586375ms)
+✔ native table-cell compatibility preserves other redundancy checks (30.211458ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.095625ms)
+✔ debug staging records the dev profile and a clean source tree (0.092375ms)
+✔ rejects missing executable without touching staged resources (0.159333ms)
+✔ rejects test executable without touching staged resources (0.446625ms)
+✔ rejects ambiguous executables without touching staged resources (0.07875ms)
+✔ a failed build cannot stage a previously available executable (0.073792ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 753.10725
+Unit execution 2: 0.777283 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+✔ claims an unclaimed target exclusively for this worktree (0.879375ms)
+✔ permits a target already claimed by this worktree (0.105875ms)
+✔ rejects another worktree's target without changing its ownership (0.166167ms)
+✔ rejects a symlinked target before creating or claiming it (0.06575ms)
+✔ rejects a target under a symlinked parent before claiming it (0.069625ms)
+✔ rejects a symlinked ownership marker without following it (0.074583ms)
+✔ frontend lint accepts typed composition and direct UI imports (32.846708ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (62.377834ms)
+✔ frontend lint surfaces compiler and accessible-name defects (62.968583ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (344.022709ms)
+✔ native boundary rules cover nested paths, type and namespace exports (32.208958ms)
+✔ warnings fail and native suppression names remain checked (96.250291ms)
+✔ native table-cell compatibility preserves other redundancy checks (30.205333ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.061ms)
+✔ debug staging records the dev profile and a clean source tree (0.095209ms)
+✔ rejects missing executable without touching staged resources (0.220416ms)
+✔ rejects test executable without touching staged resources (0.075125ms)
+✔ rejects ambiguous executables without touching staged resources (0.093958ms)
+✔ a failed build cannot stage a previously available executable (0.078375ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 762.766459
+Unit execution 3: 0.786527 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+✔ claims an unclaimed target exclusively for this worktree (0.99825ms)
+✔ permits a target already claimed by this worktree (0.096792ms)
+✔ rejects another worktree's target without changing its ownership (0.186625ms)
+✔ rejects a symlinked target before creating or claiming it (0.118625ms)
+✔ rejects a target under a symlinked parent before claiming it (0.074ms)
+✔ rejects a symlinked ownership marker without following it (0.07225ms)
+✔ frontend lint accepts typed composition and direct UI imports (32.671958ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (60.952542ms)
+✔ frontend lint surfaces compiler and accessible-name defects (61.2765ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (332.180375ms)
+✔ native boundary rules cover nested paths, type and namespace exports (32.745209ms)
+✔ warnings fail and native suppression names remain checked (92.157541ms)
+✔ native table-cell compatibility preserves other redundancy checks (31.58075ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.033417ms)
+✔ debug staging records the dev profile and a clean source tree (0.097375ms)
+✔ rejects missing executable without touching staged resources (0.157292ms)
+✔ rejects test executable without touching staged resources (0.069042ms)
+✔ rejects ambiguous executables without touching staged resources (0.49375ms)
+✔ a failed build cannot stage a previously available executable (0.088125ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 745.509417
+Unit execution 4: 0.775598 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+✔ claims an unclaimed target exclusively for this worktree (0.995584ms)
+✔ permits a target already claimed by this worktree (0.149208ms)
+✔ rejects another worktree's target without changing its ownership (0.195292ms)
+✔ rejects a symlinked target before creating or claiming it (0.083625ms)
+✔ rejects a target under a symlinked parent before claiming it (0.0925ms)
+✔ rejects a symlinked ownership marker without following it (0.061333ms)
+✔ frontend lint accepts typed composition and direct UI imports (33.011916ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (63.281958ms)
+✔ frontend lint surfaces compiler and accessible-name defects (63.257833ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (345.429958ms)
+✔ native boundary rules cover nested paths, type and namespace exports (31.687833ms)
+✔ warnings fail and native suppression names remain checked (93.924042ms)
+✔ native table-cell compatibility preserves other redundancy checks (33.653416ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.151291ms)
+✔ debug staging records the dev profile and a clean source tree (0.099208ms)
+✔ rejects missing executable without touching staged resources (0.213417ms)
+✔ rejects test executable without touching staged resources (0.498ms)
+✔ rejects ambiguous executables without touching staged resources (0.08875ms)
+✔ a failed build cannot stage a previously available executable (0.073333ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 772.436167
+Unit execution 5: 0.797400 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+Warm execution median 0.786527 s; range 0.775598–0.799995 s
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  09:19:45
+   Duration  2.65s (tests 60%, environment 21%, import 17%, transform 1%)
+
+    Isolate  3 workers spawned · ~226ms startup each (spawn + environment, per file)
+             at least ~452ms faster with isolate: false — reuses workers across files instead of one per file
+
+Unit execution warm-up: 2.814016 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  09:19:47
+   Duration  2.62s (tests 61%, environment 20%, import 17%, transform 1%)
+
+    Isolate  3 workers spawned · ~217ms startup each (spawn + environment, per file)
+             at least ~434ms faster with isolate: false — reuses workers across files instead of one per file
+
+Unit execution 1: 2.786165 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  09:19:50
+   Duration  2.69s (tests 60%, environment 21%, import 18%, transform 1%)
+
+    Isolate  3 workers spawned · ~227ms startup each (spawn + environment, per file)
+             at least ~455ms faster with isolate: false — reuses workers across files instead of one per file
+
+Unit execution 2: 2.858366 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  09:19:53
+   Duration  2.78s (tests 60%, environment 21%, import 18%, transform 1%)
+
+    Isolate  3 workers spawned · ~234ms startup each (spawn + environment, per file)
+             at least ~468ms faster with isolate: false — reuses workers across files instead of one per file
+
+Unit execution 3: 2.954423 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  09:19:56
+   Duration  2.75s (tests 60%, environment 21%, import 17%, transform 1%)
+
+    Isolate  3 workers spawned · ~232ms startup each (spawn + environment, per file)
+             at least ~464ms faster with isolate: false — reuses workers across files instead of one per file
+
+Unit execution 4: 2.923792 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  09:19:59
+   Duration  2.74s (tests 60%, environment 21%, import 18%, transform 1%)
+
+    Isolate  3 workers spawned · ~229ms startup each (spawn + environment, per file)
+             at least ~459ms faster with isolate: false — reuses workers across files instead of one per file
+
+Unit execution 5: 2.910418 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1
+Warm execution median 2.910418 s; range 2.786165–2.954423 s
+real 22.97
+user 19.84
+sys 3.82

@@ -2,7 +2,8 @@
 
 Status: ready-for-agent
 
-Implementation baseline: tickets 01–02 and 02a are complete. Product behavior in tickets 03–13 is not implemented; ticket 03's verification gate was brought forward for current testing-policy alignment.
+Implementation baseline: tickets 01–02 and 02a are complete. Tickets 03–04 implement repository registration/navigation and isolated workspace
+creation/recovery. Product behavior in tickets 05–13 remains unimplemented.
 
 ## Problem Statement
 
@@ -10,7 +11,7 @@ Christopher needs a local desktop workspace for coding with his existing Codex r
 
 ## Solution
 
-Build one Apple Silicon macOS desktop workflow: register an existing Git repository, create a separate branch/worktree at a selected local commit, chat with Codex, allow or deny an exact requested operation, inspect uncommitted changes, interrupt work, quit/reopen, and explicitly resume the same native conversation.
+Build one Apple Silicon macOS desktop workflow: register an existing Git repository, create a separate branch/worktree at an automatically identified local default commit, chat with Codex, allow or deny an exact requested operation, inspect uncommitted changes, interrupt work, quit/reopen, and explicitly resume the same native conversation.
 
 Use a Tauri desktop connected to a separate on-demand local supervisor hosting the Rust core. The supervisor owns execution and authoritative storage. The desktop submits explicitly targeted actions and displays observations. Viewing history and reconnecting never start or replay a turn.
 
@@ -23,7 +24,7 @@ Deliver this as one implementation spec with session-sized implementation ticket
 3. As a developer, I want to register an existing Git repository without changing its files or starting Codex, so that adding a project is safe and predictable.
 4. As a developer, I want invalid or unavailable repository paths to produce actionable errors, so that I can correct the problem without retaining a broken entry.
 5. As a developer, I want registered repository identity restored after reopening, so that I can return to my projects.
-6. As a developer, I want to select an identified local base commit for a new workspace, so that I know which code the work starts from.
+6. As a developer, I want workspace creation to use and display a pinned local default commit automatically, so that I can create workspaces without a setup dialog.
 7. As a developer, I want a separate branch/worktree with a visible path, branch, and provider, so that agent edits leave my original checkout untouched.
 8. As a developer, I want partially failed workspace creation to show what already exists and reconcile the same operation, so that retrying neither duplicates nor destroys work.
 9. As a developer, I want workspace identity restored after restart, so that I return to the same code state.
@@ -104,7 +105,7 @@ Deliver this as one implementation spec with session-sized implementation ticket
 ### Repository, workspace, and inspection
 
 - Validate an existing Git repository before saving a usable registration. Registration performs no project-file changes and starts no provider work.
-- Create a separate branch/worktree from an explicitly selected and resolved local commit. Retain the operation's identity and partial creation evidence for reconciliation. Preserve unrelated branches/folders and the original checkout.
+- Create a separate branch/worktree from an automatically identified and resolved local default commit. Adding a new repository requests its first workspace; repository + immediately requests another. Defer the composer and base picker. Generate names/branches/managed folders. Use usable local origin/HEAD, otherwise exactly one usable local main/master; fail visibly when unavailable or ambiguous. Retain the operation's identity and partial creation evidence for reconciliation. Preserve unrelated branches/folders and the original checkout.
 - Display workspace path, branch, and provider. Provide a usable composition of navigation, chat, pending approval, changed-file list, and text diff.
 - The milestone comparison covers uncommitted workspace changes, including new files and deletions. Identify the comparison and refresh after edits. Label binary/unsupported content and preserve the last good result with a visible error if refresh fails.
 
@@ -124,7 +125,7 @@ Follow [testing and verification](../../docs/agents/verification.md) for automat
 | Acceptance               | Required coverage                                                                                                                                                                                                             |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | A1 — Register            | Valid and invalid/unavailable repositories; no original-file changes or provider start; restored identity after reopening.                                                                                                    |
-| A2 — Workspace           | Selected commit, separate branch/worktree, untouched original checkout, persistent identity, partial creation failure, and repeat-action reconciliation without duplication or unrelated deletion.                            |
+| A2 — Workspace           | Automatic pinned local default, separate branch/worktree, untouched original checkout, persistent identity, partial creation failure, and repeat-action reconciliation without duplication or unrelated deletion.             |
 | A3 — Connect             | Supported protocol/configuration and existing authentication; missing executable, incompatible protocol, unavailable authentication, and actionable setup errors. Native compatibility is separately qualified.               |
 | A4 — Chat                | Multiline sends, correctly routed streaming/tool activity, saved/received/uncertain delivery, repeated action IDs, late/duplicate events, and usable control during sustained output.                                         |
 | A5 — Approval            | Exact operation/request/turn matching, allow effect, denied non-effect, malformed payloads, stale/conflicting answers, and uncertain lost replies without broadened permission.                                               |
@@ -159,5 +160,22 @@ These are sequencing limits. Retain the product contract's ownership and identit
 - Preparation confirmed one spec, separate-session tickets, bootstrap before product behavior, a clear usable desktop, stable reproducible versions, and lasting modules without speculative abstractions. Automated coverage follows the repository testing policy; desktop and native qualification remain separate.
 - Published to the configured local Markdown tracker with `ready-for-agent` status. Implementation tickets are separate files with explicit blockers under this feature's `issues/` directory.
 - Exact stable dependency versions and the supported Codex runtime/schema cohort are selected and recorded during their respective implementation gates. The agreed presentation stack is recorded above; no transport library, message schema, or provider compatibility result is implied by that choice.
-- Tickets 01–02 are complete and predate the testing policy. Product behavior in tickets 03–13 remains unimplemented; the ticket 03 verification gate is in place, with [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
+- Tickets 01–02 are complete and predate the testing policy. Tickets 03–04 are complete; product behavior in tickets 05–13 remains unimplemented. The ticket 03 verification gate is in place, with [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
 - Mark the milestone Passed only when its deterministic, desktop, and required native checks succeed. If native checks are unauthorized or fail, retain completed evidence and leave the milestone incomplete. Preserve the completed milestone when defining the next one.
+
+## Workspace-flow decision — 2026-11-13
+
+The user accepted immediate workspace creation after adding a new repository and
+from its + action, generated names/folders, and automatic local-default selection.
+Registration remains separate and read-only; successful new registration records
+its first-creation continuation atomically. Re-registering an existing repository
+does not create another. No composer, base picker, fetch, setup or agent launch.
+See [research](../../docs/research/ticket-04-conductor-workspace-flow.md).
+
+## Readable workspace follow-up
+
+The approved [readable-workspaces plan](readable-workspaces-plan.md) refines ticket
+04 naming and development startup. UUIDs remain internal identity; human labels
+use the curated footballer catalog with permanent reservations and numeric tiers.
+This does not expand creation into a composer, base picker or provider launch.
+See [evidence](../../docs/evidence/readable-workspaces.md) for qualification and limits.

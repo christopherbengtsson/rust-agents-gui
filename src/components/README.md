@@ -156,3 +156,38 @@ transitive dependencies, and variant usefulness still require review.
 
 For primary-source rationale and the article's stack adaptations, consult
 [component convention research](../../docs/research/shadcn-agent-conventions.md).
+
+### Workspace creation
+
+- **WorkspaceDetails** (`blocks/workspace-details.tsx`) owns selected-workspace
+  identity, observed creation stage, pinned base, branch/folder evidence and the
+  explicit reconciliation callback. Use it for workspace creation/result/recovery;
+  use WorkspacePanel for the screen and RepositorySidebar for navigation. It has
+  no IPC or execution policy. Shared appearance uses semantic tokens; long names,
+  branches and paths wrap without hiding recovery controls.
+- RepositorySidebar now includes independent native-button workspace children and
+  an accessible per-repository +. Existing selection/disclosure remains separate.
+  WorkspacePanel composes WorkspaceDetails and retained transport/preference errors.
+- App calls `useWorkspaces` once. It owns bounded pages, workspace selection and
+  pending action status across navigation. Reconnect only reads. Creation and
+  recovery callbacks retain explicit target IDs; late replies cannot steal changed
+  selection. Action settlement uses owner and explicit-navigation generations,
+  independent of repository-driven observation resubscription. Admission errors
+  remain visible while unrelated workspace progress continues polling; observation
+  failures pause polling. Stable callbacks own observation subscriptions; the shared
+  React-independent async settlement utility preserves cleanup outside compiler lowering.
+- Add repository explains the automatic first workspace and lack of agent launch.
+  No additional shadcn component or custom primitive was needed. Existing controls
+  retain their local compact variants and Base UI render contracts.
+
+### Human labels and diagnostic identities
+
+Use meaningful human names for navigation, headings, badges and ordinary status.
+Keep internal UUIDs in keys, action targets and persistence; display them only in
+explicit troubleshooting details when needed. Do not append raw IDs to labels or
+show them as a fallback for missing names. Pending allocation displays “New
+workspace” and states that no name/folder is reserved. Newly allocated locations
+are readable; WorkspaceDetails discloses retained legacy branches/folders through
+an explicit keyboard-accessible Collapsible. No new toolkit component is needed.
+Connection failure replaces initial navigation skeletons with unavailable guidance;
+retained observations remain readable and marked stale.
