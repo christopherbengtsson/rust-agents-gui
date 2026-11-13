@@ -191,3 +191,39 @@ are readable; WorkspaceDetails discloses retained legacy branches/folders throug
 an explicit keyboard-accessible Collapsible. No new toolkit component is needed.
 Connection failure replaces initial navigation skeletons with unavailable guidance;
 retained observations remain readable and marked stale.
+
+### Manual workspace change inspection (05a)
+
+- **WorkspaceInspection** (`blocks/workspace-changes.tsx`) coordinates the ready
+  workspace's Workspace/Changes tabs and one `useWorkspaceChanges` owner above
+  their content. Use it for workspace-wide uncommitted inspection; existing
+  WorkspaceDetails retains creation/recovery presentation. It receives an exact
+  workspace ID and connected supervisor owner. Changes are explicitly refreshed;
+  this slice only polls already admitted jobs. Reconnect reads observations.
+- **ChangedFiles** is the bounded file-selection block shared by the desktop
+  right panel and the below-880-px Sheet. It receives observations and a selection
+  callback. Opaque file IDs, never display labels, target previews. It renders one
+  page, with First/Next navigation. Selection opens the single Changes tab and
+  closes the Sheet. The desktop panel is independently collapsible and resizable.
+- **UnifiedDiff** (`primitives/unified-diff.tsx`) composes Code Block and Scroll
+  Area for plain, bounded Git rows. Use explicit old/new source numbers, row kinds
+  and supplied text; use Code Block directly for ordinary sequential code. It
+  accepts a reading-position ref owned above the tabs and an explicit scroll
+  callback. Tab switches unmount inactive heavy content; changing files resets
+  position. No highlighting or HTML rendering is enabled.
+- **Foundation additions:** Tabs, Resizable, Scroll Area and Code Block came from
+  shadcn base-nova through the project runner. Existing compact Button source was
+  preserved. Scroll Area supplies both scrollbars and omits an unused React
+  import. CodeBlockContent omits upstream's extra keyboard stop; Scroll Area's
+  viewport owns keyboard scrolling. New diff appearance uses shared semantic
+  roles in the global stylesheet.
+- **CSP:** WorkspaceInspection supplies `CSPProvider disableStyleElements`, with
+  Base UI 1.9.0's scrollbar suppression externalized into the global stylesheet.
+  Keep the existing Tauri policy. Actual WebView scrolling, focus, resizing and
+  responsiveness remain 05c qualification; controlled DOM checks are partial
+  evidence only.
+
+The Rust observation contracts live in `workspaces::inspection`, re-exported
+through `workspaces`; TypeScript validation lives in `lib/changes.ts`. Failure and
+last-good comparison identity stay explicit. This component documentation does
+not duplicate the wire schema or authorize automatic refresh/provider actions.

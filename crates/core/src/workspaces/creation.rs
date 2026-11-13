@@ -145,6 +145,16 @@ impl WorkspaceAction {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "operation", rename_all = "snake_case")]
 pub enum WorkspaceRequest {
+    Changes {
+        workspace_id: WorkspaceId,
+        refresh: bool,
+        comparison_id: Option<ComparisonId>,
+        after: Option<FileId>,
+    },
+    ChangePreview {
+        target: PreviewTarget,
+        load: bool,
+    },
     Create {
         action_id: ActionId,
         repository_id: RepositoryId,
@@ -172,6 +182,12 @@ pub struct WorkspacePage {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum WorkspaceReply {
+    Changes {
+        observation: ChangesObservation,
+    },
+    ChangePreview {
+        observation: PreviewObservation,
+    },
     Workspace {
         workspace: Option<Workspace>,
     },
@@ -971,6 +987,12 @@ impl OwnerState {
 }
 impl Workspaces {
     pub fn workspace_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
+        if matches!(
+            request,
+            WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. }
+        ) {
+            return self.inspection_request(request);
+        }
         let mut state = self.state()?;
         let reply = match request {
             WorkspaceRequest::Create {
@@ -1070,6 +1092,9 @@ impl Workspaces {
                     page.next = page.workspaces.last().map(|w| w.id);
                 }
                 WorkspaceReply::Workspaces { page }
+            }
+            WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. } => {
+                unreachable!()
             }
         };
         drop(state);

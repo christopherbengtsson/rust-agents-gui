@@ -1,0 +1,33 @@
+{
+  "base": "6ecf36b31a70dc2171a4949dc7c25d2c9bf0418e",
+  "branch": "feature/m01-change-inspection",
+  "state": "uncommitted reviewed implementation; final commit referenced by ticket completion comment",
+  "files": {
+    "crates/core/src/connection.rs": "506ba1a77611bebffc56b35ab9694ef8756bea06e46f19344eb53ae5c4787baa",
+    "crates/core/src/connection/tests.rs": "d65b8eccd9916c33397e0a5b89a4705e52bea068068c6798d7ac981637d04cef",
+    "crates/core/src/git.rs": "84d8f40ec6f8efe406f0bcb9fb46b8a72bdec8deb23099de868c87c4d302ee95",
+    "crates/core/src/git/inspection.rs": "beffb7e4757a15d8d00b3e8376b200abdb52d9fcf1f68dfe2ea44964f57ad2fb",
+    "crates/core/src/workspaces.rs": "47927ce7aa5b6537c495fc2af64c0a4c45e00a81c4948b9a56853056ae64f035",
+    "crates/core/src/workspaces/creation.rs": "d2223762c5e01b68741d6106dacf81ddfe11c5f0722599bbfe9f7cc600297f8f",
+    "crates/core/src/workspaces/inspection.rs": "7e5cf4e6d2dd3c7ebda1fcf170cf2ff5d5f966343faa39acfb2a61133f42f876",
+    "crates/core/src/workspaces/inspection/tests.rs": "ef48ec5887391208ea9fc0a762dfccece6faf2ff5c8337117623579ac95fb872",
+    "crates/core/src/workspaces/tests.rs": "e2f985f92788148cfbdbc82482d31b51e2c591a2e9f2f758a0f0518f7fc85c2a",
+    "package.json": "cfdbe7c72a605073e28e3d63ba773413b5df89500e4bc72e39c216389fbbc3b0",
+    "pnpm-lock.yaml": "be348f1cbde87368a663f57fe7e31be545cf512ee84f10bcbc8c84a50b163c1a",
+    "src/components/README.md": "0761ce0afb2babc089414c3693c8cac90a15d5f1165c87ea1b95e78ad0166e8e",
+    "src/components/blocks/workspace-changes.tsx": "4bd958a280c7ab3d4a974c0257255d58227aeb55b3228a25190b43bd58ea7efd",
+    "src/components/blocks/workspace-panel.tsx": "853ac700f06cb7a7665c306dd48a6ef5346b19225661dbdae9833c583194293c",
+    "src/components/primitives/unified-diff.tsx": "fcfc2a0cacef1b4c80f46af3ea4557ab1bd905d3ce836c00276fdf6f8a13cb20",
+    "src/components/ui/code-block.tsx": "b02f6e6a61dc6f59f02fab1d00c1cb577b76305f5489d97a7c23501f7c87a6bd",
+    "src/components/ui/resizable.tsx": "0e6d400496b06974a963a6b4bf1e05b46d64f6c220e3b843a0deff871ddedf48",
+    "src/components/ui/scroll-area.tsx": "fb4bf566cc8d245a0a1f17b5c2abff57b9f3aa086dcc99cf70f0d467084d94a4",
+    "src/components/ui/tabs.tsx": "eada79bb1e9160da118602c60b2c5a19378237fa31a127bee5eec13e7e5de2ee",
+    "src/hooks/use-highlighted-code.ts": "745a826901b7d70f8bb7c62011a231d71b863474a6e311e0c7834a2587c8a142",
+    "src/hooks/use-workspace-changes.ts": "762d8b06ab5e1ac146fa5822a0b222b37bd74c532f21b0604c6c817dbf0491d0",
+    "src/lib/changes.ts": "61f34fff931cd53c13bd6614a3aabe4020eedeed383def30f9a540ecff79707a",
+    "src/lib/highlighter.tsx": "0a974a2a0dfba8b190201d691b6da8de0263e28ff2accc31b31a1000a57a0f71",
+    "src/lib/workspaces.ts": "ed24d0af490a4ab7fed1a7d5cdea8f24479cd91ec03c874546fe3103722768c7",
+    "src/style.css": "da39fcc3640a170622483b2b68e2dd5d852c05f23f045f150566b5b88230eb0c",
+    "src/workspace-changes.test.tsx": "aad6c16cef28670a0e2b669a289a8601e4e293d00696af97b2e9cea4e5dcf22f"
+  }
+}

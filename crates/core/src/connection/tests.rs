@@ -424,6 +424,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
     assert_eq!(snapshot.status.state, crate::SupervisorState::Ready);
     assert!(!snapshot.reset);
     for (protocol, version) in [
+        (4, env!("CARGO_PKG_VERSION")),
         (999, env!("CARGO_PKG_VERSION")),
         (PROTOCOL_VERSION, "99.0.0"),
     ] {
@@ -436,6 +437,38 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
         };
         assert!(message.contains("Install matching desktop and supervisor builds"));
     }
+}
+
+#[test]
+fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
+    use crate::workspaces::{WorkspaceId, WorkspaceRequest};
+    let core = Core {
+        owner: "owner-a".into(),
+        pid: 42,
+        workspaces: None,
+    };
+    let mut input = serde_json::to_vec(&Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        repository: None,
+        workspace: Some(WorkspaceRequest::Changes {
+            workspace_id: WorkspaceId(uuid::Uuid::from_u128(7)),
+            refresh: true,
+            comparison_id: None,
+            after: None,
+        }),
+    })
+    .unwrap();
+    input.push(b'\n');
+    let mut stream = TransportScenario::new(input);
+    serve_stream(&core, &mut stream).unwrap();
+    let Response::Workspace { result: Err(error) } =
+        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    else {
+        panic!("inspection must retain workspace routing and typed failure")
+    };
+    assert_eq!(error.code, ErrorCode::Storage);
 }
 
 #[test]

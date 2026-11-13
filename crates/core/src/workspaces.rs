@@ -24,6 +24,12 @@ macro_rules! identity {
 identity!(RepositoryId);
 identity!(ActionId);
 mod creation;
+mod inspection;
+pub(crate) use inspection::{CONTENT_BYTES, FileEvidence, InspectionEffects};
+pub use inspection::{
+    ChangePage, ChangedFile, ChangesObservation, ComparisonId, DiffRow, FileId, FilePreview,
+    InspectionPhase, PreviewObservation, PreviewTarget, RowKind, UnsupportedContent,
+};
 pub(crate) mod naming;
 pub use creation::*;
 
@@ -297,6 +303,7 @@ const PAGE_BYTES: usize = 48 * 1024;
 const CACHE_SIZE: usize = 64;
 
 struct OwnerState {
+    inspections: inspection::Inspections,
     directory: PathBuf,
     store: Result<Box<dyn RepositoryStore>>,
     cache: VecDeque<(RepositoryId, Availability)>,
@@ -320,6 +327,7 @@ impl OwnerState {
         )?;
         let store = open(&directory);
         Ok(Self {
+            inspections: inspection::Inspections::default(),
             directory,
             store,
             cache: VecDeque::new(),
@@ -453,13 +461,19 @@ impl Workspaces {
         let (wake, receiver) = mpsc::sync_channel(1);
         let worker_state = shared.clone();
         let worker = std::thread::spawn(move || {
+            let mut next = 0;
             loop {
                 if matches!(receiver.try_recv(), Err(mpsc::TryRecvError::Disconnected)) {
                     break;
                 }
-                if process_creation(&worker_state, &mut crate::git::LocalCreation)
-                    || process_one(&worker_state, crate::git::inspect)
-                {
+                if worker_cycle(&mut next, |kind| match kind {
+                    0 => process_creation(&worker_state, &mut crate::git::LocalCreation),
+                    1 => process_one(&worker_state, crate::git::inspect),
+                    _ => inspection::process_inspection(
+                        &worker_state,
+                        &mut crate::git::LocalInspection,
+                    ),
+                }) {
                     continue;
                 }
                 if receiver.recv().is_err() {
@@ -527,6 +541,17 @@ impl Workspaces {
         self.notify();
         result
     }
+}
+
+fn worker_cycle(next: &mut usize, mut run: impl FnMut(usize) -> bool) -> bool {
+    for offset in 0..3 {
+        let kind = (*next + offset) % 3;
+        if run(kind) {
+            *next = (kind + 1) % 3;
+            return true;
+        }
+    }
+    false
 }
 impl Drop for Workspaces {
     fn drop(&mut self) {
