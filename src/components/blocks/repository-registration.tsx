@@ -97,8 +97,8 @@ export function RepositoryRegistration({
         <DialogHeader>
           <DialogTitle>Add repository</DialogTitle>
           <DialogDescription>
-            Register an existing local Git repository. Its files stay untouched
-            and no agent starts.
+            Add an existing local Git repository and create its first isolated
+            workspace from the local default branch. No agent starts.
           </DialogDescription>
         </DialogHeader>
         <form

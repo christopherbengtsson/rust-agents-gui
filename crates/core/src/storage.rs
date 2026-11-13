@@ -61,7 +61,7 @@ impl SqliteStore {
         let version: u32 = connection
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .map_err(storage)?;
-        if version > 1 {
+        if version > 2 {
             return Err(storage(
                 "This database belongs to a newer application. Open it with a compatible build; do not delete it.",
             ));
@@ -73,6 +73,14 @@ impl SqliteStore {
                 CREATE INDEX pending_registrations ON registration_actions(pending, id);
                 PRAGMA user_version=1;
                 COMMIT;").map_err(storage)?;
+        }
+        if version < 2 {
+            connection.execute_batch("BEGIN IMMEDIATE;
+                CREATE TABLE workspaces (id TEXT PRIMARY KEY NOT NULL, repository_id TEXT NOT NULL REFERENCES repositories(id), queued INTEGER NOT NULL, record TEXT NOT NULL);
+                CREATE INDEX workspace_navigation ON workspaces(repository_id,id);
+                CREATE INDEX queued_workspaces ON workspaces(queued,id);
+                CREATE TABLE workspace_actions (id TEXT PRIMARY KEY NOT NULL, workspace_id TEXT NOT NULL REFERENCES workspaces(id), record TEXT NOT NULL);
+                PRAGMA user_version=2; COMMIT;").map_err(storage)?;
         }
         Ok(Self { connection, path })
     }
@@ -163,6 +171,8 @@ impl RepositoryStore for SqliteStore {
     }
     fn intent(&mut self, req: &RegisterRepository) -> Result<Registration> {
         let action = Registration {
+            create_initial_workspace: req.create_initial_workspace,
+            initial_workspace_id: None,
             action_id: req.action_id,
             path: req.path.clone(),
             state: RegistrationState::Pending,
@@ -215,6 +225,7 @@ impl RepositoryStore for SqliteStore {
         action: &Registration,
         repository: Option<&RepositoryRecord>,
         status: &RegistrationState,
+        initial: Option<&Workspace>,
     ) -> Result<Registration> {
         let action = Registration {
             state: status.clone(),
@@ -226,6 +237,9 @@ impl RepositoryStore for SqliteStore {
         self.write(|db| {
             if let Some((repo, json)) = repository {
                 db.execute("INSERT INTO repositories (id,common_dir,record) VALUES (?1,?2,?3) ON CONFLICT(id) DO NOTHING", params![repo.id.0.to_string(), repo.common_dir, json]).map_err(storage)?;
+            }
+            if let Some(workspace) = initial {
+                write_workspace(db, workspace, Some(&WorkspaceAction::Create { action_id: workspace.creation_action_id, repository_id: workspace.repository_id }))?;
             }
             let changed = db.execute("UPDATE registration_actions SET pending=0,record=?2 WHERE id=?1 AND pending=1", params![action.action_id.0.to_string(), encoded]).map_err(storage)?;
             if changed != 1 { return Err(storage("Registration no longer has pending intent")); }
@@ -255,6 +269,104 @@ impl RepositoryStore for SqliteStore {
             )
             .map_err(storage)?;
         rows.map(|r| decode(r.map_err(storage)?)).collect()
+    }
+}
+
+fn write_workspace(
+    db: &Connection,
+    workspace: &Workspace,
+    action: Option<&WorkspaceAction>,
+) -> Result<()> {
+    db.execute("INSERT INTO workspaces(id,repository_id,queued,record) VALUES (?1,?2,?3,?4) ON CONFLICT(id) DO UPDATE SET queued=excluded.queued,record=excluded.record", params![workspace.id.0.to_string(), workspace.repository_id.0.to_string(), i64::from(workspace.status == CreationStatus::Queued), encode(workspace)?]).map_err(storage)?;
+    if let Some(action) = action {
+        db.execute(
+            "INSERT INTO workspace_actions(id,workspace_id,record) VALUES (?1,?2,?3)",
+            params![
+                action.id().0.to_string(),
+                workspace.id.0.to_string(),
+                encode(action)?
+            ],
+        )
+        .map_err(storage)?;
+    }
+    Ok(())
+}
+impl CreationStore for SqliteStore {
+    fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>> {
+        self.ensure_committed()?;
+        self.read(
+            "SELECT record FROM workspaces WHERE id=?1",
+            &id.0.to_string(),
+        )
+    }
+    fn workspace_action(&mut self, id: ActionId) -> Result<Option<(WorkspaceAction, WorkspaceId)>> {
+        self.ensure_committed()?;
+        self.connection
+            .query_row(
+                "SELECT record,workspace_id FROM workspace_actions WHERE id=?1",
+                [id.0.to_string()],
+                |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+            )
+            .optional()
+            .map_err(storage)?
+            .map(|(a, w)| {
+                Ok((
+                    decode(a)?,
+                    WorkspaceId(uuid::Uuid::parse_str(&w).map_err(storage)?),
+                ))
+            })
+            .transpose()
+    }
+    fn save_workspace(
+        &mut self,
+        workspace: &Workspace,
+        action: Option<&WorkspaceAction>,
+    ) -> Result<()> {
+        self.ensure_committed()?;
+        self.write(|db| write_workspace(db, workspace, action))
+    }
+    fn workspace_pending(&mut self) -> Result<Option<Workspace>> {
+        self.ensure_committed()?;
+        self.connection
+            .query_row(
+                "SELECT record FROM workspaces WHERE queued=1 ORDER BY id LIMIT 1",
+                [],
+                |r| r.get::<_, String>(0),
+            )
+            .optional()
+            .map_err(storage)?
+            .map(decode)
+            .transpose()
+    }
+    fn workspace_cleanup_blocked(&mut self, repository: RepositoryId) -> Result<bool> {
+        self.ensure_committed()?;
+        self.connection.query_row("SELECT EXISTS(SELECT 1 FROM workspaces WHERE repository_id=?1 AND json_extract(record,'$.cleanup_unconfirmed')=1)", [repository.0.to_string()], |r| r.get(0)).map_err(storage)
+    }
+    fn workspace_count_pending(&mut self) -> Result<usize> {
+        self.ensure_committed()?;
+        let count: i64 = self.connection.query_row("SELECT COUNT(*) FROM workspaces WHERE queued=1 OR json_extract(record,'$.status.state')='running'", [], |r| r.get(0)).map_err(storage)?;
+        usize::try_from(count).map_err(storage)
+    }
+    fn workspace_list(
+        &mut self,
+        repository: RepositoryId,
+        after: Option<WorkspaceId>,
+        limit: usize,
+    ) -> Result<Vec<Workspace>> {
+        self.ensure_committed()?;
+        let mut query = self.connection.prepare("SELECT record FROM workspaces WHERE repository_id=?1 AND id>?2 ORDER BY id LIMIT ?3").map_err(storage)?;
+        query
+            .query_map(
+                params![
+                    repository.0.to_string(),
+                    after.map(|id| id.0.to_string()).unwrap_or_default(),
+                    i64::try_from(limit).map_err(storage)?
+                ],
+                |r| r.get::<_, String>(0),
+            )
+            .map_err(storage)?
+            .map(|r| decode(r.map_err(storage)?))
+            .collect()
     }
 }
 

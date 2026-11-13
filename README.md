@@ -7,8 +7,9 @@ supervisor discovery, status and reconnect. Ticket 02a established the React/sha
 is preserved. The current [Sidebar refactor and branding fix](docs/evidence/milestone-01-sidebar-refactor.md#actual-tauri-requalification--2026-11-1213)
 passed actual Tauri requalification on 2026-11-12–13.
 Ticket 03 adds existing-repository registration, durable identity, per-repository
-details and restored navigation. Tickets 04–06 (isolated workspaces, change inspection
-and Codex setup), chat and the rest of the milestone remain unimplemented.
+details and restored navigation. Ticket 04 adds immediate isolated-workspace creation and explicit recovery.
+Change inspection, Codex setup, chat and the remaining milestone tickets remain
+unimplemented.
 
 ## Development
 
@@ -32,12 +33,8 @@ Read [testing and verification](docs/agents/verification.md) before selecting
 commands. The checked-out package scripts define available commands. Tickets
 01–02 predate that policy; their completed desktop/process evidence is retained.
 The current default test gate is unit-only, with controlled filesystem, process,
-transport and time outcomes. The verification foundation originally planned for
-ticket 03 was brought forward and remains the default gate.
-The application test gate uses units with controlled filesystem, process,
-transport and time outcomes. The tooling gate also runs bounded native Oxlint CLI
-configuration checks against disposable source fixtures. The verification foundation originally planned for
-ticket 03 has been brought forward; repository registration remains unimplemented.
+transport and time outcomes. The tooling gate also runs bounded native Oxlint CLI configuration checks
+against disposable source fixtures.
 
 | Command                         | Purpose                                                                                                                                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -101,7 +98,17 @@ and registration performs read-only Git inspection without starting agents.
 Desktop preferences remember the last selection and an uncertain registration's
 action ID. Refresh retrieves authoritative status; edited paths are separate explicit
 requests after the pending action is resolved. No repository relocation or removal
-workflow is implemented. Protocol 2 requires matching desktop/supervisor builds.
+workflow is implemented. Protocol 3 requires matching desktop/supervisor builds. SQLite schema 2 migrates
+existing registrations without changing their identities.
+
+Adding a new repository records its first-workspace continuation atomically with
+registration. The repository's + creates another immediately. Generated city/UUID
+names, branches and managed folders remain stable across recovery. Creation uses
+locally available origin/HEAD, otherwise exactly one usable local main/master;
+missing or ambiguous defaults remain actionable. No creation dialog, base picker,
+fetch, setup script or Codex launch occurs. Workspace details show the pinned base,
+branch, folder, progress and partial artifacts. Explicit reconciliation retrieves
+and safely continues the same workspace; refresh never repeats uncertain effects.
 
 As remaining tickets add behavior, `workspaces` extends workspace policy and
 `runtimes` owns provider process mechanics.
@@ -111,8 +118,8 @@ See the [product contract](docs/MVP.md), [milestone status](docs/MILESTONE-01.md
 [bootstrap evidence](docs/evidence/milestone-01-bootstrap.md) and
 [discovery evidence](docs/evidence/milestone-01-discovery.md) and
 [UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md) and
-[repository registration evidence](docs/evidence/milestone-01-repositories.md).
-[UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md).
+[repository registration evidence](docs/evidence/milestone-01-repositories.md) and
+[workspace evidence](docs/evidence/milestone-01-workspaces.md).
 
 ## Frontend tooling
 

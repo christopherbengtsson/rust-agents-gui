@@ -85,6 +85,20 @@ impl Core {
             .request(request)
     }
 
+    pub fn workspace_request(
+        &self,
+        request: workspaces::WorkspaceRequest,
+    ) -> Result<workspaces::WorkspaceReply, workspaces::RepositoryError> {
+        self.workspaces
+            .as_ref()
+            .ok_or_else(|| {
+                workspaces::RepositoryError::storage(
+                    "Workspace storage has not been opened by the execution owner",
+                )
+            })?
+            .workspace_request(request)
+    }
+
     pub fn status(&self) -> SupervisorStatus {
         SupervisorStatus {
             state: SupervisorState::Ready,

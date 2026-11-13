@@ -22,6 +22,24 @@ async fn repository_request(
     .map_err(|e| repository_connection_error(format!("Repository request task failed: {e}")))?
 }
 
+#[tauri::command]
+async fn workspace_request(
+    request: workspace_core::workspaces::WorkspaceRequest,
+    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+) -> Result<workspace_core::workspaces::WorkspaceReply, RepositoryError> {
+    let connection = connection.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        connection
+            .lock()
+            .map_err(|e| repository_connection_error(e.to_string()))?
+            .as_ref()
+            .ok_or_else(|| repository_connection_error("Connect to the supervisor first".into()))?
+            .workspace_request(request)
+    })
+    .await
+    .map_err(|e| repository_connection_error(format!("Workspace request task failed: {e}")))?
+}
+
 fn repository_connection_error(message: String) -> RepositoryError {
     RepositoryError {
         code: ErrorCode::Connection,
@@ -73,7 +91,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             supervisor_status,
             desktop_pid,
-            repository_request
+            repository_request,
+            workspace_request
         ])
         .run(tauri::generate_context!())
         .expect("failed to run desktop");

@@ -395,6 +395,7 @@ fn request(protocol: u32, version: &str, after: Option<SnapshotCursor>) -> Vec<u
         application_version: version.into(),
         after,
         repository: None,
+        workspace: None,
     })
     .unwrap();
     bytes.push(b'\n');
@@ -448,6 +449,7 @@ fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navi
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
+        workspace: None,
         repository: Some(RepositoryRequest::List {
             after: None,
             refresh: false,
@@ -476,6 +478,7 @@ fn oversized_registration_is_a_definite_capacity_rejection_before_transport() {
     ] {
         let request = RepositoryRequest::Register {
             request: crate::workspaces::RegisterRepository {
+                create_initial_workspace: false,
                 action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(1)),
                 path,
             },
@@ -500,6 +503,7 @@ fn bounded_registration_uses_transport_and_preserves_uncertain_failures() {
     ] {
         let request = RepositoryRequest::Register {
             request: crate::workspaces::RegisterRepository {
+                create_initial_workspace: false,
                 action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(1)),
                 path,
             },

@@ -26,7 +26,7 @@ This follows Conductor's documented [workspace loop](https://www.conductor.build
 
 | Capability | Acceptance evidence |
 | --- | --- |
-| Repository and workspace navigation | Add two existing repositories without modifying them or starting agents. Fetch the configured remote before creating a branch/worktree from its configured base; pin the resolved commit. Fetch failure is visible and requires an explicit choice to use an identified local commit. Repositories without a remote use a selected local base. Setup failure retains the workspace and offers explicit recovery without duplicate creation or automatic launch. |
+| Repository and workspace navigation | Add existing repositories without changing original-checkout files or starting agents. Adding a new repository also requests its first isolated workspace as a separate durable operation; repository + requests another immediately. Generate names and managed folders. Fetch the configured remote before creating a branch/worktree from its configured base; pin the resolved commit. Fetch failure is visible and requires an explicit choice to use an identified local commit. Repositories without a remote use a selected local base. Setup failure retains the workspace and offers explicit recovery without duplicate creation or automatic launch. |
 | Integrated chat | With either configured provider, send multiline text, file references, and uploaded images; see streamed text, tool activity, errors, and supported model/effort choices. Include Plan Mode: inspect a readable plan and explicitly approve implementation or send feedback. Plan approval and tool approval are distinct. Qualify each provider's actual mode support. Provider changes create separate conversations. Retain uploaded content for later history. |
 | Concurrent work | Demonstrate two active chats sharing one workspace and another active workspace. Switching views stops none of them. Events, sends, approvals, and completion remain attached to the exact chat/turn. Show one shared diff and explain overlapping-edit risk. Reject duplicate ownership of a native conversation. |
 | Human control | Show running, waiting, completed, interrupted, failed, or unknown based on runtime evidence. Approve once/deny the exact pending operation; reject stale approvals. Interrupt a turn separately from stopping a runtime. Follow-ups steer where supported and distinguish pending from received. |
@@ -103,3 +103,13 @@ The first working slice is defined in [MILESTONE-01.md](MILESTONE-01.md). Read i
 No additional product decision blocks starting that slice. Public distribution and a full TUI can be decided later. Qualification gaps are engineering evidence to obtain, not questions for the user to guess.
 
 Local sources: [subscription research](../../rust-agent-terminal/docs/research/subscription-chat-integration.md), [Claude source reconciliation](../../rust-agent-terminal/docs/research/claude-subscription-answer-check.md), [accepted RAT chat decisions](../../rust-agent-terminal/.scratch/integrated-agent-chat/decisions.md), [proof and retained artifact inventory](../../rust-agent-terminal/.scratch/integrated-agent-chat/proof-results.md), [ADR 0008](../../rust-agent-terminal/docs/adr/0008-integrated-chat-over-official-agent-runtimes.md), and [desktop/CLI architecture research](../../agent-workspace-research/desktop-cli-architecture.md). These are evidence links, not imported implementation obligations.
+
+## Workspace creation sequencing decision — 2026-11-13
+
+Milestone 01 defers the composer dialog and base picker. Use the locally available
+origin/HEAD commit, otherwise an unambiguous local main/master commit; missing or
+ambiguous defaults fail visibly. No fetch occurs in this milestone. Registration
+and its first-workspace continuation retain separate durable identities. Creation
+never starts Codex. This updates the earlier manually selected-base requirement;
+full-MVP configured-base fetching remains required. See
+[creation research](research/ticket-04-conductor-workspace-flow.md).

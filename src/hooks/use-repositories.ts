@@ -22,6 +22,10 @@ type Navigation = {
 
 // App calls this once. Selection and action ownership survive disclosure/dialog changes.
 export function useRepositories(owner: string | undefined) {
+  const [initialWorkspace, setInitialWorkspace] = useState<{
+    repository_id: string;
+    workspace_id: string;
+  } | null>(null);
   const [navigation, setNavigation] = useState<Navigation>({ loading: true });
   const [pending, setPending] = useState(readPending);
   const [actionError, setActionError] = useState<RepositoryError>();
@@ -65,6 +69,11 @@ export function useRepositories(owner: string | undefined) {
       selection.current === pending.selection
     ) {
       selection.current = action.repository_id;
+      if (action.initial_workspace_id)
+        setInitialWorkspace({
+          repository_id: action.repository_id,
+          workspace_id: action.initial_workspace_id,
+        });
       try {
         localStorage.setItem(SELECTION_KEY, action.repository_id);
       } catch {
@@ -239,7 +248,11 @@ export function useRepositories(owner: string | undefined) {
       return false;
     }
     const intent: PendingRegistration = old ?? {
-      request: { action_id: crypto.randomUUID(), path },
+      request: {
+        action_id: crypto.randomUUID(),
+        path,
+        create_initial_workspace: true,
+      },
       selection: selection.current,
     };
     try {
@@ -312,6 +325,7 @@ export function useRepositories(owner: string | undefined) {
   }
   return {
     ...navigation,
+    initialWorkspace,
     pending,
     submitting,
     actionError,

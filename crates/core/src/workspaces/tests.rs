@@ -4,6 +4,8 @@ use std::collections::BTreeMap;
 #[derive(Default)]
 struct Store {
     actions: BTreeMap<ActionId, Registration>,
+    workspaces: BTreeMap<WorkspaceId, Workspace>,
+    workspace_actions: BTreeMap<ActionId, (WorkspaceAction, WorkspaceId)>,
     repositories: BTreeMap<RepositoryId, RepositoryRecord>,
     calls: Vec<&'static str>,
     fail_intent: bool,
@@ -20,6 +22,8 @@ impl RepositoryStore for Store {
             return Err(RepositoryError::storage("disk full"));
         }
         let action = Registration {
+            create_initial_workspace: req.create_initial_workspace,
+            initial_workspace_id: None,
             action_id: req.action_id,
             path: req.path.clone(),
             state: RegistrationState::Pending,
@@ -53,10 +57,20 @@ impl RepositoryStore for Store {
         a: &Registration,
         r: Option<&RepositoryRecord>,
         state: &RegistrationState,
+        initial: Option<&Workspace>,
     ) -> Result<Registration> {
         self.calls.push("finish");
         if self.finish_fault == Some(false) {
             return Err(RepositoryError::storage("commit failed"));
+        }
+        if let Some(w) = initial {
+            self.save_workspace(
+                w,
+                Some(&WorkspaceAction::Create {
+                    action_id: w.creation_action_id,
+                    repository_id: w.repository_id,
+                }),
+            )?;
         }
         if let Some(r) = r {
             self.repositories.insert(r.id, r.clone());
@@ -177,6 +191,7 @@ fn invalid_validation_records_an_actionable_failure_without_a_saved_repository()
             ErrorCode::InvalidPath,
             "Folder unavailable; restore its location",
         )),
+        Path::new("/private/state"),
     )
     .unwrap();
     assert!(
@@ -193,6 +208,7 @@ fn separate_clones_keep_separate_identity_even_with_the_same_name() {
         let action = admit(
             &mut store,
             &RegisterRepository {
+                create_initial_workspace: false,
                 action_id: ActionId(Uuid::from_u128(number)),
                 path: path.into(),
             },
@@ -202,6 +218,7 @@ fn separate_clones_keep_separate_identity_even_with_the_same_name() {
             &mut store,
             &action,
             validation(path, &format!("{path}/.git")),
+            Path::new("/private/state"),
         )
         .unwrap();
     }
@@ -218,6 +235,7 @@ fn uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains
             &mut store,
             &action,
             validation("/projects/one", "/projects/one/.git"),
+            Path::new("/private/state"),
         );
         if committed {
             assert!(matches!(
@@ -236,14 +254,16 @@ fn uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains
     }
 }
 
-fn state(store: Store) -> Mutex<WorkspaceState> {
-    Mutex::new(WorkspaceState {
+fn state(store: Store) -> Mutex<OwnerState> {
+    Mutex::new(OwnerState {
         directory: "/unused-private-state".into(),
         store: Ok(Box::new(store)),
         cache: VecDeque::new(),
         probes: VecDeque::new(),
         fault: None,
         revision: 1,
+        active_workspace: None,
+        workspace_fault: None,
     })
 }
 
@@ -348,6 +368,7 @@ fn bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count(
         admit(
             &mut store,
             &RegisterRepository {
+                create_initial_workspace: false,
                 action_id: ActionId(Uuid::from_u128(number)),
                 path: "/one".into(),
             },
@@ -358,6 +379,7 @@ fn bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count(
         admit(
             &mut store,
             &RegisterRepository {
+                create_initial_workspace: false,
                 action_id: ActionId(Uuid::from_u128(9)),
                 path: "/nine".into()
             }
@@ -370,6 +392,7 @@ fn bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count(
         admit(
             &mut store,
             &RegisterRepository {
+                create_initial_workspace: false,
                 action_id: ActionId(Uuid::from_u128(1)),
                 path: "/one".into()
             }
@@ -410,6 +433,7 @@ fn escaped_path_serialization_reduces_page_size_and_retains_next_cursor() {
 }
 fn request() -> RegisterRepository {
     RegisterRepository {
+        create_initial_workspace: false,
         action_id: ActionId(Uuid::from_u128(1)),
         path: "/projects/one".into(),
     }
@@ -443,9 +467,11 @@ fn validated_aliases_and_linked_worktrees_share_identity_and_first_location() {
             path: "/projects/one".into(),
             common_dir: "/projects/one/.git".into(),
         }),
+        Path::new("/private/state"),
     )
     .unwrap();
     let other = RegisterRepository {
+        create_initial_workspace: false,
         action_id: ActionId(Uuid::from_u128(2)),
         path: "/linked/one".into(),
     };
@@ -458,6 +484,7 @@ fn validated_aliases_and_linked_worktrees_share_identity_and_first_location() {
             path: other.path.clone(),
             common_dir: "/projects/one/.git".into(),
         }),
+        Path::new("/private/state"),
     )
     .unwrap();
     assert_eq!(alias.state, result.state);
@@ -467,4 +494,418 @@ fn validated_aliases_and_linked_worktrees_share_identity_and_first_location() {
         "/projects/one"
     );
     assert_eq!(admit(&mut store, &request()).unwrap(), result);
+}
+
+impl CreationStore for Store {
+    fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>> {
+        Ok(self.workspaces.get(&id).cloned())
+    }
+    fn workspace_action(&mut self, id: ActionId) -> Result<Option<(WorkspaceAction, WorkspaceId)>> {
+        Ok(self.workspace_actions.get(&id).cloned())
+    }
+    fn save_workspace(&mut self, w: &Workspace, a: Option<&WorkspaceAction>) -> Result<()> {
+        if self.fail_intent {
+            return Err(RepositoryError::storage("disk full"));
+        }
+        self.workspaces.insert(w.id, w.clone());
+        if let Some(a) = a {
+            self.workspace_actions.insert(a.id(), (a.clone(), w.id));
+        }
+        Ok(())
+    }
+    fn workspace_pending(&mut self) -> Result<Option<Workspace>> {
+        Ok(self
+            .workspaces
+            .values()
+            .find(|w| w.status == CreationStatus::Queued)
+            .cloned())
+    }
+    fn workspace_cleanup_blocked(&mut self, r: RepositoryId) -> Result<bool> {
+        Ok(self
+            .workspaces
+            .values()
+            .any(|w| w.repository_id == r && w.cleanup_unconfirmed))
+    }
+    fn workspace_count_pending(&mut self) -> Result<usize> {
+        Ok(self
+            .workspaces
+            .values()
+            .filter(|w| {
+                matches!(
+                    w.status,
+                    CreationStatus::Queued | CreationStatus::Running { .. }
+                )
+            })
+            .count())
+    }
+    fn workspace_list(
+        &mut self,
+        r: RepositoryId,
+        after: Option<WorkspaceId>,
+        limit: usize,
+    ) -> Result<Vec<Workspace>> {
+        Ok(self
+            .workspaces
+            .values()
+            .filter(|w| w.repository_id == r && after.is_none_or(|id| w.id > id))
+            .take(limit)
+            .cloned()
+            .collect())
+    }
+}
+
+#[test]
+fn initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace() {
+    let mut store = Store::default();
+    let req = RegisterRepository {
+        create_initial_workspace: true,
+        ..request()
+    };
+    let pending = admit(&mut store, &req).unwrap();
+    let completed = finish_registration(
+        &mut store,
+        &pending,
+        validation("/repo", "/repo/.git"),
+        Path::new("/state"),
+    )
+    .unwrap();
+    assert!(completed.initial_workspace_id.is_some());
+    assert_eq!(store.workspaces.len(), 1);
+    assert_eq!(admit(&mut store, &req).unwrap(), completed);
+    let duplicate = RegisterRepository {
+        action_id: ActionId(Uuid::new_v4()),
+        ..req
+    };
+    let pending = admit(&mut store, &duplicate).unwrap();
+    let reused = finish_registration(
+        &mut store,
+        &pending,
+        validation("/repo", "/repo/.git"),
+        Path::new("/state"),
+    )
+    .unwrap();
+    assert_eq!(reused.initial_workspace_id, None);
+    assert_eq!(store.workspaces.len(), 1);
+}
+#[test]
+fn workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity() {
+    let mut store = Store::default();
+    let req = request();
+    let pending = admit(&mut store, &req).unwrap();
+    let registration = finish_registration(
+        &mut store,
+        &pending,
+        validation("/repo", "/repo/.git"),
+        Path::new("/state"),
+    )
+    .unwrap();
+    let RegistrationState::Completed { repository_id } = registration.state else {
+        panic!()
+    };
+    let action = WorkspaceAction::Create {
+        action_id: ActionId(Uuid::new_v4()),
+        repository_id,
+    };
+    let w = admit_workspace(&mut store, Path::new("/state"), &action, None).unwrap();
+    assert_eq!(
+        admit_workspace(&mut store, Path::new("/other"), &action, None).unwrap(),
+        w
+    );
+    assert_eq!(store.workspaces.len(), 1);
+    assert!(
+        admit_workspace(
+            &mut store,
+            Path::new("/state"),
+            &WorkspaceAction::Reconcile {
+                action_id: action.id(),
+                workspace_id: w.id
+            },
+            None
+        )
+        .is_err()
+    );
+    let mut interrupted = w.clone();
+    interrupted.status = CreationStatus::Running {
+        stage: CreationStage::CreatingBranch,
+    };
+    store.save_workspace(&interrupted, None).unwrap();
+    assert_eq!(
+        admit_workspace(&mut store, Path::new("/state"), &action, None)
+            .unwrap()
+            .status,
+        interrupted.status
+    );
+    let recovered = admit_workspace(
+        &mut store,
+        Path::new("/state"),
+        &WorkspaceAction::Reconcile {
+            action_id: ActionId(Uuid::new_v4()),
+            workspace_id: w.id,
+        },
+        None,
+    )
+    .unwrap();
+    assert_eq!(recovered.id, w.id);
+    assert_eq!(recovered.path, w.path);
+    assert_eq!(recovered.status, CreationStatus::Queued);
+    assert!(
+        admit_workspace(
+            &mut store,
+            Path::new("/state"),
+            &WorkspaceAction::Create {
+                action_id: req.action_id,
+                repository_id
+            },
+            None
+        )
+        .is_err()
+    );
+}
+#[test]
+fn restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it() {
+    let mut w = allocate(
+        RepositoryId(Uuid::nil()),
+        ActionId(Uuid::nil()),
+        Path::new("/state"),
+    )
+    .unwrap();
+    w.status = CreationStatus::Running {
+        stage: CreationStage::CreatingWorktree,
+    };
+    let mut store = Store::default();
+    store.save_workspace(&w, None).unwrap();
+    let shared = state(store);
+    let mut owner = shared.lock().unwrap();
+    let restored: Workspace = serde_json::from_str(&serde_json::to_string(&w).unwrap()).unwrap();
+    assert!(matches!(
+        owner.workspace_observation(restored).status,
+        CreationStatus::Uncertain { .. }
+    ));
+    assert!(
+        owner
+            .store()
+            .unwrap()
+            .workspace_pending()
+            .unwrap()
+            .is_none()
+    );
+}
+#[test]
+fn recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded() {
+    let mut w = allocate(
+        RepositoryId(Uuid::nil()),
+        ActionId(Uuid::nil()),
+        Path::new("/state"),
+    )
+    .unwrap();
+    w.path = "\\".repeat(8500); // JSON escaping counts toward the metadata byte budget.
+    check_workspace_budget(&w).unwrap();
+    w.status = CreationStatus::Uncertain {
+        error: RepositoryError::storage("x".repeat(10000)),
+    };
+    w.base = Some(PinnedBase {
+        reference: "refs/remotes/origin/HEAD".into(),
+        commit: "f".repeat(64),
+    });
+    assert!(
+        serde_json::to_vec(&WorkspaceReply::Workspace {
+            workspace: Some(w.clone())
+        })
+        .unwrap()
+        .len()
+            < 24 * 1024
+    );
+    w.path = "\\".repeat(12000);
+    assert!(check_workspace_budget(&w).is_err());
+}
+
+#[test]
+fn creation_keeps_pending_observations_readable_during_every_effect() {
+    let repository = RepositoryRecord {
+        id: RepositoryId(Uuid::new_v4()),
+        name: "repo".into(),
+        path: "/repo".into(),
+        common_dir: "/repo/.git".into(),
+    };
+    let w = allocate(repository.id, ActionId(Uuid::new_v4()), Path::new("/state")).unwrap();
+    let mut store = Store::default();
+    store.repositories.insert(repository.id, repository);
+    store.save_workspace(&w, None).unwrap();
+    let service = Workspaces {
+        shared: Arc::new(state(store)),
+        wake: None,
+        worker: None,
+    };
+    struct Reading<'a> {
+        service: &'a Workspaces,
+        artifacts: Artifacts,
+    }
+    impl Reading<'_> {
+        fn status(&self, w: &Workspace, stage: CreationStage) {
+            let WorkspaceReply::Workspace {
+                workspace: Some(observed),
+            } = self
+                .service
+                .workspace_request(WorkspaceRequest::Get { id: w.id })
+                .unwrap()
+            else {
+                panic!()
+            };
+            assert_eq!(observed.status, CreationStatus::Running { stage });
+        }
+    }
+    impl CreationEffects for Reading<'_> {
+        fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
+            Ok(true)
+        }
+        fn base(&mut self, _: &RepositoryRecord) -> Result<PinnedBase> {
+            Ok(PinnedBase {
+                reference: "refs/heads/main".into(),
+                commit: "a".repeat(40),
+            })
+        }
+        fn inspect(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<Artifacts> {
+            Ok(self.artifacts.clone())
+        }
+        fn reserve(&mut self, w: &Workspace) -> Result<()> {
+            self.status(w, CreationStage::ReservingFolder);
+            self.artifacts.folder = FolderArtifact::Reserved;
+            Ok(())
+        }
+        fn branch(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
+            self.status(w, CreationStage::CreatingBranch);
+            self.artifacts.branch = BranchArtifact::Owned;
+            Ok(())
+        }
+        fn worktree(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
+            self.status(w, CreationStage::CreatingWorktree);
+            self.artifacts.folder = FolderArtifact::Worktree;
+            Ok(())
+        }
+    }
+    let mut effects = Reading {
+        service: &service,
+        artifacts: Artifacts {
+            branch: BranchArtifact::Absent,
+            folder: FolderArtifact::Absent,
+        },
+    };
+    assert!(process_creation(&service.shared, &mut effects));
+    let WorkspaceReply::Workspace {
+        workspace: Some(ready),
+    } = service
+        .workspace_request(WorkspaceRequest::Get { id: w.id })
+        .unwrap()
+    else {
+        panic!()
+    };
+    assert_eq!(ready.status, CreationStatus::Ready);
+}
+#[test]
+fn workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit() {
+    let repository_id = RepositoryId(Uuid::new_v4());
+    let mut store = Store::default();
+    for number in 1..=70 {
+        let mut w = allocate(
+            repository_id,
+            ActionId(Uuid::from_u128(number)),
+            Path::new("/state"),
+        )
+        .unwrap();
+        w.id = WorkspaceId(Uuid::from_u128(number));
+        w.path = "\\".repeat(7000);
+        w.status = CreationStatus::Ready;
+        store.save_workspace(&w, None).unwrap();
+    }
+    assert_eq!(store.workspace_count_pending().unwrap(), 0);
+    let service = Workspaces {
+        shared: Arc::new(state(store)),
+        wake: None,
+        worker: None,
+    };
+    let mut after = None;
+    let mut seen = vec![];
+    loop {
+        let reply = service
+            .workspace_request(WorkspaceRequest::List {
+                repository_id,
+                after,
+            })
+            .unwrap();
+        assert!(serde_json::to_vec(&reply).unwrap().len() < 64 * 1024);
+        let WorkspaceReply::Workspaces { page } = reply else {
+            panic!()
+        };
+        assert!(page.workspaces.len() <= 32);
+        seen.extend(page.workspaces.iter().map(|w| w.id));
+        if page.next.is_none() {
+            break;
+        }
+        after = page.next;
+    }
+    assert_eq!(seen.len(), 70);
+    seen.dedup();
+    assert_eq!(seen.len(), 70);
+}
+
+#[test]
+fn failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault() {
+    let repository = RepositoryRecord {
+        id: RepositoryId(Uuid::new_v4()),
+        name: "repo".into(),
+        path: "/repo".into(),
+        common_dir: "/repo/.git".into(),
+    };
+    let mut store = Store::default();
+    store.repositories.insert(repository.id, repository.clone());
+    store.fail_intent = true;
+    let action = WorkspaceAction::Create {
+        action_id: ActionId(Uuid::new_v4()),
+        repository_id: repository.id,
+    };
+    assert!(admit_workspace(&mut store, Path::new("/state"), &action, None).is_err());
+    assert!(store.workspaces.is_empty());
+    assert!(store.workspace_actions.is_empty());
+    store.fail_intent = false;
+    let mut w = admit_workspace(&mut store, Path::new("/state"), &action, None).unwrap();
+    w.status = CreationStatus::Failed {
+        error: RepositoryError::storage("failure"),
+    };
+    store.save_workspace(&w, None).unwrap();
+    let recovery = WorkspaceAction::Reconcile {
+        action_id: ActionId(Uuid::new_v4()),
+        workspace_id: w.id,
+    };
+    admit_workspace(&mut store, Path::new("/state"), &recovery, None).unwrap();
+    let shared = Arc::new(state(store));
+    shared.lock().unwrap().workspace_fault = Some((
+        w.id,
+        RepositoryError::storage("write failed before mutation"),
+    ));
+    let service = Workspaces {
+        shared,
+        wake: None,
+        worker: None,
+    };
+    let WorkspaceAction::Reconcile {
+        action_id,
+        workspace_id,
+    } = recovery
+    else {
+        panic!()
+    };
+    let WorkspaceReply::Action {
+        workspace: Some(observed),
+        ..
+    } = service
+        .workspace_request(WorkspaceRequest::Reconcile {
+            action_id,
+            workspace_id,
+        })
+        .unwrap()
+    else {
+        panic!()
+    };
+    assert!(matches!(observed.status, CreationStatus::Uncertain { .. }));
+    assert!(service.shared.lock().unwrap().workspace_fault.is_some());
 }

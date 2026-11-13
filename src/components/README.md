@@ -156,3 +156,23 @@ transitive dependencies, and variant usefulness still require review.
 
 For primary-source rationale and the article's stack adaptations, consult
 [component convention research](../../docs/research/shadcn-agent-conventions.md).
+
+### Workspace creation
+
+- **WorkspaceDetails** (`blocks/workspace-details.tsx`) owns selected-workspace
+  identity, observed creation stage, pinned base, branch/folder evidence and the
+  explicit reconciliation callback. Use it for workspace creation/result/recovery;
+  use WorkspacePanel for the screen and RepositorySidebar for navigation. It has
+  no IPC or execution policy. Shared appearance uses semantic tokens; long names,
+  branches and paths wrap without hiding recovery controls.
+- RepositorySidebar now includes independent native-button workspace children and
+  an accessible per-repository +. Existing selection/disclosure remains separate.
+  WorkspacePanel composes WorkspaceDetails and retained transport/preference errors.
+- App calls `useWorkspaces` once. It owns bounded pages, workspace selection and
+  pending action status across navigation. Reconnect only reads. Creation and
+  recovery callbacks retain explicit target IDs; late replies cannot steal changed
+  selection. The existing compiler cannot lower finally blocks in the observation
+  hook, so stable callbacks retain lifecycle cleanup as in useRepositories.
+- Add repository explains the automatic first workspace and lack of agent launch.
+  No additional shadcn component or custom primitive was needed. Existing controls
+  retain their local compact variants and Base UI render contracts.

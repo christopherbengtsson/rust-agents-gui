@@ -1,0 +1,11 @@
+{
+  "root": "/private/tmp/rag04-desktop-iu1f_8u7",
+  "state": "/private/tmp/rag04-desktop-iu1f_8u7/state",
+  "repo": "/private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha",
+  "app": "/private/tmp/rag04-desktop-iu1f_8u7/Workspace Qualification.app",
+  "desktop_pid": 52707,
+  "binary_hashes": {
+    "Contents/MacOS/workspace-desktop": "3fc59f9324f78bb5c2d513680b5b0b8de9315899abcbb35f78a18016ce05ffca",
+    "Contents/Resources/workspace-supervisor": "de367a329c2523760821050258fcc8ee16f1a295e8b86d65ba53328a1602f4e1"
+  }
+}

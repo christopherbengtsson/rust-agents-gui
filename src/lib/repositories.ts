@@ -14,12 +14,21 @@ export type RepositoryPage = {
   repositories: Repository[];
   next: string | null;
 };
-export type Registration = { action_id: string; path: string } & (
+export type Registration = {
+  action_id: string;
+  path: string;
+  initial_workspace_id?: string | null;
+  create_initial_workspace?: boolean;
+} & (
   | { state: "pending" }
   | { state: "completed"; repository_id: string }
   | { state: "failed"; error: RepositoryError }
 );
-export type RegistrationRequest = { action_id: string; path: string };
+export type RegistrationRequest = {
+  action_id: string;
+  path: string;
+  create_initial_workspace?: boolean;
+};
 export type RepositoryRequest =
   | { operation: "register"; request: RegistrationRequest }
   | { operation: "action"; action_id: string }
@@ -71,6 +80,9 @@ function registration(value: unknown): value is Registration {
     object(value) &&
     identity(value.action_id) &&
     typeof value.path === "string" &&
+    (value.initial_workspace_id === undefined ||
+      value.initial_workspace_id === null ||
+      identity(value.initial_workspace_id)) &&
     (value.state === "pending" ||
       (value.state === "completed" && identity(value.repository_id)) ||
       (value.state === "failed" && error(value.error)))
@@ -170,12 +182,16 @@ export function readPending(): PendingRegistration | null {
       object(value.request) &&
       identity(value.request.action_id) &&
       typeof value.request.path === "string" &&
+      (value.request.create_initial_workspace === undefined ||
+        typeof value.request.create_initial_workspace === "boolean") &&
       (value.selection === null || identity(value.selection))
     ) {
       return {
         request: {
           action_id: value.request.action_id,
           path: value.request.path,
+          create_initial_workspace:
+            value.request.create_initial_workspace === true,
         },
         selection: value.selection,
       };
