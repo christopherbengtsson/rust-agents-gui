@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import {
   act,
   cleanup,
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -54,6 +55,53 @@ const snapshot = {
   reset: false,
 };
 
+test("Settings replaces the workbench, tells the truth, and returns keyboard focus", async () => {
+  const user = userEvent.setup();
+  mockConnection(async (command) =>
+    command === "desktop_pid" ? 42 : snapshot,
+  );
+  render(<App />);
+  await screen.findByRole("button", { name: "Refresh status" });
+  const trigger = screen.getByRole("button", { name: "Settings" });
+  trigger.focus();
+  await user.keyboard("{Enter}");
+  const heading = screen.getByRole("heading", { level: 1, name: "Settings" });
+  expect(document.activeElement).toBe(heading);
+  expect(screen.getAllByRole("main")).toHaveLength(1);
+  expect(screen.getByRole("main").id).toBe("settings");
+  expect(screen.queryByRole("complementary")).toBeNull();
+  expect(
+    screen.getByRole("link", { name: "Skip to settings" }).getAttribute("href"),
+  ).toBe("#settings");
+  expect(
+    within(screen.getByRole("navigation", { name: "Settings categories" }))
+      .getByRole("button", { name: "Agent runtimes" })
+      .getAttribute("aria-current"),
+  ).toBe("page");
+  expect(screen.getByRole("heading", { name: "Codex" })).toBeDefined();
+  expect(screen.getByText("No setup diagnostic has run.")).toBeDefined();
+  expect(screen.queryByRole("button", { name: /check|save/i })).toBeNull();
+  expect(screen.queryByText("Claude")).toBeNull();
+  const ids = Array.from(
+    document.querySelectorAll("[id]"),
+    (element) => element.id,
+  );
+  expect(new Set(ids).size).toBe(ids.length);
+  await user.tab();
+  expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "Back" }),
+  );
+  await user.keyboard("{Enter}");
+  expect(screen.getByRole("main").id).toBe("workspace");
+  expect(document.activeElement).toBe(trigger);
+  expect(connectionCalls()).toHaveLength(2);
+  await user.click(trigger);
+  await user.click(screen.getByRole("button", { name: "Agent runtimes" }));
+  expect(document.activeElement).toBe(
+    screen.getByRole("heading", { level: 2, name: "Agent runtimes" }),
+  );
+});
+
 test.each([600, 900])(
   "the fixed shell preserves landmarks and empty navigation at width %i without global collapse or cookies",
   async (width) => {
@@ -92,7 +140,12 @@ test.each([600, 900])(
     ).toBe("A place for your next change");
     expect(
       screen.getAllByRole("button").map((button) => button.textContent),
-    ).toEqual(["Add repository", "Connection details", "Refresh status"]);
+    ).toEqual([
+      "Add repository",
+      "Settings",
+      "Connection details",
+      "Refresh status",
+    ]);
 
     for (const modifier of ["metaKey", "ctrlKey"]) {
       const shortcut = new KeyboardEvent("keydown", {
@@ -126,6 +179,10 @@ test("diagnostics opens from the keyboard and Escape returns focus without readi
   );
   await user.tab();
   await user.tab();
+  expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "Settings" }),
+  );
+  await user.tab();
   const trigger = screen.getByRole("button", { name: "Connection details" });
   expect(document.activeElement).toBe(trigger);
   await user.keyboard("{Enter}");
@@ -140,6 +197,32 @@ test("diagnostics opens from the keyboard and Escape returns focus without readi
   expect(document.activeElement).toBe(trigger);
   expect(connectionCalls()).toHaveLength(2);
 });
+
+test.each(["Add repository", "Connection details"])(
+  "Settings closes %s without restoring hidden focus or reopening its portal",
+  async (name) => {
+    mockConnection(async (command) =>
+      command === "desktop_pid" ? 42 : snapshot,
+    );
+    render(<App />);
+    await screen.findByRole("button", { name: "Refresh status" });
+    const trigger = screen.getByRole("button", { name: "Settings" });
+    fireEvent.click(screen.getByRole("button", { name }));
+    await screen.findByRole("dialog");
+    // Exercise the navigation intent even while a modal owns normal keyboard access.
+    fireEvent.click(trigger);
+    await act(async () => {});
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.activeElement).toBe(
+      screen.getByRole("heading", { level: 1, name: "Settings" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    await act(async () => {});
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+    expect(connectionCalls()).toHaveLength(2);
+  },
+);
 
 test("connection failure stays visible until an explicit status retry; diagnostics never replay work", async () => {
   const user = userEvent.setup();

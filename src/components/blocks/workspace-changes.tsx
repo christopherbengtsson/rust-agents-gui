@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { CSPProvider } from "@base-ui/react/csp-provider";
-import type { PanelImperativeHandle } from "react-resizable-panels";
+import type { Layout, PanelImperativeHandle } from "react-resizable-panels";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -56,15 +56,26 @@ export function WorkspaceInspection({
   workspaceId,
   reader,
   children,
+  disclosureKey = 0,
+  canRestoreFocus,
 }: {
   owner: string | undefined;
   workspaceId: string;
   reader: WorkspaceChangesReader;
   children: ReactNode;
+  disclosureKey?: number;
+  canRestoreFocus?: () => boolean;
 }) {
   const [tab, setTab] = useState("workspace");
   const [collapsed, setCollapsed] = useState(false);
-  const [sheet, setSheet] = useState(false);
+  const [layout, setLayout] = useState<Layout>();
+  const [disclosure, setDisclosure] = useState<{
+    key: number;
+    open: boolean;
+  }>();
+  const sheet = disclosure?.key === disclosureKey && disclosure.open;
+  const setSheet = (open: boolean) =>
+    setDisclosure({ key: disclosureKey, open });
   const narrow = useSyncExternalStore(subscribeNarrow, readNarrow);
   const changes = useWorkspaceChanges(
     owner,
@@ -107,11 +118,11 @@ export function WorkspaceInspection({
               : "Refresh changes"}
           </Button>
           {narrow ? (
-            <Sheet open={sheet} onOpenChange={setSheet}>
+            <Sheet key={disclosureKey} open={!!sheet} onOpenChange={setSheet}>
               <SheetTrigger render={<Button size="sm" variant="outline" />}>
                 Changed files
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent finalFocus={canRestoreFocus}>
                 <SheetHeader>
                   <SheetTitle>Uncommitted changes</SheetTitle>
                   <SheetDescription>
@@ -137,6 +148,8 @@ export function WorkspaceInspection({
         </div>
         <InspectionStatus changes={changes} connected={!!owner} />
         <ResizablePanelGroup
+          defaultLayout={layout}
+          onLayoutChanged={(_, meta) => setLayout(meta.requestedLayout)}
           orientation="horizontal"
           className="inspection-panels"
         >

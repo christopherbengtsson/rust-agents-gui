@@ -1,4 +1,6 @@
 import { completeOperation } from "@/lib/complete-operation";
+import type { SelectionEligibility } from "@/use-app-navigation";
+import type { InitialWorkspaceSelection } from "./use-repositories";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { repositoryError, type RepositoryError } from "@/lib/repositories";
 import {
@@ -17,7 +19,8 @@ export function useWorkspaces(
   owner: string | undefined,
   repositoryId: string | undefined,
   repositoryIds: string,
-  initial: { repository_id: string; workspace_id: string } | null,
+  initial: InitialWorkspaceSelection | null,
+  eligibility: SelectionEligibility,
 ) {
   const [pages, setPages] = useState<Record<string, WorkspacePage>>({});
   const [selected, setSelected] = useState<Workspace>();
@@ -33,8 +36,8 @@ export function useWorkspaces(
   const mounted = useRef(false);
   const epoch = useRef(0);
   const actionEpoch = useRef(0);
-  const navigation = useRef(0);
-  const pendingNavigation = useRef(0);
+  const [restoredNavigation] = useState(eligibility.capture);
+  const pendingNavigation = useRef(restoredNavigation);
   const reading = useRef(false);
   const queued = useRef(false);
   const sending = useRef(false);
@@ -66,7 +69,7 @@ export function useWorkspaces(
   const settleAction = useCallback(
     (request: WorkspaceAction, workspace: Workspace) => {
       if (intent.current?.action_id !== request.action_id) return;
-      if (navigation.current === pendingNavigation.current) remember(workspace);
+      if (eligibility.allows(pendingNavigation.current)) remember(workspace);
       setActionError(undefined);
       intent.current = null;
       setPending(null);
@@ -78,7 +81,7 @@ export function useWorkspaces(
         );
       }
     },
-    [remember],
+    [remember, eligibility],
   );
   // Stable synchronization callback owns the observation subscription lifecycle.
   const read = useCallback(
@@ -90,7 +93,7 @@ export function useWorkspaces(
       }
       reading.current = true;
       const generation = epoch.current;
-      const navigationGeneration = navigation.current;
+      const navigationGeneration = eligibility.capture();
       const active = () => mounted.current && epoch.current === generation;
       return completeOperation(
         async () => {
@@ -147,6 +150,7 @@ export function useWorkspaces(
               ? target.workspace_id
               : initial &&
                   initial.repository_id === repositoryId &&
+                  eligibility.allows(initial.navigationGeneration) &&
                   handledInitial.current !== initial.workspace_id
                 ? initial.workspace_id
                 : undefined;
@@ -175,7 +179,9 @@ export function useWorkspaces(
             detail?.kind === "workspace" &&
             detail.workspace &&
             selection.current === target &&
-            navigation.current === navigationGeneration
+            (eligibility.allows(navigationGeneration) ||
+              // Updating the same selected record is an observation, not navigation.
+              target?.workspace_id === detail.workspace.id)
           ) {
             if (initial?.workspace_id === detail.workspace.id)
               handledInitial.current = detail.workspace.id;
@@ -198,7 +204,15 @@ export function useWorkspaces(
         },
       );
     },
-    [owner, repositoryId, repositoryIds, initial, remember, settleAction],
+    [
+      owner,
+      repositoryId,
+      repositoryIds,
+      initial,
+      remember,
+      settleAction,
+      eligibility,
+    ],
   );
   useEffect(() => {
     mounted.current = true;
@@ -246,7 +260,8 @@ export function useWorkspaces(
       });
       return;
     }
-    pendingNavigation.current = navigation.current;
+    // Retrying a retained action does not renew permission lost to navigation.
+    if (!intent.current) pendingNavigation.current = eligibility.capture();
     intent.current = request;
     setPending(request);
     sending.current = true;
@@ -308,12 +323,12 @@ export function useWorkspaces(
   }
   function select(workspace: Workspace) {
     handledInitial.current = initial?.workspace_id;
-    navigation.current++;
+    eligibility.navigate();
     remember(workspace);
   }
   function selectRepository() {
     handledInitial.current = initial?.workspace_id;
-    navigation.current++;
+    eligibility.navigate();
     remember(null);
   }
   function create(repository_id: string) {

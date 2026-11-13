@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type Ref } from "react";
 import { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { CircleAlert, FolderGit2, RefreshCw } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -21,11 +21,17 @@ export function WorkspacePanel({
   onRefreshStatus,
   repositories,
   workspaces,
+  mainRef,
+  disclosureKey,
+  canRestoreFocus,
 }: {
   connection: Connection;
   onRefreshStatus: () => Promise<void>;
   repositories: Repositories;
   workspaces: Workspaces;
+  mainRef?: Ref<HTMLElement>;
+  disclosureKey?: number;
+  canRestoreFocus?: () => boolean;
 }) {
   // Keep the physical IPC lane alive across keyed workspace presentation resets.
   const [changeReader] = useState(() => new WorkspaceChangesReader());
@@ -39,7 +45,12 @@ export function WorkspacePanel({
     />
   ) : null;
   return (
-    <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
+    <main
+      ref={mainRef}
+      id="workspace"
+      tabIndex={-1}
+      className="workspace-region flex-1"
+    >
       <header className="workspace-header">
         <h1 className="min-w-0 truncate">
           {workspaces.selected
@@ -163,6 +174,8 @@ export function WorkspacePanel({
         {workspaces.selected ? (
           workspaces.selected.status.state === "ready" ? (
             <WorkspaceInspection
+              disclosureKey={disclosureKey}
+              canRestoreFocus={canRestoreFocus}
               key={workspaces.selected.id}
               workspaceId={workspaces.selected.id}
               reader={changeReader}

@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-13",
+  "branch": "feature/m01-codex-setup",
+  "base_revision": "fbf6e7361af3046945d396d602536b3c6beffb94",
+  "source_state": "base plus working implementation; final commit contains these file hashes",
+  "sha256": {
+    "Cargo.lock": "73fa135db67dc5cc1292bd667b548217b8ae3c467f7cb7ca36677d30e663581a",
+    "package.json": "cfdbe7c72a605073e28e3d63ba773413b5df89500e4bc72e39c216389fbbc3b0",
+    "pnpm-lock.yaml": "be348f1cbde87368a663f57fe7e31be545cf512ee84f10bcbc8c84a50b163c1a",
+    "src/App.test.tsx": "635b8fe1ca39860d517b7d991e2c7b9240c8bfc0d59944039777115f2361c776",
+    "src/App.tsx": "24e7acaf9b6ed6957de7bb6812f1fcb4a8d271c7653be55794062678ab8e2a1f",
+    "src/components/README.md": "99131e419dd7ee3a7ad6036fe59126552799f993b12504411bb1056fd35f3e01",
+    "src/components/blocks/repository-registration.tsx": "38b2dd3af00cd240f8926fa877cc1b8b80e405dd7beb004cd0fbbb9a1c15ae51",
+    "src/components/blocks/repository-sidebar.tsx": "ae0dc2220fad649e306ca50e5b7a749ebccc855c36328271fdde68ed91acd77b",
+    "src/components/blocks/settings-screen.tsx": "f23d609134d8413e1f86af381969d880623b98e90bcffdf8cfd25e602e34a5d2",
+    "src/components/blocks/supervisor-connection.tsx": "5e61e39312f5e9d60b5faece693452a492f2ffb6ea4ff1bcf68a18f68200daac",
+    "src/components/blocks/workspace-changes.tsx": "a28e5eace95431357b8b352be762a75ab299a9ccba647fdf4bc9e3f392eadba5",
+    "src/components/blocks/workspace-panel.tsx": "00f8b22d5cb9fb4a984795dcbcf34349d3a92368f61051cac0238e8890da03bd",
+    "src/hooks/use-repositories.ts": "3977a90b5ae4ece100f5eb312c3906adc3c0275957f0d44e952878155d7dee77",
+    "src/hooks/use-workspaces.ts": "4fb8886ce887813b62d8c463b5f6f4ca73454cef2d161feae219dfd0b5156c46",
+    "src/repositories.test.tsx": "0a5016d84e9098a52d61476ea15bde8a35348cfadf3087e3797d0eb50897adb7",
+    "src/style.css": "80b05a9153da7854c65ad096901fce3d7638ecbfdd91114ead034f3063abf2c8",
+    "src/use-app-navigation.test.tsx": "7222af02d8799bd7ff4a40cee9587eca0ee187d85803ffc3b9b6ec770d6193a3",
+    "src/use-app-navigation.ts": "e98bfc0c31a7e6e676f1a45668485e1248b64f2b064e736ff441f8dc1503e911",
+    "src/workspace-changes.test.tsx": "a11ea395bea971ae54d6957d3be03ac1d68fd3a933650ef416ad5cee9f064392",
+    "src/workspaces.test.tsx": "0c491cf638f24b57a902389fcdca9cfe9b8ff07a2b4ed797a32614dd3f063130"
+  },
+  "aggregate_sha256": "81c5bff9d832fec68d72abfe96363e60afa2470338c40cda2fd552bcac42e9f9",
+  "environment": {
+    "os": "macOS 26.2 / 25C56",
+    "architecture": "arm64",
+    "cpu": "Apple M4 Pro",
+    "memory_bytes": 51539607552,
+    "node": "26.13.1",
+    "pnpm": "12.18.0",
+    "rustc": "1.99.1",
+    "cargo": "1.99.1",
+    "target": "worktree default target; warm existing caches",
+    "rust_harness_threads": 1,
+    "ui_workers": 1
+  }
+}

@@ -1,4 +1,5 @@
 import { completeOperation } from "@/lib/complete-operation";
+import type { SelectionEligibility } from "@/use-app-navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PENDING_KEY,
@@ -22,18 +23,28 @@ type Navigation = {
 };
 
 // App calls this once. Selection and action ownership survive disclosure/dialog changes.
-export function useRepositories(owner: string | undefined) {
-  const [initialWorkspace, setInitialWorkspace] = useState<{
-    repository_id: string;
-    workspace_id: string;
-  } | null>(null);
+export type InitialWorkspaceSelection = {
+  repository_id: string;
+  workspace_id: string;
+  navigationGeneration: number;
+};
+
+export function useRepositories(
+  owner: string | undefined,
+  eligibility: SelectionEligibility,
+) {
+  const [initialWorkspace, setInitialWorkspace] =
+    useState<InitialWorkspaceSelection | null>(null);
   const [navigation, setNavigation] = useState<Navigation>({ loading: true });
   const [pending, setPending] = useState(readPending);
+  const [restoredNavigation] = useState(eligibility.capture);
+  const pendingNavigation = useRef(restoredNavigation);
   const [actionError, setActionError] = useState<RepositoryError>();
   const [submitting, setSubmitting] = useState(false);
   const [preferenceError, setPreferenceError] = useState<string>();
   const [restoredSelection] = useState(readSelection);
   const selection = useRef(restoredSelection);
+  const restored = useRef(false);
   const currentPending = useRef(pending);
   const after = useRef<string | null>(null);
   const [previous, setPrevious] = useState<(string | null)[]>([]);
@@ -56,44 +67,49 @@ export function useRepositories(owner: string | undefined) {
   }
 
   // Stable callbacks bind observation subscriptions to their lifecycle owner.
-  const finish = useCallback((action: Registration) => {
-    const pending = currentPending.current;
-    if (
-      !pending ||
-      action.action_id !== pending.request.action_id ||
-      action.path !== pending.request.path ||
-      action.state === "pending"
-    )
-      return;
-    if (
-      action.state === "completed" &&
-      selection.current === pending.selection
-    ) {
-      selection.current = action.repository_id;
-      if (action.initial_workspace_id)
-        setInitialWorkspace({
-          repository_id: action.repository_id,
-          workspace_id: action.initial_workspace_id,
-        });
+  const finish = useCallback(
+    (action: Registration) => {
+      const pending = currentPending.current;
+      if (
+        !pending ||
+        action.action_id !== pending.request.action_id ||
+        action.path !== pending.request.path ||
+        action.state === "pending"
+      )
+        return;
+      if (
+        action.state === "completed" &&
+        eligibility.allows(pendingNavigation.current) &&
+        selection.current === pending.selection
+      ) {
+        selection.current = action.repository_id;
+        if (action.initial_workspace_id)
+          setInitialWorkspace({
+            repository_id: action.repository_id,
+            workspace_id: action.initial_workspace_id,
+            navigationGeneration: pendingNavigation.current,
+          });
+        try {
+          localStorage.setItem(SELECTION_KEY, action.repository_id);
+        } catch {
+          setPreferenceError(
+            "The desktop could not remember repository selection.",
+          );
+        }
+      }
+      currentPending.current = null;
+      setPending(null);
       try {
-        localStorage.setItem(SELECTION_KEY, action.repository_id);
+        localStorage.removeItem(PENDING_KEY);
       } catch {
         setPreferenceError(
-          "The desktop could not remember repository selection.",
+          "The completed registration could not be removed from desktop preferences. Reopening will retrieve its recorded result.",
         );
       }
-    }
-    currentPending.current = null;
-    setPending(null);
-    try {
-      localStorage.removeItem(PENDING_KEY);
-    } catch {
-      setPreferenceError(
-        "The completed registration could not be removed from desktop preferences. Reopening will retrieve its recorded result.",
-      );
-    }
-    setActionError(action.state === "failed" ? action.error : undefined);
-  }, []);
+      setActionError(action.state === "failed" ? action.error : undefined);
+    },
+    [eligibility],
+  );
 
   const readRepositories = useCallback(
     async function read(recheck = true): Promise<void> {
@@ -166,7 +182,14 @@ export function useRepositories(owner: string | undefined) {
             return;
           const candidate =
             selected?.kind === "repository" ? selected.repository : null;
-          const chosen = candidate ?? list.page.repositories[0];
+          // The first observation may restore a default. Later list updates must
+          // not indirectly select a registration whose navigation was fenced.
+          const chosen =
+            candidate ??
+            (!restored.current && eligibility.allows(restoredNavigation)
+              ? list.page.repositories[0]
+              : undefined);
+          restored.current = true;
           if (selection.current === requestedSelection) {
             selection.current = chosen?.id ?? null;
             try {
@@ -204,7 +227,7 @@ export function useRepositories(owner: string | undefined) {
         },
       );
     },
-    [finish],
+    [finish, eligibility, restoredNavigation],
   );
 
   useEffect(() => {
@@ -270,6 +293,7 @@ export function useRepositories(owner: string | undefined) {
       });
       return false;
     }
+    if (!old) pendingNavigation.current = eligibility.capture();
     currentPending.current = intent;
     setPending(intent);
     setActionError(undefined);
@@ -317,6 +341,7 @@ export function useRepositories(owner: string | undefined) {
     );
   }
   function select(repository: Repository) {
+    eligibility.navigate();
     rememberSelection(repository.id);
     setNavigation((last) => ({ ...last, selected: repository }));
   }

@@ -14,7 +14,13 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { App } from "./App";
 import { StrictMode } from "react";
-import { useRepositories } from "./hooks/use-repositories";
+import { useAppNavigation } from "./use-app-navigation";
+
+function useRepositories(owner: string | undefined) {
+  const navigation = useAppNavigation();
+  return useRepositoryObservations(owner, navigation.selection);
+}
+import { useRepositories as useRepositoryObservations } from "./hooks/use-repositories";
 import {
   PENDING_KEY,
   SELECTION_KEY,
@@ -57,6 +63,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.resetAllMocks();
   vi.unstubAllGlobals();
 });
@@ -442,21 +449,119 @@ test.each([false, true])(
   },
 );
 
-test("selection during registration is not retargeted by its late completion", async () => {
+test.each([
+  "other repository",
+  "away and back",
+  "settings",
+  "settings and back",
+])(
+  "navigation during registration is not retargeted by its late completion: %s",
+  async (navigation) => {
+    const user = userEvent.setup();
+    const two: Repository = {
+      ...repository,
+      id: "00000000-0000-4000-8000-000000000002",
+      name: "two",
+      path: "/projects/two",
+    };
+    let resolve!: (reply: RepositoryReply) => void;
+    let submitted!: { action_id: string; path: string };
+    const created = {
+      ...repository,
+      id: "00000000-0000-4000-8000-000000000003",
+      name: "new",
+      path: "/projects/new",
+    };
+    let completed = false;
+    replies(async (request) => {
+      if (request.operation === "register") {
+        submitted = request.request;
+        return new Promise((r) => {
+          resolve = r;
+        });
+      }
+      if (request.operation === "action")
+        return {
+          kind: "action",
+          registration: { ...submitted, state: "pending" },
+        };
+      if (request.operation === "get")
+        return {
+          kind: "repository",
+          repository:
+            request.id === id
+              ? repository
+              : request.id === two.id
+                ? two
+                : created,
+        };
+      return {
+        kind: "repositories",
+        page: {
+          repositories: completed
+            ? [repository, two, created]
+            : [repository, two],
+          next: null,
+        },
+      };
+    });
+    render(<App />);
+    await screen.findByRole("heading", { level: 1, name: "one" });
+    await user.click(screen.getByRole("button", { name: "Add repository" }));
+    await user.type(
+      screen.getByRole("textbox", { name: "Repository folder" }),
+      "/projects/new",
+    );
+    await user.click(screen.getByRole("button", { name: /^Register$/ }));
+    await user.keyboard("{Escape}");
+    if (navigation === "other repository" || navigation === "away and back") {
+      await user.click(screen.getByRole("button", { name: "two" }));
+      if (navigation === "away and back")
+        await user.click(screen.getByRole("button", { name: "one" }));
+    } else {
+      await user.click(screen.getByRole("button", { name: "Settings" }));
+      if (navigation === "settings and back")
+        await user.click(screen.getByRole("button", { name: "Back" }));
+    }
+    completed = true;
+    await act(async () =>
+      resolve({
+        kind: "registration",
+        registration: {
+          ...submitted,
+          state: "completed",
+          repository_id: created.id,
+        },
+      }),
+    );
+    await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
+    if (navigation === "settings") {
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Settings" }),
+      ).toBeDefined();
+      await user.click(screen.getByRole("button", { name: "Back" }));
+    }
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: navigation === "other repository" ? "two" : "one",
+      }),
+    ).toBeDefined();
+    expect(await screen.findByRole("button", { name: "new" })).toBeDefined();
+    expect(registrations()).toHaveLength(1);
+  },
+);
+
+test("registration from an empty workbench settles in Settings without selecting its new record", async () => {
   const user = userEvent.setup();
-  const two: Repository = {
-    ...repository,
-    id: "00000000-0000-4000-8000-000000000002",
-    name: "two",
-    path: "/projects/two",
-  };
-  let resolve!: (reply: RepositoryReply) => void;
+  let finish!: (reply: RepositoryReply) => void;
   let submitted!: { action_id: string; path: string };
+  let completed = false;
   replies(async (request) => {
     if (request.operation === "register") {
       submitted = request.request;
-      return new Promise((r) => {
-        resolve = r;
+      return new Promise((resolve) => {
+        finish = resolve;
       });
     }
     if (request.operation === "action")
@@ -464,35 +569,127 @@ test("selection during registration is not retargeted by its late completion", a
         kind: "action",
         registration: { ...submitted, state: "pending" },
       };
-    if (request.operation === "get")
-      return {
-        kind: "repository",
-        repository: request.id === id ? repository : two,
-      };
     return {
       kind: "repositories",
-      page: { repositories: [repository, two], next: null },
+      page: { repositories: completed ? [repository] : [], next: null },
     };
   });
   render(<App />);
-  await screen.findByRole("heading", { level: 1, name: "one" });
+  await screen.findByText("No repositories yet");
   await user.click(screen.getByRole("button", { name: "Add repository" }));
   await user.type(
     screen.getByRole("textbox", { name: "Repository folder" }),
-    "/projects/new",
+    repository.path,
   );
-  await user.click(screen.getByRole("button", { name: /^Register$/ }));
+  await user.click(screen.getByRole("button", { name: "Register" }));
   await user.keyboard("{Escape}");
-  await user.click(screen.getByRole("button", { name: "two" }));
+  await user.click(screen.getByRole("button", { name: "Settings" }));
+  completed = true;
   await act(async () =>
-    resolve({
+    finish({
       kind: "registration",
       registration: { ...submitted, state: "completed", repository_id: id },
     }),
   );
   await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
-  expect(screen.getByRole("heading", { level: 1, name: "two" })).toBeDefined();
+  await user.click(screen.getByRole("button", { name: "Back" }));
+  expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(
+    "Workspace",
+  );
+  expect(screen.getByRole("button", { name: "one" })).toBeDefined();
+  expect(localStorage.getItem(SELECTION_KEY)).toBeNull();
   expect(registrations()).toHaveLength(1);
+});
+
+test("the shared registration observation keeps polling in Settings and settles the exact action without replay", async () => {
+  vi.useFakeTimers();
+  const created = {
+    ...repository,
+    id: "00000000-0000-4000-8000-000000000009",
+    name: "new",
+  };
+  let submitted!: { action_id: string; path: string };
+  let completed = false;
+  const lookedUp: string[] = [];
+  replies(async (request) => {
+    if (request.operation === "register") {
+      submitted = request.request;
+      return {
+        kind: "registration",
+        registration: { ...submitted, state: "pending" },
+      };
+    }
+    if (request.operation === "action") {
+      lookedUp.push(request.action_id);
+      return {
+        kind: "action",
+        registration: completed
+          ? { ...submitted, state: "completed", repository_id: created.id }
+          : { ...submitted, state: "pending" },
+      };
+    }
+    if (request.operation === "get") return { kind: "repository", repository };
+    return {
+      kind: "repositories",
+      page: {
+        repositories: completed ? [repository, created] : [repository],
+        next: null,
+      },
+    };
+  });
+  render(<App />);
+  await act(async () => {});
+  fireEvent.click(screen.getByRole("button", { name: "Add repository" }));
+  fireEvent.change(screen.getByRole("textbox", { name: "Repository folder" }), {
+    target: { value: "/projects/new" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Register" }));
+  await act(async () => {});
+  fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+  const previousLookups = lookedUp.length;
+  completed = true;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(250);
+  });
+  expect(lookedUp.length).toBeGreaterThan(previousLookups);
+  expect(lookedUp.every((action) => action === submitted.action_id)).toBe(true);
+  expect(localStorage.getItem(PENDING_KEY)).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Back" }));
+  expect(screen.getByRole("heading", { level: 1, name: "one" })).toBeDefined();
+  expect(screen.getByRole("button", { name: "new" })).toBeDefined();
+  expect(registrations()).toHaveLength(1);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "supervisor_status"),
+  ).toHaveLength(1);
+});
+
+test("a picker from a hidden registration cannot fill the dialog on the next visit", async () => {
+  let finish!: (value: string) => void;
+  vi.mocked(open).mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  render(<App />);
+  await screen.findByRole("button", { name: "Refresh status" });
+  const settings = screen.getByRole("button", { name: "Settings" });
+  fireEvent.click(screen.getByRole("button", { name: "Add repository" }));
+  fireEvent.click(screen.getByRole("button", { name: "Browse…" }));
+  fireEvent.click(settings);
+  fireEvent.click(screen.getByRole("button", { name: "Back" }));
+  fireEvent.click(screen.getByRole("button", { name: "Add repository" }));
+  await act(async () => finish("/late/path"));
+  expect(
+    (
+      screen.getByRole("textbox", {
+        name: "Repository folder",
+      }) as HTMLInputElement
+    ).value,
+  ).toBe("");
+  expect(registrations()).toHaveLength(0);
 });
 
 test("cursor paging retains selection and previous returns to the original page", async () => {

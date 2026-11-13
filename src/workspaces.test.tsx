@@ -2,12 +2,30 @@ import { cleanup, renderHook, act, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { object } from "./lib/repositories";
-import { useWorkspaces } from "./hooks/use-workspaces";
+import { useWorkspaces as useWorkspaceObservations } from "./hooks/use-workspaces";
 import {
   WORKSPACE_PENDING,
   workspaceRequest,
   type Workspace,
 } from "./lib/workspaces";
+import { useAppNavigation } from "./use-app-navigation";
+
+function useWorkspaces(
+  owner: string | undefined,
+  repositoryId: string | undefined,
+  repositoryIds: string,
+  initial: Parameters<typeof useWorkspaceObservations>[3],
+) {
+  const navigation = useAppNavigation();
+  return useWorkspaceObservations(
+    owner,
+    repositoryId,
+    repositoryIds,
+    initial,
+    navigation.selection,
+  );
+}
+
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const repository_id = "00000000-0000-4000-8000-000000000001";
 const id = "00000000-0000-4000-8000-000000000002";
@@ -35,6 +53,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.resetAllMocks();
 });
 test("a restored uncertain action is read without replaying creation", async () => {
@@ -317,6 +336,211 @@ test("switching selection prevents a late creation reply from stealing context",
   });
   expect(result.current.selected).toBeUndefined();
 });
+
+test.each([
+  ["settings", "reply"],
+  ["settings and back", "reply"],
+  ["away and back", "reply"],
+  ["settings", "lookup"],
+  ["settings and back", "lookup"],
+  ["away and back", "lookup"],
+])(
+  "creation settles without redirecting after %s through %s",
+  async (destination, settlement) => {
+    const created = {
+      ...w,
+      id: "00000000-0000-4000-8000-000000000009",
+      name: "new",
+    };
+    let finish!: () => void;
+    let saved!: {
+      operation: "create";
+      action_id: string;
+      repository_id: string;
+    };
+    let completed = false;
+    let creates = 0;
+    vi.mocked(invoke).mockImplementation(async (_, args) => {
+      const request = (object(args) ? args.request : undefined) as {
+        operation: string;
+        id?: string;
+      };
+      const reply = () => ({
+        kind: "action",
+        action: saved,
+        workspace: { ...created, creation_action_id: saved.action_id },
+      });
+      if (request.operation === "create") {
+        creates++;
+        saved = (object(args) ? args.request : undefined) as typeof saved;
+        return new Promise((resolve) => {
+          finish = () => resolve(reply());
+        });
+      }
+      if (request.operation === "action")
+        return completed
+          ? reply()
+          : { kind: "action", action: null, workspace: null };
+      if (request.operation === "get")
+        return { kind: "workspace", workspace: w };
+      return {
+        kind: "workspaces",
+        page: { workspaces: completed ? [w, created] : [w], next: null },
+      };
+    });
+    const { result } = renderHook(() => {
+      const navigation = useAppNavigation();
+      const workspaces = useWorkspaceObservations(
+        "owner",
+        repository_id,
+        repository_id,
+        null,
+        navigation.selection,
+      );
+      return { navigation, workspaces };
+    });
+    act(() => result.current.workspaces.select(w));
+    let sending!: Promise<void>;
+    act(() => {
+      sending = result.current.workspaces.create(repository_id);
+    });
+    act(() => {
+      if (destination === "away and back") {
+        result.current.workspaces.selectRepository();
+        result.current.workspaces.select(w);
+      } else {
+        result.current.navigation.openSettings();
+        if (destination === "settings and back")
+          result.current.navigation.back();
+      }
+    });
+    completed = true;
+    if (settlement === "lookup")
+      await act(async () => {
+        await result.current.workspaces.refresh();
+      });
+    await act(async () => {
+      finish();
+      await sending;
+    });
+    await waitFor(() => expect(result.current.workspaces.pending).toBeNull());
+    expect(result.current.workspaces.selected?.id).toBe(w.id);
+    expect(
+      result.current.workspaces.pages[repository_id].workspaces.map(
+        (item) => item.id,
+      ),
+    ).toContain(created.id);
+    expect(localStorage.getItem(WORKSPACE_PENDING)).toBeNull();
+    expect(creates).toBe(1);
+  },
+);
+
+test("retrying the same uncertain creation does not renew selection permission", async () => {
+  let first = true;
+  const submitted: string[] = [];
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+      action_id: string;
+    };
+    if (request.operation === "create") {
+      submitted.push(request.action_id);
+      if (first) {
+        first = false;
+        throw new Error("Reply unavailable");
+      }
+      return {
+        kind: "action",
+        action: request,
+        workspace: {
+          ...w,
+          id: "00000000-0000-4000-8000-000000000009",
+          creation_action_id: request.action_id,
+        },
+      };
+    }
+    if (request.operation === "action")
+      return { kind: "action", action: null, workspace: null };
+    if (request.operation === "get") return { kind: "workspace", workspace: w };
+    return { kind: "workspaces", page: { workspaces: [w], next: null } };
+  });
+  const { result } = renderHook(() => {
+    const navigation = useAppNavigation();
+    const workspaces = useWorkspaceObservations(
+      "owner",
+      repository_id,
+      repository_id,
+      null,
+      navigation.selection,
+    );
+    return { navigation, workspaces };
+  });
+  act(() => result.current.workspaces.select(w));
+  await act(async () => {
+    await result.current.workspaces.create(repository_id);
+  });
+  act(() => {
+    result.current.navigation.openSettings();
+    result.current.navigation.back();
+  });
+  await act(async () => {
+    await result.current.workspaces.retry();
+  });
+  expect(result.current.workspaces.pending).toBeNull();
+  expect(result.current.workspaces.selected?.id).toBe(w.id);
+  expect(submitted).toHaveLength(2);
+  expect(submitted[0]).toBe(submitted[1]);
+});
+
+test("shared workspace polling updates the selected record while Settings is visible", async () => {
+  vi.useFakeTimers();
+  let ready = false;
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+    };
+    const observed: Workspace = {
+      ...w,
+      status: ready ? { state: "ready" } : { state: "queued" },
+    };
+    if (request.operation === "get")
+      return { kind: "workspace", workspace: observed };
+    return { kind: "workspaces", page: { workspaces: [observed], next: null } };
+  });
+  const { result } = renderHook(() => {
+    const navigation = useAppNavigation();
+    const workspaces = useWorkspaceObservations(
+      "owner",
+      repository_id,
+      repository_id,
+      null,
+      navigation.selection,
+    );
+    return { navigation, workspaces };
+  });
+  await act(async () => {});
+  act(() =>
+    result.current.workspaces.select({ ...w, status: { state: "queued" } }),
+  );
+  act(() => result.current.navigation.openSettings());
+  ready = true;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(250);
+  });
+  expect(result.current.navigation.screen).toBe("settings");
+  expect(result.current.workspaces.selected?.status.state).toBe("ready");
+  expect(result.current.workspaces.selected?.id).toBe(id);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.every(([, args]) =>
+        ["list", "get"].includes(
+          ((object(args) ? args.request : undefined) as { operation: string })
+            .operation,
+        ),
+      ),
+  ).toBe(true);
+});
 test("registration's recorded initial workspace is observed without a create request", async () => {
   vi.mocked(invoke).mockImplementation(async (_, args) =>
     (object(args) ? args.request : (undefined as unknown)) &&
@@ -325,7 +549,7 @@ test("registration's recorded initial workspace is observed without a create req
       ? { kind: "workspace", workspace: w }
       : { kind: "workspaces", page: { workspaces: [w], next: null } },
   );
-  const initial = { repository_id, workspace_id: id };
+  const initial = { repository_id, workspace_id: id, navigationGeneration: 0 };
   const { result } = renderHook(() =>
     useWorkspaces("owner", repository_id, repository_id, initial),
   );
@@ -354,7 +578,7 @@ test("a delayed initial-workspace lookup cannot override explicit repository sel
       });
     return { kind: "workspaces", page: { workspaces: [w], next: null } };
   });
-  const initial = { repository_id, workspace_id: id };
+  const initial = { repository_id, workspace_id: id, navigationGeneration: 0 };
   const { result } = renderHook(() =>
     useWorkspaces("owner", repository_id, repository_id, initial),
   );
@@ -367,6 +591,58 @@ test("a delayed initial-workspace lookup cannot override explicit repository sel
   });
   expect(result.current.selected).toBeUndefined();
 });
+
+test.each(["before lookup", "during lookup"])(
+  "Settings invalidates registration's initial-workspace handoff %s",
+  async (schedule) => {
+    let finish!: (value: unknown) => void;
+    let gets = 0;
+    vi.mocked(invoke).mockImplementation(async (_, args) => {
+      const request = (object(args) ? args.request : undefined) as {
+        operation: string;
+      };
+      if (request.operation === "get") {
+        gets++;
+        return new Promise((resolve) => {
+          finish = resolve;
+        });
+      }
+      return { kind: "workspaces", page: { workspaces: [w], next: null } };
+    });
+    const initial = {
+      repository_id,
+      workspace_id: id,
+      navigationGeneration: 0,
+    };
+    const { result, rerender } = renderHook(
+      ({ handoff }) => {
+        const navigation = useAppNavigation();
+        const workspaces = useWorkspaceObservations(
+          "owner",
+          repository_id,
+          repository_id,
+          handoff ? initial : null,
+          navigation.selection,
+        );
+        return { navigation, workspaces };
+      },
+      { initialProps: { handoff: schedule === "during lookup" } },
+    );
+    await act(async () => {});
+    act(() => result.current.navigation.openSettings());
+    act(() => result.current.navigation.back());
+    if (schedule === "before lookup") rerender({ handoff: true });
+    else await act(async () => finish({ kind: "workspace", workspace: w }));
+    await act(async () => {
+      await result.current.workspaces.refresh();
+    });
+    expect(result.current.workspaces.selected).toBeUndefined();
+    expect(gets).toBe(schedule === "during lookup" ? 1 : 0);
+    expect(
+      result.current.workspaces.pages[repository_id].workspaces[0].id,
+    ).toBe(id);
+  },
+);
 
 test("definite admission rejection retains the error but does not block another workspace's recovery", async () => {
   vi.mocked(invoke).mockImplementation(async (_, args) => {

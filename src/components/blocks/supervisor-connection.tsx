@@ -16,8 +16,10 @@ import type {
 
 export function SupervisorConnection({
   connection,
+  canRestoreFocus,
 }: {
   connection: Connection;
+  canRestoreFocus?: () => boolean;
 }) {
   const label =
     connection.state === "connected"
@@ -49,7 +51,10 @@ export function SupervisorConnection({
           <SlidersHorizontal data-icon="inline-start" />
           Connection details
         </DialogTrigger>
-        <DialogContent className="max-h-[calc(100dvh-3rem)] overflow-y-auto">
+        <DialogContent
+          finalFocus={canRestoreFocus}
+          className="max-h-[calc(100dvh-3rem)] overflow-y-auto"
+        >
           <DialogHeader>
             <DialogTitle>Supervisor connection</DialogTitle>
             <DialogDescription>

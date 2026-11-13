@@ -242,3 +242,33 @@ is read-only. A refreshed comparison resets list paging to First; expired
 continuations are explicit errors, and a removed selection stays named until the
 user selects another file. Preview failures label retained content as stale even
 when the retained comparison ID has not changed.
+
+### Settings and retained workbench (06a)
+
+- **SettingsScreen** (`blocks/settings-screen.tsx`) composes the full Settings
+  surface, Back intent, category navigation and Codex's untested setup state. Use
+  it for application settings; keep supervisor diagnostics in SupervisorConnection
+  and workspace content in WorkspacePanel. It receives a heading ref and Back
+  callback, performs no IPC, and offers no runtime action until 06b implements it.
+  The category button focuses its associated section heading.
+- App owns `useAppNavigation` beside its single shared observation hooks, outside
+  one stable workbench Activity. Navigation owns screen transitions, focus return,
+  disclosure visits and selection eligibility; repository/workspace hooks remain
+  canonical selection owners. Settings and explicit selection advance the
+  eligibility generation. Action settlement always records its exact outcome,
+  but can redirect selection only with its original eligible generation; retry
+  does not renew it. Registration passes that generation with its initial-workspace
+  handoff. Existing preference formats and authoritative recovery are unchanged.
+- Activity retains the sidebar and WorkspacePanel, including the same physical
+  changes-reader lane. Hidden inspection effects/listeners/timers clean up;
+  shared repository/workspace polling continues. Reveal observes through the lane
+  after old IPC drains. WorkspaceInspection retains requested panel layout in state
+  through the resizable group's `defaultLayout`/`onLayoutChanged` API, in addition
+  to tab/file/reading state. No additional reader or workspace view cache is added.
+- Transient registration/connection dialogs and the changed-file Sheet reset on a
+  new disclosure visit. Their popup `finalFocus` callback allows return only to the
+  same visible workbench visit, so hidden or obsolete portals cannot steal focus.
+  Preserve these props/refs when changing composition. Settings entry focuses its
+  heading; Back focuses the Settings trigger or the workspace main fallback.
+  The skip link targets the active screen's unique main ID. Controlled DOM checks
+  cover these contracts; actual WebView/accessibility qualification remains 06d.

@@ -4,7 +4,9 @@ import {
   Layers2,
   Plus,
   GitBranch,
+  Settings,
 } from "lucide-react";
+import type { Ref } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -41,10 +43,18 @@ export function RepositorySidebar({
   connection,
   repositories,
   workspaces,
+  onSettings,
+  settingsRef,
+  disclosureKey,
+  canRestoreFocus,
 }: {
   connection: Connection;
   repositories: Repositories;
   workspaces: Workspaces;
+  onSettings: () => void;
+  settingsRef: Ref<HTMLButtonElement>;
+  disclosureKey: number;
+  canRestoreFocus: () => boolean;
 }) {
   return (
     <Sidebar
@@ -259,10 +269,26 @@ export function RepositorySidebar({
       </SidebarContent>
       <SidebarFooter className="connection-footer shrink-0">
         <RepositoryRegistration
+          key={`registration-${disclosureKey}`}
+          canRestoreFocus={canRestoreFocus}
           repositories={repositories}
           connected={connection.state === "connected"}
         />
-        <SupervisorConnection connection={connection} />
+        <Button
+          ref={settingsRef}
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start"
+          onClick={onSettings}
+        >
+          <Settings data-icon="inline-start" aria-hidden="true" />
+          Settings
+        </Button>
+        <SupervisorConnection
+          key={`connection-${disclosureKey}`}
+          connection={connection}
+          canRestoreFocus={canRestoreFocus}
+        />
       </SidebarFooter>
     </Sidebar>
   );

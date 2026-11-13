@@ -14,6 +14,10 @@ import { useWorkspaceChanges } from "./hooks/use-workspace-changes";
 import { WorkspaceInspection } from "./components/blocks/workspace-changes";
 import { WorkspacePanel } from "./components/blocks/workspace-panel";
 import { WorkspaceChangesReader } from "./lib/workspace-changes-reader";
+import { Activity, StrictMode } from "react";
+import { useAppNavigation } from "./use-app-navigation";
+import { SettingsScreen } from "./components/blocks/settings-screen";
+import { SidebarProvider } from "./components/ui/sidebar";
 import type { Repositories } from "./hooks/use-repositories";
 import type { Workspaces } from "./hooks/use-workspaces";
 import type { Workspace } from "./lib/workspaces";
@@ -61,6 +65,39 @@ function changes(
 }
 function request(args: unknown) {
   return (args as { request: InspectionRequest }).request;
+}
+
+function InspectionNavigation({ reader }: { reader: WorkspaceChangesReader }) {
+  const {
+    screen: destination,
+    settingsTrigger,
+    openSettings,
+    visit,
+    canRestoreFocus,
+    settingsHeading,
+    back,
+  } = useAppNavigation();
+  return (
+    <SidebarProvider>
+      <Activity mode={destination === "workbench" ? "visible" : "hidden"}>
+        <button ref={settingsTrigger} onClick={openSettings}>
+          Settings
+        </button>
+        <WorkspaceInspection
+          owner="owner"
+          workspaceId={workspace_id}
+          reader={reader}
+          disclosureKey={visit}
+          canRestoreFocus={canRestoreFocus}
+        >
+          <p>Details</p>
+        </WorkspaceInspection>
+      </Activity>
+      {destination === "settings" && (
+        <SettingsScreen headingRef={settingsHeading} onBack={back} />
+      )}
+    </SidebarProvider>
+  );
 }
 beforeEach(() => {
   Object.defineProperty(document, "visibilityState", {
@@ -134,6 +171,7 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.resetAllMocks();
+  vi.restoreAllMocks();
 });
 
 test("inspection validates exact workspace/comparison/file targets and display bounds", async () => {
@@ -940,6 +978,185 @@ test("the resize separator remains keyboard reachable and changes the panel allo
   expect(document.activeElement).toBe(handle);
   expect(files.style.flexGrow).not.toBe(before);
   expect(Number(files.style.flexGrow)).toBeGreaterThan(32);
+});
+
+test.each([false, true])(
+  "Settings retains the diff DOM, tab, selection, layout and reading position (Strict Mode: %s)",
+  async (strict) => {
+    const user = (await import("@testing-library/user-event")).default.setup();
+    const content = (
+      <InspectionNavigation reader={new WorkspaceChangesReader()} />
+    );
+    render(strict ? <StrictMode>{content}</StrictMode> : content);
+    fireEvent.click(
+      await screen.findByRole("button", { name: /src\/file.txt/ }),
+    );
+    await screen.findByText("new content");
+    const viewport = screen
+      .getByLabelText("Unified file diff")
+      .closest<HTMLElement>("[data-slot=scroll-area-viewport]")!;
+    viewport.scrollTop = 70;
+    viewport.scrollLeft = 20;
+    fireEvent.scroll(viewport);
+    const main = document.getElementById("inspection-main")!;
+    const files = document.getElementById("inspection-files")!;
+    Object.defineProperty(main, "offsetWidth", {
+      configurable: true,
+      value: 680,
+    });
+    Object.defineProperty(files, "offsetWidth", {
+      configurable: true,
+      value: 320,
+    });
+    await act(async () => {
+      resizeCallbacks.get(main.closest("[data-slot=resizable-panel-group]")!)?.(
+        1000,
+      );
+      resizeCallbacks.get(files)?.(320);
+    });
+    screen.getByRole("separator", { name: "Resize changed files" }).focus();
+    await user.keyboard("{ArrowLeft}");
+    const width = files.style.flexGrow;
+    expect(Number(width)).toBeGreaterThan(32);
+    for (let visit = 0; visit < 2; visit++) {
+      fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+      expect(screen.queryByRole("tab")).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: "Back" }));
+      expect(
+        screen
+          .getByRole("tab", { name: "Changes" })
+          .getAttribute("aria-selected"),
+      ).toBe("true");
+      expect(
+        screen
+          .getByRole("button", { name: /src\/file.txt/ })
+          .getAttribute("aria-pressed"),
+      ).toBe("true");
+      expect(
+        screen
+          .getByLabelText("Unified file diff")
+          .closest("[data-slot=scroll-area-viewport]"),
+      ).toBe(viewport);
+      expect([viewport.scrollTop, viewport.scrollLeft]).toEqual([70, 20]);
+      expect(files.style.flexGrow).toBe(width);
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Hide changed files" }));
+    await act(async () => {
+      resizeCallbacks.get(files)?.(0);
+    });
+    await screen.findByRole("button", { name: "Show changed files" });
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    expect(
+      screen
+        .getByRole("button", { name: "Show changed files" })
+        .getAttribute("aria-expanded"),
+    ).toBe("false");
+  },
+);
+
+test.each([
+  ["hidden", "success"],
+  ["hidden", "failure"],
+  ["revealed", "success"],
+  ["revealed", "failure"],
+])(
+  "Activity pauses inspection and drains one lane when the old %s read settles with %s",
+  async (settledWhile, outcome) => {
+    vi.useFakeTimers();
+    const add = vi.spyOn(document, "addEventListener");
+    const remove = vi.spyOn(document, "removeEventListener");
+    const listeners = () =>
+      add.mock.calls.filter(([name]) => name === "visibilitychange").length -
+      remove.mock.calls.filter(([name]) => name === "visibilitychange").length;
+    let finish!: (value: unknown) => void;
+    let reject!: (error: Error) => void;
+    vi.mocked(invoke).mockImplementationOnce(
+      () =>
+        new Promise((resolve, fail) => {
+          finish = resolve;
+          reject = fail;
+        }),
+    );
+    render(<InspectionNavigation reader={new WorkspaceChangesReader()} />);
+    expect(invoke).toHaveBeenCalledTimes(1);
+    expect(listeners()).toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    expect(listeners()).toBe(0);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10000);
+    });
+    expect(invoke).toHaveBeenCalledTimes(1);
+    if (settledWhile === "revealed")
+      fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    expect(invoke).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      if (outcome === "success")
+        finish(
+          changes("failed", null, {
+            code: "git",
+            message: "Obsolete inspection failure",
+          }),
+        );
+      else reject(new Error("Obsolete transport failure"));
+    });
+    if (settledWhile === "hidden") {
+      expect(invoke).toHaveBeenCalledTimes(1);
+      fireEvent.click(screen.getByRole("button", { name: "Back" }));
+      await act(async () => {});
+    }
+    expect(listeners()).toBe(1);
+    expect(screen.getByText(/Compared with HEAD/)).toBeDefined();
+    expect(screen.queryByText(/Obsolete/)).toBeNull();
+    expect(invoke).toHaveBeenCalledTimes(2);
+    expect(request(vi.mocked(invoke).mock.calls[1][1]).operation).toBe(
+      "changes",
+    );
+    expect(request(vi.mocked(invoke).mock.calls[1][1])).toMatchObject({
+      refresh: false,
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+    expect(invoke).toHaveBeenCalledTimes(3);
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10000);
+    });
+    expect(invoke).toHaveBeenCalledTimes(3);
+    add.mockRestore();
+    remove.mockRestore();
+  },
+);
+
+test("Settings dismisses an open changed-file Sheet without a hidden focus trap or reopening it", async () => {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: () => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+    }),
+  });
+  render(<InspectionNavigation reader={new WorkspaceChangesReader()} />);
+  const settings = screen.getByRole("button", { name: "Settings" });
+  fireEvent.click(screen.getByRole("button", { name: "Changed files" }));
+  await screen.findByRole("dialog");
+  fireEvent.click(settings);
+  await act(async () => {});
+  expect(screen.queryByRole("dialog")).toBeNull();
+  expect(document.activeElement).toBe(
+    screen.getByRole("heading", { name: "Settings", level: 1 }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Back" }));
+  await act(async () => {});
+  expect(screen.queryByRole("dialog")).toBeNull();
+  expect(document.activeElement).toBe(settings);
+  expect(
+    screen
+      .getByRole("button", { name: "Changed files" })
+      .getAttribute("aria-expanded"),
+  ).toBe("false");
 });
 
 test("WorkspacePanel navigation keeps one physical read lane across keyed inspection views", async () => {

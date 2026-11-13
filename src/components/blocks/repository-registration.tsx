@@ -31,9 +31,11 @@ import type { Repositories } from "@/hooks/use-repositories";
 export function RepositoryRegistration({
   repositories,
   connected,
+  canRestoreFocus,
 }: {
   repositories: Repositories;
   connected: boolean;
+  canRestoreFocus?: () => boolean;
 }) {
   const [isOpen, setOpen] = useState(false);
   const [path, setPath] = useState(repositories.pending?.request.path ?? "");
@@ -98,7 +100,10 @@ export function RepositoryRegistration({
         <FolderPlus data-icon="inline-start" />
         Add repository
       </DialogTrigger>
-      <DialogContent className="max-h-[calc(100dvh-3rem)] overflow-y-auto">
+      <DialogContent
+        finalFocus={canRestoreFocus}
+        className="max-h-[calc(100dvh-3rem)] overflow-y-auto"
+      >
         <DialogHeader>
           <DialogTitle>Add repository</DialogTitle>
           <DialogDescription>
