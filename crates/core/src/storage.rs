@@ -61,7 +61,7 @@ impl SqliteStore {
         let version: u32 = connection
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .map_err(storage)?;
-        if version > 2 {
+        if version > 3 {
             return Err(storage(
                 "This database belongs to a newer application. Open it with a compatible build; do not delete it.",
             ));
@@ -81,6 +81,38 @@ impl SqliteStore {
                 CREATE INDEX queued_workspaces ON workspaces(queued,id);
                 CREATE TABLE workspace_actions (id TEXT PRIMARY KEY NOT NULL, workspace_id TEXT NOT NULL REFERENCES workspaces(id), record TEXT NOT NULL);
                 PRAGMA user_version=2; COMMIT;").map_err(storage)?;
+        }
+        if version < 3 {
+            transaction(&SqliteTransaction(&connection), || {
+                connection.execute_batch("ALTER TABLE workspaces ADD COLUMN name TEXT; ALTER TABLE workspaces ADD COLUMN branch TEXT; ALTER TABLE workspaces ADD COLUMN path TEXT;
+                    CREATE TABLE repository_folders(repository_id TEXT PRIMARY KEY NOT NULL REFERENCES repositories(id), folder TEXT UNIQUE NOT NULL);") .map_err(storage)?;
+                let mut query = connection
+                    .prepare("SELECT record FROM workspaces ORDER BY repository_id,id")
+                    .map_err(storage)?;
+                let records: Vec<Workspace> = query
+                    .query_map([], |r| r.get::<_, String>(0))
+                    .map_err(storage)?
+                    .map(|r| decode(r.map_err(storage)?))
+                    .collect::<Result<_>>()?;
+                for workspace in crate::workspaces::naming::migrate_labels(records)? {
+                    connection
+                        .execute(
+                            "UPDATE workspaces SET record=?2,name=?3,branch=?4,path=?5 WHERE id=?1",
+                            params![
+                                workspace.id.0.to_string(),
+                                encode(&workspace)?,
+                                workspace.name,
+                                workspace.branch,
+                                workspace.path
+                            ],
+                        )
+                        .map_err(storage)?;
+                }
+                connection.execute_batch("CREATE UNIQUE INDEX reserved_workspace_names ON workspaces(repository_id,name);
+                    CREATE UNIQUE INDEX reserved_workspace_branches ON workspaces(repository_id,branch);
+                    CREATE UNIQUE INDEX reserved_workspace_paths ON workspaces(path);
+                    PRAGMA user_version=3;").map_err(storage)
+            })?;
         }
         Ok(Self { connection, path })
     }
@@ -277,7 +309,26 @@ fn write_workspace(
     workspace: &Workspace,
     action: Option<&WorkspaceAction>,
 ) -> Result<()> {
-    db.execute("INSERT INTO workspaces(id,repository_id,queued,record) VALUES (?1,?2,?3,?4) ON CONFLICT(id) DO UPDATE SET queued=excluded.queued,record=excluded.record", params![workspace.id.0.to_string(), workspace.repository_id.0.to_string(), i64::from(workspace.status == CreationStatus::Queued), encode(workspace)?]).map_err(storage)?;
+    // A final location is immutable, including on recovery or failed creation.
+    let saved: Option<String> = db
+        .query_row(
+            "SELECT record FROM workspaces WHERE id=?1",
+            [workspace.id.0.to_string()],
+            |r| r.get(0),
+        )
+        .optional()
+        .map_err(storage)?;
+    if let Some(saved) = saved {
+        let saved: Workspace = decode(saved)?;
+        if saved.name.is_some()
+            && (saved.name != workspace.name
+                || saved.branch != workspace.branch
+                || saved.path != workspace.path)
+        {
+            return Err(storage("A reserved workspace location cannot be changed"));
+        }
+    }
+    db.execute("INSERT INTO workspaces(id,repository_id,queued,record,name,branch,path) VALUES (?1,?2,?3,?4,?5,?6,?7) ON CONFLICT(id) DO UPDATE SET queued=excluded.queued,record=excluded.record,name=excluded.name,branch=excluded.branch,path=excluded.path", params![workspace.id.0.to_string(), workspace.repository_id.0.to_string(), i64::from(workspace.status == CreationStatus::Queued), encode(workspace)?,workspace.name,workspace.branch,workspace.path]).map_err(storage)?;
     if let Some(action) = action {
         db.execute(
             "INSERT INTO workspace_actions(id,workspace_id,record) VALUES (?1,?2,?3)",
@@ -292,6 +343,50 @@ fn write_workspace(
     Ok(())
 }
 impl CreationStore for SqliteStore {
+    fn naming(&mut self, repository: RepositoryId) -> Result<crate::workspaces::naming::Naming> {
+        self.ensure_committed()?;
+        let folder = self
+            .connection
+            .query_row(
+                "SELECT folder FROM repository_folders WHERE repository_id=?1",
+                [repository.0.to_string()],
+                |r| r.get(0),
+            )
+            .optional()
+            .map_err(storage)?;
+        let mut query = self
+            .connection
+            .prepare("SELECT folder FROM repository_folders")
+            .map_err(storage)?;
+        let folders = query
+            .query_map([], |r| r.get::<_, String>(0))
+            .map_err(storage)?
+            .map(|r| r.map_err(storage))
+            .collect::<Result<_>>()?;
+        let mut query = self
+            .connection
+            .prepare("SELECT name FROM workspaces WHERE repository_id=?1 AND name IS NOT NULL")
+            .map_err(storage)?;
+        let names = query
+            .query_map([repository.0.to_string()], |r| r.get::<_, String>(0))
+            .map_err(storage)?
+            .map(|r| r.map_err(storage))
+            .collect::<Result<_>>()?;
+        Ok(crate::workspaces::naming::Naming {
+            folder,
+            folders,
+            names,
+        })
+    }
+    fn reserve_name(&mut self, workspace: &Workspace, folder: &str) -> Result<()> {
+        self.ensure_committed()?;
+        self.write(|db| {
+            db.execute("INSERT INTO repository_folders(repository_id,folder) VALUES (?1,?2) ON CONFLICT(repository_id) DO NOTHING", params![workspace.repository_id.0.to_string(), folder]).map_err(storage)?;
+            let saved: String = db.query_row("SELECT folder FROM repository_folders WHERE repository_id=?1", [workspace.repository_id.0.to_string()], |r| r.get(0)).map_err(storage)?;
+            if saved != folder { return Err(storage("Repository folder reservation conflicts with saved identity")); }
+            write_workspace(db, workspace, None)
+        })
+    }
     fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>> {
         self.ensure_committed()?;
         self.read(

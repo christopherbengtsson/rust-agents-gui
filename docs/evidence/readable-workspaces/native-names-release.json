@@ -1,0 +1,240 @@
+{
+  "root": "/private/tmp/rag-names-1285r5oh",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "sha256": "bf1c675aea3bad64f847497fd4c3f86914d4a9d10a85a6585f75ee2ed6647461",
+  "metadata_no_state_effects": true,
+  "result": "pass",
+  "catalog_count": 500,
+  "first": {
+    "id": "f82c1b07-b52d-4924-b84e-da4fd9cf0167",
+    "repository_id": "88c0c987-80a8-4e2f-93ca-e51942435502",
+    "creation_action_id": "a9233768-e7ec-4676-a2d6-133824b611eb",
+    "name": "elias-figueroa-2",
+    "branch": "workspace/elias-figueroa-2",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-2/elias-figueroa-2/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "37ea7a8b4966081191cc7edd00cda4c001eb0878"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "tier3": {
+    "id": "b1d3ceae-3a77-4237-92b3-6a812491b83f",
+    "repository_id": "88c0c987-80a8-4e2f-93ca-e51942435502",
+    "creation_action_id": "d7a2a87e-52ed-465b-89cf-011f9beefdee",
+    "name": "brandi-chastain-3",
+    "branch": "workspace/brandi-chastain-3",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-2/brandi-chastain-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "37ea7a8b4966081191cc7edd00cda4c001eb0878"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "failed_reserved": {
+    "id": "220d28b3-21fc-4f39-9bda-bb443aabd677",
+    "repository_id": "88c0c987-80a8-4e2f-93ca-e51942435502",
+    "creation_action_id": "3c2dbb2c-c508-4295-9cab-53ac5e22b28c",
+    "name": "marek-hamsik-3",
+    "branch": "workspace/marek-hamsik-3",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-2/marek-hamsik-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": null,
+    "artifacts": {
+      "branch": "unknown",
+      "folder": "unknown"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "git",
+        "message": "Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "other_failed_reserved": {
+    "id": "ce83371f-378b-477e-b614-c22bebd434d9",
+    "repository_id": "88c0c987-80a8-4e2f-93ca-e51942435502",
+    "creation_action_id": "7f5c3b08-143a-4164-b0f5-ff13742c01dd",
+    "name": "virgil-van-dijk-3",
+    "branch": "workspace/virgil-van-dijk-3",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-2/virgil-van-dijk-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": null,
+    "artifacts": {
+      "branch": "unknown",
+      "folder": "unknown"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "git",
+        "message": "Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "recovered": {
+    "id": "220d28b3-21fc-4f39-9bda-bb443aabd677",
+    "repository_id": "88c0c987-80a8-4e2f-93ca-e51942435502",
+    "creation_action_id": "3c2dbb2c-c508-4295-9cab-53ac5e22b28c",
+    "name": "marek-hamsik-3",
+    "branch": "workspace/marek-hamsik-3",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-2/marek-hamsik-3/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "37ea7a8b4966081191cc7edd00cda4c001eb0878"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "second_repository": {
+    "id": "de233c9a-0f92-4532-a927-d5d305d47243",
+    "repository_id": "787c7c72-3675-46f7-9f0f-7976b6b982b9",
+    "creation_action_id": "c74b25ce-db43-4433-91cb-2b991b05ac68",
+    "name": "frenkie-de-jong",
+    "branch": "workspace/frenkie-de-jong",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-3/frenkie-de-jong/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "e002abfc1002bb47cce983e63d04295b7487ef61"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "ancestor_conflict": {
+    "id": "d355a703-0a1e-48e4-bcba-f040ae95f1d1",
+    "repository_id": "7ce149fc-7b5a-44c9-b13a-bbeebb10b064",
+    "creation_action_id": "e694bf4c-3041-4d64-a6cd-463ffe978460",
+    "name": null,
+    "branch": null,
+    "path": null,
+    "legacy": false,
+    "provider": "codex",
+    "base": null,
+    "artifacts": {
+      "branch": "unknown",
+      "folder": "unknown"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "conflict",
+        "message": "A registered Git worktree occupies this managed repository folder or its ancestor. Restore or move that worktree registration, then reconcile; choosing another player cannot resolve this location conflict."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "storage_constraints": [true, true, true, true],
+  "restored": {
+    "id": "f82c1b07-b52d-4924-b84e-da4fd9cf0167",
+    "repository_id": "88c0c987-80a8-4e2f-93ca-e51942435502",
+    "creation_action_id": "a9233768-e7ec-4676-a2d6-133824b611eb",
+    "name": "elias-figueroa-2",
+    "branch": "workspace/elias-figueroa-2",
+    "path": "/private/tmp/rag-names-1285r5oh/state/workspaces/readable-repo-2/elias-figueroa-2/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "37ea7a8b4966081191cc7edd00cda4c001eb0878"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "migration": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "repository_id": "7a451d45-e116-4174-96b7-14b7aaad6164",
+      "creation_action_id": "1e673ef7-1720-4046-9c99-033388825373",
+      "name": "kyoto",
+      "branch": "workspace/kyoto-00000000-0000-0000-0000-000000000001",
+      "path": "/private/tmp/rag-names-1285r5oh/migration/workspaces/7a451d45-e116-4174-96b7-14b7aaad6164/kyoto-00000000-0000-0000-0000-000000000001/checkout",
+      "legacy": true,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "37ea7a8b4966081191cc7edd00cda4c001eb0878"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "repository_id": "7a451d45-e116-4174-96b7-14b7aaad6164",
+      "creation_action_id": "3946ec84-eef9-404d-a5e4-b898c692bba5",
+      "name": "kyoto-2",
+      "branch": "workspace/kyoto-00000000-0000-0000-0000-000000000002",
+      "path": "/private/tmp/rag-names-1285r5oh/migration/workspaces/7a451d45-e116-4174-96b7-14b7aaad6164/kyoto-00000000-0000-0000-0000-000000000002/checkout",
+      "legacy": true,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "37ea7a8b4966081191cc7edd00cda4c001eb0878"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "failed",
+        "error": {
+          "code": "git",
+          "message": "synthetic prior failure"
+        }
+      },
+      "cleanup_unconfirmed": false
+    }
+  ],
+  "original_checkout_unchanged": true,
+  "wall_seconds": 3.237960209022276
+}

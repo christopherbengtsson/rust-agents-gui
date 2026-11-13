@@ -62,6 +62,7 @@ export function prepareSupervisor(
   copyFile(artifact.executable, binary);
   const provenance = {
     sourceRevision,
+    applicationVersion: supervisor.version,
     dirty,
     targetDirectory: metadata.target_directory,
     profile: mode === "debug" ? "dev" : "release",

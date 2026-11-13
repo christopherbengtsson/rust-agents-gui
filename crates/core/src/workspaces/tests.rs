@@ -497,6 +497,21 @@ fn validated_aliases_and_linked_worktrees_share_identity_and_first_location() {
 }
 
 impl CreationStore for Store {
+    fn naming(&mut self, r: RepositoryId) -> Result<super::naming::Naming> {
+        Ok(super::naming::Naming {
+            folder: None,
+            folders: Default::default(),
+            names: self
+                .workspaces
+                .values()
+                .filter(|w| w.repository_id == r)
+                .filter_map(|w| w.name.clone())
+                .collect(),
+        })
+    }
+    fn reserve_name(&mut self, w: &Workspace, _: &str) -> Result<()> {
+        self.save_workspace(w, None)
+    }
     fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>> {
         Ok(self.workspaces.get(&id).cloned())
     }
@@ -698,7 +713,7 @@ fn recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bou
         Path::new("/state"),
     )
     .unwrap();
-    w.path = "\\".repeat(8500); // JSON escaping counts toward the metadata byte budget.
+    w.path = Some("\\".repeat(8500)); // JSON escaping counts toward the metadata byte budget.
     check_workspace_budget(&w).unwrap();
     w.status = CreationStatus::Uncertain {
         error: RepositoryError::storage("x".repeat(10000)),
@@ -715,7 +730,7 @@ fn recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bou
         .len()
             < 24 * 1024
     );
-    w.path = "\\".repeat(12000);
+    w.path = Some("\\".repeat(12000));
     assert!(check_workspace_budget(&w).is_err());
 }
 
@@ -755,6 +770,16 @@ fn creation_keeps_pending_observations_readable_during_every_effect() {
         }
     }
     impl CreationEffects for Reading<'_> {
+        fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
+            Ok(Default::default())
+        }
+        fn occupied(
+            &mut self,
+            _: &RepositoryRecord,
+            _: &Path,
+        ) -> Result<crate::workspaces::naming::Occupied> {
+            Ok(Default::default())
+        }
         fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
             Ok(true)
         }
@@ -813,7 +838,7 @@ fn workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit() {
         )
         .unwrap();
         w.id = WorkspaceId(Uuid::from_u128(number));
-        w.path = "\\".repeat(7000);
+        w.path = Some("\\".repeat(7000));
         w.status = CreationStatus::Ready;
         store.save_workspace(&w, None).unwrap();
     }

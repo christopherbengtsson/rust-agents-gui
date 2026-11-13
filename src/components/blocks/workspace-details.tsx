@@ -1,3 +1,8 @@
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
 import { GitBranch, Folder, Check, CircleAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -23,6 +28,24 @@ export function WorkspaceDetails({
   const failure =
     workspace.status.state === "failed" ||
     workspace.status.state === "uncertain";
+  const locationFacts = (
+    <>
+      <div>
+        <dt>
+          <GitBranch aria-hidden="true" />
+          Branch
+        </dt>
+        <dd>{workspace.branch}</dd>
+      </div>
+      <div>
+        <dt>
+          <Folder aria-hidden="true" />
+          Workspace folder
+        </dt>
+        <dd>{workspace.path}</dd>
+      </div>
+    </>
+  );
   return (
     <section
       aria-label="Selected workspace"
@@ -41,22 +64,9 @@ export function WorkspaceDetails({
             ? "Workspace needs attention"
             : "Preparing your workspace"}
       </h2>
-      <p className="repository-path">{workspace.name}</p>
+      <p className="repository-path">{workspace.name ?? "New workspace"}</p>
       <dl className="workspace-facts flex flex-col gap-4">
-        <div>
-          <dt>
-            <GitBranch aria-hidden="true" />
-            Branch
-          </dt>
-          <dd>{workspace.branch}</dd>
-        </div>
-        <div>
-          <dt>
-            <Folder aria-hidden="true" />
-            Workspace folder
-          </dt>
-          <dd>{workspace.path}</dd>
-        </div>
+        {workspace.path && !workspace.legacy && <>{locationFacts}</>}
         <div>
           <dt>Local base</dt>
           <dd>
@@ -94,6 +104,23 @@ export function WorkspaceDetails({
           </dd>
         </div>
       </dl>
+      {!workspace.path && (
+        <p className="muted-copy">
+          A name and folder have not been reserved yet.
+        </p>
+      )}
+      {workspace.legacy && workspace.path && (
+        <Collapsible>
+          <CollapsibleTrigger render={<Button variant="outline" size="sm" />}>
+            Show saved branch and folder
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <dl className="workspace-facts flex flex-col gap-4 pt-3">
+              {locationFacts}
+            </dl>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
       {busy && (
         <p role="status" className="flex items-center gap-2">
           <Spinner aria-hidden="true" />

@@ -1,3 +1,4 @@
+import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -51,24 +52,28 @@ export function useSupervisorConnection() {
     if (!mounted.current || pending.current !== null) return;
     const request = Symbol();
     pending.current = request;
-    try {
-      await readObservation().then((outcome) => {
-        if (!mounted.current || pending.current !== request) return;
-        if (outcome.ok)
-          setConnection({
-            state: "connected",
-            observation: outcome.observation,
-          });
-        else
-          setConnection((last) => ({
-            state: "error",
-            error: outcome.error,
-            observation: last.observation,
-          }));
-      });
-    } finally {
-      if (pending.current === request) pending.current = null;
-    }
+    return completeOperation(
+      async () => {
+        await readObservation().then((outcome) => {
+          if (!mounted.current || pending.current !== request) return;
+          if (outcome.ok)
+            setConnection({
+              state: "connected",
+              observation: outcome.observation,
+            });
+          else
+            setConnection((last) => ({
+              state: "error",
+              error: outcome.error,
+              observation: last.observation,
+            }));
+        });
+      },
+      undefined,
+      () => {
+        if (pending.current === request) pending.current = null;
+      },
+    );
   }, []);
 
   const refreshStatus = useCallback(async () => {

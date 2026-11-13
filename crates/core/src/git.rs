@@ -8,7 +8,8 @@ use std::{
     time::{Duration, Instant},
 };
 
-const OUTPUT_LIMIT: usize = 16 * 1024;
+// Batch ref/worktree inventories share the bounded command runner.
+const OUTPUT_LIMIT: usize = 256 * 1024;
 const DEADLINE: Duration = Duration::from_secs(2);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -354,7 +355,7 @@ fn ownership_ref(workspace: &Workspace) -> String {
     format!("refs/agent-workspace/{}", workspace.id.0)
 }
 fn wrapper(workspace: &Workspace) -> Result<&Path> {
-    Path::new(&workspace.path)
+    Path::new(workspace.path()?)
         .parent()
         .ok_or_else(|| failure("Workspace folder has no parent"))
 }
@@ -397,7 +398,80 @@ fn validate_repository(repository: &crate::workspaces::RepositoryRecord) -> Resu
     }
     Ok(())
 }
+fn directory_names(directory: &Path) -> Result<std::collections::HashSet<String>> {
+    let mut names = std::collections::HashSet::new();
+    if location(directory)?.is_none() {
+        return Ok(names);
+    }
+    crate::supervisor::check_private(directory, true).map_err(failure)?;
+    for entry in std::fs::read_dir(directory).map_err(failure)? {
+        let name = entry
+            .map_err(failure)?
+            .file_name()
+            .to_string_lossy()
+            .to_ascii_lowercase();
+        names.insert(name);
+        if names.len() > 100_000 {
+            return Err(failure(
+                "Managed folder inventory exceeds its safety budget",
+            ));
+        }
+    }
+    Ok(names)
+}
+fn occupied_inventory(
+    refs: &str,
+    worktrees: &str,
+    names: std::collections::HashSet<String>,
+) -> Result<crate::workspaces::naming::Occupied> {
+    let mut result = crate::workspaces::naming::Occupied {
+        names,
+        worktrees: vec![],
+    };
+    for reference in refs.lines() {
+        if reference == "refs/heads/workspace" {
+            return Err(failure(
+                "An existing workspace branch blocks the workspace/ namespace. Rename that branch before reconciling.",
+            ));
+        }
+        if let Some(name) = reference.strip_prefix("refs/heads/workspace/") {
+            result
+                .names
+                .insert(name.split('/').next().unwrap_or(name).to_ascii_lowercase());
+        }
+    }
+    for field in worktrees.split('\0') {
+        if let Some(path) = field.strip_prefix("worktree ") {
+            result.worktrees.push(PathBuf::from(path));
+        }
+    }
+    Ok(result)
+}
 impl CreationEffects for LocalCreation {
+    fn repository_folders(&mut self, root: &Path) -> Result<std::collections::HashSet<String>> {
+        directory_names(root)
+    }
+    fn occupied(
+        &mut self,
+        repository: &crate::workspaces::RepositoryRecord,
+        directory: &Path,
+    ) -> Result<crate::workspaces::naming::Occupied> {
+        validate_repository(repository)?;
+        let path = Path::new(&repository.path);
+        let refs = run(creation_command(
+            path,
+            &[
+                "for-each-ref",
+                "--format=%(refname)",
+                "refs/heads/workspace",
+            ],
+        ))?;
+        let worktrees = run(creation_command(
+            path,
+            &["worktree", "list", "--porcelain", "-z"],
+        ))?;
+        occupied_inventory(&refs, &worktrees, directory_names(directory)?)
+    }
     fn quiescent(&mut self, workspace: &Workspace) -> Result<bool> {
         check_workspace_ancestors(workspace)?;
         let path = wrapper(workspace)?.join("execution.lock");
@@ -435,7 +509,7 @@ impl CreationEffects for LocalCreation {
             .base
             .as_ref()
             .ok_or_else(|| failure("Workspace has no pinned commit"))?;
-        let branch = query_optional(path, &format!("refs/heads/{}", workspace.branch))?;
+        let branch = query_optional(path, &format!("refs/heads/{}", workspace.branch()?))?;
         let owner = query_optional(path, &ownership_ref(workspace))?;
         let branch = match (branch, owner) {
             (None, None) => BranchArtifact::Absent,
@@ -458,15 +532,15 @@ impl CreationEffects for LocalCreation {
                 };
                 if !owned {
                     FolderArtifact::Conflict
-                } else if location(Path::new(&workspace.path))?.is_none() {
+                } else if location(Path::new(workspace.path()?))?.is_none() {
                     FolderArtifact::Reserved
                 } else {
-                    let inspected = inspect(&workspace.path);
+                    let inspected = inspect(workspace.path()?);
                     if let Ok(actual) = inspected {
-                        if actual.path == workspace.path
+                        if actual.path == workspace.path()?
                             && actual.common_dir == repository.common_dir
                         {
-                            let target = Path::new(&workspace.path);
+                            let target = Path::new(workspace.path()?);
                             let head = query_optional(target, "HEAD")?;
                             let symbolic = run_output(
                                 creation_command(target, &["symbolic-ref", "--quiet", "HEAD"]),
@@ -482,7 +556,7 @@ impl CreationEffects for LocalCreation {
                             if head.as_deref() == Some(&base.commit)
                                 && symbolic.0
                                 && symbolic.1
-                                    == format!("refs/heads/{}\n", workspace.branch).as_bytes()
+                                    == format!("refs/heads/{}\n", workspace.branch()?).as_bytes()
                                 && clean.0
                                 && clean.1.is_empty()
                             {
@@ -554,7 +628,7 @@ impl CreationEffects for LocalCreation {
             .ok_or_else(|| failure("Missing pinned base"))?;
         let input = format!(
             "start\ncreate refs/heads/{} {}\ncreate {} {}\nprepare\ncommit\n",
-            workspace.branch,
+            workspace.branch()?,
             base.commit,
             ownership_ref(workspace),
             base.commit
@@ -585,8 +659,8 @@ impl CreationEffects for LocalCreation {
                     "add",
                     "--quiet",
                     "--",
-                    &workspace.path,
-                    &workspace.branch,
+                    workspace.path()?,
+                    workspace.branch()?,
                 ],
             ),
             None,
@@ -677,6 +751,20 @@ mod tests {
             }
             .into())
         }
+    }
+    #[test]
+    fn batch_inventory_keeps_nested_refs_missing_worktree_locations_and_occupied_folders() {
+        let occupied = occupied_inventory("refs/heads/workspace/marta/subtask\nrefs/heads/workspace/pele\n", "worktree /repo\0HEAD abc\0\0worktree /state/repo/marta/checkout\0branch refs/heads/workspace/marta\0\0", std::collections::HashSet::from(["mia-hamm".into()])).unwrap();
+        assert_eq!(
+            occupied.names,
+            std::collections::HashSet::from(["marta".into(), "pele".into(), "mia-hamm".into()])
+        );
+        assert!(
+            occupied
+                .worktrees
+                .contains(&PathBuf::from("/state/repo/marta/checkout"))
+        );
+        assert!(occupied_inventory("refs/heads/workspace", "", Default::default()).is_err());
     }
     #[test]
     fn nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries() {

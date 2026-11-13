@@ -1,3 +1,4 @@
+import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { repositoryError, type RepositoryError } from "@/lib/repositories";
 import {
@@ -54,7 +55,7 @@ export function useWorkspaces(
       setPreferenceError("The desktop could not remember workspace selection.");
     }
   }, []);
-  // Stable synchronization callback while finally cleanup remains outside compiler lowering.
+  // Stable synchronization callback owns the observation subscription lifecycle.
   const read = useCallback(
     async function refresh(): Promise<void> {
       if (!mounted.current || !owner) return;
@@ -66,121 +67,125 @@ export function useWorkspaces(
       const generation = epoch.current;
       const navigationGeneration = navigation.current;
       const active = () => mounted.current && epoch.current === generation;
-      try {
-        const outstanding = intent.current;
-        if (outstanding) {
-          const result = await workspaceRequest({
-            operation: "action",
-            action_id: outstanding.action_id,
-          });
-          if (!active()) return;
-          if (
-            intent.current?.action_id === outstanding.action_id &&
-            result.kind === "action" &&
-            result.action &&
-            result.workspace
-          ) {
-            // A lookup validates its ID; also match the retained request payload.
+      return completeOperation(
+        async () => {
+          const outstanding = intent.current;
+          if (outstanding) {
+            const result = await workspaceRequest({
+              operation: "action",
+              action_id: outstanding.action_id,
+            });
+            if (!active()) return;
             if (
-              JSON.stringify(result.action) !== JSON.stringify(outstanding) &&
-              (result.action.operation !== outstanding.operation ||
-                (result.action.operation === "create" &&
-                outstanding.operation === "create"
-                  ? result.action.repository_id !== outstanding.repository_id
-                  : result.action.operation === "reconcile" &&
-                    outstanding.operation === "reconcile" &&
-                    result.action.workspace_id !== outstanding.workspace_id))
+              intent.current?.action_id === outstanding.action_id &&
+              result.kind === "action" &&
+              result.action &&
+              result.workspace
+            ) {
+              // A lookup validates its ID; also match the retained request payload.
+              if (
+                JSON.stringify(result.action) !== JSON.stringify(outstanding) &&
+                (result.action.operation !== outstanding.operation ||
+                  (result.action.operation === "create" &&
+                  outstanding.operation === "create"
+                    ? result.action.repository_id !== outstanding.repository_id
+                    : result.action.operation === "reconcile" &&
+                      outstanding.operation === "reconcile" &&
+                      result.action.workspace_id !== outstanding.workspace_id))
+              )
+                throw new Error(
+                  "Workspace action payload conflicts with the retained request.",
+                );
+              if (
+                navigation.current === pendingNavigation.current &&
+                result.workspace.repository_id === repositoryId
+              )
+                remember(result.workspace);
+              setActionError(undefined);
+              intent.current = null;
+              setPending(null);
+              try {
+                localStorage.removeItem(WORKSPACE_PENDING);
+              } catch {
+                setPreferenceError(
+                  "The recorded workspace action could not be cleared from desktop preferences; reopening will retrieve its status.",
+                );
+              }
+            } else if (
+              intent.current?.action_id === outstanding.action_id &&
+              !sending.current
             )
-              throw new Error(
-                "Workspace action payload conflicts with the retained request.",
+              setActionError(
+                (last) =>
+                  last ?? {
+                    code: "not_found",
+                    message:
+                      "No recorded workspace action was found. Retry the same submission explicitly; refresh does not create another workspace.",
+                  },
               );
-            if (
-              navigation.current === pendingNavigation.current &&
-              result.workspace.repository_id === repositoryId
-            )
-              remember(result.workspace);
-            setActionError(undefined);
-            intent.current = null;
-            setPending(null);
-            try {
-              localStorage.removeItem(WORKSPACE_PENDING);
-            } catch {
-              setPreferenceError(
-                "The recorded workspace action could not be cleared from desktop preferences; reopening will retrieve its status.",
-              );
-            }
-          } else if (
-            intent.current?.action_id === outstanding.action_id &&
-            !sending.current
-          )
-            setActionError(
-              (last) =>
-                last ?? {
-                  code: "not_found",
-                  message:
-                    "No recorded workspace action was found. Retry the same submission explicitly; refresh does not create another workspace.",
-                },
-            );
-        }
-        const ids = Array.from(
-          new Set([
-            ...repositoryIds.split(",").filter(Boolean),
-            ...(repositoryId ? [repositoryId] : []),
-          ]),
-        );
-        const target = selection.current;
-        const wanted =
-          target && target.repository_id === repositoryId
-            ? target.workspace_id
-            : initial &&
-                initial.repository_id === repositoryId &&
-                handledInitial.current !== initial.workspace_id
-              ? initial.workspace_id
-              : undefined;
-        const [lists, detail] = await Promise.all([
-          Promise.all(
-            ids.map(async (id) => {
-              const history = cursors.current[id];
-              const result = await workspaceRequest({
-                operation: "list",
-                repository_id: id,
-                after: history?.at(-1) ?? null,
-              });
-              return [id, result] as const;
-            }),
-          ),
-          wanted
-            ? workspaceRequest({ operation: "get", id: wanted })
-            : Promise.resolve(null),
-        ]);
-        if (!active()) return;
-        const next: Record<string, WorkspacePage> = {};
-        for (const [id, result] of lists)
-          if (result.kind === "workspaces") next[id] = result.page;
-        setPages(next);
-        if (
-          detail?.kind === "workspace" &&
-          detail.workspace &&
-          selection.current === target &&
-          navigation.current === navigationGeneration
-        ) {
-          if (initial?.workspace_id === detail.workspace.id)
-            handledInitial.current = detail.workspace.id;
-          remember(detail.workspace);
-        }
-        if (!outstanding || !intent.current) setError(undefined);
-      } catch (error) {
-        if (active()) setError(repositoryError(error));
-      } finally {
-        if (active()) {
-          reading.current = false;
-          setLoading(false);
-          if (queued.current) {
-            queued.current = false;
-            void refresh();
           }
-        }
-      }
+          const ids = Array.from(
+            new Set([
+              ...repositoryIds.split(",").filter(Boolean),
+              ...(repositoryId ? [repositoryId] : []),
+            ]),
+          );
+          const target = selection.current;
+          const wanted =
+            target && target.repository_id === repositoryId
+              ? target.workspace_id
+              : initial &&
+                  initial.repository_id === repositoryId &&
+                  handledInitial.current !== initial.workspace_id
+                ? initial.workspace_id
+                : undefined;
+          const [lists, detail] = await Promise.all([
+            Promise.all(
+              ids.map(async (id) => {
+                const history = cursors.current[id];
+                const result = await workspaceRequest({
+                  operation: "list",
+                  repository_id: id,
+                  after: history?.at(-1) ?? null,
+                });
+                return [id, result] as const;
+              }),
+            ),
+            wanted
+              ? workspaceRequest({ operation: "get", id: wanted })
+              : Promise.resolve(null),
+          ]);
+          if (!active()) return;
+          const next: Record<string, WorkspacePage> = {};
+          for (const [id, result] of lists)
+            if (result.kind === "workspaces") next[id] = result.page;
+          setPages(next);
+          if (
+            detail?.kind === "workspace" &&
+            detail.workspace &&
+            selection.current === target &&
+            navigation.current === navigationGeneration
+          ) {
+            if (initial?.workspace_id === detail.workspace.id)
+              handledInitial.current = detail.workspace.id;
+            remember(detail.workspace);
+          }
+          if (!outstanding || !intent.current) setError(undefined);
+        },
+        (error) => {
+          if (active()) setError(repositoryError(error));
+        },
+        () => {
+          if (active()) {
+            reading.current = false;
+            setLoading(false);
+            if (queued.current) {
+              queued.current = false;
+              void refresh();
+            }
+          }
+        },
+      );
     },
     [owner, repositoryId, repositoryIds, initial, remember],
   );
@@ -238,56 +243,66 @@ export function useWorkspaces(
     setActionError(undefined);
     const generation = epoch.current;
     const nav = navigation.current;
-    try {
-      const result = await workspaceRequest(request);
-      if (!mounted.current || intent.current?.action_id !== request.action_id)
-        return;
-      if (result.kind === "action" && result.workspace) {
-        if (
-          epoch.current === generation &&
-          navigation.current === nav &&
-          result.workspace.repository_id === repositoryId
-        )
-          remember(result.workspace);
-        intent.current = null;
-        setPending(null);
-        try {
-          localStorage.removeItem(WORKSPACE_PENDING);
-        } catch {
-          setPreferenceError(
-            "The desktop could not clear the recorded workspace request.",
-          );
-        }
-      }
-    } catch (error) {
-      if (mounted.current && intent.current?.action_id === request.action_id) {
-        const failure = repositoryError(error);
-        setActionError(failure);
-        if (
-          ["capacity", "not_found", "conflict", "cleanup_unconfirmed"].includes(
-            failure.code,
+    return completeOperation(
+      async () => {
+        const result = await workspaceRequest(request);
+        if (!mounted.current || intent.current?.action_id !== request.action_id)
+          return;
+        if (result.kind === "action" && result.workspace) {
+          if (
+            epoch.current === generation &&
+            navigation.current === nav &&
+            result.workspace.repository_id === repositoryId
           )
-        ) {
-          // These typed responses reject admission before a durable creation intent.
-          // Storage/transport failures retain the identity for authoritative lookup.
+            remember(result.workspace);
           intent.current = null;
           setPending(null);
           try {
             localStorage.removeItem(WORKSPACE_PENDING);
           } catch {
             setPreferenceError(
-              "The rejected workspace request could not be cleared from desktop preferences.",
+              "The desktop could not clear the recorded workspace request.",
             );
           }
         }
-      }
-    } finally {
-      sending.current = false;
-      if (mounted.current) {
-        setSubmitting(false);
-        if (epoch.current === generation) void read();
-      }
-    }
+      },
+      (error) => {
+        if (
+          mounted.current &&
+          intent.current?.action_id === request.action_id
+        ) {
+          const failure = repositoryError(error);
+          setActionError(failure);
+          if (
+            [
+              "capacity",
+              "not_found",
+              "conflict",
+              "cleanup_unconfirmed",
+            ].includes(failure.code)
+          ) {
+            // These typed responses reject admission before a durable creation intent.
+            // Storage/transport failures retain the identity for authoritative lookup.
+            intent.current = null;
+            setPending(null);
+            try {
+              localStorage.removeItem(WORKSPACE_PENDING);
+            } catch {
+              setPreferenceError(
+                "The rejected workspace request could not be cleared from desktop preferences.",
+              );
+            }
+          }
+        }
+      },
+      () => {
+        sending.current = false;
+        if (mounted.current) {
+          setSubmitting(false);
+          if (epoch.current === generation) void read();
+        }
+      },
+    );
   }
   function select(workspace: Workspace) {
     handledInitial.current = initial?.workspace_id;

@@ -11,9 +11,17 @@ use workspace_core::{Core, connection::serve_connection, supervisor::SupervisorO
 
 fn main() -> io::Result<()> {
     let mut arguments = env::args_os().skip(1);
-    let state = PathBuf::from(arguments.next().ok_or_else(|| {
+    let first = arguments.next().ok_or_else(|| {
         io::Error::other("usage: workspace-supervisor <private-application-state-directory>")
-    })?);
+    })?;
+    if first == "--protocol-version" {
+        if arguments.next().is_some() {
+            return Err(io::Error::other("protocol metadata takes no arguments"));
+        }
+        println!("{}", workspace_core::connection::PROTOCOL_VERSION);
+        return Ok(());
+    }
+    let state = PathBuf::from(first);
     if arguments.next().is_some() {
         return Err(io::Error::other("expected exactly one state directory"));
     }

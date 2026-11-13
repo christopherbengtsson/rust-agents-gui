@@ -1,0 +1,18 @@
+{
+  "full_count": 500,
+  "utf8_slug_bytes": 6531,
+  "slice_table_bytes_on_64_bit": 8000,
+  "binary_500_bytes": 3211280,
+  "binary_500_sha256": "bcbc49fa5bdbf0f4c997f45ac8777ae018e2b388100b4593a20e064474692a4a",
+  "packaged_app_file_bytes_500": 14628775,
+  "control_count": 112,
+  "comparison": "Same production source/toolchain/profile/target, catalog alone reduced to retained112; package delta is uncompressed resource replacement in a private copy, not a second signed/compressed bundle.",
+  "control_build_wall_seconds": 16.045374708017334,
+  "binary_112_bytes": 3211280,
+  "binary_delta_bytes": 0,
+  "private_bundle_file_bytes_112": 14628775,
+  "uncompressed_bundle_delta_bytes": 0,
+  "control_bundle_copy": "/private/tmp/rag-catalog-size-h5yihue8/Agent Workspace.app",
+  "restored_build_wall_seconds": 3.551146417041309,
+  "restored_binary_sha256": "bcbc49fa5bdbf0f4c997f45ac8777ae018e2b388100b4593a20e064474692a4a"
+}

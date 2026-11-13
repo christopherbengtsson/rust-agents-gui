@@ -24,6 +24,7 @@ macro_rules! identity {
 identity!(RepositoryId);
 identity!(ActionId);
 mod creation;
+pub(crate) mod naming;
 pub use creation::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

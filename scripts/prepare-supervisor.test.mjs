@@ -42,7 +42,9 @@ function stagingScenario({
         if (command === "cargo" && args[0] === "metadata") {
           return JSON.stringify({
             target_directory: "/private/build-target",
-            packages: [{ name: "workspace-supervisor", id: packageId }],
+            packages: [
+              { name: "workspace-supervisor", id: packageId, version: "0.1.0" },
+            ],
           });
         }
         if (command === "git" && args[0] === "rev-parse")
@@ -98,6 +100,7 @@ test("stages Cargo's exact executable from a private target and records its prov
   ]);
   assert.deepEqual(provenance, {
     sourceRevision: "revision-123",
+    applicationVersion: "0.1.0",
     dirty: true,
     targetDirectory: "/private/build-target",
     profile: "release",

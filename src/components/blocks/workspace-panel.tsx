@@ -28,9 +28,9 @@ export function WorkspacePanel({
     <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
       <header className="workspace-header">
         <h1 className="min-w-0 truncate">
-          {workspaces.selected?.name ??
-            repositories.selected?.name ??
-            "Workspace"}
+          {workspaces.selected
+            ? (workspaces.selected.name ?? "New workspace")
+            : (repositories.selected?.name ?? "Workspace")}
         </h1>
         <Button
           variant="outline"

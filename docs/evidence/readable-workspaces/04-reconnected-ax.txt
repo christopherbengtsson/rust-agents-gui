@@ -1,0 +1,61 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/rag-names-ui-0fznotzt/Great Goals Available
+							11 button Great Goals, Help: /private/tmp/rag-names-ui-0fznotzt/Great Goals
+							12 button (expanded) Toggle details for Great Goals, Secondary Actions: Collapse
+							13 button Create workspace in Great Goals
+							14 text /private/tmp/rag-names-ui-0fznotzt/Great Goals
+							15 text Available
+							16 content list
+								17 button ricardo-quaresma, Help: Workspace ready
+								18 button jairzinho, Help: Workspace ready
+				19 pop up button Add repository
+				20 text Connected
+				21 pop up button Connection details
+			22 container
+				23 heading jairzinho, Value: 1
+					24 text jairzinho
+				25 button Refresh status
+				26 container Selected repository
+					27 text /private/tmp/rag-names-ui-0fznotzt/Great Goals
+					28 text Repository available
+				29 container Selected workspace
+					30 text Workspace ready Codex
+					31 heading Your workspace is ready, Value: 2
+						32 text Your workspace is ready
+					33 text jairzinho
+					34 description list
+						35 text Branch
+						36 text workspace/jairzinho
+						37 text Workspace folder
+						38 text /private/tmp/rag-names-ui-0fznotzt/state/workspaces/great-goals/jairzinho/checkout
+						39 text Local base
+						40 text refs/heads/main · 06dae53d869cee3b63ba1faa61410414ef560d07
+						41 text Branch artifact
+						42 text Created by this action
+						43 text Folder artifact
+						44 text Worktree created
+					45 container
+						46 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				47 text Local workspace
+				48 text Great Goals
+	49 close button
+	50 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	51 minimize button
+	52 text Agent Workspace
+53 menu bar
+	54 Agent Workspace
+	55 File
+	56 Edit
+	57 View
+	58 Window
+	59 Help

@@ -125,7 +125,7 @@ Follow [testing and verification](../../docs/agents/verification.md) for automat
 | Acceptance               | Required coverage                                                                                                                                                                                                             |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | A1 — Register            | Valid and invalid/unavailable repositories; no original-file changes or provider start; restored identity after reopening.                                                                                                    |
-| A2 — Workspace           | Automatic pinned local default, separate branch/worktree, untouched original checkout, persistent identity, partial creation failure, and repeat-action reconciliation without duplication or unrelated deletion.                            |
+| A2 — Workspace           | Automatic pinned local default, separate branch/worktree, untouched original checkout, persistent identity, partial creation failure, and repeat-action reconciliation without duplication or unrelated deletion.             |
 | A3 — Connect             | Supported protocol/configuration and existing authentication; missing executable, incompatible protocol, unavailable authentication, and actionable setup errors. Native compatibility is separately qualified.               |
 | A4 — Chat                | Multiline sends, correctly routed streaming/tool activity, saved/received/uncertain delivery, repeated action IDs, late/duplicate events, and usable control during sustained output.                                         |
 | A5 — Approval            | Exact operation/request/turn matching, allow effect, denied non-effect, malformed payloads, stale/conflicting answers, and uncertain lost replies without broadened permission.                                               |
@@ -171,3 +171,11 @@ Registration remains separate and read-only; successful new registration records
 its first-creation continuation atomically. Re-registering an existing repository
 does not create another. No composer, base picker, fetch, setup or agent launch.
 See [research](../../docs/research/ticket-04-conductor-workspace-flow.md).
+
+## Readable workspace follow-up
+
+The approved [readable-workspaces plan](readable-workspaces-plan.md) refines ticket
+04 naming and development startup. UUIDs remain internal identity; human labels
+use the curated footballer catalog with permanent reservations and numeric tiers.
+This does not expand creation into a composer, base picker or provider launch.
+See [evidence](../../docs/evidence/readable-workspaces.md) for qualification and limits.

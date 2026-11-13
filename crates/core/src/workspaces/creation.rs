@@ -27,6 +27,7 @@ pub struct PinnedBase {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CreationStage {
+    AllocatingName,
     ResolvingBase,
     ReservingFolder,
     CreatingBranch,
@@ -69,9 +70,11 @@ pub struct Workspace {
     pub id: WorkspaceId,
     pub repository_id: RepositoryId,
     pub creation_action_id: ActionId,
-    pub name: String,
-    pub branch: String,
-    pub path: String,
+    pub name: Option<String>,
+    pub branch: Option<String>,
+    pub path: Option<String>,
+    #[serde(default)]
+    pub legacy: bool,
     pub provider: String,
     pub base: Option<PinnedBase>,
     pub artifacts: Artifacts,
@@ -89,6 +92,18 @@ pub enum WorkspaceAction {
         action_id: ActionId,
         workspace_id: WorkspaceId,
     },
+}
+impl Workspace {
+    pub(crate) fn path(&self) -> Result<&str> {
+        self.path
+            .as_deref()
+            .ok_or_else(|| RepositoryError::storage("Workspace name has not been reserved"))
+    }
+    pub(crate) fn branch(&self) -> Result<&str> {
+        self.branch
+            .as_deref()
+            .ok_or_else(|| RepositoryError::storage("Workspace name has not been reserved"))
+    }
 }
 impl WorkspaceAction {
     pub(crate) fn id(&self) -> ActionId {
@@ -140,6 +155,8 @@ pub enum WorkspaceReply {
 }
 
 pub(crate) trait CreationStore: Send {
+    fn naming(&mut self, repository: RepositoryId) -> Result<super::naming::Naming>;
+    fn reserve_name(&mut self, workspace: &Workspace, folder: &str) -> Result<()>;
     fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>>;
     fn workspace_action(&mut self, id: ActionId) -> Result<Option<(WorkspaceAction, WorkspaceId)>>;
     fn save_workspace(
@@ -161,45 +178,17 @@ pub(crate) trait CreationStore: Send {
 pub(crate) fn allocate(
     repository: RepositoryId,
     action: ActionId,
-    directory: &Path,
+    _directory: &Path,
 ) -> Result<Workspace> {
     let id = WorkspaceId(Uuid::new_v4());
-    let cities = [
-        "stockholm",
-        "kyoto",
-        "lisbon",
-        "lima",
-        "oslo",
-        "macau",
-        "porto",
-        "vienna",
-    ];
-    let name = format!(
-        "{}-{}",
-        cities[usize::from(id.0.as_bytes()[0]) % cities.len()],
-        id.0
-    );
-    let path = directory
-        .join("workspaces")
-        .join(repository.0.to_string())
-        .join(&name)
-        .join("checkout");
-    let path = path
-        .to_str()
-        .ok_or_else(|| {
-            RepositoryError::new(
-                ErrorCode::InvalidPath,
-                "The private workspace directory is not UTF-8.",
-            )
-        })?
-        .to_owned();
     let workspace = Workspace {
         id,
         repository_id: repository,
         creation_action_id: action,
-        branch: format!("workspace/{name}"),
-        name,
-        path,
+        branch: None,
+        name: None,
+        path: None,
+        legacy: false,
         provider: "codex".into(),
         base: None,
         artifacts: Artifacts {
@@ -228,6 +217,12 @@ pub(crate) fn check_workspace_budget(workspace: &Workspace) -> Result<()> {
 }
 
 pub(crate) trait CreationEffects {
+    fn repository_folders(&mut self, root: &Path) -> Result<std::collections::HashSet<String>>;
+    fn occupied(
+        &mut self,
+        repository: &RepositoryRecord,
+        directory: &Path,
+    ) -> Result<super::naming::Occupied>;
     fn quiescent(&mut self, workspace: &Workspace) -> Result<bool>;
     fn base(&mut self, repository: &RepositoryRecord) -> Result<PinnedBase>;
     fn inspect(
@@ -240,12 +235,77 @@ pub(crate) trait CreationEffects {
     fn worktree(&mut self, repository: &RepositoryRecord, workspace: &Workspace) -> Result<()>;
 }
 
+pub(crate) fn prepare_name(
+    mut workspace: Workspace,
+    repository: &RepositoryRecord,
+    root: &Path,
+    mut naming: super::naming::Naming,
+    effects: &mut impl CreationEffects,
+    mut persist: impl FnMut(&Workspace, Option<&str>) -> Result<()>,
+) -> Result<Workspace> {
+    if workspace.name.is_some() {
+        return Ok(workspace);
+    }
+    workspace.status = CreationStatus::Running {
+        stage: CreationStage::AllocatingName,
+    };
+    persist(&workspace, None)?;
+    let result = (|| {
+        let root = root.join("workspaces");
+        let folder = match naming.folder {
+            Some(folder) => folder,
+            None => {
+                naming.folders.extend(effects.repository_folders(&root)?);
+                super::naming::repository_folder(&repository.name, &naming.folders)?
+            }
+        };
+        let directory = root.join(&folder);
+        let occupied = effects.occupied(repository, &directory)?;
+        let name = super::naming::workspace_name(
+            &naming.names,
+            &occupied,
+            &directory,
+            workspace.id.0.as_u128(),
+        )?;
+        let path = directory
+            .join(&name)
+            .join("checkout")
+            .to_str()
+            .ok_or_else(|| {
+                RepositoryError::new(
+                    ErrorCode::InvalidPath,
+                    "Private workspace path must be UTF-8.",
+                )
+            })?
+            .to_owned();
+        Ok((folder, name, path))
+    })();
+    match result {
+        Ok((folder, name, path)) => {
+            workspace.branch = Some(format!("workspace/{name}"));
+            workspace.name = Some(name);
+            workspace.path = Some(path);
+            check_workspace_budget(&workspace)?;
+            // This single transaction reserves repository folder, name, branch
+            // and path before mkdir/update-ref can run. A failed commit stops here.
+            persist(&workspace, Some(&folder))?;
+        }
+        Err(error) => {
+            workspace.status = CreationStatus::Failed { error };
+            persist(&workspace, None)?;
+        }
+    }
+    Ok(workspace)
+}
+
 pub(crate) fn drive(
     mut workspace: Workspace,
     repository: &RepositoryRecord,
     effects: &mut impl CreationEffects,
     mut persist: impl FnMut(&Workspace) -> Result<()>,
 ) -> Result<Workspace> {
+    workspace.path()?;
+    workspace.branch()?;
     if !effects.quiescent(&workspace)? {
         workspace.cleanup_unconfirmed = true;
         workspace.status = CreationStatus::Uncertain {
@@ -312,7 +372,7 @@ pub(crate) fn drive(
                 workspace.artifacts.folder == FolderArtifact::Reserved
                     && workspace.artifacts.branch == BranchArtifact::Owned
             }
-            CreationStage::ResolvingBase => false,
+            CreationStage::AllocatingName | CreationStage::ResolvingBase => false,
         };
         if !needed {
             continue;
@@ -323,7 +383,7 @@ pub(crate) fn drive(
             CreationStage::ReservingFolder => effects.reserve(&workspace),
             CreationStage::CreatingBranch => effects.branch(repository, &workspace),
             CreationStage::CreatingWorktree => effects.worktree(repository, &workspace),
-            CreationStage::ResolvingBase => unreachable!(),
+            CreationStage::AllocatingName | CreationStage::ResolvingBase => unreachable!(),
         };
         if let Err(error) = outcome {
             workspace.cleanup_unconfirmed = error.code == ErrorCode::CleanupUnconfirmed;
@@ -392,7 +452,32 @@ mod policy_tests {
         fail: Option<CreationStage>,
         quiescent: bool,
     }
+    fn allocated(r: RepositoryId, a: ActionId, d: &Path) -> Result<Workspace> {
+        let mut w = allocate(r, a, d)?;
+        w.name = Some("marta".into());
+        w.branch = Some("workspace/marta".into());
+        w.path = Some("/state/repo/marta/checkout".into());
+        Ok(w)
+    }
     impl CreationEffects for Effects<'_> {
+        fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
+            self.calls.borrow_mut().push("folders");
+            Ok(Default::default())
+        }
+        fn occupied(
+            &mut self,
+            _: &RepositoryRecord,
+            _: &Path,
+        ) -> Result<super::super::naming::Occupied> {
+            self.calls.borrow_mut().push("inventory");
+            if self.fail == Some(CreationStage::AllocatingName) {
+                return Err(RepositoryError::new(
+                    ErrorCode::Git,
+                    "inventory unavailable",
+                ));
+            }
+            Ok(Default::default())
+        }
         fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
             Ok(self.quiescent)
         }
@@ -445,9 +530,131 @@ mod policy_tests {
         }
     }
     #[test]
+    fn name_reservation_precedes_mutation_and_recovery_never_reallocates() {
+        let calls = RefCell::new(vec![]);
+        let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+        assert!(w.name.is_none() && w.path.is_none() && w.branch.is_none());
+        let mut effects = Effects {
+            calls: &calls,
+            artifacts: Artifacts {
+                branch: BranchArtifact::Absent,
+                folder: FolderArtifact::Absent,
+            },
+            fail: None,
+            quiescent: true,
+        };
+        let w = prepare_name(
+            w,
+            &repo(),
+            Path::new("/state"),
+            Default::default(),
+            &mut effects,
+            |w, folder| {
+                if folder.is_none() {
+                    assert!(w.name.is_none());
+                    calls.borrow_mut().push("intent");
+                } else {
+                    assert!(w.path()?.contains(w.name.as_deref().unwrap()));
+                    calls.borrow_mut().push("reservation");
+                }
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            *calls.borrow(),
+            ["intent", "folders", "inventory", "reservation"]
+        );
+        let restored: Workspace =
+            serde_json::from_str(&serde_json::to_string(&w).unwrap()).unwrap();
+        let recovered = prepare_name(
+            restored,
+            &repo(),
+            Path::new("/other"),
+            Default::default(),
+            &mut effects,
+            |_, _| panic!("must reuse exact reservation"),
+        )
+        .unwrap();
+        assert_eq!(w, recovered);
+        assert_eq!(
+            drive(recovered, &repo(), &mut effects, |_| Ok(()))
+                .unwrap()
+                .status,
+            CreationStatus::Ready
+        );
+        assert_eq!(
+            calls.borrow().iter().filter(|c| **c == "inventory").count(),
+            1
+        );
+    }
+    #[test]
+    fn failed_intent_or_reservation_stops_effects_and_inventory_failure_is_explicit() {
+        for fail_boundary in [0, 1, 2] {
+            let calls = RefCell::new(vec![]);
+            let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+            let mut effects = Effects {
+                calls: &calls,
+                artifacts: Artifacts {
+                    branch: BranchArtifact::Absent,
+                    folder: FolderArtifact::Absent,
+                },
+                fail: None,
+                quiescent: true,
+            };
+            let result = prepare_name(
+                w.clone(),
+                &repo(),
+                Path::new("/state"),
+                Default::default(),
+                &mut effects,
+                |_, folder| {
+                    if (folder.is_none() && fail_boundary == 0)
+                        || (folder.is_some() && fail_boundary == 1)
+                    {
+                        return Err(RepositoryError::storage("commit unconfirmed"));
+                    }
+                    Ok(())
+                },
+            )
+            .and_then(|w| drive(w, &repo(), &mut effects, |_| Ok(())));
+            if fail_boundary < 2 {
+                assert!(result.is_err());
+                assert!(!calls.borrow().contains(&"reserve"));
+                if fail_boundary == 0 {
+                    assert!(calls.borrow().is_empty());
+                }
+            } else {
+                assert_eq!(result.unwrap().status, CreationStatus::Ready);
+            }
+        }
+        let calls = RefCell::new(vec![]);
+        let mut effects = Effects {
+            calls: &calls,
+            artifacts: Artifacts {
+                branch: BranchArtifact::Absent,
+                folder: FolderArtifact::Absent,
+            },
+            fail: Some(CreationStage::AllocatingName),
+            quiescent: true,
+        };
+        let w = prepare_name(
+            allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap(),
+            &repo(),
+            Path::new("/state"),
+            Default::default(),
+            &mut effects,
+            |_, _| Ok(()),
+        )
+        .unwrap();
+        assert!(matches!(w.status, CreationStatus::Failed { .. }));
+        assert!(w.path.is_none());
+        assert!(!calls.borrow().contains(&"reserve"));
+    }
+    #[test]
     fn pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable() {
         let calls = RefCell::new(vec![]);
-        let workspace = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+        let workspace = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
         let mut effects = Effects {
             calls: &calls,
             fail: None,
@@ -491,7 +698,7 @@ mod policy_tests {
     #[test]
     fn failed_pinned_intent_prevents_every_mutation() {
         let calls = RefCell::new(vec![]);
-        let workspace = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+        let workspace = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
         let mut effects = Effects {
             calls: &calls,
             fail: None,
@@ -521,7 +728,7 @@ mod policy_tests {
             CreationStage::CreatingWorktree,
         ] {
             let calls = RefCell::new(vec![]);
-            let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+            let w = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
             let mut effects = Effects {
                 calls: &calls,
                 fail: Some(stage),
@@ -553,7 +760,7 @@ mod policy_tests {
     #[test]
     fn unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release() {
         let calls = RefCell::new(vec![]);
-        let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+        let w = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
         let mut effects = Effects {
             calls: &calls,
             fail: None,
@@ -578,7 +785,7 @@ mod policy_tests {
     fn conflicting_artifacts_and_each_failed_store_boundary_block_following_effects() {
         for artifact in [FolderArtifact::Conflict, FolderArtifact::Partial] {
             let calls = RefCell::new(vec![]);
-            let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+            let w = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
             let mut effects = Effects {
                 calls: &calls,
                 fail: None,
@@ -600,7 +807,7 @@ mod policy_tests {
             CreationStage::CreatingWorktree,
         ] {
             let calls = RefCell::new(vec![]);
-            let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
+            let w = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
             let mut effects = Effects {
                 calls: &calls,
                 fail: None,
@@ -874,16 +1081,48 @@ pub(super) fn process_creation(
         _ => return false,
     };
     let id = workspace.id;
-    let result = drive(workspace, &repository, effects, |workspace| {
-        let mut state = shared.lock().map_err(RepositoryError::storage)?;
-        let store = state.store()?;
-        if let Err(error) = store.save_workspace(workspace, None)
-            && store.workspace(workspace.id)?.as_ref() != Some(workspace)
-        {
-            return Err(error);
+    let result = (|| {
+        let (directory, naming) = {
+            let mut state = shared.lock().map_err(RepositoryError::storage)?;
+            let directory = state.directory.clone();
+            (directory, state.store()?.naming(repository.id)?)
+        };
+        let workspace = prepare_name(
+            workspace,
+            &repository,
+            &directory,
+            naming,
+            effects,
+            |workspace, folder| {
+                let mut state = shared.lock().map_err(RepositoryError::storage)?;
+                let store = state.store()?;
+                let saved = if let Some(folder) = folder {
+                    store.reserve_name(workspace, folder)
+                } else {
+                    store.save_workspace(workspace, None)
+                };
+                if let Err(error) = saved
+                    && store.workspace(workspace.id)?.as_ref() != Some(workspace)
+                {
+                    return Err(error);
+                }
+                state.change()
+            },
+        )?;
+        if matches!(workspace.status, CreationStatus::Failed { .. }) {
+            return Ok(workspace);
         }
-        state.change()
-    });
+        drive(workspace, &repository, effects, |workspace| {
+            let mut state = shared.lock().map_err(RepositoryError::storage)?;
+            let store = state.store()?;
+            if let Err(error) = store.save_workspace(workspace, None)
+                && store.workspace(workspace.id)?.as_ref() != Some(workspace)
+            {
+                return Err(error);
+            }
+            state.change()
+        })
+    })();
     if let Ok(mut state) = shared.lock() {
         state.active_workspace = None;
         state.workspace_fault = result.err().map(|e| (id, e));

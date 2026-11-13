@@ -3,7 +3,11 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { object } from "./lib/repositories";
 import { useWorkspaces } from "./hooks/use-workspaces";
-import { WORKSPACE_PENDING, type Workspace } from "./lib/workspaces";
+import {
+  WORKSPACE_PENDING,
+  workspaceRequest,
+  type Workspace,
+} from "./lib/workspaces";
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const repository_id = "00000000-0000-4000-8000-000000000001";
 const id = "00000000-0000-4000-8000-000000000002";
@@ -20,6 +24,7 @@ const w: Workspace = {
   artifacts: { branch: "owned", folder: "worktree" },
   status: { state: "ready" },
   cleanup_unconfirmed: false,
+  legacy: false,
 };
 beforeEach(() => {
   localStorage.clear();
@@ -306,4 +311,33 @@ test("definite rejection follows its pending action across repository navigation
   expect(result.current.pending).toBeNull();
   expect(localStorage.getItem(WORKSPACE_PENDING)).toBeNull();
   expect(result.current.error?.code).toBe("cleanup_unconfirmed");
+});
+
+test("pending name allocation is a valid observation, but partial and ready-without-location replies are rejected", async () => {
+  const request = { operation: "get" as const, id };
+  const pending = {
+    ...w,
+    name: null,
+    branch: null,
+    path: null,
+    status: { state: "running", stage: "allocating_name" },
+  };
+  vi.mocked(invoke).mockResolvedValue({
+    kind: "workspace",
+    workspace: pending,
+  });
+  expect((await workspaceRequest(request)).kind).toBe("workspace");
+  for (const invalid of [
+    { ...pending, branch: "workspace/marta" },
+    { ...pending, status: { state: "ready" } },
+    { ...pending, status: { state: "running", stage: "creating_branch" } },
+  ]) {
+    vi.mocked(invoke).mockResolvedValue({
+      kind: "workspace",
+      workspace: invalid,
+    });
+    await expect(workspaceRequest(request)).rejects.toThrow(
+      "Invalid workspace observation",
+    );
+  }
 });

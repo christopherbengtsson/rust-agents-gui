@@ -1,6 +1,8 @@
 // Development/build launcher. Rust owns supervisor discovery and lifetime.
 import { spawn } from "node:child_process";
 import path from "node:path";
+import { readFileSync } from "node:fs";
+import { developmentEnvironment } from "./development-state.mjs";
 import { cargoMetadata, root } from "./cargo.mjs";
 
 const mode = process.argv[2];
@@ -73,13 +75,20 @@ try {
     );
   }
   if (!stopping) {
-    const env = { ...process.env };
-    env.CARGO_TARGET_DIR = cargoMetadata().target_directory;
+    let env = {
+      ...process.env,
+      CARGO_TARGET_DIR: cargoMetadata().target_directory,
+    };
     if (mode === "dev") {
-      env.AGENT_WORKSPACE_SUPERVISOR = path.join(
-        root,
-        "src-tauri/gen/sidecar/workspace-supervisor",
+      const provenance = JSON.parse(
+        readFileSync(
+          path.join(root, "src-tauri/gen/sidecar/provenance.json"),
+          "utf8",
+        ),
       );
+      env = developmentEnvironment(provenance, { env });
+      console.log(`Dev supervisor: ${env.AGENT_WORKSPACE_SUPERVISOR}`);
+      console.log(`Dev state: ${env.AGENT_WORKSPACE_STATE_DIR}`);
     }
     const desktop =
       mode === "dev"

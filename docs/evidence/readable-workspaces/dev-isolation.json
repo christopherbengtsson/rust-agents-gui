@@ -1,0 +1,37 @@
+{
+  "old_owner": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 85891,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "85891-1794523727777133000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "new_dev_owner": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 72547,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "72547-1794563006194010000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "new_state": "/Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3/p4-6ad9613a",
+  "default_protocol4_response": {
+    "kind": "incompatible",
+    "message": "Incompatible desktop/supervisor versions (client protocol 4 / app 0.1.0, supervisor protocol 1 / app 0.1.0). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening."
+  }
+}

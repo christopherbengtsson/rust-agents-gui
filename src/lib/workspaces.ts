@@ -6,6 +6,7 @@ export type WorkspaceStatus =
   | {
       state: "running";
       stage:
+        | "allocating_name"
         | "resolving_base"
         | "reserving_folder"
         | "creating_branch"
@@ -16,9 +17,10 @@ export type Workspace = {
   id: string;
   repository_id: string;
   creation_action_id: string;
-  name: string;
-  branch: string;
-  path: string;
+  name: string | null;
+  branch: string | null;
+  path: string | null;
+  legacy: boolean;
   provider: "codex";
   base: { reference: string; commit: string } | null;
   artifacts: {
@@ -72,9 +74,16 @@ function workspace(value: unknown): value is Workspace {
     !identity(value.id) ||
     !identity(value.repository_id) ||
     !identity(value.creation_action_id) ||
-    typeof value.name !== "string" ||
-    typeof value.branch !== "string" ||
-    typeof value.path !== "string" ||
+    !(
+      (value.name === null && value.branch === null && value.path === null) ||
+      (typeof value.name === "string" &&
+        value.name.length > 0 &&
+        typeof value.branch === "string" &&
+        value.branch.length > 0 &&
+        typeof value.path === "string" &&
+        value.path.length > 0)
+    ) ||
+    typeof value.legacy !== "boolean" ||
     value.provider !== "codex" ||
     typeof value.cleanup_unconfirmed !== "boolean" ||
     !object(value.status) ||
@@ -82,6 +91,10 @@ function workspace(value: unknown): value is Workspace {
   )
     return false;
   return (
+    (value.name !== null ||
+      (value.status.state !== "ready" &&
+        (value.status.state !== "running" ||
+          value.status.stage === "allocating_name"))) &&
     (value.base === null ||
       (object(value.base) &&
         typeof value.base.reference === "string" &&
@@ -102,6 +115,7 @@ function workspace(value: unknown): value is Workspace {
       value.status.state === "ready" ||
       (value.status.state === "running" &&
         [
+          "allocating_name",
           "resolving_base",
           "reserving_folder",
           "creating_branch",
@@ -191,6 +205,7 @@ export function workspaceStatus(status: WorkspaceStatus): string {
       return "Waiting to create workspace…";
     case "running":
       return {
+        allocating_name: "Choosing a workspace name…",
         resolving_base: "Resolving local default branch…",
         reserving_folder: "Reserving workspace folder…",
         creating_branch: "Creating branch…",

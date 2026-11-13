@@ -33,3 +33,8 @@ _Avoid_: Registration when referring to branch or workspace creation.
 The exact commit a workspace starts from, retained as its comparison origin even
 when the workspace branch changes.
 _Avoid_: Current default branch when referring to the saved starting commit.
+
+**Workspace name**:
+A readable label that distinguishes a workspace within its registered repository.
+It remains associated with that workspace's saved history.
+_Avoid_: Workspace identity when referring only to its readable name.

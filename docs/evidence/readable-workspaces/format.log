@@ -1,0 +1,2 @@
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --write src scripts .github/workflows/ci.yml package.json tsconfig.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all
+Finished in 4ms on 138 files using 12 threads.

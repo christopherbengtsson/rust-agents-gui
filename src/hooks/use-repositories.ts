@@ -1,3 +1,4 @@
+import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PENDING_KEY,
@@ -54,7 +55,7 @@ export function useRepositories(owner: string | undefined) {
     }
   }
 
-  // Keep Effect dependencies stable while Compiler cannot lower this Hook's finally blocks.
+  // Stable callbacks bind observation subscriptions to their lifecycle owner.
   const finish = useCallback((action: Registration) => {
     const pending = currentPending.current;
     if (
@@ -105,99 +106,103 @@ export function useRepositories(owner: string | undefined) {
       const generation = epoch.current;
       const pageAfter = after.current;
       const active = () => mounted.current && epoch.current === generation;
-      try {
-        const pending = currentPending.current;
-        if (pending) {
-          const result = await repositoryRequest({
-            operation: "action",
-            action_id: pending.request.action_id,
-          }).catch((error: unknown) => ({
-            kind: "error" as const,
-            error: repositoryError(error),
-          }));
-          if (!active()) return;
-          if (result.kind === "error") {
-            setActionError(result.error);
-          } else if (result.kind === "action") {
-            if (result.registration) {
-              if (result.registration.path !== pending.request.path) {
-                setActionError({
-                  code: "conflict",
-                  message:
-                    "This action ID records a different path. Preserve its ID and inspect the recorded registration before submitting another request.",
-                });
-              } else {
-                setActionError(undefined);
-                finish(result.registration);
-              }
-            } else
-              setActionError(
-                (last) =>
-                  last ?? {
-                    code: "not_found",
+      return completeOperation(
+        async () => {
+          const pending = currentPending.current;
+          if (pending) {
+            const result = await repositoryRequest({
+              operation: "action",
+              action_id: pending.request.action_id,
+            }).catch((error: unknown) => ({
+              kind: "error" as const,
+              error: repositoryError(error),
+            }));
+            if (!active()) return;
+            if (result.kind === "error") {
+              setActionError(result.error);
+            } else if (result.kind === "action") {
+              if (result.registration) {
+                if (result.registration.path !== pending.request.path) {
+                  setActionError({
+                    code: "conflict",
                     message:
-                      "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
-                  },
+                      "This action ID records a different path. Preserve its ID and inspect the recorded registration before submitting another request.",
+                  });
+                } else {
+                  setActionError(undefined);
+                  finish(result.registration);
+                }
+              } else
+                setActionError(
+                  (last) =>
+                    last ?? {
+                      code: "not_found",
+                      message:
+                        "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
+                    },
+                );
+            }
+          }
+          const requestedSelection = selection.current;
+          const [list, selected] = await Promise.all([
+            repositoryRequest({
+              operation: "list",
+              after: pageAfter,
+              refresh: recheck,
+            }),
+            requestedSelection
+              ? repositoryRequest({
+                  operation: "get",
+                  id: requestedSelection,
+                  refresh: recheck,
+                })
+              : Promise.resolve(null),
+          ]);
+          if (
+            !active() ||
+            after.current !== pageAfter ||
+            list.kind !== "repositories"
+          )
+            return;
+          const candidate =
+            selected?.kind === "repository" ? selected.repository : null;
+          const chosen = candidate ?? list.page.repositories[0];
+          if (selection.current === requestedSelection) {
+            selection.current = chosen?.id ?? null;
+            try {
+              if (chosen) localStorage.setItem(SELECTION_KEY, chosen.id);
+              else localStorage.removeItem(SELECTION_KEY);
+            } catch {
+              setPreferenceError(
+                "The desktop could not remember repository selection.",
               );
+            }
           }
-        }
-        const requestedSelection = selection.current;
-        const [list, selected] = await Promise.all([
-          repositoryRequest({
-            operation: "list",
-            after: pageAfter,
-            refresh: recheck,
-          }),
-          requestedSelection
-            ? repositoryRequest({
-                operation: "get",
-                id: requestedSelection,
-                refresh: recheck,
-              })
-            : Promise.resolve(null),
-        ]);
-        if (
-          !active() ||
-          after.current !== pageAfter ||
-          list.kind !== "repositories"
-        )
-          return;
-        const candidate =
-          selected?.kind === "repository" ? selected.repository : null;
-        const chosen = candidate ?? list.page.repositories[0];
-        if (selection.current === requestedSelection) {
-          selection.current = chosen?.id ?? null;
-          try {
-            if (chosen) localStorage.setItem(SELECTION_KEY, chosen.id);
-            else localStorage.removeItem(SELECTION_KEY);
-          } catch {
-            setPreferenceError(
-              "The desktop could not remember repository selection.",
-            );
-          }
-        }
-        setNavigation((last) => ({
-          page: list.page,
-          selected: selection.current === chosen?.id ? chosen : last.selected,
-          loading: false,
-        }));
-      } catch (error) {
-        if (active())
           setNavigation((last) => ({
-            ...last,
+            page: list.page,
+            selected: selection.current === chosen?.id ? chosen : last.selected,
             loading: false,
-            error: repositoryError(error),
           }));
-      } finally {
-        if (active()) {
-          reading.current = false;
-          if (queued.current !== null) {
-            const next = queued.current;
-            queued.current = null;
-            void read(next);
+        },
+        (error) => {
+          if (active())
+            setNavigation((last) => ({
+              ...last,
+              loading: false,
+              error: repositoryError(error),
+            }));
+        },
+        () => {
+          if (active()) {
+            reading.current = false;
+            if (queued.current !== null) {
+              const next = queued.current;
+              queued.current = null;
+              void read(next);
+            }
           }
-        }
-      }
+        },
+      );
     },
     [finish],
   );
@@ -271,40 +276,45 @@ export function useRepositories(owner: string | undefined) {
     setSubmitting(true);
     sending.current = true;
     const generation = epoch.current;
-    try {
-      const result = await repositoryRequest({
-        operation: "register",
-        request: intent.request,
-      });
-      if (
-        mounted.current &&
-        epoch.current === generation &&
-        result.kind === "registration"
-      )
-        finish(result.registration);
-      return true;
-    } catch (error) {
-      if (mounted.current && epoch.current === generation) {
-        const failure = repositoryError(error);
-        setActionError(failure);
-        if (failure.code === "invalid_path" || failure.code === "capacity") {
-          currentPending.current = null;
-          setPending(null);
-          try {
-            localStorage.removeItem(PENDING_KEY);
-          } catch {
-            setPreferenceError(
-              "A rejected registration could not be removed from desktop preferences.",
-            );
+    return completeOperation(
+      async () => {
+        const result = await repositoryRequest({
+          operation: "register",
+          request: intent.request,
+        });
+        if (
+          mounted.current &&
+          epoch.current === generation &&
+          result.kind === "registration"
+        )
+          finish(result.registration);
+        return true;
+      },
+      (error) => {
+        if (mounted.current && epoch.current === generation) {
+          const failure = repositoryError(error);
+          setActionError(failure);
+          if (failure.code === "invalid_path" || failure.code === "capacity") {
+            currentPending.current = null;
+            setPending(null);
+            try {
+              localStorage.removeItem(PENDING_KEY);
+            } catch {
+              setPreferenceError(
+                "A rejected registration could not be removed from desktop preferences.",
+              );
+            }
           }
         }
-      }
-      return false;
-    } finally {
-      sending.current = false;
-      if (mounted.current) setSubmitting(false);
-      if (mounted.current && epoch.current === generation) void refresh(false);
-    }
+        return false;
+      },
+      () => {
+        sending.current = false;
+        if (mounted.current) setSubmitting(false);
+        if (mounted.current && epoch.current === generation)
+          void refresh(false);
+      },
+    );
   }
   function select(repository: Repository) {
     rememberSelection(repository.id);

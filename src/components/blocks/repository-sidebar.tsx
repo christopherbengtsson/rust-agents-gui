@@ -73,14 +73,16 @@ export function RepositorySidebar({
               Repositories
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              {repositories.loading && !repositories.page ? (
+              {repositories.loading &&
+              !repositories.page &&
+              connection.state !== "error" ? (
                 <div aria-label="Loading repositories">
                   <SidebarMenuSkeleton showIcon />
                   <SidebarMenuSkeleton showIcon />
                 </div>
               ) : !repositories.page?.repositories.length ? (
                 <p className="navigation-empty">
-                  {repositories.error
+                  {repositories.error || connection.state === "error"
                     ? "Repository list unavailable"
                     : "No repositories yet"}
                 </p>
@@ -174,7 +176,7 @@ export function RepositorySidebar({
                                           ? "true"
                                           : undefined
                                       }
-                                      title={`${workspace.branch} · ${workspaceStatus(workspace.status)}`}
+                                      title={workspaceStatus(workspace.status)}
                                       onClick={() => {
                                         repositories.select(repository);
                                         workspaces.select(workspace);
@@ -186,7 +188,9 @@ export function RepositorySidebar({
                                       ) : (
                                         <GitBranch aria-hidden="true" />
                                       )}
-                                      <span>{workspace.name}</span>
+                                      <span>
+                                        {workspace.name ?? "New workspace"}
+                                      </span>
                                     </SidebarMenuSubButton>
                                   </SidebarMenuSubItem>
                                 ),

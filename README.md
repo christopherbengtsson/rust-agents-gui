@@ -22,6 +22,19 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm dev
 ```
 
+Development logs its freshly built supervisor executable and persistent state:
+`~/.agent-workspace/dev/<canonical-worktree hash>/p<protocol>-<app-version hash>`.
+Compatible restarts reuse it; other worktrees/protocols/versions are isolated.
+An explicit `AGENT_WORKSPACE_STATE_DIR` is honored exactly, including its existing
+owner/version checks. Release state is unchanged. Rebuilding does not stop an old
+supervisor; default dev no longer connects to an incompatible release owner.
+
+Workspace labels come from a [curated catalog of 500 footballers](docs/research/footballer-catalog.md).
+Unused plain names are preferred per repository, then numbered variants. Saved
+names stay reserved with their history. New branches and folder components are
+readable; internal UUID identities remain stable. Existing branches and folders
+are preserved, with clean legacy labels and explicit location details.
+
 The supervisor is the execution owner. Refresh retrieves observations; desktop
 crash/disconnection leaves the supervisor alive, and reconnect does not replay
 actions. Explicit Quit with owned cleanup is future ticket 09. Use private disposable
@@ -98,11 +111,11 @@ and registration performs read-only Git inspection without starting agents.
 Desktop preferences remember the last selection and an uncertain registration's
 action ID. Refresh retrieves authoritative status; edited paths are separate explicit
 requests after the pending action is resolved. No repository relocation or removal
-workflow is implemented. Protocol 3 requires matching desktop/supervisor builds. SQLite schema 2 migrates
-existing registrations without changing their identities.
+workflow is implemented. Protocol 4 requires matching desktop/supervisor builds. SQLite schema 3 migrates
+existing registrations/workspaces without changing internal identities or physical locations.
 
 Adding a new repository records its first-workspace continuation atomically with
-registration. The repository's + creates another immediately. Generated city/UUID
+registration. The repository's + creates another immediately. Generated footballer
 names, branches and managed folders remain stable across recovery. Creation uses
 locally available origin/HEAD, otherwise exactly one usable local main/master;
 missing or ambiguous defaults remain actionable. No creation dialog, base picker,
@@ -119,7 +132,8 @@ See the [product contract](docs/MVP.md), [milestone status](docs/MILESTONE-01.md
 [discovery evidence](docs/evidence/milestone-01-discovery.md) and
 [UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md) and
 [repository registration evidence](docs/evidence/milestone-01-repositories.md) and
-[workspace evidence](docs/evidence/milestone-01-workspaces.md).
+[workspace evidence](docs/evidence/milestone-01-workspaces.md) and
+[readable naming/dev follow-up](docs/evidence/readable-workspaces.md).
 
 ## Frontend tooling
 

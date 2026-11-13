@@ -41,3 +41,24 @@ and Spec review findings were fixed with red/green regressions and confirmed
 resolved. [Evidence](../../../docs/evidence/milestone-01-workspaces.md) records
 source/binary identities, commands, timings, screenshots, failures and limitations.
 No live-provider submissions occurred; remaining tickets and the milestone stay open.
+
+### 2026-11-13 — readable names and development follow-up
+
+Implemented the [approved follow-up](../readable-workspaces-plan.md).
+
+- [x] 500 attributed footballer slugs, permanent per-repository reservations,
+      numeric fallback and readable repository/workspace locations.
+- [x] Pending identity before inspection; atomic final reservations before mutation;
+      immutable recovery targets, batch collision checks and existing race guards.
+- [x] Schema 3 / protocol 4, stable clean legacy labels and explicit saved locations;
+      meaningful-label rule in the component guide.
+- [x] Persistent compatible dev-state isolation, side-effect-free protocol metadata,
+      explicit overrides preserved and old owner untouched; unavailable navigation guidance.
+- [x] Compiler-compatible async settlement with lifecycle guards/returns preserved.
+- [x] 76 Rust + 25 tooling + 44 UI units, full static/format gate, production package,
+      real Git/SQLite/lease/migration/reconnect and actual desktop/dev evidence; catalog
+      cost measurements and independent two-axis review with its one finding resolved.
+
+See [follow-up evidence](../../../docs/evidence/readable-workspaces.md) for commands,
+results, failed attempts and limits. No provider submissions; the parent milestone
+remains incomplete. Previous ticket cohorts remain historical evidence.

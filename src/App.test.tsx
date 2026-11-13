@@ -358,3 +358,15 @@ test("a failed desktop identity read releases the pending guard for explicit ret
   expect(screen.queryByRole("alert")).toBeNull();
   expect(connectionCalls()).toHaveLength(4);
 });
+
+test("connection failure replaces initial repository skeletons with unavailable guidance", async () => {
+  mockConnection(async () => {
+    throw new Error("Incompatible supervisor versions");
+  });
+  const view = render(<App />);
+  await screen.findByRole("button", { name: "Retry connection" });
+  expect(screen.getByText("Repository list unavailable")).toBeDefined();
+  expect(
+    view.container.querySelector('[data-slot="sidebar-menu-skeleton"]'),
+  ).toBeNull();
+});

@@ -171,8 +171,20 @@ For primary-source rationale and the article's stack adaptations, consult
 - App calls `useWorkspaces` once. It owns bounded pages, workspace selection and
   pending action status across navigation. Reconnect only reads. Creation and
   recovery callbacks retain explicit target IDs; late replies cannot steal changed
-  selection. The existing compiler cannot lower finally blocks in the observation
-  hook, so stable callbacks retain lifecycle cleanup as in useRepositories.
+  selection. Stable callbacks own observation subscriptions; the shared
+  React-independent async settlement utility preserves cleanup outside compiler lowering.
 - Add repository explains the automatic first workspace and lack of agent launch.
   No additional shadcn component or custom primitive was needed. Existing controls
   retain their local compact variants and Base UI render contracts.
+
+### Human labels and diagnostic identities
+
+Use meaningful human names for navigation, headings, badges and ordinary status.
+Keep internal UUIDs in keys, action targets and persistence; display them only in
+explicit troubleshooting details when needed. Do not append raw IDs to labels or
+show them as a fallback for missing names. Pending allocation displays “New
+workspace” and states that no name/folder is reserved. Newly allocated locations
+are readable; WorkspaceDetails discloses retained legacy branches/folders through
+an explicit keyboard-accessible Collapsible. No new toolkit component is needed.
+Connection failure replaces initial navigation skeletons with unavailable guidance;
+retained observations remain readable and marked stale.
