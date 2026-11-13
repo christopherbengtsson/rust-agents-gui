@@ -73,8 +73,11 @@ TypeScript check. Resource preparation builds the supervisor without launching i
 
 CI does not package/sign the app, launch desktop or supervisor processes, run
 provider sessions, or qualify native behavior. Those checks retain their separate
-milestone gates. Actions are pinned to release commits; caches are intentionally
-omitted for this initial workflow. See the [CI research](docs/research/github-actions-ci.md)
+milestone gates. Actions are pinned to release commits. Rust dependency downloads and selected
+compiled artifacts are cached; the target ownership marker, staged sidecars and
+frontend outputs are excluded. Every cache hit still runs the full checks. pnpm
+caching is deferred. See [cache research](docs/research/github-actions-caching.md)
+for cache boundaries and validation. See the [CI research](docs/research/github-actions-ci.md)
 for versions and sources. Hosted execution remains unverified until this branch
 is pushed and a matching GitHub event runs.
 

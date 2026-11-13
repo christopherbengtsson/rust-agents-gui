@@ -55,6 +55,53 @@ jobs:
           sw_vers
           uname -m
 
+      - name: Identify Rust cache environment
+        id: rust-cache-env
+        run: |
+          node <<'JS'
+          const { createHash } = require('node:crypto');
+          const { execFileSync } = require('node:child_process');
+          const { appendFileSync } = require('node:fs');
+          const { homedir } = require('node:os');
+          const { resolve } = require('node:path');
+          const command = (file, args) => execFileSync(file, args, { encoding: 'utf8' }).trim();
+          const environment = {
+            compiler: command('rustc', ['-vV']),
+            xcode: command('xcodebuild', ['-version']),
+            sdkPath: command('xcrun', ['--show-sdk-path']),
+            sdkVersion: command('xcrun', ['--show-sdk-version']),
+            imageOS: process.env.ImageOS ?? '',
+            imageVersion: process.env.ImageVersion ?? '',
+            flags: Object.fromEntries(Object.entries(process.env)
+              .filter(([key]) => /^(CARGO_|RUSTC|RUSTFLAGS$)/.test(key))
+              .sort(([a], [b]) => a.localeCompare(b))),
+          };
+          const fingerprint = createHash('sha256').update(JSON.stringify(environment)).digest('hex');
+          const cargoHome = resolve(process.env.CARGO_HOME || `${homedir()}/.cargo`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `fingerprint=${fingerprint}\ncargo-home=${cargoHome}\n`);
+          JS
+
+      - name: Cache Rust dependencies
+        id: rust-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ${{ steps.rust-cache-env.outputs.cargo-home }}/registry/index
+            ${{ steps.rust-cache-env.outputs.cargo-home }}/registry/cache
+            ${{ steps.rust-cache-env.outputs.cargo-home }}/git/db
+            target/debug/deps
+            target/debug/.fingerprint
+            target/debug/build
+          key: rust-deps-v1-${{ runner.os }}-${{ runner.arch }}-macos-15-${{ steps.rust-cache-env.outputs.fingerprint }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock', '**/Cargo.toml', '.cargo/config', '.cargo/config.toml', '**/.cargo/config', '**/.cargo/config.toml', '.github/workflows/ci.yml') }}
+
+      - name: Check restored target ownership
+        run: |
+          marker=target/.agent-workspace-owner.json
+          if [[ -e "$marker" || -L "$marker" ]]; then
+            echo "Rust cache must not restore a target ownership marker." >&2
+            exit 1
+          fi
+
       # Static Tauri checks require the resource; this builds but never runs it.
       - name: Prepare supervisor resource
         run: node scripts/prepare-supervisor.mjs debug
