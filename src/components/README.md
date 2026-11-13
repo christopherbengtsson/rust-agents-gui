@@ -191,3 +191,54 @@ are readable; WorkspaceDetails discloses retained legacy branches/folders throug
 an explicit keyboard-accessible Collapsible. No new toolkit component is needed.
 Connection failure replaces initial navigation skeletons with unavailable guidance;
 retained observations remain readable and marked stale.
+
+### Workspace change inspection (05a–05b)
+
+- **WorkspaceInspection** (`blocks/workspace-changes.tsx`) coordinates the ready
+  workspace's Workspace/Changes tabs and one `useWorkspaceChanges` owner above
+  their content. Use it for workspace-wide uncommitted inspection; existing
+  WorkspaceDetails retains creation/recovery presentation. It receives an exact
+  workspace ID and connected supervisor owner. One reader coordinates summary
+  refresh every two seconds while Changes, the expanded file panel or the open
+  Sheet is visible; selected previews load only in Changes. Pending jobs use
+  observation-only polling. Hidden documents/surfaces, disconnection and failures
+  pause automatic reads; manual Refresh remains available after errors. Reconnect
+  first retrieves observations. Generations isolate targets and stale replies;
+  the physical read lane drains before another sequence starts. WorkspacePanel
+  owns the reader's lifetime above the workspace-keyed presentation, so navigation
+  also drains old IPC before reading the new target. Supply that stable reader
+  when composing WorkspaceInspection; keyed view resets retain no extra readers.
+- **ChangedFiles** is the bounded file-selection block shared by the desktop
+  right panel and the below-880-px Sheet. It receives observations and a selection
+  callback. Opaque file IDs, never display labels, target previews. It renders one
+  page, with First/Next navigation. Selection opens the single Changes tab and
+  closes the Sheet. The desktop panel is independently collapsible and resizable.
+- **UnifiedDiff** (`primitives/unified-diff.tsx`) composes Code Block and Scroll
+  Area for plain, bounded Git rows. Use explicit old/new source numbers, row kinds
+  and supplied text; use Code Block directly for ordinary sequential code. It
+  accepts a reading-position ref owned above the tabs and an explicit scroll
+  callback. Tab switches unmount inactive heavy content; changing files resets
+  position. No highlighting or HTML rendering is enabled.
+- **Foundation additions:** Tabs, Resizable, Scroll Area and Code Block came from
+  shadcn base-nova through the project runner. Existing compact Button source was
+  preserved. Tabs forwards orientation to Base UI and uses explicit
+  `data-[orientation=…]` selectors because this stylesheet does not define the
+  registry’s shorthand orientation variants. Scroll Area uses the same explicit
+  orientation selectors for track sizing and supplies both scrollbars and omits an unused React
+  import. CodeBlockContent omits upstream's extra keyboard stop; Scroll Area's
+  viewport owns keyboard scrolling. New diff appearance uses shared semantic
+  roles in the global stylesheet.
+- **CSP:** WorkspaceInspection supplies `CSPProvider disableStyleElements`, with
+  Base UI 1.9.0's scrollbar suppression externalized into the global stylesheet.
+  Keep the existing Tauri policy. Actual WebView scrolling, focus, resizing and
+  responsiveness remain 05c qualification; controlled DOM checks are partial
+  evidence only.
+
+The Rust observation contracts live in `workspaces::inspection`, re-exported
+through `workspaces`; TypeScript validation lives in `lib/changes.ts`. Failure and
+last-good comparison identity stay explicit. This component documentation does
+not duplicate the wire schema or authorize provider actions. Automatic inspection
+is read-only. A refreshed comparison resets list paging to First; expired
+continuations are explicit errors, and a removed selection stays named until the
+user selects another file. Preview failures label retained content as stale even
+when the retained comparison ID has not changed.

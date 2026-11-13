@@ -1,0 +1,14 @@
+command=['rustc', '--edition=2024', 'docs/evidence/milestone-01-change-inspection-qualification/transport-client.rs', '--extern', 'workspace_core=/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libworkspace_core-dfca7b1b37481f99.rlib', '-L', 'dependency=target/debug/deps', '-o', '/private/tmp/agent-workspace-05c-66onln_j/client-after-fix']
+exit=0 wall=0.142445s
+rows=200 limited=Some("Preview limited by the 200-row or 48 KiB response budget.")
+command=['/private/tmp/agent-workspace-05c-66onln_j/client-after-fix', '/private/tmp/agent-workspace-05c-66onln_j/state', '18f6cac4-be1e-48c2-8a36-1c11024cf885']
+exit=0 wall=0.952958s
+
+thread 'main' (28786085) panicked at /private/tmp/agent-workspace-05c-66onln_j/client.rs:10:210:
+preview failed: Err(RepositoryError { code: Connection, message: "Workspace reply unavailable: Invalid argument (os error 22). Refresh its recorded action status; this request has not been replayed." })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+command=['/private/tmp/agent-workspace-05c-66onln_j/client', '/private/tmp/agent-workspace-05c-66onln_j/state', '18f6cac4-be1e-48c2-8a36-1c11024cf885']
+exit=101 wall=0.004956s
+rows=200 limited=Some("Preview limited by the 200-row or 48 KiB response budget.")
+command=['/private/tmp/agent-workspace-05c-66onln_j/client-after-fix', '/private/tmp/agent-workspace-05c-66onln_j/state', '18f6cac4-be1e-48c2-8a36-1c11024cf885']
+exit=0 wall=0.005479s

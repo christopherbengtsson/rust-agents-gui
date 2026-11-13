@@ -11,6 +11,8 @@ use std::{
 // Batch ref/worktree inventories share the bounded command runner.
 const OUTPUT_LIMIT: usize = 256 * 1024;
 const DEADLINE: Duration = Duration::from_secs(2);
+mod inspection;
+pub(crate) use inspection::LocalInspection;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Query {

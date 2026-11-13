@@ -1,0 +1,7 @@
+{'peer_closed': False, 'micros': 999999, 'result': 'ok'}
+{'peer_closed': False, 'micros': 500000, 'result': 'ok'}
+{'peer_closed': False, 'micros': 0, 'result': 'ok'}
+{'peer_closed': True, 'micros': 999999, 'error': '[Errno 22] Invalid argument'}
+{'peer_closed': True, 'micros': 500000, 'error': '[Errno 22] Invalid argument'}
+{'peer_closed': True, 'micros': 0, 'error': '[Errno 22] Invalid argument'}
+{'python_same_production_reply': 'pass', 'bytes': 45644, 'rows': 200, 'limited': 'Preview limited by the 200-row or 48 KiB response budget.'}

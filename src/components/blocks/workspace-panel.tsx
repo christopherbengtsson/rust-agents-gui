@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { CircleAlert, FolderGit2, RefreshCw } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -9,6 +11,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { WorkspaceDetails } from "./workspace-details";
+import { WorkspaceInspection } from "./workspace-changes";
 import type { Workspaces } from "@/hooks/use-workspaces";
 import type { Connection } from "@/hooks/use-supervisor-connection";
 import type { Repositories } from "@/hooks/use-repositories";
@@ -24,6 +27,17 @@ export function WorkspacePanel({
   repositories: Repositories;
   workspaces: Workspaces;
 }) {
+  // Keep the physical IPC lane alive across keyed workspace presentation resets.
+  const [changeReader] = useState(() => new WorkspaceChangesReader());
+  const details = workspaces.selected ? (
+    <WorkspaceDetails
+      workspace={workspaces.selected}
+      connected={connection.state === "connected"}
+      stale={connection.state !== "connected" || !!workspaces.error}
+      pending={workspaces.submitting || !!workspaces.pending}
+      onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
+    />
+  ) : null;
   return (
     <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
       <header className="workspace-header">
@@ -147,13 +161,22 @@ export function WorkspacePanel({
           <p role="status">Retrieving workspace creation status…</p>
         )}
         {workspaces.selected ? (
-          <WorkspaceDetails
-            workspace={workspaces.selected}
-            connected={connection.state === "connected"}
-            stale={connection.state !== "connected" || !!workspaces.error}
-            pending={workspaces.submitting || !!workspaces.pending}
-            onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
-          />
+          workspaces.selected.status.state === "ready" ? (
+            <WorkspaceInspection
+              key={workspaces.selected.id}
+              workspaceId={workspaces.selected.id}
+              reader={changeReader}
+              owner={
+                connection.state === "connected"
+                  ? connection.observation.snapshot.cursor.owner
+                  : undefined
+              }
+            >
+              {details}
+            </WorkspaceInspection>
+          ) : (
+            details
+          )
         ) : (
           <Empty>
             <EmptyHeader>

@@ -1,0 +1,6 @@
+{
+  "method": "Workspace tab + collapsed file panel; edit limited.txt; allow 1s drain then count porcelain-v2 commands across 3 real seconds",
+  "before": 640,
+  "after": 640,
+  "paused": true
+}

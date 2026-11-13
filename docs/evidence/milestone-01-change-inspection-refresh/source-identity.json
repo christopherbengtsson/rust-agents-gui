@@ -1,0 +1,37 @@
+{
+  "recorded_utc": "2026-11-13T14:15:44.984176+00:00",
+  "baseline": "029e2fb4a9a5f428ffe666cd87057d014c6a59c6",
+  "branch": "feature/m01-change-inspection",
+  "implementation_dirty": true,
+  "sources": {
+    "crates/core/src/workspaces/inspection.rs": "db247d6221ea052c3b5f6cd5c069fd5ea4ed9589636e8fc595b091421778e762",
+    "crates/core/src/workspaces/inspection/tests.rs": "09e6455ed7f8861b5c770fb75c26791ad03ab34756d21fccef57c44115d36dfb",
+    "src/components/README.md": "f6c19b78d03f8fe0244707f402b8034ab44518d304e1d53ab3add5d2ac487e8e",
+    "src/components/blocks/workspace-changes.tsx": "9d87dd6fba5d92120fd84e1536f2f79e263206a54865bbf9ea1f15ae3cef6683",
+    "src/components/blocks/workspace-panel.tsx": "23473f3591b5cb82f2550149686e673a74cb6932eb8469edefed51271e1eca04",
+    "src/hooks/use-workspace-changes.ts": "6195995141a3196926e744ccbb1e0e39df6307573a03a376ceb4ba10b4d2a93c",
+    "src/lib/workspace-changes-reader.ts": "704801f3c2419d6c108a4d9bccdc661d3c758f864c7720e835399eb79ce4c1d5",
+    "src/workspace-changes.test.tsx": "52a5d26600feb3455a262f57d11a299f63c06db37dcc828c6896f7b0651ff3b2",
+    "docs/evidence/milestone-01-change-inspection-refresh/fixture-instructions.md": "00a40aa94d48af30d211db0de37b09bbe44820245f0ff3661ff0666274fa733f"
+  },
+  "unit_executable": {
+    "path": "target/debug/deps/workspace_core-36bf8e1346420b1d",
+    "sha256": "b96ce2ae559336c634cda09a287c60edfc45866546c1bb807ff501c7a3af2a57"
+  },
+  "environment": {
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+    "architecture": "arm64",
+    "model": "Mac16,8",
+    "cpus": "12",
+    "memory_bytes": "51539607552",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "git": "git version 2.50.0",
+    "node": "v26.13.1",
+    "pnpm": "12.18.0",
+    "cpu": "Apple M4 Pro"
+  },
+  "target": "worktree-default target/, owned by current worktree, warm cache, test profile",
+  "harness_threads": 1,
+  "ui_workers": 1
+}

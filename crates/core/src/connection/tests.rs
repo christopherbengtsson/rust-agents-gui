@@ -307,6 +307,7 @@ struct TransportScenario {
     input: Cursor<Vec<u8>>,
     chunk_size: usize,
     timeouts: RefCell<Vec<Duration>>,
+    read_waits: RefCell<Vec<Duration>>,
     write_chunk_size: usize,
     fault: Option<TransportFault>,
     trace: Rc<RefCell<TransportTrace>>,
@@ -315,6 +316,8 @@ struct TransportScenario {
 #[derive(Clone, Copy)]
 enum TransportFault {
     ReadTimeout,
+    ReadTimeoutAfterFirstRead,
+    ReadWait,
     WriteTimeout,
     WriteAfter(usize),
     Read,
@@ -334,6 +337,7 @@ impl TransportScenario {
             input: Cursor::new(input),
             chunk_size: usize::MAX,
             timeouts: RefCell::new(vec![]),
+            read_waits: RefCell::new(vec![]),
             write_chunk_size: usize::MAX,
             fault: None,
             trace: Rc::default(),
@@ -369,9 +373,22 @@ impl Write for TransportScenario {
     }
 }
 impl FrameStream for TransportScenario {
+    fn wait_readable(&self, timeout: Duration) -> io::Result<()> {
+        self.read_waits.borrow_mut().push(timeout);
+        if matches!(self.fault, Some(TransportFault::ReadWait)) {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        Ok(())
+    }
     fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
         if matches!(self.fault, Some(TransportFault::ReadTimeout)) {
             return Err(io::ErrorKind::Unsupported.into());
+        }
+        // macOS rejects timeout changes after a peer closes, even with unread bytes.
+        if matches!(self.fault, Some(TransportFault::ReadTimeoutAfterFirstRead))
+            && self.trace.borrow().reads > 0
+        {
+            return Err(io::Error::from_raw_os_error(libc::EINVAL));
         }
         self.timeouts.borrow_mut().push(timeout.unwrap());
         Ok(())
@@ -424,6 +441,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
     assert_eq!(snapshot.status.state, crate::SupervisorState::Ready);
     assert!(!snapshot.reset);
     for (protocol, version) in [
+        (4, env!("CARGO_PKG_VERSION")),
         (999, env!("CARGO_PKG_VERSION")),
         (PROTOCOL_VERSION, "99.0.0"),
     ] {
@@ -436,6 +454,38 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
         };
         assert!(message.contains("Install matching desktop and supervisor builds"));
     }
+}
+
+#[test]
+fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
+    use crate::workspaces::{WorkspaceId, WorkspaceRequest};
+    let core = Core {
+        owner: "owner-a".into(),
+        pid: 42,
+        workspaces: None,
+    };
+    let mut input = serde_json::to_vec(&Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        repository: None,
+        workspace: Some(WorkspaceRequest::Changes {
+            workspace_id: WorkspaceId(uuid::Uuid::from_u128(7)),
+            refresh: true,
+            comparison_id: None,
+            after: None,
+        }),
+    })
+    .unwrap();
+    input.push(b'\n');
+    let mut stream = TransportScenario::new(input);
+    serve_stream(&core, &mut stream).unwrap();
+    let Response::Workspace { result: Err(error) } =
+        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    else {
+        panic!("inspection must retain workspace routing and typed failure")
+    };
+    assert_eq!(error.code, ErrorCode::Storage);
 }
 
 #[test]
@@ -570,6 +620,19 @@ fn oversized_incomplete_and_malformed_frames_are_rejected_without_output() {
 }
 
 #[test]
+fn large_reply_survives_peer_close_after_first_chunk() {
+    let expected = "x".repeat(45_000);
+    let mut frame = serde_json::to_vec(&expected).unwrap();
+    frame.push(b'\n');
+    let mut stream = TransportScenario::new(frame);
+    stream.fault = Some(TransportFault::ReadTimeoutAfterFirstRead);
+    let start = Instant::now();
+    let received: String = read_frame_with_clock(&mut stream, || start).unwrap();
+    assert_eq!(received, expected);
+    assert!(stream.trace.borrow().reads > 1);
+}
+
+#[test]
 fn slow_trickled_frame_uses_an_absolute_deadline_without_waiting() {
     let mut stream = TransportScenario::new(b"{}\n".to_vec());
     stream.chunk_size = 1;
@@ -585,7 +648,7 @@ fn slow_trickled_frame_uses_an_absolute_deadline_without_waiting() {
             .unwrap_err();
     assert_eq!(error.kind(), io::ErrorKind::TimedOut);
     assert_eq!(
-        *stream.timeouts.borrow(),
+        *stream.read_waits.borrow(),
         [Duration::from_secs(2), Duration::from_secs(1)]
     );
 }
@@ -829,6 +892,21 @@ fn client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request() {
         assert_eq!(trace.writes, 1);
         assert_eq!(trace.drops, 1);
     }
+}
+
+#[test]
+fn client_readiness_failure_does_not_repeat_exchange_or_read() {
+    let mut scenario = ClientScenario::new(b"{}\n".to_vec());
+    scenario.stream.as_mut().unwrap().fault = Some(TransportFault::ReadWait);
+    assert_eq!(
+        scenario.snapshot().unwrap_err().kind(),
+        io::ErrorKind::TimedOut
+    );
+    assert_eq!(scenario.calls, client_calls());
+    let trace = scenario.trace.borrow();
+    assert_eq!(trace.writes, 1);
+    assert_eq!(trace.reads, 0);
+    assert_eq!(trace.drops, 1);
 }
 
 #[test]

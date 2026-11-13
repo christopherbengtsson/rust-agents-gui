@@ -1,0 +1,118 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container Create workspace in Inspection Beta /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							11 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							12 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							13 button (disabled) Create workspace in Inspection Beta
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							15 text Available
+							16 content list
+								17 button yuto-nagatomo, Help: Workspace ready
+						18 container Create workspace in Inspection Alpha /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							19 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							20 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							21 button (disabled) Create workspace in Inspection Alpha
+							22 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							23 text Available
+							24 content list
+								25 button kristine-lilly, Help: Workspace ready
+				26 pop up button (disabled) Add repository
+				27 text Connection error
+				28 pop up button Connection details
+			29 container
+				30 heading kristine-lilly, Value: 1
+					31 text kristine-lilly
+				32 button Retry connection
+				33 text Repository action needs attention
+				34 text Repository reply unavailable: Supervisor frame deadline exceeded. Refresh to retrieve the recorded action status; this request has not been replayed.
+				35 text Refresh to retrieve authoritative repository and action status.
+				36 container Selected repository
+					37 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					38 text Repository available
+					39 text Repository details are retained from the last observation and may be stale.
+				40 text Cannot reach the supervisor
+				41 text Cannot read supervisor observations: Supervisor frame deadline exceeded. Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.
+				42 text After addressing the error, retry the connection to retrieve its status.
+				43 text Workspace action needs attention
+				44 text Workspace reply unavailable: Supervisor frame deadline exceeded. Refresh its recorded action status; this request has not been replayed.
+				45 text Uncommitted changes
+				46 button (disabled) Refresh changes
+				47 button (expanded) Hide changed files, Secondary Actions: Collapse
+				48 text Compared with HEAD 
+				49 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				50 text  · 
+				51 text 13
+				52 text changed files
+				53 text Change inspection needs attention
+				54 text Workspace reply unavailable: Supervisor frame deadline exceeded. Refresh its recorded action status; this request has not been replayed.
+				55 text Showing the last-good comparison; it may be stale.
+				56 tab group (selectable) Workspace views
+					57 tab (selectable) Workspace
+					58 tab (selected) Changes
+				59 container Changes
+					60 container Selected file changes
+						61 heading text.txt, Value: 2
+							62 text text.txt
+						63 container
+							64 text Showing the last-good preview against HEAD 0c47e519f2a2a6e3c11995a11958340eafafa5a7 ; it may be stale.
+						65 container Unified file diff
+							66 container
+								67 container Old line
+								68 container New line
+								69 text @@ -1 +1 @@
+								70 container Old line
+									71 text 1
+								72 container New line
+								73 text original text
+								74 container Old line
+								75 container New line
+									76 text 1
+								77 text third edit after settled preview
+				78 splitter Resize changed files, Value: 68
+				79 container Changed files
+					80 heading Changed files, Value: 2
+						81 text Changed files
+					82 container
+						83 toggle button delete.txt .D, Help: delete.txt, Value: off
+						84 toggle button text.txt .M, Help: text.txt, Value: on
+						85 toggle button binary.bin ??, Help: binary.bin, Value: off
+						86 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						87 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						88 toggle button limited.txt ??, Help: limited.txt, Value: off
+						89 container Symbolic link
+							90 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							91 text Symbolic link
+						92 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						93 toggle button new.txt ??, Help: new.txt, Value: off
+						94 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						95 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						96 container Content exceeds the read limit
+							97 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							98 text Content exceeds the read limit
+						99 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					100 button First page
+					101 button (disabled) Next files
+				102 text Local workspace
+				103 text Inspection Alpha
+	104 close button
+	105 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	106 minimize button
+	107 text Agent Workspace
+108 menu bar
+	109 Inspection Qualification
+	110 File
+	111 Edit
+	112 View
+	113 Window
+	114 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/

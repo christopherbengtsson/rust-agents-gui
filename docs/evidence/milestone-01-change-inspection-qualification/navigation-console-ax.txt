@@ -1,0 +1,185 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 4:18:43 PM
+					36 image
+					37 text console.log("05C_ASSETS="+JSON.stringify({scripts:[...document.scripts].map(s=>s.src),styles:[...document.querySelectorAll("link[rel=stylesheet]")].map(s=>s.href),scrollTrack:[...document.querySelectorAll("[data-slot=scroll-area-scrollbar]")].map(s=>[s.dataset.orientation,getComputedStyle(s).width,getComputedStyle(s).height]),rows:document.querySelectorAll(".diff-row").length}))
+					38 image
+					39 text 05C_ASSETS={"scripts":["
+					40 link http://127.0.0.1:1420/assets/index-BH_usD4q.js, Value: 127.0.0.1:1420/assets/index-BH_usD4q.js
+					41 text "],"styles":["
+					42 link http://127.0.0.1:1420/assets/index-BSp6w5We.css, Value: 127.0.0.1:1420/assets/index-BSp6w5We.css
+					43 text "],"scrollTrack":[["vertical","10px","139px"],["horizontal","427.40625px","10px"],["vertical","10px","154px"]],"rows":200}
+					44 image
+					45 text undefined
+					46 image
+					47 text // Injected via the actual WKWebView Inspector console for opt-in qualification.
+// Observes native trusted tab clicks; never replaces IPC, data or React behavior.
+(() => {
+  window.__inspectionQualification?.dispose?.();
+  const records = [];
+  const observers = new Set();
+  const click = (event) => {
+    const tab = event.target.closest('[role="tab"]');
+    if (!tab || tab.getAttribute('aria-selected') === 'true' || records.length >= 12) return;
+    const record = { sample: records.length + 1, target: tab
+					48 image
+					49 text "
+					50 text 05c navigation observation installed
+					51 text "
+					52 text  = $1
+					53 image
+					54 text window.__inspectionQualification.records.forEach(r=>console.log("05C_FINAL_SAMPLE="+JSON.stringify(r)));console.log("05C_FINAL_META="+JSON.stringify({assets:window.__inspectionQualification.assets.map(s=>s.split("/").pop()),userAgent:window.__inspectionQualification.userAgent,timeOrigin:window.__inspectionQualification.timeOrigin}))
+					55 image
+					56 text 05C_FINAL_SAMPLE={"sample":1,"target":"Workspace","trusted":true,"input":40855.00000000001,"eventTime":40842,"rowsBefore":200,"viewport":[900,398],"commit":40858.00000000001,"rowsAfter":200,"secondFrame":40886}
+					57 image
+					58 text 05C_FINAL_SAMPLE={"sample":2,"target":"Changes","trusted":true,"input":41772,"eventTime":41759,"rowsBefore":0,"viewport":[900,398],"commit":41789,"rowsAfter":200,"secondFrame":41827}
+					59 image
+					60 text 05C_FINAL_SAMPLE={"sample":3,"target":"Workspace","trusted":true,"input":42706,"eventTime":42694,"rowsBefore":200,"viewport":[900,398],"commit":42708,"rowsAfter":200,"secondFrame":42737}
+					61 image
+					62 text 05C_FINAL_SAMPLE={"sample":4,"target":"Changes","trusted":true,"input":43606,"eventTime":43594,"rowsBefore":0,"viewport":[900,398],"commit":43623,"rowsAfter":200,"secondFrame":43660.00000000001}
+					63 image
+					64 text 05C_FINAL_SAMPLE={"sample":5,"target":"Workspace","trusted":true,"input":44521,"eventTime":44512,"rowsBefore":200,"viewport":[900,398],"commit":44524,"rowsAfter":200,"secondFrame":44553.00000000001}
+					65 image
+					66 text 05C_FINAL_SAMPLE={"sample":6,"target":"Changes","trusted":true,"input":45422.00000000001,"eventTime":45408,"rowsBefore":0,"viewport":[900,398],"commit":45438,"rowsAfter":200,"secondFrame":45476}
+					67 image
+					68 text 05C_FINAL_SAMPLE={"sample":7,"target":"Workspace","trusted":true,"input":46355.00000000001,"eventTime":46345,"rowsBefore":200,"viewport":[900,398],"commit":46358.00000000001,"rowsAfter":200,"secondFrame":46386}
+					69 image
+					70 text 05C_FINAL_SAMPLE={"sample":8,"target":"Changes","trusted":true,"input":47172.00000000001,"eventTime":47160.00000000001,"rowsBefore":0,"viewport":[900,398],"commit":47188,"rowsAfter":200,"secondFrame":47225}
+					71 image
+					72 text 05C_FINAL_SAMPLE={"sample":9,"target":"Workspace","trusted":true,"input":48105.00000000001,"eventTime":48093,"rowsBefore":200,"viewport":[900,398],"commit":48107,"rowsAfter":200,"secondFrame":48136}
+					73 image
+					74 text 05C_FINAL_SAMPLE={"sample":10,"target":"Changes","trusted":true,"input":48922.00000000001,"eventTime":48909,"rowsBefore":0,"viewport":[900,398],"commit":48939,"rowsAfter":200,"secondFrame":48977.00000000001}
+					75 image
+					76 text 05C_FINAL_SAMPLE={"sample":11,"target":"Workspace","trusted":true,"input":49755,"eventTime":49745.00000000001,"rowsBefore":200,"viewport":[900,398],"commit":49758,"rowsAfter":200,"secondFrame":49787}
+					77 image
+					78 text 05C_FINAL_SAMPLE={"sample":12,"target":"Changes","trusted":true,"input":50555,"eventTime":50543,"rowsBefore":0,"viewport":[900,398],"commit":50572,"rowsAfter":200,"secondFrame":50609}
+					79 image
+					80 text 05C_FINAL_META={"assets":["index-BH_usD4q.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","timeOrigin":1794583123818}
+					81 image
+					82 text undefined
+			83 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			84 container
+	85 scroll area
+		86 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/?qualification=final-05c
+			87 link Skip to workspace, Value: 127.0.0.1:1420/?qualification=final-05c#workspace
+			88 container Repository sidebar
+				89 text Agent Workspace
+				90 container Repositories
+					91 heading Repositories, Value: 2
+						92 text Repositories
+					93 content list
+						94 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							95 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							96 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							97 button Create workspace in Inspection Beta
+							98 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							99 text Available
+							100 content list
+								101 button yuto-nagatomo, Help: Workspace ready
+						102 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							103 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							104 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							105 button Create workspace in Inspection Alpha
+							106 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							107 text Available
+							108 content list
+								109 button kristine-lilly, Help: Workspace ready
+				110 pop up button Add repository
+				111 text Connected
+				112 pop up button Connection details
+			113 container
+				114 heading kristine-lilly, Value: 1
+					115 text kristine-lilly
+				116 button Refresh status
+				117 container Selected repository
+					118 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					119 text Repository available
+				120 text Uncommitted changes
+				121 button Refresh changes
+				122 button (expanded) Hide changed files, Secondary Actions: Collapse
+				123 text Compared with HEAD 
+				124 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				125 text  · 
+				126 text 12
+				127 text changed files
+				128 tab group (selectable) Workspace views
+					129 tab (selectable) Workspace
+					130 tab (selected) Changes, Value: on
+				131 container Changes
+					132 container Selected file changes
+						133 heading limited.txt, Value: 2
+							134 text limited.txt
+						135 text Preview limited by the 200-row or 48 KiB response budget.
+						136 container Unified file diff
+				137 splitter Resize changed files, Value: 68
+				138 container Changed files
+					139 heading Changed files, Value: 2
+						140 text Changed files
+					141 container
+						142 toggle button delete.txt .D, Help: delete.txt, Value: off
+						143 toggle button binary.bin ??, Help: binary.bin, Value: off
+						144 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						145 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						146 toggle button limited.txt ??, Help: limited.txt, Value: on
+						147 container Symbolic link
+							148 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							149 text Symbolic link
+						150 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						151 toggle button new.txt ??, Help: new.txt, Value: off
+						152 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						153 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						154 container Content exceeds the read limit
+							155 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							156 text Content exceeds the read limit
+						157 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					158 button First page
+					159 button (disabled) Next files
+				160 text Local workspace
+				161 text Inspection Alpha
+	162 close button
+	163 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	164 minimize button
+	165 text Agent Workspace
+166 menu bar
+	167 Inspection Qualification
+	168 File
+	169 Edit
+	170 View
+	171 Window
+	172 Help
+
+The focused UI element is 83 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

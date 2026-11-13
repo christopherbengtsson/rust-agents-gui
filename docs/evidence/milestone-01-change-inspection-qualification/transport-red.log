@@ -1,0 +1,25 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.13s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-36bf8e1346420b1d)
+
+running 1 test
+test connection::tests::large_reply_survives_peer_close_after_first_chunk ... FAILED
+
+failures:
+
+---- connection::tests::large_reply_survives_peer_close_after_first_chunk stdout ----
+
+thread 'connection::tests::large_reply_survives_peer_close_after_first_chunk' (28771859) panicked at crates/core/src/connection/tests.rs:620:73:
+called `Result::unwrap()` on an `Err` value: Os { code: 22, kind: InvalidInput, message: "Invalid argument" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    connection::tests::large_reply_survives_peer_close_after_first_chunk
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 108 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`
+real 1.83
+user 1.06
+sys 0.60

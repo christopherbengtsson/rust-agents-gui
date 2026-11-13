@@ -1,0 +1,229 @@
+docs/evidence/milestone-01-change-inspection-qualification/02-clean-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/02-clean-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/03-tabs-layout-fixed-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/03-tabs-layout-fixed-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/04-modified-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/04-modified-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/05-added-keyboard-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/05-added-keyboard-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/06-deleted-keyboard-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/06-deleted-keyboard-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/07-same-status-refreshed-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/07-same-status-refreshed-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/08-refreshed-recovery-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/08-refreshed-recovery-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:24: trailing whitespace.
++				22 search text field (settable)  
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:43: trailing whitespace.
++						41 text Module Code  — 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:50: trailing whitespace.
++						47 text handleMessage  — 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:59: trailing whitespace.
++					54 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:64: trailing whitespace.
++						59 text invalidate  — 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:68: trailing whitespace.
++					62 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:74: trailing whitespace.
++					67 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:80: trailing whitespace.
++					72 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:86: trailing whitespace.
++					77 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:93: trailing whitespace.
++					83 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/09-console-diagnostics-ax.txt:114: trailing whitespace.
++					96 text  – 
+docs/evidence/milestone-01-change-inspection-qualification/10-same-status-ready-edit-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/10-same-status-ready-edit-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/11-binary-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/11-binary-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/12-non-utf8-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/12-non-utf8-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/13-symlink-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/13-symlink-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/14-read-limit-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/14-read-limit-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/15-row-limit-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/15-row-limit-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/16-no-newline-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/16-no-newline-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/17-empty-added-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/17-empty-added-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/18-preview-transport-failure-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/18-preview-transport-failure-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/19-static-production-assets-ax.txt:23: trailing whitespace.
++				21 search text field (settable)  
+docs/evidence/milestone-01-change-inspection-qualification/19-static-production-assets-ax.txt:79: trailing whitespace.
++				77 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/19-static-production-assets-ax.txt:81: trailing whitespace.
++				79 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/21-large-preview-fixed-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/21-large-preview-fixed-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/22-diff-keyboard-scrolled-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/22-diff-keyboard-scrolled-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/23-tab-keyboard-reading-retained-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/23-tab-keyboard-reading-retained-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/24-keyboard-resize-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/24-keyboard-resize-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/25-panel-collapsed-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/25-panel-collapsed-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/26-minimum-window-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/26-minimum-window-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/28-sheet-escape-focus-return-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/28-sheet-escape-focus-return-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/29-long-path-minimum-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/29-long-path-minimum-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/30-read-failure-last-good-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/30-read-failure-last-good-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/31-read-failure-recovered-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/31-read-failure-recovered-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/32-read-recovery-settled-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/32-read-recovery-settled-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/33-git-failure-last-good-ax.txt:33: trailing whitespace.
++				31 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/33-git-failure-last-good-ax.txt:35: trailing whitespace.
++				33 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/35-alpha-pending-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/35-alpha-pending-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/37-beta-clean-settled-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/37-beta-clean-settled-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/38-disconnected-last-good-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/38-disconnected-last-good-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/39-connection-error-stale-ax.txt:50: trailing whitespace.
++				48 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/39-connection-error-stale-ax.txt:52: trailing whitespace.
++				50 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/40-reconnected-same-target-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/40-reconnected-same-target-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/41-selection-removed-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/41-selection-removed-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/42-surfaces-hidden-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/42-surfaces-hidden-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/43-returned-after-hidden-edit-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/43-returned-after-hidden-edit-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/44-restored-after-minimize-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/44-restored-after-minimize-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/45-navigation-timeline-ax.txt:31: trailing whitespace.
++				28 pop up button 
+docs/evidence/milestone-01-change-inspection-qualification/45-navigation-timeline-ax.txt:35: trailing whitespace.
++				31 pop up button 
+docs/evidence/milestone-01-change-inspection-qualification/45-navigation-timeline-ax.txt:68: trailing whitespace.
++				58 pop up button 
+docs/evidence/milestone-01-change-inspection-qualification/45-navigation-timeline-ax.txt:131: trailing whitespace.
++				111 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/45-navigation-timeline-ax.txt:133: trailing whitespace.
++				113 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/46-final-navigation-trace-ax.txt:32: trailing whitespace.
++				29 pop up button 
+docs/evidence/milestone-01-change-inspection-qualification/46-final-navigation-trace-ax.txt:36: trailing whitespace.
++				32 pop up button 
+docs/evidence/milestone-01-change-inspection-qualification/46-final-navigation-trace-ax.txt:68: trailing whitespace.
++				58 pop up button 
+docs/evidence/milestone-01-change-inspection-qualification/46-final-navigation-trace-ax.txt:131: trailing whitespace.
++				111 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/46-final-navigation-trace-ax.txt:133: trailing whitespace.
++				113 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/47-final-assets-desktop-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/47-final-assets-desktop-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/48-packaged-inspection-ax.txt:41: trailing whitespace.
++				39 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/48-packaged-inspection-ax.txt:43: trailing whitespace.
++				41 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/final-assets-console-ax.txt:23: trailing whitespace.
++				21 search text field (settable)  
+docs/evidence/milestone-01-change-inspection-qualification/final-assets-console-ax.txt:88: trailing whitespace.
++				86 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/final-assets-console-ax.txt:90: trailing whitespace.
++				88 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/navigation-console-ax.txt:23: trailing whitespace.
++				21 search text field (settable)  
+docs/evidence/milestone-01-change-inspection-qualification/navigation-console-ax.txt:134: trailing whitespace.
++				123 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/navigation-console-ax.txt:136: trailing whitespace.
++				125 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/navigation-initial-attempt/navigation-console-ax.txt:23: trailing whitespace.
++				21 search text field (settable)  
+docs/evidence/milestone-01-change-inspection-qualification/navigation-initial-attempt/navigation-console-ax.txt:141: trailing whitespace.
++				123 text Compared with HEAD 
+docs/evidence/milestone-01-change-inspection-qualification/navigation-initial-attempt/navigation-console-ax.txt:143: trailing whitespace.
++				125 text  · 
+docs/evidence/milestone-01-change-inspection-qualification/packaging-final.log:20: trailing whitespace.
++[plugin builtin:vite-reporter] 
+docs/evidence/milestone-01-change-inspection-qualification/packaging.log:18: trailing whitespace.
++[plugin builtin:vite-reporter] 
+docs/evidence/milestone-01-change-inspection-qualification/static-frontend-build.log:11: trailing whitespace.
++[plugin builtin:vite-reporter] 
+docs/evidence/milestone-01-change-inspection-qualification/tabs-ui-check.log:9: new blank line at EOF.

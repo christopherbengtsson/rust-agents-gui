@@ -1,0 +1,93 @@
+Window: "Agent Workspace", App: Inspection Packaged Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							11 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							12 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							13 button Create workspace in Inspection Beta
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							15 text Available
+							16 content list
+								17 button yuto-nagatomo, Help: Workspace ready
+						18 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							19 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							20 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Inspection Alpha
+							22 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							23 text Available
+							24 content list
+								25 button kristine-lilly, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading kristine-lilly, Value: 1
+					31 text kristine-lilly
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					35 text Repository available
+				36 text Uncommitted changes
+				37 button (disabled) Refreshing…
+				38 button (expanded) Hide changed files, Secondary Actions: Collapse
+				39 text Compared with HEAD 
+				40 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				41 text  · 
+				42 text 12
+				43 text changed files
+				44 text Refreshing the retained comparison…
+				45 tab group (selectable) Workspace views
+					46 tab (selectable) Workspace
+					47 tab (selected) Changes
+				48 container Changes
+					49 container Selected file changes
+						50 heading limited.txt, Value: 2
+							51 text limited.txt
+						52 text Preview limited by the 200-row or 48 KiB response budget.
+						53 container Unified file diff
+				54 splitter Resize changed files, Value: 68
+				55 container Changed files
+					56 heading Changed files, Value: 2
+						57 text Changed files
+					58 container
+						59 toggle button delete.txt .D, Help: delete.txt, Value: off
+						60 toggle button binary.bin ??, Help: binary.bin, Value: off
+						61 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						62 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						63 toggle button limited.txt ??, Help: limited.txt, Value: on
+						64 container Symbolic link
+							65 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							66 text Symbolic link
+						67 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						68 toggle button new.txt ??, Help: new.txt, Value: off
+						69 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						70 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						71 container Content exceeds the read limit
+							72 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							73 text Content exceeds the read limit
+						74 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					75 button First page
+					76 button (disabled) Next files
+				77 text Local workspace
+				78 text Inspection Alpha
+	79 close button
+	80 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	81 minimize button
+	82 text Agent Workspace
+83 menu bar
+	84 Inspection Packaged Qualification
+	85 File
+	86 Edit
+	87 View
+	88 Window
+	89 Help
+
+The focused UI element is 63 toggle button limited.txt ??, Help: limited.txt, Value: on

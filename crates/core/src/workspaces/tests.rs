@@ -258,6 +258,7 @@ fn uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains
 
 fn state(store: Store) -> Mutex<OwnerState> {
     Mutex::new(OwnerState {
+        inspections: inspection::Inspections::default(),
         directory: "/unused-private-state".into(),
         store: Ok(Box::new(store)),
         cache: VecDeque::new(),
@@ -267,6 +268,57 @@ fn state(store: Store) -> Mutex<OwnerState> {
         active_workspace: None,
         workspace_faults: BTreeMap::new(),
     })
+}
+
+#[test]
+fn inspection_requests_admit_only_the_exact_ready_workspace_without_writes() {
+    let repository = record(1);
+    let mut workspace =
+        allocate(repository.id, ActionId(Uuid::new_v4()), Path::new("/state")).unwrap();
+    workspace.path = Some("/state/ready/checkout".into());
+    workspace.branch = Some("workspace/ready".into());
+    workspace.name = Some("ready".into());
+    workspace.status = CreationStatus::Ready;
+    let mut store = Store::default();
+    store.repositories.insert(repository.id, repository);
+    store.workspaces.insert(workspace.id, workspace.clone());
+    let service = Workspaces {
+        shared: Arc::new(state(store)),
+        wake: None,
+        worker: None,
+    };
+    let request = |id| WorkspaceRequest::Changes {
+        workspace_id: id,
+        refresh: true,
+        comparison_id: None,
+        after: None,
+    };
+    assert_eq!(
+        service
+            .workspace_request(request(WorkspaceId(Uuid::new_v4())))
+            .unwrap_err()
+            .code,
+        ErrorCode::NotFound
+    );
+    let WorkspaceReply::Changes { observation } =
+        service.workspace_request(request(workspace.id)).unwrap()
+    else {
+        panic!()
+    };
+    assert_eq!(observation.workspace_id, workspace.id);
+    assert_eq!(observation.phase, InspectionPhase::Queued);
+    assert!(observation.page.is_none());
+    assert_eq!(
+        service
+            .state()
+            .unwrap()
+            .store()
+            .unwrap()
+            .workspace(workspace.id)
+            .unwrap()
+            .unwrap(),
+        workspace
+    );
 }
 
 #[test]

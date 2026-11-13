@@ -1,0 +1,24 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.81s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-36bf8e1346420b1d)
+
+running 1 test
+test connection::tests::client_readiness_failure_does_not_repeat_exchange_or_read ... FAILED
+
+failures:
+
+---- connection::tests::client_readiness_failure_does_not_repeat_exchange_or_read stdout ----
+
+thread 'connection::tests::client_readiness_failure_does_not_repeat_exchange_or_read' (28779135) panicked at crates/core/src/connection/tests.rs:898:5:
+assertion `left == right` failed
+  left: Other
+ right: TimedOut
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    connection::tests::client_readiness_failure_does_not_repeat_exchange_or_read
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 109 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

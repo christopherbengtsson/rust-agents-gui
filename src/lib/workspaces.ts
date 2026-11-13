@@ -1,5 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import { identity, object, type RepositoryError } from "./repositories";
+import {
+  validInspectionReply,
+  type InspectionRequest,
+  type InspectionReply,
+} from "./changes";
 
 export type WorkspaceStatus =
   | { state: "queued" | "ready" }
@@ -41,11 +46,13 @@ export type WorkspaceAction =
   | { operation: "reconcile"; action_id: string; workspace_id: string };
 export type WorkspaceRequest =
   | WorkspaceAction
+  | InspectionRequest
   | { operation: "action"; action_id: string }
   | { operation: "get"; id: string }
   | { operation: "list"; repository_id: string; after: string | null };
 export type WorkspacePage = { workspaces: Workspace[]; next: string | null };
 export type WorkspaceReply =
+  | InspectionReply
   | { kind: "workspace"; workspace: Workspace | null }
   | {
       kind: "action";
@@ -132,7 +139,12 @@ export async function workspaceRequest(
   const value = await invoke<unknown>("workspace_request", { request });
   let valid = false;
   if (object(value)) {
-    if (request.operation === "list")
+    if (
+      request.operation === "changes" ||
+      request.operation === "change_preview"
+    )
+      valid = validInspectionReply(request, value);
+    else if (request.operation === "list")
       valid =
         value.kind === "workspaces" &&
         object(value.page) &&

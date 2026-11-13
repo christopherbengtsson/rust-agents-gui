@@ -301,3 +301,147 @@
     gap: 4px;
   }
 }
+
+/* Change inspection: bounded views share the shell's semantic roles. */
+.workspace-inspection {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 300px;
+  min-width: 0;
+  gap: 8px;
+}
+.changes-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.changes-toolbar > span {
+  margin-right: auto;
+  font-weight: 500;
+}
+.inspection-status {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+  font-size: var(--shell-text-caption);
+}
+.inspection-panels {
+  flex: 1;
+  min-height: 0;
+}
+.inspection-tabs {
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  padding-right: 8px;
+}
+.workspace-tab {
+  overflow: auto;
+  min-height: 0;
+}
+.changes-tab {
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+.selected-diff {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+.selected-diff h2 {
+  font-weight: 500;
+  font-size: var(--shell-text-label);
+}
+.changed-files {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+}
+.changed-files h2 {
+  font-weight: 500;
+  font-size: var(--shell-text-label);
+}
+.changed-file-scroll {
+  flex: 1;
+  min-height: 0;
+}
+.changed-file {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.changed-file[aria-pressed="true"] {
+  background: var(--accent);
+}
+.unsupported-file {
+  padding-inline: 8px;
+  color: var(--muted-foreground);
+  font-size: var(--shell-text-caption);
+}
+.file-paging {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.diff-scroll {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.diff-code {
+  border: 0;
+  border-radius: 0;
+  min-width: max-content;
+}
+.diff-content {
+  overflow: visible;
+  padding: 0;
+}
+.diff-row {
+  margin: 0;
+  padding-inline: 0;
+}
+.diff-row::after {
+  content: none;
+}
+.diff-row [data-slot="code-block-line-content"] {
+  display: grid;
+  grid-template-columns: 5ch 5ch 2ch 1fr;
+}
+.diff-row[data-kind="added"] {
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+}
+.diff-row[data-kind="removed"] {
+  background: color-mix(in srgb, var(--destructive) 10%, transparent);
+}
+.diff-row[data-kind="hunk"],
+.diff-row[data-kind="no_newline"] {
+  color: var(--muted-foreground);
+}
+.diff-number {
+  color: var(--muted-foreground);
+  text-align: right;
+  padding-right: 1ch;
+  user-select: none;
+}
+.diff-sign {
+  user-select: none;
+}
+/* Base UI 1.9.0 injected scrollbar styles, externalized for style-src 'self'. */
+[data-slot="scroll-area-viewport"] {
+  scrollbar-width: none;
+}
+[data-slot="scroll-area-viewport"]::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,151 @@
+{
+  "records": [
+    {
+      "sample": 1,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 40855.00000000001,
+      "eventTime": 40842,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 40858.00000000001,
+      "rowsAfter": 200,
+      "secondFrame": 40886
+    },
+    {
+      "sample": 2,
+      "target": "Changes",
+      "trusted": true,
+      "input": 41772,
+      "eventTime": 41759,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 41789,
+      "rowsAfter": 200,
+      "secondFrame": 41827
+    },
+    {
+      "sample": 3,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 42706,
+      "eventTime": 42694,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 42708,
+      "rowsAfter": 200,
+      "secondFrame": 42737
+    },
+    {
+      "sample": 4,
+      "target": "Changes",
+      "trusted": true,
+      "input": 43606,
+      "eventTime": 43594,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 43623,
+      "rowsAfter": 200,
+      "secondFrame": 43660.00000000001
+    },
+    {
+      "sample": 5,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 44521,
+      "eventTime": 44512,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 44524,
+      "rowsAfter": 200,
+      "secondFrame": 44553.00000000001
+    },
+    {
+      "sample": 6,
+      "target": "Changes",
+      "trusted": true,
+      "input": 45422.00000000001,
+      "eventTime": 45408,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 45438,
+      "rowsAfter": 200,
+      "secondFrame": 45476
+    },
+    {
+      "sample": 7,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 46355.00000000001,
+      "eventTime": 46345,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 46358.00000000001,
+      "rowsAfter": 200,
+      "secondFrame": 46386
+    },
+    {
+      "sample": 8,
+      "target": "Changes",
+      "trusted": true,
+      "input": 47172.00000000001,
+      "eventTime": 47160.00000000001,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 47188,
+      "rowsAfter": 200,
+      "secondFrame": 47225
+    },
+    {
+      "sample": 9,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 48105.00000000001,
+      "eventTime": 48093,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 48107,
+      "rowsAfter": 200,
+      "secondFrame": 48136
+    },
+    {
+      "sample": 10,
+      "target": "Changes",
+      "trusted": true,
+      "input": 48922.00000000001,
+      "eventTime": 48909,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 48939,
+      "rowsAfter": 200,
+      "secondFrame": 48977.00000000001
+    },
+    {
+      "sample": 11,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 49755,
+      "eventTime": 49745.00000000001,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 49758,
+      "rowsAfter": 200,
+      "secondFrame": 49787
+    },
+    {
+      "sample": 12,
+      "target": "Changes",
+      "trusted": true,
+      "input": 50555,
+      "eventTime": 50543,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 50572,
+      "rowsAfter": 200,
+      "secondFrame": 50609
+    }
+  ],
+  "assets": ["index-BH_usD4q.js"],
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+  "timeOrigin": 1794583123818
+}
