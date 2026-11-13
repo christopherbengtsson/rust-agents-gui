@@ -1,13 +1,18 @@
 import { fileURLToPath, URL } from "node:url";
-import babel from "@rolldown/plugin-babel";
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] }),
+    react({
+      compiler: {
+        compilationMode: "infer",
+        panicThreshold: "none",
+        target: "19",
+        reportDiagnostics: true,
+      },
+    }),
     tailwindcss(),
   ],
   clearScreen: false,

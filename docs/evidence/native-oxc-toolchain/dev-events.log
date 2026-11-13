@@ -1,0 +1,11 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.37s
+     Running BeforeDevCommand (`corepack pnpm frontend:dev`)
+  VITE v8.3.8  ready in 87 ms
+  ➜  Local:   http://127.0.0.1:1420/
+     Running DevCommand (`cargo  run --no-default-features --color always --`)
+[K[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 14.72s
+[1m[92m     Running[0m `/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target/debug/workspace-desktop`
+1:48:39 AM [vite] (client) hmr update /src/style.css, /src/components/blocks/supervisor-connection.tsx
+1:48:56 AM [vite] (client) hmr update /src/style.css, /src/components/blocks/supervisor-connection.tsx
+1:49:20 AM [vite] (client) hmr update /src/style.css, /src/components/blocks/supervisor-connection.tsx
+1:49:31 AM [vite] (client) hmr update /src/style.css, /src/components/blocks/supervisor-connection.tsx

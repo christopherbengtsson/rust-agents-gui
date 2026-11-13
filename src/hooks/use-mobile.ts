@@ -14,7 +14,7 @@ export function useIsMobile() {
     };
     mql.addEventListener("change", onChange);
     // Preserve the upstream post-mount breakpoint initialization and first render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // oxlint-disable-next-line react/set-state-in-effect
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     return () => mql.removeEventListener("change", onChange);
   }, []);

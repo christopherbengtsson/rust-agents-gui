@@ -1,0 +1,137 @@
+$ corepack pnpm format:check && corepack pnpm lint && corepack pnpm check && corepack pnpm test
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts package.json tsconfig.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 5ms on 63 files using 12 threads.
+$ oxlint src --max-warnings 0 --report-unused-disable-directives-severity warn
+$ tsc --noEmit && node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.01s
+$ node scripts/test-unit.mjs
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling serde v1.0.229
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.19
+   Compiling zmij v1.0.23
+   Compiling libc v0.2.191
+   Compiling syn v3.0.10
+   Compiling serde_derive v1.0.229
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.84s
+Unit compilation: 3.874347 s; target /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target; test profile
+
+running 33 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::client_access_and_connect_failures_stop_before_transport_io ... ok
+test connection::tests::client_bad_or_lost_replies_do_not_reconnect_or_repeat_the_request ... ok
+test connection::tests::client_partial_write_failure_neither_reads_nor_repeats_the_request ... ok
+test connection::tests::client_preserves_incompatible_version_guidance_without_another_exchange ... ok
+test connection::tests::client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange ... ok
+test connection::tests::client_rejects_an_oversized_request_before_writing ... ok
+test connection::tests::client_sends_exact_versions_and_cursor_and_reads_a_chunked_snapshot ... ok
+test connection::tests::client_timeout_configuration_failures_drop_the_stream_without_io ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::oversized_incomplete_and_malformed_frames_are_rejected_without_output ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::slow_trickled_frame_uses_an_absolute_deadline_without_waiting ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+Unit execution 1: 0.300437 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target/debug/deps/workspace_core-847732502cf0fdc3 --test-threads=1
+✔ claims an unclaimed target exclusively for this worktree (0.687ms)
+✔ permits a target already claimed by this worktree (0.122042ms)
+✔ rejects another worktree's target without changing its ownership (0.222625ms)
+✔ rejects a symlinked target before creating or claiming it (0.074958ms)
+✔ rejects a target under a symlinked parent before claiming it (0.079583ms)
+✔ rejects a symlinked ownership marker without following it (0.073875ms)
+✔ frontend lint accepts typed composition and direct UI imports (31.296ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (63.750708ms)
+✔ frontend lint surfaces compiler and accessible-name defects (62.007958ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (341.407209ms)
+✔ native boundary rules cover nested paths, type and namespace exports (32.911417ms)
+✔ warnings fail and native suppression names remain checked (103.166875ms)
+✔ native table-cell compatibility preserves other redundancy checks (31.10225ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (0.990583ms)
+✔ debug staging records the dev profile and a clean source tree (0.0865ms)
+✔ rejects missing executable without touching staged resources (0.182833ms)
+✔ rejects test executable without touching staged resources (0.060458ms)
+✔ rejects ambiguous executables without touching staged resources (0.069291ms)
+✔ a failed build cannot stage a previously available executable (0.057209ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 775.648041
+Unit execution 1: 0.812593 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v24.21.0/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-supervisor.test.mjs
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc
+
+1:44:57 AM [vite] (client) warning: `try`/`finally` without `catch` is not supported by React Compiler
+
+  > react-compiler(Todo): `try`/`finally` without `catch` is not supported by
+  | React Compiler
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/src/hooks/use-supervisor-connection.ts:54:5]
+ 53 |     pending.current = request;
+ 54 |     try {
+    :     ^|^
+    :      `-- Unsupported `try` starts here
+ 55 |       await readObservation().then((outcome) => {
+ 56 |         if (!mounted.current || pending.current !== request) return;
+ 57 |         if (outcome.ok)
+ 58 |           setConnection({
+ 59 |             state: "connected",
+ 60 |             observation: outcome.observation,
+ 61 |           });
+ 62 |         else
+ 63 |           setConnection((last) => ({
+ 64 |             state: "error",
+ 65 |             error: outcome.error,
+ 66 |             observation: last.observation,
+ 67 |           }));
+ 68 |       });
+ 69 |     } finally {
+    :      ^^^^|^^^^
+    :          `-- This `finally` clause requires unsupported control flow
+ 70 |       if (pending.current === request) pending.current = null;
+    `----
+  help: React Compiler cannot analyze this control flow. Refactor the
+        cleanup to avoid `finally`, or suppress this warning if this
+        function should remain uncompiled
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/src/hooks/use-supervisor-connection.ts
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  01:44:56
+   Duration  1.02s (tests 31%, environment 31%, import 26%, transform 12%)
+
+Unit execution 1: 1.236613 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v24.21.0/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1

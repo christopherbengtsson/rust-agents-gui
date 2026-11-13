@@ -1,0 +1,12 @@
+{
+  "package.json": "70d6329d7a56be3a5f77784f8ca4c4c695ac856223cc5d10e0b2543924efd669",
+  "pnpm-lock.yaml": "92dbdcd461c2a2c6e9b64d0c613bf9f51eb5b3f513ce567703fc13a4617e8492",
+  "vite.config.ts": "eca8dd0633de094bc69107b1f959557bfafff3c4eea07f4b35780cadd0829cfd",
+  "src/hooks/use-supervisor-connection.ts": "85a8d48f828a966a6da284e68d9e4cc7f79d827b72ba6d428a185f521fdbd9de",
+  "src/App.test.tsx": "3f9bbf476f0a7f0443437c3d3a040f7c759c7f5a2b0cbe1e8985f490a9900488",
+  ".oxlintrc.json": "38944665c4985339d3360cec1056f25051c6e111c7f75973ffa344495d7f691f",
+  ".oxfmtrc.json": "f9e3cacf6c0d5aa4bf6c64596e83f3fed089371a28ac10b819b3916774191659",
+  "dist/index.html": "5c1af24d0e570fb21866c2bef5d7f91152b461e6e1751c2264ecfed48822df22",
+  "dist/assets/index-BpD5-zyI.js": "87ff71d364e6386ff9804e569fa57c81a5a6016fd8f78e2a43444f65ab807255",
+  "dist/assets/index-CNgCq90z.css": "de0b6e24c51fe00d570880913a93c94d9d560a07fb2aec5f3d3793c83889e24f"
+}
