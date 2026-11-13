@@ -22,3 +22,14 @@ _Avoid_: Repository when referring to an individual workspace.
 An explicitly requested attempt to register a repository, with its own retained
 identity and observable pending, completed, or failed outcome.
 _Avoid_: Connection retry when referring to submitting registration.
+
+**Creation action**:
+An explicitly requested attempt to create an isolated workspace, with a retained
+identity and observable outcome. Adding a new repository also requests its first
+creation action.
+_Avoid_: Registration when referring to branch or workspace creation.
+
+**Pinned base**:
+The exact commit a workspace starts from, retained as its comparison origin even
+when the workspace branch changes.
+_Avoid_: Current default branch when referring to the saved starting commit.

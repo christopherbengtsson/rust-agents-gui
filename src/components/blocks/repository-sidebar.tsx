@@ -91,7 +91,7 @@ export function RepositorySidebar({
                       <Collapsible defaultOpen>
                         <SidebarMenuButton
                           size="sm"
-                          className="pr-14"
+                          className="pr-14!"
                           isActive={
                             repositories.selected?.id === repository.id &&
                             !workspaces.selected

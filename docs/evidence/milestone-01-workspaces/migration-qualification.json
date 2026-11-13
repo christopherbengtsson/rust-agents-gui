@@ -1,0 +1,41 @@
+{
+  "result": "pass",
+  "root": "/private/tmp/rag04-migration-cgo4cx3q",
+  "fixture_provenance": "Synthetic schema-1 metadata following retained ticket-03 schema; existing IDs and old JSON field shape",
+  "repository_before": {
+    "id": "ead91bdb-62ef-4109-b6a0-e6409931c303",
+    "name": "repo",
+    "path": "/private/tmp/rag04-migration-cgo4cx3q/repo",
+    "common_dir": "/private/tmp/rag04-migration-cgo4cx3q/repo/.git"
+  },
+  "action_before": {
+    "action_id": "f1e94bd6-781b-4a4e-9b21-4729a25d3e70",
+    "path": "/private/tmp/rag04-migration-cgo4cx3q/repo",
+    "state": "completed",
+    "repository_id": "ead91bdb-62ef-4109-b6a0-e6409931c303"
+  },
+  "repository_after": {
+    "kind": "repository",
+    "repository": {
+      "id": "ead91bdb-62ef-4109-b6a0-e6409931c303",
+      "name": "repo",
+      "path": "/private/tmp/rag04-migration-cgo4cx3q/repo",
+      "availability": {
+        "state": "checking"
+      }
+    }
+  },
+  "action_after": {
+    "kind": "action",
+    "registration": {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "f1e94bd6-781b-4a4e-9b21-4729a25d3e70",
+      "path": "/private/tmp/rag04-migration-cgo4cx3q/repo",
+      "state": "completed",
+      "repository_id": "ead91bdb-62ef-4109-b6a0-e6409931c303"
+    }
+  },
+  "schema_version_after": 2,
+  "workspaces_after": 0
+}

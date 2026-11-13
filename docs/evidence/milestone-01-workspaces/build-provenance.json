@@ -1,0 +1,22 @@
+{
+  "sidecar": {
+    "sourceRevision": "230bf75a74911b0d0118465a2a67b490a82c713f",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "6201baa1f2b23f1e0fdf6cc4287aee398279036bea1343b0798bd1e68603a028"
+  },
+  "packaged_sha256": {
+    "target/release/workspace-supervisor": "6201baa1f2b23f1e0fdf6cc4287aee398279036bea1343b0798bd1e68603a028",
+    "target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": "600a23f4c6e77af2587343da9d551897241f5cf49a47aff922d094c2451cc06d",
+    "target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor": "6201baa1f2b23f1e0fdf6cc4287aee398279036bea1343b0798bd1e68603a028"
+  }
+}

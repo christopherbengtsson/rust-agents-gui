@@ -1,0 +1,36 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspaces.test.tsx (8 tests | 1 failed) 177ms
+   × definite rejection follows its pending action across repository navigation 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspaces.test.tsx > definite rejection follows its pending action across repository navigation
+AssertionError: expected { operation: 'create', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "action_id": "1e42dfcf-8b88-401c-831a-76efc052867b",
+  "operation": "create",
+  "repository_id": "00000000-0000-4000-8000-000000000009",
+}
+
+ ❯ src/workspaces.test.tsx:288:33
+    286|  rerender({repository:other});
+    287|  await act(async()=>{reject?.({code:"cleanup_unconfirmed",message:"Rec…
+    288|  expect(result.current.pending).toBeNull();expect(localStorage.getItem…
+       |                                 ^
+    289|  expect(result.current.error?.code).toBe("cleanup_unconfirmed");
+    290| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  09:16:03
+   Duration  492ms (environment 42%, tests 41%, import 11%, transform 6%)

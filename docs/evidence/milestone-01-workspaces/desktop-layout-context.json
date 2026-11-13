@@ -1,0 +1,29 @@
+{
+  "root": "/private/tmp/rag04-desktop-iu1f_8u7",
+  "state": "/private/tmp/rag04-desktop-iu1f_8u7/state",
+  "repo": "/private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha",
+  "app": "/private/tmp/rag04-desktop-iu1f_8u7/Workspace Layout Qualification.app",
+  "desktop_pid": 58975,
+  "binary_hashes": {
+    "Contents/MacOS/workspace-desktop": "76c016fe8987fcf6544d40fb1b062a94913b718e1d269bc91fc5848481350703",
+    "Contents/Resources/workspace-supervisor": "6226839014c7c4521ecc2062b84abb715b722df31d7e87d47236a40d62c098ae"
+  },
+  "previous_owner": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 52719,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "52719-1794556986613218000",
+      "revision": 53
+    },
+    "reset": true
+  },
+  "counts_before_restart": {
+    "repositories": 2,
+    "registration_actions": 2,
+    "workspaces": 4,
+    "workspace_actions": 6
+  }
+}

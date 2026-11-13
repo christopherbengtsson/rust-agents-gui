@@ -1,0 +1,151 @@
+$ node scripts/build.mjs
+   Compiling libsqlite3-sys v0.40.0
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `release` profile [optimized] target(s) in 16.44s
+$ tauri build --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ tsc --noEmit && vite build
+vite v8.3.8 building client environment for production...
+transforming...
+[plugin vite:react-compiler] `try`/`finally` without `catch` is not supported by React Compiler
+
+  > react-compiler(Todo): `try`/`finally` without `catch` is not supported by
+  | React Compiler
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-supervisor-connection.ts:54:5]
+ 53 |     pending.current = request;
+ 54 |     try {
+    :     ^|^
+    :      `-- Unsupported `try` starts here
+ 55 |       await readObservation().then((outcome) => {
+ 56 |         if (!mounted.current || pending.current !== request) return;
+ 57 |         if (outcome.ok)
+ 58 |           setConnection({
+ 59 |             state: "connected",
+ 60 |             observation: outcome.observation,
+ 61 |           });
+ 62 |         else
+ 63 |           setConnection((last) => ({
+ 64 |             state: "error",
+ 65 |             error: outcome.error,
+ 66 |             observation: last.observation,
+ 67 |           }));
+ 68 |       });
+ 69 |     } finally {
+    :      ^^^^|^^^^
+    :          `-- This `finally` clause requires unsupported control flow
+ 70 |       if (pending.current === request) pending.current = null;
+    `----
+  help: React Compiler cannot analyze this control flow. Refactor the
+        cleanup to avoid `finally`, or suppress this warning if this
+        function should remain uncompiled
+  note: React Compiler skipped optimizing this component or hook
+
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+     ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts:191:8]
+ 190 |           }));
+ 191 |       } finally {
+     :        ^^^^^^^^^
+ 192 |         if (active()) {
+     `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+     ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts:303:6]
+ 302 |       return false;
+ 303 |     } finally {
+     :      ^^^^^^^^^
+ 304 |       sending.current = false;
+     `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/components/blocks/repository-registration.tsx:77:6]
+ 76 |         );
+ 77 |     } finally {
+    :      ^^^^^^^^^
+ 78 |       if (current === generation.current) setPicking(false);
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+     ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:174:8]
+ 173 |         if (active()) setError(repositoryError(error));
+ 174 |       } finally {
+     :        ^^^^^^^^^
+ 175 |         if (active()) {
+     `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Support ThrowStatement inside of try/catch
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Support ThrowStatement
+  | inside of try/catch
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:94:15]
+ 93 |                 )
+ 94 | ,->               throw new Error(
+ 95 | |                   "Workspace action payload conflicts with the retained request.",
+ 96 | `->               );
+ 97 |                 if (
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+     ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:284:6]
+ 283 |       }
+ 284 |     } finally {
+     :      ^^^^^^^^^
+ 285 |       sending.current = false;
+     `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+✓ 2372 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.27 kB
+dist/assets/index-CpcgfL3T.css   80.40 kB │ gzip:  13.82 kB
+dist/assets/index-DP5eszWW.js   457.28 kB │ gzip: 144.43 kB
+
+✓ built in 270ms
+   Compiling libsqlite3-sys v0.40.0
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `release` profile [optimized] target(s) in 24.62s
+       Built application at: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-desktop
+    Bundling Agent Workspace.app (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app)
+    Finished 1 bundle at:
+        /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app (13.88 MiB)
+
+real 42.60
+user 84.43
+sys 3.53

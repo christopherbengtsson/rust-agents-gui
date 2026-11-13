@@ -1,0 +1,71 @@
+Window: "Agent Workspace", App: Workspace Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/rag04-desktop-iu1f_8u7/No Default Available
+							11 button No Default, Help: /private/tmp/rag04-desktop-iu1f_8u7/No Default
+							12 button (expanded) Toggle details for No Default, Secondary Actions: Collapse
+							13 button Create workspace in No Default
+							14 text /private/tmp/rag04-desktop-iu1f_8u7/No Default
+							15 text Available
+							16 content list
+								17 button lisbon-aa96287a-e840-4866-a949-147743766fc3, Help: workspace/lisbon-aa96287a-e840-4866-a949-147743766fc3 · Workspace ready
+						18 container /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha Available
+							19 button Desktop Alpha, Help: /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha
+							20 button (expanded) Toggle details for Desktop Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Desktop Alpha
+							22 text /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha
+							23 text Available
+							24 content list
+								25 button oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78, Help: workspace/oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78 · Workspace ready
+								26 button oslo-54e9b56c-686b-4478-9606-a7fd6ba0c80d, Help: workspace/oslo-54e9b56c-686b-4478-9606-a7fd6ba0c80d · Workspace ready
+								27 button vienna-7f27a064-659a-4618-966f-58476aec7029, Help: workspace/vienna-7f27a064-659a-4618-966f-58476aec7029 · Workspace ready
+								28 button lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923, Help: workspace/lisbon-d2c5d77d-a663-48e0-b81e-f0c301dba923 · Workspace ready
+				29 pop up button Add repository
+				30 text Connected
+				31 pop up button Connection details
+			32 container
+				33 heading oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78, Value: 1
+					34 text oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78
+				35 button Refresh status
+				36 container Selected repository
+					37 text /private/tmp/rag04-desktop-iu1f_8u7/Desktop Alpha
+					38 text Repository available
+				39 container Selected workspace
+					40 text Workspace ready Codex
+					41 heading Your workspace is ready, Value: 2
+						42 text Your workspace is ready
+					43 text oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78
+					44 description list
+						45 text Branch
+						46 text workspace/oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78
+						47 text Workspace folder
+						48 text /private/tmp/rag04-desktop-iu1f_8u7/state/workspaces/e2debecd-7b8b-4b94-9f88-824b628639b1/oslo-2c4984a1-20fa-494c-9bf9-9733c5082c78/checkout
+						49 text Local base
+						50 text refs/heads/main · 62f878d32149e838accad88a1548517d65508729
+						51 text Branch artifact
+						52 text Created by this action
+						53 text Folder artifact
+						54 text Worktree created
+					55 container
+						56 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				57 text Local workspace
+				58 text Desktop Alpha
+	59 close button
+	60 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	61 minimize button
+	62 text Agent Workspace
+63 menu bar
+	64 Workspace Qualification
+	65 File
+	66 Edit
+	67 View
+	68 Window
+	69 Help

@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–03, including 02a, are complete. Repository registration/navigation has unit and actual-desktop evidence. Product behavior in tickets 04–13, the complete workflow and native-provider qualification remain incomplete.
+Status: In progress — tickets 01–04, including 02a, are complete. Repository registration/navigation has unit and actual-desktop evidence. Product behavior in tickets 05–13, the complete workflow and native-provider qualification remain incomplete.
 
 ## Outcome and authority
 
@@ -30,7 +30,7 @@ Select the latest compatible stable versions when executing the bootstrap ticket
 
 The desktop should have a clear, usable layout for navigation, chat, approvals, and change inspection. Build lasting, reusable modules with clear ownership under the MVP architecture; introduce abstractions when exercised behavior needs them. Later capabilities should extend these first building blocks.
 
-[Ticket 02a](../.scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md) establishes the agreed React/Vite presentation with shadcn/ui, Base UI and Tailwind before repository registration. Start from a compact dark Conductor-inspired shell and shared visual conventions; subsequent behavior tickets extend it incrementally. Its original shell and deferred actual Tauri desktop qualification cohort are complete; see the appended [UI foundation desktop evidence](evidence/milestone-01-ui-foundation.md#desktop-qualification-follow-up--2026-11-12). The current [official Sidebar refactor and branding fix](evidence/milestone-01-sidebar-refactor.md#actual-tauri-requalification--2026-11-1213) passed actual Tauri requalification on 2026-11-12–13. Completed tickets 01–02 are preserved. Other tickets, the parent spec and this milestone remain open.
+[Ticket 02a](../.scratch/milestone-01/issues/02a-establish-incremental-ui-foundation.md) establishes the agreed React/Vite presentation with shadcn/ui, Base UI and Tailwind before repository registration. Start from a compact dark Conductor-inspired shell and shared visual conventions; subsequent behavior tickets extend it incrementally. Its original shell and deferred actual Tauri desktop qualification cohort are complete; see the appended [UI foundation desktop evidence](evidence/milestone-01-ui-foundation.md#desktop-qualification-follow-up--2026-11-12). The current [official Sidebar refactor and branding fix](evidence/milestone-01-sidebar-refactor.md#actual-tauri-requalification--2026-11-1213) passed actual Tauri requalification on 2026-11-12–13. Completed ticket evidence is preserved. Later behavior tickets, the parent spec and this milestone remain open.
 
 ## Observable acceptance
 
@@ -66,7 +66,8 @@ Ticket 01 established the TypeScript/pnpm + Rust/Tauri baseline, a separate supe
 
 Tickets 01–02 predate the testing policy. Repository alignment brought forward ticket 03's unit-only verification gate while retaining the earlier process/desktop evidence. See [policy-alignment evidence](evidence/milestone-01-verification-policy-alignment.md) for the coverage mapping, separate process qualification and measurements. Repository registration was unimplemented at that checkpoint.
 
-Ticket 03 now implements A1 repository registration, shared Git identity, durable action status, restored selection and per-repository availability/details. Its 89 unit checks, six retained process scenarios, production packaging and actual Tauri workflow passed on 2026-11-13. See [registration evidence](evidence/milestone-01-repositories.md) for commands, failed attempts, measurements, screenshots and limits. No live-provider submissions were performed. Product behavior in tickets 04–13 remains unimplemented; those acceptance items and whole-milestone qualification stay open.
+Ticket 03 now implements A1 repository registration, shared Git identity, durable action status, restored selection and per-repository availability/details. Its 89 unit checks, six retained process scenarios, production packaging and actual Tauri workflow passed on 2026-11-13. See [registration evidence](evidence/milestone-01-repositories.md) for commands, failed attempts, measurements, screenshots and limits. No live-provider submissions were performed. Ticket 04 implements isolated workspace creation and recovery, with unit, actual
+desktop, migration and real-process lease evidence. See [workspace evidence](evidence/milestone-01-workspaces.md). No live-provider work was submitted. Product behavior in tickets 05–13 remains unimplemented; those acceptance items and whole-milestone qualification stay open.
 
 During qualification, record:
 

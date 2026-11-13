@@ -1,0 +1,18 @@
+{
+  "stopped_owned_qualification_processes": [
+    {
+      "pid": 59426,
+      "verified_command": "/private/tmp/rag04-desktop-iu1f_8u7/Workspace Layout Qualification.app/Contents/MacOS/workspace-desktop"
+    },
+    {
+      "pid": 57855,
+      "verified_command": "/private/tmp/rag04-desktop-iu1f_8u7/Workspace Final Qualification.app/Contents/Resources/workspace-supervisor /private/tmp/rag04-desktop-iu1f_8u7/state"
+    },
+    {
+      "pid": 50602,
+      "verified_command": "target/debug/workspace-supervisor /private/tmp/rag04-zvjd29dx/state"
+    }
+  ],
+  "private_fixture_state_retained": true,
+  "product_quit_not_qualified": true
+}
