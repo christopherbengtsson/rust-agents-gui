@@ -3,6 +3,7 @@ import {
   cleanup,
   fireEvent,
   render,
+  renderHook,
   screen,
   waitFor,
   within,
@@ -13,6 +14,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { App } from "./App";
 import { StrictMode } from "react";
+import { useRepositories } from "./hooks/use-repositories";
 import {
   PENDING_KEY,
   SELECTION_KEY,
@@ -571,4 +573,150 @@ test("a missing action lookup preserves the storage failure that blocked intent"
   );
   expect(registrations()).toHaveLength(1);
   expect(localStorage.getItem(PENDING_KEY)).not.toBeNull();
+});
+
+test.each(["success", "failure"])(
+  "reconnect ignores the previous owner's late observation without repeating actions (%s)",
+  async (outcome) => {
+    const initialProps: { owner: string | undefined } = { owner: "owner-a" };
+    const fresh: Repository = { ...repository, name: "fresh observation" };
+    let stage: "initial" | "old" | "new" = "initial";
+    let rejectOld!: (error: unknown) => void;
+    let resolveOld!: (reply: RepositoryReply) => void;
+    const requests: RepositoryRequest[] = [];
+    replies(async (request) => {
+      requests.push(request);
+      if (request.operation === "get")
+        return {
+          kind: "repository",
+          repository: stage === "new" ? fresh : repository,
+        };
+      if (stage === "old")
+        return new Promise((resolve, reject) => {
+          resolveOld = resolve;
+          rejectOld = reject;
+        });
+      return {
+        kind: "repositories",
+        page: {
+          repositories: [stage === "new" ? fresh : repository],
+          next: null,
+        },
+      };
+    });
+    const { result, rerender } = renderHook(
+      ({ owner }: { owner: string | undefined }) => useRepositories(owner),
+      { initialProps },
+    );
+    await waitFor(() => expect(result.current.selected?.name).toBe("one"));
+    rerender({ owner: "owner-a" });
+    expect(requests.filter((r) => r.operation === "list")).toHaveLength(1);
+
+    rerender({ owner: undefined });
+    stage = "old";
+    rerender({ owner: "owner-a" });
+    expect(requests.filter((r) => r.operation === "list")).toHaveLength(2);
+    stage = "new";
+    rerender({ owner: "owner-b" });
+    await waitFor(() => expect(result.current.selected?.name).toBe(fresh.name));
+    await act(async () => {
+      if (outcome === "success") {
+        resolveOld({
+          kind: "repositories",
+          page: { repositories: [repository], next: null },
+        });
+      } else rejectOld(new Error("old owner disconnected"));
+    });
+    expect(result.current.selected?.name).toBe(fresh.name);
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.loading).toBe(false);
+    expect(requests.filter((r) => r.operation === "list")).toHaveLength(3);
+    expect(registrations()).toHaveLength(0);
+  },
+);
+
+test("reconnect retrieves a retained registration result without resubmitting", async () => {
+  const initialProps: { owner: string | undefined } = { owner: "owner-a" };
+  const action_id = "00000000-0000-4000-8000-000000000010";
+  localStorage.setItem(
+    PENDING_KEY,
+    JSON.stringify({
+      request: { action_id, path: repository.path },
+      selection: null,
+    }),
+  );
+  let connected = false;
+  const actions: string[] = [];
+  replies(async (request) => {
+    if (request.operation === "action") {
+      actions.push(request.action_id);
+      if (!connected)
+        throw { code: "connection", message: "Owner unavailable" };
+      return {
+        kind: "action",
+        registration: {
+          action_id,
+          path: repository.path,
+          state: "completed",
+          repository_id: id,
+        },
+      };
+    }
+    if (request.operation === "get") return { kind: "repository", repository };
+    return {
+      kind: "repositories",
+      page: { repositories: [repository], next: null },
+    };
+  });
+  const { result, rerender } = renderHook(
+    ({ owner }: { owner: string | undefined }) => useRepositories(owner),
+    { initialProps },
+  );
+  await waitFor(() => expect(result.current.loading).toBe(false));
+  expect(result.current.actionError?.code).toBe("connection");
+  expect(result.current.pending?.request.action_id).toBe(action_id);
+  rerender({ owner: undefined });
+  connected = true;
+  rerender({ owner: "owner-b" });
+  await waitFor(() => expect(result.current.pending).toBeNull());
+  expect(result.current.selected?.id).toBe(id);
+  expect(result.current.actionError).toBeUndefined();
+  expect(localStorage.getItem(PENDING_KEY)).toBeNull();
+  expect(actions).toEqual([action_id, action_id]);
+  expect(registrations()).toHaveLength(0);
+});
+
+test("explicit repository refresh reports loading while retaining the last observation", async () => {
+  let release!: (reply: RepositoryReply) => void;
+  let defer = false;
+  replies(async (request) => {
+    if (request.operation === "get") return { kind: "repository", repository };
+    if (defer)
+      return new Promise((resolve) => {
+        release = resolve;
+      });
+    return {
+      kind: "repositories",
+      page: { repositories: [repository], next: null },
+    };
+  });
+  const { result } = renderHook(() => useRepositories("owner-a"));
+  await waitFor(() => expect(result.current.loading).toBe(false));
+  defer = true;
+  let refreshing!: Promise<void>;
+  act(() => {
+    refreshing = result.current.refresh();
+  });
+  expect(result.current.loading).toBe(true);
+  expect(result.current.selected?.id).toBe(id);
+  await act(async () => {
+    release({
+      kind: "repositories",
+      page: { repositories: [repository], next: null },
+    });
+    await refreshing;
+  });
+  expect(result.current.loading).toBe(false);
+  expect(result.current.selected?.id).toBe(id);
+  expect(registrations()).toHaveLength(0);
 });

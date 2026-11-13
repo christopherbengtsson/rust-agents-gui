@@ -50,6 +50,7 @@ export function useRepositories(owner: string | undefined) {
     }
   }
 
+  // Keep Effect dependencies stable while Compiler cannot lower this Hook's finally blocks.
   const finish = useCallback((action: Registration) => {
     const pending = currentPending.current;
     if (
@@ -84,8 +85,8 @@ export function useRepositories(owner: string | undefined) {
     setActionError(action.state === "failed" ? action.error : undefined);
   }, []);
 
-  const refresh = useCallback(
-    async function readRepositories(recheck = true): Promise<void> {
+  const readRepositories = useCallback(
+    async function read(recheck = true): Promise<void> {
       if (!mounted.current) return;
       if (reading.current) {
         queued.current = recheck || queued.current === true;
@@ -95,40 +96,40 @@ export function useRepositories(owner: string | undefined) {
       const generation = epoch.current;
       const pageAfter = after.current;
       const active = () => mounted.current && epoch.current === generation;
-      setNavigation((last) => ({ ...last, loading: true }));
       try {
         const pending = currentPending.current;
         if (pending) {
-          try {
-            const result = await repositoryRequest({
-              operation: "action",
-              action_id: pending.request.action_id,
-            });
-            if (!active()) return;
-            if (result.kind === "action") {
-              if (result.registration) {
-                if (result.registration.path !== pending.request.path) {
-                  setActionError({
-                    code: "conflict",
+          const result = await repositoryRequest({
+            operation: "action",
+            action_id: pending.request.action_id,
+          }).catch((error: unknown) => ({
+            kind: "error" as const,
+            error: repositoryError(error),
+          }));
+          if (!active()) return;
+          if (result.kind === "error") {
+            setActionError(result.error);
+          } else if (result.kind === "action") {
+            if (result.registration) {
+              if (result.registration.path !== pending.request.path) {
+                setActionError({
+                  code: "conflict",
+                  message:
+                    "This action ID records a different path. Preserve its ID and inspect the recorded registration before submitting another request.",
+                });
+              } else {
+                setActionError(undefined);
+                finish(result.registration);
+              }
+            } else
+              setActionError(
+                (last) =>
+                  last ?? {
+                    code: "not_found",
                     message:
-                      "This action ID records a different path. Preserve its ID and inspect the recorded registration before submitting another request.",
-                  });
-                } else {
-                  setActionError(undefined);
-                  finish(result.registration);
-                }
-              } else
-                setActionError(
-                  (last) =>
-                    last ?? {
-                      code: "not_found",
-                      message:
-                        "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
-                    },
-                );
-            }
-          } catch (error) {
-            if (active()) setActionError(repositoryError(error));
+                      "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
+                  },
+              );
           }
         }
         const requestedSelection = selection.current;
@@ -184,7 +185,7 @@ export function useRepositories(owner: string | undefined) {
           if (queued.current !== null) {
             const next = queued.current;
             queued.current = null;
-            void readRepositories(next);
+            void read(next);
           }
         }
       }
@@ -194,14 +195,14 @@ export function useRepositories(owner: string | undefined) {
 
   useEffect(() => {
     mounted.current = true;
-    if (owner) void refresh();
+    if (owner) void readRepositories();
     return () => {
       mounted.current = false;
       epoch.current += 1;
       reading.current = false;
       queued.current = null;
     };
-  }, [owner, refresh]);
+  }, [owner, readRepositories]);
 
   const checking =
     navigation.page?.repositories.some(
@@ -215,9 +216,16 @@ export function useRepositories(owner: string | undefined) {
       ((!pending || actionError) && !checking)
     )
       return;
-    const timer = setTimeout(() => void refresh(false), 250);
+    const timer = setTimeout(() => void readRepositories(false), 250);
     return () => clearTimeout(timer);
-  }, [owner, navigation, pending, actionError, checking, refresh]);
+  }, [owner, navigation, pending, actionError, checking, readRepositories]);
+
+  // Explicit intents show loading immediately; observation Effects only start reads.
+  function refresh(recheck = true): Promise<void> {
+    if (!mounted.current) return Promise.resolve();
+    setNavigation((last) => ({ ...last, loading: true }));
+    return readRepositories(recheck);
+  }
 
   async function register(path: string): Promise<boolean> {
     if (!owner || sending.current) return false;
