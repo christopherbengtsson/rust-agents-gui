@@ -25,8 +25,12 @@ corepack pnpm dev
 Development logs its freshly built supervisor executable and persistent state:
 `~/.agent-workspace/dev/<canonical-worktree hash>/p<protocol>-<app-version hash>`.
 Compatible restarts reuse it; other worktrees/protocols/versions are isolated.
-An explicit `AGENT_WORKSPACE_STATE_DIR` is honored exactly, including its existing
-owner/version checks. Release state is unchanged. Rebuilding does not stop an old
+An explicit `AGENT_WORKSPACE_STATE_DIR` selects that location, including its existing
+owner/version checks. The supervisor resolves it to an absolute canonical root before
+storage or workspace creation; relative paths resolve against its startup directory.
+Malformed saved relative or traversal-containing workspace paths are incompatible
+development data: use fresh private state rather than moving or adopting artifacts.
+Release state is unchanged. Rebuilding does not stop an old
 supervisor; default dev no longer connects to an incompatible release owner.
 
 Workspace labels come from a [curated catalog of 500 footballers](docs/research/footballer-catalog.md).

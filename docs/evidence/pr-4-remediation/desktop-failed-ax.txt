@@ -1,0 +1,69 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/pr4-ui-uf6w9qcb/Brave Goals Available
+							11 button Brave Goals, Help: /private/tmp/pr4-ui-uf6w9qcb/Brave Goals
+							12 button (expanded) Toggle details for Brave Goals, Secondary Actions: Collapse
+							13 button Create workspace in Brave Goals
+							14 text /private/tmp/pr4-ui-uf6w9qcb/Brave Goals
+							15 text Available
+							16 content list
+								17 button lukasz-piszczek, Help: Creation needs attention
+						18 container /private/tmp/pr4-ui-uf6w9qcb/Alpha Goals Available
+							19 button Alpha Goals, Help: /private/tmp/pr4-ui-uf6w9qcb/Alpha Goals
+							20 button (expanded) Toggle details for Alpha Goals, Secondary Actions: Collapse
+							21 button Create workspace in Alpha Goals
+							22 text /private/tmp/pr4-ui-uf6w9qcb/Alpha Goals
+							23 text Available
+							24 content list
+								25 button paolo-guerrero, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading lukasz-piszczek, Value: 1
+					31 text lukasz-piszczek
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/pr4-ui-uf6w9qcb/Brave Goals
+					35 text Repository available
+				36 container Selected workspace
+					37 text Creation needs attention Codex
+					38 heading Workspace needs attention, Value: 2
+						39 text Workspace needs attention
+					40 text lukasz-piszczek
+					41 description list
+						42 text Branch
+						43 text workspace/lukasz-piszczek
+						44 text Workspace folder
+						45 text /private/tmp/pr4-ui-uf6w9qcb/state/workspaces/brave-goals/lukasz-piszczek/checkout
+						46 text Local base
+						47 text Waiting for an identifiable local default branch
+						48 text Branch artifact
+						49 text Not yet confirmed
+						50 text Folder artifact
+						51 text Not yet confirmed
+					52 container
+						53 text Creation needs attention Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed.
+						54 button Reconcile workspace
+				55 text Local workspace
+				56 text Brave Goals
+	57 close button
+	58 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	59 minimize button
+	60 text Agent Workspace
+61 menu bar
+	62 Agent Workspace
+	63 File
+	64 Edit
+	65 View
+	66 Window
+	67 Help

@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::{
-    collections::VecDeque,
+    collections::{BTreeMap, VecDeque},
     path::{Path, PathBuf},
     sync::{
         Arc, Mutex, MutexGuard,
@@ -304,9 +304,32 @@ struct OwnerState {
     fault: Option<RepositoryError>,
     revision: u64,
     active_workspace: Option<WorkspaceId>,
-    workspace_fault: Option<(WorkspaceId, RepositoryError)>,
+    workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
 }
 impl OwnerState {
+    fn open(
+        directory: &Path,
+        resolve: impl FnOnce(&Path) -> Result<PathBuf>,
+        open: impl FnOnce(&Path) -> Result<Box<dyn RepositoryStore>>,
+    ) -> Result<Self> {
+        let directory = resolve(directory)?;
+        validate_workspace_path(
+            directory
+                .to_str()
+                .ok_or_else(|| RepositoryError::storage("Private state path must be UTF-8"))?,
+        )?;
+        let store = open(&directory);
+        Ok(Self {
+            directory,
+            store,
+            cache: VecDeque::new(),
+            probes: VecDeque::new(),
+            fault: None,
+            revision: 1,
+            active_workspace: None,
+            workspace_faults: BTreeMap::new(),
+        })
+    }
     fn store(&mut self) -> Result<&mut (dyn RepositoryStore + 'static)> {
         if self.store.is_err() {
             self.store = crate::storage::SqliteStore::open(&self.directory)
@@ -410,18 +433,23 @@ impl Workspaces {
                 .map(|repository| RepositoryReply::Repository { repository }),
         }
     }
-    pub fn open(directory: &Path) -> Self {
-        let shared = Arc::new(Mutex::new(OwnerState {
-            directory: directory.to_owned(),
-            store: crate::storage::SqliteStore::open(directory)
-                .map(|s| Box::new(s) as Box<dyn RepositoryStore>),
-            cache: VecDeque::new(),
-            probes: VecDeque::new(),
-            fault: None,
-            revision: 1,
-            active_workspace: None,
-            workspace_fault: None,
-        }));
+    pub fn open(directory: &Path) -> Result<Self> {
+        let state = OwnerState::open(
+            directory,
+            |path| {
+                crate::supervisor::check_private(path, true).map_err(RepositoryError::storage)?;
+                std::fs::canonicalize(path).map_err(|error| {
+                    RepositoryError::storage(format!(
+                        "Cannot resolve private application state: {error}"
+                    ))
+                })
+            },
+            |path| {
+                crate::storage::SqliteStore::open(path)
+                    .map(|s| Box::new(s) as Box<dyn RepositoryStore>)
+            },
+        )?;
+        let shared = Arc::new(Mutex::new(state));
         let (wake, receiver) = mpsc::sync_channel(1);
         let worker_state = shared.clone();
         let worker = std::thread::spawn(move || {
@@ -439,11 +467,11 @@ impl Workspaces {
                 }
             }
         });
-        Self {
+        Ok(Self {
             shared,
             wake: Some(wake),
             worker: Some(worker),
-        }
+        })
     }
     fn state(&self) -> Result<MutexGuard<'_, OwnerState>> {
         self.shared.lock().map_err(RepositoryError::storage)

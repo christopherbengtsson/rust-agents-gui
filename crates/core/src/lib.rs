@@ -64,11 +64,11 @@ impl Core {
     }
 
     /// Called only by the admitted supervisor owner, never by presentation clients.
-    pub fn with_state(directory: &std::path::Path) -> Self {
-        Self {
-            workspaces: Some(workspaces::Workspaces::open(directory)),
+    pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
+        Ok(Self {
+            workspaces: Some(workspaces::Workspaces::open(directory)?),
             ..Self::new()
-        }
+        })
     }
 
     pub fn repository_request(

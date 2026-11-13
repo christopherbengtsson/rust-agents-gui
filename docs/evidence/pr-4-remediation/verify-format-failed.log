@@ -1,0 +1,11 @@
+$ corepack pnpm format:check && corepack pnpm lint && corepack pnpm check && corepack pnpm test
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+docs/evidence/pr-4-remediation/native-paths.json (0ms)
+src/workspaces.test.tsx (0ms)
+
+Format issues found in above 2 files. Run without `--check` to fix.
+Finished in 5ms on 147 files using 12 threads.
+[ELIFECYCLE] Command failed with exit code 1.
+[ELIFECYCLE] Command failed with exit code 1.

@@ -32,6 +32,7 @@ export function useWorkspaces(
   const intent = useRef(pending);
   const mounted = useRef(false);
   const epoch = useRef(0);
+  const actionEpoch = useRef(0);
   const navigation = useRef(0);
   const pendingNavigation = useRef(0);
   const reading = useRef(false);
@@ -55,6 +56,30 @@ export function useWorkspaces(
       setPreferenceError("The desktop could not remember workspace selection.");
     }
   }, []);
+  // Repository-driven read lifetimes must not invalidate the action that selected it.
+  useEffect(
+    () => () => {
+      actionEpoch.current += 1;
+    },
+    [owner],
+  );
+  const settleAction = useCallback(
+    (request: WorkspaceAction, workspace: Workspace) => {
+      if (intent.current?.action_id !== request.action_id) return;
+      if (navigation.current === pendingNavigation.current) remember(workspace);
+      setActionError(undefined);
+      intent.current = null;
+      setPending(null);
+      try {
+        localStorage.removeItem(WORKSPACE_PENDING);
+      } catch {
+        setPreferenceError(
+          "The recorded workspace action could not be cleared from desktop preferences; reopening will retrieve its status.",
+        );
+      }
+    },
+    [remember],
+  );
   // Stable synchronization callback owns the observation subscription lifecycle.
   const read = useCallback(
     async function refresh(): Promise<void> {
@@ -96,21 +121,7 @@ export function useWorkspaces(
                 throw new Error(
                   "Workspace action payload conflicts with the retained request.",
                 );
-              if (
-                navigation.current === pendingNavigation.current &&
-                result.workspace.repository_id === repositoryId
-              )
-                remember(result.workspace);
-              setActionError(undefined);
-              intent.current = null;
-              setPending(null);
-              try {
-                localStorage.removeItem(WORKSPACE_PENDING);
-              } catch {
-                setPreferenceError(
-                  "The recorded workspace action could not be cleared from desktop preferences; reopening will retrieve its status.",
-                );
-              }
+              settleAction(outstanding, result.workspace);
             } else if (
               intent.current?.action_id === outstanding.action_id &&
               !sending.current
@@ -187,7 +198,7 @@ export function useWorkspaces(
         },
       );
     },
-    [owner, repositoryId, repositoryIds, initial, remember],
+    [owner, repositoryId, repositoryIds, initial, remember, settleAction],
   );
   useEffect(() => {
     mounted.current = true;
@@ -208,10 +219,10 @@ export function useWorkspaces(
     selected?.status.state === "queued" ||
     selected?.status.state === "running";
   useEffect(() => {
-    if (!owner || error || (!busy && !pending)) return;
+    if (!owner || observationError || (!busy && !pending)) return;
     const timer = setTimeout(() => void read(), 250);
     return () => clearTimeout(timer);
-  }, [owner, error, busy, pending, pages, selected, read]);
+  }, [owner, observationError, busy, pending, pages, selected, read]);
   async function submit(request: WorkspaceAction) {
     if (!owner || sending.current) return;
     if (
@@ -242,33 +253,24 @@ export function useWorkspaces(
     setSubmitting(true);
     setActionError(undefined);
     const generation = epoch.current;
-    const nav = navigation.current;
+    const actionGeneration = actionEpoch.current;
     return completeOperation(
       async () => {
         const result = await workspaceRequest(request);
-        if (!mounted.current || intent.current?.action_id !== request.action_id)
+        if (
+          !mounted.current ||
+          actionEpoch.current !== actionGeneration ||
+          intent.current?.action_id !== request.action_id
+        )
           return;
         if (result.kind === "action" && result.workspace) {
-          if (
-            epoch.current === generation &&
-            navigation.current === nav &&
-            result.workspace.repository_id === repositoryId
-          )
-            remember(result.workspace);
-          intent.current = null;
-          setPending(null);
-          try {
-            localStorage.removeItem(WORKSPACE_PENDING);
-          } catch {
-            setPreferenceError(
-              "The desktop could not clear the recorded workspace request.",
-            );
-          }
+          settleAction(request, result.workspace);
         }
       },
       (error) => {
         if (
           mounted.current &&
+          actionEpoch.current === actionGeneration &&
           intent.current?.action_id === request.action_id
         ) {
           const failure = repositoryError(error);

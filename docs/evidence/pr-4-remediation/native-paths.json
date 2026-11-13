@@ -1,0 +1,172 @@
+{
+  "root": "/private/tmp/pr4-fixed-5154o5g9",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "binary_sha256": "3d1e991082ef8db2a9ee9a1e1f39d493fd89d066c7a400c9bffb5fae563fe4de",
+  "source_head": "cf1bc198e97bc1d6a794b2d924039d7f339d60bd",
+  "source_dirty": true,
+  "cases": [
+    {
+      "case": "relative",
+      "argument": "state",
+      "cwd": "/private/tmp/pr4-fixed-5154o5g9/relative/launcher",
+      "failed": {
+        "id": "63e90fc7-f8ab-499e-a031-e95ce99b96a0",
+        "repository_id": "6b343c5e-1c52-4329-9e0f-0ddbfb283b71",
+        "creation_action_id": "5d809f70-04bc-4a68-937e-29a52d28127b",
+        "name": "javier-zanetti",
+        "branch": "workspace/javier-zanetti",
+        "path": "/private/tmp/pr4-fixed-5154o5g9/relative/launcher/state/workspaces/repo/javier-zanetti/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": null,
+        "artifacts": {
+          "branch": "unknown",
+          "folder": "unknown"
+        },
+        "status": {
+          "state": "failed",
+          "error": {
+            "code": "git",
+            "message": "Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed."
+          }
+        },
+        "cleanup_unconfirmed": false
+      },
+      "ready": {
+        "id": "63e90fc7-f8ab-499e-a031-e95ce99b96a0",
+        "repository_id": "6b343c5e-1c52-4329-9e0f-0ddbfb283b71",
+        "creation_action_id": "5d809f70-04bc-4a68-937e-29a52d28127b",
+        "name": "javier-zanetti",
+        "branch": "workspace/javier-zanetti",
+        "path": "/private/tmp/pr4-fixed-5154o5g9/relative/launcher/state/workspaces/repo/javier-zanetti/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "82b4a9c7586554c128ea8681f66e4e5ad0ad3dfa"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      "restored": {
+        "id": "63e90fc7-f8ab-499e-a031-e95ce99b96a0",
+        "repository_id": "6b343c5e-1c52-4329-9e0f-0ddbfb283b71",
+        "creation_action_id": "5d809f70-04bc-4a68-937e-29a52d28127b",
+        "name": "javier-zanetti",
+        "branch": "workspace/javier-zanetti",
+        "path": "/private/tmp/pr4-fixed-5154o5g9/relative/launcher/state/workspaces/repo/javier-zanetti/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "82b4a9c7586554c128ea8681f66e4e5ad0ad3dfa"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      "original_status_unchanged": "M tracked.txt\n?? untracked.txt",
+      "original_hashes": {
+        "tracked.txt": "701084b0c91774cccc498fad85c38998330193502a231949fdf9afd8d1228ae2",
+        "untracked.txt": "301cd2869d2924f75e591bf982a3da45fdac17b62d490b3e2879c75008d646ef"
+      },
+      "incompatible_record_rejected": {
+        "Err": {
+          "code": "storage",
+          "message": "Application storage failed: Application storage failed: Incompatible workspace path: expected a normalized absolute location. Use fresh private development state; saved records and artifacts have not been moved or deleted.. Check the private state directory and free disk space, then refresh to reconcile this action. at line 1 column 273. Check the private state directory and free disk space, then refresh to reconcile this action."
+        }
+      }
+    },
+    {
+      "case": "dotdot",
+      "argument": "/private/tmp/pr4-fixed-5154o5g9/dotdot/launcher/state/../state",
+      "cwd": "/private/tmp/pr4-fixed-5154o5g9/dotdot/launcher",
+      "failed": {
+        "id": "26f4740a-73b5-4604-a5dc-420390cd4a8b",
+        "repository_id": "c0555343-b074-4c85-8b20-af64809fe920",
+        "creation_action_id": "87a50715-85f6-41b4-a9df-9f599a5e96c5",
+        "name": "ricardo-rodriguez",
+        "branch": "workspace/ricardo-rodriguez",
+        "path": "/private/tmp/pr4-fixed-5154o5g9/dotdot/launcher/state/workspaces/repo/ricardo-rodriguez/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": null,
+        "artifacts": {
+          "branch": "unknown",
+          "folder": "unknown"
+        },
+        "status": {
+          "state": "failed",
+          "error": {
+            "code": "git",
+            "message": "Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed."
+          }
+        },
+        "cleanup_unconfirmed": false
+      },
+      "ready": {
+        "id": "26f4740a-73b5-4604-a5dc-420390cd4a8b",
+        "repository_id": "c0555343-b074-4c85-8b20-af64809fe920",
+        "creation_action_id": "87a50715-85f6-41b4-a9df-9f599a5e96c5",
+        "name": "ricardo-rodriguez",
+        "branch": "workspace/ricardo-rodriguez",
+        "path": "/private/tmp/pr4-fixed-5154o5g9/dotdot/launcher/state/workspaces/repo/ricardo-rodriguez/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "bede16d542a761b496d0d0ae91a6419960267c03"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      "restored": {
+        "id": "26f4740a-73b5-4604-a5dc-420390cd4a8b",
+        "repository_id": "c0555343-b074-4c85-8b20-af64809fe920",
+        "creation_action_id": "87a50715-85f6-41b4-a9df-9f599a5e96c5",
+        "name": "ricardo-rodriguez",
+        "branch": "workspace/ricardo-rodriguez",
+        "path": "/private/tmp/pr4-fixed-5154o5g9/dotdot/launcher/state/workspaces/repo/ricardo-rodriguez/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "bede16d542a761b496d0d0ae91a6419960267c03"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      "original_status_unchanged": "M tracked.txt\n?? untracked.txt",
+      "original_hashes": {
+        "tracked.txt": "701084b0c91774cccc498fad85c38998330193502a231949fdf9afd8d1228ae2",
+        "untracked.txt": "301cd2869d2924f75e591bf982a3da45fdac17b62d490b3e2879c75008d646ef"
+      }
+    }
+  ],
+  "result": "pass",
+  "owned_exits": [-15, -15, -15, -15, -15],
+  "wall_seconds": 1.9890663330443203
+}

@@ -420,12 +420,12 @@ impl CreationStore for SqliteStore {
         self.ensure_committed()?;
         self.write(|db| write_workspace(db, workspace, action))
     }
-    fn workspace_pending(&mut self) -> Result<Option<Workspace>> {
+    fn workspace_pending(&mut self, after: Option<WorkspaceId>) -> Result<Option<Workspace>> {
         self.ensure_committed()?;
         self.connection
             .query_row(
-                "SELECT record FROM workspaces WHERE queued=1 ORDER BY id LIMIT 1",
-                [],
+                "SELECT record FROM workspaces WHERE queued=1 AND id>?1 ORDER BY id LIMIT 1",
+                [after.map(|id| id.0.to_string()).unwrap_or_default()],
                 |r| r.get::<_, String>(0),
             )
             .optional()

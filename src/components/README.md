@@ -171,7 +171,10 @@ For primary-source rationale and the article's stack adaptations, consult
 - App calls `useWorkspaces` once. It owns bounded pages, workspace selection and
   pending action status across navigation. Reconnect only reads. Creation and
   recovery callbacks retain explicit target IDs; late replies cannot steal changed
-  selection. Stable callbacks own observation subscriptions; the shared
+  selection. Action settlement uses owner and explicit-navigation generations,
+  independent of repository-driven observation resubscription. Admission errors
+  remain visible while unrelated workspace progress continues polling; observation
+  failures pause polling. Stable callbacks own observation subscriptions; the shared
   React-independent async settlement utility preserves cleanup outside compiler lowering.
 - Add repository explains the automatic first workspace and lack of agent launch.
   No additional shadcn component or custom primitive was needed. Existing controls

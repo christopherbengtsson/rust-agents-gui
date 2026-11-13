@@ -62,3 +62,16 @@ Implemented the [approved follow-up](../readable-workspaces-plan.md).
 See [follow-up evidence](../../../docs/evidence/readable-workspaces.md) for commands,
 results, failed attempts and limits. No provider submissions; the parent milestone
 remains incomplete. Previous ticket cohorts remain historical evidence.
+
+### 2026-11-13 — PR 4 review remediation
+
+Resolved canonical managed paths, per-workspace write-fault ownership, and
+cross-repository creation selection. User approved an early-development break
+for malformed saved relative/traversal paths: reject with fresh-state guidance,
+without migration or artifact repair. Fresh frontend review found and closed an
+additional admission-error polling defect. Permanent controlled regressions,
+final verification/measurements, production packaging, private Git/SQLite/restart
+checks and actual packaged desktop selection/recovery are recorded in the
+[remediation evidence](../../../docs/evidence/pr-4-remediation.md). Four independent
+full-PR review scopes have zero remaining actionable findings. No provider
+submissions; the parent milestone remains incomplete and prior evidence is retained.

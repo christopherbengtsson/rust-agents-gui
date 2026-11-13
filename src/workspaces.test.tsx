@@ -106,6 +106,132 @@ test("explicit creation sends once with a retained action identity", async () =>
   expect(result.current.selected?.id).toBe(id);
 });
 
+test.each(["create-first", "lookup-first", "lookup-before-admission"])(
+  "creation in an unselected repository retains selection: %s",
+  async (schedule) => {
+    const other = "00000000-0000-4000-8000-000000000009";
+    const created = { ...w, repository_id: other };
+    let finishCreate: (() => void) | undefined;
+    let finishLookup: (() => void) | undefined;
+    let creates = 0;
+    let accepted = false;
+    let saved: unknown;
+    vi.mocked(invoke).mockImplementation(async (_, args) => {
+      const request = (object(args) ? args.request : undefined) as {
+        operation: string;
+        action_id: string;
+        repository_id: string;
+      };
+      const reply = () => ({
+        kind: "action",
+        action: saved,
+        workspace: {
+          ...created,
+          creation_action_id: object(saved)
+            ? saved.action_id
+            : creation_action_id,
+        },
+      });
+      if (request.operation === "create") {
+        creates++;
+        saved = request;
+        return new Promise((resolve) => {
+          finishCreate = () => {
+            accepted = true;
+            resolve(reply());
+          };
+        });
+      }
+      if (request.operation === "action")
+        return new Promise((resolve) => {
+          finishLookup = () =>
+            resolve(
+              schedule === "lookup-before-admission"
+                ? { kind: "action", action: null, workspace: null }
+                : reply(),
+            );
+        });
+      if (request.operation === "get")
+        return { kind: "workspace", workspace: created };
+      return {
+        kind: "workspaces",
+        page: {
+          workspaces:
+            accepted && request.repository_id === other ? [created] : [],
+          next: null,
+        },
+      };
+    });
+    const { result, rerender } = renderHook(
+      ({ repository }) =>
+        useWorkspaces("owner", repository, `${repository_id},${other}`, null),
+      { initialProps: { repository: repository_id } },
+    );
+    await act(async () => {});
+    let submission: Promise<void>;
+    act(() => {
+      submission = result.current.create(other);
+    });
+    rerender({ repository: other });
+    await waitFor(() => expect(finishLookup).toBeDefined());
+    if (schedule === "create-first") {
+      await act(async () => {
+        finishCreate?.();
+        await submission;
+      });
+      await act(async () => finishLookup?.());
+    } else {
+      await act(async () => finishLookup?.());
+      await act(async () => {
+        finishCreate?.();
+        await submission;
+      });
+    }
+    expect(creates).toBe(1);
+    expect(result.current.pending).toBeNull();
+    expect(result.current.selected?.id).toBe(id);
+    expect(result.current.selected?.repository_id).toBe(other);
+  },
+);
+
+test("an old owner's creation reply cannot select a workspace after reconnect", async () => {
+  let finish: (() => void) | undefined;
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+      action_id: string;
+    };
+    if (request.operation === "create")
+      return new Promise((resolve) => {
+        finish = () =>
+          resolve({
+            kind: "action",
+            action: { ...request, repository_id },
+            workspace: { ...w, creation_action_id: request.action_id },
+          });
+      });
+    if (request.operation === "action")
+      return { kind: "action", action: null, workspace: null };
+    return { kind: "workspaces", page: { workspaces: [], next: null } };
+  });
+  const { result, rerender } = renderHook(
+    ({ owner }) => useWorkspaces(owner, repository_id, repository_id, null),
+    { initialProps: { owner: "old" } },
+  );
+  await act(async () => {});
+  let submission: Promise<void>;
+  act(() => {
+    submission = result.current.create(repository_id);
+  });
+  rerender({ owner: "new" });
+  await act(async () => {
+    finish?.();
+    await submission;
+  });
+  expect(result.current.selected).toBeUndefined();
+  expect(result.current.pending).not.toBeNull();
+});
+
 test("a lost creation reply retrieves the same action and selects its failed workspace", async () => {
   let createCount = 0;
   let savedAction: unknown;
@@ -274,6 +400,54 @@ test("definite admission rejection retains the error but does not block another 
     await result.current.reconcile(w);
   });
   expect(result.current.error).toBeUndefined();
+});
+
+test("a rejected action retains its error while unrelated workspace progress keeps polling", async () => {
+  vi.useFakeTimers();
+  let ready = false;
+  const observed = () => ({
+    ...w,
+    status: ready ? w.status : { state: "running", stage: "creating_worktree" },
+  });
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+    };
+    if (request.operation === "create")
+      throw { code: "capacity", message: "Eight operations are pending" };
+    if (request.operation === "get")
+      return { kind: "workspace", workspace: observed() };
+    return {
+      kind: "workspaces",
+      page: { workspaces: [observed()], next: null },
+    };
+  });
+  try {
+    const { result } = renderHook(() =>
+      useWorkspaces("owner", repository_id, repository_id, null),
+    );
+    await act(async () => {});
+    act(() =>
+      result.current.select({
+        ...w,
+        status: { state: "running", stage: "creating_worktree" },
+      }),
+    );
+    await act(async () => {
+      await result.current.create(repository_id);
+    });
+    expect(result.current.error?.code).toBe("capacity");
+    expect(result.current.pending).toBeNull();
+    expect(result.current.selected?.status.state).toBe("running");
+    ready = true;
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(250);
+    });
+    expect(result.current.selected?.status.state).toBe("ready");
+    expect(result.current.error?.code).toBe("capacity");
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 test("definite rejection follows its pending action across repository navigation", async () => {

@@ -72,6 +72,7 @@ pub struct Workspace {
     pub creation_action_id: ActionId,
     pub name: Option<String>,
     pub branch: Option<String>,
+    #[serde(deserialize_with = "deserialize_workspace_path")]
     pub path: Option<String>,
     #[serde(default)]
     pub legacy: bool,
@@ -95,15 +96,44 @@ pub enum WorkspaceAction {
 }
 impl Workspace {
     pub(crate) fn path(&self) -> Result<&str> {
-        self.path
+        let path = self
+            .path
             .as_deref()
-            .ok_or_else(|| RepositoryError::storage("Workspace name has not been reserved"))
+            .ok_or_else(|| RepositoryError::storage("Workspace name has not been reserved"))?;
+        validate_workspace_path(path)?;
+        Ok(path)
     }
     pub(crate) fn branch(&self) -> Result<&str> {
         self.branch
             .as_deref()
             .ok_or_else(|| RepositoryError::storage("Workspace name has not been reserved"))
     }
+}
+
+pub(super) fn validate_workspace_path(value: &str) -> Result<()> {
+    use std::path::Component;
+    let path = Path::new(value);
+    if !path.is_absolute()
+        || !path
+            .components()
+            .all(|part| matches!(part, Component::RootDir | Component::Normal(_)))
+        || path.components().collect::<PathBuf>().as_os_str() != path.as_os_str()
+    {
+        return Err(RepositoryError::storage(
+            "Incompatible workspace path: expected a normalized absolute location. Use fresh private development state; saved records and artifacts have not been moved or deleted.",
+        ));
+    }
+    Ok(())
+}
+
+fn deserialize_workspace_path<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> std::result::Result<Option<String>, D::Error> {
+    let path = Option::<String>::deserialize(deserializer)?;
+    if let Some(value) = &path {
+        validate_workspace_path(value).map_err(serde::de::Error::custom)?;
+    }
+    Ok(path)
 }
 impl WorkspaceAction {
     pub(crate) fn id(&self) -> ActionId {
@@ -164,7 +194,7 @@ pub(crate) trait CreationStore: Send {
         workspace: &Workspace,
         action: Option<&WorkspaceAction>,
     ) -> Result<()>;
-    fn workspace_pending(&mut self) -> Result<Option<Workspace>>;
+    fn workspace_pending(&mut self, after: Option<WorkspaceId>) -> Result<Option<Workspace>>;
     fn workspace_count_pending(&mut self) -> Result<usize>;
     fn workspace_cleanup_blocked(&mut self, repository: RepositoryId) -> Result<bool>;
     fn workspace_list(
@@ -931,9 +961,7 @@ impl OwnerState {
                 ),
             };
         }
-        if let Some((id, error)) = &self.workspace_fault
-            && *id == workspace.id
-        {
+        if let Some(error) = self.workspace_faults.get(&workspace.id) {
             workspace.status = CreationStatus::Uncertain {
                 error: error.clone(),
             };
@@ -974,10 +1002,7 @@ impl Workspaces {
                 let new_request = state.store()?.workspace_action(action_id)?.is_none();
                 // Only a new explicit recovery may re-admit a queued record whose write failed.
                 if new_request
-                    && state
-                        .workspace_fault
-                        .as_ref()
-                        .is_some_and(|(id, _)| *id == workspace_id)
+                    && state.workspace_faults.contains_key(&workspace_id)
                     && let Some(mut w) = state.store()?.workspace(workspace_id)?
                 {
                     w.status = CreationStatus::Uncertain {
@@ -987,7 +1012,7 @@ impl Workspaces {
                 }
                 let workspace = admit_workspace(state.store()?, &directory, &action, active)?;
                 if new_request {
-                    state.workspace_fault = None;
+                    state.workspace_faults.remove(&workspace_id);
                 }
                 WorkspaceReply::Action {
                     action: Some(action),
@@ -1059,16 +1084,16 @@ pub(super) fn process_creation(
 ) -> bool {
     let work = (|| -> Result<Option<(Workspace, RepositoryRecord)>> {
         let mut state = shared.lock().map_err(RepositoryError::storage)?;
-        let Some(workspace) = state.store()?.workspace_pending()? else {
-            return Ok(None);
+        let mut after = None;
+        let workspace = loop {
+            let Some(workspace) = state.store()?.workspace_pending(after)? else {
+                return Ok(None);
+            };
+            if !state.workspace_faults.contains_key(&workspace.id) {
+                break workspace;
+            }
+            after = Some(workspace.id);
         };
-        if state
-            .workspace_fault
-            .as_ref()
-            .is_some_and(|(id, _)| *id == workspace.id)
-        {
-            return Ok(None);
-        }
         let repository = state
             .store()?
             .repository(workspace.repository_id)?
@@ -1125,15 +1150,17 @@ pub(super) fn process_creation(
     })();
     if let Ok(mut state) = shared.lock() {
         state.active_workspace = None;
-        state.workspace_fault = result.err().map(|e| (id, e));
+        if let Err(error) = result {
+            state.workspace_faults.insert(id, error);
+        } else {
+            state.workspace_faults.remove(&id);
+        }
     }
     // A failed persistence boundary must not spin or replay the queued record.
     result_is_success(shared, id)
 }
 fn result_is_success(shared: &Mutex<OwnerState>, id: WorkspaceId) -> bool {
-    shared.lock().is_ok_and(|s| {
-        !s.workspace_fault
-            .as_ref()
-            .is_some_and(|(key, _)| *key == id)
-    })
+    shared
+        .lock()
+        .is_ok_and(|s| !s.workspace_faults.contains_key(&id))
 }

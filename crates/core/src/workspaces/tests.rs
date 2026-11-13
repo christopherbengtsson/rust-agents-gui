@@ -10,6 +10,8 @@ struct Store {
     calls: Vec<&'static str>,
     fail_intent: bool,
     finish_fault: Option<bool>,
+    fail_workspace_stage_once: Option<(WorkspaceId, CreationStage)>,
+    fail_reconcile_once: Option<WorkspaceId>,
 }
 impl RepositoryStore for Store {
     fn action(&mut self, id: ActionId) -> Result<Option<Registration>> {
@@ -263,7 +265,7 @@ fn state(store: Store) -> Mutex<OwnerState> {
         fault: None,
         revision: 1,
         active_workspace: None,
-        workspace_fault: None,
+        workspace_faults: BTreeMap::new(),
     })
 }
 
@@ -519,6 +521,23 @@ impl CreationStore for Store {
         Ok(self.workspace_actions.get(&id).cloned())
     }
     fn save_workspace(&mut self, w: &Workspace, a: Option<&WorkspaceAction>) -> Result<()> {
+        if self.fail_reconcile_once == Some(w.id)
+            && matches!(a, Some(WorkspaceAction::Reconcile { .. }))
+        {
+            self.fail_reconcile_once = None;
+            return Err(RepositoryError::storage(
+                "controlled failed reconciliation intent",
+            ));
+        }
+        if self
+            .fail_workspace_stage_once
+            .is_some_and(|(id, stage)| w.id == id && w.status == CreationStatus::Running { stage })
+        {
+            self.fail_workspace_stage_once = None;
+            return Err(RepositoryError::storage(
+                "controlled noncommitting status write",
+            ));
+        }
         if self.fail_intent {
             return Err(RepositoryError::storage("disk full"));
         }
@@ -528,11 +547,11 @@ impl CreationStore for Store {
         }
         Ok(())
     }
-    fn workspace_pending(&mut self) -> Result<Option<Workspace>> {
+    fn workspace_pending(&mut self, after: Option<WorkspaceId>) -> Result<Option<Workspace>> {
         Ok(self
             .workspaces
             .values()
-            .find(|w| w.status == CreationStatus::Queued)
+            .find(|w| w.status == CreationStatus::Queued && after.is_none_or(|id| w.id > id))
             .cloned())
     }
     fn workspace_cleanup_blocked(&mut self, r: RepositoryId) -> Result<bool> {
@@ -567,6 +586,273 @@ impl CreationStore for Store {
             .cloned()
             .collect())
     }
+}
+
+#[derive(Default)]
+struct CreationProbe {
+    mutations: Vec<(WorkspaceId, &'static str)>,
+    artifacts: BTreeMap<WorkspaceId, Artifacts>,
+}
+impl CreationEffects for CreationProbe {
+    fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
+        Ok(Default::default())
+    }
+    fn occupied(&mut self, _: &RepositoryRecord, _: &Path) -> Result<naming::Occupied> {
+        Ok(Default::default())
+    }
+    fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
+        Ok(true)
+    }
+    fn base(&mut self, _: &RepositoryRecord) -> Result<PinnedBase> {
+        Ok(PinnedBase {
+            reference: "refs/heads/main".into(),
+            commit: "a".repeat(40),
+        })
+    }
+    fn inspect(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<Artifacts> {
+        Ok(self.artifacts.get(&w.id).cloned().unwrap_or(Artifacts {
+            branch: BranchArtifact::Absent,
+            folder: FolderArtifact::Absent,
+        }))
+    }
+    fn reserve(&mut self, w: &Workspace) -> Result<()> {
+        self.mutations.push((w.id, "reserve"));
+        self.artifacts.insert(
+            w.id,
+            Artifacts {
+                branch: BranchArtifact::Absent,
+                folder: FolderArtifact::Reserved,
+            },
+        );
+        Ok(())
+    }
+    fn branch(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
+        self.mutations.push((w.id, "branch"));
+        self.artifacts.get_mut(&w.id).unwrap().branch = BranchArtifact::Owned;
+        Ok(())
+    }
+    fn worktree(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
+        self.mutations.push((w.id, "worktree"));
+        self.artifacts.get_mut(&w.id).unwrap().folder = FolderArtifact::Worktree;
+        Ok(())
+    }
+}
+
+#[test]
+fn unrelated_recovery_and_completion_preserve_a_failed_write_fence() {
+    let repository = RepositoryRecord {
+        id: RepositoryId(Uuid::from_u128(10)),
+        name: "repo".into(),
+        path: "/repo".into(),
+        common_dir: "/repo/.git".into(),
+    };
+    let mut a = allocate(
+        repository.id,
+        ActionId(Uuid::from_u128(11)),
+        Path::new("/state"),
+    )
+    .unwrap();
+    a.id = WorkspaceId(Uuid::from_u128(1));
+    let mut b = allocate(
+        repository.id,
+        ActionId(Uuid::from_u128(12)),
+        Path::new("/state"),
+    )
+    .unwrap();
+    b.id = WorkspaceId(Uuid::from_u128(2));
+    b.status = CreationStatus::Failed {
+        error: RepositoryError::storage("prior failure"),
+    };
+    let mut store = Store::default();
+    store.repositories.insert(repository.id, repository);
+    store.save_workspace(&a, None).unwrap();
+    store.save_workspace(&b, None).unwrap();
+    store.fail_workspace_stage_once = Some((a.id, CreationStage::AllocatingName));
+    store.fail_reconcile_once = Some(a.id);
+    let service = Workspaces {
+        shared: Arc::new(state(store)),
+        wake: None,
+        worker: None,
+    };
+    let mut effects = CreationProbe::default();
+    assert!(!process_creation(&service.shared, &mut effects));
+    service
+        .workspace_request(WorkspaceRequest::Reconcile {
+            action_id: ActionId(Uuid::from_u128(20)),
+            workspace_id: b.id,
+        })
+        .unwrap();
+    assert!(process_creation(&service.shared, &mut effects));
+    assert!(
+        effects.mutations.iter().all(|(id, _)| *id == b.id),
+        "A must not execute when only B was reconciled"
+    );
+    assert!(!process_creation(&service.shared, &mut effects));
+    let WorkspaceReply::Workspace {
+        workspace: Some(observed),
+    } = service
+        .workspace_request(WorkspaceRequest::Get { id: a.id })
+        .unwrap()
+    else {
+        panic!()
+    };
+    assert!(matches!(observed.status, CreationStatus::Uncertain { .. }));
+    assert!(
+        service
+            .workspace_request(WorkspaceRequest::Reconcile {
+                action_id: ActionId(Uuid::from_u128(21)),
+                workspace_id: a.id
+            })
+            .is_err()
+    );
+    assert!(
+        service
+            .shared
+            .lock()
+            .unwrap()
+            .workspace_faults
+            .contains_key(&a.id)
+    );
+    assert!(!process_creation(&service.shared, &mut effects));
+    service
+        .workspace_request(WorkspaceRequest::Reconcile {
+            action_id: ActionId(Uuid::from_u128(21)),
+            workspace_id: a.id,
+        })
+        .unwrap();
+    assert!(process_creation(&service.shared, &mut effects));
+    assert_eq!(
+        effects
+            .mutations
+            .iter()
+            .filter(|(id, _)| *id == a.id)
+            .count(),
+        3
+    );
+}
+
+#[test]
+fn multiple_faults_are_skipped_and_explicit_recovery_releases_only_its_target() {
+    let repository = RepositoryRecord {
+        id: RepositoryId(Uuid::from_u128(10)),
+        name: "repo".into(),
+        path: "/repo".into(),
+        common_dir: "/repo/.git".into(),
+    };
+    let mut store = Store::default();
+    store.repositories.insert(repository.id, repository.clone());
+    for n in 1..=3 {
+        let mut w = allocate(
+            repository.id,
+            ActionId(Uuid::from_u128(n + 10)),
+            Path::new("/state"),
+        )
+        .unwrap();
+        w.id = WorkspaceId(Uuid::from_u128(n));
+        store.save_workspace(&w, None).unwrap();
+    }
+    let shared = state(store);
+    for n in 1..=2 {
+        shared.lock().unwrap().workspace_faults.insert(
+            WorkspaceId(Uuid::from_u128(n)),
+            RepositoryError::storage("failed write"),
+        );
+    }
+    let service = Workspaces {
+        shared: Arc::new(shared),
+        wake: None,
+        worker: None,
+    };
+    let mut effects = CreationProbe::default();
+    assert!(process_creation(&service.shared, &mut effects));
+    assert!(
+        effects
+            .mutations
+            .iter()
+            .all(|(id, _)| id.0 == Uuid::from_u128(3))
+    );
+    assert!(!process_creation(&service.shared, &mut effects));
+    service
+        .workspace_request(WorkspaceRequest::Reconcile {
+            action_id: ActionId(Uuid::from_u128(30)),
+            workspace_id: WorkspaceId(Uuid::from_u128(1)),
+        })
+        .unwrap();
+    assert!(process_creation(&service.shared, &mut effects));
+    assert!(
+        service
+            .shared
+            .lock()
+            .unwrap()
+            .workspace_faults
+            .contains_key(&WorkspaceId(Uuid::from_u128(2)))
+    );
+    assert!(
+        !effects
+            .mutations
+            .iter()
+            .any(|(id, _)| id.0 == Uuid::from_u128(2))
+    );
+}
+
+#[test]
+fn incompatible_saved_workspace_paths_are_rejected_without_retargeting() {
+    let mut w = allocate(
+        RepositoryId(Uuid::nil()),
+        ActionId(Uuid::nil()),
+        Path::new("/state"),
+    )
+    .unwrap();
+    for path in [
+        "state/workspaces/checkout",
+        "/state/../state/checkout",
+        "/state/./checkout",
+    ] {
+        w.path = Some(path.into());
+        assert!(w.path().is_err(), "invalid mutation target: {path}");
+        assert!(
+            serde_json::from_str::<Workspace>(&serde_json::to_string(&w).unwrap()).is_err(),
+            "invalid saved target: {path}"
+        );
+    }
+    w.path = Some("/state/workspaces/repo/player/checkout".into());
+    assert!(w.path().is_ok());
+    assert!(serde_json::from_str::<Workspace>(&serde_json::to_string(&w).unwrap()).is_ok());
+}
+
+#[test]
+fn state_resolution_precedes_storage_and_provides_the_only_allocation_root() {
+    for supplied in ["state", "/private/launcher/state/../state"] {
+        let owner = OwnerState::open(
+            Path::new(supplied),
+            |path| {
+                assert_eq!(path, Path::new(supplied));
+                Ok(PathBuf::from("/private/launcher/state"))
+            },
+            |path| {
+                assert_eq!(path, Path::new("/private/launcher/state"));
+                Ok(Box::<Store>::default())
+            },
+        )
+        .unwrap();
+        assert_eq!(owner.directory, Path::new("/private/launcher/state"));
+    }
+    assert!(
+        OwnerState::open(
+            Path::new("missing"),
+            |_| Err(RepositoryError::storage("cannot resolve")),
+            |_| panic!("resolution failure must not open storage")
+        )
+        .is_err()
+    );
+    assert!(
+        OwnerState::open(
+            Path::new("state"),
+            |_| Ok("relative".into()),
+            |_| panic!("invalid resolved root must not open storage")
+        )
+        .is_err()
+    );
 }
 
 #[test]
@@ -700,7 +986,7 @@ fn restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it() {
         owner
             .store()
             .unwrap()
-            .workspace_pending()
+            .workspace_pending(None)
             .unwrap()
             .is_none()
     );
@@ -903,10 +1189,10 @@ fn failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fa
     };
     admit_workspace(&mut store, Path::new("/state"), &recovery, None).unwrap();
     let shared = Arc::new(state(store));
-    shared.lock().unwrap().workspace_fault = Some((
+    shared.lock().unwrap().workspace_faults.insert(
         w.id,
         RepositoryError::storage("write failed before mutation"),
-    ));
+    );
     let service = Workspaces {
         shared,
         wake: None,
@@ -932,7 +1218,14 @@ fn failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fa
         panic!()
     };
     assert!(matches!(observed.status, CreationStatus::Uncertain { .. }));
-    assert!(service.shared.lock().unwrap().workspace_fault.is_some());
+    assert!(
+        service
+            .shared
+            .lock()
+            .unwrap()
+            .workspace_faults
+            .contains_key(&w.id)
+    );
 }
 
 #[test]

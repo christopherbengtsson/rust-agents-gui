@@ -1,0 +1,60 @@
+{
+  "state": "/private/tmp/pr4-path-5a_qd8uh/state/../state",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "sha256": "871aecaf38971839bb9249a1fda3c3d3438f577ceabb69b4ed0b44db2472267a",
+  "first": {
+    "id": "834d1d21-024a-4ae0-8b0f-74dc04c1e4c8",
+    "repository_id": "31190355-4a4d-4806-829c-620d2561e9b5",
+    "creation_action_id": "dc2d9d9d-514e-4ddf-a581-2c45ba9c862c",
+    "name": "arturo-vidal",
+    "branch": "workspace/arturo-vidal",
+    "path": "/private/tmp/pr4-path-5a_qd8uh/state/../state/workspaces/repo/arturo-vidal/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "747c1baf5b90cb003f8fcfe3ef48cb1bce05a6a9"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "conflict"
+    },
+    "status": {
+      "state": "uncertain",
+      "error": {
+        "code": "git",
+        "message": "Creation could not be confirmed from the saved branch and worktree evidence. Reconcile to inspect this same workspace; no additional creation was requested."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "reconciled": {
+    "id": "834d1d21-024a-4ae0-8b0f-74dc04c1e4c8",
+    "repository_id": "31190355-4a4d-4806-829c-620d2561e9b5",
+    "creation_action_id": "dc2d9d9d-514e-4ddf-a581-2c45ba9c862c",
+    "name": "arturo-vidal",
+    "branch": "workspace/arturo-vidal",
+    "path": "/private/tmp/pr4-path-5a_qd8uh/state/../state/workspaces/repo/arturo-vidal/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "747c1baf5b90cb003f8fcfe3ef48cb1bce05a6a9"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "conflict"
+    },
+    "status": {
+      "state": "failed",
+      "error": {
+        "code": "conflict",
+        "message": "Existing branch/folder artifacts cannot safely be continued. Inspect the displayed locations and restore access or move conflicting artifacts yourself, then reconcile. No work was overwritten or deleted."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "checkout_exists": true,
+  "canonical_checkout": "/private/tmp/pr4-path-5a_qd8uh/state/workspaces/repo/arturo-vidal/checkout",
+  "owned_supervisor_exit": -15
+}

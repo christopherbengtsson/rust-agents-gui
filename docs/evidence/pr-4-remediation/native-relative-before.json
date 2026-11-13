@@ -1,0 +1,39 @@
+{
+  "root": "/private/tmp/pr4-relative-xxt0q82v",
+  "source": "cf1bc198e97bc1d6a794b2d924039d7f339d60bd",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "sha256": "871aecaf38971839bb9249a1fda3c3d3438f577ceabb69b4ed0b44db2472267a",
+  "cwd": "/private/tmp/pr4-relative-xxt0q82v/launcher",
+  "state_argument": "state",
+  "workspace": {
+    "id": "b7bd5ece-9a23-4a4d-9c97-9bc7f401b988",
+    "repository_id": "37082a2f-17b9-4365-8503-c411e8719e9c",
+    "creation_action_id": "e5f3dbca-12a8-42f4-9b1c-9b8b6124fe02",
+    "name": "arturo-vidal",
+    "branch": "workspace/arturo-vidal",
+    "path": "state/workspaces/repo/arturo-vidal/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "0ff06784e609d61067d291d55a67d175c2f81e76"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "reserved"
+    },
+    "status": {
+      "state": "uncertain",
+      "error": {
+        "code": "git",
+        "message": "Creation could not be confirmed from the saved branch and worktree evidence. Reconcile to inspect this same workspace; no additional creation was requested."
+      }
+    },
+    "cleanup_unconfirmed": false
+  },
+  "worktrees": "worktree /private/tmp/pr4-relative-xxt0q82v/repo\nHEAD 0ff06784e609d61067d291d55a67d175c2f81e76\nbranch refs/heads/main\n\nworktree /private/tmp/pr4-relative-xxt0q82v/repo/state/workspaces/repo/arturo-vidal/checkout\nHEAD 0ff06784e609d61067d291d55a67d175c2f81e76\nbranch refs/heads/workspace/arturo-vidal",
+  "original_checkout_status": "?? state/",
+  "managed_checkout_exists": false,
+  "checkout_inside_original_exists": true,
+  "owned_supervisor_exit": -15
+}
