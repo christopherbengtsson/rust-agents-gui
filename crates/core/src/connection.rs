@@ -17,7 +17,13 @@ use std::{
 };
 const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 5;
+fn runtime_connection_error() -> crate::runtimes::RuntimeError {
+    crate::runtimes::RuntimeError::new(
+        crate::runtimes::ErrorCode::Connection,
+        "Runtime reply unavailable. Refresh authoritative saved configuration and the original action status; no request has been replayed.",
+    )
+}
+pub const PROTOCOL_VERSION: u32 = 6;
 
 #[derive(Serialize, Deserialize)]
 struct Request {
@@ -28,10 +34,15 @@ struct Request {
     repository: Option<RepositoryRequest>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     workspace: Option<crate::workspaces::WorkspaceRequest>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    runtime: Option<crate::runtimes::RuntimeRequest>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
+    Runtime {
+        result: Box<Result<crate::runtimes::RuntimeReply, crate::runtimes::RuntimeError>>,
+    },
     Workspace {
         result: Result<crate::workspaces::WorkspaceReply, RepositoryError>,
     },
@@ -54,6 +65,15 @@ pub struct SupervisorConnection {
     cursor: Option<SnapshotCursor>,
 }
 impl SupervisorConnection {
+    pub fn runtime_request(
+        &self,
+        request: crate::runtimes::RuntimeRequest,
+    ) -> Result<crate::runtimes::RuntimeReply, crate::runtimes::RuntimeError> {
+        if !self.initialized {
+            return Err(runtime_connection_error());
+        }
+        SupervisorClient::new(self.state.clone()).runtime_request(request)
+    }
     /// Actions use this already discovered owner. Transport failure grants no start/replay authority.
     pub fn repository_request(
         &self,
@@ -109,6 +129,45 @@ pub struct SupervisorClient {
     state: PathBuf,
 }
 impl SupervisorClient {
+    pub fn runtime_request(
+        &self,
+        request: crate::runtimes::RuntimeRequest,
+    ) -> Result<crate::runtimes::RuntimeReply, crate::runtimes::RuntimeError> {
+        self.runtime_request_with(request, |state, request| {
+            check_private(state, true)?;
+            let socket = socket_path(state);
+            check_private(&socket, false)?;
+            let mut stream = UnixStream::connect(socket)?;
+            configure(&stream)?;
+            write_frame(&mut stream, request)?;
+            read_frame(&mut stream)
+        })
+    }
+    fn runtime_request_with(
+        &self,
+        request: crate::runtimes::RuntimeRequest,
+        exchange: impl FnOnce(&Path, &Request) -> io::Result<Response>,
+    ) -> Result<crate::runtimes::RuntimeReply, crate::runtimes::RuntimeError> {
+        if let crate::runtimes::RuntimeRequest::Save { executable, .. } = &request {
+            crate::runtimes::validate_preference(executable.as_deref())?;
+        }
+        let request = Request {
+            protocol: PROTOCOL_VERSION,
+            application_version: env!("CARGO_PKG_VERSION").into(),
+            after: None,
+            repository: None,
+            workspace: None,
+            runtime: Some(request),
+        };
+        match exchange(&self.state, &request).map_err(|_| runtime_connection_error())? {
+            Response::Runtime { result } => *result,
+            Response::Incompatible { .. } => Err(crate::runtimes::RuntimeError::new(
+                crate::runtimes::ErrorCode::Connection,
+                "Incompatible desktop/supervisor versions. Use matching builds and refresh runtime status; no action was replayed.",
+            )),
+            _ => Err(runtime_connection_error()),
+        }
+    }
     pub fn workspace_request(
         &self,
         request: crate::workspaces::WorkspaceRequest,
@@ -127,6 +186,7 @@ impl SupervisorClient {
                     after: None,
                     repository: None,
                     workspace: Some(request),
+                    runtime: None,
                 },
             )?;
             read_frame(&mut stream)
@@ -170,13 +230,16 @@ impl SupervisorClient {
                     after: None,
                     repository: Some(request),
                     workspace: None,
+                    runtime: None,
                 },
             )? {
                 Response::Repository { result } => Ok(result),
                 Response::Incompatible { message } => {
                     Err(io::Error::new(io::ErrorKind::InvalidData, message))
                 }
-                Response::Workspace { .. } | Response::Snapshot { .. } => Err(io::Error::new(
+                Response::Workspace { .. }
+                | Response::Snapshot { .. }
+                | Response::Runtime { .. } => Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "Unexpected status reply to repository request",
                 )),
@@ -229,6 +292,7 @@ impl SupervisorClient {
                 after,
                 repository: None,
                 workspace: None,
+                runtime: None,
             },
         )?;
         match read_frame_with_clock(&mut stream, || effects.now())? {
@@ -236,10 +300,12 @@ impl SupervisorClient {
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
-            Response::Workspace { .. } | Response::Repository { .. } => Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                "Unexpected repository reply to status request",
-            )),
+            Response::Workspace { .. } | Response::Repository { .. } | Response::Runtime { .. } => {
+                Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Unexpected repository reply to status request",
+                ))
+            }
         }
     }
 }
@@ -403,11 +469,28 @@ fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
             },
         );
     }
-    if request.workspace.is_some() && request.repository.is_some() {
+    if [
+        request.workspace.is_some(),
+        request.repository.is_some(),
+        request.runtime.is_some(),
+    ]
+    .into_iter()
+    .filter(|present| *present)
+    .count()
+        > 1
+    {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
             "Only one targeted request is permitted",
         ));
+    }
+    if let Some(request) = request.runtime {
+        return write_frame(
+            stream,
+            &Response::Runtime {
+                result: Box::new(core.runtime_request(request)),
+            },
+        );
     }
     if let Some(request) = request.workspace {
         return write_frame(

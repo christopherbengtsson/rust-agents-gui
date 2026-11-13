@@ -6,8 +6,84 @@ fn snapshot() -> SupervisorSnapshot {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        runtimes: None,
     }
     .snapshot(None)
+}
+
+#[test]
+fn runtime_exchange_preserves_structured_errors_and_never_replays_a_lost_reply() {
+    use crate::runtimes::{ErrorCode as RuntimeCode, Runtime, RuntimeRequest, Target};
+    let client = SupervisorClient::new("/private/state".into());
+    let request = RuntimeRequest::Check {
+        target: Target {
+            owner: "owner-a".into(),
+            runtime: Runtime::Codex,
+        },
+        action_id: uuid::Uuid::from_u128(7),
+        revision: 1,
+    };
+    let mut calls = 0;
+    let error = client
+        .runtime_request_with(request.clone(), |_, wire| {
+            calls += 1;
+            assert!(wire.runtime.is_some());
+            Err(io::ErrorKind::UnexpectedEof.into())
+        })
+        .unwrap_err();
+    assert_eq!(calls, 1);
+    assert_eq!(error.code, RuntimeCode::Connection);
+    let error = client
+        .runtime_request_with(request, |_, _| {
+            Ok(Response::Runtime {
+                result: Box::new(Err(crate::runtimes::RuntimeError::cleanup())),
+            })
+        })
+        .unwrap_err();
+    assert_eq!(error.code, RuntimeCode::CleanupUnconfirmed);
+}
+
+#[test]
+fn runtime_routing_and_mixed_domain_rejection_use_the_existing_frame_parser() {
+    let core = Core {
+        owner: "owner-a".into(),
+        pid: 42,
+        workspaces: None,
+        runtimes: None,
+    };
+    let mut wire = Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        repository: None,
+        workspace: None,
+        runtime: Some(crate::runtimes::RuntimeRequest::Observe {
+            target: crate::runtimes::Target {
+                owner: "owner-a".into(),
+                runtime: crate::runtimes::Runtime::Codex,
+            },
+        }),
+    };
+    let mut bytes = serde_json::to_vec(&wire).unwrap();
+    bytes.push(b'\n');
+    let mut stream = TransportScenario::new(bytes);
+    serve_stream(&core, &mut stream).unwrap();
+    let Response::Runtime { result } =
+        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    else {
+        panic!("runtime reply lost routing")
+    };
+    assert_eq!(
+        result.unwrap_err().code,
+        crate::runtimes::ErrorCode::Storage
+    );
+    wire.repository = Some(RepositoryRequest::List {
+        after: None,
+        refresh: false,
+    });
+    let mut bytes = serde_json::to_vec(&wire).unwrap();
+    bytes.push(b'\n');
+    assert!(serve_stream(&core, &mut TransportScenario::new(bytes)).is_err());
 }
 
 struct DiscoveryScenario {
@@ -275,6 +351,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
         owner: "owner-b".into(),
         pid: 43,
         workspaces: None,
+        runtimes: None,
     }
     .snapshot(Some(before.cursor.clone()));
     let mut scenario = DiscoveryScenario::new(vec![
@@ -413,6 +490,7 @@ fn request(protocol: u32, version: &str, after: Option<SnapshotCursor>) -> Vec<u
         after,
         repository: None,
         workspace: None,
+        runtime: None,
     })
     .unwrap();
     bytes.push(b'\n');
@@ -425,6 +503,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        runtimes: None,
     };
     let mut stream = TransportScenario::new(request(
         PROTOCOL_VERSION,
@@ -463,12 +542,14 @@ fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        runtimes: None,
     };
     let mut input = serde_json::to_vec(&Request {
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
         repository: None,
+        runtime: None,
         workspace: Some(WorkspaceRequest::Changes {
             workspace_id: WorkspaceId(uuid::Uuid::from_u128(7)),
             refresh: true,
@@ -494,12 +575,14 @@ fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navi
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        runtimes: None,
     };
     let mut input = serde_json::to_vec(&Request {
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
         workspace: None,
+        runtime: None,
         repository: Some(RepositoryRequest::List {
             after: None,
             refresh: false,
@@ -595,6 +678,7 @@ fn oversized_incomplete_and_malformed_frames_are_rejected_without_output() {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        runtimes: None,
     };
     for input in [
         vec![b'x'; MAX_FRAME_BYTES + 1],

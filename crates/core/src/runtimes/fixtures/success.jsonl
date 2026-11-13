@@ -1,0 +1,3 @@
+{"id":1,"result":{"userAgent":"codex/0.167.2","codexHome":"/fixture/codex-home","platformFamily":"unix","platformOs":"macos"}}
+{"id":2,"result":{"account":{"type":"chatgpt","email":null,"planType":"pro","workspaceName":null},"requiresOpenaiAuth":true}}
+{"id":3,"result":{"config":{"model_provider":"openai"},"origins":{},"layers":null}}

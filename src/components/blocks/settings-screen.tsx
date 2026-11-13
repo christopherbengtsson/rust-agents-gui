@@ -1,6 +1,8 @@
 import { useRef, type Ref } from "react";
 import { ArrowLeft, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CodexSettings } from "./codex-settings";
+import type { Runtimes } from "@/hooks/use-runtimes";
 import {
   Sidebar,
   SidebarContent,
@@ -15,9 +17,11 @@ import {
 export function SettingsScreen({
   headingRef,
   onBack,
+  runtimes,
 }: {
   headingRef: Ref<HTMLHeadingElement>;
   onBack: () => void;
+  runtimes: Runtimes;
 }) {
   const categoryHeading = useRef<HTMLHeadingElement>(null);
   return (
@@ -66,13 +70,7 @@ export function SettingsScreen({
             <h2 ref={categoryHeading} id="agent-runtimes" tabIndex={-1}>
               Agent runtimes
             </h2>
-            <section
-              aria-labelledby="codex-settings"
-              className="runtime-settings"
-            >
-              <h3 id="codex-settings">Codex</h3>
-              <p className="muted-copy">No setup diagnostic has run.</p>
-            </section>
+            <CodexSettings runtimes={runtimes} />
           </section>
         </main>
       </div>

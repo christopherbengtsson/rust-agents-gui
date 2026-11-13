@@ -12,6 +12,7 @@ custom-protocol = ["tauri/custom-protocol"]
 workspace-core.workspace = true
 tauri = { version = "2.12.5", features = [] }
 tauri-plugin-dialog = "2.8.4"
+tauri-plugin-opener = "2"
 
 [build-dependencies]
 tauri-build = { version = "2.7.4", features = [] }

@@ -7,10 +7,17 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { useSupervisorConnection } from "@/hooks/use-supervisor-connection";
 import { useWorkspaces } from "@/hooks/use-workspaces";
 import { useRepositories } from "@/hooks/use-repositories";
+import { useRuntimes } from "@/hooks/use-runtimes";
 
 export function App() {
   const navigation = useAppNavigation();
   const { connection, refreshStatus } = useSupervisorConnection();
+  const runtimes = useRuntimes(
+    connection.state === "connected"
+      ? connection.observation.snapshot.cursor.owner
+      : undefined,
+    navigation.screen === "settings",
+  );
   const repositories = useRepositories(
     connection.state === "connected"
       ? connection.observation.snapshot.cursor.owner
@@ -64,6 +71,7 @@ export function App() {
         <SettingsScreen
           headingRef={navigation.settingsHeading}
           onBack={navigation.back}
+          runtimes={runtimes}
         />
       )}
     </SidebarProvider>

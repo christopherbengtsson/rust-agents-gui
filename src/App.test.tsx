@@ -36,7 +36,10 @@ afterEach(() => {
 function connectionCalls() {
   return vi
     .mocked(invoke)
-    .mock.calls.filter(([command]) => command !== "repository_request");
+    .mock.calls.filter(
+      ([command]) =>
+        command !== "repository_request" && command !== "runtime_request",
+    );
 }
 function mockConnection(implementation: (command: string) => Promise<unknown>) {
   vi.mocked(invoke).mockImplementation((command) =>
@@ -80,7 +83,17 @@ test("Settings replaces the workbench, tells the truth, and returns keyboard foc
   ).toBe("page");
   expect(screen.getByRole("heading", { name: "Codex" })).toBeDefined();
   expect(screen.getByText("No setup diagnostic has run.")).toBeDefined();
-  expect(screen.queryByRole("button", { name: /check|save/i })).toBeNull();
+  expect(screen.getByRole("button", { name: "Check setup" })).toBeDefined();
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(
+        ([command, args]) =>
+          command === "runtime_request" &&
+          (args as { request: { operation: string } }).request.operation !==
+            "observe",
+      ),
+  ).toHaveLength(0);
   expect(screen.queryByText("Claude")).toBeNull();
   const ids = Array.from(
     document.querySelectorAll("[id]"),

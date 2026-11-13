@@ -8,6 +8,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
+pub(crate) mod runtime;
+
 pub(crate) struct SqliteStore {
     connection: Connection,
     path: PathBuf,
@@ -61,7 +63,7 @@ impl SqliteStore {
         let version: u32 = connection
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .map_err(storage)?;
-        if version > 3 {
+        if version > 4 {
             return Err(storage(
                 "This database belongs to a newer application. Open it with a compatible build; do not delete it.",
             ));
@@ -113,6 +115,13 @@ impl SqliteStore {
                     CREATE UNIQUE INDEX reserved_workspace_paths ON workspaces(path);
                     PRAGMA user_version=3;").map_err(storage)
             })?;
+        }
+        if version < 4 {
+            connection.execute_batch("BEGIN IMMEDIATE;
+                CREATE TABLE runtime_configuration(id INTEGER PRIMARY KEY CHECK(id=1), record TEXT NOT NULL);
+                CREATE TABLE runtime_actions(id TEXT PRIMARY KEY NOT NULL, record TEXT NOT NULL);
+                CREATE TABLE runtime_recovery(id INTEGER PRIMARY KEY CHECK(id=1), action_id TEXT NOT NULL, boot TEXT NOT NULL);
+                PRAGMA user_version=4; COMMIT;").map_err(storage)?;
         }
         Ok(Self { connection, path })
     }

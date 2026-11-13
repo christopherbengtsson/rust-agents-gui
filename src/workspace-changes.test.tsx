@@ -11,6 +11,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { workspaceRequest } from "./lib/workspaces";
 import { useWorkspaceChanges } from "./hooks/use-workspace-changes";
+import { useRuntimes } from "./hooks/use-runtimes";
 import { WorkspaceInspection } from "./components/blocks/workspace-changes";
 import { WorkspacePanel } from "./components/blocks/workspace-panel";
 import { WorkspaceChangesReader } from "./lib/workspace-changes-reader";
@@ -68,6 +69,7 @@ function request(args: unknown) {
 }
 
 function InspectionNavigation({ reader }: { reader: WorkspaceChangesReader }) {
+  const runtimes = useRuntimes(undefined, false);
   const {
     screen: destination,
     settingsTrigger,
@@ -94,7 +96,11 @@ function InspectionNavigation({ reader }: { reader: WorkspaceChangesReader }) {
         </WorkspaceInspection>
       </Activity>
       {destination === "settings" && (
-        <SettingsScreen headingRef={settingsHeading} onBack={back} />
+        <SettingsScreen
+          headingRef={settingsHeading}
+          onBack={back}
+          runtimes={runtimes}
+        />
       )}
     </SidebarProvider>
   );

@@ -1,7 +1,45 @@
 use std::{path::PathBuf, sync::Mutex};
 use tauri::Manager;
+use tauri_plugin_opener::OpenerExt;
 use workspace_core::workspaces::{ErrorCode, RepositoryError, RepositoryReply, RepositoryRequest};
 use workspace_core::{SupervisorSnapshot, connection::SupervisorConnection};
+
+#[tauri::command]
+async fn open_runtime_document(app: tauri::AppHandle, document: String) -> Result<(), String> {
+    let url = match document.as_str() {
+        "install" => "https://developers.openai.com/codex/cli/",
+        "authentication" => "https://developers.openai.com/codex/auth/",
+        _ => return Err("Unknown runtime documentation destination".into()),
+    };
+    tauri::async_runtime::spawn_blocking(move || {
+        app.opener()
+            .open_url(url, None::<&str>)
+            .map_err(|_| "Could not open official Codex instructions".to_owned())
+    })
+    .await
+    .map_err(|_| "Documentation opener task failed".to_owned())?
+}
+
+#[tauri::command]
+async fn runtime_request(
+    request: workspace_core::runtimes::RuntimeRequest,
+    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+) -> Result<workspace_core::runtimes::RuntimeReply, workspace_core::runtimes::RuntimeError> {
+    let connection = connection.inner().clone();
+    let unavailable = || {
+        workspace_core::runtimes::RuntimeError{code:workspace_core::runtimes::ErrorCode::Connection,message:"Runtime reply unavailable. Refresh saved configuration and action status; no action was replayed.".into()}
+    };
+    tauri::async_runtime::spawn_blocking(move || {
+        connection
+            .lock()
+            .map_err(|_| unavailable())?
+            .as_ref()
+            .ok_or_else(unavailable)?
+            .runtime_request(request)
+    })
+    .await
+    .map_err(|_| unavailable())?
+}
 
 #[tauri::command]
 async fn repository_request(
@@ -85,6 +123,11 @@ fn desktop_pid() -> u32 {
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(
+            tauri_plugin_opener::Builder::new()
+                .open_js_links_on_click(false)
+                .build(),
+        )
         .manage(std::sync::Arc::new(Mutex::new(
             None::<SupervisorConnection>,
         )))
@@ -92,7 +135,9 @@ fn main() {
             supervisor_status,
             desktop_pid,
             repository_request,
-            workspace_request
+            workspace_request,
+            runtime_request,
+            open_runtime_document
         ])
         .run(tauri::generate_context!())
         .expect("failed to run desktop");

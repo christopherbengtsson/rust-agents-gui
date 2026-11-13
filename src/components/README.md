@@ -275,3 +275,23 @@ when the retained comparison ID has not changed.
   heading; Back focuses the Settings trigger or the workspace main fallback.
   The skip link targets the active screen's unique main ID. Controlled DOM checks
   cover these contracts; actual WebView/accessibility qualification remains 06d.
+
+### Codex setup (06b)
+
+- **CodexSettings** (`blocks/codex-settings.tsx`) owns executable draft/form and
+  diagnostic/recovery composition. Use it inside SettingsScreen for application-wide
+  Codex setup; SupervisorConnection remains the supervisor diagnostic surface.
+  It receives `Runtimes` observations and explicit callbacks. Rust owns admission,
+  persistence, protocol and cleanup decisions. The draft unmounts with Settings;
+  pending Save/Check identity does not. Saved-baseline updates preserve newer edits.
+- App calls `useRuntimes` once outside the workbench Activity and Settings screen.
+  It validates IPC shapes/targets, retains submitted recovery identity, and reads
+  exact action status after reconnect or unavailable replies. Mount/navigation never
+  submit checks. Transport errors retain stale evidence; cleanup uncertainty stays
+  distinct from check failure. The Rust owner serializes effects.
+- Existing Field/Input, compact Button, Spinner, Badge and Alert controls supply
+  labelled input, pending/status and error semantics without foundation regeneration.
+  Recovery links retain anchor semantics and use an application-owned Tauri command
+  accepting only install/authentication destination keys. Generic URL/path opening
+  is not enabled. Clipboard and opener failures remain visible. The existing CSP is
+  unchanged. Controlled DOM evidence does not establish actual WebView behavior.

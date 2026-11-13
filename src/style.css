@@ -133,6 +133,41 @@
   gap: 8px;
   margin-top: 20px;
 }
+
+.runtime-actions,
+.runtime-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.runtime-evidence {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.4rem 1rem;
+}
+.runtime-evidence dt {
+  color: var(--muted-foreground);
+}
+.runtime-evidence dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.runtime-recovery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.runtime-recovery a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .runtime-evidence {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .repository-sidebar {
   width: var(--shell-sidebar-width);
 }

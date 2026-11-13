@@ -2,6 +2,7 @@
 
 pub mod connection;
 mod git;
+pub mod runtimes;
 mod storage;
 pub mod supervisor;
 pub mod workspaces;
@@ -39,6 +40,7 @@ pub struct Core {
     owner: String,
     pid: u32,
     workspaces: Option<workspaces::Workspaces>,
+    runtimes: Option<runtimes::Runtimes>,
 }
 
 impl Default for Core {
@@ -60,15 +62,26 @@ impl Core {
             ),
             pid: std::process::id(),
             workspaces: None,
+            runtimes: None,
         }
     }
 
     /// Called only by the admitted supervisor owner, never by presentation clients.
     pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
-        Ok(Self {
-            workspaces: Some(workspaces::Workspaces::open(directory)?),
-            ..Self::new()
-        })
+        let mut core = Self::new();
+        core.workspaces = Some(workspaces::Workspaces::open(directory)?);
+        core.runtimes = Some(runtimes::Runtimes::open(directory, core.owner.clone()));
+        Ok(core)
+    }
+
+    pub fn runtime_request(
+        &self,
+        request: runtimes::RuntimeRequest,
+    ) -> Result<runtimes::RuntimeReply, runtimes::RuntimeError> {
+        self.runtimes
+            .as_ref()
+            .ok_or_else(runtimes::RuntimeError::storage)?
+            .request(request)
     }
 
     pub fn repository_request(
@@ -131,6 +144,7 @@ mod tests {
             owner: "test-owner".into(),
             pid: 42,
             workspaces: None,
+            runtimes: None,
         }
     }
 
