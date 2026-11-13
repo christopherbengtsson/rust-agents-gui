@@ -210,3 +210,100 @@ test("registration's recorded initial workspace is observed without a create req
       ),
   ).toBe(true);
 });
+
+test("a delayed initial-workspace lookup cannot override explicit repository selection", async () => {
+  let resolveDetail: ((v: unknown) => void) | undefined;
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+    };
+    if (request.operation === "get")
+      return new Promise((resolve) => {
+        resolveDetail = resolve;
+      });
+    return { kind: "workspaces", page: { workspaces: [w], next: null } };
+  });
+  const initial = { repository_id, workspace_id: id };
+  const { result } = renderHook(() =>
+    useWorkspaces("owner", repository_id, repository_id, initial),
+  );
+  await waitFor(() => expect(resolveDetail).toBeDefined());
+  act(() => result.current.selectRepository());
+  await act(async () => resolveDetail?.({ kind: "workspace", workspace: w }));
+  expect(result.current.selected).toBeUndefined();
+  await act(async () => {
+    await result.current.refresh();
+  });
+  expect(result.current.selected).toBeUndefined();
+});
+
+test("definite admission rejection retains the error but does not block another workspace's recovery", async () => {
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+      action_id: string;
+      workspace_id: string;
+    };
+    if (request.operation === "create")
+      throw {
+        code: "cleanup_unconfirmed",
+        message: "Reconcile the earlier workspace first",
+      };
+    if (request.operation === "reconcile")
+      return { kind: "action", action: request, workspace: w };
+    if (request.operation === "get") return { kind: "workspace", workspace: w };
+    return { kind: "workspaces", page: { workspaces: [w], next: null } };
+  });
+  const { result } = renderHook(() =>
+    useWorkspaces("owner", repository_id, repository_id, null),
+  );
+  await act(async () => {
+    await result.current.create(repository_id);
+  });
+  expect(result.current.pending).toBeNull();
+  expect(localStorage.getItem(WORKSPACE_PENDING)).toBeNull();
+  expect(result.current.error?.message).toBe(
+    "Reconcile the earlier workspace first",
+  );
+  await act(async () => {
+    await result.current.reconcile(w);
+  });
+  expect(result.current.error).toBeUndefined();
+});
+
+test("definite rejection follows its pending action across repository navigation", async () => {
+  let reject: ((error: unknown) => void) | undefined;
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const request = (object(args) ? args.request : undefined) as {
+      operation: string;
+    };
+    if (request.operation === "create")
+      return new Promise((_, fail) => {
+        reject = fail;
+      });
+    if (request.operation === "action")
+      return { kind: "action", action: null, workspace: null };
+    return { kind: "workspaces", page: { workspaces: [], next: null } };
+  });
+  const other = "00000000-0000-4000-8000-000000000009";
+  const { result, rerender } = renderHook(
+    ({ repository }) =>
+      useWorkspaces("owner", repository, `${repository_id},${other}`, null),
+    { initialProps: { repository: repository_id } },
+  );
+  let submitted: Promise<void>;
+  act(() => {
+    submitted = result.current.create(other);
+  });
+  rerender({ repository: other });
+  await act(async () => {
+    reject?.({
+      code: "cleanup_unconfirmed",
+      message: "Reconcile earlier work",
+    });
+    await submitted;
+  });
+  expect(result.current.pending).toBeNull();
+  expect(localStorage.getItem(WORKSPACE_PENDING)).toBeNull();
+  expect(result.current.error?.code).toBe("cleanup_unconfirmed");
+});

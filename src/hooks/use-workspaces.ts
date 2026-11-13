@@ -21,7 +21,9 @@ export function useWorkspaces(
   const [pages, setPages] = useState<Record<string, WorkspacePage>>({});
   const [selected, setSelected] = useState<Workspace>();
   const [pending, setPending] = useState(readWorkspacePending);
-  const [error, setError] = useState<RepositoryError>();
+  const [observationError, setError] = useState<RepositoryError>();
+  const [actionError, setActionError] = useState<RepositoryError>();
+  const error = actionError ?? observationError;
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [preferenceError, setPreferenceError] = useState<string>();
@@ -62,6 +64,7 @@ export function useWorkspaces(
       }
       reading.current = true;
       const generation = epoch.current;
+      const navigationGeneration = navigation.current;
       const active = () => mounted.current && epoch.current === generation;
       try {
         const outstanding = intent.current;
@@ -71,7 +74,12 @@ export function useWorkspaces(
             action_id: outstanding.action_id,
           });
           if (!active()) return;
-          if (result.kind === "action" && result.action && result.workspace) {
+          if (
+            intent.current?.action_id === outstanding.action_id &&
+            result.kind === "action" &&
+            result.action &&
+            result.workspace
+          ) {
             // A lookup validates its ID; also match the retained request payload.
             if (
               JSON.stringify(result.action) !== JSON.stringify(outstanding) &&
@@ -91,6 +99,7 @@ export function useWorkspaces(
               result.workspace.repository_id === repositoryId
             )
               remember(result.workspace);
+            setActionError(undefined);
             intent.current = null;
             setPending(null);
             try {
@@ -100,12 +109,18 @@ export function useWorkspaces(
                 "The recorded workspace action could not be cleared from desktop preferences; reopening will retrieve its status.",
               );
             }
-          } else
-            setError({
-              code: "not_found",
-              message:
-                "No recorded workspace action was found. Retry the same submission explicitly; refresh does not create another workspace.",
-            });
+          } else if (
+            intent.current?.action_id === outstanding.action_id &&
+            !sending.current
+          )
+            setActionError(
+              (last) =>
+                last ?? {
+                  code: "not_found",
+                  message:
+                    "No recorded workspace action was found. Retry the same submission explicitly; refresh does not create another workspace.",
+                },
+            );
         }
         const ids = Array.from(
           new Set([
@@ -146,7 +161,8 @@ export function useWorkspaces(
         if (
           detail?.kind === "workspace" &&
           detail.workspace &&
-          selection.current === target
+          selection.current === target &&
+          navigation.current === navigationGeneration
         ) {
           if (initial?.workspace_id === detail.workspace.id)
             handledInitial.current = detail.workspace.id;
@@ -197,7 +213,7 @@ export function useWorkspaces(
       intent.current &&
       JSON.stringify(intent.current) !== JSON.stringify(request)
     ) {
-      setError({
+      setActionError({
         code: "conflict",
         message:
           "Retrieve the outstanding workspace action before submitting another.",
@@ -207,7 +223,7 @@ export function useWorkspaces(
     try {
       localStorage.setItem(WORKSPACE_PENDING, JSON.stringify(request));
     } catch {
-      setError({
+      setActionError({
         code: "storage",
         message:
           "The desktop could not retain this action ID. No workspace request was submitted.",
@@ -219,14 +235,16 @@ export function useWorkspaces(
     setPending(request);
     sending.current = true;
     setSubmitting(true);
-    setError(undefined);
+    setActionError(undefined);
     const generation = epoch.current;
     const nav = navigation.current;
     try {
       const result = await workspaceRequest(request);
-      if (!mounted.current || epoch.current !== generation) return;
+      if (!mounted.current || intent.current?.action_id !== request.action_id)
+        return;
       if (result.kind === "action" && result.workspace) {
         if (
+          epoch.current === generation &&
           navigation.current === nav &&
           result.workspace.repository_id === repositoryId
         )
@@ -242,8 +260,27 @@ export function useWorkspaces(
         }
       }
     } catch (error) {
-      if (mounted.current && epoch.current === generation)
-        setError(repositoryError(error));
+      if (mounted.current && intent.current?.action_id === request.action_id) {
+        const failure = repositoryError(error);
+        setActionError(failure);
+        if (
+          ["capacity", "not_found", "conflict", "cleanup_unconfirmed"].includes(
+            failure.code,
+          )
+        ) {
+          // These typed responses reject admission before a durable creation intent.
+          // Storage/transport failures retain the identity for authoritative lookup.
+          intent.current = null;
+          setPending(null);
+          try {
+            localStorage.removeItem(WORKSPACE_PENDING);
+          } catch {
+            setPreferenceError(
+              "The rejected workspace request could not be cleared from desktop preferences.",
+            );
+          }
+        }
+      }
     } finally {
       sending.current = false;
       if (mounted.current) {
@@ -253,10 +290,12 @@ export function useWorkspaces(
     }
   }
   function select(workspace: Workspace) {
+    handledInitial.current = initial?.workspace_id;
     navigation.current++;
     remember(workspace);
   }
   function selectRepository() {
+    handledInitial.current = initial?.workspace_id;
     navigation.current++;
     remember(null);
   }

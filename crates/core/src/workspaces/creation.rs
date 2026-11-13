@@ -657,7 +657,11 @@ pub(crate) fn admit_workspace(
             "This action ID belongs to repository registration.",
         ));
     }
-    if store.pending_count()? + store.workspace_count_pending()? >= 8 {
+    // Recovery reuses an existing identity and durable slot. Normal admission must
+    // never strand interrupted records by consuming their recovery capacity.
+    if matches!(action, WorkspaceAction::Create { .. })
+        && store.pending_count()? + store.workspace_count_pending()? >= 8
+    {
         return Err(RepositoryError::new(
             ErrorCode::Capacity,
             "Eight operations are pending. Retrieve their status before creating another workspace.",

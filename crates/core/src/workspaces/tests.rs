@@ -909,3 +909,30 @@ fn failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fa
     assert!(matches!(observed.status, CreationStatus::Uncertain { .. }));
     assert!(service.shared.lock().unwrap().workspace_fault.is_some());
 }
+
+#[test]
+fn eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission() {
+    let mut store = Store::default();
+    let repository_id = RepositoryId(Uuid::new_v4());
+    let mut target = None;
+    for _ in 0..8 {
+        let mut w = allocate(repository_id, ActionId(Uuid::new_v4()), Path::new("/state")).unwrap();
+        w.status = CreationStatus::Running {
+            stage: CreationStage::CreatingWorktree,
+        };
+        target = Some(w.id);
+        store.save_workspace(&w, None).unwrap();
+    }
+    assert_eq!(store.workspace_count_pending().unwrap(), 8);
+    let recovered = admit_workspace(
+        &mut store,
+        Path::new("/state"),
+        &WorkspaceAction::Reconcile {
+            action_id: ActionId(Uuid::new_v4()),
+            workspace_id: target.unwrap(),
+        },
+        None,
+    )
+    .unwrap();
+    assert_eq!(recovered.status, CreationStatus::Queued);
+}
