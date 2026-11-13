@@ -6,6 +6,7 @@ import {
   runtimeError,
   runtimeRequest,
   terminal,
+  sameMutation,
   type RuntimeError,
   type RuntimeMutation,
   type RuntimeReply,
@@ -68,6 +69,15 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
         setError(undefined);
         if (reply.lookup?.complete && reply.lookup.action)
           setRecovered(reply.lookup.action);
+        if (
+          retained &&
+          reply.rejected &&
+          sameMutation(reply.rejected.request, retained)
+        ) {
+          setActionError(reply.rejected.error);
+          forget();
+          return;
+        }
         if (
           retained &&
           reply.configuration &&

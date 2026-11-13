@@ -16,6 +16,7 @@ const observation: RuntimeReply = {
   lookup: null,
   diagnostic: null,
   blocked: null,
+  rejected: null,
 };
 function runtime(): Runtimes {
   return {

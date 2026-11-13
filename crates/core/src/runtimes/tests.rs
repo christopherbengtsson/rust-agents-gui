@@ -460,3 +460,58 @@ fn public_repeated_mutations_return_exact_cached_and_evicted_action_status() {
     assert!(lookup.complete);
     assert_eq!(lookup.action.unwrap().phase, Phase::Completed);
 }
+
+#[test]
+fn evicted_conflicting_payload_is_rejected_without_replacing_canonical_identity() {
+    let id = Uuid::from_u128(1);
+    let canonical = Action {
+        action_id: id,
+        request: check(id),
+        phase: Phase::Completed,
+        error: None,
+    };
+    let shared = Arc::new(Mutex::new(State::ready(target(), Configuration::default())));
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let runtime = Runtimes {
+        shared: shared.clone(),
+        sender: Some(sender),
+        worker: None,
+        stop: Arc::new(std::sync::atomic::AtomicBool::new(false)),
+    };
+    let conflicting = save(id, Some("/other/codex"));
+    runtime.request(conflicting.clone()).unwrap();
+    let mut store = Memory::default();
+    store.actions.insert(id, canonical.clone());
+    execute(
+        &shared,
+        &mut store,
+        receiver.try_recv().unwrap(),
+        "boot",
+        |_, _, _| panic!("conflicting payload executed"),
+    );
+    let status = runtime
+        .request(RuntimeRequest::Action {
+            target: target(),
+            action_id: id,
+        })
+        .unwrap();
+    assert_eq!(
+        status.lookup.unwrap().action.unwrap().request,
+        canonical.request
+    );
+    let rejection = status.rejected.unwrap();
+    assert_eq!(rejection.request, conflicting);
+    assert_eq!(rejection.error.code, ErrorCode::InvalidRequest);
+    assert_eq!(
+        runtime
+            .request(canonical.request.clone())
+            .unwrap()
+            .lookup
+            .unwrap()
+            .action
+            .unwrap()
+            .request,
+        canonical.request
+    );
+    assert_eq!(store.actions[&id].request, canonical.request);
+}

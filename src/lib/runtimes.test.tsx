@@ -10,6 +10,7 @@ export const readyRuntime: RuntimeReply = {
   lookup: null,
   diagnostic: null,
   blocked: null,
+  rejected: null,
 };
 test("runtime observations reject wrong owners, malformed fields and unrelated action IDs", () => {
   const request = { operation: "observe" as const, target };

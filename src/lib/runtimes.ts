@@ -68,6 +68,7 @@ export type RuntimeReply = {
   } | null;
   diagnostic: RuntimeDiagnostic | null;
   blocked: RuntimeError | null;
+  rejected: { request: RuntimeMutation; error: RuntimeError } | null;
 };
 
 const codes = new Set([
@@ -174,7 +175,12 @@ export function validateRuntimeReply(
     typeof value.busy === "boolean" &&
     (value.active === null || action(value.active)) &&
     (value.diagnostic === null || diagnostic(value.diagnostic)) &&
-    errorOrNull(value.blocked);
+    errorOrNull(value.blocked) &&
+    (value.rejected === null ||
+      (object(value.rejected) &&
+        mutation(value.rejected.request) &&
+        isRuntimeError(value.rejected.error) &&
+        value.rejected.error.code === "invalid_request"));
   if (valid && object(value)) {
     valid =
       value.lookup === null ||
@@ -196,8 +202,11 @@ export function validateRuntimeReply(
         valid =
           value.lookup.action.action_id === request.action_id &&
           (request.operation === "action"
-            ? !pending || sameMutation(value.lookup.action.request, pending)
-            : sameMutation(value.lookup.action.request, request));
+            ? !pending ||
+              sameMutation(value.lookup.action.request, pending) ||
+              rejectionMatches(value.rejected, pending)
+            : sameMutation(value.lookup.action.request, request) ||
+              rejectionMatches(value.rejected, request));
       }
     } else valid = valid && value.lookup === null;
     if (
@@ -230,6 +239,13 @@ export function sameMutation(a: RuntimeMutation, b: RuntimeMutation) {
     a.revision === b.revision &&
     (a.operation !== "save" ||
       (b.operation === "save" && a.executable === b.executable))
+  );
+}
+function rejectionMatches(value: unknown, request: RuntimeMutation) {
+  return (
+    object(value) &&
+    mutation(value.request) &&
+    sameMutation(value.request, request)
   );
 }
 export async function runtimeRequest(

@@ -23,6 +23,7 @@ const initial: RuntimeReply = {
   lookup: null,
   diagnostic: null,
   blocked: null,
+  rejected: null,
 };
 function calls() {
   return vi
@@ -241,4 +242,43 @@ test("a slow observation read visibly disables setup actions until it drains", a
     await refreshing;
   });
   expect(result.current.canAct).toBe(true);
+});
+
+test("a conflicting durable identity reports the rejected payload separately from the original action", async () => {
+  const original: RuntimeMutation = {
+    operation: "check",
+    target: initial.target,
+    action_id: "00000000-0000-0000-0000-000000000007",
+    revision: 1,
+  };
+  const conflict: RuntimeMutation = {
+    ...original,
+    operation: "save",
+    executable: "/different",
+  };
+  localStorage.setItem(RUNTIME_PENDING, JSON.stringify(conflict));
+  vi.mocked(invoke).mockResolvedValue({
+    ...initial,
+    lookup: {
+      action_id: original.action_id,
+      complete: true,
+      action: {
+        action_id: original.action_id,
+        request: original,
+        phase: "completed",
+        error: null,
+      },
+    },
+    rejected: {
+      request: conflict,
+      error: {
+        code: "invalid_request",
+        message: "ID belongs to another request",
+      },
+    },
+  });
+  const { result } = renderHook(() => useRuntimes("owner", true));
+  await waitFor(() => expect(result.current.pending).toBeNull());
+  expect(result.current.actionError?.code).toBe("invalid_request");
+  expect(result.current.recovered?.request).toEqual(original);
 });

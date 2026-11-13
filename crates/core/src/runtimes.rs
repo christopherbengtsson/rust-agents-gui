@@ -193,6 +193,13 @@ pub struct RuntimeReply {
     pub lookup: Option<ActionLookup>,
     pub diagnostic: Option<Diagnostic>,
     pub blocked: Option<RuntimeError>,
+    pub rejected: Option<RejectedRequest>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RejectedRequest {
+    pub request: RuntimeRequest,
+    pub error: RuntimeError,
 }
 
 pub struct Runtimes {
@@ -230,6 +237,7 @@ impl State {
                 lookup: None,
                 diagnostic: None,
                 blocked: None,
+                rejected: None,
             },
             actions: Default::default(),
         }
@@ -321,6 +329,7 @@ impl State {
             self.remember(action.clone());
             self.reply.active = Some(action);
             self.reply.lookup = None;
+            self.reply.rejected = None;
         }
         self.reply.busy = true;
         Ok(true)
@@ -571,10 +580,12 @@ fn execute(
         phase: Phase::Pending,
         error: None,
     };
+    let mut conflicting_record = None;
     // A cache miss never grants replay: the worker checks durable identity first.
     let result = (|| {
         if let Some(old) = store.action(id)? {
             if old.request != request {
+                conflicting_record = Some(old);
                 return Err(RuntimeError::new(
                     ErrorCode::InvalidRequest,
                     "This action ID already belongs to another request.",
@@ -644,6 +655,15 @@ fn execute(
         Ok(())
     })();
     if let Err(error) = result {
+        if let Some(canonical) = conflicting_record {
+            // A rejected payload never replaces the durable owner of its ID.
+            publish_action(shared, &recovered_action(canonical));
+            update(shared, |s| {
+                s.reply.rejected = Some(RejectedRequest { request, error })
+            });
+            refresh_store(shared, store);
+            return;
+        }
         action.phase = if matches!(
             error.code,
             ErrorCode::PersistenceUncertain | ErrorCode::CleanupUnconfirmed
@@ -654,9 +674,10 @@ fn execute(
         };
         action.error = Some(error.clone());
         // Reopen/read on the storage side settles a lost commit, never a repeated write.
-        if let Ok(Some(saved)) = store.action(id) {
-            if saved.request != request { /* Never substitute another request's recorded outcome. */
-            } else if saved.phase.terminal() {
+        if let Ok(Some(saved)) = store.action(id)
+            && saved.request == request
+        {
+            if saved.phase.terminal() {
                 action = saved;
             } else if matches!(request, RuntimeRequest::Save { .. }) {
                 // The atomic preference/result transaction did not commit. A
