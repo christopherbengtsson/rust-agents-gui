@@ -1,7 +1,10 @@
 //! UI-independent application interface hosted by the local supervisor.
 
 pub mod connection;
+mod git;
+mod storage;
 pub mod supervisor;
+pub mod workspaces;
 
 use serde::{Deserialize, Serialize};
 
@@ -35,6 +38,7 @@ pub struct SupervisorSnapshot {
 pub struct Core {
     owner: String,
     pid: u32,
+    workspaces: Option<workspaces::Workspaces>,
 }
 
 impl Default for Core {
@@ -55,7 +59,30 @@ impl Core {
                     .as_nanos()
             ),
             pid: std::process::id(),
+            workspaces: None,
         }
+    }
+
+    /// Called only by the admitted supervisor owner, never by presentation clients.
+    pub fn with_state(directory: &std::path::Path) -> Self {
+        Self {
+            workspaces: Some(workspaces::Workspaces::open(directory)),
+            ..Self::new()
+        }
+    }
+
+    pub fn repository_request(
+        &self,
+        request: workspaces::RepositoryRequest,
+    ) -> Result<workspaces::RepositoryReply, workspaces::RepositoryError> {
+        self.workspaces
+            .as_ref()
+            .ok_or_else(|| {
+                workspaces::RepositoryError::storage(
+                    "Repository storage has not been opened by the execution owner",
+                )
+            })?
+            .request(request)
     }
 
     pub fn status(&self) -> SupervisorStatus {
@@ -71,7 +98,7 @@ impl Core {
     pub fn snapshot(&self, after: Option<SnapshotCursor>) -> SupervisorSnapshot {
         let cursor = SnapshotCursor {
             owner: self.owner.clone(),
-            revision: 1,
+            revision: self.workspaces.as_ref().map_or(1, |w| w.revision()),
         };
         SupervisorSnapshot {
             status: self.status(),
@@ -89,6 +116,7 @@ mod tests {
         Core {
             owner: "test-owner".into(),
             pid: 42,
+            workspaces: None,
         }
     }
 

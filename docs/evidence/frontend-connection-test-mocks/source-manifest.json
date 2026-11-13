@@ -1,0 +1,7 @@
+{
+  "base_commit": "89b2af452b73ff0d9ea4c259b5921a754fc4debe",
+  "dirty": true,
+  "sha256": {
+    "src/App.test.tsx": "3f5f2a02282996da66c3b10034629e26f859664d23dd362bed92f5bb1a4ed63f"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "identifier": "dev.christopherbengtsson.agent-workspace.registration-qualification",
+  "app": {
+    "windows": [
+      {
+        "title": "Agent Workspace",
+        "width": 900,
+        "height": 680,
+        "minWidth": 600,
+        "minHeight": 480,
+        "label": "main"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "desktop_pid": 23187,
+  "supervisor_pid": 23194,
+  "signal": "SIGTERM",
+  "state_retained": "/private/tmp/rag-03-m7m5hrys/state",
+  "presentation_state_directories": [
+    "~/Library/WebKit/dev.rag.registration",
+    "~/Library/WebKit/dev.christopherbengtsson.agent-workspace.registration-qualification"
+  ]
+}

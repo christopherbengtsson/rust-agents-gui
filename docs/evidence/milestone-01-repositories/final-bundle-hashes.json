@@ -1,0 +1,13 @@
+{
+  "production": {
+    "Contents/Info.plist": "8138f27a6a1b774fdbf441f5de4e169ccf5a7d2bb88a8c8892c441cbfbf66019",
+    "Contents/MacOS/workspace-desktop": "5a059dc457fb2b586335f5999dcb77cf85db465720e358039b7bd0ec89cae490",
+    "Contents/Resources/workspace-supervisor": "bfd5657a3b39465fa2d73529a320d267f9c515451a55b879ae5695cc367d6414"
+  },
+  "qualification_copy": {
+    "Contents/Info.plist": "a2d9c5ed4393999736d11902b62d14cdc13e255eaf990dee52d67804a2a7978c",
+    "Contents/MacOS/workspace-desktop": "bfc6b829946d58c471702a1664ebf0e3aa94729a3e48df02597fac88c7ccad70",
+    "Contents/Resources/workspace-supervisor": "bfd5657a3b39465fa2d73529a320d267f9c515451a55b879ae5695cc367d6414",
+    "Contents/_CodeSignature/CodeResources": "35d957ad36fee22efa0b74268e576cacd050f0ad72c684f7b038257b7f05cb33"
+  }
+}

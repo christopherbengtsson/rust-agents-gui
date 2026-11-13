@@ -1,0 +1,15 @@
+{
+  "kind": "snapshot",
+  "snapshot": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 23194,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "23194-1794532146028480000",
+      "revision": 5
+    },
+    "reset": true
+  }
+}

@@ -5,6 +5,7 @@ fn snapshot() -> SupervisorSnapshot {
     Core {
         owner: "owner-a".into(),
         pid: 42,
+        workspaces: None,
     }
     .snapshot(None)
 }
@@ -273,6 +274,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
     let after = Core {
         owner: "owner-b".into(),
         pid: 43,
+        workspaces: None,
     }
     .snapshot(Some(before.cursor.clone()));
     let mut scenario = DiscoveryScenario::new(vec![
@@ -392,6 +394,7 @@ fn request(protocol: u32, version: &str, after: Option<SnapshotCursor>) -> Vec<u
         protocol,
         application_version: version.into(),
         after,
+        repository: None,
     })
     .unwrap();
     bytes.push(b'\n');
@@ -403,6 +406,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
     let core = Core {
         owner: "owner-a".into(),
         pid: 42,
+        workspaces: None,
     };
     let mut stream = TransportScenario::new(request(
         PROTOCOL_VERSION,
@@ -434,10 +438,109 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
 }
 
 #[test]
+fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navigation() {
+    let core = Core {
+        owner: "owner-a".into(),
+        pid: 42,
+        workspaces: None,
+    };
+    let mut input = serde_json::to_vec(&Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        repository: Some(RepositoryRequest::List {
+            after: None,
+            refresh: false,
+        }),
+    })
+    .unwrap();
+    input.push(b'\n');
+    let mut stream = TransportScenario::new(input);
+    serve_stream(&core, &mut stream).unwrap();
+    let Response::Repository { result: Err(error) } =
+        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    else {
+        panic!("storage failure must be an observation error")
+    };
+    assert_eq!(error.code, ErrorCode::Storage);
+    assert!(error.message.contains("execution owner"));
+}
+
+#[test]
+fn oversized_registration_is_a_definite_capacity_rejection_before_transport() {
+    let client = SupervisorClient::new("/unused-private-state".into());
+    for path in [
+        format!("/{}", "a".repeat(4096)),
+        format!("/{}", "é".repeat(2048)),
+        format!("/{}", "a".repeat(MAX_FRAME_BYTES)),
+    ] {
+        let request = RepositoryRequest::Register {
+            request: crate::workspaces::RegisterRepository {
+                action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(1)),
+                path,
+            },
+        };
+        let error = client
+            .repository_request_with(request, |_, _| {
+                panic!("oversized input must not access state, connect, or send")
+            })
+            .unwrap_err();
+        assert_eq!(error.code, ErrorCode::Capacity);
+        assert!(error.message.contains("4096 UTF-8 bytes"));
+    }
+}
+
+#[test]
+fn bounded_registration_uses_transport_and_preserves_uncertain_failures() {
+    let client = SupervisorClient::new("/unused-private-state".into());
+    for path in [
+        format!("/{}", "a".repeat(4095)),
+        format!("/{}a", "é".repeat(2047)),
+        format!("/{}", "\u{1}".repeat(4095)),
+    ] {
+        let request = RepositoryRequest::Register {
+            request: crate::workspaces::RegisterRepository {
+                action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(1)),
+                path,
+            },
+        };
+        let mut calls = 0;
+        for kind in [
+            io::ErrorKind::BrokenPipe,
+            io::ErrorKind::ConnectionReset,
+            io::ErrorKind::TimedOut,
+        ] {
+            let error = client
+                .repository_request_with(request.clone(), |state, envelope| {
+                    calls += 1;
+                    assert_eq!(state, Path::new("/unused-private-state"));
+                    let Some(RepositoryRequest::Register { request: sent }) = &envelope.repository
+                    else {
+                        panic!("expected the targeted registration request")
+                    };
+                    let RepositoryRequest::Register { request: expected } = &request else {
+                        unreachable!()
+                    };
+                    assert_eq!(sent, expected);
+                    let mut frame = Vec::new();
+                    write_frame(&mut frame, envelope).unwrap();
+                    assert!(frame.len() <= MAX_FRAME_BYTES);
+                    Err(kind.into())
+                })
+                .unwrap_err();
+            assert_eq!(error.code, ErrorCode::Connection);
+            assert!(error.message.contains("recorded action status"));
+        }
+        assert_eq!(calls, 3);
+    }
+}
+
+#[test]
 fn oversized_incomplete_and_malformed_frames_are_rejected_without_output() {
     let core = Core {
         owner: "owner-a".into(),
         pid: 42,
+        workspaces: None,
     };
     for input in [
         vec![b'x'; MAX_FRAME_BYTES + 1],

@@ -1,0 +1,26 @@
+$ node scripts/cargo.mjs test --locked -p workspace-supervisor --features process-qualification --test startup --test discovery -- --test-threads=1
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.95s
+     Running tests/discovery.rs (target/debug/deps/discovery-225bab3ae64a852f)
+
+running 6 tests
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.61s
+
+     Running tests/startup.rs (target/debug/deps/startup-af7a5f92ecebe472)
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+real 2.53
+user 1.91
+sys 0.75

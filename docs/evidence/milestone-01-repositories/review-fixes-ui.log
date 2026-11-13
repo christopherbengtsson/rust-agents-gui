@@ -1,0 +1,13 @@
+$ vitest run --maxWorkers=1 src/repositories.test.tsx
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  06:31:51
+   Duration  1.57s (tests 43%, environment 20%, transform 19%, import 19%)
+
+real 1.91
+user 1.68
+sys 0.28

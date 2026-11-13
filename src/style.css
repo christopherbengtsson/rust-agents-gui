@@ -253,3 +253,12 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+.repository-path {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.repository-details {
+  color: var(--muted-foreground);
+  font-size: var(--shell-text-caption);
+}

@@ -1,0 +1,26 @@
+{
+  "status": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 28170,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "28170-1794532756095376000",
+        "revision": 6
+      },
+      "reset": true
+    }
+  },
+  "repository_count": 2,
+  "action_count": 7,
+  "original_repository_ids_retained": true,
+  "project_files_identical": true,
+  "screenshots": [
+    "17-final-production-restored.png",
+    "18-final-minimum-dialog.png",
+    "19-final-registration.png"
+  ]
+}

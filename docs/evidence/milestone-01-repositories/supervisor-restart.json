@@ -1,0 +1,21 @@
+{
+  "old_desktop": 21024,
+  "new_desktop": 23187,
+  "old_owner": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 19828,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "19828-1794531496274095000",
+        "revision": 23
+      },
+      "reset": true
+    }
+  },
+  "owned_supervisor_command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor /private/tmp/rag-03-m7m5hrys/state",
+  "signal": "SIGTERM to both owned qualification processes"
+}

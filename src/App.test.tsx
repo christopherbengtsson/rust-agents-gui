@@ -14,6 +14,7 @@ import { App } from "./App";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 beforeEach(() => {
+  localStorage.clear();
   vi.stubGlobal("matchMedia", (media: string): MediaQueryList =>
     Object.assign(new EventTarget(), {
       media,
@@ -31,6 +32,22 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+function connectionCalls() {
+  return vi
+    .mocked(invoke)
+    .mock.calls.filter(([command]) => command !== "repository_request");
+}
+function mockConnection(implementation: (command: string) => Promise<unknown>) {
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "repository_request"
+      ? Promise.resolve({
+          kind: "repositories",
+          page: { repositories: [], next: null },
+        })
+      : implementation(command),
+  );
+}
+
 const snapshot = {
   status: { state: "ready", supervisor_pid: 41, application_version: "0.1.0" },
   cursor: { owner: "owner-41", revision: 1 },
@@ -38,11 +55,11 @@ const snapshot = {
 };
 
 test.each([600, 900])(
-  "the fixed shell preserves landmarks and empty navigation at width %i without collapse or persistence",
+  "the fixed shell preserves landmarks and empty navigation at width %i without global collapse or cookies",
   async (width) => {
     vi.stubGlobal("innerWidth", width);
     const writeCookie = vi.spyOn(document, "cookie", "set");
-    vi.mocked(invoke).mockImplementation(async (command) =>
+    mockConnection(async (command) =>
       command === "desktop_pid" ? 42 : snapshot,
     );
     render(<App />);
@@ -57,7 +74,9 @@ test.each([600, 900])(
     expect(
       within(navigation).getByRole("heading", { level: 2 }).textContent,
     ).toBe("Repositories");
-    expect(within(navigation).getByText("No repositories yet")).toBeDefined();
+    expect(
+      await within(navigation).findByText("No repositories yet"),
+    ).toBeDefined();
     expect(within(navigation).queryAllByRole("link")).toHaveLength(0);
     expect(within(navigation).queryAllByRole("button")).toHaveLength(0);
     const workspace = screen.getByRole("main");
@@ -73,7 +92,7 @@ test.each([600, 900])(
     ).toBe("A place for your next change");
     expect(
       screen.getAllByRole("button").map((button) => button.textContent),
-    ).toEqual(["Connection details", "Refresh status"]);
+    ).toEqual(["Add repository", "Connection details", "Refresh status"]);
 
     for (const modifier of ["metaKey", "ctrlKey"]) {
       const shortcut = new KeyboardEvent("keydown", {
@@ -87,7 +106,7 @@ test.each([600, 900])(
     }
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(writeCookie).not.toHaveBeenCalled();
-    expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
+    expect(connectionCalls().map(([command]) => command)).toEqual([
       "supervisor_status",
       "desktop_pid",
     ]);
@@ -96,7 +115,7 @@ test.each([600, 900])(
 
 test("diagnostics opens from the keyboard and Escape returns focus without reading status again", async () => {
   const user = userEvent.setup();
-  vi.mocked(invoke).mockImplementation(async (command) =>
+  mockConnection(async (command) =>
     command === "desktop_pid" ? 42 : snapshot,
   );
   render(<App />);
@@ -105,6 +124,7 @@ test("diagnostics opens from the keyboard and Escape returns focus without readi
   expect(document.activeElement).toBe(
     screen.getByRole("link", { name: "Skip to workspace" }),
   );
+  await user.tab();
   await user.tab();
   const trigger = screen.getByRole("button", { name: "Connection details" });
   expect(document.activeElement).toBe(trigger);
@@ -118,12 +138,12 @@ test("diagnostics opens from the keyboard and Escape returns focus without readi
   await user.keyboard("{Escape}");
   await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   expect(document.activeElement).toBe(trigger);
-  expect(vi.mocked(invoke)).toHaveBeenCalledTimes(2);
+  expect(connectionCalls()).toHaveLength(2);
 });
 
 test("connection failure stays visible until an explicit status retry; diagnostics never replay work", async () => {
   const user = userEvent.setup();
-  vi.mocked(invoke).mockImplementation(async (command) => {
+  mockConnection(async (command) => {
     if (command === "desktop_pid") return 42;
     throw "Unsafe socket <details>: restore mode 600";
   });
@@ -133,9 +153,8 @@ test("connection failure stays visible until an explicit status retry; diagnosti
   );
   expect(screen.getByRole("status").textContent).toContain("Connection error");
   expect(
-    vi
-      .mocked(invoke)
-      .mock.calls.map(([command]) => command)
+    connectionCalls()
+      .map(([command]) => command)
       .sort(),
   ).toEqual(["desktop_pid", "supervisor_status"]);
 
@@ -147,9 +166,9 @@ test("connection failure stays visible until an explicit status retry; diagnosti
   expect(document.activeElement).toBe(
     screen.getByRole("button", { name: "Connection details" }),
   );
-  expect(vi.mocked(invoke)).toHaveBeenCalledTimes(2);
+  expect(connectionCalls()).toHaveLength(2);
 
-  vi.mocked(invoke).mockImplementation(async (command) =>
+  mockConnection(async (command) =>
     command === "desktop_pid" ? 42 : snapshot,
   );
   await user.click(screen.getByRole("button", { name: "Retry connection" }));
@@ -159,18 +178,18 @@ test("connection failure stays visible until an explicit status retry; diagnosti
   expect(screen.queryByRole("alert")).toBeNull();
   await user.click(screen.getByRole("button", { name: "Connection details" }));
   expect(screen.getByRole("dialog").textContent).toContain("owner-41");
-  expect(vi.mocked(invoke)).toHaveBeenCalledTimes(4);
+  expect(connectionCalls()).toHaveLength(4);
 });
 
 test("refresh exposes pending feedback, blocks duplicate reads, and labels retained diagnostics as stale after failure", async () => {
   const user = userEvent.setup();
-  vi.mocked(invoke).mockImplementation(async (command) =>
+  mockConnection(async (command) =>
     command === "desktop_pid" ? 42 : snapshot,
   );
   render(<App />);
   await screen.findByRole("button", { name: "Refresh status" });
   let rejectStatus!: (error: string) => void;
-  vi.mocked(invoke).mockImplementation((command) =>
+  mockConnection((command) =>
     command === "desktop_pid"
       ? Promise.resolve(42)
       : new Promise((_, reject) => {
@@ -181,7 +200,7 @@ test("refresh exposes pending feedback, blocks duplicate reads, and labels retai
   const checking = screen.getByRole("button", { name: "Checking…" });
   expect(checking.hasAttribute("disabled")).toBe(true);
   await user.click(checking);
-  expect(vi.mocked(invoke)).toHaveBeenCalledTimes(4);
+  expect(connectionCalls()).toHaveLength(4);
   rejectStatus("Connection lost; reopen to reconcile the owner");
   await screen.findByRole("alert");
   await user.click(screen.getByRole("button", { name: "Connection details" }));
@@ -192,8 +211,8 @@ test("refresh exposes pending feedback, blocks duplicate reads, and labels retai
   expect(screen.getByRole("dialog").textContent).toContain("owner-41");
 });
 
-test("remounting retrieves status only and never adds product actions", async () => {
-  vi.mocked(invoke).mockImplementation(async (command) =>
+test("remounting retrieves observations and never submits execution actions", async () => {
+  mockConnection(async (command) =>
     command === "desktop_pid" ? 42 : snapshot,
   );
   const first = render(<App />);
@@ -201,19 +220,17 @@ test("remounting retrieves status only and never adds product actions", async ()
   first.unmount();
   render(<App />);
   await screen.findByRole("button", { name: "Refresh status" });
-  expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
+  expect(connectionCalls().map(([command]) => command)).toEqual([
     "supervisor_status",
     "desktop_pid",
     "supervisor_status",
     "desktop_pid",
   ]);
-  expect(
-    screen.queryByRole("button", { name: /add repository|send|resume/i }),
-  ).toBeNull();
+  expect(screen.queryByRole("button", { name: /send|resume/i })).toBeNull();
 });
 
 test("a connection failure with no error text still exposes the alert and retry", async () => {
-  vi.mocked(invoke).mockImplementation(async (command) => {
+  mockConnection(async (command) => {
     if (command === "desktop_pid") return 42;
     throw "";
   });
@@ -241,7 +258,7 @@ test.each(["success", "failure"])(
       resolveCurrent = resolve;
     });
     let statusReads = 0;
-    vi.mocked(invoke).mockImplementation((command) => {
+    mockConnection((command) => {
       if (command === "desktop_pid") return Promise.resolve(42);
       return statusReads++ === 0 ? oldStatus : currentStatus;
     });
@@ -257,7 +274,7 @@ test.each(["success", "failure"])(
     expect(screen.getByRole("status").textContent).toContain("Checking");
     expect(screen.queryByRole("alert")).toBeNull();
     await user.click(screen.getByRole("button", { name: "Checking…" }));
-    expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
+    expect(connectionCalls().map(([command]) => command)).toEqual([
       "supervisor_status",
       "desktop_pid",
       "supervisor_status",
@@ -289,7 +306,7 @@ test.each(["success", "failure"])(
       rejectOld = reject;
     });
     let reads = 0;
-    vi.mocked(invoke).mockImplementation((command) => {
+    mockConnection((command) => {
       if (command === "desktop_pid") return Promise.resolve(42);
       return reads++ === 0
         ? oldStatus
@@ -315,7 +332,7 @@ test.each(["success", "failure"])(
     );
     expect(screen.getByRole("dialog").textContent).toContain("current-owner");
     expect(screen.getByRole("dialog").textContent).not.toContain("owner-41");
-    expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
+    expect(connectionCalls().map(([command]) => command)).toEqual([
       "supervisor_status",
       "desktop_pid",
       "supervisor_status",
@@ -325,13 +342,13 @@ test.each(["success", "failure"])(
 );
 
 test("a failed desktop identity read releases the pending guard for explicit retry", async () => {
-  vi.mocked(invoke).mockImplementation(async (command) => {
+  mockConnection(async (command) => {
     if (command === "desktop_pid") throw "Identity unavailable";
     return snapshot;
   });
   render(<App />);
   await screen.findByRole("alert");
-  vi.mocked(invoke).mockImplementation(async (command) =>
+  mockConnection(async (command) =>
     command === "desktop_pid" ? 42 : snapshot,
   );
   await userEvent
@@ -339,5 +356,5 @@ test("a failed desktop identity read releases the pending guard for explicit ret
     .click(screen.getByRole("button", { name: "Retry connection" }));
   await screen.findByRole("button", { name: "Refresh status" });
   expect(screen.queryByRole("alert")).toBeNull();
-  expect(vi.mocked(invoke)).toHaveBeenCalledTimes(4);
+  expect(connectionCalls()).toHaveLength(4);
 });

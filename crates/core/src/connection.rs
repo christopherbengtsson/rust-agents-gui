@@ -1,4 +1,5 @@
 //! Versioned, bounded observations; transport loss never replays actions.
+use crate::workspaces::{ErrorCode, RepositoryError, RepositoryReply, RepositoryRequest};
 use crate::{
     Core, SnapshotCursor, SupervisorSnapshot, SupervisorStatus,
     supervisor::{check_private, owner_present, prepare_state, socket_path},
@@ -11,21 +12,30 @@ use std::{
     process::{Command, Stdio},
     time::{Duration, Instant},
 };
-const MAX_FRAME_BYTES: usize = 4096;
+const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 1;
+pub const PROTOCOL_VERSION: u32 = 2;
 
 #[derive(Serialize, Deserialize)]
 struct Request {
     protocol: u32,
     application_version: String,
     after: Option<SnapshotCursor>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    repository: Option<RepositoryRequest>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
-    Snapshot { snapshot: SupervisorSnapshot },
-    Incompatible { message: String },
+    Snapshot {
+        snapshot: SupervisorSnapshot,
+    },
+    Incompatible {
+        message: String,
+    },
+    Repository {
+        result: Result<RepositoryReply, RepositoryError>,
+    },
 }
 
 /// Desktop connection state lives in Rust core: initialize once, then only retrieve observations.
@@ -36,6 +46,19 @@ pub struct SupervisorConnection {
     cursor: Option<SnapshotCursor>,
 }
 impl SupervisorConnection {
+    /// Actions use this already discovered owner. Transport failure grants no start/replay authority.
+    pub fn repository_request(
+        &self,
+        request: RepositoryRequest,
+    ) -> Result<RepositoryReply, RepositoryError> {
+        if !self.initialized {
+            return Err(RepositoryError::new(
+                ErrorCode::Connection,
+                "Connect to the supervisor before submitting repository actions.",
+            ));
+        }
+        SupervisorClient::new(self.state.clone()).repository_request(request)
+    }
     pub fn new(state: PathBuf, executable: PathBuf) -> Self {
         Self {
             state,
@@ -66,6 +89,52 @@ pub struct SupervisorClient {
     state: PathBuf,
 }
 impl SupervisorClient {
+    pub fn repository_request(
+        &self,
+        request: RepositoryRequest,
+    ) -> Result<RepositoryReply, RepositoryError> {
+        self.repository_request_with(request, |state, request| {
+            check_private(state, true)?;
+            let socket = socket_path(state);
+            check_private(&socket, false)?;
+            let mut stream = UnixStream::connect(socket)?;
+            configure(&stream)?;
+            write_frame(&mut stream, request)?;
+            read_frame(&mut stream)
+        })
+    }
+
+    fn repository_request_with(
+        &self,
+        request: RepositoryRequest,
+        exchange: impl FnOnce(&Path, &Request) -> io::Result<Response>,
+    ) -> Result<RepositoryReply, RepositoryError> {
+        if let RepositoryRequest::Register { request } = &request {
+            // A definite local rejection must not become uncertain delivery in the UI.
+            crate::workspaces::check_registration_path_budget(&request.path)?;
+        }
+        let result = (|| -> io::Result<Result<RepositoryReply, RepositoryError>> {
+            match exchange(
+                &self.state,
+                &Request {
+                    protocol: PROTOCOL_VERSION,
+                    application_version: env!("CARGO_PKG_VERSION").into(),
+                    after: None,
+                    repository: Some(request),
+                },
+            )? {
+                Response::Repository { result } => Ok(result),
+                Response::Incompatible { message } => {
+                    Err(io::Error::new(io::ErrorKind::InvalidData, message))
+                }
+                Response::Snapshot { .. } => Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Unexpected status reply to repository request",
+                )),
+            }
+        })();
+        result.map_err(|e| RepositoryError::new(ErrorCode::Connection, format!("Repository reply unavailable: {e}. Refresh to retrieve the recorded action status; this request has not been replayed.")))?
+    }
     pub fn new(state: PathBuf) -> Self {
         Self { state }
     }
@@ -109,6 +178,7 @@ impl SupervisorClient {
                 protocol,
                 application_version: application_version.into(),
                 after,
+                repository: None,
             },
         )?;
         match read_frame_with_clock(&mut stream, || effects.now())? {
@@ -116,6 +186,10 @@ impl SupervisorClient {
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
+            Response::Repository { .. } => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "Unexpected repository reply to status request",
+            )),
         }
     }
 }
@@ -276,6 +350,14 @@ fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
                     PROTOCOL_VERSION,
                     env!("CARGO_PKG_VERSION")
                 ),
+            },
+        );
+    }
+    if let Some(request) = request.repository {
+        return write_frame(
+            stream,
+            &Response::Repository {
+                result: core.repository_request(request),
             },
         );
     }
