@@ -1,0 +1,11 @@
+{"action": "tracked modification/deletion and untracked addition", "workspace": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout"}
+{"action": "same-status edit", "path": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout/text.txt"}
+{"action": "unsupported/limited/newline/long-path fixtures", "workspace": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout", "limited_content_rows": 400, "limited_row_content_bytes": 169}
+{"action": "same-status edit after ready preview", "time": 1794580908.695842, "path": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout/text.txt"}
+{"action": "synthetic permission fault chmod000", "path": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout/text.txt", "time": 1794581994.684962}
+{"action": "synthetic Git indirection fault", "workspace": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout", "time": 1794582056.590734}
+{"action": "removed 1.5s status-delay marker after workspace switch", "time": 1794582153.9365172}
+{"action": "synthetic supervisor SIGSTOP", "pid": 40182, "edited": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout/text.txt", "time": 1794582182.973217}
+{"action": "synthetic fault restored SIGCONT", "pid": 40182, "time": 1794582220.41818}
+{"action": "removed selected file from inventory", "command": ["/opt/homebrew/bin/git", "-C", "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout", "restore", "--source=HEAD", "--staged", "--worktree", "--", "text.txt"], "time": 1794582255.569261}
+{"action": "maximum preview workload", "rows": 400, "row_text_bytes": 185, "time": 1794582517.458986}

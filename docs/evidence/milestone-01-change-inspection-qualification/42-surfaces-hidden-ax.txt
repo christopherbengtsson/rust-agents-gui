@@ -1,0 +1,83 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							11 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							12 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							13 button Create workspace in Inspection Beta
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							15 text Available
+							16 content list
+								17 button yuto-nagatomo, Help: Workspace ready
+						18 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							19 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							20 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Inspection Alpha
+							22 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							23 text Available
+							24 content list
+								25 button kristine-lilly, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading kristine-lilly, Value: 1
+					31 text kristine-lilly
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					35 text Repository available
+				36 text Uncommitted changes
+				37 button Refresh changes
+				38 button (collapsed) Show changed files, Secondary Actions: Expand
+				39 text Compared with HEAD 
+				40 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				41 text  · 
+				42 text 12
+				43 text changed files
+				44 tab group (selectable) Workspace views
+					45 tab (selected) Workspace
+					46 tab (selectable) Changes
+				47 container Workspace
+					48 container Selected workspace
+						49 text Workspace ready Codex
+						50 heading Your workspace is ready, Value: 2
+							51 text Your workspace is ready
+						52 text kristine-lilly
+						53 description list
+							54 text Branch
+							55 text workspace/kristine-lilly
+							56 text Workspace folder
+							57 text /private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout
+							58 text Local base
+							59 text refs/heads/main · 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+							60 text Branch artifact
+							61 text Created by this action
+							62 text Folder artifact
+							63 text Worktree created
+						64 container
+							65 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				66 splitter Resize changed files, Value: 100
+				67 text Local workspace
+				68 text Inspection Alpha
+	69 close button
+	70 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	71 minimize button
+	72 text Agent Workspace
+73 menu bar
+	74 Inspection Qualification
+	75 File
+	76 Edit
+	77 View
+	78 Window
+	79 Help
+
+The focused UI element is 38 button (collapsed) Show changed files, Secondary Actions: Expand

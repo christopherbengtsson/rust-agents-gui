@@ -1,0 +1,13 @@
+{
+  "raw_bytes": 173285494,
+  "raw_sha256": "2f231f2ba02b0c24f7c50d74eb381e33b92ccd184a16b435232544134d4da894",
+  "gzip_bytes": 124036600,
+  "gzip_sha256": "d9c7e86b891bfed9e28beca6dae28b626d34d9adc23e58ab9a6c3efcd974ff25",
+  "lossless_roundtrip_verified": true,
+  "full_lossless_export": "/private/tmp/agent-workspace-05c-66onln_j/navigation-timeline-full.json.gz",
+  "source_screenshots": 1439,
+  "retained_screenshots": 12,
+  "pruning": "All non-screenshot records, samples, markers and metadata retained; only first post-commit screenshot per native navigation sample retained in repository trace.",
+  "retained_gzip_sha256": "eb54ac0aa23054a8a9a58f4e8cae42251a12f5f9adf8257e77b12d1570462f7a",
+  "retained_gzip_bytes": 1400513
+}

@@ -1,0 +1,139 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 4:18:43 PM
+					36 image
+					37 text console.log("05C_ASSETS="+JSON.stringify({scripts:[...document.scripts].map(s=>s.src),styles:[...document.querySelectorAll("link[rel=stylesheet]")].map(s=>s.href),scrollTrack:[...document.querySelectorAll("[data-slot=scroll-area-scrollbar]")].map(s=>[s.dataset.orientation,getComputedStyle(s).width,getComputedStyle(s).height]),rows:document.querySelectorAll(".diff-row").length}))
+					38 image
+					39 text 05C_ASSETS={"scripts":["
+					40 link http://127.0.0.1:1420/assets/index-BH_usD4q.js, Value: 127.0.0.1:1420/assets/index-BH_usD4q.js
+					41 text "],"styles":["
+					42 link http://127.0.0.1:1420/assets/index-BSp6w5We.css, Value: 127.0.0.1:1420/assets/index-BSp6w5We.css
+					43 text "],"scrollTrack":[["vertical","10px","139px"],["horizontal","427.40625px","10px"],["vertical","10px","154px"]],"rows":200}
+					44 image
+					45 text undefined
+			46 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			47 container
+	48 scroll area
+		49 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/?qualification=final-05c
+			50 link Skip to workspace, Value: 127.0.0.1:1420/?qualification=final-05c#workspace
+			51 container Repository sidebar
+				52 text Agent Workspace
+				53 container Repositories
+					54 heading Repositories, Value: 2
+						55 text Repositories
+					56 content list
+						57 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							58 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							59 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							60 button Create workspace in Inspection Beta
+							61 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							62 text Available
+							63 content list
+								64 button yuto-nagatomo, Help: Workspace ready
+						65 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							66 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							67 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							68 button Create workspace in Inspection Alpha
+							69 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							70 text Available
+							71 content list
+								72 button kristine-lilly, Help: Workspace ready
+				73 pop up button Add repository
+				74 text Connected
+				75 pop up button Connection details
+			76 container
+				77 heading kristine-lilly, Value: 1
+					78 text kristine-lilly
+				79 button Refresh status
+				80 container Selected repository
+					81 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					82 text Repository available
+				83 text Uncommitted changes
+				84 button Refresh changes
+				85 button (expanded) Hide changed files, Secondary Actions: Collapse
+				86 text Compared with HEAD 
+				87 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				88 text  · 
+				89 text 12
+				90 text changed files
+				91 tab group (selectable) Workspace views
+					92 tab (selectable) Workspace
+					93 tab (selected) Changes
+				94 container Changes
+					95 container Selected file changes
+						96 heading limited.txt, Value: 2
+							97 text limited.txt
+						98 text Preview limited by the 200-row or 48 KiB response budget.
+						99 container Unified file diff
+				100 splitter Resize changed files, Value: 68
+				101 container Changed files
+					102 heading Changed files, Value: 2
+						103 text Changed files
+					104 container
+						105 toggle button delete.txt .D, Help: delete.txt, Value: off
+						106 toggle button binary.bin ??, Help: binary.bin, Value: off
+						107 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						108 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						109 toggle button limited.txt ??, Help: limited.txt, Value: on
+						110 container Symbolic link
+							111 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							112 text Symbolic link
+						113 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						114 toggle button new.txt ??, Help: new.txt, Value: off
+						115 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						116 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						117 container Content exceeds the read limit
+							118 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							119 text Content exceeds the read limit
+						120 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					121 button First page
+					122 button (disabled) Next files
+				123 text Local workspace
+				124 text Inspection Alpha
+	125 close button
+	126 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	127 minimize button
+	128 text Agent Workspace
+129 menu bar
+	130 Inspection Qualification
+	131 File
+	132 Edit
+	133 View
+	134 Window
+	135 Help
+
+The focused UI element is 46 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

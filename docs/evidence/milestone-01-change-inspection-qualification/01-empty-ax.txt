@@ -1,0 +1,36 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 text No repositories yet
+				10 pop up button Add repository
+				11 text Connected
+				12 pop up button Connection details
+			13 container
+				14 heading Workspace, Value: 1
+					15 text Workspace
+				16 button Refresh status
+				17 heading A place for your next change, Value: 2
+					18 text A place for your next change
+				19 text Add an existing Git repository from the sidebar to get started.
+				20 text Local workspace
+				21 text No repository selected
+	22 close button
+	23 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	24 minimize button
+	25 text Agent Workspace
+26 menu bar
+	27 Inspection Qualification
+	28 File
+	29 Edit
+	30 View
+	31 Window
+	32 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/

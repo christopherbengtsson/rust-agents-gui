@@ -1,0 +1,207 @@
+{
+  "root": "/private/tmp/agent-workspace-05c-66onln_j",
+  "state": "/private/tmp/agent-workspace-05c-66onln_j/state",
+  "repositories": [
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha",
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta"
+  ],
+  "git": "/opt/homebrew/bin/git",
+  "synthetic_faults": [
+    "optional 1.5 s Git status wrapper delay",
+    "chmod 000 selected disposable file",
+    "temporarily hidden disposable .git indirection"
+  ],
+  "original_hashes": {
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha/text.txt": "84bd16f91ec8f223cad47630cf98cc04521ba112acb13942d20865060c28f3d3",
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha/delete.txt": "d2d0654c6c4393dd6dd2e006299e4c9150da26701ebb14c199f1ba6c85d8e74f",
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha/empty.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta/text.txt": "84bd16f91ec8f223cad47630cf98cc04521ba112acb13942d20865060c28f3d3",
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta/delete.txt": "d2d0654c6c4393dd6dd2e006299e4c9150da26701ebb14c199f1ba6c85d8e74f",
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta/empty.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "launcher_pid": 29832,
+  "app": "/private/tmp/agent-workspace-05c-66onln_j/Inspection Qualification.app",
+  "desktop_pid": 40177,
+  "vite_pid": 30710,
+  "debug_sidecar_provenance": {
+    "sourceRevision": "504bd5047232978070440b3730ada6fa7ee8eaf2",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "dev",
+    "cargoProfile": {
+      "opt_level": "0",
+      "debuginfo": 2,
+      "debug_assertions": true,
+      "overflow_checks": true,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+    "sha256": "c6be96008db286f7dd4fba948941fef3593e6ee71d732a42274a98d2e7715db9"
+  },
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 54285,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "54285-1794583377497183000",
+        "revision": 125
+      },
+      "reset": true
+    }
+  },
+  "database": "/private/tmp/agent-workspace-05c-66onln_j/state/workspace.sqlite3",
+  "table_counts": {
+    "repositories": 2,
+    "registration_actions": 2,
+    "workspaces": 2,
+    "workspace_actions": 2,
+    "repository_folders": 2
+  },
+  "workspaces": [
+    {
+      "id": "18f6cac4-be1e-48c2-8a36-1c11024cf885",
+      "repository_id": "bd31ce56-5df5-46e4-b24e-7bc20bfa8f07",
+      "queued": 0,
+      "record": "{\"id\":\"18f6cac4-be1e-48c2-8a36-1c11024cf885\",\"repository_id\":\"bd31ce56-5df5-46e4-b24e-7bc20bfa8f07\",\"creation_action_id\":\"45db06e3-bb33-4efa-94f2-fc4783716404\",\"name\":\"kristine-lilly\",\"branch\":\"workspace/kristine-lilly\",\"path\":\"/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout\",\"legacy\":false,\"provider\":\"codex\",\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"0c47e519f2a2a6e3c11995a11958340eafafa5a7\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+      "name": "kristine-lilly",
+      "branch": "workspace/kristine-lilly",
+      "path": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout"
+    },
+    {
+      "id": "fce1b247-fa0c-4819-85ca-6798cbf72d8a",
+      "repository_id": "3669fa15-2714-4434-a65a-2791e8ebebc5",
+      "queued": 0,
+      "record": "{\"id\":\"fce1b247-fa0c-4819-85ca-6798cbf72d8a\",\"repository_id\":\"3669fa15-2714-4434-a65a-2791e8ebebc5\",\"creation_action_id\":\"07f9e905-a41a-420f-94cc-f19038b4a309\",\"name\":\"yuto-nagatomo\",\"branch\":\"workspace/yuto-nagatomo\",\"path\":\"/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-beta/yuto-nagatomo/checkout\",\"legacy\":false,\"provider\":\"codex\",\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"0c47e519f2a2a6e3c11995a11958340eafafa5a7\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+      "name": "yuto-nagatomo",
+      "branch": "workspace/yuto-nagatomo",
+      "path": "/private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-beta/yuto-nagatomo/checkout"
+    }
+  ],
+  "stopped_unbundled_dev_tree": [
+    {
+      "pid": 30417,
+      "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-desktop"
+    },
+    {
+      "pid": 30344,
+      "command": "node /Users/christopherbengtsson/Documents/dev/rust-agents-gui/node_modules/.bin/../.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/bin/vite.js"
+    },
+    {
+      "pid": 30343,
+      "command": "sh -c trap '' INT TERM HUP\\012groups=' '\\012while read -r line; do\\012  group=${line#?}\\012  case $line in\\012    +*) groups=\"$groups$group \" ;;\\012    -*)\\012      case $groups in\\012        *\" $group \"*) groups=\"${groups%% \"$group\" *} ${groups#* \"$group\" }\" ;;\\012      esac\\012      ;;\\012  esac\\012done\\012for group in $groups; do kill -9 -\"$group\"; done"
+    },
+    {
+      "pid": 30327,
+      "command": "sh -c trap 'if [ \"$?\" -eq 130 ]; then trap - INT; kill -s INT $$; fi; trap \"trap - INT; kill -s INT $$\" INT' INT; vite"
+    },
+    {
+      "pid": 30326,
+      "command": "/Users/christopherbengtsson/.cache/node/corepack/v1/pnpm/12.18.0/pnpm-native frontend:dev"
+    },
+    {
+      "pid": 30314,
+      "command": "node /Users/christopherbengtsson/.local/state/fnm_multishells/1088_1794042522819/bin/corepack pnpm frontend:dev"
+    },
+    {
+      "pid": 30113,
+      "command": "node /Users/christopherbengtsson/Documents/dev/rust-agents-gui/node_modules/.bin/../.pnpm/@tauri-apps+cli@2.12.4/node_modules/@tauri-apps/cli/tauri.js dev"
+    },
+    {
+      "pid": 30112,
+      "command": "sh -c trap '' INT TERM HUP\\012groups=' '\\012while read -r line; do\\012  group=${line#?}\\012  case $line in\\012    +*) groups=\"$groups$group \" ;;\\012    -*)\\012      case $groups in\\012        *\" $group \"*) groups=\"${groups%% \"$group\" *} ${groups#* \"$group\" }\" ;;\\012      esac\\012      ;;\\012  esac\\012done\\012for group in $groups; do kill -9 -\"$group\"; done"
+    },
+    {
+      "pid": 30096,
+      "command": "sh -c trap 'if [ \"$?\" -eq 130 ]; then trap - INT; kill -s INT $$; fi; trap \"trap - INT; kill -s INT $$\" INT' INT; tauri dev"
+    },
+    {
+      "pid": 30095,
+      "command": "/Users/christopherbengtsson/.cache/node/corepack/v1/pnpm/12.18.0/pnpm-native tauri dev"
+    },
+    {
+      "pid": 30094,
+      "command": "node /Users/christopherbengtsson/.local/state/fnm_multishells/1088_1794042522819/bin/corepack pnpm tauri dev"
+    },
+    {
+      "pid": 29850,
+      "command": "node scripts/start.mjs dev"
+    },
+    {
+      "pid": 29849,
+      "command": "sh -c trap '' INT TERM HUP\\012groups=' '\\012while read -r line; do\\012  group=${line#?}\\012  case $line in\\012    +*) groups=\"$groups$group \" ;;\\012    -*)\\012      case $groups in\\012        *\" $group \"*) groups=\"${groups%% \"$group\" *} ${groups#* \"$group\" }\" ;;\\012      esac\\012      ;;\\012  esac\\012done\\012for group in $groups; do kill -9 -\"$group\"; done"
+    },
+    {
+      "pid": 29836,
+      "command": "sh -c trap 'if [ \"$?\" -eq 130 ]; then trap - INT; kill -s INT $$; fi; trap \"trap - INT; kill -s INT $$\" INT' INT; node scripts/start.mjs dev"
+    },
+    {
+      "pid": 29835,
+      "command": "/Users/christopherbengtsson/.cache/node/corepack/v1/pnpm/12.18.0/pnpm-native dev"
+    },
+    {
+      "pid": 29833,
+      "command": "node /Users/christopherbengtsson/.local/state/fnm_multishells/1088_1794042522819/bin/corepack pnpm dev"
+    }
+  ],
+  "static_server_pid": 37308,
+  "production_sidecar_provenance": {
+    "sourceRevision": "504bd5047232978070440b3730ada6fa7ee8eaf2",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "84657ad3d7197e9045e7a3d5e6d29bb6a5355b8a598148acea99417d383ee3c0"
+  },
+  "debug_artifacts_after_transport_fix": {
+    "workspace-supervisor": {
+      "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+      "sha256": "834b3780c1d7f4374fb8ea7b49f89cf93c4ef12d2a2339ddd92f18b6bf95c622"
+    },
+    "workspace-desktop": {
+      "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-desktop",
+      "sha256": "c0e9be94bcd588da4da2e3f55c27498cc24aba559c05ef81b2956c60d07fe08c"
+    }
+  },
+  "debug_core_rlib": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libworkspace_core-dfca7b1b37481f99.rlib",
+  "setup_faults": [
+    "Unbundled dev binary not selectable by CUA; private debug bundle created",
+    "fnm launcher termination left dev descendants; explicitly stopped recorded private tree",
+    "CUA observation after Cmd+Q auto-reopened private bundle without env; incompatible default owner response observed, no actions; explicitly stopped that fixture desktop"
+  ],
+  "packaged_app": "/private/tmp/agent-workspace-05c-66onln_j/Inspection Packaged Qualification.app",
+  "packaged_desktop_pid": 54275,
+  "packaged_provenance": {
+    "sourceRevision": "504bd5047232978070440b3730ada6fa7ee8eaf2",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "6ef1de8050d51a480bac652e5da56a45d6a9dea15dada0dc402aa1a5343b1eaa"
+  },
+  "packaged_hashes": {
+    "Contents/MacOS/workspace-desktop": "ddd3d0cff5eecb2b17a6a6440c3b32d274e32a0caaa314d36a04907800409da2",
+    "Contents/Resources/workspace-supervisor": "6ef1de8050d51a480bac652e5da56a45d6a9dea15dada0dc402aa1a5343b1eaa"
+  },
+  "packaging_copy_note": "Only private-copy CFBundle name/id changed to avoid selecting unrelated installed app. Executable/resources hashes unchanged. No supervisor override: resource path used."
+}

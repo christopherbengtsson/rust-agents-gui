@@ -1,0 +1,87 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							11 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							12 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							13 button Create workspace in Inspection Beta
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							15 text Available
+							16 content list
+								17 button yuto-nagatomo, Help: Workspace ready
+						18 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							19 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							20 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Inspection Alpha
+							22 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							23 text Available
+							24 content list
+								25 button kristine-lilly, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading yuto-nagatomo, Value: 1
+					31 text yuto-nagatomo
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+					35 text Repository available
+				36 text Uncommitted changes
+				37 button Refresh changes
+				38 button (expanded) Hide changed files, Secondary Actions: Collapse
+				39 text Compared with HEAD 
+				40 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				41 text  · 
+				42 text 0
+				43 text changed files
+				44 text No uncommitted changes.
+				45 tab group (selectable) Workspace views
+					46 tab (selected) Workspace
+					47 tab (selectable) Changes
+				48 container Workspace
+					49 container Selected workspace
+						50 text Workspace ready Codex
+						51 heading Your workspace is ready, Value: 2
+							52 text Your workspace is ready
+						53 text yuto-nagatomo
+						54 description list
+							55 text Branch
+							56 text workspace/yuto-nagatomo
+							57 text Workspace folder
+							58 text /private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-beta/yuto-nagatomo/checkout
+							59 text Local base
+							60 text refs/heads/main · 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+							61 text Branch artifact
+							62 text Created by this action
+							63 text Folder artifact
+							64 text Worktree created
+						65 container
+							66 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				67 splitter Resize changed files, Value: 68
+				68 container Changed files
+					69 heading Changed files, Value: 2
+						70 text Changed files
+				71 text Local workspace
+				72 text Inspection Beta
+	73 close button
+	74 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	75 minimize button
+	76 text Agent Workspace
+77 menu bar
+	78 Inspection Qualification
+	79 File
+	80 Edit
+	81 View
+	82 Window
+	83 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/

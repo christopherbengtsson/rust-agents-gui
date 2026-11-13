@@ -1,0 +1,50 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 container Repository sidebar
+				4 text Connected
+			5 container
+				6 button
+				7 container Uncommitted changes
+					8 heading Uncommitted changes, Value: 2
+						9 text Uncommitted changes
+					10 text Select a file to read its diff.
+					11 container Changed files
+						12 heading Changed files, Value: 2
+							13 text Changed files
+						14 container
+							15 toggle button delete.txt .D, Help: delete.txt, Value: off
+							16 toggle button text.txt .M, Help: text.txt, Value: off
+							17 toggle button binary.bin ??, Help: binary.bin, Value: off
+							18 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+							19 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+							20 toggle button limited.txt ??, Help: limited.txt, Value: on
+							21 container Symbolic link
+								22 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+								23 text Symbolic link
+							24 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+							25 toggle button new.txt ??, Help: new.txt, Value: off
+							26 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+							27 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+							28 container Content exceeds the read limit
+								29 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+								30 text Content exceeds the read limit
+							31 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+						32 button First page
+						33 button (disabled) Next files
+					34 button Close
+				35 button
+	36 close button
+	37 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	38 minimize button
+	39 text Agent Workspace
+40 menu bar
+	41 Inspection Qualification
+	42 File
+	43 Edit
+	44 View
+	45 Window
+	46 Help
+
+The focused UI element is 15 toggle button delete.txt .D, Help: delete.txt, Value: off

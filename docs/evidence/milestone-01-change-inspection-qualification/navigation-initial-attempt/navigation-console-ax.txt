@@ -1,0 +1,195 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console opened at 4:09:42 PM
+					36 image
+					37 text Selected Element
+					38 image
+					39 outline (selectable)
+						40 row (selectable) Description: <span>​Uncommitted changes​</span>, Value: <span>​Uncommitted changes​</span>
+<
+span
+>
+Uncommitted changes
+<
+/span
+>
+					41 text  = $1
+					42 image
+					43 text // Injected via the actual WKWebView Inspector console for opt-in qualification.
+// Observes native trusted tab clicks; never replaces IPC, data or React behavior.
+(() => {
+  window.__inspectionQualification?.dispose?.();
+  const records = [];
+  const observers = new Set();
+  const click = (event) => {
+    const tab = event.target.closest('[role="tab"]');
+    if (!tab || tab.getAttribute('aria-selected') === 'true' || records.length >= 12) return;
+    const record = { sample: records.length + 1, target: tab
+					44 image
+					45 text "
+					46 text 05c navigation observation installed
+					47 text "
+					48 text  = $2
+					49 image
+					50 text console.log("05C_NAV_JSON="+JSON.stringify(window.__inspectionQualification))
+					51 image
+					52 text 05C_NAV_JSON={"records":[{"sample":1,"target":"Workspace","trusted":true,"input":1149338,"eventTime":1149337,"rowsBefore":200,"viewport":[900,398],"commit":1149343,"rowsAfter":200,"secondFrame":1149370.0000000002},{"sample":2,"target":"Changes","trusted":true,"input":1150226,"eventTime":1150220,"rowsBefore":0,"viewport":[900,398],"commit":1150243,"rowsAfter":200,"secondFrame":1150286},{"sample":3,"target":"Workspace","trusted":true,"input":1151034,"eventTime":1151027,"rowsBefore":200,"viewport":[900,398],"c
+					53 image
+					54 text undefined
+					55 image
+					56 text window.__inspectionQualification.records.forEach(r=>console.log("05C_NAV_SAMPLE="+JSON.stringify(r)))
+					57 image
+					58 text 05C_NAV_SAMPLE={"sample":1,"target":"Workspace","trusted":true,"input":1149338,"eventTime":1149337,"rowsBefore":200,"viewport":[900,398],"commit":1149343,"rowsAfter":200,"secondFrame":1149370.0000000002}
+					59 image
+					60 text 05C_NAV_SAMPLE={"sample":2,"target":"Changes","trusted":true,"input":1150226,"eventTime":1150220,"rowsBefore":0,"viewport":[900,398],"commit":1150243,"rowsAfter":200,"secondFrame":1150286}
+					61 image
+					62 text 05C_NAV_SAMPLE={"sample":3,"target":"Workspace","trusted":true,"input":1151034,"eventTime":1151027,"rowsBefore":200,"viewport":[900,398],"commit":1151037,"rowsAfter":200,"secondFrame":1151065}
+					63 image
+					64 text 05C_NAV_SAMPLE={"sample":4,"target":"Changes","trusted":true,"input":1151809,"eventTime":1151805,"rowsBefore":0,"viewport":[900,398],"commit":1151824,"rowsAfter":200,"secondFrame":1151867}
+					65 image
+					66 text 05C_NAV_SAMPLE={"sample":5,"target":"Workspace","trusted":true,"input":1152621,"eventTime":1152620.0000000002,"rowsBefore":200,"viewport":[900,398],"commit":1152627,"rowsAfter":200,"secondFrame":1152653}
+					67 image
+					68 text 05C_NAV_SAMPLE={"sample":6,"target":"Changes","trusted":true,"input":1153393,"eventTime":1153392,"rowsBefore":0,"viewport":[900,398],"commit":1153408.0000000002,"rowsAfter":200,"secondFrame":1153449}
+					69 image
+					70 text 05C_NAV_SAMPLE={"sample":7,"target":"Workspace","trusted":true,"input":1154201,"eventTime":1154193,"rowsBefore":200,"viewport":[900,398],"commit":1154203,"rowsAfter":200,"secondFrame":1154230}
+					71 image
+					72 text 05C_NAV_SAMPLE={"sample":8,"target":"Changes","trusted":true,"input":1155070,"eventTime":1155069,"rowsBefore":0,"viewport":[900,398],"commit":1155085,"rowsAfter":200,"secondFrame":1155120.0000000002}
+					73 image
+					74 text 05C_NAV_SAMPLE={"sample":9,"target":"Workspace","trusted":true,"input":1155976,"eventTime":1155975.0000000002,"rowsBefore":200,"viewport":[900,398],"commit":1155978,"rowsAfter":200,"secondFrame":1156011}
+					75 image
+					76 text 05C_NAV_SAMPLE={"sample":10,"target":"Changes","trusted":true,"input":1156764.0000000002,"eventTime":1156758,"rowsBefore":0,"viewport":[900,398],"commit":1156779,"rowsAfter":200,"secondFrame":1156814}
+					77 image
+					78 text 05C_NAV_SAMPLE={"sample":11,"target":"Workspace","trusted":true,"input":1157570,"eventTime":1157569,"rowsBefore":200,"viewport":[900,398],"commit":1157573,"rowsAfter":200,"secondFrame":1157598}
+					79 image
+					80 text 05C_NAV_SAMPLE={"sample":12,"target":"Changes","trusted":true,"input":1158351,"eventTime":1158344,"rowsBefore":0,"viewport":[900,398],"commit":1158366,"rowsAfter":200,"secondFrame":1158400}
+					81 image
+					82 text undefined
+			83 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			84 container
+	85 scroll area
+		86 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			87 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			88 container Repository sidebar
+				89 text Agent Workspace
+				90 container Repositories
+					91 heading Repositories, Value: 2
+						92 text Repositories
+					93 content list
+						94 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							95 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							96 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							97 button Create workspace in Inspection Beta
+							98 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							99 text Available
+							100 content list
+								101 button yuto-nagatomo, Help: Workspace ready
+						102 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							103 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							104 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							105 button Create workspace in Inspection Alpha
+							106 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							107 text Available
+							108 content list
+								109 button kristine-lilly, Help: Workspace ready
+				110 pop up button Add repository
+				111 text Connected
+				112 pop up button Connection details
+			113 container
+				114 heading kristine-lilly, Value: 1
+					115 text kristine-lilly
+				116 button Refresh status
+				117 container Selected repository
+					118 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					119 text Repository available
+				120 text Uncommitted changes
+				121 button Refresh changes
+				122 button (expanded) Hide changed files, Secondary Actions: Collapse
+				123 text Compared with HEAD 
+				124 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				125 text  · 
+				126 text 12
+				127 text changed files
+				128 tab group (selectable) Workspace views
+					129 tab (selectable) Workspace
+					130 tab (selected) Changes, Value: on
+				131 container Changes
+					132 container Selected file changes
+						133 heading limited.txt, Value: 2
+							134 text limited.txt
+						135 text Loading selected-file preview…
+						136 container
+							137 text Showing the last-good preview against HEAD 0c47e519f2a2a6e3c11995a11958340eafafa5a7 ; it may be stale.
+						138 text Preview limited by the 200-row or 48 KiB response budget.
+						139 container Unified file diff
+				140 splitter Resize changed files, Value: 68
+				141 container Changed files
+					142 heading Changed files, Value: 2
+						143 text Changed files
+					144 container
+						145 toggle button delete.txt .D, Help: delete.txt, Value: off
+						146 toggle button binary.bin ??, Help: binary.bin, Value: off
+						147 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						148 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						149 toggle button limited.txt ??, Help: limited.txt, Value: on
+						150 container Symbolic link
+							151 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							152 text Symbolic link
+						153 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						154 toggle button new.txt ??, Help: new.txt, Value: off
+						155 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						156 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						157 container Content exceeds the read limit
+							158 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							159 text Content exceeds the read limit
+						160 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					161 button First page
+					162 button (disabled) Next files
+				163 text Local workspace
+				164 text Inspection Alpha
+	165 close button
+	166 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	167 minimize button
+	168 text Agent Workspace
+169 menu bar
+	170 Inspection Qualification
+	171 File
+	172 Edit
+	173 View
+	174 Window
+	175 Help
+
+The focused UI element is 83 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

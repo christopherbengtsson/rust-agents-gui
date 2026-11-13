@@ -1,0 +1,70 @@
+{
+  "verify": {
+    "wall_seconds": ["7.26"],
+    "rust_results": [
+      "test result: ok. 108 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s"
+    ],
+    "ui_results": ["Tests  71 passed (71)"],
+    "compilation": [
+      "Unit compilation: 0.105252 s; target /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target; test profile"
+    ],
+    "warm_summary": [],
+    "exit_status": 0
+  },
+  "verify-final": {
+    "wall_seconds": ["8.21"],
+    "rust_results": [
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s"
+    ],
+    "ui_results": ["Tests  71 passed (71)"],
+    "compilation": [
+      "Unit compilation: 0.118665 s; target /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target; test profile"
+    ],
+    "warm_summary": [],
+    "exit_status": 0
+  },
+  "packaging": {
+    "wall_seconds": ["32.70"],
+    "rust_results": [],
+    "ui_results": [],
+    "compilation": [],
+    "warm_summary": [],
+    "exit_status": 0
+  },
+  "packaging-final": {
+    "wall_seconds": ["43.91"],
+    "rust_results": [],
+    "ui_results": [],
+    "compilation": [],
+    "warm_summary": [],
+    "exit_status": 0
+  },
+  "unit-measurements": {
+    "wall_seconds": ["36.67"],
+    "rust_results": [
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s",
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s",
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s",
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s",
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s",
+      "test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s"
+    ],
+    "ui_results": [
+      "Tests  71 passed (71)",
+      "Tests  71 passed (71)",
+      "Tests  71 passed (71)",
+      "Tests  71 passed (71)",
+      "Tests  71 passed (71)",
+      "Tests  71 passed (71)"
+    ],
+    "compilation": [
+      "Unit compilation: 0.080655 s; target /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target; test profile"
+    ],
+    "warm_summary": [
+      "Warm execution median 0.409184 s; range 0.404289\u20130.412434 s",
+      "Warm execution median 0.895329 s; range 0.890657\u20130.909006 s",
+      "Warm execution median 4.760636 s; range 4.751386\u20134.790851 s"
+    ],
+    "exit_status": 0
+  }
+}

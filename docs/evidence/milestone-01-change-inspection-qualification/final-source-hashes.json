@@ -1,0 +1,30 @@
+{
+  "revision_before_commit": "504bd5047232978070440b3730ada6fa7ee8eaf2",
+  "files": {
+    "crates/core/src/connection.rs": "8c35000484e92e33ff5202ea64a1be41aa0473d6fa45a4a234b39f399048a822",
+    "crates/core/src/connection/tests.rs": "63229786ee42c3f7d6de1fe02487eaf785bb252cc4861f4a70fee1aa3045fb78",
+    "src/components/ui/tabs.tsx": "f75911e7cca4b3748a90d6d8db8d82b855e390a27452a53d38dbd268b84daec0",
+    "src/components/ui/scroll-area.tsx": "2ff43b529f84895b947c93b2397a5796b934218129fb9a1cd749eb4a28fb4bb1",
+    "src/components/README.md": "ca0bad5ec7c1815859d1f31fe10a454a089329f0cdc6e73c8ad9e19925420e9a"
+  },
+  "package_provenance": {
+    "sourceRevision": "504bd5047232978070440b3730ada6fa7ee8eaf2",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "6ef1de8050d51a480bac652e5da56a45d6a9dea15dada0dc402aa1a5343b1eaa"
+  },
+  "frontend_artifacts": {
+    "dist/assets/index-BSp6w5We.css": "5be22d3c43a704d0a1b248452bae06eb0225d6e8dc4983aa9cf036f2426f5475",
+    "dist/assets/index-BH_usD4q.js": "97cb1c121204c2dc8df38b950d3e8a06a623836f4c4b2480045583c3edc9c983"
+  }
+}

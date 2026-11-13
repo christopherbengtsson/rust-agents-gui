@@ -1,0 +1,89 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							11 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							12 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Inspection Alpha
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							15 text Available
+							16 content list
+								17 button kristine-lilly, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+			21 container
+				22 heading kristine-lilly, Value: 1
+					23 text kristine-lilly
+				24 button Refresh status
+				25 container Selected repository
+					26 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					27 text Repository available
+				28 text Uncommitted changes
+				29 button Refresh changes
+				30 button (expanded) Hide changed files, Secondary Actions: Collapse
+				31 text Compared with HEAD 
+				32 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				33 text  · 
+				34 text 13
+				35 text changed files
+				36 tab group (selectable) Workspace views
+					37 tab (selectable) Workspace
+					38 tab (selected) Changes
+				39 container Changes
+					40 container Selected file changes
+						41 heading oversized-file.txt, Value: 2
+							42 text oversized-file.txt
+						43 container
+							44 text Preview unsupported:  Content exceeds the read limit .
+				45 splitter Resize changed files, Value: 68
+				46 container Changed files
+					47 heading Changed files, Value: 2
+						48 text Changed files
+					49 container
+						50 toggle button delete.txt .D, Help: delete.txt, Value: off
+						51 toggle button text.txt .M, Help: text.txt, Value: off
+						52 toggle button binary.bin ??, Help: binary.bin, Value: off
+						53 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						54 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						55 toggle button limited.txt ??, Help: limited.txt, Value: off
+						56 container Symbolic link
+							57 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							58 text Symbolic link
+						59 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						60 toggle button new.txt ??, Help: new.txt, Value: off
+						61 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						62 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						63 container Content exceeds the read limit
+							64 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: on
+							65 text Content exceeds the read limit
+						66 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					67 button First page
+					68 button (disabled) Next files
+				69 text Local workspace
+				70 text Inspection Alpha
+	71 close button
+	72 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	73 minimize button
+	74 text Agent Workspace
+75 menu bar
+	76 Inspection Qualification
+	77 File
+	78 Edit
+	79 View
+	80 Window
+	81 Help
+
+Selected text: ```
+Uncommitted
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

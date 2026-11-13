@@ -1,0 +1,54 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							11 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							12 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							13 button Create workspace in Inspection Beta
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							15 text Available
+						16 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							17 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							18 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							19 button Create workspace in Inspection Alpha
+							20 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							21 text Available
+							22 content list
+								23 button kristine-lilly, Help: Workspace ready
+				24 pop up button Add repository
+				25 text Connected
+				26 pop up button Connection details
+			27 container
+				28 heading Inspection Beta, Value: 1
+					29 text Inspection Beta
+				30 button Refresh status
+				31 container Selected repository
+					32 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+					33 text Repository available
+				34 heading Repository registered, Value: 2
+					35 text Repository registered
+				36 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				37 button Create workspace
+				38 text Local workspace
+				39 text Inspection Beta
+	40 close button
+	41 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	42 minimize button
+	43 text Agent Workspace
+44 menu bar
+	45 Inspection Qualification
+	46 File
+	47 Edit
+	48 View
+	49 Window
+	50 Help
+
+The focused UI element is 24 pop up button Add repository

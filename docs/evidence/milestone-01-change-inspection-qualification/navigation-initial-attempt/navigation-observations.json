@@ -1,0 +1,148 @@
+{
+  "records": [
+    {
+      "sample": 1,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 1149338,
+      "eventTime": 1149337,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 1149343,
+      "rowsAfter": 200,
+      "secondFrame": 1149370.0000000002
+    },
+    {
+      "sample": 2,
+      "target": "Changes",
+      "trusted": true,
+      "input": 1150226,
+      "eventTime": 1150220,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 1150243,
+      "rowsAfter": 200,
+      "secondFrame": 1150286
+    },
+    {
+      "sample": 3,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 1151034,
+      "eventTime": 1151027,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 1151037,
+      "rowsAfter": 200,
+      "secondFrame": 1151065
+    },
+    {
+      "sample": 4,
+      "target": "Changes",
+      "trusted": true,
+      "input": 1151809,
+      "eventTime": 1151805,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 1151824,
+      "rowsAfter": 200,
+      "secondFrame": 1151867
+    },
+    {
+      "sample": 5,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 1152621,
+      "eventTime": 1152620.0000000002,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 1152627,
+      "rowsAfter": 200,
+      "secondFrame": 1152653
+    },
+    {
+      "sample": 6,
+      "target": "Changes",
+      "trusted": true,
+      "input": 1153393,
+      "eventTime": 1153392,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 1153408.0000000002,
+      "rowsAfter": 200,
+      "secondFrame": 1153449
+    },
+    {
+      "sample": 7,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 1154201,
+      "eventTime": 1154193,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 1154203,
+      "rowsAfter": 200,
+      "secondFrame": 1154230
+    },
+    {
+      "sample": 8,
+      "target": "Changes",
+      "trusted": true,
+      "input": 1155070,
+      "eventTime": 1155069,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 1155085,
+      "rowsAfter": 200,
+      "secondFrame": 1155120.0000000002
+    },
+    {
+      "sample": 9,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 1155976,
+      "eventTime": 1155975.0000000002,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 1155978,
+      "rowsAfter": 200,
+      "secondFrame": 1156011
+    },
+    {
+      "sample": 10,
+      "target": "Changes",
+      "trusted": true,
+      "input": 1156764.0000000002,
+      "eventTime": 1156758,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 1156779,
+      "rowsAfter": 200,
+      "secondFrame": 1156814
+    },
+    {
+      "sample": 11,
+      "target": "Workspace",
+      "trusted": true,
+      "input": 1157570,
+      "eventTime": 1157569,
+      "rowsBefore": 200,
+      "viewport": [900, 398],
+      "commit": 1157573,
+      "rowsAfter": 200,
+      "secondFrame": 1157598
+    },
+    {
+      "sample": 12,
+      "target": "Changes",
+      "trusted": true,
+      "input": 1158351,
+      "eventTime": 1158344,
+      "rowsBefore": 0,
+      "viewport": [900, 398],
+      "commit": 1158366,
+      "rowsAfter": 200,
+      "secondFrame": 1158400
+    }
+  ]
+}

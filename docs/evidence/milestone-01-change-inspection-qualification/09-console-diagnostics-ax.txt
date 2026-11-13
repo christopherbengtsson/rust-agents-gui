@@ -1,0 +1,219 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 button Click to show 1 error in the Console
+			10 tab group (selectable)
+				11 tab (selectable) Elements
+				12 tab (selected) Console
+				13 tab (selectable) Sources
+				14 tab (selectable) Network
+				15 tab (selectable) Timelines
+				16 tab (selectable) Storage
+				17 tab (selectable) Graphics
+				18 tab (selectable) Show hidden tabs…
+				19 tab (selectable) Search (⇧⌘F)
+				20 tab (selectable) Settings (⌘,)
+			21 container Console
+				22 search text field (settable)  
+				23 button (disabled) Find Previous (⇧⌘G)
+				24 button (disabled) Find Next (⌘G)
+				25 text All
+				26 text Evaluations
+				27 text Errors
+				28 text Warnings
+				29 text Logs
+				30 text Debugs
+				31 button Other filter options…
+				32 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				33 button Run Console Snippet…
+				34 button Collect garbage
+				35 button Clear log (⌘K or ⌃L)
+				36 container
+					37 text Console opened at 3:40:36 PM
+					38 image
+					39 container
+						40 image
+						41 text Module Code  — 
+						42 link client:934, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:934:15
+Originally http://127.0.0.1:1420/@vite/client:934:15
+					43 text [vite] connecting...
+					44 image
+					45 container
+						46 image
+						47 text handleMessage  — 
+						48 link client:1043, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:1043:18
+Originally http://127.0.0.1:1420/@vite/client:1043:18
+					49 text [vite] connected.
+					50 image
+					51 text 2
+					52 link client:655, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:655:23
+Originally http://127.0.0.1:1420/@vite/client:655:23
+					53 text [vite]
+					54 text  – 
+					55 text "hot updated: /src/style.css"
+					56 image
+					57 container
+						58 image
+						59 text invalidate  — 
+						60 link client:523, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:523:31
+Originally http://127.0.0.1:1420/@vite/client:523:31
+					61 text [vite]
+					62 text  – 
+					63 text "invalidate /src/components/ui/tabs.tsx: Could not Fast Refresh (\"tabsListVariants\" export is incompatible). Learn more a…"
+					64 image
+					65 link client:655, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:655:23
+Originally http://127.0.0.1:1420/@vite/client:655:23
+					66 text [vite]
+					67 text  – 
+					68 text "hot updated: /src/components/ui/tabs.tsx"
+					69 image
+					70 link client:655, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:655:23
+Originally http://127.0.0.1:1420/@vite/client:655:23
+					71 text [vite]
+					72 text  – 
+					73 text "hot updated: /src/style.css"
+					74 image
+					75 link client:655, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:655:23
+Originally http://127.0.0.1:1420/@vite/client:655:23
+					76 text [vite]
+					77 text  – 
+					78 text "hot updated: /src/components/blocks/workspace-changes.tsx"
+					79 image
+					80 text 2
+					81 link client:655, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:655:23
+Originally http://127.0.0.1:1420/@vite/client:655:23
+					82 text [vite]
+					83 text  – 
+					84 text "hot updated: /src/style.css"
+					85 image
+					86 text Unhandled Promise Rejection: webview.internal_toggle_devtools not allowed. Permissions associated with this command: core:webview:allow-internal-toggle-devtools, core:webview:default
+					87 image
+					88 text Selected Element
+					89 image
+					90 outline (selectable)
+						91 row (selectable) Description: <span>​Uncommitted changes​</span>, Value: <span>​Uncommitted changes​</span>
+<
+span
+>
+Uncommitted changes
+<
+/span
+>
+					92 text  = $1
+					93 image
+					94 link client:655, Value: 127.0.0.1:1420/@vite/client, Help: Located at http://127.0.0.1:1420/@vite/client:655:23
+Originally http://127.0.0.1:1420/@vite/client:655:23
+					95 text [vite]
+					96 text  – 
+					97 text "hot updated: /src/style.css"
+					98 image
+					99 text JSON.stringify({visibility:document.visibilityState,focus:document.hasFocus(),height:innerHeight,width:innerWidth,now:performance.now()})
+					100 image
+					101 text "
+					102 text {\"visibility\":\"visible\",\"focus\":false,\"height\":148,\"width\":900,\"now\":265466}
+					103 text "
+					104 text  = $2
+			105 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			106 container
+	107 scroll area
+		108 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			109 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			110 container Repository sidebar
+				111 text Agent Workspace
+				112 container Repositories
+					113 heading Repositories, Value: 2
+						114 text Repositories
+					115 content list
+						116 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							117 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							118 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							119 button Create workspace in Inspection Alpha
+							120 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							121 text Available
+							122 content list
+								123 button kristine-lilly, Help: Workspace ready
+				124 pop up button Add repository
+				125 text Connected
+				126 pop up button Connection details
+			127 container
+				128 container
+					129 heading kristine-lilly, Value: 1
+						130 text kristine-lilly
+					131 button Refresh status
+				132 container Selected repository
+					133 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					134 text Repository available
+				135 text Uncommitted changes
+				136 button Refresh changes
+				137 button (expanded) Hide changed files, Secondary Actions: Collapse
+				138 container
+					139 text Compared with HEAD  0c47e519f2a2a6e3c11995a11958340eafafa5a7  ·  13 changed files
+				140 tab group (selectable) Workspace views
+					141 tab (selected) Workspace
+					142 tab (selectable) Changes
+				143 container Workspace
+					144 container Selected workspace
+						145 text Workspace ready Codex
+						146 heading Your workspace is ready, Value: 2
+							147 text Your workspace is ready
+						148 text kristine-lilly
+						149 description list
+							150 text Branch
+							151 text workspace/kristine-lilly
+							152 text Workspace folder
+							153 text /private/tmp/agent-workspace-05c-66onln_j/state/workspaces/inspection-alpha/kristine-lilly/checkout
+							154 text Local base
+							155 text refs/heads/main · 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+							156 text Branch artifact
+							157 text Created by this action
+							158 text Folder artifact
+							159 text Worktree created
+						160 container
+							161 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				162 splitter Resize changed files, Value: 68
+				163 container Changed files
+					164 heading Changed files, Value: 2
+						165 text Changed files
+					166 container
+						167 toggle button delete.txt .D, Help: delete.txt, Value: off
+						168 toggle button text.txt .M, Help: text.txt, Value: on
+						169 toggle button binary.bin ??, Help: binary.bin, Value: off
+						170 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						171 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						172 toggle button limited.txt ??, Help: limited.txt, Value: off
+						173 container Symbolic link
+							174 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							175 text Symbolic link
+						176 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						177 toggle button new.txt ??, Help: new.txt, Value: off
+						178 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						179 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						180 container Content exceeds the read limit
+							181 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							182 text Content exceeds the read limit
+						183 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					184 button First page
+					185 button (disabled) Next files
+				186 container
+					187 text Local workspace Inspection Alpha
+		188 scroll bar (settable, float) 0
+	189 close button
+	190 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	191 minimize button
+	192 text Agent Workspace
+193 menu bar
+	194 Inspection Qualification
+	195 File
+	196 Edit
+	197 View
+	198 Window
+	199 Help
+
+The focused UI element is 105 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

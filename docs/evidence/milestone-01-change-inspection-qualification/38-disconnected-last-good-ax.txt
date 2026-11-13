@@ -1,0 +1,109 @@
+Window: "Agent Workspace", App: Inspection Qualification.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: 127.0.0.1:1420/
+			3 link Skip to workspace, Value: 127.0.0.1:1420/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta Available
+							11 button Inspection Beta, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							12 button (expanded) Toggle details for Inspection Beta, Secondary Actions: Collapse
+							13 button Create workspace in Inspection Beta
+							14 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Beta
+							15 text Available
+							16 content list
+								17 button yuto-nagatomo, Help: Workspace ready
+						18 container /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha Available
+							19 button Inspection Alpha, Help: /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							20 button (expanded) Toggle details for Inspection Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Inspection Alpha
+							22 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+							23 text Available
+							24 content list
+								25 button kristine-lilly, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading kristine-lilly, Value: 1
+					31 text kristine-lilly
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha
+					35 text Repository available
+				36 text Uncommitted changes
+				37 button Refresh changes
+				38 button (expanded) Hide changed files, Secondary Actions: Collapse
+				39 text Compared with HEAD 
+				40 text 0c47e519f2a2a6e3c11995a11958340eafafa5a7
+				41 text  · 
+				42 text 13
+				43 text changed files
+				44 text Change inspection needs attention
+				45 text Workspace reply unavailable: Supervisor frame deadline exceeded. Refresh its recorded action status; this request has not been replayed.
+				46 text Showing the last-good comparison; it may be stale.
+				47 tab group (selectable) Workspace views
+					48 tab (selectable) Workspace
+					49 tab (selected) Changes
+				50 container Changes
+					51 container Selected file changes
+						52 heading text.txt, Value: 2
+							53 text text.txt
+						54 container
+							55 text Showing the last-good preview against HEAD 0c47e519f2a2a6e3c11995a11958340eafafa5a7 ; it may be stale.
+						56 container Unified file diff
+							57 container
+								58 container Old line
+								59 container New line
+								60 text @@ -1 +1 @@
+								61 container Old line
+									62 text 1
+								63 container New line
+								64 text original text
+								65 container Old line
+								66 container New line
+									67 text 1
+								68 text third edit after settled preview
+				69 splitter Resize changed files, Value: 68
+				70 container Changed files
+					71 heading Changed files, Value: 2
+						72 text Changed files
+					73 container
+						74 toggle button delete.txt .D, Help: delete.txt, Value: off
+						75 toggle button text.txt .M, Help: text.txt, Value: on
+						76 toggle button binary.bin ??, Help: binary.bin, Value: off
+						77 toggle button crlf.txt ??, Help: crlf.txt, Value: off
+						78 toggle button empty-new.txt ??, Help: empty-new.txt, Value: off
+						79 toggle button limited.txt ??, Help: limited.txt, Value: off
+						80 container Symbolic link
+							81 toggle button link.txt ?? Symbolic link, Help: link.txt, Value: off
+							82 text Symbolic link
+						83 toggle button Value: off, long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt ??, Help: long-directory-long-directory-long-directory-long-directory-long-directory-/nested-directory-nested-directory-nested-directory-nested-directory-/long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-long-file-name-.txt
+						84 toggle button new.txt ??, Help: new.txt, Value: off
+						85 toggle button no-newline.txt ??, Help: no-newline.txt, Value: off
+						86 toggle button non-utf8.txt ??, Help: non-utf8.txt, Value: off
+						87 container Content exceeds the read limit
+							88 toggle button oversized-file.txt ?? Content exceeds the read limit, Help: oversized-file.txt, Value: off
+							89 text Content exceeds the read limit
+						90 toggle button oversized-row.txt ??, Help: oversized-row.txt, Value: off
+					91 button First page
+					92 button (disabled) Next files
+				93 text Local workspace
+				94 text Inspection Alpha
+	95 close button
+	96 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	97 minimize button
+	98 text Agent Workspace
+99 menu bar
+	100 Inspection Qualification
+	101 File
+	102 Edit
+	103 View
+	104 Window
+	105 Help
+
+The focused UI element is 75 toggle button text.txt .M, Help: text.txt, Value: on

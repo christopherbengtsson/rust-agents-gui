@@ -7,7 +7,10 @@ use crate::{
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{
     io::{self, BufRead, BufReader, Read, Write},
-    os::unix::{net::UnixStream, process::CommandExt},
+    os::{
+        fd::AsRawFd,
+        unix::{net::UnixStream, process::CommandExt},
+    },
     path::{Path, PathBuf},
     process::{Command, Stdio},
     time::{Duration, Instant},
@@ -433,6 +436,7 @@ fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
 trait FrameStream: Read + Write {
     fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()>;
     fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()>;
+    fn wait_readable(&self, timeout: Duration) -> io::Result<()>;
 }
 impl FrameStream for UnixStream {
     fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
@@ -440,6 +444,35 @@ impl FrameStream for UnixStream {
     }
     fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
         UnixStream::set_write_timeout(self, timeout)
+    }
+    fn wait_readable(&self, timeout: Duration) -> io::Result<()> {
+        // Changing SO_RCVTIMEO after peer close fails on macOS even while a
+        // complete reply remains buffered. Poll preserves the frame deadline
+        // without changing socket options between fragments.
+        let milliseconds = i32::try_from(
+            timeout.as_millis() + u128::from(!timeout.subsec_nanos().is_multiple_of(1_000_000)),
+        )
+        .map_err(|_| {
+            io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "Frame timeout exceeds poll budget",
+            )
+        })?;
+        let mut descriptor = libc::pollfd {
+            fd: self.as_raw_fd(),
+            events: libc::POLLIN,
+            revents: 0,
+        };
+        // SAFETY: descriptor is initialized, points to one live pollfd, and
+        // the borrowed UnixStream owns its fd throughout this bounded call.
+        match unsafe { libc::poll(&mut descriptor, 1, milliseconds) } {
+            -1 => Err(io::Error::last_os_error()),
+            0 => Err(io::Error::new(
+                io::ErrorKind::TimedOut,
+                "Supervisor frame deadline exceeded",
+            )),
+            _ => Ok(()), // Read buffered bytes or obtain the socket's EOF/error.
+        }
     }
 }
 
@@ -461,13 +494,16 @@ fn read_frame_with_clock<T: DeserializeOwned>(
     let mut frame = Vec::new();
     // read_until alone would allow an unbounded peer-controlled allocation.
     loop {
-        let remaining = deadline.checked_duration_since(now()).ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::TimedOut,
-                "Supervisor frame deadline exceeded",
-            )
-        })?;
-        reader.get_ref().set_read_timeout(Some(remaining))?;
+        let remaining = deadline
+            .checked_duration_since(now())
+            .filter(|remaining| !remaining.is_zero())
+            .ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "Supervisor frame deadline exceeded",
+                )
+            })?;
+        reader.get_ref().wait_readable(remaining)?;
         let available = reader.fill_buf()?;
         if available.is_empty() {
             return Err(io::Error::new(

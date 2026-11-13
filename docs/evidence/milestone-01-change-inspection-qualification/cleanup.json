@@ -1,0 +1,25 @@
+{
+  "timestamp": 1794583568.949656,
+  "packaged_desktop_quit_observed_via_native_menu": true,
+  "cohort_processes_explicitly_terminated": [
+    {
+      "pid": 54285,
+      "command": "/private/tmp/agent-workspace-05c-66onln_j/Inspection Packaged Qualification.app/Contents/Resources/workspace-supervisor /private/tmp/agent-workspace-05c-66onln_j/state"
+    },
+    {
+      "pid": 54912,
+      "command": "/private/tmp/agent-workspace-05c-66onln_j/Inspection Qualification.app/Contents/MacOS/workspace-desktop"
+    }
+  ],
+  "static_server_pid": 37308,
+  "original_files_preserved": {
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha/text.txt": true,
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha/delete.txt": true,
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Alpha/empty.txt": true,
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta/text.txt": true,
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta/delete.txt": true,
+    "/private/tmp/agent-workspace-05c-66onln_j/Inspection Beta/empty.txt": true
+  },
+  "provider_submissions": 0,
+  "scope_note": "Supervisor shutdown-on-Quit belongs to ticket09; fixture owner explicitly stopped after desktop Quit. Only exact private fixture executable/state paths signaled."
+}

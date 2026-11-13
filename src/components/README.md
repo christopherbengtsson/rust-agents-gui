@@ -221,7 +221,10 @@ retained observations remain readable and marked stale.
   position. No highlighting or HTML rendering is enabled.
 - **Foundation additions:** Tabs, Resizable, Scroll Area and Code Block came from
   shadcn base-nova through the project runner. Existing compact Button source was
-  preserved. Scroll Area supplies both scrollbars and omits an unused React
+  preserved. Tabs forwards orientation to Base UI and uses explicit
+  `data-[orientation=…]` selectors because this stylesheet does not define the
+  registry’s shorthand orientation variants. Scroll Area uses the same explicit
+  orientation selectors for track sizing and supplies both scrollbars and omits an unused React
   import. CodeBlockContent omits upstream's extra keyboard stop; Scroll Area's
   viewport owns keyboard scrolling. New diff appearance uses shared semantic
   roles in the global stylesheet.
