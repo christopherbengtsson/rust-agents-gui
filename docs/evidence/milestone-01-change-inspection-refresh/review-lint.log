@@ -1,0 +1,4 @@
+$ oxlint src --max-warnings 0 --report-unused-disable-directives-severity warn
+real 0.09
+user 0.09
+sys 0.03

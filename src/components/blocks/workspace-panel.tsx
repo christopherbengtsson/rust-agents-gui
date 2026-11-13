@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { CircleAlert, FolderGit2, RefreshCw } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,8 @@ export function WorkspacePanel({
   repositories: Repositories;
   workspaces: Workspaces;
 }) {
+  // Keep the physical IPC lane alive across keyed workspace presentation resets.
+  const [changeReader] = useState(() => new WorkspaceChangesReader());
   const details = workspaces.selected ? (
     <WorkspaceDetails
       workspace={workspaces.selected}
@@ -161,6 +165,7 @@ export function WorkspacePanel({
             <WorkspaceInspection
               key={workspaces.selected.id}
               workspaceId={workspaces.selected.id}
+              reader={changeReader}
               owner={
                 connection.state === "connected"
                   ? connection.observation.snapshot.cursor.owner

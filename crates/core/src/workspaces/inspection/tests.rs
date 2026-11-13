@@ -40,6 +40,12 @@ struct Effects<'a> {
     fail: bool,
     reads: usize,
     file: FileEvidence,
+    heads: VecDeque<Result<String>>,
+    statuses: VecDeque<Result<Vec<u8>>>,
+    evidence: VecDeque<Result<FileEvidence>>,
+    read_failure: Option<RepositoryError>,
+    diff_failure: Option<RepositoryError>,
+    diffs: usize,
 }
 impl<'a> Effects<'a> {
     fn new(shared: &'a Mutex<OwnerState>) -> Self {
@@ -50,6 +56,12 @@ impl<'a> Effects<'a> {
             patch: b"@@ -1 +1 @@\n-old\n+new\n".to_vec(),
             fail: false,
             reads: 0,
+            heads: VecDeque::new(),
+            statuses: VecDeque::new(),
+            evidence: VecDeque::new(),
+            read_failure: None,
+            diff_failure: None,
+            diffs: 0,
             file: FileEvidence::Regular {
                 device: 1,
                 inode: 2,
@@ -75,21 +87,32 @@ impl InspectionEffects for Effects<'_> {
         if self.fail {
             Err(invalid("Injected Git failure"))
         } else {
-            Ok("a".repeat(40))
+            self.heads.pop_front().unwrap_or_else(|| Ok("a".repeat(40)))
         }
     }
     fn status(&mut self, _: &Path) -> Result<Vec<u8>> {
-        Ok(self.status.clone())
+        self.statuses
+            .pop_front()
+            .unwrap_or_else(|| Ok(self.status.clone()))
     }
     fn evidence(&mut self, _: &Path, _: &[u8]) -> Result<FileEvidence> {
-        Ok(self.file.clone())
+        self.evidence
+            .pop_front()
+            .unwrap_or_else(|| Ok(self.file.clone()))
     }
     fn read(&mut self, _: &Path, _: &[u8]) -> Result<Vec<u8>> {
         self.reads += 1;
-        Ok(self.contents.clone())
+        match &self.read_failure {
+            Some(error) => Err(error.clone()),
+            None => Ok(self.contents.clone()),
+        }
     }
     fn diff(&mut self, _: &Path, _: &str, _: &[u8]) -> Result<Vec<u8>> {
-        Ok(self.patch.clone())
+        self.diffs += 1;
+        match &self.diff_failure {
+            Some(error) => Err(error.clone()),
+            None => Ok(self.patch.clone()),
+        }
     }
 }
 fn observation(reply: WorkspaceReply) -> ChangesObservation {
@@ -666,4 +689,544 @@ fn unified_rows_keep_source_numbers_and_missing_newline_markers() {
     assert_eq!((rows[3].old_line, rows[3].new_line), (None, Some(8)));
     assert_eq!(rows[4].kind, RowKind::NoNewline);
     assert!(parse_diff(b"@@ -7,2 +7,2 @@\n-short\n").is_err());
+}
+
+#[test]
+fn refreshed_comparisons_invalidate_queued_previews_before_effects() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    let page = refreshed(&shared, &workspace, &repository, &mut effects);
+    let target = PreviewTarget {
+        workspace_id: workspace.id,
+        comparison_id: page.comparison_id,
+        file_id: page.files[0].id,
+    };
+    {
+        let mut state = shared.lock().unwrap();
+        state
+            .inspections
+            .changes(workspace.clone(), repository.clone(), true, None, None)
+            .unwrap();
+        state
+            .inspections
+            .preview(workspace.clone(), repository.clone(), target.clone(), true)
+            .unwrap();
+    }
+    assert!(process_inspection(&shared, &mut effects)); // New comparison precedes old queued preview.
+    assert!(!process_inspection(&shared, &mut effects));
+    assert_eq!(effects.reads, 0);
+    let mut state = shared.lock().unwrap();
+    assert!(
+        state
+            .inspections
+            .preview(workspace, repository, target, false)
+            .is_err()
+    );
+    let retained = state.inspections.records[0].preview.as_ref().unwrap();
+    assert_eq!(retained.phase, InspectionPhase::Failed);
+    assert_eq!(retained.error.as_ref().unwrap().code, ErrorCode::Conflict);
+}
+
+fn load_preview(
+    shared: &Mutex<OwnerState>,
+    workspace: &Workspace,
+    repository: &RepositoryRecord,
+    target: &PreviewTarget,
+    effects: &mut Effects<'_>,
+) -> PreviewObservation {
+    shared
+        .lock()
+        .unwrap()
+        .inspections
+        .preview(workspace.clone(), repository.clone(), target.clone(), true)
+        .unwrap();
+    assert!(process_inspection(shared, effects));
+    let WorkspaceReply::ChangePreview { observation } = shared
+        .lock()
+        .unwrap()
+        .inspections
+        .preview(workspace.clone(), repository.clone(), target.clone(), false)
+        .unwrap()
+    else {
+        panic!("preview observation expected")
+    };
+    observation
+}
+
+#[test]
+fn refreshed_same_status_keeps_file_identity_and_replaces_selected_content() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    let first = refreshed(&shared, &workspace, &repository, &mut effects);
+    let mut target = PreviewTarget {
+        workspace_id: workspace.id,
+        comparison_id: first.comparison_id,
+        file_id: first.files[0].id,
+    };
+    let old = load_preview(&shared, &workspace, &repository, &target, &mut effects)
+        .preview
+        .unwrap();
+    effects.contents = b"further edit\n".to_vec();
+    effects.patch = b"@@ -1 +1 @@\n-old\n+further edit\n".to_vec();
+    effects.file = FileEvidence::Regular {
+        device: 1,
+        inode: 2,
+        size: 13,
+        modified: (4, 0),
+        changed: (4, 0),
+    };
+    let next = refreshed(&shared, &workspace, &repository, &mut effects);
+    assert_ne!(first.comparison_id, next.comparison_id);
+    assert_eq!(first.files[0].id, next.files[0].id);
+    assert_eq!(
+        first.files[0].worktree_status,
+        next.files[0].worktree_status
+    );
+    assert!(
+        shared
+            .lock()
+            .unwrap()
+            .inspections
+            .preview(workspace.clone(), repository.clone(), target.clone(), false)
+            .is_err()
+    );
+    target.comparison_id = next.comparison_id;
+    let new = load_preview(&shared, &workspace, &repository, &target, &mut effects)
+        .preview
+        .unwrap();
+    assert_eq!(old.rows[2].text, "new");
+    assert_eq!(new.rows[2].text, "further edit");
+    assert_eq!(new.comparison_id, next.comparison_id);
+}
+
+#[test]
+fn supplied_read_and_diff_failures_retain_last_good_then_clear_on_success() {
+    for fail_read in [true, false] {
+        let shared = shared();
+        let (workspace, repository) = fixture();
+        let mut effects = Effects::new(&shared);
+        let page = refreshed(&shared, &workspace, &repository, &mut effects);
+        let mut target = PreviewTarget {
+            workspace_id: workspace.id,
+            comparison_id: page.comparison_id,
+            file_id: page.files[0].id,
+        };
+        let good = load_preview(&shared, &workspace, &repository, &target, &mut effects)
+            .preview
+            .unwrap();
+        let next = refreshed(&shared, &workspace, &repository, &mut effects);
+        target.comparison_id = next.comparison_id;
+        if fail_read {
+            effects.read_failure = Some(invalid("Supplied read failure"));
+        } else {
+            effects.diff_failure = Some(invalid("Supplied Git output-budget failure"));
+        }
+        let failure = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+        assert_eq!(failure.phase, InspectionPhase::Failed);
+        let retained = failure.preview.unwrap();
+        assert_eq!(retained.comparison_id, good.comparison_id);
+        assert_eq!(retained.rows, good.rows);
+        assert!(failure.error.is_some());
+        effects.read_failure = None;
+        effects.diff_failure = None;
+        let recovered = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+        assert_eq!(recovered.phase, InspectionPhase::Ready);
+        assert!(recovered.error.is_none());
+        assert_eq!(recovered.preview.unwrap().comparison_id, next.comparison_id);
+    }
+}
+
+#[test]
+fn supplied_content_outcomes_keep_unsupported_empty_and_net_cancellation_distinct() {
+    for (status, contents, patch, expected, note) in [
+        (
+            b"? added\0".as_slice(),
+            b"\0binary".as_slice(),
+            b"".as_slice(),
+            Some(UnsupportedContent::Binary),
+            None,
+        ),
+        (
+            b"? added\0",
+            b"bad \xff",
+            b"",
+            Some(UnsupportedContent::NonUtf8),
+            None,
+        ),
+        (
+            b"1 .M N... 100644 100644 100644 a b text.txt\0",
+            b"new\n",
+            b"Binary files a/text.txt and b/text.txt differ\n",
+            Some(UnsupportedContent::Binary),
+            None,
+        ),
+        (
+            b"1 .M N... 100644 100644 100644 a b text.txt\0",
+            b"new\n",
+            b"@@ -1 +1 @@\n-old \xff\n+new\n",
+            Some(UnsupportedContent::NonUtf8),
+            None,
+        ),
+        (
+            b"1 MM N... 100644 100644 100644 a b text.txt\0",
+            b"new\n",
+            b"",
+            None,
+            Some("No net text change against HEAD. Staged and unstaged changes may cancel."),
+        ),
+        (
+            b"1 M. N... 100644 100755 100755 a b text.txt\0",
+            b"new\n",
+            b"diff --git a/text.txt b/text.txt\nold mode 100644\nnew mode 100755\n",
+            None,
+            Some("Metadata-only change."),
+        ),
+        (
+            b"1 A. N... 000000 100644 100644 a b empty\0",
+            b"",
+            b"diff --git a/empty b/empty\nnew file mode 100644\n",
+            None,
+            Some("Empty added file."),
+        ),
+    ] {
+        let shared = shared();
+        let (workspace, repository) = fixture();
+        let mut effects = Effects::new(&shared);
+        effects.status = status.to_vec();
+        effects.contents = contents.to_vec();
+        effects.patch = patch.to_vec();
+        let page = refreshed(&shared, &workspace, &repository, &mut effects);
+        let target = PreviewTarget {
+            workspace_id: workspace.id,
+            comparison_id: page.comparison_id,
+            file_id: page.files[0].id,
+        };
+        let result = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+        assert_eq!(result.phase, InspectionPhase::Ready);
+        assert!(result.error.is_none());
+        let preview = result.preview.unwrap();
+        assert_eq!(preview.unsupported, expected);
+        assert_eq!(preview.note.as_deref(), note);
+        assert!(preview.rows.is_empty());
+        assert_eq!(page.total, 1); // An empty comparison is not a clean inventory.
+    }
+}
+
+#[test]
+fn line_endings_and_untracked_missing_final_newline_preserve_bytes_and_numbers() {
+    let rows = parse_diff(b"@@ -1 +1 @@\n-old\r\n+new\n").unwrap();
+    assert_eq!(rows[1].text, "old\r");
+    assert_eq!(rows[2].text, "new");
+    assert_eq!((rows[1].old_line, rows[2].new_line), (Some(1), Some(1)));
+    for content in [b"one\r\ntwo".as_slice(), b"one\ntwo", b"one\n", b"", b"\n"] {
+        let shared = shared();
+        let (workspace, repository) = fixture();
+        let mut effects = Effects::new(&shared);
+        effects.status = b"? added\0".to_vec();
+        effects.contents = content.to_vec();
+        let page = refreshed(&shared, &workspace, &repository, &mut effects);
+        let target = PreviewTarget {
+            workspace_id: workspace.id,
+            comparison_id: page.comparison_id,
+            file_id: page.files[0].id,
+        };
+        let p = load_preview(&shared, &workspace, &repository, &target, &mut effects)
+            .preview
+            .unwrap();
+        let added: Vec<_> = p.rows.iter().filter(|r| r.kind == RowKind::Added).collect();
+        match content {
+            b"one\r\ntwo" => {
+                assert_eq!(added[0].text, "one\r");
+                assert_eq!(added[1].text, "two");
+                assert_eq!(added[1].new_line, Some(2));
+            }
+            b"one\ntwo" => {
+                assert_eq!(added[0].text, "one");
+                assert_eq!(added[1].new_line, Some(2));
+            }
+            b"one\n" => {
+                assert_eq!(added.len(), 1);
+                assert_eq!(added[0].text, "one");
+            }
+            b"" => {
+                assert!(added.is_empty());
+                assert_eq!(p.note.as_deref(), Some("Empty new file."));
+            }
+            b"\n" => {
+                assert_eq!(added.len(), 1);
+                assert_eq!(added[0].text, "");
+            }
+            _ => unreachable!(),
+        }
+        assert_eq!(
+            p.rows.iter().any(|r| r.kind == RowKind::NoNewline),
+            content.ends_with(b"two")
+        );
+        assert_eq!(effects.diffs, 0);
+    }
+}
+
+#[test]
+fn unsafe_inventory_entries_never_read_or_diff_as_text() {
+    for (status, evidence, expected) in [
+        (
+            b"1 .T N... 100644 100644 120000 a b link\0".as_slice(),
+            None,
+            UnsupportedContent::Symlink,
+        ),
+        (
+            b"1 .M S.M. 160000 160000 160000 a b module\0",
+            None,
+            UnsupportedContent::Submodule,
+        ),
+        (
+            b"u UU N... 100644 100644 100644 100644 a b c conflict\0",
+            None,
+            UnsupportedContent::Conflict,
+        ),
+        (b"? bad-\xff\0", None, UnsupportedContent::NonUtf8),
+        (
+            b"? special\0",
+            Some(FileEvidence::Unsupported(UnsupportedContent::SpecialFile)),
+            UnsupportedContent::SpecialFile,
+        ),
+        (
+            b"? link\0",
+            Some(FileEvidence::Unsupported(UnsupportedContent::Symlink)),
+            UnsupportedContent::Symlink,
+        ),
+        (
+            b"? huge\0",
+            Some(FileEvidence::Unsupported(UnsupportedContent::Oversized)),
+            UnsupportedContent::Oversized,
+        ),
+    ] {
+        let shared = shared();
+        let (workspace, repository) = fixture();
+        let mut effects = Effects::new(&shared);
+        effects.status = status.to_vec();
+        if let Some(evidence) = evidence {
+            effects.file = evidence;
+        }
+        let page = refreshed(&shared, &workspace, &repository, &mut effects);
+        let target = PreviewTarget {
+            workspace_id: workspace.id,
+            comparison_id: page.comparison_id,
+            file_id: page.files[0].id,
+        };
+        let result = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+        assert_eq!(result.phase, InspectionPhase::Ready);
+        assert_eq!(result.preview.unwrap().unsupported, Some(expected));
+        assert_eq!((effects.reads, effects.diffs), (0, 0));
+    }
+}
+
+#[test]
+fn head_status_and_selected_evidence_changes_reject_obsolete_preview_reads() {
+    enum Changed {
+        HeadBefore,
+        HeadAfter,
+        StatusBefore,
+        StatusAfter,
+        FileBefore,
+        FileAfter,
+    }
+    for changed in [
+        Changed::HeadBefore,
+        Changed::HeadAfter,
+        Changed::StatusBefore,
+        Changed::StatusAfter,
+        Changed::FileBefore,
+        Changed::FileAfter,
+    ] {
+        let shared = shared();
+        let (workspace, repository) = fixture();
+        let mut effects = Effects::new(&shared);
+        let page = refreshed(&shared, &workspace, &repository, &mut effects);
+        let target = PreviewTarget {
+            workspace_id: workspace.id,
+            comparison_id: page.comparison_id,
+            file_id: page.files[0].id,
+        };
+        let reads = match changed {
+            Changed::HeadBefore => {
+                effects.heads.push_back(Ok("b".repeat(40)));
+                0
+            }
+            Changed::HeadAfter => {
+                effects
+                    .heads
+                    .extend([Ok("a".repeat(40)), Ok("b".repeat(40))]);
+                1
+            }
+            Changed::StatusBefore => {
+                effects.statuses.push_back(Ok(Vec::new()));
+                0
+            }
+            Changed::StatusAfter => {
+                effects
+                    .statuses
+                    .extend([Ok(effects.status.clone()), Ok(Vec::new())]);
+                1
+            }
+            Changed::FileBefore => {
+                effects.evidence.push_back(Ok(FileEvidence::Missing));
+                0
+            }
+            Changed::FileAfter => {
+                effects.evidence.extend([
+                    Ok(effects.file.clone()),
+                    Ok(FileEvidence::Unsupported(UnsupportedContent::Symlink)),
+                ]);
+                1
+            }
+        };
+        let result = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+        assert_eq!(result.phase, InspectionPhase::Failed);
+        assert_eq!(result.error.unwrap().code, ErrorCode::Conflict);
+        assert!(result.preview.is_none());
+        assert_eq!(effects.reads, reads);
+    }
+}
+
+#[test]
+fn inventory_capture_failures_do_not_establish_clean_and_can_recover() {
+    enum Failure {
+        HeadChanged,
+        StatusChanged,
+        StatusRead,
+        FileEvidence,
+        TooMany,
+        TooLarge,
+        Incomplete,
+    }
+    for failure in [
+        Failure::HeadChanged,
+        Failure::StatusChanged,
+        Failure::StatusRead,
+        Failure::FileEvidence,
+        Failure::TooMany,
+        Failure::TooLarge,
+        Failure::Incomplete,
+    ] {
+        let shared = shared();
+        let (workspace, repository) = fixture();
+        let mut effects = Effects::new(&shared);
+        match failure {
+            Failure::HeadChanged => effects
+                .heads
+                .extend([Ok("a".repeat(40)), Ok("b".repeat(40))]),
+            Failure::StatusChanged => effects
+                .statuses
+                .extend([Ok(effects.status.clone()), Ok(Vec::new())]),
+            Failure::StatusRead => effects
+                .statuses
+                .push_back(Err(invalid("Supplied status failure"))),
+            Failure::FileEvidence => effects
+                .evidence
+                .push_back(Err(invalid("Supplied metadata failure"))),
+            Failure::TooMany => {
+                effects.status = (0..4097)
+                    .flat_map(|n| format!("? file{n}\0").into_bytes())
+                    .collect()
+            }
+            Failure::TooLarge => effects.status = vec![b'x'; CONTENT_BYTES + 1],
+            Failure::Incomplete => effects.status = b"? incomplete".to_vec(),
+        }
+        shared
+            .lock()
+            .unwrap()
+            .inspections
+            .changes(workspace.clone(), repository.clone(), true, None, None)
+            .unwrap();
+        assert!(process_inspection(&shared, &mut effects));
+        let failed = observation(
+            shared
+                .lock()
+                .unwrap()
+                .inspections
+                .changes(workspace.clone(), repository.clone(), false, None, None)
+                .unwrap(),
+        );
+        assert_eq!(failed.phase, InspectionPhase::Failed);
+        assert!(failed.error.is_some());
+        assert!(failed.page.is_none());
+        effects.status.clear();
+        effects.heads.clear();
+        effects.statuses.clear();
+        effects.evidence.clear();
+        let recovered = refreshed(&shared, &workspace, &repository, &mut effects);
+        assert_eq!(recovered.total, 0);
+        assert!(
+            shared.lock().unwrap().inspections.records[0]
+                .error
+                .is_none()
+        );
+    }
+}
+
+#[test]
+fn unusual_paths_keep_raw_identity_even_when_display_labels_collide() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    effects.status = b"? :(glob)*\t\n.txt\0? bad-\xff\0? bad-\xfe\0".to_vec();
+    let page = refreshed(&shared, &workspace, &repository, &mut effects);
+    assert_eq!(page.files[0].path, ":(glob)*\\t\\n.txt");
+    assert_eq!(page.files[1].path, page.files[2].path);
+    assert_ne!(page.files[1].id, page.files[2].id);
+    let state = shared.lock().unwrap();
+    let raw = &state.inspections.records[0]
+        .comparison
+        .as_ref()
+        .unwrap()
+        .files;
+    assert_eq!(raw[0].path, b":(glob)*\t\n.txt");
+    assert_eq!(raw[1].path, b"bad-\xff");
+    assert_eq!(raw[2].path, b"bad-\xfe");
+}
+
+#[test]
+fn acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    let page = refreshed(&shared, &workspace, &repository, &mut effects);
+    let target = PreviewTarget {
+        workspace_id: workspace.id,
+        comparison_id: page.comparison_id,
+        file_id: page.files[0].id,
+    };
+    effects.contents = vec![b'x'; CONTENT_BYTES + 1];
+    let p = load_preview(&shared, &workspace, &repository, &target, &mut effects)
+        .preview
+        .unwrap();
+    assert_eq!(p.unsupported, Some(UnsupportedContent::Oversized));
+    assert_eq!(effects.diffs, 0);
+    effects.contents = b"new\n".to_vec();
+    effects.patch = b"@@ -0,0 +1,300 @@\n".to_vec();
+    for n in 1..=300 {
+        effects.patch.extend(format!("+line {n}\n").bytes());
+    }
+    let next = refreshed(&shared, &workspace, &repository, &mut effects);
+    let target = PreviewTarget {
+        comparison_id: next.comparison_id,
+        ..target
+    };
+    let result = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+    let p = result.preview.as_ref().unwrap();
+    assert!(p.limited.is_some());
+    assert_eq!(p.rows.len(), 200);
+    assert_eq!(p.rows[199].text, "line 199");
+    assert_eq!(p.rows[199].new_line, Some(199));
+    assert!(
+        serde_json::to_vec(&WorkspaceReply::ChangePreview {
+            observation: result
+        })
+        .unwrap()
+        .len()
+            <= RESPONSE_BYTES
+    );
 }

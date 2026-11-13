@@ -856,6 +856,11 @@ pub(super) fn process_inspection(
         } => {
             let result = capture(workspace, repository, effects);
             if let Ok(mut state) = shared.lock() {
+                if result.is_ok() {
+                    state.inspections.pending.retain(|pending| {
+                        !matches!(pending, Job::Preview { workspace: queued, .. } if queued.id == workspace.id)
+                    });
+                }
                 if let Ok(record) = state.inspections.record(workspace.id) {
                     match result {
                         Ok(mut comparison) => {
@@ -867,6 +872,11 @@ pub(super) fn process_inspection(
                                         file.id = previous.id;
                                     }
                                 }
+                            }
+                            if let Some(preview) = &mut record.preview {
+                                preview.phase = InspectionPhase::Failed;
+                                preview.error = Some(expired());
+                                bound_failed_preview(preview);
                             }
                             record.comparison = Some(comparison);
                             record.phase = InspectionPhase::Ready;
@@ -892,6 +902,10 @@ pub(super) fn process_inspection(
             let result = acquire_preview(workspace, repository, target, comparison, file, effects);
             if let Ok(mut state) = shared.lock() {
                 if let Ok(record) = state.inspections.record(workspace.id)
+                    && record
+                        .comparison
+                        .as_ref()
+                        .is_some_and(|c| c.id == target.comparison_id)
                     && let Some(p) = record.preview.as_mut().filter(|p| p.target == *target)
                 {
                     match result {

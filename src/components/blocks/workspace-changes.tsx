@@ -31,6 +31,7 @@ import {
   SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { UnifiedDiff } from "@/components/primitives/unified-diff";
 import {
   useWorkspaceChanges,
@@ -53,17 +54,25 @@ const readNarrow = () => window.matchMedia(narrowQuery).matches;
 export function WorkspaceInspection({
   owner,
   workspaceId,
+  reader,
   children,
 }: {
   owner: string | undefined;
   workspaceId: string;
+  reader: WorkspaceChangesReader;
   children: ReactNode;
 }) {
   const [tab, setTab] = useState("workspace");
   const [collapsed, setCollapsed] = useState(false);
   const [sheet, setSheet] = useState(false);
   const narrow = useSyncExternalStore(subscribeNarrow, readNarrow);
-  const changes = useWorkspaceChanges(owner, workspaceId, tab === "changes");
+  const changes = useWorkspaceChanges(
+    owner,
+    workspaceId,
+    tab === "changes",
+    tab === "changes" || (narrow ? sheet : !collapsed),
+    reader,
+  );
   const panel = useRef<PanelImperativeHandle>(null);
   const position = useRef({ top: 0, left: 0 });
   const savePosition = useCallback((value: { top: number; left: number }) => {
@@ -88,11 +97,12 @@ export function WorkspaceInspection({
             disabled={
               !owner ||
               changes.loading ||
-              pendingInspection(changes.observation?.phase)
+              (pendingInspection(changes.observation?.phase) && !changes.error)
             }
             onClick={() => void changes.refresh()}
           >
-            {changes.loading || pendingInspection(changes.observation?.phase)
+            {changes.loading ||
+            (pendingInspection(changes.observation?.phase) && !changes.error)
               ? "Refreshing…"
               : "Refresh changes"}
           </Button>
@@ -343,6 +353,7 @@ function SelectedDiff({
           {(preview.comparison_id !==
             changes.observation?.page?.comparison_id ||
             changes.observation?.phase === "failed" ||
+            p.phase === "failed" ||
             changes.error) && (
             <p>
               Showing the last-good preview against HEAD {preview.head}; it may

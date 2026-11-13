@@ -1,0 +1,8 @@
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 4ms on 171 files using 12 threads.
+real 0.21
+user 0.17
+sys 0.07

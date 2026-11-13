@@ -1,0 +1,85 @@
+Final affected UI measurement: one warm-up + five warm runs
+Command: node node_modules/vitest/vitest.mjs run --maxWorkers=1
+Node: v26.13.1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  15:13:17
+   Duration  4.40s (tests 58%, environment 23%, import 18%, transform 1%)
+
+    Isolate  6 workers spawned · ~209ms startup each (spawn + environment, per file)
+             at least ~1.04s faster with isolate: false — reuses workers across files instead of one per file
+
+UI execution warm-up: 4.560698 s; exit 0
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  15:13:21
+   Duration  4.33s (tests 57%, environment 24%, import 18%, transform 1%)
+
+    Isolate  6 workers spawned · ~207ms startup each (spawn + environment, per file)
+             at least ~1.04s faster with isolate: false — reuses workers across files instead of one per file
+
+UI execution 1: 4.473797 s; exit 0
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  15:13:26
+   Duration  4.35s (tests 58%, environment 23%, import 18%, transform 1%)
+
+    Isolate  6 workers spawned · ~207ms startup each (spawn + environment, per file)
+             at least ~1.03s faster with isolate: false — reuses workers across files instead of one per file
+
+UI execution 2: 4.502980 s; exit 0
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  15:13:30
+   Duration  4.43s (tests 59%, environment 23%, import 17%, transform 1%)
+
+    Isolate  6 workers spawned · ~208ms startup each (spawn + environment, per file)
+             at least ~1.04s faster with isolate: false — reuses workers across files instead of one per file
+
+UI execution 3: 4.575267 s; exit 0
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  15:13:35
+   Duration  4.33s (tests 57%, environment 23%, import 18%, transform 1%)
+
+    Isolate  6 workers spawned · ~207ms startup each (spawn + environment, per file)
+             at least ~1.03s faster with isolate: false — reuses workers across files instead of one per file
+
+UI execution 4: 4.480164 s; exit 0
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  15:13:39
+   Duration  4.42s (tests 58%, environment 23%, import 18%, transform 1%)
+
+    Isolate  6 workers spawned · ~208ms startup each (spawn + environment, per file)
+             at least ~1.04s faster with isolate: false — reuses workers across files instead of one per file
+
+UI execution 5: 4.564558 s; exit 0
+Warm UI median 4.502980 s; range 4.473797–4.575267 s
+real 27.20
+user 23.71
+sys 3.30
