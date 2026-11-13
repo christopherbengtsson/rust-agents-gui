@@ -12,6 +12,14 @@
 
 **Coverage:** A6. Full changes against the workspace base and inline feedback remain deferred.
 
+**Execution:** Follow the [accepted change-inspection plan](../change-inspection-plan.md)
+on `feature/m01-change-inspection`, in order:
+[05a: manual inspection](05a-inspect-workspace-changes-manually.md) →
+[05b: reliable refresh](05b-refresh-workspace-changes-reliably.md) →
+[05c: qualification and review](05c-qualify-workspace-change-inspection.md).
+This ticket remains the acceptance parent; child completion alone does not check
+its original acceptance items.
+
 - [ ] Add change inspection as a focused product block within `WorkspacePanel`, with keyboard-reachable file selection, a readable selected-file diff and visible comparison identity; preserve access to workspace navigation.
 - [ ] Apply the shared empty/loading/error and unsupported-content patterns to the changes region. Keep long diffs/previews bounded and readable, and label a retained last-good result when refresh fails.
 - [ ] Show a changed-file list and readable text diffs for modifications, new files, and deletions in the selected workspace.
@@ -22,3 +30,19 @@
 - [ ] Unit-test workspace/comparison selection, parsing, classification, refresh and last-good retention with supplied Git bytes and file metadata/read outcomes. Cover newline, binary/non-UTF-8, symlink/submodule/size and preview-bound cases; test command/environment construction without running Git. Separately demonstrate desktop changed, clean, unsupported, refreshed and failed states with disposable fixture state; retain distinct evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.
+
+## Comments
+
+### 2026-11-13 — accepted plan and session split
+
+The user accepted one central Changes tab with a collapsible/resizable right-hand
+flat file list, unified bounded previews, Scroll Area and a narrow-window Sheet.
+Keep the full agreed presentation; simplify through one inspection owner within
+`workspaces` and bounded selected-file previews instead of diff pagination.
+Inactive heavy tab content unmounts while one observation owner retains reading
+context above it.
+
+The linked plan records decisions and dependencies for two implementation sessions
+and a separate actual-desktop qualification/review session, all on the same feature
+branch. This preparation implements no product behavior and claims no A6
+qualification; the acceptance items above remain unchecked.
