@@ -24,7 +24,7 @@ ownership and presentation for 05b to extend.
 
 ## Acceptance
 
-- [ ] A ready workspace has working Workspace/Changes tabs and the agreed
+- [x] A ready workspace has working Workspace/Changes tabs and the agreed
       independently collapsible/resizable right file list, Scroll Area and
       narrow-window Sheet. Selection opens the single Changes tab; existing
       navigation, details and recovery remain reachable.
@@ -44,7 +44,7 @@ ownership and presentation for 05b to extend.
       manual refresh retains and labels its last-good result rather than appearing
       clean. No saved workspace identity or original-checkout files are mutated by
       inspection, and no agent starts.
-- [ ] The inactive heavy tab content unmounts. One observation owner sits above
+- [x] The inactive heavy tab content unmounts. One observation owner sits above
       the tab content; ordinary tab switching retains selected-file reading context.
       Scroll Area works under the existing CSP without broad policy relaxation.
 - [x] Deterministic units cover the manual path, exact targets, text parsing and
@@ -101,3 +101,18 @@ no actual WebView qualification. Packaging, actual desktop/process inspection an
 native-provider checks were not performed; 05c owns that qualification. No live
 provider submissions occurred. Stop after 05a: 05b, 05c, parent 05 and Milestone 01
 remain open. Completed predecessor evidence is preserved.
+
+### 2026-11-13 — deferred desktop acceptance verified by 05c
+
+Checked the two remaining acceptance items against the completed
+[05c qualification evidence](../../../docs/evidence/milestone-01-change-inspection-qualification.md),
+tested at `23fb5e8e3a02886c44bde3f7989a8ec8510c6b16`.
+The actual WebView cohort verifies the tabs, collapsible/resizable file panel,
+Scroll Area, narrow-window Sheet, keyboard/focus behavior and navigation access.
+Controlled lifecycle coverage and desktop tab switching verify inactive heavy
+content unmounting, shared observation ownership and retained reading position;
+scrolling works under the existing CSP. The earlier handoff comment remains the
+historical record of what was unqualified during 05a.
+
+No new product changes or provider submissions were made for this tracker update.
+Milestone 01 and unrelated qualification remain open.
