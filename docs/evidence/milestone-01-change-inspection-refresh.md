@@ -4,7 +4,8 @@
 `feature/m01-change-inspection`, starting from 05a's recorded handoff at
 `029e2fb4a9a5f428ffe666cd87057d014c6a59c6`. Parent 05, actual desktop qualification,
 packaging (05c), and Milestone 01 remain open. No provider submissions occurred.
-The 05b completion comment links the implementation commit.
+Implementation commit: `50685d5cd8325d595a8868ce3b768638e6806f91`.
+The 05b completion comment links this evidence and the qualification handoff.
 
 ## Implemented behavior and ownership
 
