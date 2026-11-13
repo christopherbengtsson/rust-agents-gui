@@ -1,0 +1,55 @@
+$ node scripts/build.mjs
+    Finished `release` profile [optimized] target(s) in 0.04s
+$ tauri build --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ tsc --noEmit && vite build
+vite v8.3.8 building client environment for production...
+transforming...
+[plugin vite:react-compiler] `try`/`finally` without `catch` is not supported by React Compiler
+
+  > react-compiler(Todo): `try`/`finally` without `catch` is not supported by
+  | React Compiler
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/src/hooks/use-supervisor-connection.ts:54:5]
+ 53 |     pending.current = request;
+ 54 |     try {
+    :     ^|^
+    :      `-- Unsupported `try` starts here
+ 55 |       await readObservation().then((outcome) => {
+ 56 |         if (!mounted.current || pending.current !== request) return;
+ 57 |         if (outcome.ok)
+ 58 |           setConnection({
+ 59 |             state: "connected",
+ 60 |             observation: outcome.observation,
+ 61 |           });
+ 62 |         else
+ 63 |           setConnection((last) => ({
+ 64 |             state: "error",
+ 65 |             error: outcome.error,
+ 66 |             observation: last.observation,
+ 67 |           }));
+ 68 |       });
+ 69 |     } finally {
+    :      ^^^^|^^^^
+    :          `-- This `finally` clause requires unsupported control flow
+ 70 |       if (pending.current === request) pending.current = null;
+    `----
+  help: React Compiler cannot analyze this control flow. Refactor the
+        cleanup to avoid `finally`, or suppress this warning if this
+        function should remain uncompiled
+  note: React Compiler skipped optimizing this component or hook
+
+✓ 2344 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.27 kB
+dist/assets/index-CNgCq90z.css   65.46 kB │ gzip:  11.95 kB
+dist/assets/index-BpD5-zyI.js   344.56 kB │ gzip: 110.46 kB
+
+✓ built in 245ms
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/src-tauri)
+    Finished `release` profile [optimized] target(s) in 7.51s
+       Built application at: /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target/release/workspace-desktop
+    Bundling Agent Workspace.app (/Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target/release/bundle/macos/Agent Workspace.app)
+    Finished 1 bundle at:
+        /Users/christopherbengtsson/Documents/dev/rust-agents-gui-oxc/target/release/bundle/macos/Agent Workspace.app (10.40 MiB)

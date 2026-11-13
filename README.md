@@ -30,8 +30,9 @@ application state for qualification and never remove an active owner's lock.
 Read [testing and verification](docs/agents/verification.md) before selecting
 commands. The checked-out package scripts define available commands. Tickets
 01–02 predate that policy; their completed desktop/process evidence is retained.
-The current default test gate is unit-only, with controlled filesystem, process,
-transport and time outcomes. The verification foundation originally planned for
+The application test gate uses units with controlled filesystem, process,
+transport and time outcomes. The tooling gate also runs bounded native Oxlint CLI
+configuration checks against disposable source fixtures. The verification foundation originally planned for
 ticket 03 has been brought forward; repository registration remains unimplemented.
 
 | Command                         | Purpose                                                                                                                                                                                    |
@@ -40,7 +41,7 @@ ticket 03 has been brought forward; repository registration remains unimplemente
 | `corepack pnpm test:measure`    | Compile once; measure one warm-up and five warm executions of each unit harness.                                                                                                           |
 | `corepack pnpm compile`         | Check workspace compilation independently.                                                                                                                                                 |
 | `corepack pnpm check`           | TypeScript and Clippy, including retained qualification targets; no test execution.                                                                                                        |
-| `corepack pnpm format:check`    | Prettier and rustfmt checks.                                                                                                                                                               |
+| `corepack pnpm format:check`    | Oxfmt and rustfmt checks.                                                                                                                                                                  |
 | `corepack pnpm lint`            | Frontend Hook/compiler and JSX accessibility lint; toolkit Tauri dependency restrictions.                                                                                                  |
 | `corepack pnpm verify`          | Formatting, frontend lint, static checks and unit tests, each once; excludes packaging and process qualification.                                                                          |
 | `corepack pnpm qualify:process` | Opt in to inherited supervisor-process qualification using disposable private state.                                                                                                       |
@@ -76,3 +77,20 @@ See the [product contract](docs/MVP.md), [milestone status](docs/MILESTONE-01.md
 [bootstrap evidence](docs/evidence/milestone-01-bootstrap.md) and
 [discovery evidence](docs/evidence/milestone-01-discovery.md) and
 [UI foundation evidence](docs/evidence/milestone-01-ui-foundation.md).
+
+## Frontend tooling
+
+Oxfmt owns frontend/document formatting at width 80, with import, Tailwind-class
+and package-field sorting disabled. `.prettierignore` remains the shared ignore
+file; commands also pass `.gitignore`. Rust formatting stays with rustfmt.
+
+Oxlint runs native React Hooks/compiler and JSX accessibility checks plus direct
+Tauri dependency restrictions in toolkit layers. Warnings and unused suppressions
+fail lint. Explicit rule configuration avoids broadening scope with tool defaults.
+The table-cell role exception preserves the accepted `td role="gridcell"` case.
+
+Vite uses the experimental native React Compiler with recoverable diagnostics
+visible. `oxc-transform-react` is pinned to 0.156.0 for plugin-react 6.3.0's peer
+range. Unsupported constructs may remain unoptimized: the observation Hook keeps
+its `finally` cleanup. TypeScript checking remains separate. Compiler output and
+mocked IPC checks do not establish actual desktop behavior; see [migration evidence](docs/evidence/native-oxc-toolchain.md).
