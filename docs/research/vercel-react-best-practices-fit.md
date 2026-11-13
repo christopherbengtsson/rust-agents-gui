@@ -7,25 +7,34 @@
 
 ## Decision and authority
 
-Extend the existing [React engineering skill][local-skill] as the single entry
-point for everyday implementation and review in this repository. Bring in material
-gaps and resolve competing recommendations explicitly; do not install a second
-React skill or turn every applicable upstream suggestion into a requirement.
-Keep maintained instructions compact and put supporting recipes in the
-[React performance reference][local-reference]. This note records the comparison,
-rather than becoming another set of instructions to load for every frontend task.
+Maintain the existing [React engineering skill][local-skill] as the single entry
+point, with an indexed library of 44 individual `rules/` files containing
+explanations, incorrect/correct examples and primary sources. Provide a
+[generated full guide][local-guide] from that same inventory. The index and full
+guide are two reading formats, not competing policy or separately edited copies.
 
-Choices below follow the API or platform evidence and the intended application,
-not a preference for whichever text already exists. The [MVP][local-mvp] owns
-Rust/Tauri responsibilities; the [component guide][local-components] owns component
-layers and styling; [verification policy][local-verification] owns checks and
-qualification. Those requirements remain authoritative. The maintained React skill
-owns the implementation guidance after this change; this note is a dated source
-and decision record.
+**Follow-up criterion, 2026-11-13:** cover the installed stack and intended MVP,
+including useful existing conventions and conditional optimization recipes. This
+supersedes the earlier gap-only/compact-reference criterion and its omissions
+based solely on today's small UI or lack of an observed current defect. The
+[rule index][local-index] replaces the former `references/react-performance.md`
+organization. The finite inventory follows coherent decisions rather than
+matching upstream's count or making every sentence a separate file.
+
+Choices follow supported APIs, platform evidence and intended application
+responsibilities. The [MVP][local-mvp] owns Rust/Tauri responsibilities; the
+[component guide][local-components] owns layers, composition decisions, tokens and
+styling; [verification policy][local-verification] owns checks and qualification.
+The [shadcn skill][local-shadcn] owns toolkit lookup and detailed component
+workflows. Rules link to these authorities rather than duplicate their policy.
+No recipe authorizes new product behavior, dependencies or provider execution.
+This note records provenance, coverage and decisions; maintained instructions live
+in the index and its rule sources.
 
 ## Inspection scope and relevant baseline
 
-Both remote `main` SHAs were checked with non-mutating `git ls-remote` reads.
+In the original comparison, both remote `main` SHAs were checked with
+non-mutating `git ls-remote` reads.
 The repository main object was available locally, so its files could be inspected
 without treating the active workspace-creation feature branch as main. The
 comparison read the upstream skill index, all 70 individual rules, section
@@ -33,10 +42,17 @@ metadata, generated full guide, metadata, README and guide builder. It inspected
 repository AGENTS, MVP, verification policy, component guide, React skill,
 package/compiler/lint/TypeScript configuration, architecture ADR and a bounded
 sample of the existing observation and preference code. These are source reads,
-not a frontend performance audit.
+not a frontend performance audit. The follow-up re-read repository policy, MVP,
+component guide, package/compiler/TypeScript/WebView settings and this comparison,
+and consulted the official integration sources mapped below. It did not inspect
+RAT or exercise the application or providers.
 
 At the baseline, [package.json][local-package] specifies React/React DOM 19.3.1,
-Vite 8.3.8, TypeScript 7.0.2 and Tauri 2. The [Vite configuration][local-vite]
+Vite 8.3.8, TypeScript 7.0.2 and Tauri 2. Installed integrations also include
+Base UI 1.9.0, Tailwind 4.3.5, the Tauri dialog plugin, Lucide React,
+class-variance-authority and `cn`; verification uses Vitest 5, jsdom 31, React
+Testing Library 16 and user-event 14. The checked-in manifest and lockfile, not
+a rule example, determine available dependencies. The [Vite configuration][local-vite]
 enables React Compiler in infer mode, targets React 19, reports diagnostics and
 allows recoverable compiler bailouts. The browser build target is Safari 16.4;
 [TypeScript library declarations][local-tsconfig] are ES2022 plus DOM.
@@ -46,10 +62,12 @@ SWR or server-action dependency in the manifest. Tauri's official guidance descr
 a static frontend host, recommends Vite for React SPAs, and does not natively
 provide SSR. [Tauri frontend configuration][tauri-frontend]
 
-Main already uses shared observation ownership, concurrent independent reads,
+The inspected main baseline already uses shared observation ownership, concurrent
+independent reads,
 lazy preference initialization, validated preference shapes and request identity
 checks. Repository pages are bounded to 32 items in the inspected adapter. These
-observations prevent selling familiar practices as discovered defects.
+observations establish existing coverage; they do not remove those practices from
+the maintained inventory or establish that the growing MVP will be fast.
 [Connection observations][local-connection], [repository observations][local-repositories],
 [repository adapter/preferences][local-adapter]
 
@@ -77,52 +95,72 @@ pre-Compiler guidance. Its caveats and metadata are nevertheless inconsistent:
 rules, while the index enumerates 70. The SHA, rather than that version string,
 identifies this comparison.
 
-## Complete rule disposition
+## Complete upstream rule disposition
 
-Each upstream rule appears in exactly one matrix row. Cross-category grouping is
-intentional when the same actual decision resolves the recommendations. In
-particular, the nested-fetch server rule contains a general dependency-scheduling
-idea useful beyond RSC.
+Each of the 70 pinned upstream IDs appears once in the first column. A retained
+local choice now maps to named maintained files as well. **Retain** preserves the
+useful mechanism; **Adapt** gives its stack/ownership qualifications; **Exclude**
+identifies an actual architecture mismatch. Conditional optimization guidance is
+retained for relevant workloads without asserting a measured improvement or
+requiring speculative rewrites. Rule links are the maintained destinations.
 
-- **Local** retains the existing local choice with the rationale shown.
-- **Upstream** adopts the underlying upstream recommendation, with the stated scope.
-- **Merge** combines useful mechanisms with necessary local or API qualifications.
-- **Omit** leaves the recipe out of maintained everyday guidance. It does not ban
-  a later use justified by an actual feature or measurement.
-
-| Upstream rules | Existing local guidance or gap | Decision, rationale and primary evidence |
+| Pinned upstream rules | Maintained rule files | Disposition and rationale |
 | --- | --- | --- |
-| [async-cheap-condition-before-await][u-async-cheap-condition-before-await], [async-defer-await][u-async-defer-await] | Explicit intent paths and lifecycle checks; no specific unnecessary-await guidance. | **Merge.** Put cheap relevant guards before unnecessary reads and await only where needed. Preserve required authorization checks, errors, effects and ordering; reordered async work can change behavior. The upstream cheap-condition rule itself preserves fixed effect order. |
-| [async-api-routes][u-async-api-routes], [async-dependencies][u-async-dependencies], [async-parallel][u-async-parallel], [server-parallel-nested-fetching][u-server-parallel-nested-fetching] | Shared observation ownership; independent reads already use `Promise.all`. | **Merge.** Schedule independent observations concurrently and start dependent work as its input becomes available. Use native promises without a `better-all` mandate. Preserve target identity, failure handling, lifecycle and intentional sequencing; this is no authorization for parallel mutations or unlimited fan-out. The upstream dependency rule provides a native-promise alternative; [local observation code][local-repositories] demonstrates the concrete seam. |
-| [async-suspense-boundaries][u-async-suspense-boundaries] | Explicit stale/loading/error observations; no Suspense recipe. | **Merge.** Keep usable surrounding UI visible and locate a fallback around the unavailable surface. Use Suspense only with a supported source, such as lazy component code. Effect/event-handler IPC reads do not automatically suspend. Omit async RSC examples and uncached requests created during render. [React Suspense][react-suspense] |
-| [bundle-analyzable-paths][u-bundle-analyzable-paths], [bundle-conditional][u-bundle-conditional], [bundle-defer-third-party][u-bundle-defer-third-party], [bundle-dynamic-imports][u-bundle-dynamic-imports], [bundle-preload][u-bundle-preload] | No specific optional-code recipe. | **Merge.** For substantial optional UI, use module-scope React `lazy` or statically analyzable Vite `import()` paths, with loading/error ownership. Preload code on likely intent when useful; importing must not admit application work. Drop Next APIs, hydration framing and assumptions that telemetry is required. Do not split today's small controls speculatively. [React lazy][react-lazy], [Vite features][vite-features] |
-| [bundle-barrel-imports][u-bundle-barrel-imports] | Supported toolkit APIs and measure-before-optimizing guidance. | **Local.** Keep supported typed public imports and inspect actual bundle/build/dev costs before changing paths. Lucide documents named imports as tree-shakable; Vite prebundles dependencies. Upstream's Next/server cold-start figures do not establish desktop runtime cost. Its own warning about untyped deep paths supports checking exports rather than blindly rewriting imports. [Lucide React][lucide-react], [Vite features][vite-features] |
-| [server-after-nonblocking][u-server-after-nonblocking], [server-auth-actions][u-server-auth-actions], [server-cache-lru][u-server-cache-lru], [server-cache-react][u-server-cache-react], [server-dedup-props][u-server-dedup-props], [server-hoist-static-io][u-server-hoist-static-io], [server-no-shared-module-state][u-server-no-shared-module-state], [server-parallel-fetching][u-server-parallel-fetching], [server-serialization][u-server-serialization] | Rust core owns execution/storage; React presents typed observations. | **Omit.** These prescribe Next/SSR/RSC/request facilities absent from this frontend. Keep their recipes out rather than translating backend ownership into React. Rust caching/admission and IPC payload design remain decisions for their actual modules. This is a platform/ownership decision, not a claim that server authentication or payload bounds are unimportant. [Tauri][tauri-frontend], [MVP][local-mvp], [manifest][local-package] |
-| [client-event-listeners][u-client-event-listeners], [client-swr-dedup][u-client-swr-dedup] | One owner for shared observations; an actual external store may use `useSyncExternalStore`. | **Local.** Retain explicit shared ownership and correct subscription cleanup; do not mandate SWR to solve duplicated listeners or requests. SWR remains a possible separately justified dependency choice. Ordinary React state fits simple owned observations, while `useSyncExternalStore` specifically integrates an existing subscribable source. [React external stores][react-external], [local skill][local-skill] |
-| [client-passive-event-listeners][u-client-passive-event-listeners] | Cleanup/accessibility guidance; no wheel/touch detail. | **Upstream.** When introducing wheel/touch observations that do not cancel default behavior, use passive listeners. Preserve nonpassive behavior where a real gesture/zoom contract requires `preventDefault`, and retain cleanup. This is a conditional recipe, not a directive to introduce listeners. [DOM event listener options][dom-events] |
-| [client-localstorage-schema][u-client-localstorage-schema], [js-cache-storage][u-js-cache-storage] | Preferences retain selection/action identity; observations and action results remain authoritative elsewhere. | **Merge.** Store minimal validated shapes, plan schema evolution, and handle failure according to the workflow. Prefer owned initialized state over repeated synchronous reads. Shared caches need explicit ownership/invalidation. Preserve pending action IDs and recovery across migrations; do not copy silent catch/delete examples that can lose uncertain work. [Current preference boundary][local-adapter], [MVP durability][local-mvp] |
-| [rerender-defer-reads][u-rerender-defer-reads], [rerender-derived-state][u-rerender-derived-state] | State near consumers; localize frequent updates; CSS for visual responsive states. | **Merge.** Subscribe to the smallest observation that drives output; read genuinely event-only external values on demand when that preserves meaning. A breakpoint observation can avoid continuous pixel updates, but purely visual responsiveness still belongs in CSS. Never substitute the latest selection for an admitted action's original target. [React external stores][react-external], [component guide][local-components], [MVP targeting][local-mvp] |
-| [rerender-derived-state-no-effect][u-rerender-derived-state-no-effect], [rerender-move-effect-to-event][u-rerender-move-effect-to-event] | Already derives values during render and sends interaction commands through explicit intent paths. | **Local.** Retain those recommendations without duplicate instructions. They match React's separation of render calculations, event logic and synchronization, with the local skill adding targeted commands and Rust recovery ownership. [React Effect guidance][react-no-effect] |
-| [rerender-dependencies][u-rerender-dependencies], [rerender-split-combined-hooks][u-rerender-split-combined-hooks] | Complete reactive dependencies and owned setup/cleanup; coherent Hooks rather than one Hook per component. | **Merge.** Depend on actual synchronization inputs; read relevant primitives and split independent synchronization processes when their lifetimes differ. Keep dependencies complete. Do not remove an object dependency while still reading its other fields, force custom Hook extraction, or manually split routine computations merely to duplicate Compiler. [React dependencies][react-deps], [React Compiler][react-compiler] |
-| [rerender-functional-setstate][u-rerender-functional-setstate], [rerender-lazy-state-init][u-rerender-lazy-state-init] | State ownership exists, but updater/initializer rules are implicit. | **Upstream.** Add pure functional updates when the next value depends on pending state, and pure lazy initialization for expensive mount initialization. Direct assignments from arguments remain fine. Initialization is per mount, and development can replay initializers/updaters; no commands or required effects belong there. This correctness rule survives Compiler adoption. [React useState][react-state] |
-| [rerender-memo][u-rerender-memo], [rerender-memo-with-default-value][u-rerender-memo-with-default-value], [rerender-simple-expression-in-memo][u-rerender-simple-expression-in-memo], [rendering-hoist-jsx][u-rendering-hoist-jsx] | Compiler-first calculations/callbacks; measured/manual integration exceptions; responsibility-based extraction. | **Local.** Keep those defaults. Skip unnecessary work before guards, but extraction is only one possible solution. Do not prescribe routine `memo`, constant defaults or JSX hoisting. An omitted default parameter inside a function does not itself change the incoming props compared by that function's memo boundary; downstream identity can matter during an actual render. [React memo][react-memo], [Compiler scope][react-compiler], [local memoization research](react-compiler-memoization-guidance.md) |
-| [rerender-no-inline-components][u-rerender-no-inline-components] | Domain keys/identity and useful boundaries; Oxlint already checks static components. | **Upstream.** Make stable component-type definitions explicit, normally at module scope. Nested definitions can reset state/focus and restart resources; this does not forbid inline JSX expressions or ordinary event functions. [React state identity][react-identity], [lint configuration][local-lint] |
-| [rerender-transitions][u-rerender-transitions], [rerender-use-deferred-value][u-rerender-use-deferred-value], [rendering-usetransition-loading][u-rendering-usetransition-loading] | Localize updates and measure; preserve explicit pending/error/authoritative observations. | **Merge.** Use transitions/deferred values for justified nonurgent rendering, keeping controlled inputs and immediate intent feedback urgent. Explain stale presentation. Retain action identity, stale-result handling and authoritative outcomes; transition pending does not replace them or cancel Rust work. Correct post-`await` handling and avoid compulsory manual memoization. [React transitions][react-transition], [deferred values][react-deferred], [MVP][local-mvp] |
-| [rerender-use-ref-transient-values][u-rerender-use-ref-transient-values], [advanced-event-handler-refs][u-advanced-event-handler-refs], [advanced-use-latest][u-advanced-use-latest], [advanced-effect-event-deps][u-advanced-effect-event-deps] | State/ref identity, complete dependencies, resource cleanup and target binding. | **Merge.** Use state for React output, refs for nonrendering mutable values/owned imperative resources, and Effect Events for genuinely nonreactive logic invoked from Effects or their subscriptions. Effect Event identity is intentionally unstable; keep actual reactive dependencies. Do not use latest-value indirection to retarget admitted actions. Ref bridges remain available for concrete integrations, not a universal default. [React refs][react-ref], [Effect Events][react-effect-event] |
-| [advanced-init-once][u-advanced-init-once] | Setup/cleanup/re-setup and reconnect status reads; durable execution belongs to Rust. | **Merge.** Distinguish actual app-load initialization from mount-owned synchronization. Explicit entry/module initialization can fit an app-wide frontend resource. A module flag must not hide broken cleanup or suppress required reconnect reads, and cannot establish durable once-only execution. [React application initialization][react-no-effect], [MVP lifecycle][local-mvp] |
-| [rendering-activity][u-rendering-activity] | Shared observation owners and local UI state; visibility/resource tradeoffs implicit. | **Merge.** Choose unmounting, CSS visibility or Activity according to state and resource lifetimes. Activity preserves state/DOM but destroys Effects while hidden and recreates them on reveal. Keep observations that must continue outside visibility-owned subtrees; switching views must not stop admitted conversation work. No universal Activity requirement for menus/tabs. [React Activity][react-activity], [MVP concurrency][local-mvp] |
-| [rendering-content-visibility][u-rendering-content-visibility] | Bound growing history/data and localize frequent updates. | **Local.** Retain those primary controls. Content visibility can be progressive enhancement, but does not bound retained DOM/data and Safari 18 introduced support, later than this repo's 16.4 baseline. Paging/virtualization is a workload/accessibility choice, not an automatic translation of the upstream 1,000-node example. [WebKit Safari 18][webkit-content], [Vite target][local-vite], [MVP bounds][local-mvp] |
-| [rendering-conditional-render][u-rendering-conditional-render] | No explicit numeric-condition guidance. | **Upstream.** Use an explicit boolean comparison or ternary when a numeric/falsy renderable condition could leak `0`/`NaN`. Boolean `&&` remains valid. [React conditional rendering][react-conditional] |
-| [rendering-animate-svg-wrapper][u-rendering-animate-svg-wrapper], [rendering-svg-precision][u-rendering-svg-precision] | Toolkit composition, visual contract, CSS/reduced-motion and measurement guidance. | **Omit.** Adding a wrapper does not establish a universal GPU guarantee, and rounding is an asset-specific visual tradeoff. No inspected application evidence requires either recipe. Keep them available for a scoped asset/animation problem rather than changing qualified controls by rule. [Component contract][local-components], [measurement policy][local-verification] |
-| [rendering-hydration-no-flicker][u-rendering-hydration-no-flicker], [rendering-hydration-suppress-warning][u-rendering-hydration-suppress-warning] | Client-rendered desktop frontend. | **Omit.** There is no hydration lifecycle here to repair or suppress. Do not introduce inline DOM-patching scripts for that absent problem. [Client entry][local-main], [Tauri frontend model][tauri-frontend] |
-| [rendering-resource-hints][u-rendering-resource-hints], [rendering-script-defer-async][u-rendering-script-defer-async] | Vite-managed module entry; no intended MVP remote-script/resource-hint requirement. | **Omit.** Classic parser-blocking script recipes and remote resource hints are not everyday requirements for this application. Revisit when an actual resource demands them; this is no ban on scripts or preloading. [HTML entry][local-html], [Vite features][vite-features] |
-| [js-batch-dom-css][u-js-batch-dom-css] | CSS for visual states; preserve component styling ownership. | **Merge.** Prefer declarative CSS/classes for meaningful visual state; when a real imperative integration measures layout, avoid interleaving reads with invalidating writes. Do not convert every inline style to a class or add layout effects without a consumer. [Upstream concrete read/write examples][u-js-batch-dom-css], [component guide][local-components] |
-| [js-index-maps][u-js-index-maps], [js-set-map-lookups][u-js-set-map-lookups], [js-min-max-loop][u-js-min-max-loop] | Bounded data and measurement; no specific algorithm examples. | **Merge.** Match structures/algorithms to the real workload: repeated joins/membership can justify an index and extrema do not require sorting. Account for rebuilding, ownership, data size and readability. These are useful options for intended history/change surfaces, not mandatory rewrites of current short arrays. The upstream examples establish the algorithmic distinction, not a measured application speedup. |
-| [js-early-exit][u-js-early-exit], [js-length-check-first][u-js-length-check-first] | Preserve application decisions and failure paths. | **Merge.** Use cheap decisive checks and stop once the required result is known, preserving equality semantics, validation requirements, error selection and effects. The upstream first-error rewrite changes its last-error example's behavior; do not treat that as a mechanical optimization. [Upstream examples][u-js-early-exit], [verification policy][local-verification] |
-| [js-cache-function-results][u-js-cache-function-results], [js-hoist-regexp][u-js-hoist-regexp] | Compiler/owned state first; performance changes need evidence. | **Local.** Avoid default unbounded module caches and routine manual render memoization. A shared cache needs demonstrated benefit, an owner, bounds and invalidation. Dynamic regex inputs and global/sticky regex state require correctness care; the upstream regex rule itself warns about mutable `lastIndex`. [Compiler scope][react-compiler], [upstream regex caveat][u-js-hoist-regexp] |
-| [js-cache-property-access][u-js-cache-property-access], [js-combine-iterations][u-js-combine-iterations], [js-flatmap-filter][u-js-flatmap-filter] | Plain transformations and measurement before optimization. | **Omit.** Do not impose universal loop/property/array-expression rewrites without a relevant workload. Fewer source-level passes do not establish lower runtime cost, and transformations must preserve values/effects. The flatMap example changes empty-string filtering semantics and still constructs callback result arrays. [Upstream examples][u-js-flatmap-filter], [local skill][local-skill] |
-| [js-tosorted-immutable][u-js-tosorted-immutable] | Pure rendering and compiler immutability lint; wording can be more explicit. | **Merge.** Treat state/props/observations as immutable; copy before mutation. Do not prescribe `toSorted` specifically with current ES2022 library declarations: copying then sorting is immediately compatible. Check types/runtime before newer APIs and omit routine `useMemo`. [React state arrays][react-state], [TypeScript config][local-tsconfig], [compiler lint][local-lint] |
-| [js-request-idle-callback][u-js-request-idle-callback] | Owned effects and required intent-before-effect/durable recovery. | **Omit.** No concrete intended MVP noncritical task currently warrants this scheduler recipe. Any later use needs target support, cancellation, fallback and lifecycle analysis. Required action identity persistence, execution, recovery and cleanup must not depend on opportunistic idle execution. [MVP ownership][local-mvp], [upstream scope/caveats][u-js-request-idle-callback] |
+| [async-cheap-condition-before-await][u-async-cheap-condition-before-await], [async-defer-await][u-async-defer-await] | [guard-before-read][r-guard-before-read] | Adapt. Guard unnecessary reads and defer awaits while preserving validation, errors, effects and required ordering. |
+| [async-api-routes][u-async-api-routes], [async-dependencies][u-async-dependencies], [async-parallel][u-async-parallel], [server-parallel-nested-fetching][u-server-parallel-nested-fetching] | [schedule-independent-reads][r-schedule-independent-reads] | Adapt the general dependency graph to bounded, independent observations. Use native promises; do not import route/RSC ownership or mandate better-all. Preserve failure behavior and mutation order. |
+| [async-suspense-boundaries][u-async-suspense-boundaries] | [lazy-surfaces-and-suspense][r-lazy-surfaces-and-suspense], [observation-status][r-observation-status] | Adapt. Put fallbacks around unavailable supported surfaces; ordinary Effect/IPC reads do not automatically suspend. Retain explicit observation loading/stale/error states. [React Suspense][react-suspense] |
+| [bundle-analyzable-paths][u-bundle-analyzable-paths], [bundle-conditional][u-bundle-conditional], [bundle-defer-third-party][u-bundle-defer-third-party], [bundle-dynamic-imports][u-bundle-dynamic-imports], [bundle-preload][u-bundle-preload] | [lazy-surfaces-and-suspense][r-lazy-surfaces-and-suspense], [vite-imports-and-preloading][r-vite-imports-and-preloading], [render-and-load-failures][r-render-and-load-failures] | Adapt for substantial optional MVP surfaces, using module-scope lazy declarations and analyzable Vite imports. Include loading/load failure ownership and conditional intent preloading, without Next APIs or assumed telemetry. Importing code cannot admit application work. [React lazy][react-lazy], [Vite features][vite-features] |
+| [bundle-barrel-imports][u-bundle-barrel-imports] | [supported-public-imports][r-supported-public-imports] | Adapt. Use supported typed exports and measure bundle/build/dev costs before changing paths. Named Lucide imports are tree-shakable; Next/server cold-start figures do not establish desktop cost. [Lucide React][lucide-react], [Vite features][vite-features] |
+| [server-after-nonblocking][u-server-after-nonblocking], [server-auth-actions][u-server-auth-actions], [server-cache-lru][u-server-cache-lru], [server-cache-react][u-server-cache-react], [server-dedup-props][u-server-dedup-props], [server-hoist-static-io][u-server-hoist-static-io], [server-no-shared-module-state][u-server-no-shared-module-state], [server-parallel-fetching][u-server-parallel-fetching], [server-serialization][u-server-serialization] | No corresponding frontend recipe | Exclude these Next/SSR/RSC/request-specific recipes by architecture. Frontend [typed IPC][r-typed-ipc-contracts] and [targeted intents][r-explicit-targeted-intents] cover their actual boundary without relocating Rust execution, storage, admission or recovery policy. [Tauri frontend][tauri-frontend], [MVP][local-mvp] |
+| [client-event-listeners][u-client-event-listeners], [client-swr-dedup][u-client-swr-dedup] | [shared-observation-owner][r-shared-observation-owner], [subscription-cleanup][r-subscription-cleanup], [external-store-snapshots][r-external-store-snapshots] | Adapt. One owner serves shared observations; repeated custom Hook calls do not share state. Integrate an actual subscribable source with useSyncExternalStore and cached immutable snapshots. No SWR requirement. [React external stores][react-external] |
+| [client-passive-event-listeners][u-client-passive-event-listeners] | [passive-event-listeners][r-passive-event-listeners] | Retain conditionally for observing wheel/touch events. Preserve active listeners where preventDefault is required and clean up either kind. [DOM options][dom-events] |
+| [client-localstorage-schema][u-client-localstorage-schema], [js-cache-storage][u-js-cache-storage] | [presentation-records][r-presentation-records], [owned-bounded-caches][r-owned-bounded-caches], [lazy-initialization][r-lazy-initialization] | Adapt. Keep validated minimal records, explicit evolution/failure behavior and owned initialized reads. Preserve pending action/status-lookup identity through cache misses or migrations; silent deletion cannot prove an uncertain action never ran. [MVP][local-mvp], [local preference boundary][local-adapter] |
+| [rerender-defer-reads][u-rerender-defer-reads], [rerender-derived-state][u-rerender-derived-state] | [state-ownership][r-state-ownership], [shared-observation-owner][r-shared-observation-owner], [explicit-targeted-intents][r-explicit-targeted-intents] | Adapt. Subscribe to output-relevant observations; read genuinely event-only values when their timing and target meaning permit. CSS still owns purely visual responsiveness. Latest selection cannot replace an admitted action target. [React external stores][react-external], [component guide][local-components] |
+| [rerender-derived-state-no-effect][u-rerender-derived-state-no-effect], [rerender-move-effect-to-event][u-rerender-move-effect-to-event] | [derive-during-render][r-derive-during-render], [events-vs-effects][r-events-vs-effects] | Retain existing local guidance as named recipes: derive display values during render, submit interaction commands from explicit intent paths and use Effects for synchronization. [React Effect guidance][react-no-effect] |
+| [rerender-dependencies][u-rerender-dependencies], [rerender-split-combined-hooks][u-rerender-split-combined-hooks] | [synchronization-dependencies][r-synchronization-dependencies], [component-responsibilities][r-component-responsibilities] | Adapt. Depend on actual synchronization inputs, keep dependencies complete and separate independent processes when lifetimes differ. A Hook per component and routine calculation splitting are unnecessary. [React dependencies][react-deps], [Compiler][react-compiler] |
+| [rerender-functional-setstate][u-rerender-functional-setstate], [rerender-lazy-state-init][u-rerender-lazy-state-init] | [immutable-state-updates][r-immutable-state-updates], [lazy-initialization][r-lazy-initialization] | Retain. Pure functional updates apply when next state depends on pending state; pure lazy initializers avoid repeated expensive mount initialization. Neither is an action execution path, and development may replay them. [React state][react-state] |
+| [rerender-memo][u-rerender-memo], [rerender-memo-with-default-value][u-rerender-memo-with-default-value], [rerender-simple-expression-in-memo][u-rerender-simple-expression-in-memo], [rendering-hoist-jsx][u-rendering-hoist-jsx] | [compiler-first-memoization][r-compiler-first-memoization], [component-responsibilities][r-component-responsibilities] | Adapt. Compiler handles routine render memoization; keep measured/manual integration exceptions and inspect skipped compilation. Do not prescribe constant defaults, manual memo or JSX hoisting universally. An omitted default created inside a function does not itself invalidate that function’s incoming-prop memo comparison. [React memo][react-memo], [Compiler][react-compiler] |
+| [rerender-no-inline-components][u-rerender-no-inline-components] | [component-and-list-identity][r-component-and-list-identity] | Retain. Stable component types, normally module-scoped, protect state/focus/resources; domain keys express list identity. Ordinary inline callbacks and JSX expressions are separate choices. [React identity][react-identity] |
+| [rerender-transitions][u-rerender-transitions], [rerender-use-deferred-value][u-rerender-use-deferred-value], [rendering-usetransition-loading][u-rendering-usetransition-loading] | [urgent-and-deferred-rendering][r-urgent-and-deferred-rendering], [async-result-targets][r-async-result-targets], [observation-status][r-observation-status] | Adapt for expensive history/filter/change surfaces. Controlled inputs and immediate intent feedback stay urgent; explain stale content. Rendering priority does not cancel backend work, deduplicate requests or order custom async responses. Apply supported post-await transition handling. [Transitions][react-transition], [deferred values][react-deferred] |
+| [rerender-use-ref-transient-values][u-rerender-use-ref-transient-values], [advanced-event-handler-refs][u-advanced-event-handler-refs], [advanced-use-latest][u-advanced-use-latest], [advanced-effect-event-deps][u-advanced-effect-event-deps] | [refs-and-resources][r-refs-and-resources], [effect-events][r-effect-events], [async-result-targets][r-async-result-targets] | Adapt. State drives output, refs retain nonrendering mutable values/resources, and Effect Events handle genuinely nonreactive Effect logic. Effect Events have changing identity, remain local to their Effect owner and cannot hide dependencies or retarget admitted work. [Refs][react-ref], [Effect Events][react-effect-event] |
+| [advanced-init-once][u-advanced-init-once] | [app-initialization][r-app-initialization], [subscription-cleanup][r-subscription-cleanup] | Adapt. Distinguish app-wide frontend initialization from mount synchronization. A module flag cannot replace cleanup, reconnect reads or durable once-only execution. [React initialization][react-no-effect], [MVP lifecycle][local-mvp] |
+| [rendering-activity][u-rendering-activity] | [view-resource-lifetimes][r-view-resource-lifetimes], [shared-observation-owner][r-shared-observation-owner] | Adapt. Choose unmounting, CSS visibility or Activity according to state/DOM/effect lifetimes. Activity cleans up hidden Effects and recreates them on reveal; keep continuing observations above visibility-dependent subtrees. [Activity][react-activity] |
+| [rendering-content-visibility][u-rendering-content-visibility] | [bounded-streams-and-history][r-bounded-streams-and-history] | Adapt conditionally. Paging/bounded retention remain primary; CSS content visibility neither bounds retained data/DOM nor supports the Safari 16.4 baseline. It can complement a qualified fallback on supporting WebViews. [WebKit Safari 18][webkit-content] |
+| [rendering-conditional-render][u-rendering-conditional-render] | [boolean-render-conditions][r-boolean-render-conditions] | Retain explicit boolean comparisons or ternaries for numeric guards that could leak 0/NaN; boolean && remains valid. [React conditional rendering][react-conditional] |
+| [rendering-animate-svg-wrapper][u-rendering-animate-svg-wrapper], [rendering-svg-precision][u-rendering-svg-precision] | [svg-and-animation-tradeoffs][r-svg-and-animation-tradeoffs] | Adapt as conditional asset/animation guidance for the installed icon and CSS stack. A wrapper does not establish universal GPU acceleration; precision changes require visual evidence. Scope by rendering/animation cost and preserve accessibility/reduced motion. Absence of today’s defect is not an omission criterion. [SVG][svg-spec], [CSS transforms][css-transforms], [component guide][local-components] |
+| [rendering-hydration-no-flicker][u-rendering-hydration-no-flicker], [rendering-hydration-suppress-warning][u-rendering-hydration-suppress-warning] | No corresponding frontend recipe | Exclude hydration recipes by client createRoot architecture; no hydration lifecycle exists here to repair or suppress. [Client entry][local-main], [Tauri frontend][tauri-frontend] |
+| [rendering-resource-hints][u-rendering-resource-hints], [rendering-script-defer-async][u-rendering-script-defer-async] | [vite-imports-and-preloading][r-vite-imports-and-preloading] | Adapt to Vite-managed module entry, assets and code preloading. Explain resource-specific hints only when useful and CSP-compatible; do not copy Next or classic remote-script defaults into the desktop build. [Vite features][vite-features], [Vite assets][vite-assets], [HTML scripts][html-scripts] |
+| [js-batch-dom-css][u-js-batch-dom-css] | [layout-measurement][r-layout-measurement] | Adapt. Prefer declarative visual state; real imperative integrations should avoid interleaving layout reads with invalidating writes. This does not mandate a class rewrite or layout Effect for every style. [Rendering cycle][html-rendering], [component guide][local-components] |
+| [js-index-maps][u-js-index-maps], [js-set-map-lookups][u-js-set-map-lookups], [js-min-max-loop][u-js-min-max-loop] | [indexes-and-extrema][r-indexes-and-extrema] | Retain conditional algorithm choices for growing history/change data: repeated joins/membership may justify indexes; an extremum needs no full sort. Account for rebuild cost, ownership and readability; examples establish complexity, not application speedups. [ECMAScript collections][ecma-collections] |
+| [js-early-exit][u-js-early-exit], [js-length-check-first][u-js-length-check-first], [js-cache-property-access][u-js-cache-property-access], [js-combine-iterations][u-js-combine-iterations], [js-flatmap-filter][u-js-flatmap-filter] | [behavior-preserving-hot-loops][r-behavior-preserving-hot-loops], [guard-before-read][r-guard-before-read] | Adapt as measured hot-path recipes rather than universal loop/property/array rewrites. Preserve empty-string handling, validation, first/last-error selection, ordering and effects. Fewer source passes do not establish lower cost. [ECMAScript arrays][ecma-arrays], [verification policy][local-verification] |
+| [js-cache-function-results][u-js-cache-function-results] | [owned-bounded-caches][r-owned-bounded-caches], [compiler-first-memoization][r-compiler-first-memoization] | Adapt. Shared caches require an owner, bounds, invalidation and demonstrated benefit. Compiler/render memoization is separate from caching external state or durable decisions. [Compiler scope][react-compiler] |
+| [js-hoist-regexp][u-js-hoist-regexp] | [regexp-reuse-and-state][r-regexp-reuse-and-state] | Adapt conditionally for repeated nontrivial work. Preserve dynamic inputs and global/sticky lastIndex semantics; hoisting is not automatically a safe pure optimization. [ECMAScript RegExp][ecma-regexp] |
+| [js-tosorted-immutable][u-js-tosorted-immutable] | [immutable-state-updates][r-immutable-state-updates] | Adapt immutability, not a blanket toSorted API choice. Copy then sort fits current ES2022 declarations; check types/runtime before newer APIs. [React arrays][react-arrays], [TypeScript libraries][ts-libraries] |
+| [js-request-idle-callback][u-js-request-idle-callback] | [timers-and-long-tasks][r-timers-and-long-tasks] | Adapt into capability-aware cooperative work with fallback, cancellation and ownership. Required identity persistence, execution, recovery and cleanup cannot depend on opportunistic idle execution; scheduling also does not make one large synchronous calculation interruptible. [Idle callbacks][idle-spec], [HTML timers][html-timers] |
+
+## Stack and intended-MVP coverage
+
+This map includes existing core React guidance and substantive integrations beyond
+the upstream collection. Capability coverage determines inclusion; an unused API
+does not require an added library or a speculative component. The installed
+manifest/configuration owns availability. Official documentation supplies API facts,
+while local product and verification documents supply requirements.
+
+| Dependency or intended capability | Maintained rule coverage | Official API evidence and local authority |
+| --- | --- | --- |
+| React 19.3 components, state and identity | [component-responsibilities][r-component-responsibilities], [state-ownership][r-state-ownership], [derive-during-render][r-derive-during-render], [immutable-state-updates][r-immutable-state-updates], [lazy-initialization][r-lazy-initialization], [component-and-list-identity][r-component-and-list-identity], [refs-and-resources][r-refs-and-resources] | [State structure][react-state-structure], [Effect guidance][react-no-effect], [state][react-state], [identity][react-identity], [refs][react-ref]; [component guide][local-components]. |
+| React synchronization and app lifecycle | [events-vs-effects][r-events-vs-effects], [synchronization-dependencies][r-synchronization-dependencies], [effect-events][r-effect-events], [subscription-cleanup][r-subscription-cleanup], [async-result-targets][r-async-result-targets], [shared-observation-owner][r-shared-observation-owner], [external-store-snapshots][r-external-store-snapshots], [app-initialization][r-app-initialization] | [Effects][react-effect], [dependencies][react-deps], [Effect Events][react-effect-event], [external stores][react-external]; [MVP][local-mvp]. |
+| Tauri 2 typed commands/events and native dialog results | [typed-ipc-contracts][r-typed-ipc-contracts], [explicit-targeted-intents][r-explicit-targeted-intents], [observation-status][r-observation-status], [guard-before-read][r-guard-before-read], [schedule-independent-reads][r-schedule-independent-reads], [async-result-targets][r-async-result-targets], [subscription-cleanup][r-subscription-cleanup] | [Calling Rust][tauri-rust], [frontend events/channels][tauri-events], [dialog API][tauri-dialog]. Dialog cancellation returns null; closing/changing a React dialog does not cancel its pending native result. Capture request/target identity and ignore late results for an obsolete owner. Core reconciliation and retry remain Rust-owned under [MVP][local-mvp]. |
+| Compiler-enabled React and interactive history/change surfaces | [compiler-first-memoization][r-compiler-first-memoization], [urgent-and-deferred-rendering][r-urgent-and-deferred-rendering], [view-resource-lifetimes][r-view-resource-lifetimes], [bounded-streams-and-history][r-bounded-streams-and-history], [boolean-render-conditions][r-boolean-render-conditions] | [Compiler][react-compiler], [transitions][react-transition], [deferred values][react-deferred], [Activity][react-activity], [conditions][react-conditional], [WebKit support][webkit-content]; [MVP responsiveness/bounds][local-mvp]. |
+| Vite 8 static desktop build, optional large surfaces and import costs | [lazy-surfaces-and-suspense][r-lazy-surfaces-and-suspense], [render-and-load-failures][r-render-and-load-failures], [vite-imports-and-preloading][r-vite-imports-and-preloading], [supported-public-imports][r-supported-public-imports] | [React lazy][react-lazy], [Suspense][react-suspense], [boundaries][react-boundary], [Vite features][vite-features], [Vite assets][vite-assets], [Lucide][lucide-react]; [Tauri frontend][tauri-frontend]. |
+| WebView layout, gestures, image attachments and rendered provider output | [layout-measurement][r-layout-measurement], [passive-event-listeners][r-passive-event-listeners], [owned-attachment-resources][r-owned-attachment-resources], [safe-rendered-content][r-safe-rendered-content], [timers-and-long-tasks][r-timers-and-long-tasks], [svg-and-animation-tradeoffs][r-svg-and-animation-tradeoffs] | [React DOM][react-dom-common], [DOM listeners][dom-events], [File API URL lifetime][file-api], [HTML timers][html-timers], [idle tasks][idle-spec], [SVG][svg-spec], [CSS transforms][css-transforms]. Respect configured CSP and the Safari 16.4/ES2022 baseline. The [MVP][local-mvp] justifies attachment/history handling without choosing a Markdown, editor, worker or virtualization dependency. |
+| Base UI 1.9, generated shadcn consumers, CVA/cn and Tailwind 4 | [base-ui-props-and-refs][r-base-ui-props-and-refs], [controlled-inputs-and-submission][r-controlled-inputs-and-submission], [tailwind-static-classes][r-tailwind-static-classes], [base-ui-csp-integration][r-base-ui-csp-integration] | [Composition][base-composition], [forms][base-forms], [React inputs][react-input], [Tailwind class detection][tailwind-detection], [CSP Provider][base-csp]. Forward composition props/ref and preserve handler semantics; map variants to complete classes. The [component guide][local-components] and [shadcn skill][local-shadcn] own design/composition workflow, including CVA/cn usage; no extra rule merely for a utility dependency. |
+| Desktop preferences and growing data transformations | [presentation-records][r-presentation-records], [owned-bounded-caches][r-owned-bounded-caches], [indexes-and-extrema][r-indexes-and-extrema], [behavior-preserving-hot-loops][r-behavior-preserving-hot-loops], [regexp-reuse-and-state][r-regexp-reuse-and-state] | [Web Storage][web-storage], [ECMAScript arrays][ecma-arrays], [collections][ecma-collections], [RegExp][ecma-regexp], [TypeScript libraries][ts-libraries]; [MVP durable identity][local-mvp]. |
+| Vitest 5, jsdom 31, React Testing Library 16 and user-event 14 | [subscription-cleanup][r-subscription-cleanup], [async-result-targets][r-async-result-targets], [controlled-inputs-and-submission][r-controlled-inputs-and-submission], [render-and-load-failures][r-render-and-load-failures], [layout-measurement][r-layout-measurement] | [Vitest environments][vitest-environments], [RTL render/rerender/unmount/cleanup][rtl-api], [user-event interactions][user-event], [jsdom limitations][jsdom-readme]. Existing [verification policy][local-verification] governs test selection, doubles and qualification; these tools provide controlled application-decision observations, not native dialog, WebView layout, screen-reader or responsiveness proof. No new test category or dependency is introduced. |
+
+The map covers all 44 maintained rule IDs. Rule files provide examples for these
+decisions; the generated full guide contains the same material. Baseline-local
+examples demonstrate a seam and do not prove future workload performance.
 
 ## Important source corrections
 
@@ -175,10 +213,11 @@ chat UI even though the sampled main shell does not yet demonstrate that workloa
 ## Provenance and maintenance
 
 This note credits Vercel Engineering's rule collection as the source of the
-comparison and selected ideas. The maintained local guidance uses original prose
-and official API references rather than copying upstream examples or vendoring
-its generated full guide. Record the pinned SHA and rule IDs when revisiting a
-choice; review relevant source diffs and current supported-version documentation
+comparison and selected ideas. The maintained local rules use original prose and
+examples with official API references rather than vendoring upstream examples or
+its full guide. The local full guide is generated from those local rule sources.
+Record the pinned SHA and rule IDs when revisiting a choice; review relevant source
+diffs and current supported-version documentation
 instead of overwriting local guidance with an automatic update.
 
 Upstream declares MIT in [SKILL.md frontmatter][upstream-skill] and its
@@ -192,21 +231,25 @@ identify a future update. [Pinned upstream tree][upstream-tree],
 
 ## Evidence limits
 
-A mechanical documentation check compared the matrix against the pinned GitHub
-tree: all 70 rule IDs occur once in its first column across 31 grouped rows; all
-111 used reference labels resolve, and all six local reference targets exist.
+The original comparison mechanically checked all 70 upstream IDs against the
+pinned GitHub tree. The follow-up keeps that exact upstream inventory, maps every
+retained/adapted choice to the maintained rules, and adds a stack-capability map
+covering all 44 local IDs. Documentation validation should check matrix coverage,
+local links, rule/index agreement and generated-guide reproducibility; it does
+not establish API execution or application performance.
 
-This work changes documentation and agent guidance, not application behavior or
-requirements. Research used read-only source/network inspection before the
-separately authorized documentation implementation. It did not run application
-static/build checks, units, performance benchmarks, desktop/accessibility
-qualification or native-provider checks. No such results or measured improvement
-are claimed. Existing milestone/compiler evidence remains unchanged; any later
-implementation selects its checks under [repository verification policy][local-verification].
-
+This follow-up changes documentation and agent guidance. It used read-only
+source/network research followed by the authorized documentation edits. It did
+not run application static/build checks, units, performance benchmarks,
+desktop/accessibility qualification or native-provider checks, and did not inspect
+RAT. No such results or measured improvement are claimed. Existing milestone and
+compiler evidence remains unchanged; later implementation selects checks under
+[repository verification policy][local-verification].
 
 [local-skill]: ../../.agents/skills/react-engineering/SKILL.md
-[local-reference]: ../../.agents/skills/react-engineering/references/react-performance.md
+[local-index]: ../../.agents/skills/react-engineering/SKILL.md#rule-index
+[local-guide]: ../../.agents/skills/react-engineering/AGENTS.md
+[local-shadcn]: ../../.agents/skills/shadcn/SKILL.md
 [local-mvp]: ../MVP.md
 [local-components]: ../../src/components/README.md
 [local-verification]: ../agents/verification.md
@@ -316,3 +359,79 @@ implementation selects its checks under [repository verification policy][local-v
 [u-server-parallel-fetching]: https://github.com/vercel-labs/agent-skills/blob/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices/rules/server-parallel-fetching.md
 [u-server-parallel-nested-fetching]: https://github.com/vercel-labs/agent-skills/blob/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices/rules/server-parallel-nested-fetching.md
 [u-server-serialization]: https://github.com/vercel-labs/agent-skills/blob/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices/rules/server-serialization.md
+
+[r-component-responsibilities]: ../../.agents/skills/react-engineering/rules/component-responsibilities.md
+[r-state-ownership]: ../../.agents/skills/react-engineering/rules/state-ownership.md
+[r-derive-during-render]: ../../.agents/skills/react-engineering/rules/derive-during-render.md
+[r-immutable-state-updates]: ../../.agents/skills/react-engineering/rules/immutable-state-updates.md
+[r-lazy-initialization]: ../../.agents/skills/react-engineering/rules/lazy-initialization.md
+[r-component-and-list-identity]: ../../.agents/skills/react-engineering/rules/component-and-list-identity.md
+[r-refs-and-resources]: ../../.agents/skills/react-engineering/rules/refs-and-resources.md
+[r-events-vs-effects]: ../../.agents/skills/react-engineering/rules/events-vs-effects.md
+[r-synchronization-dependencies]: ../../.agents/skills/react-engineering/rules/synchronization-dependencies.md
+[r-effect-events]: ../../.agents/skills/react-engineering/rules/effect-events.md
+[r-subscription-cleanup]: ../../.agents/skills/react-engineering/rules/subscription-cleanup.md
+[r-async-result-targets]: ../../.agents/skills/react-engineering/rules/async-result-targets.md
+[r-shared-observation-owner]: ../../.agents/skills/react-engineering/rules/shared-observation-owner.md
+[r-external-store-snapshots]: ../../.agents/skills/react-engineering/rules/external-store-snapshots.md
+[r-app-initialization]: ../../.agents/skills/react-engineering/rules/app-initialization.md
+[r-typed-ipc-contracts]: ../../.agents/skills/react-engineering/rules/typed-ipc-contracts.md
+[r-explicit-targeted-intents]: ../../.agents/skills/react-engineering/rules/explicit-targeted-intents.md
+[r-observation-status]: ../../.agents/skills/react-engineering/rules/observation-status.md
+[r-guard-before-read]: ../../.agents/skills/react-engineering/rules/guard-before-read.md
+[r-schedule-independent-reads]: ../../.agents/skills/react-engineering/rules/schedule-independent-reads.md
+[r-compiler-first-memoization]: ../../.agents/skills/react-engineering/rules/compiler-first-memoization.md
+[r-urgent-and-deferred-rendering]: ../../.agents/skills/react-engineering/rules/urgent-and-deferred-rendering.md
+[r-view-resource-lifetimes]: ../../.agents/skills/react-engineering/rules/view-resource-lifetimes.md
+[r-bounded-streams-and-history]: ../../.agents/skills/react-engineering/rules/bounded-streams-and-history.md
+[r-boolean-render-conditions]: ../../.agents/skills/react-engineering/rules/boolean-render-conditions.md
+[r-lazy-surfaces-and-suspense]: ../../.agents/skills/react-engineering/rules/lazy-surfaces-and-suspense.md
+[r-render-and-load-failures]: ../../.agents/skills/react-engineering/rules/render-and-load-failures.md
+[r-vite-imports-and-preloading]: ../../.agents/skills/react-engineering/rules/vite-imports-and-preloading.md
+[r-supported-public-imports]: ../../.agents/skills/react-engineering/rules/supported-public-imports.md
+[r-layout-measurement]: ../../.agents/skills/react-engineering/rules/layout-measurement.md
+[r-passive-event-listeners]: ../../.agents/skills/react-engineering/rules/passive-event-listeners.md
+[r-owned-attachment-resources]: ../../.agents/skills/react-engineering/rules/owned-attachment-resources.md
+[r-safe-rendered-content]: ../../.agents/skills/react-engineering/rules/safe-rendered-content.md
+[r-timers-and-long-tasks]: ../../.agents/skills/react-engineering/rules/timers-and-long-tasks.md
+[r-svg-and-animation-tradeoffs]: ../../.agents/skills/react-engineering/rules/svg-and-animation-tradeoffs.md
+[r-base-ui-props-and-refs]: ../../.agents/skills/react-engineering/rules/base-ui-props-and-refs.md
+[r-controlled-inputs-and-submission]: ../../.agents/skills/react-engineering/rules/controlled-inputs-and-submission.md
+[r-tailwind-static-classes]: ../../.agents/skills/react-engineering/rules/tailwind-static-classes.md
+[r-base-ui-csp-integration]: ../../.agents/skills/react-engineering/rules/base-ui-csp-integration.md
+[r-presentation-records]: ../../.agents/skills/react-engineering/rules/presentation-records.md
+[r-owned-bounded-caches]: ../../.agents/skills/react-engineering/rules/owned-bounded-caches.md
+[r-indexes-and-extrema]: ../../.agents/skills/react-engineering/rules/indexes-and-extrema.md
+[r-behavior-preserving-hot-loops]: ../../.agents/skills/react-engineering/rules/behavior-preserving-hot-loops.md
+[r-regexp-reuse-and-state]: ../../.agents/skills/react-engineering/rules/regexp-reuse-and-state.md
+
+[react-state-structure]: https://react.dev/learn/choosing-the-state-structure
+[react-effect]: https://react.dev/reference/react/useEffect
+[react-arrays]: https://react.dev/learn/updating-arrays-in-state
+[react-boundary]: https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary
+[react-dom-common]: https://react.dev/reference/react-dom/components/common
+[react-input]: https://react.dev/reference/react-dom/components/input
+[tauri-rust]: https://v2.tauri.app/develop/calling-rust/
+[tauri-events]: https://v2.tauri.app/develop/calling-frontend/
+[tauri-dialog]: https://v2.tauri.app/reference/javascript/dialog/
+[vite-assets]: https://vite.dev/guide/assets.html
+[base-composition]: https://base-ui.com/react/handbook/composition
+[base-forms]: https://base-ui.com/react/handbook/forms
+[base-csp]: https://base-ui.com/react/utils/csp-provider
+[tailwind-detection]: https://tailwindcss.com/docs/detecting-classes-in-source-files
+[file-api]: https://www.w3.org/TR/FileAPI/
+[html-timers]: https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#timers
+[html-scripts]: https://html.spec.whatwg.org/multipage/scripting.html#the-script-element
+[html-rendering]: https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering
+[idle-spec]: https://w3c.github.io/requestidlecallback/
+[svg-spec]: https://www.w3.org/TR/SVG2/
+[css-transforms]: https://www.w3.org/TR/css-transforms-1/
+[ecma-arrays]: https://tc39.es/ecma262/multipage/indexed-collections.html
+[ecma-collections]: https://tc39.es/ecma262/multipage/keyed-collections.html
+[ecma-regexp]: https://tc39.es/ecma262/multipage/text-processing.html#sec-regexp-regular-expression-objects
+[ts-libraries]: https://www.typescriptlang.org/tsconfig/lib.html
+[web-storage]: https://html.spec.whatwg.org/multipage/webstorage.html
+[vitest-environments]: https://vitest.dev/guide/environment.html
+[rtl-api]: https://testing-library.com/docs/react-testing-library/api/
+[user-event]: https://testing-library.com/docs/user-event/intro/
+[jsdom-readme]: https://github.com/jsdom/jsdom#unimplemented-parts-of-the-web-platform
