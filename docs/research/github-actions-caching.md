@@ -244,6 +244,47 @@ Xcode; its `xcodebuild -version` requirement will be exercised on the hosted mac
 image. No fallback identity was substituted. This is an environment limitation,
 not a local cache-hit qualification.
 
-Hosted cache miss/save and exact-hit results are pending. No performance saving
-is claimed. Standards and Spec reviews cover this scoped implementation before
-publication; runtime cache behavior requires the hosted runs.
+Standards and Spec reviews found no implementation findings. The inline script
+also passed Node 26 syntax checking; a controlled command-output check confirmed
+that environment insertion order does not change its fingerprint and an added
+Rust compiler setting does change it. These local checks are distinct from the
+hosted runtime qualification below.
+
+### Hosted miss/save and exact-hit qualification
+
+Both attempts ran revision `4450748333e278aab8ecb4d8955c6e06edc033ab` under the
+same cache environment and input hashes on macOS 15 arm64. The first was a
+successful miss/save; rerunning the same workflow restored its exact primary key.
+The hosted fingerprint step passed with full Xcode on both attempts.
+
+| Step / job                              | Miss and save | Exact-key hit |
+| --------------------------------------- | ------------: | ------------: |
+| Cache lookup / restoration              |           3 s |          14 s |
+| Ownership guard                         |        Passed |        Passed |
+| Supervisor preparation                  |           9 s |           7 s |
+| Frontend build                          |           1 s |           1 s |
+| Verification                            |          79 s |          11 s |
+| Post-cache step, including save on miss |          11 s |           2 s |
+| Complete job, including post steps      |         139 s |          72 s |
+| Result                                  |       Success |       Success |
+
+The compressed archive was 212,751,337 bytes (reported as approximately 203 MB).
+The primary key was:
+
+```text
+rust-deps-v1-macOS-ARM64-macos-15-e994b622796969f81dc1f91e610f1e4641f69367f28402e53b8649bda5cb39dc-243061b9d41c4ff70b172f6ecf5e5c6f77a484b6d2dddc88c4013843d094f392
+```
+
+The miss log confirmed the archive was saved under that key. The hit log confirmed
+restoration from the identical key and no second save. On both attempts the
+marker assertion passed and the existing preparation/build/verification steps
+ran unconditionally. Existing Cargo ownership checks remained enabled; preparation
+built/staged this job's supervisor resource rather than restoring a staged sidecar.
+
+Sources: [miss/save job](https://github.com/christopherbengtsson/rust-agents-gui/actions/runs/43344089505/job/131619114735),
+[exact-hit job](https://github.com/christopherbengtsson/rust-agents-gui/actions/runs/43344089505/job/131620276382).
+Durations are individual step/job timestamp observations, rounded to seconds;
+cache save time includes compression/upload within its post step. These qualify
+cache functionality, not a controlled performance comparison. No warm-up/five-run
+benchmark, median/range, or guaranteed speedup is claimed. The earlier uncached
+147-second workflow observation remains a separate source/configuration cohort.
