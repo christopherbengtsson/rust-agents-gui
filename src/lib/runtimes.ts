@@ -23,7 +23,12 @@ export type RuntimeMutation =
 export type RuntimeRequest =
   | RuntimeMutation
   | { operation: "observe"; target: RuntimeTarget }
-  | { operation: "action"; target: RuntimeTarget; action_id: string };
+  | {
+      operation: "action";
+      target: RuntimeTarget;
+      action_id: string;
+      expected?: RuntimeMutation | null;
+    };
 export type RuntimePhase =
   | "pending"
   | "saving"

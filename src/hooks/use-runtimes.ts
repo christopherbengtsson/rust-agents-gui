@@ -61,6 +61,7 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
               operation: "action" as const,
               target,
               action_id: retained.action_id,
+              expected: retained,
             }
           : { operation: "observe" as const, target };
         const reply = await runtimeRequest(request, retained);

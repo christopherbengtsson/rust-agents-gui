@@ -104,6 +104,8 @@ pub enum RuntimeRequest {
     Action {
         target: Target,
         action_id: Uuid,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        expected: Option<Box<RuntimeRequest>>,
     },
     Save {
         target: Target,
@@ -132,6 +134,12 @@ impl RuntimeRequest {
             Self::Action { action_id, .. }
             | Self::Save { action_id, .. }
             | Self::Check { action_id, .. } => Some(*action_id),
+        }
+    }
+    fn expected(&self) -> Option<&RuntimeRequest> {
+        match self {
+            Self::Action { expected, .. } => expected.as_deref(),
+            _ => None,
         }
     }
 }
@@ -249,6 +257,32 @@ impl State {
         }
         self.actions.push_back(action);
     }
+    fn record_lookup(
+        &mut self,
+        id: Uuid,
+        action: Option<Action>,
+        expected: Option<&RuntimeRequest>,
+    ) {
+        if let Some(action) = &action {
+            self.remember(action.clone());
+            if let Some(expected) = expected
+                && action.request != *expected
+            {
+                self.reply.rejected = Some(RejectedRequest {
+                    request: expected.clone(),
+                    error: RuntimeError::new(
+                        ErrorCode::InvalidRequest,
+                        "This action ID belongs to another recorded runtime request. The conflicting payload was not executed.",
+                    ),
+                });
+            }
+        }
+        self.reply.lookup = Some(ActionLookup {
+            action_id: id,
+            complete: true,
+            action,
+        });
+    }
     fn admit(&mut self, request: &RuntimeRequest) -> Result<bool> {
         if request.target() != &self.reply.target {
             return Err(RuntimeError::new(
@@ -269,7 +303,19 @@ impl State {
         let id = request
             .id()
             .expect("non-observation request has an action ID");
-        if let Some(action) = self.actions.iter().find(|a| a.action_id == id)
+        if let Some(expected) = request.expected()
+            && (expected.id() != Some(id)
+                || !matches!(
+                    expected,
+                    RuntimeRequest::Save { .. } | RuntimeRequest::Check { .. }
+                ))
+        {
+            return Err(RuntimeError::new(
+                ErrorCode::InvalidRequest,
+                "Status lookup must retain the original mutation and its exact action ID.",
+            ));
+        }
+        if let Some(action) = self.actions.iter().find(|a| a.action_id == id).cloned()
             && !(reconcile_storage && matches!(request, RuntimeRequest::Action { .. }))
         {
             if !matches!(request, RuntimeRequest::Action { .. }) && action.request != *request {
@@ -278,11 +324,7 @@ impl State {
                     "This action ID already belongs to another runtime request.",
                 ));
             }
-            self.reply.lookup = Some(ActionLookup {
-                action_id: id,
-                complete: true,
-                action: Some(action.clone()),
-            });
+            self.record_lookup(id, Some(action), request.expected());
             return Ok(false);
         }
         if matches!(request, RuntimeRequest::Action { .. }) {
@@ -557,16 +599,7 @@ fn execute(
     if matches!(request, RuntimeRequest::Action { .. }) {
         let result = store.action(id).map(|a| a.map(recovered_action));
         update(shared, |s| match result {
-            Ok(action) => {
-                if let Some(a) = &action {
-                    s.remember(a.clone());
-                }
-                s.reply.lookup = Some(ActionLookup {
-                    action_id: id,
-                    complete: true,
-                    action,
-                });
-            }
+            Ok(action) => s.record_lookup(id, action, request.expected()),
             Err(error) => {
                 s.reply.blocked = Some(error);
             }

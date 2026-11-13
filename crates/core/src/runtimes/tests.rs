@@ -281,6 +281,7 @@ fn action_reads_and_restart_markers_do_not_execute_checks() {
         &shared,
         &mut store,
         RuntimeRequest::Action {
+            expected: None,
             target: target(),
             action_id: id,
         },
@@ -322,6 +323,7 @@ fn blocked_storage_reads_reenter_authoritative_storage_even_with_a_cached_action
     assert!(
         state
             .admit(&RuntimeRequest::Action {
+                expected: None,
                 target: target(),
                 action_id: id
             })
@@ -333,6 +335,7 @@ fn blocked_storage_reads_reenter_authoritative_storage_even_with_a_cached_action
         &shared,
         &mut store,
         RuntimeRequest::Action {
+            expected: None,
             target: target(),
             action_id: id,
         },
@@ -491,6 +494,7 @@ fn evicted_conflicting_payload_is_rejected_without_replacing_canonical_identity(
     );
     let status = runtime
         .request(RuntimeRequest::Action {
+            expected: None,
             target: target(),
             action_id: id,
         })
@@ -514,4 +518,47 @@ fn evicted_conflicting_payload_is_rejected_without_replacing_canonical_identity(
         canonical.request
     );
     assert_eq!(store.actions[&id].request, canonical.request);
+}
+
+#[test]
+fn after_restart_status_reconciles_retained_payload_against_canonical_durable_identity() {
+    let id = Uuid::from_u128(1);
+    let canonical = Action {
+        action_id: id,
+        request: check(id),
+        phase: Phase::Completed,
+        error: None,
+    };
+    let conflicting = save(id, Some("/different"));
+    // Fresh owner state has neither cached action nor transient rejection.
+    let shared = Arc::new(Mutex::new(State::ready(target(), Configuration::default())));
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let runtime = Runtimes {
+        shared: shared.clone(),
+        sender: Some(sender),
+        worker: None,
+        stop: Arc::new(std::sync::atomic::AtomicBool::new(false)),
+    };
+    let status = RuntimeRequest::Action {
+        target: target(),
+        action_id: id,
+        expected: Some(Box::new(conflicting.clone())),
+    };
+    runtime.request(status.clone()).unwrap();
+    let mut store = Memory::default();
+    store.actions.insert(id, canonical.clone());
+    execute(
+        &shared,
+        &mut store,
+        receiver.try_recv().unwrap(),
+        "boot",
+        |_, _, _| panic!("recovery replayed work"),
+    );
+    let reply = runtime.request(status).unwrap();
+    assert_eq!(
+        reply.lookup.unwrap().action.unwrap().request,
+        canonical.request
+    );
+    assert_eq!(reply.rejected.unwrap().request, conflicting);
+    assert!(!store.calls.contains(&"intent"));
 }
