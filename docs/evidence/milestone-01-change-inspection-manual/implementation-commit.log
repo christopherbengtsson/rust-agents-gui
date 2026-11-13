@@ -1,0 +1,30 @@
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 5ms on 167 files using 12 threads.
+$ oxlint src --max-warnings 0 --report-unused-disable-directives-severity warn
+[feature/m01-change-inspection 9790e46] Implement manual workspace change inspection (05a)
+ 34 files changed, 6296 insertions(+), 12 deletions(-)
+ create mode 100644 crates/core/src/git/inspection.rs
+ create mode 100644 crates/core/src/workspaces/inspection.rs
+ create mode 100644 crates/core/src/workspaces/inspection/tests.rs
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual.md
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/frontend-build.log
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/review-clippy.log
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/review-rust-measurements.log
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/review-rust.log
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/source-identity.json
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/unit-measurements.log
+ create mode 100644 docs/evidence/milestone-01-change-inspection-manual/verify.log
+ create mode 100644 src/components/blocks/workspace-changes.tsx
+ create mode 100644 src/components/primitives/unified-diff.tsx
+ create mode 100644 src/components/ui/code-block.tsx
+ create mode 100644 src/components/ui/resizable.tsx
+ create mode 100644 src/components/ui/scroll-area.tsx
+ create mode 100644 src/components/ui/tabs.tsx
+ create mode 100644 src/hooks/use-highlighted-code.ts
+ create mode 100644 src/hooks/use-workspace-changes.ts
+ create mode 100644 src/lib/changes.ts
+ create mode 100644 src/lib/highlighter.tsx
+ create mode 100644 src/workspace-changes.test.tsx

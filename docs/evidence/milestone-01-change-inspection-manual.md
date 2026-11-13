@@ -3,7 +3,7 @@
 2026-11-13. Implementation and controlled verification for ticket 05a on
 `feature/m01-change-inspection`. Parent 05, automatic refresh (05b), desktop
 qualification/packaging (05c), and Milestone 01 remain open. No provider work was
-submitted. The dated ticket comment identifies the implementation commit.
+submitted. Implementation commit: `9790e461cc14a3374058b4441a2995d82d460528`.
 
 ## Source and implemented behavior
 
@@ -40,7 +40,7 @@ Apple M4 Pro, Mac16,8, 12 cores, 48 GiB; macOS 26.2 ARM64 (25C56). Rust/Cargo
 Vite 8.3.8, TypeScript 7.0.2, react-resizable-panels 4.21.0 and Shiki 4.6.0
 (lockfile). Optional highlighting source is installed but unused by this feature.
 The worktree-default owned `target/` and warm caches were used; test profile,
-one Rust harness thread and one UI worker. Checks/builds were run sequentially.
+one Rust harness thread and one UI worker. The recorded gates/builds were run sequentially.
 The complete-gate log retains a brief Cargo build-directory lock wait; no stale
 binary contradiction or demonstrated build contamination occurred.
 
