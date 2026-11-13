@@ -62,6 +62,22 @@ sources, sidecar staging and Cargo output from its watcher. The frontend targets
 Safari 16.4 to match Tailwind 4; the macOS bundle minimum is 13.3. These are
 compatibility settings, not qualification of every supported OS.
 
+## Continuous integration
+
+[GitHub Actions CI](.github/workflows/ci.yml) runs on pull requests targeting
+`main`, pushes to `main`, and manual dispatch. One `macos-15` Apple Silicon job
+uses the repository's Node, pnpm and Rust versions. It installs frozen frontend
+dependencies, prepares the debug supervisor resource for Tauri's static checks,
+runs `corepack pnpm verify`, then builds frontend assets without repeating the
+TypeScript check. Resource preparation builds the supervisor without launching it.
+
+CI does not package/sign the app, launch desktop or supervisor processes, run
+provider sessions, or qualify native behavior. Those checks retain their separate
+milestone gates. Actions are pinned to release commits; caches are intentionally
+omitted for this initial workflow. See the [CI research](docs/research/github-actions-ci.md)
+for versions and sources. Hosted execution remains unverified until this branch
+is pushed and a matching GitHub event runs.
+
 ## Ownership
 
 - `crates/core`: Tauri-independent actions, observations and connection decisions.
