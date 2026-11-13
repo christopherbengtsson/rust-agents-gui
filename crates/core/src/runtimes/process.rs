@@ -310,8 +310,10 @@ impl Runner {
             passed: false,
             error: None,
             cleanup_confirmed: true,
+            exit_successful: None,
         };
         let mut total = 0;
+        let check_started = Instant::now();
         let outcome = (|| {
             if self.stop.load(Ordering::SeqCst) {
                 return Err(timeout());
@@ -338,6 +340,9 @@ impl Runner {
                 private_directory(&directory)?;
             }
             progress(Phase::Version);
+            if check_started.elapsed() >= OVERALL.saturating_sub(CLEANUP) {
+                return Err(timeout());
+            }
             let mut session = self.start(&command_spec(&executable, &directory, true))?;
             let result = version(session.as_mut(), &mut total, &self.stop);
             let clean = session.cleanup();
@@ -346,11 +351,12 @@ impl Runner {
                 diagnostic.cleanup_confirmed = false;
                 return Err(RuntimeError::cleanup());
             }
+            diagnostic.exit_successful = Some(session.successful_exit());
+            let spent = session.elapsed();
+            diagnostic.version = Some(result?);
             if !session.successful_exit() {
                 return Err(io_error());
             }
-            let spent = session.elapsed();
-            diagnostic.version = Some(result?);
             if diagnostic.version.as_deref() != Some(SUPPORTED_VERSION) {
                 return Err(RuntimeError::new(
                     ErrorCode::IncompatibleVersion,
@@ -367,7 +373,7 @@ impl Runner {
                 session.as_mut(),
                 &mut total,
                 &self.stop,
-                OVERALL.saturating_sub(spent),
+                OVERALL.saturating_sub(check_started.elapsed().max(spent)),
                 progress,
             );
             progress(Phase::Cleaning);
@@ -377,10 +383,11 @@ impl Runner {
                 diagnostic.cleanup_confirmed = false;
                 return Err(RuntimeError::cleanup());
             }
+            diagnostic.exit_successful = Some(session.successful_exit());
+            let evidence = result?;
             if !session.successful_exit() {
                 return Err(io_error());
             }
-            let evidence = result?;
             diagnostic.authentication = evidence.authentication;
             diagnostic.provider = evidence.provider;
             diagnostic.billing = evidence.billing;
@@ -393,6 +400,16 @@ impl Runner {
     }
     pub fn cleanup_confirmed(&self) -> bool {
         self.quarantine.is_empty()
+    }
+    pub fn reconcile_cleanup(&mut self) -> bool {
+        let mut retained = Vec::new();
+        for mut session in self.quarantine.drain(..) {
+            if !session.cleanup() {
+                retained.push(session);
+            }
+        }
+        self.quarantine = retained;
+        self.cleanup_confirmed()
     }
 }
 
@@ -832,7 +849,8 @@ impl Session for FixtureSession {
         self.scenario != "cleanup" || self.sent.is_empty()
     }
     fn successful_exit(&self) -> bool {
-        self.scenario != "exit"
+        // Fault exits after synthetic TERM/KILL must not mask the primary error.
+        self.scenario == "success" || self.sent.is_empty() && self.scenario != "exit"
     }
 }
 
@@ -1081,5 +1099,15 @@ mod tests {
         s.signal_ok = false;
         assert!(!clean_owned(&mut s));
         assert!(!s.reaped);
+    }
+
+    #[test]
+    fn failed_cleanup_reconciliation_retains_each_owned_handle() {
+        let mut r = runner("cleanup");
+        let d = r.check(&Configuration::default(), Uuid::new_v4(), &mut |_| {});
+        assert!(!d.cleanup_confirmed);
+        assert_eq!(r.quarantine.len(), 1);
+        assert!(!r.reconcile_cleanup());
+        assert_eq!(r.quarantine.len(), 1);
     }
 }

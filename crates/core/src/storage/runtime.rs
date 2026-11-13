@@ -1,7 +1,5 @@
 //! Narrow supervisor-owned storage seam. Runtime policy does not depend on workspaces.
-use crate::runtimes::{
-    Action, Configuration, ErrorCode, Phase, Result, RuntimeError, RuntimeStore,
-};
+use crate::runtimes::{Action, Configuration, ErrorCode, Result, RuntimeError, RuntimeStore};
 use rusqlite::{Connection, OptionalExtension, params};
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
@@ -110,8 +108,7 @@ impl RuntimeStore for RuntimeSqlite {
     }
     fn action(&mut self, id: Uuid) -> Result<Option<Action>> {
         self.readable()?;
-        let mut action: Option<Action> = self
-            .connection
+        self.connection
             .as_ref()
             .ok_or_else(RuntimeError::storage)?
             .query_row(
@@ -122,19 +119,7 @@ impl RuntimeStore for RuntimeSqlite {
             .optional()
             .map_err(|_| RuntimeError::storage())?
             .map(decode)
-            .transpose()?;
-        // Startup never repeats an unfinished operation. Even when no launch took
-        // place, an old Pending marker becomes an observation of uncertainty.
-        if let Some(a) = &mut action
-            && !a.phase.terminal()
-        {
-            a.phase = Phase::Uncertain;
-            a.error = Some(RuntimeError::new(
-                ErrorCode::PersistenceUncertain,
-                "The supervisor stopped before this setup action settled. Saved configuration is authoritative; no action was replayed.",
-            ));
-        }
-        Ok(action)
+            .transpose()
     }
     fn blocked(&mut self) -> Result<bool> {
         self.readable()?;

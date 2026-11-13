@@ -26,6 +26,8 @@ function runtime(): Runtimes {
     preferenceError: undefined,
     loading: false,
     sending: false,
+    reading: false,
+    recovered: undefined,
     stale: false,
     canAct: true,
     refresh: vi.fn(),

@@ -33,7 +33,7 @@ export function CodexSettings({ runtimes }: { runtimes: Runtimes }) {
     (!value.startsWith("/") ||
       new TextEncoder().encode(value).length > 4096 ||
       /[\0\r\n]/.test(value));
-  const active = observed?.active;
+  const active = runtimes.recovered ?? observed?.active;
   const pending = runtimes.sending || !!runtimes.pending || !!observed?.busy;
   const diagnostic = observed?.diagnostic;
   const problem =
@@ -176,6 +176,14 @@ export function CodexSettings({ runtimes }: { runtimes: Runtimes }) {
           <dd>{diagnostic.billing}</dd>
           <dt>Owned cleanup</dt>
           <dd>{diagnostic.cleanup_confirmed ? "Confirmed" : "Unconfirmed"}</dd>
+          <dt>Process exit</dt>
+          <dd>
+            {diagnostic.exit_successful === null
+              ? "Unknown"
+              : diagnostic.exit_successful
+                ? "Successful"
+                : "Nonzero or terminated"}
+          </dd>
         </dl>
       )}
       <p className="muted-copy">

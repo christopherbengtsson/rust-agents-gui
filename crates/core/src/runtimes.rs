@@ -176,6 +176,7 @@ pub struct Diagnostic {
     pub passed: bool,
     pub error: Option<RuntimeError>,
     pub cleanup_confirmed: bool,
+    pub exit_successful: Option<bool>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ActionLookup {
@@ -382,19 +383,56 @@ impl Runtimes {
             };
             refresh_store(&worker_state, &mut store);
             let mut runner = process::Runner::new(directory, worker_stop.clone());
-            while let Ok(request) = receiver.recv() {
-                execute(
-                    &worker_state,
-                    &mut store,
-                    request,
-                    &boot,
-                    |configuration, id, progress| runner.check(configuration, id, progress),
-                );
-            }
-            if !runner.cleanup_confirmed() {
-                update(&worker_state, |s| {
-                    s.reply.blocked = Some(RuntimeError::cleanup())
-                });
+            let mut disconnected = false;
+            let mut pending_cleanup: Option<Action> = None;
+            loop {
+                if !disconnected {
+                    match receiver.recv_timeout(std::time::Duration::from_millis(50)) {
+                        Ok(request) => execute(
+                            &worker_state,
+                            &mut store,
+                            request,
+                            &boot,
+                            |configuration, id, progress| runner.check(configuration, id, progress),
+                        ),
+                        Err(mpsc::RecvTimeoutError::Disconnected) => disconnected = true,
+                        Err(mpsc::RecvTimeoutError::Timeout) => {}
+                    }
+                }
+                if !runner.cleanup_confirmed() && runner.reconcile_cleanup() {
+                    pending_cleanup = worker_state
+                        .lock()
+                        .ok()
+                        .and_then(|s| s.reply.active.clone());
+                    if let Some(action) = &mut pending_cleanup {
+                        action.phase = Phase::Failed;
+                        action.error = Some(RuntimeError::new(
+                            ErrorCode::Process,
+                            "The previous setup check stopped; owned cleanup is now confirmed. Run a new explicit check when ready.",
+                        ));
+                    }
+                }
+                if let Some(action) = &pending_cleanup
+                    && store.finish(action, true).is_ok()
+                {
+                    publish_action(&worker_state, action);
+                    update(&worker_state, |s| {
+                        if let Some(d) = &mut s.reply.diagnostic {
+                            d.cleanup_confirmed = true;
+                            d.error = action.error.clone();
+                        }
+                    });
+                    refresh_store(&worker_state, &mut store);
+                    pending_cleanup = None;
+                }
+                if disconnected {
+                    if runner.cleanup_confirmed() && pending_cleanup.is_none() {
+                        break;
+                    }
+                    // Shutdown can return uncertainty while this worker continues
+                    // owning/reconciling its handles; it never abandons them.
+                    std::thread::sleep(std::time::Duration::from_millis(50));
+                }
             }
         });
         Self {
@@ -443,19 +481,50 @@ impl Runtimes {
         use std::sync::atomic::Ordering;
         self.stop.store(true, Ordering::SeqCst);
         self.sender.take();
-        let start = std::time::Instant::now();
-        while self.worker.as_ref().is_some_and(|w| !w.is_finished()) {
-            if start.elapsed() >= std::time::Duration::from_secs(4) {
-                return Err(RuntimeError::cleanup());
-            }
-            std::thread::sleep(std::time::Duration::from_millis(5));
-        }
-        if let Some(worker) = self.worker.take() {
-            worker.join().map_err(|_| RuntimeError::cleanup())?;
-        }
+        await_worker(&mut WorkerCompletion {
+            worker: &mut self.worker,
+            start: std::time::Instant::now(),
+        })?;
         let state = self.shared.lock().map_err(|_| RuntimeError::cleanup())?;
         if let Some(error) = &state.reply.blocked {
             return Err(error.clone());
+        }
+        Ok(())
+    }
+}
+
+trait Completion {
+    fn finished(&self) -> bool;
+    fn elapsed(&self) -> std::time::Duration;
+    fn tick(&mut self);
+    fn join(&mut self) -> Result<()>;
+}
+fn await_worker(completion: &mut impl Completion) -> Result<()> {
+    while !completion.finished() {
+        if completion.elapsed() >= std::time::Duration::from_secs(4) {
+            return Err(RuntimeError::cleanup());
+        }
+        completion.tick();
+    }
+    completion.join()
+}
+struct WorkerCompletion<'a> {
+    worker: &'a mut Option<JoinHandle<()>>,
+    start: std::time::Instant,
+}
+impl Completion for WorkerCompletion<'_> {
+    fn finished(&self) -> bool {
+        self.worker.as_ref().is_none_or(JoinHandle::is_finished)
+    }
+    fn elapsed(&self) -> std::time::Duration {
+        self.start.elapsed()
+    }
+    fn tick(&mut self) {
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    }
+    fn join(&mut self) -> Result<()> {
+        if let Some(worker) = self.worker.take() {
+            worker.join().map_err(|_| RuntimeError::cleanup())?;
         }
         Ok(())
     }
@@ -497,7 +566,7 @@ fn execute(
     }
     let id = request.id().expect("worker receives targeted actions only");
     if matches!(request, RuntimeRequest::Action { .. }) {
-        let result = store.action(id);
+        let result = store.action(id).map(|a| a.map(recovered_action));
         update(shared, |s| match result {
             Ok(action) => {
                 if let Some(a) = &action {
@@ -531,7 +600,7 @@ fn execute(
                     "This action ID already belongs to another request.",
                 ));
             }
-            action = old;
+            action = recovered_action(old);
             return Ok(());
         }
         if store.blocked()? {
@@ -609,7 +678,19 @@ fn execute(
             if saved.phase.terminal() {
                 action = saved;
             } else if matches!(request, RuntimeRequest::Save { .. }) {
-                let _ = store.finish(&action, true);
+                // The atomic preference/result transaction did not commit. A
+                // confirmed read of its Pending intent is not a crash diagnosis.
+                action.phase = Phase::Failed;
+                if error.code == ErrorCode::PersistenceUncertain {
+                    action.error = Some(RuntimeError::new(
+                        ErrorCode::Storage,
+                        "Authoritative read confirmed the Save did not commit. Previous saved preferences remain; edit and save explicitly.",
+                    ));
+                }
+                if let Err(failure) = store.finish(&action, true) {
+                    action.phase = Phase::Uncertain;
+                    action.error = Some(failure);
+                }
             }
         }
         update(shared, |s| {
@@ -632,15 +713,40 @@ fn publish_action(shared: &Mutex<State>, action: &Action) {
     });
 }
 
+fn recovered_action(mut action: Action) -> Action {
+    if !action.phase.terminal() {
+        action.phase = Phase::Uncertain;
+        action.error = Some(RuntimeError::new(
+            ErrorCode::PersistenceUncertain,
+            "This setup action has no recorded final result. Saved configuration is authoritative; no action was replayed.",
+        ));
+    }
+    action
+}
+
+// A failed explicit shutdown retains its worker on the Runtimes value. When the
+// Core itself is destroyed, transfer that still-owned worker to module recovery
+// ownership rather than detach it or perform an unbounded destructor join. The
+// admitted supervisor has one runtime owner; completed retained workers are joined.
+static RECOVERY_WORKERS: Mutex<Vec<JoinHandle<()>>> = Mutex::new(Vec::new());
 impl Drop for Runtimes {
     fn drop(&mut self) {
-        // Explicit shutdown reports bounded failure while retaining this owner.
-        // Destruction is the final fallback: request stop and observe completion,
-        // rather than silently detaching a worker or abandoning its child handles.
-        self.stop.store(true, std::sync::atomic::Ordering::SeqCst);
-        self.sender.take();
-        if let Some(worker) = self.worker.take() {
-            let _ = worker.join();
+        if self.shutdown().is_err()
+            && let Some(worker) = self.worker.take()
+        {
+            let mut retained = RECOVERY_WORKERS
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner);
+            let mut unfinished = Vec::new();
+            for previous in retained.drain(..) {
+                if previous.is_finished() {
+                    let _ = previous.join();
+                } else {
+                    unfinished.push(previous);
+                }
+            }
+            unfinished.push(worker);
+            *retained = unfinished;
         }
     }
 }

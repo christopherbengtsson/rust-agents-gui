@@ -184,3 +184,61 @@ test("owner change during an in-flight read drains it before observing the new o
   );
   expect(calls().every((r) => r.operation === "observe")).toBe(true);
 });
+
+test("recovered uncertain Save remains visible after its pending identity settles", async () => {
+  const request: RuntimeMutation = {
+    operation: "save",
+    target: initial.target,
+    action_id: "00000000-0000-0000-0000-000000000007",
+    revision: 1,
+    executable: "/new/codex",
+  };
+  localStorage.setItem(RUNTIME_PENDING, JSON.stringify(request));
+  vi.mocked(invoke).mockResolvedValue({
+    ...initial,
+    lookup: {
+      action_id: request.action_id,
+      complete: true,
+      action: {
+        action_id: request.action_id,
+        request,
+        phase: "uncertain",
+        error: {
+          code: "persistence_uncertain",
+          message: "No recorded final result",
+        },
+      },
+    },
+  });
+  const { result } = renderHook(() => useRuntimes("owner", true));
+  await waitFor(() => expect(result.current.pending).toBeNull());
+  expect(result.current.recovered?.phase).toBe("uncertain");
+  expect(result.current.recovered?.error?.message).toBe(
+    "No recorded final result",
+  );
+});
+
+test("a slow observation read visibly disables setup actions until it drains", async () => {
+  let release: ((value: RuntimeReply) => void) | undefined;
+  vi.mocked(invoke)
+    .mockResolvedValueOnce(initial)
+    .mockImplementationOnce(
+      () =>
+        new Promise<RuntimeReply>((resolve) => {
+          release = resolve;
+        }),
+    );
+  const { result } = renderHook(() => useRuntimes("owner", true));
+  await waitFor(() => expect(result.current.canAct).toBe(true));
+  let refreshing: Promise<void> | undefined;
+  act(() => {
+    refreshing = result.current.refresh();
+  });
+  expect(result.current.canAct).toBe(false);
+  expect(result.current.reading).toBe(true);
+  await act(async () => {
+    release?.(initial);
+    await refreshing;
+  });
+  expect(result.current.canAct).toBe(true);
+});

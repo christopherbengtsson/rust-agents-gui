@@ -53,6 +53,7 @@ struct Memory {
     fail_intent: bool,
     save_uncertain: bool,
     fail_finish: bool,
+    reject_save: bool,
 }
 impl RuntimeStore for Memory {
     fn configuration(&mut self) -> Result<Configuration> {
@@ -79,6 +80,9 @@ impl RuntimeStore for Memory {
     }
     fn save(&mut self, a: &Action, c: &Configuration) -> Result<()> {
         self.calls.push("save");
+        if self.reject_save {
+            return Err(RuntimeError::storage());
+        }
         self.configuration = c.clone();
         self.actions.insert(a.action_id, a.clone());
         if self.save_uncertain {
@@ -120,6 +124,7 @@ fn success(c: &Configuration, id: Uuid) -> Diagnostic {
         passed: true,
         error: None,
         cleanup_confirmed: true,
+        exit_successful: Some(true),
     }
 }
 
@@ -337,4 +342,63 @@ fn blocked_storage_reads_reenter_authoritative_storage_even_with_a_cached_action
     );
     assert!(shared.lock().unwrap().reply.blocked.is_none());
     assert!(store.calls.contains(&"read-configuration"));
+}
+
+#[test]
+fn confirmed_save_rollback_preserves_definite_rejection_and_previous_preference() {
+    let shared = Mutex::new(State::ready(target(), Configuration::default()));
+    let mut store = Memory {
+        reject_save: true,
+        ..Default::default()
+    };
+    let id = Uuid::new_v4();
+    execute(
+        &shared,
+        &mut store,
+        save(id, Some("/new/codex")),
+        "boot",
+        |_, _, _| panic!(),
+    );
+    let s = shared.lock().unwrap();
+    let action = s.reply.active.as_ref().unwrap();
+    assert_eq!(action.phase, Phase::Failed);
+    assert_eq!(action.error.as_ref().unwrap().code, ErrorCode::Storage);
+    assert!(s.reply.configuration.as_ref().unwrap().executable.is_none());
+    assert_eq!(store.actions[&id].phase, Phase::Failed);
+}
+
+#[test]
+fn bounded_worker_shutdown_keeps_ownership_on_timeout_and_joins_only_finished_work() {
+    struct Worker {
+        time: u64,
+        finishes: u64,
+        retained: bool,
+    }
+    impl Completion for Worker {
+        fn finished(&self) -> bool {
+            self.time >= self.finishes
+        }
+        fn elapsed(&self) -> std::time::Duration {
+            std::time::Duration::from_secs(self.time)
+        }
+        fn tick(&mut self) {
+            self.time += 1;
+        }
+        fn join(&mut self) -> Result<()> {
+            assert!(self.finished());
+            self.retained = false;
+            Ok(())
+        }
+    }
+    let mut worker = Worker {
+        time: 0,
+        finishes: 99,
+        retained: true,
+    };
+    assert!(await_worker(&mut worker).is_err());
+    assert!(worker.retained);
+    assert_eq!(worker.time, 4);
+    worker.finishes = worker.time;
+    assert!(await_worker(&mut worker).is_ok());
+    assert!(!worker.retained);
 }

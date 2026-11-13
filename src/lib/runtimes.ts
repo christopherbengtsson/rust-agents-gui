@@ -54,6 +54,7 @@ export type RuntimeDiagnostic = {
   passed: boolean;
   error: RuntimeError | null;
   cleanup_confirmed: boolean;
+  exit_successful: boolean | null;
 };
 export type RuntimeReply = {
   target: RuntimeTarget;
@@ -151,6 +152,7 @@ function diagnostic(v: unknown): v is RuntimeDiagnostic {
     string(v.billing) &&
     typeof v.passed === "boolean" &&
     typeof v.cleanup_confirmed === "boolean" &&
+    (v.exit_successful === null || typeof v.exit_successful === "boolean") &&
     errorOrNull(v.error) &&
     (!v.passed || (v.cleanup_confirmed && v.error === null))
   );

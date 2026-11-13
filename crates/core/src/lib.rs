@@ -84,6 +84,14 @@ impl Core {
             .request(request)
     }
 
+    /// Host lifecycle seam. A failed bounded stop retains runtime ownership and
+    /// must not be reported as successful supervisor shutdown.
+    pub fn shutdown_runtimes(&mut self) -> Result<(), runtimes::RuntimeError> {
+        self.runtimes
+            .as_mut()
+            .map_or(Ok(()), runtimes::Runtimes::shutdown)
+    }
+
     pub fn repository_request(
         &self,
         request: workspaces::RepositoryRequest,

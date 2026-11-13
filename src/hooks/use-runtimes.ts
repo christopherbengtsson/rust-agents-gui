@@ -9,6 +9,7 @@ import {
   type RuntimeError,
   type RuntimeMutation,
   type RuntimeReply,
+  type RuntimeAction,
 } from "@/lib/runtimes";
 
 // One App-owned observation/action lifetime. Settings owns only discardable drafts.
@@ -19,6 +20,8 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
   const [actionError, setActionError] = useState<RuntimeError>();
   const [preferenceError, setPreferenceError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [reading, setReading] = useState(false);
+  const [recovered, setRecovered] = useState<RuntimeAction>();
   const intent = useRef(pending);
   const epoch = useRef(0);
   const mounted = useRef(false);
@@ -45,6 +48,7 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
       return;
     }
     lane.current = true;
+    setReading(true);
     const generation = epoch.current;
     const active = () => mounted.current && epoch.current === generation;
     return completeOperation(
@@ -62,6 +66,8 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
         if (!active()) return;
         setObservation(reply);
         setError(undefined);
+        if (reply.lookup?.complete && reply.lookup.action)
+          setRecovered(reply.lookup.action);
         if (
           retained &&
           reply.configuration &&
@@ -77,6 +83,7 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
       },
       () => {
         lane.current = false;
+        if (mounted.current) setReading(false);
         if (mounted.current) setLoading(false);
         if (queued.current && mounted.current) {
           queued.current = false;
@@ -155,6 +162,7 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
       submitting.current = true;
       setSending(true);
       setActionError(undefined);
+      setRecovered(undefined);
       const generation = epoch.current;
       const active = () => mounted.current && epoch.current === generation;
       await completeOperation(
@@ -195,6 +203,8 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
     preferenceError,
     loading,
     sending,
+    reading,
+    recovered,
     stale:
       !!observation &&
       (!owner || observation.target.owner !== owner || !!error),
@@ -206,7 +216,8 @@ export function useRuntimes(owner: string | undefined, visible: boolean) {
       !observation.blocked &&
       !error &&
       !pending &&
-      !sending,
+      !sending &&
+      !reading,
     refresh,
     save: (executable: string | null) => submit("save", executable),
     check: () => submit("check"),
