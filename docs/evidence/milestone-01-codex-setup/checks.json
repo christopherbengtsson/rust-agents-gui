@@ -1,0 +1,41 @@
+[
+  {
+    "label": "verify-final",
+    "command": ["corepack", "pnpm", "verify"],
+    "exitStatus": 0,
+    "wallSeconds": 11.429453
+  },
+  {
+    "label": "unit-measurements-final",
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exitStatus": 0,
+    "wallSeconds": 47.241548
+  },
+  {
+    "label": "build-final",
+    "command": ["corepack", "pnpm", "build"],
+    "exitStatus": 0,
+    "wallSeconds": 41.079681
+  },
+  {
+    "label": "verify-reviewed",
+    "source": "77f84c8",
+    "command": ["corepack", "pnpm", "verify"],
+    "exitStatus": 0,
+    "wallSeconds": 10.481794
+  },
+  {
+    "label": "unit-measurements-reviewed",
+    "source": "77f84c8",
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exitStatus": 0,
+    "wallSeconds": 49.276828
+  },
+  {
+    "label": "build-reviewed",
+    "source": "77f84c8",
+    "command": ["corepack", "pnpm", "build"],
+    "exitStatus": 0,
+    "wallSeconds": 41.647807
+  }
+]

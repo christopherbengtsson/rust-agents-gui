@@ -12,11 +12,17 @@ Action, Save and Check requests. Mutations bind supervisor owner, runtime Codex,
 configuration revision and UUID action identity. Reads target the current owner;
 historical action lookup retains its original owner/request identity. A 32-action
 session cache is only an optimization: cache misses read durable action identity
-before effects. A repeated admitted check returns status and never respawns.
+before fresh revision/cleanup admission rules or effects. A repeated admitted check
+returns its exact lookup status and never respawns. During an occupied lane, an
+uncached identity returns unresolved lookup status without admitting another job.
+Rejected conflicting payloads are separate from the canonical action. Action reads
+carry the original retained mutation as `expected`, letting Rust reconstruct a
+conflict rejection after restart without persisting or replaying that payload.
 
 One runtime-owned worker and a capacity-one channel serialize persistence and
-process work. The admission limit includes in-flight work; competing mutations
-reject Busy. Shared-state locks only copy/admit/publish observations; storage,
+process work. One request may be queued or executing; retained cleanup reconciliation
+can coexist with that queued identity lookup, while its fence blocks new setup
+effects. Shared-state locks only copy/admit/publish observations; storage,
 process waits, stdio and cleanup occur outside them. Check begins only after the
 action and recovery intent commit. Save starts no Codex process and atomically
 updates the executable revision and recorded result, invalidating readiness.
@@ -56,7 +62,8 @@ budgets and high-level cleanup decisions.
 
 | Budget                                                       | Value                                                     |
 | ------------------------------------------------------------ | --------------------------------------------------------- |
-| Outstanding runtime work, including in flight                | 1                                                         |
+| Queued or executing request                                  | 1                                                         |
+| Admitted setup effects, including owned cleanup              | 1                                                         |
 | Cached action records                                        | 32                                                        |
 | Executable preference                                        | 4096 UTF-8 bytes                                          |
 | Provider frame                                               | 256 KiB                                                   |
@@ -77,8 +84,14 @@ unreaped child pins process-group signaling authority; cleanup observes group
 absence, drained pipes and release of a private inherited execution lease. Child
 exit alone never means descendant cleanup. There is no signal after reaping or
 from a saved PID. Failed cleanup retains process handles with the runtime worker
-and a durable launch fence; shutdown reports failure. Destructor cleanup remains
-a last-resort wait, not a successful bounded-shutdown claim.
+and a durable launch fence; shutdown reports failure. Subsequent owned cleanup
+reconciliation can clear the fence only after confirmed cleanup and durable
+completion recording, without repeating a check. Core exposes shutdown_runtimes. If its runtime owner is destroyed after a failed
+bounded shutdown, it transfers the unfinished JoinHandle to private runtime
+recovery ownership. The worker continues bounded cleanup attempts and retains
+its process handles until confirmed; it does not detach or block destruction
+indefinitely. No successful supervisor Quit/flush workflow is claimed here;
+that existing milestone lifecycle work remains separate.
 
 Only preferences, action/recovery markers and boot identity persist. Successful
 diagnostic details are session observations. Supervisor restart never repeats a
@@ -137,3 +150,44 @@ in 06b. Unit success is not SQLite durability, OS ownership/lease/descendant cle
 WebView accessibility/CSP/responsiveness or native compatibility evidence. Those
 remain 06d. Native-provider processes/submissions, login changes and runtime
 configuration changes: **zero** in this implementation session.
+
+## Final reviewed-source results
+
+Runtime source: `77f84c81291d44299f705103d380debc8f5114b5`. The final evidence
+commit changes documentation/logs only. [Source/environment identity](milestone-01-codex-setup/source-identity.json)
+records file SHA-256 values, target, toolchain and the dirty documentation state.
+Machine: Apple M4 Pro, 48 GiB, macOS 26.2 ARM64; Rust/Cargo 1.99.1, Node 26.13.1,
+pnpm 12.18.0. Units use the default worktree target, test profile, warm cache and
+one harness worker/thread. No fresh-private-target compilation was performed.
+
+| Command                      | Result                                                                           | Wall time |
+| ---------------------------- | -------------------------------------------------------------------------------- | --------- |
+| `corepack pnpm verify`       | Format, lint, TypeScript, Clippy; **140 Rust + 25 tooling + 113 UI**, all passed | 10.482 s  |
+| `corepack pnpm test:measure` | One warm-up + five warm executions for each harness, all passed                  | 49.277 s  |
+| `corepack pnpm build`        | Production app bundle built, 15.31 MiB; no app/provider launched                 | 41.648 s  |
+
+The [command/timing records](milestone-01-codex-setup/checks.json) distinguish
+intermediate and reviewed-source cohorts. Final logs:
+[verification](milestone-01-codex-setup/verify-reviewed.log),
+[measurements](milestone-01-codex-setup/unit-measurements-reviewed.log),
+[packaging](milestone-01-codex-setup/build-reviewed.log).
+The existing Vite chunk-size advisory remains visible in packaging logs; packaging
+completed successfully. An intermediate commit hook rejected generated evidence
+JSON formatting; formatting was corrected, with no verification failure concealed.
+
+Warm unit compilation took 0.076989 s separately from execution. Five-run warm
+execution median/range: Rust **0.389715 s / 0.388297–0.390849 s**; tooling
+**0.837268 s / 0.827543–0.848928 s**; UI **6.958942 s / 6.901620–6.968020 s**.
+These are harness measurements, not actual WebView responsiveness claims.
+The [staged sidecar provenance](milestone-01-codex-setup/sidecar-provenance.json)
+records Cargo's exact executable, source, target/profile and binary hash.
+
+Independent [Standards and Spec reviews](milestone-01-codex-setup/review.md) found
+and prompted fixes for lifecycle ownership, definite Save rejection, primary error
+preservation, recovered UI outcomes, read-lane feedback and exact durable action
+identity/restart recovery. Final re-review: **Standards 0, Spec 0 unresolved**.
+
+06b implementation and controlled-check acceptance is complete. 06c expands
+adversarial coverage; 06d owns actual desktop/process, accessibility/responsiveness,
+SQLite durability/migration, OS cleanup and separately permitted native metadata
+qualification. Their unperformed results remain open. Parent 06 remains open.
