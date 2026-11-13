@@ -182,7 +182,7 @@ export function validateRuntimeReply(
         id(value.lookup.action_id) &&
         typeof value.lookup.complete === "boolean" &&
         (value.lookup.action === null || action(value.lookup.action)));
-    if (request.operation === "action") {
+    if (request.operation !== "observe") {
       valid =
         valid &&
         object(value.lookup) &&
@@ -195,7 +195,9 @@ export function validateRuntimeReply(
       ) {
         valid =
           value.lookup.action.action_id === request.action_id &&
-          (!pending || sameMutation(value.lookup.action.request, pending));
+          (request.operation === "action"
+            ? !pending || sameMutation(value.lookup.action.request, pending)
+            : sameMutation(value.lookup.action.request, request));
       }
     } else valid = valid && value.lookup === null;
     if (

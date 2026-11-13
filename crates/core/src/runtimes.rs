@@ -296,38 +296,22 @@ impl State {
                 action: None,
             });
         } else {
-            if let Some(error) = &self.reply.blocked {
-                return Err(error.clone());
+            if let RuntimeRequest::Save { executable, .. } = request {
+                validate_preference(executable.as_deref())?;
             }
             if self.reply.busy {
-                return Err(RuntimeError::new(
-                    ErrorCode::Busy,
-                    "Wait for the current setup action and owned cleanup to settle.",
-                ));
+                // Status is unresolved, and no second job is admitted. In
+                // particular an evicted repeated identity is not freshly rejected.
+                self.reply.lookup = Some(ActionLookup {
+                    action_id: id,
+                    complete: false,
+                    action: None,
+                });
+                return Ok(false);
             }
-            let configuration = self
-                .reply
-                .configuration
-                .as_ref()
-                .ok_or_else(RuntimeError::storage)?;
-            let revision = match request {
-                RuntimeRequest::Save {
-                    revision,
-                    executable,
-                    ..
-                } => {
-                    validate_preference(executable.as_deref())?;
-                    *revision
-                }
-                RuntimeRequest::Check { revision, .. } => *revision,
-                _ => unreachable!(),
-            };
-            if revision != configuration.revision {
-                return Err(RuntimeError::new(
-                    ErrorCode::StaleTarget,
-                    "The saved executable changed. Refresh its configuration before continuing.",
-                ));
-            }
+            // The worker resolves durable identity before fresh admission rules.
+            // Configuration/cleanup fences may reject new work, never hide an
+            // already admitted action's recorded result.
             let action = Action {
                 action_id: id,
                 request: request.clone(),
@@ -443,11 +427,7 @@ impl Runtimes {
         }
     }
     pub fn request(&self, request: RuntimeRequest) -> Result<RuntimeReply> {
-        let lookup_id = if let RuntimeRequest::Action { action_id, .. } = &request {
-            Some(*action_id)
-        } else {
-            None
-        };
+        let lookup_id = request.id();
         let mut state = self.shared.lock().map_err(|_| RuntimeError::storage())?;
         if state.admit(&request)?
             && self
@@ -675,7 +655,8 @@ fn execute(
         action.error = Some(error.clone());
         // Reopen/read on the storage side settles a lost commit, never a repeated write.
         if let Ok(Some(saved)) = store.action(id) {
-            if saved.phase.terminal() {
+            if saved.request != request { /* Never substitute another request's recorded outcome. */
+            } else if saved.phase.terminal() {
                 action = saved;
             } else if matches!(request, RuntimeRequest::Save { .. }) {
                 // The atomic preference/result transaction did not commit. A

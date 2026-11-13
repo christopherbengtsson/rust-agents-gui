@@ -40,3 +40,41 @@ test("runtime observations reject wrong owners, malformed fields and unrelated a
     ),
   ).toThrow();
 });
+
+test("repeated mutation replies validate the exact recorded action rather than the latest active action", () => {
+  const request = {
+    operation: "check" as const,
+    target,
+    action_id: "00000000-0000-0000-0000-000000000001",
+    revision: 1,
+  };
+  const reply = {
+    ...readyRuntime,
+    configuration: { revision: 2, executable: null },
+    lookup: {
+      action_id: request.action_id,
+      complete: true,
+      action: {
+        action_id: request.action_id,
+        request,
+        phase: "completed",
+        error: null,
+      },
+    },
+  };
+  expect(validateRuntimeReply(reply, request).lookup?.action?.action_id).toBe(
+    request.action_id,
+  );
+  expect(() =>
+    validateRuntimeReply(
+      {
+        ...reply,
+        lookup: {
+          ...reply.lookup,
+          action_id: "00000000-0000-0000-0000-000000000002",
+        },
+      },
+      request,
+    ),
+  ).toThrow();
+});

@@ -29,10 +29,7 @@ fn admission_serializes_setup_and_fences_changed_owner_and_configuration() {
     let mut state = State::ready(target(), Configuration::default());
     let request = save(Uuid::new_v4(), Some("/bin/codex"));
     assert!(state.admit(&request).unwrap());
-    assert_eq!(
-        state.admit(&save(Uuid::new_v4(), None)).unwrap_err().code,
-        ErrorCode::Busy
-    );
+    assert!(!state.admit(&save(Uuid::new_v4(), None)).unwrap());
     assert!(!state.admit(&request).unwrap());
     let mut stale = request.clone();
     if let RuntimeRequest::Save { target, .. } = &mut stale {
@@ -260,7 +257,9 @@ fn unconfirmed_cleanup_and_failed_final_persistence_keep_the_replacement_fence()
             s.reply.blocked.as_ref().unwrap().code,
             ErrorCode::CleanupUnconfirmed
         );
-        assert!(s.admit(&save(Uuid::new_v4(), None)).is_err());
+        assert!(s.admit(&save(Uuid::new_v4(), None)).unwrap());
+        // Admission here queues identity resolution only. The owning worker
+        // applies durable cleanup fencing before any new effect.
     }
 }
 #[test]
@@ -401,4 +400,63 @@ fn bounded_worker_shutdown_keeps_ownership_on_timeout_and_joins_only_finished_wo
     worker.finishes = worker.time;
     assert!(await_worker(&mut worker).is_ok());
     assert!(!worker.retained);
+}
+
+#[test]
+fn public_repeated_mutations_return_exact_cached_and_evicted_action_status() {
+    let old_id = Uuid::from_u128(1);
+    let old_request = check(old_id);
+    let old = Action {
+        action_id: old_id,
+        request: old_request.clone(),
+        phase: Phase::Completed,
+        error: None,
+    };
+    let mut state = State::ready(
+        target(),
+        Configuration {
+            revision: 2,
+            executable: None,
+        },
+    );
+    state.remember(old.clone());
+    state.reply.active = Some(Action {
+        action_id: Uuid::from_u128(2),
+        request: save(Uuid::from_u128(2), None),
+        phase: Phase::Completed,
+        error: None,
+    });
+    let shared = Arc::new(Mutex::new(state));
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let runtime = Runtimes {
+        shared: shared.clone(),
+        sender: Some(sender),
+        worker: None,
+        stop: Arc::new(std::sync::atomic::AtomicBool::new(false)),
+    };
+    let reply = runtime.request(old_request.clone()).unwrap();
+    assert_eq!(reply.lookup.unwrap().action.unwrap().action_id, old_id);
+    assert!(receiver.try_recv().is_err());
+    shared.lock().unwrap().actions.clear();
+    shared.lock().unwrap().reply.blocked = Some(RuntimeError::cleanup());
+    let reply = runtime.request(old_request.clone()).unwrap();
+    assert!(!reply.lookup.unwrap().complete);
+    let queued = receiver.try_recv().unwrap();
+    assert_eq!(queued, old_request);
+    let mut store = Memory {
+        configuration: Configuration {
+            revision: 2,
+            executable: None,
+        },
+        blocked: true,
+        ..Default::default()
+    };
+    store.actions.insert(old_id, old);
+    execute(&shared, &mut store, queued, "boot", |_, _, _| {
+        panic!("evicted repeated identity replayed")
+    });
+    let reply = runtime.request(old_request).unwrap();
+    let lookup = reply.lookup.unwrap();
+    assert!(lookup.complete);
+    assert_eq!(lookup.action.unwrap().phase, Phase::Completed);
 }
