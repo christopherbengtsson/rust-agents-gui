@@ -78,5 +78,8 @@ Maximum-preview tab feedback conservatively measured 34.71 ms / 56.73 ms medians
 all measured samples below 100 ms; method, viewport and limits are explicit.
 Parent 05's original eight items were cross-checked against evidence. Native
 provider results are not run (zero submissions), full-MVP concurrency is deferred,
-and Milestone 01/unrelated tickets remain open. Tested revision is recorded in the
-following commit comment after the evidence/fixes commit.
+and Milestone 01/unrelated tickets remain open.
+
+Final tested implementation/qualification revision: `23fb5e8e3a02886c44bde3f7989a8ec8510c6b16`.
+The following evidence-only commit records this revision and retains the commit
+hook output; it changes no product code.

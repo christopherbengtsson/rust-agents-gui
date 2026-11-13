@@ -1,6 +1,7 @@
 # 05c — workspace change inspection qualification
 
 2026-11-13. Parent 05 / Milestone 01 A6 fixture qualification passed after fixes.
+Tested implementation/qualification revision: `23fb5e8e3a02886c44bde3f7989a8ec8510c6b16`.
 Native-provider qualification was **not run**; **zero provider submissions**.
 Milestone 01 and its unrelated tickets remain open.
 
