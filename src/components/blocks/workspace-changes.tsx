@@ -1,3 +1,4 @@
+import type { WorkspaceView } from "@/lib/navigation";
 import {
   useCallback,
   useRef,
@@ -5,6 +6,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { useStore } from "zustand";
 import { CSPProvider } from "@base-ui/react/csp-provider";
 import type { PanelImperativeHandle } from "react-resizable-panels";
 import { Button } from "@/components/ui/button";
@@ -32,6 +34,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
+import {
+  defaultWorkspacePresentation,
+  type ReadingPosition,
+} from "@/lib/presentation-store";
 import { UnifiedDiff } from "@/components/primitives/unified-diff";
 import {
   useWorkspaceChanges,
@@ -52,18 +58,25 @@ function subscribeNarrow(changed: () => void) {
 const readNarrow = () => window.matchMedia(narrowQuery).matches;
 
 export function WorkspaceInspection({
+  view: tab,
+  onViewChange,
   owner,
   workspaceId,
   reader,
   children,
 }: {
+  view: WorkspaceView;
+  onViewChange: (view: WorkspaceView) => void;
   owner: string | undefined;
   workspaceId: string;
   reader: WorkspaceChangesReader;
   children: ReactNode;
 }) {
-  const [tab, setTab] = useState("workspace");
-  const [collapsed, setCollapsed] = useState(false);
+  const remembered = useStore(
+    reader.presentation,
+    (state) => state.contexts[workspaceId] ?? defaultWorkspacePresentation,
+  );
+  const [collapsed, setCollapsed] = useState(remembered.collapsed);
   const [sheet, setSheet] = useState(false);
   const narrow = useSyncExternalStore(subscribeNarrow, readNarrow);
   const changes = useWorkspaceChanges(
@@ -74,15 +87,23 @@ export function WorkspaceInspection({
     reader,
   );
   const panel = useRef<PanelImperativeHandle>(null);
-  const position = useRef({ top: 0, left: 0 });
-  const savePosition = useCallback((value: { top: number; left: number }) => {
-    position.current = value;
-  }, []);
+  const savePosition = useCallback(
+    (comparison: string, file: string, position: ReadingPosition) => {
+      reader.presentation
+        .getState()
+        .rememberPosition(workspaceId, comparison, file, position);
+    },
+    [reader, workspaceId],
+  );
+  const rememberLayout = (filesWidth: number, collapsed: boolean) => {
+    reader.presentation
+      .getState()
+      .rememberLayout(workspaceId, { filesWidth, collapsed });
+  };
   const select = (file: ChangedFile) => {
-    if (changes.selected?.id !== file.id)
-      position.current = { top: 0, left: 0 };
     changes.select(file);
-    setTab("changes");
+    onViewChange("changes");
+    reader.presentation.getState().rememberView(workspaceId, "changes");
     setSheet(false);
   };
   const list = <ChangedFiles changes={changes} onSelect={select} />;
@@ -127,7 +148,11 @@ export function WorkspaceInspection({
               variant="ghost"
               aria-expanded={!collapsed}
               onClick={() => {
-                if (collapsed) panel.current?.expand();
+                const width =
+                  reader.presentation.getState().contexts[workspaceId]
+                    ?.filesWidth ?? remembered.filesWidth;
+                rememberLayout(width, !collapsed);
+                if (collapsed) panel.current?.resize(`${width}%`);
                 else panel.current?.collapse();
               }}
             >
@@ -139,11 +164,24 @@ export function WorkspaceInspection({
         <ResizablePanelGroup
           orientation="horizontal"
           className="inspection-panels"
+          onLayoutChanged={(layout, meta) => {
+            if (narrow || !meta.isUserInteraction) return;
+            const width = (meta.requestedLayout ?? layout)["inspection-files"];
+            if (width === undefined) return;
+            const previousWidth =
+              reader.presentation.getState().contexts[workspaceId]
+                ?.filesWidth ?? remembered.filesWidth;
+            rememberLayout(width || previousWidth, width === 0);
+          }}
         >
           <ResizablePanel id="inspection-main" minSize={180}>
             <Tabs
               value={tab}
-              onValueChange={(value) => setTab(String(value))}
+              onValueChange={(value) => {
+                if (value !== "workspace" && value !== "changes") return;
+                onViewChange(value);
+                reader.presentation.getState().rememberView(workspaceId, value);
+              }}
               className="inspection-tabs"
             >
               <TabsList aria-label="Workspace views">
@@ -162,11 +200,7 @@ export function WorkspaceInspection({
                 keepMounted={false}
                 className="changes-tab"
               >
-                <SelectedDiff
-                  changes={changes}
-                  position={position}
-                  onPosition={savePosition}
-                />
+                <SelectedDiff changes={changes} onPosition={savePosition} />
               </TabsContent>
             </Tabs>
           </ResizablePanel>
@@ -176,7 +210,9 @@ export function WorkspaceInspection({
               <ResizablePanel
                 id="inspection-files"
                 panelRef={panel}
-                defaultSize="32%"
+                defaultSize={
+                  remembered.collapsed ? "0%" : `${remembered.filesWidth}%`
+                }
                 minSize={170}
                 maxSize="55%"
                 collapsible
@@ -315,13 +351,23 @@ export function ChangedFiles({
 
 function SelectedDiff({
   changes,
-  position,
   onPosition,
 }: {
   changes: WorkspaceChanges;
-  position: React.RefObject<{ top: number; left: number }>;
-  onPosition: (position: { top: number; left: number }) => void;
+  onPosition: (
+    comparison: string,
+    file: string,
+    position: ReadingPosition,
+  ) => void;
 }) {
+  const comparison = changes.selected?.comparison;
+  const file = changes.selected?.id;
+  const savePosition = useCallback(
+    (position: ReadingPosition) => {
+      if (comparison && file) onPosition(comparison, file, position);
+    },
+    [comparison, file, onPosition],
+  );
   const p = changes.preview;
   const preview = p?.preview;
   if (!changes.selected)
@@ -367,10 +413,10 @@ function SelectedDiff({
           {preview.note && <p>{preview.note}</p>}
           {preview.rows.length > 0 && (
             <UnifiedDiff
-              key={changes.selected.id}
+              key={`${comparison}:${changes.selected.id}`}
               rows={preview.rows}
-              position={position}
-              onPosition={onPosition}
+              initialPosition={changes.selected.position ?? { top: 0, left: 0 }}
+              onPosition={savePosition}
             />
           )}
         </>

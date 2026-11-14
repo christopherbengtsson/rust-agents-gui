@@ -1,0 +1,43 @@
+{
+  "root": "/private/tmp/aw-f04g-desktop-tq4w5p9r",
+  "states": {
+    "current": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current",
+    "baseline": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-baseline"
+  },
+  "repositories": [
+    "/private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha",
+    "/private/tmp/aw-f04g-desktop-tq4w5p9r/Beta"
+  ],
+  "bundles": {
+    "current": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g current.app",
+    "baseline": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g baseline.app"
+  },
+  "source_hashes": {
+    "F04g baseline.app/Contents/MacOS/workspace-desktop": "2ea47e0f6cb5289551e835c12d7c9228eee382a92f19f787bcaffe0456b16d63",
+    "F04g current.app/Contents/MacOS/workspace-desktop": "a74e6dd57b25c0dc0bb984df95f958b75ddd3e7b6e51487ec925c93eb3791693"
+  },
+  "current_pid": 17812,
+  "inspect_current_pid": 20827,
+  "inspect_baseline_pid": 21014,
+  "fixed_release_bundle": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g fixed release.app",
+  "fixed_inspection_pid": 31618,
+  "owner_snapshot": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 17819,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "17819-1794674213130326000",
+      "revision": 589
+    },
+    "reset": true
+  },
+  "final_release_pid": 44572,
+  "final_release_bundle": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g Final Release.app",
+  "final_release_state": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-final-release",
+  "proxy_pid": 45689,
+  "final_inspection_pid": 46183,
+  "final_inspection_bundle": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g Final Inspection.app",
+  "reopened_inspection_pid": 46662
+}

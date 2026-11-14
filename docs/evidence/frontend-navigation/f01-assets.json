@@ -1,0 +1,23 @@
+{
+  "command": "corepack pnpm frontend:build",
+  "profile": "production",
+  "gzipLevel": 9,
+  "brotliQuality": 11,
+  "baselineAssetsUnchanged": true,
+  "assets": [
+    {
+      "name": "index-D4XeIzmN.js",
+      "raw": 567086,
+      "gzip": 178093,
+      "brotli": 150780,
+      "sha256": "97cb1c121204c2dc8df38b950d3e8a06a623836f4c4b2480045583c3edc9c983"
+    },
+    {
+      "name": "index-Nt6iarJC.css",
+      "raw": 99404,
+      "gzip": 16238,
+      "brotli": 13995,
+      "sha256": "2c47da13a5996c082bda2d6d021c55f87ad1f64c1d9459fcacb19cd6d95ccd64"
+    }
+  ]
+}

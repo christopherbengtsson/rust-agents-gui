@@ -1,0 +1,859 @@
+{
+  "snapshot": {
+    "time": 902134,
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queryCount": 4,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 335,
+    "logCount": 809,
+    "commands": {
+      "workspace_request": 392,
+      "observation_acknowledge": 379,
+      "repository_request": 23,
+      "observation_stop": 6,
+      "supervisor_status": 3,
+      "desktop_pid": 3,
+      "observation_subscribe": 3
+    },
+    "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+    "width": 900,
+    "height": 148,
+    "actor": "idle",
+    "cacheBodyBytes": 2020
+  },
+  "navigation": [
+    {
+      "label": "large.txt\n.M\n",
+      "start": 76690,
+      "trusted": true,
+      "feedback": 67,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 77498,
+      "trusted": true,
+      "feedback": 33,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 78297,
+      "trusted": true,
+      "feedback": 46,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 79114,
+      "trusted": true,
+      "feedback": 23,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 79915,
+      "trusted": true,
+      "feedback": 49,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 80731.00000000001,
+      "trusted": true,
+      "feedback": 22.999999999985448,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 81531,
+      "trusted": true,
+      "feedback": 44,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 82347.00000000001,
+      "trusted": true,
+      "feedback": 32.99999999998545,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 83156,
+      "trusted": true,
+      "feedback": 44,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 83981.00000000001,
+      "trusted": true,
+      "feedback": 24.999999999985448,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 84764,
+      "trusted": true,
+      "feedback": 44,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 85581,
+      "trusted": true,
+      "feedback": 24,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 86364,
+      "trusted": true,
+      "feedback": 43,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Beta\n",
+      "start": 296427,
+      "trusted": true,
+      "feedback": 24,
+      "heading": "Beta"
+    },
+    {
+      "label": "Refresh status",
+      "start": 462012,
+      "trusted": true,
+      "feedback": 25.000000000058208,
+      "heading": "Beta"
+    },
+    {
+      "label": "Refresh status",
+      "start": 477359.00000000006,
+      "trusted": true,
+      "feedback": 15.999999999941792,
+      "heading": "Beta"
+    },
+    {
+      "label": "Refresh status",
+      "start": 698977,
+      "trusted": true,
+      "feedback": 14,
+      "heading": "Beta"
+    }
+  ],
+  "windows": [
+    {
+      "label": "visible",
+      "start": {
+        "time": 75387,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 0,
+        "duplicates": 0,
+        "queryCount": 9,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 53,
+        "logCount": 0,
+        "commands": {},
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 148
+      },
+      "end": {
+        "time": 81388,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 10,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 59,
+        "logCount": 23,
+        "commands": {
+          "workspace_request": 17,
+          "observation_acknowledge": 6
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    },
+    {
+      "start": {
+        "time": 175470,
+        "visibility": "hidden",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 44,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 266,
+        "logCount": 545,
+        "commands": {
+          "workspace_request": 330,
+          "observation_acknowledge": 215
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "idle",
+        "cacheBodyBytes": 982801
+      },
+      "end": {
+        "time": 179488,
+        "visibility": "hidden",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 44,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 266,
+        "logCount": 545,
+        "commands": {
+          "workspace_request": 330,
+          "observation_acknowledge": 215
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "idle",
+        "cacheBodyBytes": 982801
+      }
+    },
+    {
+      "label": "steady-visible",
+      "start": {
+        "time": 173649,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 44,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 263,
+        "logCount": 539,
+        "commands": {
+          "workspace_request": 327,
+          "observation_acknowledge": 212
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 148,
+        "actor": "waiting",
+        "cacheBodyBytes": 982799
+      },
+      "end": {
+        "time": 179688.00000000003,
+        "visibility": "hidden",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 44,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 266,
+        "logCount": 545,
+        "commands": {
+          "workspace_request": 330,
+          "observation_acknowledge": 215
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "idle",
+        "cacheBodyBytes": 982801
+      }
+    },
+    {
+      "start": {
+        "time": 280303,
+        "visibility": "visible",
+        "active": 1,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 44,
+        "queue": 0,
+        "pending": 1,
+        "physicalActive": 1,
+        "freshness": 266,
+        "logCount": 566,
+        "commands": {
+          "workspace_request": 331,
+          "observation_acknowledge": 235
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "reading",
+        "cacheBodyBytes": 982801
+      },
+      "end": {
+        "time": 284305,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 46,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 275,
+        "logCount": 587,
+        "commands": {
+          "workspace_request": 343,
+          "observation_acknowledge": 244
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "waiting",
+        "cacheBodyBytes": 1038777
+      }
+    },
+    {
+      "start": {
+        "time": 280335,
+        "visibility": "hidden",
+        "active": 1,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 45,
+        "queue": 0,
+        "pending": 1,
+        "physicalActive": 1,
+        "freshness": 268,
+        "logCount": 570,
+        "commands": {
+          "workspace_request": 333,
+          "observation_acknowledge": 237
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "draining",
+        "cacheBodyBytes": 1010789
+      },
+      "end": {
+        "time": 284339,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 46,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 275,
+        "logCount": 587,
+        "commands": {
+          "workspace_request": 343,
+          "observation_acknowledge": 244
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "waiting",
+        "cacheBodyBytes": 1038777
+      }
+    },
+    {
+      "start": {
+        "time": 281270,
+        "visibility": "visible",
+        "active": 1,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 45,
+        "queue": 0,
+        "pending": 1,
+        "physicalActive": 1,
+        "freshness": 269,
+        "logCount": 572,
+        "commands": {
+          "workspace_request": 334,
+          "observation_acknowledge": 238
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "reading",
+        "cacheBodyBytes": 1010789
+      },
+      "end": {
+        "time": 285271,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 46,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 275,
+        "logCount": 587,
+        "commands": {
+          "workspace_request": 343,
+          "observation_acknowledge": 244
+        },
+        "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648,
+        "actor": "waiting",
+        "cacheBodyBytes": 1038777
+      }
+    }
+  ],
+  "gc": {
+    "before": {
+      "time": 314788,
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 1,
+      "duplicates": 0,
+      "queryCount": 51,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 305,
+      "logCount": 663,
+      "commands": {
+        "workspace_request": 386,
+        "observation_acknowledge": 277
+      },
+      "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 148,
+      "actor": "idle",
+      "cacheBodyBytes": 1178724
+    },
+    "after": {
+      "time": 624794,
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queryCount": 4,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 326,
+      "logCount": 737,
+      "commands": {
+        "workspace_request": 390,
+        "observation_acknowledge": 321,
+        "repository_request": 16,
+        "observation_stop": 4,
+        "supervisor_status": 2,
+        "desktop_pid": 2,
+        "observation_subscribe": 2
+      },
+      "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 648,
+      "actor": "idle",
+      "cacheBodyBytes": 2416
+    }
+  },
+  "bounds": {
+    "full": {
+      "time": 336503,
+      "visibility": "visible",
+      "active": 2,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queryCount": 50,
+      "queue": 64,
+      "pending": 66,
+      "physicalActive": 2,
+      "freshness": 305,
+      "logCount": 669,
+      "commands": {
+        "workspace_request": 386,
+        "observation_acknowledge": 281,
+        "repository_request": 2
+      },
+      "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 148,
+      "actor": "idle",
+      "cacheBodyBytes": 1178724
+    },
+    "draining": {
+      "time": 336557,
+      "visibility": "visible",
+      "active": 2,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queryCount": 50,
+      "queue": 0,
+      "pending": 2,
+      "physicalActive": 2,
+      "freshness": 305,
+      "logCount": 669,
+      "commands": {
+        "workspace_request": 386,
+        "observation_acknowledge": 281,
+        "repository_request": 2
+      },
+      "assets": ["tauri__localhost/assets/index-DWHwtLtg.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 148,
+      "actor": "idle",
+      "cacheBodyBytes": 1178724
+    },
+    "duplicateRuns": 0,
+    "resultCounts": {
+      "busy": 1,
+      "Observation interest is obsolete": 66
+    }
+  },
+  "log": [
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 24,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 804336,
+      "end": 804339
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 25,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 809342,
+      "end": 809346
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 26,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 814348.0000000001,
+      "end": 814351
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 27,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 819352,
+      "end": 819355
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 28,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 824358.0000000001,
+      "end": 824363
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 29,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 829366,
+      "end": 829370
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 30,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 834374,
+      "end": 834376
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 31,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 839379,
+      "end": 839381
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 32,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 844383,
+      "end": 844387
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 33,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 849391,
+      "end": 849394
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 34,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 854398,
+      "end": 854404
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 35,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 859407,
+      "end": 859409
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 36,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 864413,
+      "end": 864416
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 37,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 869417,
+      "end": 869418
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 38,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 874421,
+      "end": 874426
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 39,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 879428,
+      "end": 879432
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 40,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 884434,
+      "end": 884438
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 41,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 889441,
+      "end": 889444.0000000001
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 42,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 894449.0000000001,
+      "end": 894461
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "06c088e9-a220-4fe4-8064-e2c9cfc26b1c",
+          "batch_id": 43,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 891
+          }
+        }
+      },
+      "start": 899455,
+      "end": 899462
+    }
+  ]
+}

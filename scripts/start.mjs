@@ -4,6 +4,7 @@ import path from "node:path";
 import { readFileSync } from "node:fs";
 import { developmentEnvironment } from "./development-state.mjs";
 import { cargoMetadata, root } from "./cargo.mjs";
+import { prepareGenerated } from "./prepare-generated.mjs";
 
 const mode = process.argv[2];
 if (!["dev", "release"].includes(mode)) {
@@ -69,6 +70,7 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
 }
 
 try {
+  prepareGenerated("--check");
   if (mode === "dev") {
     await waitForExit(
       launch("node", ["scripts/prepare-supervisor.mjs", "debug"]),

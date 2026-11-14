@@ -1,0 +1,172 @@
+{
+  "snapshot": {
+    "time": 182455,
+    "href": "/",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "commands": {
+      "repository_request": 78,
+      "workspace_request": 356
+    },
+    "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "navigation": [
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 160066,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 161174,
+      "feedback": 36,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 162693,
+      "feedback": 24,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 163416,
+      "feedback": 33,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 165124,
+      "feedback": 28.000000000029104,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 166200.00000000003,
+      "feedback": 33.999999999970896,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 167791,
+      "feedback": 27,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 168491,
+      "feedback": 33,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 170117,
+      "feedback": 25,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 170878,
+      "feedback": 36.000000000029104,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 172482,
+      "feedback": 27,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 173183,
+      "feedback": 32,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    }
+  ],
+  "windows": [
+    {
+      "label": "matched-selected-fast",
+      "start": {
+        "time": 147844,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 2,
+        "duplicates": 0,
+        "commands": {
+          "repository_request": 78,
+          "workspace_request": 283
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 153847,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 2,
+        "duplicates": 0,
+        "commands": {
+          "repository_request": 78,
+          "workspace_request": 299
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "calls": {
+        "workspace_request:changes": 10,
+        "workspace_request:change_preview": 6
+      }
+    }
+  ]
+}

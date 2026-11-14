@@ -1,0 +1,79 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/ba55f008-23b1-42a4-923c-8e18d3cdbbc9/workspace/22b4dc38-9561-40c3-9543-eb2bdae4e508?view=changes
+			3 link Skip to workspace, Value: tauri://localhost/repository/ba55f008-23b1-42a4-923c-8e18d3cdbbc9/workspace/22b4dc38-9561-40c3-9543-eb2bdae4e508?view=changes#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f06-8dbl1nft/route-fixture Available
+							11 button route-fixture, Help: /private/tmp/aw-f06-8dbl1nft/route-fixture
+							12 button (expanded) Toggle details for route-fixture, Secondary Actions: Collapse
+							13 button Create workspace in route-fixture
+							14 text /private/tmp/aw-f06-8dbl1nft/route-fixture
+							15 text Available
+							16 content list
+								17 button manuel-akanji, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+			21 container
+				22 heading manuel-akanji, Value: 1
+					23 text manuel-akanji
+				24 button Refresh status
+				25 container Selected repository
+					26 text /private/tmp/aw-f06-8dbl1nft/route-fixture
+					27 text Repository available
+				28 text Uncommitted changes
+				29 button Refresh changes
+				30 button (expanded) Hide changed files, Secondary Actions: Collapse
+				31 text Compared with HEAD 
+				32 text 84fb07966c08015898f5eedb8b5251a3fb35f6a2
+				33 text  · 
+				34 text 1
+				35 text changed files
+				36 tab group (selectable) Workspace views
+					37 tab (selectable) Workspace
+					38 tab (selected) Changes
+				39 container Changes
+					40 container Selected file changes
+						41 heading text.txt, Value: 2
+							42 text text.txt
+						43 container Unified file diff
+							44 container
+								45 container Old line
+								46 container New line
+								47 text @@ -1 +1 @@
+								48 container Old line
+									49 text 1
+								50 container New line
+								51 text original
+								52 container Old line
+								53 container New line
+									54 text 1
+								55 text routed change
+				56 splitter Resize changed files, Value: 68
+				57 container Changed files
+					58 heading Changed files, Value: 2
+						59 text Changed files
+					60 toggle button text.txt .M, Help: text.txt, Value: on
+					61 button First page
+					62 button (disabled) Next files
+				63 text Local workspace
+				64 text route-fixture
+	65 close button
+	66 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	67 minimize button
+	68 text Agent Workspace
+69 menu bar
+	70 F06 Routes
+	71 File
+	72 Edit
+	73 View
+	74 Window
+	75 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/ba55f008-23b1-42a4-923c-8e18d3cdbbc9/workspace/22b4dc38-9561-40c3-9543-eb2bdae4e508?view=changes

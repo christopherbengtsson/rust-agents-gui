@@ -1,0 +1,16 @@
+{
+  "termination": "SIGTERM of exact verified fixture paths/PIDs; launchers waited and returned -15 (shell status 241)",
+  "current_inspector": {
+    "session": 20029,
+    "status": 241
+  },
+  "baseline_inspector": {
+    "session": 93702,
+    "status": 241
+  },
+  "production": {
+    "session": 78392,
+    "status": 241
+  },
+  "product_owned_quit": "not performed; see failures.md"
+}

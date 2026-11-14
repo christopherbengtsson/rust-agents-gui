@@ -1,0 +1,111 @@
+{
+  "admitted_lost_reply": {
+    "time": 1794677155.719371,
+    "event": "real-intent-reply-dropped",
+    "request": {
+      "protocol": 8,
+      "application_version": "0.1.0",
+      "after": null,
+      "expected_owner": "17819-1794674213130326000",
+      "workspace": {
+        "operation": "create",
+        "action_id": "2115ab8d-9c90-4e7f-bd28-69b6ac14065a",
+        "repository_id": "80a14ed5-323c-46d9-a56e-717c5b9a7470"
+      }
+    },
+    "reply": {
+      "kind": "workspace",
+      "owner": "17819-1794674213130326000",
+      "result": {
+        "Ok": {
+          "kind": "action",
+          "action": {
+            "operation": "create",
+            "action_id": "2115ab8d-9c90-4e7f-bd28-69b6ac14065a",
+            "repository_id": "80a14ed5-323c-46d9-a56e-717c5b9a7470"
+          },
+          "workspace": {
+            "id": "2ef23378-77e2-4630-96bd-337d7a70044c",
+            "repository_id": "80a14ed5-323c-46d9-a56e-717c5b9a7470",
+            "creation_action_id": "2115ab8d-9c90-4e7f-bd28-69b6ac14065a",
+            "name": null,
+            "branch": null,
+            "path": null,
+            "legacy": false,
+            "provider": "codex",
+            "base": null,
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "status": {
+              "state": "queued"
+            },
+            "cleanup_unconfirmed": false
+          }
+        }
+      }
+    }
+  },
+  "matching_action_rows": [
+    {
+      "id": "2115ab8d-9c90-4e7f-bd28-69b6ac14065a",
+      "workspace_id": "2ef23378-77e2-4630-96bd-337d7a70044c",
+      "record": "{\"operation\":\"create\",\"action_id\":\"2115ab8d-9c90-4e7f-bd28-69b6ac14065a\",\"repository_id\":\"80a14ed5-323c-46d9-a56e-717c5b9a7470\"}"
+    }
+  ],
+  "matching_workspace": {
+    "id": "2ef23378-77e2-4630-96bd-337d7a70044c",
+    "repository_id": "80a14ed5-323c-46d9-a56e-717c5b9a7470",
+    "creation_action_id": "2115ab8d-9c90-4e7f-bd28-69b6ac14065a",
+    "name": "franco-armani",
+    "branch": "workspace/franco-armani",
+    "path": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/beta/franco-armani/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "83f047d5f61edacd2fc87605778e6522e8b750b0"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "lookup_count": 1,
+  "current_owner_pid": 17819,
+  "desktop_crash": {
+    "time": 1794677163.887815,
+    "desktop_only_killed": 46183,
+    "supervisor_retained": 17819
+  },
+  "workspace_count": 3,
+  "matching_worktree_add_commands": [
+    {
+      "time": 1794677162.0883021,
+      "pid": 46471,
+      "args": [
+        "--no-pager",
+        "--no-optional-locks",
+        "-C",
+        "/private/tmp/aw-f04g-desktop-tq4w5p9r/Beta",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "submodule.recurse=false",
+        "worktree",
+        "add",
+        "--quiet",
+        "--",
+        "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/beta/franco-armani/checkout",
+        "workspace/franco-armani"
+      ]
+    }
+  ],
+  "matching_worktree_add_count": 1,
+  "duplicate_mutation_exchanges": 0
+}

@@ -1,0 +1,137 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 6:17:47 PM
+					36 image
+					37 text Array.from({length:30},(_,j)=>9000+j*300).filter(i=>i<f04g.exportString.length).forEach(i=>console.log("F04G:"+i+":"+f04g.exportString.slice(i,i+300)))
+					38 image
+					39 text F04G:9000:}},"bounds":{"full":{"time":336503,"visibility":"visible","active":2,"maxActive":2,"duplicates":0,"queryCount":50,"queue":64,"pending":66,"physicalActive":2,"freshness":305,"logCount":669,"commands":{"workspace_request":386,"observation_acknowledge":281,"repository_request":2},"assets":["tauri__loca
+					40 image
+					41 text F04G:9300:lhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148,"actor":"idle","cacheBodyBytes":1178724},"draining":{"time":336557,"visibility":"visible","active":2,"maxActive":2,"duplicates":0,"queryCou
+					42 image
+					43 text F04G:9600:nt":50,"queue":0,"pending":2,"physicalActive":2,"freshness":305,"logCount":669,"commands":{"workspace_request":386,"observation_acknowledge":281,"repository_request":2},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605
+					44 image
+					45 text F04G:9900:.1.15 (KHTML, like Gecko)","width":900,"height":148,"actor":"idle","cacheBodyBytes":1178724},"duplicateRuns":0,"resultCounts":{"busy":1,"Observation interest is obsolete":66}},"log":[{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b
+					46 image
+					47 text F04G:10200:1c","batch_id":24,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":804336,"end":804339},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":25,"cursor":{"owner":"17819-1794674213130326000","sequenc
+					48 image
+					49 text F04G:10500:e":891}}},"start":809342,"end":809346},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":26,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":814348.0000000001,"end":814351},{"command":"observatio
+					50 image
+					51 text F04G:10800:n_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":27,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":819352,"end":819355},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a2
+					52 image
+					53 text F04G:11100:20-4fe4-8064-e2c9cfc26b1c","batch_id":28,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":824358.0000000001,"end":824363},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":29,"cursor":{"owner":"1
+					54 image
+					55 text F04G:11400:7819-1794674213130326000","sequence":891}}},"start":829366,"end":829370},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":30,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":834374,"end":834376}
+					56 image
+					57 text F04G:11700:,{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":31,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":839379,"end":839381},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscr
+					58 image
+					59 text F04G:12000:iption_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":32,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":844383,"end":844387},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":33,"cursor"
+					60 image
+					61 text F04G:12300::{"owner":"17819-1794674213130326000","sequence":891}}},"start":849391,"end":849394},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":34,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":854398,"
+					62 image
+					63 text F04G:12600:end":854404},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":35,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":859407,"end":859409},{"command":"observation_acknowledge","args":{"acknowledgeme
+					64 image
+					65 text F04G:12900:nt":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":36,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":864413,"end":864416},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id"
+					66 image
+					67 text F04G:13200::37,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":869417,"end":869418},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":38,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"sta
+					68 image
+					69 text F04G:13500:rt":874421,"end":874426},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":39,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":879428,"end":879432},{"command":"observation_acknowledge","args":{"a
+					70 image
+					71 text F04G:13800:cknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":40,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":884434,"end":884438},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c
+					72 image
+					73 text F04G:14100:","batch_id":41,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":889441,"end":889444.0000000001},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":42,"cursor":{"owner":"17819-1794674213130326000"
+					74 image
+					75 text F04G:14400:,"sequence":891}}},"start":894449.0000000001,"end":894461},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"06c088e9-a220-4fe4-8064-e2c9cfc26b1c","batch_id":43,"cursor":{"owner":"17819-1794674213130326000","sequence":891}}},"start":899455,"end":899462}]}
+					76 image
+					77 text undefined
+			78 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			79 container
+	80 scroll area
+		81 HTML content Description: Agent Workspace, URL: tauri://localhost
+			82 link Skip to workspace, Value: tauri://localhost#workspace
+			83 container Repository sidebar
+				84 text Agent Workspace
+				85 container Repositories
+					86 heading Repositories, Value: 2
+						87 text Repositories
+					88 content list
+						89 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							90 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							91 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							92 button Create workspace in Beta
+							93 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							94 text Available
+							95 content list
+								96 button thiago-silva, Help: Workspace ready
+						97 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							98 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							99 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							100 button Create workspace in Alpha
+							101 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							102 text Available
+							103 content list
+								104 button vincent-aboubakar, Help: Workspace ready
+				105 pop up button Add repository
+				106 text Connected
+				107 pop up button Connection details
+			108 container
+				109 container
+					110 heading Beta, Value: 1
+						111 text Beta
+					112 button Refresh status
+				113 container Selected repository
+					114 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					115 text Repository available
+				116 heading Repository registered, Value: 2
+					117 text Repository registered
+				118 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				119 button Create workspace
+				120 container
+					121 text Local workspace Beta
+		122 scroll bar (settable, float) 0
+	123 close button
+	124 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	125 minimize button
+	126 text Agent Workspace
+127 menu bar
+	128 F04g Fixed Inspection
+	129 File
+	130 Edit
+	131 View
+	132 Window
+	133 Help
+
+The focused UI element is 78 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,39 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/inspection-actor.test.tsx (9 tests | 1 failed) 32ms
+   × paging during drain cannot downgrade a queued explicit refresh 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/inspection-actor.test.tsx > paging during drain cannot downgrade a queued explicit refresh
+AssertionError: expected { operation: 'changes', …(4) } to match object { operation: 'changes', …(3) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "after": null,
+    "comparison_id": null,
+    "operation": "changes",
+-   "refresh": true,
++   "refresh": false,
+  }
+
+ ❯ src/lib/inspection-actor.test.tsx:364:61
+    362|   expect(invoke).toHaveBeenCalledTimes(1);
+    363|   outstanding.resolve(summary()); await flush();
+    364|   expect(request(vi.mocked(invoke).mock.calls.at(-1)?.[1])).toMatchObj…
+       |                                                             ^
+    365| });
+    366|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  17:03:02
+   Duration  343ms (environment 50%, import 22%, transform 16%, tests 11%, setup 1%)
+

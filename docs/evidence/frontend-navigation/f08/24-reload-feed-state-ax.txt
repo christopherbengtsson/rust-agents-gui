@@ -1,0 +1,37 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 container Loading repositories
+				10 pop up button Add repository
+				11 text Observation delivery stopped
+				12 pop up button Connection details
+				13 link Settings, Value: tauri://localhost/settings/general
+			14 container
+				15 heading Workspace, Value: 1
+					16 text Workspace
+				17 button Refresh status
+				18 heading A place for your next change, Value: 2
+					19 text A place for your next change
+				20 text Add an existing Git repository from the sidebar to get started.
+				21 text Local workspace
+				22 text No repository selected
+	23 close button
+	24 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	25 minimize button
+	26 text Agent Workspace
+27 menu bar
+	28 F08 Inspector current
+	29 File
+	30 Edit
+	31 View
+	32 Window
+	33 Help
+
+The focused UI element is 0 standard window Agent Workspace, Secondary Actions: Raise

@@ -1,0 +1,26 @@
+{
+  "current": {
+    "root": "/private/tmp/aw-f08-qualified-wj7lgl6i",
+    "bundle": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Inspector current.app",
+    "state": "/private/tmp/aw-f08-qualified-wj7lgl6i/state",
+    "bundle_id": "dev.christopherbengtsson.f08.inspector.current",
+    "profile": "release + tauri/devtools, optimized minified frontend, no HMR",
+    "desktop_sha256": "f01c56b533705092040a8e9afbf8a53812e2c327a127bb8859cf760e23de3516",
+    "sidecar_sha256": "4e74c726badd01b743da9dad32c2c07b1797533ae2f99acb9c4206f3026fbd2a",
+    "frontend_matches_production": true,
+    "desktop_pid": 28868,
+    "launch_monotonic": 629709.39897425
+  },
+  "baseline": {
+    "root": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota",
+    "bundle": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app",
+    "state": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/state",
+    "bundle_id": "dev.christopherbengtsson.f08.inspector.baseline",
+    "profile": "release + tauri/devtools, optimized minified frontend, no HMR",
+    "desktop_sha256": "77932bfe22168347d38cda3f1b029a834de2100699bb846be9767e42525da306",
+    "sidecar_sha256": "c58d7ea26a585eb705cabaaea3530601d5261f06c65a8af899e75d04a2ac51fe",
+    "frontend_matches_production": true,
+    "desktop_pid": 31365,
+    "launch_monotonic": 630154.960240625
+  }
+}

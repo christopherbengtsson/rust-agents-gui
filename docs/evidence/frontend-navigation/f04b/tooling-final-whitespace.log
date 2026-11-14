@@ -1,0 +1,33 @@
+Gate: node scripts/prepare-supervisor.mjs debug
+Gate: corepack pnpm exec vite build
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.576375ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.30225ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.078958ms)
+✔ a failed static gate prevents later application units (0.097541ms)
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.7145ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.251ms)
+✔ explicit write mode repairs expected files and removes only obsolete managed outputs (0.081042ms)
+✔ clean checkout checking accepts the complete committed artifact set without writes (0.05325ms)
+✔ preparation build failure cannot reconcile or repair committed files (0.095ms)
+✔ preparation export failure cannot reconcile or repair committed files (0.051166ms)
+✔ preparation render failure cannot reconcile or repair committed files (0.044792ms)
+✔ preparation missing failure cannot reconcile or repair committed files (0.03175ms)
+✔ preparation ambiguous failure cannot reconcile or repair committed files (0.059291ms)
+✔ preparation test-artifact failure cannot reconcile or repair committed files (0.076542ms)
+✔ preparation foreign-artifact failure cannot reconcile or repair committed files (0.046458ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.3615

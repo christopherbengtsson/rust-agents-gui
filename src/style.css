@@ -102,6 +102,15 @@
 .repository-sidebar {
   width: var(--shell-sidebar-width);
 }
+.settings-navigation {
+  width: var(--shell-sidebar-width);
+  overflow-y: auto;
+}
+@media (max-width: 700px) {
+  .settings-navigation {
+    width: 140px;
+  }
+}
 .connection-footer {
   padding: 12px 8px;
   border-top: 1px solid var(--border);

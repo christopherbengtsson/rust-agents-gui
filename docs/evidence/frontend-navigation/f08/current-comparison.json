@@ -1,0 +1,3062 @@
+{
+  "snapshot": {
+    "time": 307452,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 899
+      }
+    },
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queries": 90,
+    "cacheBodyBytes": 1117625,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 600,
+    "actor": "idle",
+    "commands": {
+      "observation_acknowledge": 496,
+      "workspace_request": 804
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": [],
+    "queryStates": [
+      {
+        "key": [
+          "repositories",
+          "47400-1794690795286464000",
+          {
+            "operation": "list",
+            "after": null
+          }
+        ],
+        "active": 1,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "repositories",
+          "47400-1794690795286464000",
+          {
+            "operation": "get",
+            "id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3"
+          }
+        ],
+        "active": 1,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "workspaces",
+          "47400-1794690795286464000",
+          {
+            "operation": "list",
+            "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+            "after": null
+          }
+        ],
+        "active": 1,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "workspaces",
+          "47400-1794690795286464000",
+          {
+            "operation": "get",
+            "id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830"
+          }
+        ],
+        "active": 1,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "workspaces",
+          "47400-1794690795286464000",
+          {
+            "operation": "list",
+            "repository_id": "6e800468-fdab-420a-af6a-d21d8dfe0507",
+            "after": null
+          }
+        ],
+        "active": 1,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": ["inspection", "inactive", "preview"],
+        "active": 0,
+        "status": "pending",
+        "fetch": "idle"
+      },
+      {
+        "key": ["inspection", "inactive", "previous"],
+        "active": 0,
+        "status": "pending",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "changes",
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": null,
+            "after": null
+          }
+        ],
+        "active": 1,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "3715599c-e89a-4774-9353-e4e633c8f8d5",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "57cae760-cd09-49f9-be50-2a050b6e8108",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6273b7a8-7d8e-4213-9e01-4652db168801",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "adacb38a-ba48-4eae-b010-ee8a36a9e824",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "598a3339-b56d-4c05-8cdb-49a5921d0ca6",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "bf81af6c-0057-497a-9fe2-dab76deb42b3",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "b498fa26-e97c-4a54-958e-27adbb9ecc93",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "ef12fbc1-58f7-48ee-8236-07e22e5300bf",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "4ef9f3d3-82f7-4d2b-a144-4592edd48010",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "b141578e-6318-4072-97ca-8d1eaff195b7",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "07bbd3ec-4df9-454c-9097-c3aa4c4cc0b0",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "7a72a3cc-c8f4-45af-baf8-6bbf7411c85d",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "c439dfd1-b301-4afb-b4c9-65e341190e4c",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "9523d58f-ed18-46ed-acf3-cea1bfa58dd8",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "9d6c2b76-18ff-4002-8d3a-42a17c640b68",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "084c0330-90bd-44ae-a96e-e73a4a28bb45",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "28e02f92-a5f3-4862-aefb-edcc607b3267",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "0d5d91c5-a42c-4ee7-810e-bf34fbfb3aa2",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "fe41698f-9cbb-4f5f-bddc-544b3af93489",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "10c83767-202b-4b28-af55-a550c6b43394",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "74acce76-c79a-48e6-b41e-ff1a6cc6ce00",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "a5519796-18ee-439c-9d5a-67be1d105a72",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "68d06f26-1805-469e-b22f-43da28ce6e35",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "cb504543-f0ea-4759-98a7-167c527d16b5",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "3172a846-1e03-4260-b05c-e12d378fe9d8",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "359525cb-9700-41a6-bfd3-889ba0efd672",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "b3b87904-a228-410c-b1fd-3e0eccf26d38",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "a8148abc-1eff-4a3e-bd4a-bfe8b3920163",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6e39d5c6-feae-4ec0-bc5f-bc3ec761d40c",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "506205c1-dd21-4b06-88eb-21b8554f9e55",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "28c2d7f2-f3e2-4252-9784-6a9ac87cb410",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "3ffe228d-990c-4fdc-a352-e90713803384",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "5abec80b-80a7-4903-a43b-be1fbaf24a2f",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "c2e901f9-6bda-46da-95f1-e29fdf957037",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "0e223bc5-44e7-459b-a687-3ec3aad47c80",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "93ef3e4d-8bec-413a-a1cd-40e110a1a06f",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "b63aac45-ddbf-4178-bf2e-7081fdad9713",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6543aac7-a3b5-4e71-817a-817cf12aad13",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "87a72548-0a6a-411c-85d3-e17d6eeeb9df",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6d39f85a-e9c5-425b-a783-1b62d8239bed",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "46279af4-b69f-4213-b648-0dd766f2640e",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "7bdaae24-df39-4de4-a75d-24f8f2869c7c",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "c02d47b9-ce29-4981-8789-96e71fa358f5",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "55261d12-fa64-42a7-a98e-a3bc81b668b8",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "aa3485f3-3fbd-4c2f-9194-ac54c0d64718",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "bf0ed677-71ae-4ad8-8ec1-17ce8afd8153",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "2d051851-1b1d-4e25-ad93-0b41c3945e55",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "74dcfe77-3456-4bbe-a597-326fd4f61e7b",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "e73f7f62-7b6c-42ea-bc76-f063bd6f3b1c",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "f6dbc0d3-f5da-41d6-a853-18ff0230b744",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "60fd0d6a-11c1-4421-a5e9-f33e3bb7d6b3",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "3ccdb5ef-7c7c-43cb-9d58-83e7d9f65b8f",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "891a9c81-74fc-46a0-a536-02abdeb6764d",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "0b8120ba-f9c3-49ac-adfa-8d5c8b05d1df",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "92458729-9ebf-4259-9fd7-8ab0b0566301",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "50534f06-e9f9-4488-9d52-427b11816dc8",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "8fbcb1ff-a44d-40ed-9d7a-2aca23b78f73",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "7e3ca7ff-a213-410f-9e5e-67b67395f196",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "741abfc9-ee51-4bcf-a156-a235c2045ddc",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "ef114927-0ca5-456c-a739-9595d877d318",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "e0f0ff23-c79d-4c98-87fb-8086b12ca350",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "fd342a23-9ed0-4472-87b3-5564520566de",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "70aa39fd-86aa-4c78-b675-9aabbb61315e",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "94e8bb11-bb09-4a24-8511-5fc2ce14b14f",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "19188254-9c5a-41fd-850f-59620a9ebc0d",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "2319b7b1-1d7a-429a-bb5c-d957e21c61f1",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "17adee2a-944e-4a06-96ee-13361918bda6",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "f137b10b-8cb6-442d-891b-cf6562ea3a0d",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6bbc7f0b-23e8-433e-8ec2-a6f2667e379d",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6de4d269-00a1-42dd-8548-9622f6d50c51",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "06a1a026-f512-423b-b625-abe5f867beb8",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "450cc91b-a932-42bd-86c9-108f0cbe749e",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "8016cd49-5872-4ae5-9922-144d461b8ba2",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "910ef3dc-ea8b-4a01-bf6d-820a431ef690",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "45dd6df8-bb5e-476a-8f1d-1945c5ad7600",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "02e2fc5f-88eb-415a-bab2-9bafb9864105",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "f8422994-a8bb-44e8-a465-0a32ce6e613f",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "03861c3c-ebbc-404e-9082-8d9cba028283",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "f3f35163-d512-4160-8b6b-58a210bfa208",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "759955db-d13c-4c91-9289-98f9c87deffe",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "6a393b24-16f8-44a7-b387-55801b259eec",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 0,
+        "status": "success",
+        "fetch": "idle"
+      },
+      {
+        "key": [
+          "inspection",
+          "47400-1794690795286464000",
+          {
+            "operation": "change_preview",
+            "target": {
+              "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+              "comparison_id": "9cab4adc-2e69-4083-9eab-04191ae92d97",
+              "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+            }
+          }
+        ],
+        "active": 2,
+        "status": "success",
+        "fetch": "idle"
+      }
+    ]
+  },
+  "navigation": [
+    {
+      "label": "large.txt\n.M\n",
+      "trusted": true,
+      "start": 83113,
+      "feedback": 57,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 97789,
+      "feedback": 33,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 98407,
+      "feedback": 38.00000000001455,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 99942,
+      "feedback": 29,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 100939,
+      "feedback": 39.00000000001455,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 102487.00000000001,
+      "feedback": 29.999999999985448,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 103106.00000000001,
+      "feedback": 37.99999999998545,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 104557,
+      "feedback": 27,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 105178,
+      "feedback": 36,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 106564,
+      "feedback": 32,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 107554,
+      "feedback": 34.00000000001455,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 108958,
+      "feedback": 32.00000000001455,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 109544,
+      "feedback": 37,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    }
+  ],
+  "windows": [
+    {
+      "label": "steady-visible-ordinary",
+      "start": {
+        "time": 121651,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 465
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 19,
+        "cacheBodyBytes": 139071,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 167,
+        "actor": "waiting",
+        "commands": {
+          "observation_acknowledge": 63,
+          "workspace_request": 112
+        },
+        "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": [],
+        "queryStates": [
+          {
+            "key": [
+              "repositories",
+              "47400-1794690795286464000",
+              {
+                "operation": "list",
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "repositories",
+              "47400-1794690795286464000",
+              {
+                "operation": "get",
+                "id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3"
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "workspaces",
+              "47400-1794690795286464000",
+              {
+                "operation": "list",
+                "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "workspaces",
+              "47400-1794690795286464000",
+              {
+                "operation": "get",
+                "id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830"
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "workspaces",
+              "47400-1794690795286464000",
+              {
+                "operation": "list",
+                "repository_id": "6e800468-fdab-420a-af6a-d21d8dfe0507",
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": ["inspection", "inactive", "summary"],
+            "active": 0,
+            "status": "pending",
+            "fetch": "idle"
+          },
+          {
+            "key": ["inspection", "inactive", "preview"],
+            "active": 0,
+            "status": "pending",
+            "fetch": "idle"
+          },
+          {
+            "key": ["inspection", "inactive", "previous"],
+            "active": 0,
+            "status": "pending",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "changes",
+                "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                "comparison_id": null,
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "3715599c-e89a-4774-9353-e4e633c8f8d5",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "57cae760-cd09-49f9-be50-2a050b6e8108",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "6273b7a8-7d8e-4213-9e01-4652db168801",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "adacb38a-ba48-4eae-b010-ee8a36a9e824",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "598a3339-b56d-4c05-8cdb-49a5921d0ca6",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "bf81af6c-0057-497a-9fe2-dab76deb42b3",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "b498fa26-e97c-4a54-958e-27adbb9ecc93",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "ef12fbc1-58f7-48ee-8236-07e22e5300bf",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "4ef9f3d3-82f7-4d2b-a144-4592edd48010",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "b141578e-6318-4072-97ca-8d1eaff195b7",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 2,
+            "status": "success",
+            "fetch": "idle"
+          }
+        ]
+      },
+      "end": {
+        "time": 127653,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 483
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 22,
+        "cacheBodyBytes": 179844,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 185,
+        "actor": "waiting",
+        "commands": {
+          "observation_acknowledge": 81,
+          "workspace_request": 140
+        },
+        "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": [],
+        "queryStates": [
+          {
+            "key": [
+              "repositories",
+              "47400-1794690795286464000",
+              {
+                "operation": "list",
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "repositories",
+              "47400-1794690795286464000",
+              {
+                "operation": "get",
+                "id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3"
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "workspaces",
+              "47400-1794690795286464000",
+              {
+                "operation": "list",
+                "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "workspaces",
+              "47400-1794690795286464000",
+              {
+                "operation": "get",
+                "id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830"
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "workspaces",
+              "47400-1794690795286464000",
+              {
+                "operation": "list",
+                "repository_id": "6e800468-fdab-420a-af6a-d21d8dfe0507",
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": ["inspection", "inactive", "summary"],
+            "active": 0,
+            "status": "pending",
+            "fetch": "idle"
+          },
+          {
+            "key": ["inspection", "inactive", "preview"],
+            "active": 0,
+            "status": "pending",
+            "fetch": "idle"
+          },
+          {
+            "key": ["inspection", "inactive", "previous"],
+            "active": 0,
+            "status": "pending",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "changes",
+                "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                "comparison_id": null,
+                "after": null
+              }
+            ],
+            "active": 1,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "3715599c-e89a-4774-9353-e4e633c8f8d5",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "57cae760-cd09-49f9-be50-2a050b6e8108",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "6273b7a8-7d8e-4213-9e01-4652db168801",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "adacb38a-ba48-4eae-b010-ee8a36a9e824",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "598a3339-b56d-4c05-8cdb-49a5921d0ca6",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "bf81af6c-0057-497a-9fe2-dab76deb42b3",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "b498fa26-e97c-4a54-958e-27adbb9ecc93",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "ef12fbc1-58f7-48ee-8236-07e22e5300bf",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "4ef9f3d3-82f7-4d2b-a144-4592edd48010",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "b141578e-6318-4072-97ca-8d1eaff195b7",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "07bbd3ec-4df9-454c-9097-c3aa4c4cc0b0",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "7a72a3cc-c8f4-45af-baf8-6bbf7411c85d",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 0,
+            "status": "success",
+            "fetch": "idle"
+          },
+          {
+            "key": [
+              "inspection",
+              "47400-1794690795286464000",
+              {
+                "operation": "change_preview",
+                "target": {
+                  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+                  "comparison_id": "c439dfd1-b301-4afb-b4c9-65e341190e4c",
+                  "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+                }
+              }
+            ],
+            "active": 2,
+            "status": "success",
+            "fetch": "idle"
+          }
+        ]
+      }
+    }
+  ],
+  "log": [
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 121907,
+      "end": 121913,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 170,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 466
+          }
+        }
+      },
+      "start": 121910,
+      "end": 121925,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 121913,
+      "end": 121925,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 171,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 467
+          }
+        }
+      },
+      "start": 121923,
+      "end": 121925,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 121925,
+      "end": 121926,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 172,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 468
+          }
+        }
+      },
+      "start": 122177,
+      "end": 122181,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 122180,
+      "end": 122182,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "07bbd3ec-4df9-454c-9097-c3aa4c4cc0b0",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": true
+        }
+      },
+      "start": 122183,
+      "end": 122193,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 173,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 469
+          }
+        }
+      },
+      "start": 122190,
+      "end": 122212,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 174,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 470
+          }
+        }
+      },
+      "start": 122192,
+      "end": 122212,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 122207.00000000001,
+      "end": 122213.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "07bbd3ec-4df9-454c-9097-c3aa4c4cc0b0",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 122213.00000000001,
+      "end": 122216.00000000001,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 175,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 471
+          }
+        }
+      },
+      "start": 122491,
+      "end": 122495,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 122493.00000000001,
+      "end": 122495,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "07bbd3ec-4df9-454c-9097-c3aa4c4cc0b0",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 122495,
+      "end": 122498,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 124500,
+      "end": 124506,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 176,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 472
+          }
+        }
+      },
+      "start": 124503,
+      "end": 124512,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 177,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 473
+          }
+        }
+      },
+      "start": 124509,
+      "end": 124512,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 124511,
+      "end": 124513,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 178,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 474
+          }
+        }
+      },
+      "start": 124767,
+      "end": 124770,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 124769,
+      "end": 124770,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "7a72a3cc-c8f4-45af-baf8-6bbf7411c85d",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": true
+        }
+      },
+      "start": 124771,
+      "end": 124782,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 179,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 475
+          }
+        }
+      },
+      "start": 124778,
+      "end": 124801,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 180,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 476
+          }
+        }
+      },
+      "start": 124780,
+      "end": 124801,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 124794,
+      "end": 124801,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "7a72a3cc-c8f4-45af-baf8-6bbf7411c85d",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 124801,
+      "end": 124802,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 181,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 477
+          }
+        }
+      },
+      "start": 125071,
+      "end": 125075,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 125073.00000000001,
+      "end": 125075,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "7a72a3cc-c8f4-45af-baf8-6bbf7411c85d",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 125075,
+      "end": 125077,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127080,
+      "end": 127087,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 182,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 478
+          }
+        }
+      },
+      "start": 127085.00000000001,
+      "end": 127090,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127087,
+      "end": 127090,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 183,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 479
+          }
+        }
+      },
+      "start": 127089,
+      "end": 127091.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127090,
+      "end": 127091.00000000001,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 184,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 480
+          }
+        }
+      },
+      "start": 127338.00000000001,
+      "end": 127341.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127340,
+      "end": 127343,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "c439dfd1-b301-4afb-b4c9-65e341190e4c",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": true
+        }
+      },
+      "start": 127343,
+      "end": 127345,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 185,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 481
+          }
+        }
+      },
+      "start": 127344.00000000001,
+      "end": 127365.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127358,
+      "end": 127365.00000000001,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 186,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 482
+          }
+        }
+      },
+      "start": 127363,
+      "end": 127366,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "c439dfd1-b301-4afb-b4c9-65e341190e4c",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 127365.00000000001,
+      "end": 127367,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127368.00000000001,
+      "end": 127369,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "c439dfd1-b301-4afb-b4c9-65e341190e4c",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 127370,
+      "end": 127371.00000000001,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "ab5f9185-bcd8-426a-a59e-f87b22380149",
+          "batch_id": 187,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 483
+          }
+        }
+      },
+      "start": 127627.00000000001,
+      "end": 127629,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 127629,
+      "end": 127631,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "c439dfd1-b301-4afb-b4c9-65e341190e4c",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 127632,
+      "end": 127637,
+      "ok": true
+    }
+  ]
+}

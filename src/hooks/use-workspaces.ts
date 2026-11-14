@@ -1,72 +1,127 @@
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import type { Navigation } from "@/lib/navigation";
+import type { AppObservations } from "@/lib/app-observations";
+import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { repositoryError, type RepositoryError } from "@/lib/repositories";
 import {
   readWorkspacePending,
-  readWorkspaceSelection,
   WORKSPACE_PENDING,
-  WORKSPACE_SELECTION,
   workspaceRequest,
   type Workspace,
   type WorkspaceAction,
   type WorkspacePage,
 } from "@/lib/workspaces";
 
-// App owns this once. Disclosure/selection never owns or repeats Rust execution.
 export function useWorkspaces(
   owner: string | undefined,
   repositoryId: string | undefined,
   repositoryIds: string,
-  initial: { repository_id: string; workspace_id: string } | null,
+  workspaceId: string | undefined,
+  app: AppObservations,
+  navigation: Navigation,
+  visible = true,
 ) {
-  const [pages, setPages] = useState<Record<string, WorkspacePage>>({});
-  const [selected, setSelected] = useState<Workspace>();
-  const [pending, setPending] = useState(readWorkspacePending);
-  const [observationError, setError] = useState<RepositoryError>();
+  const feature = app.workspaces;
+  useSyncExternalStore(feature.subscribe, feature.getSnapshot);
+  const [restoredPending] = useState(readWorkspacePending);
+  const [pending, setPending] = useState(restoredPending?.request ?? null);
+  const uncertain = useRef(restoredPending?.uncertain ?? false);
+  const intent = useRef(pending);
   const [actionError, setActionError] = useState<RepositoryError>();
-  const error = actionError ?? observationError;
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [preferenceError, setPreferenceError] = useState<string>();
-  const selection = useRef(readWorkspaceSelection());
-  const intent = useRef(pending);
   const mounted = useRef(false);
-  const epoch = useRef(0);
   const actionEpoch = useRef(0);
-  const navigation = useRef(0);
-  const pendingNavigation = useRef(0);
-  const reading = useRef(false);
-  const queued = useRef(false);
+  const pendingNavigation = useRef<number | undefined>(undefined);
   const sending = useRef(false);
-  const cursors = useRef<Record<string, (string | null)[]>>({});
-  const handledInitial = useRef<string | undefined>(undefined);
-  const remember = useCallback((workspace: Workspace | null) => {
-    selection.current = workspace
-      ? { repository_id: workspace.repository_id, workspace_id: workspace.id }
-      : null;
-    setSelected(workspace ?? undefined);
-    try {
-      if (selection.current)
-        localStorage.setItem(
-          WORKSPACE_SELECTION,
-          JSON.stringify(selection.current),
-        );
-      else localStorage.removeItem(WORKSPACE_SELECTION);
-    } catch {
-      setPreferenceError("The desktop could not remember workspace selection.");
-    }
-  }, []);
-  // Repository-driven read lifetimes must not invalidate the action that selected it.
-  useEffect(
-    () => () => {
-      actionEpoch.current += 1;
-    },
-    [owner],
+  const [cursors, setCursors] = useState<Record<string, (string | null)[]>>({});
+  const shownOwner = owner ?? feature.retainedOwner();
+  const targets = useMemo(
+    () =>
+      Array.from(
+        new Set([
+          ...repositoryIds.split(",").filter(Boolean),
+          ...(repositoryId ? [repositoryId] : []),
+        ]),
+      ).map((id) => ({
+        operation: "list" as const,
+        repository_id: id,
+        after: cursors[id]?.at(-1) ?? null,
+      })),
+    [repositoryIds, repositoryId, cursors],
   );
+  const wanted = workspaceId;
+  const lists = shownOwner
+    ? targets.map((target) => feature.peek(shownOwner, target))
+    : [];
+  const detail =
+    shownOwner && wanted
+      ? feature.peek(shownOwner, { operation: "get", id: wanted })
+      : undefined;
+  const pages: Record<string, WorkspacePage> = {};
+  for (let index = 0; index < targets.length; index++) {
+    const value = lists[index]?.data?.value;
+    if (value?.kind === "workspaces")
+      pages[targets[index].repository_id] = value.page;
+  }
+  const selected =
+    detail?.data?.value.kind === "workspace"
+      ? (detail.data.value.workspace ?? undefined)
+      : undefined;
+  const observedOwner =
+    detail?.data?.owner ??
+    lists.find((state) => state?.data)?.data?.owner ??
+    owner;
+  const actionId = pending?.action_id;
+  const observationError =
+    lists.find((state) => state?.error)?.error ?? detail?.error;
+  const loading = lists.some(
+    (state) => !state || state.fetchStatus === "fetching",
+  );
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      actionEpoch.current += 1;
+      pendingNavigation.current = undefined;
+    };
+  }, [owner]);
+  useEffect(() => {
+    if (!owner || !visible) return;
+    const releases = targets.map((target) => feature.observe(owner, target));
+    return () => releases.forEach((release) => release());
+  }, [feature, owner, targets, visible]);
+  useEffect(() => {
+    if (!owner || !visible || !wanted) return;
+    return feature.observe(owner, { operation: "get", id: wanted });
+  }, [feature, owner, wanted, visible]);
+  useEffect(() => {
+    if (!owner || !actionId) return;
+    return feature.observe(owner, { operation: "action", action_id: actionId });
+  }, [feature, owner, actionId]);
   const settleAction = useCallback(
     (request: WorkspaceAction, workspace: Workspace) => {
       if (intent.current?.action_id !== request.action_id) return;
-      if (navigation.current === pendingNavigation.current) remember(workspace);
+      const target = navigation.current();
+      if (
+        target &&
+        target.kind !== "home" &&
+        target.repositoryId === workspace.repository_id
+      )
+        navigation.complete(pendingNavigation.current, {
+          kind: "workspace",
+          repositoryId: workspace.repository_id,
+          workspaceId: workspace.id,
+          view: "workspace",
+        });
       setActionError(undefined);
       intent.current = null;
       setPending(null);
@@ -78,153 +133,58 @@ export function useWorkspaces(
         );
       }
     },
-    [remember],
+    [navigation],
   );
-  // Stable synchronization callback owns the observation subscription lifecycle.
-  const read = useCallback(
-    async function refresh(): Promise<void> {
-      if (!mounted.current || !owner) return;
-      if (reading.current) {
-        queued.current = true;
-        return;
-      }
-      reading.current = true;
-      const generation = epoch.current;
-      const navigationGeneration = navigation.current;
-      const active = () => mounted.current && epoch.current === generation;
-      return completeOperation(
-        async () => {
+  useEffect(
+    () =>
+      feature.subscribe(() => {
+        if (!owner || !actionId || !intent.current) return;
+        const action = feature.peek(owner, {
+          operation: "action",
+          action_id: actionId,
+        });
+        if (!action) return;
+        if (action.error) {
+          setActionError(repositoryError(action.error));
+          return;
+        }
+        const result = action.data?.value;
+        if (result?.kind !== "action") return;
+        if (result.action && result.workspace) {
           const outstanding = intent.current;
-          if (outstanding) {
-            const result = await workspaceRequest({
-              operation: "action",
-              action_id: outstanding.action_id,
+          const matches =
+            result.action.action_id === outstanding.action_id &&
+            result.action.operation === outstanding.operation &&
+            (result.action.operation === "create" &&
+            outstanding.operation === "create"
+              ? result.action.repository_id === outstanding.repository_id
+              : result.action.operation === "reconcile" &&
+                outstanding.operation === "reconcile" &&
+                result.action.workspace_id === outstanding.workspace_id);
+          if (!matches) {
+            setActionError({
+              code: "conflict",
+              message:
+                "Workspace action payload conflicts with the retained request.",
             });
-            if (!active()) return;
-            if (
-              intent.current?.action_id === outstanding.action_id &&
-              result.kind === "action" &&
-              result.action &&
-              result.workspace
-            ) {
-              // A lookup validates its ID; also match the retained request payload.
-              if (
-                JSON.stringify(result.action) !== JSON.stringify(outstanding) &&
-                (result.action.operation !== outstanding.operation ||
-                  (result.action.operation === "create" &&
-                  outstanding.operation === "create"
-                    ? result.action.repository_id !== outstanding.repository_id
-                    : result.action.operation === "reconcile" &&
-                      outstanding.operation === "reconcile" &&
-                      result.action.workspace_id !== outstanding.workspace_id))
-              )
-                throw new Error(
-                  "Workspace action payload conflicts with the retained request.",
-                );
-              settleAction(outstanding, result.workspace);
-            } else if (
-              intent.current?.action_id === outstanding.action_id &&
-              !sending.current
-            )
-              setActionError(
-                (last) =>
-                  last ?? {
-                    code: "not_found",
-                    message:
-                      "No recorded workspace action was found. Retry the same submission explicitly; refresh does not create another workspace.",
-                  },
-              );
+            return;
           }
-          const ids = Array.from(
-            new Set([
-              ...repositoryIds.split(",").filter(Boolean),
-              ...(repositoryId ? [repositoryId] : []),
-            ]),
+          settleAction(outstanding, result.workspace);
+          feature.recordAction(owner, result);
+        } else if (!sending.current)
+          setActionError(
+            (last) =>
+              last ?? {
+                code: "not_found",
+                message:
+                  "No recorded workspace action was found. Retry the same submission explicitly; refresh does not create another workspace.",
+              },
           );
-          const target = selection.current;
-          const wanted =
-            target && target.repository_id === repositoryId
-              ? target.workspace_id
-              : initial &&
-                  initial.repository_id === repositoryId &&
-                  handledInitial.current !== initial.workspace_id
-                ? initial.workspace_id
-                : undefined;
-          const [lists, detail] = await Promise.all([
-            Promise.all(
-              ids.map(async (id) => {
-                const history = cursors.current[id];
-                const result = await workspaceRequest({
-                  operation: "list",
-                  repository_id: id,
-                  after: history?.at(-1) ?? null,
-                });
-                return [id, result] as const;
-              }),
-            ),
-            wanted
-              ? workspaceRequest({ operation: "get", id: wanted })
-              : Promise.resolve(null),
-          ]);
-          if (!active()) return;
-          const next: Record<string, WorkspacePage> = {};
-          for (const [id, result] of lists)
-            if (result.kind === "workspaces") next[id] = result.page;
-          setPages(next);
-          if (
-            detail?.kind === "workspace" &&
-            detail.workspace &&
-            selection.current === target &&
-            navigation.current === navigationGeneration
-          ) {
-            if (initial?.workspace_id === detail.workspace.id)
-              handledInitial.current = detail.workspace.id;
-            remember(detail.workspace);
-          }
-          if (!outstanding || !intent.current) setError(undefined);
-        },
-        (error) => {
-          if (active()) setError(repositoryError(error));
-        },
-        () => {
-          if (active()) {
-            reading.current = false;
-            setLoading(false);
-            if (queued.current) {
-              queued.current = false;
-              void refresh();
-            }
-          }
-        },
-      );
-    },
-    [owner, repositoryId, repositoryIds, initial, remember, settleAction],
+      }),
+    [owner, actionId, feature, settleAction],
   );
-  useEffect(() => {
-    mounted.current = true;
-    void Promise.resolve().then(read);
-    return () => {
-      mounted.current = false;
-      epoch.current += 1;
-      reading.current = false;
-      queued.current = false;
-    };
-  }, [read]);
-  const busy =
-    Object.values(pages).some((p) =>
-      p.workspaces.some(
-        (w) => w.status.state === "queued" || w.status.state === "running",
-      ),
-    ) ||
-    selected?.status.state === "queued" ||
-    selected?.status.state === "running";
-  useEffect(() => {
-    if (!owner || observationError || (!busy && !pending)) return;
-    const timer = setTimeout(() => void read(), 250);
-    return () => clearTimeout(timer);
-  }, [owner, observationError, busy, pending, pages, selected, read]);
   async function submit(request: WorkspaceAction) {
-    if (!owner || sending.current) return;
+    if (!owner || !observedOwner || sending.current) return;
     if (
       intent.current &&
       JSON.stringify(intent.current) !== JSON.stringify(request)
@@ -236,8 +196,12 @@ export function useWorkspaces(
       });
       return;
     }
+    const earlierUncertain = intent.current ? uncertain.current : false;
     try {
-      localStorage.setItem(WORKSPACE_PENDING, JSON.stringify(request));
+      localStorage.setItem(
+        WORKSPACE_PENDING,
+        JSON.stringify({ request, uncertain: true }),
+      );
     } catch {
       setActionError({
         code: "storage",
@@ -246,36 +210,41 @@ export function useWorkspaces(
       });
       return;
     }
-    pendingNavigation.current = navigation.current;
+    pendingNavigation.current = navigation.capture();
     intent.current = request;
+    uncertain.current = true;
     setPending(request);
     sending.current = true;
     setSubmitting(true);
     setActionError(undefined);
-    const generation = epoch.current;
     const actionGeneration = actionEpoch.current;
     return completeOperation(
       async () => {
-        const result = await workspaceRequest(request);
+        const result = await workspaceRequest(observedOwner, request);
         if (
           !mounted.current ||
           actionEpoch.current !== actionGeneration ||
+          !app.freshness.matches(observedOwner) ||
           intent.current?.action_id !== request.action_id
         )
           return;
         if (result.kind === "action" && result.workspace) {
           settleAction(request, result.workspace);
+          feature.recordAction(observedOwner, result);
         }
       },
       (error) => {
         if (
           mounted.current &&
           actionEpoch.current === actionGeneration &&
+          app.freshness.matches(observedOwner) &&
           intent.current?.action_id === request.action_id
         ) {
           const failure = repositoryError(error);
-          setActionError(failure);
+          setActionError(pendingFailure(earlierUncertain, failure));
+          uncertain.current = uncertainAfter(earlierUncertain, failure);
           if (
+            !uncertain.current &&
             [
               "capacity",
               "not_found",
@@ -294,6 +263,17 @@ export function useWorkspaces(
                 "The rejected workspace request could not be cleared from desktop preferences.",
               );
             }
+          } else {
+            try {
+              localStorage.setItem(
+                WORKSPACE_PENDING,
+                JSON.stringify({ request, uncertain: uncertain.current }),
+              );
+            } catch {
+              setPreferenceError(
+                "The desktop could not update delivery evidence; the retained action remains uncertain.",
+              );
+            }
           }
         }
       },
@@ -301,20 +281,24 @@ export function useWorkspaces(
         sending.current = false;
         if (mounted.current) {
           setSubmitting(false);
-          if (epoch.current === generation) void read();
+          if (actionEpoch.current === actionGeneration)
+            void feature.refresh(owner);
         }
       },
     );
   }
   function select(workspace: Workspace) {
-    handledInitial.current = initial?.workspace_id;
-    navigation.current++;
-    remember(workspace);
+    if (shownOwner) feature.recordWorkspace(shownOwner, workspace);
+    navigation.go({
+      kind: "workspace",
+      repositoryId: workspace.repository_id,
+      workspaceId: workspace.id,
+      view:
+        app.presentation.getState().contexts[workspace.id]?.view ?? "workspace",
+    });
   }
   function selectRepository() {
-    handledInitial.current = initial?.workspace_id;
-    navigation.current++;
-    remember(null);
+    if (repositoryId) navigation.go({ kind: "repository", repositoryId });
   }
   function create(repository_id: string) {
     return submit({
@@ -331,26 +315,29 @@ export function useWorkspaces(
     });
   }
   function refresh() {
-    setLoading(true);
-    return read();
+    return owner ? feature.refresh(owner) : Promise.resolve();
   }
   function next(id: string) {
     const cursor = pages[id]?.next;
-    if (!cursor) return;
-    const history = cursors.current[id] ?? [null];
-    history.push(cursor);
-    cursors.current[id] = history;
-    void refresh();
+    if (cursor)
+      setCursors((last) => ({
+        ...last,
+        [id]: [...(last[id] ?? [null]), cursor],
+      }));
   }
   function back(id: string) {
-    cursors.current[id]?.pop();
-    void refresh();
+    setCursors((last) => ({
+      ...last,
+      [id]: (last[id] ?? [null]).slice(0, -1),
+    }));
   }
   return {
     pages,
     selected: selected?.repository_id === repositoryId ? selected : undefined,
     pending,
-    error,
+    error:
+      actionError ??
+      (observationError ? repositoryError(observationError) : undefined),
     loading,
     submitting,
     preferenceError,
@@ -361,7 +348,7 @@ export function useWorkspaces(
     refresh,
     next,
     back,
-    hasPrevious: (id: string) => (cursors.current[id]?.length ?? 0) > 1,
+    hasPrevious: (id: string) => (cursors[id]?.length ?? 0) > 1,
     retry: () => (intent.current ? submit(intent.current) : Promise.resolve()),
   };
 }

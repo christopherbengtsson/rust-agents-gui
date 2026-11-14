@@ -1,0 +1,3 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.83s
+  Executable unittests src/lib.rs (target/debug/deps/workspace_core-a93ab365b0aedb8f)

@@ -1,0 +1,6013 @@
+{
+  "ActionId": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "format": "uuid",
+    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+    "title": "ActionId",
+    "type": "string"
+  },
+  "Artifacts": {
+    "$defs": {
+      "BranchArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "owned",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "FolderArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "reserved",
+          "worktree",
+          "partial",
+          "conflict"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "branch": {
+        "$ref": "#/$defs/BranchArtifact"
+      },
+      "folder": {
+        "$ref": "#/$defs/FolderArtifact"
+      }
+    },
+    "required": [
+      "branch",
+      "folder"
+    ],
+    "title": "Artifacts",
+    "type": "object"
+  },
+  "Availability": {
+    "$defs": {
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "state": {
+            "const": "checking",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "state": {
+            "const": "available",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          "state": {
+            "const": "unavailable",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "error"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "Availability"
+  },
+  "BranchArtifact": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "unknown",
+      "absent",
+      "owned",
+      "conflict"
+    ],
+    "title": "BranchArtifact",
+    "type": "string"
+  },
+  "ChangePage": {
+    "$defs": {
+      "ChangedFile": {
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "index_status": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "worktree_status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "index_status",
+          "worktree_status",
+          "unsupported"
+        ],
+        "type": "object"
+      },
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "comparison_id": {
+        "$ref": "#/$defs/ComparisonId"
+      },
+      "files": {
+        "items": {
+          "$ref": "#/$defs/ChangedFile"
+        },
+        "type": "array"
+      },
+      "head": {
+        "type": "string"
+      },
+      "next": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/FileId"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "total": {
+        "format": "uint",
+        "minimum": 0,
+        "type": "integer"
+      }
+    },
+    "required": [
+      "comparison_id",
+      "head",
+      "files",
+      "total",
+      "next"
+    ],
+    "title": "ChangePage",
+    "type": "object"
+  },
+  "ChangedFile": {
+    "$defs": {
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "id": {
+        "$ref": "#/$defs/FileId"
+      },
+      "index_status": {
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      },
+      "unsupported": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/UnsupportedContent"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "worktree_status": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "path",
+      "index_status",
+      "worktree_status",
+      "unsupported"
+    ],
+    "title": "ChangedFile",
+    "type": "object"
+  },
+  "ChangesObservation": {
+    "$defs": {
+      "ChangePage": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/$defs/ChangedFile"
+            },
+            "type": "array"
+          },
+          "head": {
+            "type": "string"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FileId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "format": "uint",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "comparison_id",
+          "head",
+          "files",
+          "total",
+          "next"
+        ],
+        "type": "object"
+      },
+      "ChangedFile": {
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "index_status": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "worktree_status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "index_status",
+          "worktree_status",
+          "unsupported"
+        ],
+        "type": "object"
+      },
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "InspectionPhase": {
+        "enum": [
+          "idle",
+          "queued",
+          "running",
+          "ready",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "page": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ChangePage"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phase": {
+        "$ref": "#/$defs/InspectionPhase"
+      },
+      "workspace_id": {
+        "$ref": "#/$defs/WorkspaceId"
+      }
+    },
+    "required": [
+      "workspace_id",
+      "phase",
+      "page",
+      "error"
+    ],
+    "title": "ChangesObservation",
+    "type": "object"
+  },
+  "ComparisonId": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "format": "uuid",
+    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+    "title": "ComparisonId",
+    "type": "string"
+  },
+  "CreationStage": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "allocating_name",
+      "resolving_base",
+      "reserving_folder",
+      "creating_branch",
+      "creating_worktree"
+    ],
+    "title": "CreationStage",
+    "type": "string"
+  },
+  "CreationStatus": {
+    "$defs": {
+      "CreationStage": {
+        "enum": [
+          "allocating_name",
+          "resolving_base",
+          "reserving_folder",
+          "creating_branch",
+          "creating_worktree"
+        ],
+        "type": "string"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "state": {
+            "const": "queued",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "stage": {
+            "$ref": "#/$defs/CreationStage"
+          },
+          "state": {
+            "const": "running",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "stage"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "state": {
+            "const": "ready",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          "state": {
+            "const": "failed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "error"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          "state": {
+            "const": "uncertain",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "error"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "CreationStatus"
+  },
+  "Delivery": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Evidence about this exchange only, never the outcome of an earlier attempt.",
+    "enum": [
+      "not_sent",
+      "rejected",
+      "unknown"
+    ],
+    "title": "Delivery",
+    "type": "string"
+  },
+  "DesktopPid": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "format": "uint32",
+    "minimum": 0,
+    "title": "uint32",
+    "type": "integer"
+  },
+  "DiffRow": {
+    "$defs": {
+      "RowKind": {
+        "enum": [
+          "hunk",
+          "context",
+          "added",
+          "removed",
+          "no_newline"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "kind": {
+        "$ref": "#/$defs/RowKind"
+      },
+      "new_line": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "old_line": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "text": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "old_line",
+      "new_line",
+      "text"
+    ],
+    "title": "DiffRow",
+    "type": "object"
+  },
+  "ErrorCode": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "invalid_path",
+      "git",
+      "storage",
+      "conflict",
+      "capacity",
+      "not_found",
+      "unavailable",
+      "connection",
+      "cleanup_unconfirmed"
+    ],
+    "title": "ErrorCode",
+    "type": "string"
+  },
+  "FeedAck": {
+    "$defs": {
+      "FeedCursor": {
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "sequence": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "owner",
+          "sequence"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "batch_id": {
+        "format": "uint64",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "cursor": {
+        "$ref": "#/$defs/FeedCursor"
+      },
+      "subscription_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "subscription_id",
+      "batch_id",
+      "cursor"
+    ],
+    "title": "FeedAck",
+    "type": "object"
+  },
+  "FeedBatch": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FeedCursor": {
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "sequence": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "owner",
+          "sequence"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Sample": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "hints",
+                "type": "string"
+              },
+              "targets": {
+                "items": {
+                  "$ref": "#/$defs/Target"
+                },
+                "type": "array"
+              },
+              "watermark": {
+                "format": "uint64",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "kind",
+              "watermark",
+              "targets"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "resync_required",
+                "type": "string"
+              },
+              "watermark": {
+                "format": "uint64",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "kind",
+              "watermark"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "heartbeat",
+                "type": "string"
+              },
+              "watermark": {
+                "format": "uint64",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "kind",
+              "watermark"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "Target": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "repositories",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "repository",
+                "type": "string"
+              },
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              }
+            },
+            "required": [
+              "kind",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "kind": {
+                "const": "registration",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "action_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspaces",
+                "type": "string"
+              },
+              "repository_id": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RepositoryId"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspace",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "kind",
+              "workspace_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "kind": {
+                "const": "workspace_action",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "action_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "inspection",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "kind",
+              "workspace_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "batch_id": {
+        "format": "uint64",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "cursor": {
+        "$ref": "#/$defs/FeedCursor"
+      },
+      "sample": {
+        "$ref": "#/$defs/Sample"
+      },
+      "subscription_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "subscription_id",
+      "batch_id",
+      "cursor",
+      "sample"
+    ],
+    "title": "FeedBatch",
+    "type": "object"
+  },
+  "FeedCursor": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "owner": {
+        "type": "string"
+      },
+      "sequence": {
+        "format": "uint64",
+        "minimum": 0,
+        "type": "integer"
+      }
+    },
+    "required": [
+      "owner",
+      "sequence"
+    ],
+    "title": "FeedCursor",
+    "type": "object"
+  },
+  "FeedEvent": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FeedBatch": {
+        "properties": {
+          "batch_id": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "cursor": {
+            "$ref": "#/$defs/FeedCursor"
+          },
+          "sample": {
+            "$ref": "#/$defs/Sample"
+          },
+          "subscription_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subscription_id",
+          "batch_id",
+          "cursor",
+          "sample"
+        ],
+        "type": "object"
+      },
+      "FeedCursor": {
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "sequence": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "owner",
+          "sequence"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Sample": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "hints",
+                "type": "string"
+              },
+              "targets": {
+                "items": {
+                  "$ref": "#/$defs/Target"
+                },
+                "type": "array"
+              },
+              "watermark": {
+                "format": "uint64",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "kind",
+              "watermark",
+              "targets"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "resync_required",
+                "type": "string"
+              },
+              "watermark": {
+                "format": "uint64",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "kind",
+              "watermark"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "heartbeat",
+                "type": "string"
+              },
+              "watermark": {
+                "format": "uint64",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "kind",
+              "watermark"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "Target": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "repositories",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "repository",
+                "type": "string"
+              },
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              }
+            },
+            "required": [
+              "kind",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "kind": {
+                "const": "registration",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "action_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspaces",
+                "type": "string"
+              },
+              "repository_id": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RepositoryId"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspace",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "kind",
+              "workspace_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "kind": {
+                "const": "workspace_action",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "action_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "inspection",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "kind",
+              "workspace_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "batch": {
+            "$ref": "#/$defs/FeedBatch"
+          },
+          "kind": {
+            "const": "batch",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "batch"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "stopped",
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "subscription_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "subscription_id",
+          "message"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "FeedEvent"
+  },
+  "FileId": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "format": "uuid",
+    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+    "title": "FileId",
+    "type": "string"
+  },
+  "FilePreview": {
+    "$defs": {
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "DiffRow": {
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/RowKind"
+          },
+          "new_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "old_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "old_line",
+          "new_line",
+          "text"
+        ],
+        "type": "object"
+      },
+      "RowKind": {
+        "enum": [
+          "hunk",
+          "context",
+          "added",
+          "removed",
+          "no_newline"
+        ],
+        "type": "string"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "comparison_id": {
+        "$ref": "#/$defs/ComparisonId"
+      },
+      "head": {
+        "type": "string"
+      },
+      "limited": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "note": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "rows": {
+        "items": {
+          "$ref": "#/$defs/DiffRow"
+        },
+        "type": "array"
+      },
+      "unsupported": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/UnsupportedContent"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "comparison_id",
+      "head",
+      "rows",
+      "limited",
+      "unsupported",
+      "note"
+    ],
+    "title": "FilePreview",
+    "type": "object"
+  },
+  "FolderArtifact": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "unknown",
+      "absent",
+      "reserved",
+      "worktree",
+      "partial",
+      "conflict"
+    ],
+    "title": "FolderArtifact",
+    "type": "string"
+  },
+  "InspectionPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "idle",
+      "queued",
+      "running",
+      "ready",
+      "failed"
+    ],
+    "title": "InspectionPhase",
+    "type": "string"
+  },
+  "OwnedObservation": {
+    "$defs": {
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "Result_of_AnyValue_or_RepositoryError": {
+        "oneOf": [
+          {
+            "properties": {
+              "Ok": true
+            },
+            "required": [
+              "Ok"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "Err": {
+                "$ref": "#/$defs/RepositoryError"
+              }
+            },
+            "required": [
+              "Err"
+            ],
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Serving identity is returned even when the domain rejected the request.",
+    "properties": {
+      "owner": {
+        "type": "string"
+      },
+      "result": {
+        "$ref": "#/$defs/Result_of_AnyValue_or_RepositoryError"
+      }
+    },
+    "required": [
+      "owner",
+      "result"
+    ],
+    "title": "OwnedReply",
+    "type": "object"
+  },
+  "OwnedRepositoryReply": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Availability": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "checking",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "available",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "unavailable",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "Registration": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "pending",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              },
+              "state": {
+                "const": "completed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "failed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ],
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "create_initial_workspace": {
+            "default": false,
+            "type": "boolean"
+          },
+          "initial_workspace_id": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkspaceId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "create_initial_workspace",
+          "initial_workspace_id",
+          "action_id",
+          "path"
+        ],
+        "type": "object"
+      },
+      "Repository": {
+        "properties": {
+          "availability": {
+            "$ref": "#/$defs/Availability"
+          },
+          "id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "availability"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RepositoryPage": {
+        "properties": {
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "repositories": {
+            "items": {
+              "$ref": "#/$defs/Repository"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "repositories",
+          "next"
+        ],
+        "type": "object"
+      },
+      "RepositoryReply": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "registration",
+                "type": "string"
+              },
+              "registration": {
+                "$ref": "#/$defs/Registration"
+              }
+            },
+            "required": [
+              "kind",
+              "registration"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "action",
+                "type": "string"
+              },
+              "registration": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Registration"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "registration"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "repositories",
+                "type": "string"
+              },
+              "page": {
+                "$ref": "#/$defs/RepositoryPage"
+              }
+            },
+            "required": [
+              "kind",
+              "page"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "repository",
+                "type": "string"
+              },
+              "repository": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Repository"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "repository"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "Result_of_RepositoryReply_or_RepositoryError": {
+        "oneOf": [
+          {
+            "properties": {
+              "Ok": {
+                "$ref": "#/$defs/RepositoryReply"
+              }
+            },
+            "required": [
+              "Ok"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "Err": {
+                "$ref": "#/$defs/RepositoryError"
+              }
+            },
+            "required": [
+              "Err"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Serving identity is returned even when the domain rejected the request.",
+    "properties": {
+      "owner": {
+        "type": "string"
+      },
+      "result": {
+        "$ref": "#/$defs/Result_of_RepositoryReply_or_RepositoryError"
+      }
+    },
+    "required": [
+      "owner",
+      "result"
+    ],
+    "title": "OwnedReply",
+    "type": "object"
+  },
+  "OwnedWorkspaceReply": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Artifacts": {
+        "properties": {
+          "branch": {
+            "$ref": "#/$defs/BranchArtifact"
+          },
+          "folder": {
+            "$ref": "#/$defs/FolderArtifact"
+          }
+        },
+        "required": [
+          "branch",
+          "folder"
+        ],
+        "type": "object"
+      },
+      "BranchArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "owned",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "ChangePage": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/$defs/ChangedFile"
+            },
+            "type": "array"
+          },
+          "head": {
+            "type": "string"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FileId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "format": "uint",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "comparison_id",
+          "head",
+          "files",
+          "total",
+          "next"
+        ],
+        "type": "object"
+      },
+      "ChangedFile": {
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "index_status": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "worktree_status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "index_status",
+          "worktree_status",
+          "unsupported"
+        ],
+        "type": "object"
+      },
+      "ChangesObservation": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "page": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ChangePage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/InspectionPhase"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "phase",
+          "page",
+          "error"
+        ],
+        "type": "object"
+      },
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "CreationStage": {
+        "enum": [
+          "allocating_name",
+          "resolving_base",
+          "reserving_folder",
+          "creating_branch",
+          "creating_worktree"
+        ],
+        "type": "string"
+      },
+      "CreationStatus": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "queued",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "stage": {
+                "$ref": "#/$defs/CreationStage"
+              },
+              "state": {
+                "const": "running",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "stage"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "ready",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "failed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "uncertain",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "DiffRow": {
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/RowKind"
+          },
+          "new_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "old_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "old_line",
+          "new_line",
+          "text"
+        ],
+        "type": "object"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FilePreview": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "head": {
+            "type": "string"
+          },
+          "limited": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/$defs/DiffRow"
+            },
+            "type": "array"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "comparison_id",
+          "head",
+          "rows",
+          "limited",
+          "unsupported",
+          "note"
+        ],
+        "type": "object"
+      },
+      "FolderArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "reserved",
+          "worktree",
+          "partial",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "InspectionPhase": {
+        "enum": [
+          "idle",
+          "queued",
+          "running",
+          "ready",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "PinnedBase": {
+        "properties": {
+          "commit": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reference",
+          "commit"
+        ],
+        "type": "object"
+      },
+      "PreviewObservation": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/InspectionPhase"
+          },
+          "preview": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FilePreview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "$ref": "#/$defs/PreviewTarget"
+          }
+        },
+        "required": [
+          "target",
+          "phase",
+          "preview",
+          "error"
+        ],
+        "type": "object"
+      },
+      "PreviewTarget": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "file_id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "comparison_id",
+          "file_id"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Result_of_WorkspaceReply_or_RepositoryError": {
+        "oneOf": [
+          {
+            "properties": {
+              "Ok": {
+                "$ref": "#/$defs/WorkspaceReply"
+              }
+            },
+            "required": [
+              "Ok"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "Err": {
+                "$ref": "#/$defs/RepositoryError"
+              }
+            },
+            "required": [
+              "Err"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "RowKind": {
+        "enum": [
+          "hunk",
+          "context",
+          "added",
+          "removed",
+          "no_newline"
+        ],
+        "type": "string"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      },
+      "Workspace": {
+        "properties": {
+          "artifacts": {
+            "$ref": "#/$defs/Artifacts"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/PinnedBase"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cleanup_unconfirmed": {
+            "type": "boolean"
+          },
+          "creation_action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "id": {
+            "$ref": "#/$defs/WorkspaceId"
+          },
+          "legacy": {
+            "default": false,
+            "type": "boolean"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider": {
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "status": {
+            "$ref": "#/$defs/CreationStatus"
+          }
+        },
+        "required": [
+          "id",
+          "repository_id",
+          "creation_action_id",
+          "name",
+          "branch",
+          "path",
+          "legacy",
+          "provider",
+          "base",
+          "artifacts",
+          "status",
+          "cleanup_unconfirmed"
+        ],
+        "type": "object"
+      },
+      "WorkspaceAction": {
+        "oneOf": [
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "operation": {
+                "const": "create",
+                "type": "string"
+              },
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              }
+            },
+            "required": [
+              "operation",
+              "action_id",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "operation": {
+                "const": "reconcile",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "operation",
+              "action_id",
+              "workspace_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspacePage": {
+        "properties": {
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkspaceId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workspaces": {
+            "items": {
+              "$ref": "#/$defs/Workspace"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "workspaces",
+          "next"
+        ],
+        "type": "object"
+      },
+      "WorkspaceReply": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "changes",
+                "type": "string"
+              },
+              "observation": {
+                "$ref": "#/$defs/ChangesObservation"
+              }
+            },
+            "required": [
+              "kind",
+              "observation"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "change_preview",
+                "type": "string"
+              },
+              "observation": {
+                "$ref": "#/$defs/PreviewObservation"
+              }
+            },
+            "required": [
+              "kind",
+              "observation"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspace",
+                "type": "string"
+              },
+              "workspace": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Workspace"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "workspace"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/WorkspaceAction"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "kind": {
+                "const": "action",
+                "type": "string"
+              },
+              "workspace": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Workspace"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "action",
+              "workspace"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspaces",
+                "type": "string"
+              },
+              "page": {
+                "$ref": "#/$defs/WorkspacePage"
+              }
+            },
+            "required": [
+              "kind",
+              "page"
+            ],
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Serving identity is returned even when the domain rejected the request.",
+    "properties": {
+      "owner": {
+        "type": "string"
+      },
+      "result": {
+        "$ref": "#/$defs/Result_of_WorkspaceReply_or_RepositoryError"
+      }
+    },
+    "required": [
+      "owner",
+      "result"
+    ],
+    "title": "OwnedReply",
+    "type": "object"
+  },
+  "PinnedBase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "commit": {
+        "type": "string"
+      },
+      "reference": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "reference",
+      "commit"
+    ],
+    "title": "PinnedBase",
+    "type": "object"
+  },
+  "PreviewObservation": {
+    "$defs": {
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "DiffRow": {
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/RowKind"
+          },
+          "new_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "old_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "old_line",
+          "new_line",
+          "text"
+        ],
+        "type": "object"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FilePreview": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "head": {
+            "type": "string"
+          },
+          "limited": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/$defs/DiffRow"
+            },
+            "type": "array"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "comparison_id",
+          "head",
+          "rows",
+          "limited",
+          "unsupported",
+          "note"
+        ],
+        "type": "object"
+      },
+      "InspectionPhase": {
+        "enum": [
+          "idle",
+          "queued",
+          "running",
+          "ready",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "PreviewTarget": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "file_id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "comparison_id",
+          "file_id"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RowKind": {
+        "enum": [
+          "hunk",
+          "context",
+          "added",
+          "removed",
+          "no_newline"
+        ],
+        "type": "string"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phase": {
+        "$ref": "#/$defs/InspectionPhase"
+      },
+      "preview": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/FilePreview"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "target": {
+        "$ref": "#/$defs/PreviewTarget"
+      }
+    },
+    "required": [
+      "target",
+      "phase",
+      "preview",
+      "error"
+    ],
+    "title": "PreviewObservation",
+    "type": "object"
+  },
+  "PreviewTarget": {
+    "$defs": {
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "comparison_id": {
+        "$ref": "#/$defs/ComparisonId"
+      },
+      "file_id": {
+        "$ref": "#/$defs/FileId"
+      },
+      "workspace_id": {
+        "$ref": "#/$defs/WorkspaceId"
+      }
+    },
+    "required": [
+      "workspace_id",
+      "comparison_id",
+      "file_id"
+    ],
+    "title": "PreviewTarget",
+    "type": "object"
+  },
+  "RegisterRepository": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "action_id": {
+        "$ref": "#/$defs/ActionId"
+      },
+      "create_initial_workspace": {
+        "default": false,
+        "type": "boolean"
+      },
+      "path": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "create_initial_workspace",
+      "action_id",
+      "path"
+    ],
+    "title": "RegisterRepository",
+    "type": "object"
+  },
+  "Registration": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "state": {
+            "const": "pending",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "state": {
+            "const": "completed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "repository_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          "state": {
+            "const": "failed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "error"
+        ],
+        "type": "object"
+      }
+    ],
+    "properties": {
+      "action_id": {
+        "$ref": "#/$defs/ActionId"
+      },
+      "create_initial_workspace": {
+        "default": false,
+        "type": "boolean"
+      },
+      "initial_workspace_id": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/WorkspaceId"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "path": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "create_initial_workspace",
+      "initial_workspace_id",
+      "action_id",
+      "path"
+    ],
+    "title": "Registration",
+    "type": "object"
+  },
+  "RegistrationState": {
+    "$defs": {
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "state": {
+            "const": "pending",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "state": {
+            "const": "completed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "repository_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          "state": {
+            "const": "failed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "error"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "RegistrationState"
+  },
+  "Repository": {
+    "$defs": {
+      "Availability": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "checking",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "available",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "unavailable",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "availability": {
+        "$ref": "#/$defs/Availability"
+      },
+      "id": {
+        "$ref": "#/$defs/RepositoryId"
+      },
+      "name": {
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "path",
+      "availability"
+    ],
+    "title": "Repository",
+    "type": "object"
+  },
+  "RepositoryError": {
+    "$defs": {
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "code": {
+        "$ref": "#/$defs/ErrorCode"
+      },
+      "message": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ],
+    "title": "RepositoryError",
+    "type": "object"
+  },
+  "RepositoryId": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "format": "uuid",
+    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+    "title": "RepositoryId",
+    "type": "string"
+  },
+  "RepositoryPage": {
+    "$defs": {
+      "Availability": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "checking",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "available",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "unavailable",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "Repository": {
+        "properties": {
+          "availability": {
+            "$ref": "#/$defs/Availability"
+          },
+          "id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "availability"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "next": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "repositories": {
+        "items": {
+          "$ref": "#/$defs/Repository"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "repositories",
+      "next"
+    ],
+    "title": "RepositoryPage",
+    "type": "object"
+  },
+  "RepositoryReply": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Availability": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "checking",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "available",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "unavailable",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "Registration": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "pending",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              },
+              "state": {
+                "const": "completed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "failed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ],
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "create_initial_workspace": {
+            "default": false,
+            "type": "boolean"
+          },
+          "initial_workspace_id": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkspaceId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "create_initial_workspace",
+          "initial_workspace_id",
+          "action_id",
+          "path"
+        ],
+        "type": "object"
+      },
+      "Repository": {
+        "properties": {
+          "availability": {
+            "$ref": "#/$defs/Availability"
+          },
+          "id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "availability"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RepositoryPage": {
+        "properties": {
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "repositories": {
+            "items": {
+              "$ref": "#/$defs/Repository"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "repositories",
+          "next"
+        ],
+        "type": "object"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "registration",
+            "type": "string"
+          },
+          "registration": {
+            "$ref": "#/$defs/Registration"
+          }
+        },
+        "required": [
+          "kind",
+          "registration"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "action",
+            "type": "string"
+          },
+          "registration": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Registration"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "registration"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "repositories",
+            "type": "string"
+          },
+          "page": {
+            "$ref": "#/$defs/RepositoryPage"
+          }
+        },
+        "required": [
+          "kind",
+          "page"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "repository",
+            "type": "string"
+          },
+          "repository": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Repository"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "repository"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "RepositoryReply"
+  },
+  "RepositoryRequest": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RegisterRepository": {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "create_initial_workspace": {
+            "default": false,
+            "type": "boolean"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "create_initial_workspace",
+          "action_id",
+          "path"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "operation": {
+            "const": "register",
+            "type": "string"
+          },
+          "request": {
+            "$ref": "#/$defs/RegisterRepository"
+          }
+        },
+        "required": [
+          "operation",
+          "request"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "operation": {
+            "const": "action",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "action_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "operation": {
+            "const": "list",
+            "type": "string"
+          },
+          "refresh": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "operation",
+          "after",
+          "refresh"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "operation": {
+            "const": "get",
+            "type": "string"
+          },
+          "refresh": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "operation",
+          "id",
+          "refresh"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "RepositoryRequest"
+  },
+  "RequestFailure": {
+    "$defs": {
+      "Delivery": {
+        "description": "Evidence about this exchange only, never the outcome of an earlier attempt.",
+        "enum": [
+          "not_sent",
+          "rejected",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "TransportCode": {
+        "enum": [
+          "busy",
+          "not_connected",
+          "owner_changed",
+          "reply_unavailable",
+          "incompatible"
+        ],
+        "type": "string"
+      },
+      "TransportFailure": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/TransportCode"
+          },
+          "delivery": {
+            "$ref": "#/$defs/Delivery"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "delivery",
+          "message"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/TransportFailure"
+          },
+          "kind": {
+            "const": "transport",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "error"
+        ],
+        "type": "object"
+      },
+      {
+        "description": "Local input rejection, before any transport access.",
+        "properties": {
+          "error": {
+            "$ref": "#/$defs/RepositoryError"
+          },
+          "kind": {
+            "const": "rejected",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "error"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "RequestFailure"
+  },
+  "RowKind": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "hunk",
+      "context",
+      "added",
+      "removed",
+      "no_newline"
+    ],
+    "title": "RowKind",
+    "type": "string"
+  },
+  "Sample": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Target": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "repositories",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "repository",
+                "type": "string"
+              },
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              }
+            },
+            "required": [
+              "kind",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "kind": {
+                "const": "registration",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "action_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspaces",
+                "type": "string"
+              },
+              "repository_id": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RepositoryId"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "workspace",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "kind",
+              "workspace_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "kind": {
+                "const": "workspace_action",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "action_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "inspection",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "kind",
+              "workspace_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "hints",
+            "type": "string"
+          },
+          "targets": {
+            "items": {
+              "$ref": "#/$defs/Target"
+            },
+            "type": "array"
+          },
+          "watermark": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "kind",
+          "watermark",
+          "targets"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "resync_required",
+            "type": "string"
+          },
+          "watermark": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "kind",
+          "watermark"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "heartbeat",
+            "type": "string"
+          },
+          "watermark": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "kind",
+          "watermark"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "Sample"
+  },
+  "SnapshotCursor": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "owner": {
+        "type": "string"
+      },
+      "revision": {
+        "format": "uint64",
+        "minimum": 0,
+        "type": "integer"
+      }
+    },
+    "required": [
+      "owner",
+      "revision"
+    ],
+    "title": "SnapshotCursor",
+    "type": "object"
+  },
+  "SupervisorSnapshot": {
+    "$defs": {
+      "SnapshotCursor": {
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "revision": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "owner",
+          "revision"
+        ],
+        "type": "object"
+      },
+      "SupervisorState": {
+        "enum": [
+          "ready"
+        ],
+        "type": "string"
+      },
+      "SupervisorStatus": {
+        "properties": {
+          "application_version": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/$defs/SupervisorState"
+          },
+          "supervisor_pid": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "state",
+          "supervisor_pid",
+          "application_version"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "cursor": {
+        "$ref": "#/$defs/SnapshotCursor"
+      },
+      "reset": {
+        "description": "A full snapshot replaces observations from another owner or cursor.",
+        "type": "boolean"
+      },
+      "status": {
+        "$ref": "#/$defs/SupervisorStatus"
+      }
+    },
+    "required": [
+      "status",
+      "cursor",
+      "reset"
+    ],
+    "title": "SupervisorSnapshot",
+    "type": "object"
+  },
+  "SupervisorState": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "ready"
+    ],
+    "title": "SupervisorState",
+    "type": "string"
+  },
+  "SupervisorStatus": {
+    "$defs": {
+      "SupervisorState": {
+        "enum": [
+          "ready"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "application_version": {
+        "type": "string"
+      },
+      "state": {
+        "$ref": "#/$defs/SupervisorState"
+      },
+      "supervisor_pid": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": "integer"
+      }
+    },
+    "required": [
+      "state",
+      "supervisor_pid",
+      "application_version"
+    ],
+    "title": "SupervisorStatus",
+    "type": "object"
+  },
+  "Target": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "repositories",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "repository",
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          }
+        },
+        "required": [
+          "kind",
+          "repository_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "kind": {
+            "const": "registration",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "action_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "workspaces",
+            "type": "string"
+          },
+          "repository_id": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "repository_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "workspace",
+            "type": "string"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "kind",
+          "workspace_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "kind": {
+            "const": "workspace_action",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "action_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "inspection",
+            "type": "string"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "kind",
+          "workspace_id"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "Target"
+  },
+  "TransportCode": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "busy",
+      "not_connected",
+      "owner_changed",
+      "reply_unavailable",
+      "incompatible"
+    ],
+    "title": "TransportCode",
+    "type": "string"
+  },
+  "TransportFailure": {
+    "$defs": {
+      "Delivery": {
+        "description": "Evidence about this exchange only, never the outcome of an earlier attempt.",
+        "enum": [
+          "not_sent",
+          "rejected",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "TransportCode": {
+        "enum": [
+          "busy",
+          "not_connected",
+          "owner_changed",
+          "reply_unavailable",
+          "incompatible"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "code": {
+        "$ref": "#/$defs/TransportCode"
+      },
+      "delivery": {
+        "$ref": "#/$defs/Delivery"
+      },
+      "message": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "code",
+      "delivery",
+      "message"
+    ],
+    "title": "TransportFailure",
+    "type": "object"
+  },
+  "UnsupportedContent": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "binary",
+      "non_utf8",
+      "symlink",
+      "submodule",
+      "conflict",
+      "special_file",
+      "oversized",
+      "preview_limit"
+    ],
+    "title": "UnsupportedContent",
+    "type": "string"
+  },
+  "Workspace": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Artifacts": {
+        "properties": {
+          "branch": {
+            "$ref": "#/$defs/BranchArtifact"
+          },
+          "folder": {
+            "$ref": "#/$defs/FolderArtifact"
+          }
+        },
+        "required": [
+          "branch",
+          "folder"
+        ],
+        "type": "object"
+      },
+      "BranchArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "owned",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "CreationStage": {
+        "enum": [
+          "allocating_name",
+          "resolving_base",
+          "reserving_folder",
+          "creating_branch",
+          "creating_worktree"
+        ],
+        "type": "string"
+      },
+      "CreationStatus": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "queued",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "stage": {
+                "$ref": "#/$defs/CreationStage"
+              },
+              "state": {
+                "const": "running",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "stage"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "ready",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "failed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "uncertain",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "FolderArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "reserved",
+          "worktree",
+          "partial",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "PinnedBase": {
+        "properties": {
+          "commit": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reference",
+          "commit"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "artifacts": {
+        "$ref": "#/$defs/Artifacts"
+      },
+      "base": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/PinnedBase"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "branch": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "cleanup_unconfirmed": {
+        "type": "boolean"
+      },
+      "creation_action_id": {
+        "$ref": "#/$defs/ActionId"
+      },
+      "id": {
+        "$ref": "#/$defs/WorkspaceId"
+      },
+      "legacy": {
+        "default": false,
+        "type": "boolean"
+      },
+      "name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "path": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "provider": {
+        "type": "string"
+      },
+      "repository_id": {
+        "$ref": "#/$defs/RepositoryId"
+      },
+      "status": {
+        "$ref": "#/$defs/CreationStatus"
+      }
+    },
+    "required": [
+      "id",
+      "repository_id",
+      "creation_action_id",
+      "name",
+      "branch",
+      "path",
+      "legacy",
+      "provider",
+      "base",
+      "artifacts",
+      "status",
+      "cleanup_unconfirmed"
+    ],
+    "title": "Workspace",
+    "type": "object"
+  },
+  "WorkspaceAction": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "operation": {
+            "const": "create",
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          }
+        },
+        "required": [
+          "operation",
+          "action_id",
+          "repository_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "operation": {
+            "const": "reconcile",
+            "type": "string"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "operation",
+          "action_id",
+          "workspace_id"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "WorkspaceAction"
+  },
+  "WorkspaceId": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "format": "uuid",
+    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+    "title": "WorkspaceId",
+    "type": "string"
+  },
+  "WorkspacePage": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Artifacts": {
+        "properties": {
+          "branch": {
+            "$ref": "#/$defs/BranchArtifact"
+          },
+          "folder": {
+            "$ref": "#/$defs/FolderArtifact"
+          }
+        },
+        "required": [
+          "branch",
+          "folder"
+        ],
+        "type": "object"
+      },
+      "BranchArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "owned",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "CreationStage": {
+        "enum": [
+          "allocating_name",
+          "resolving_base",
+          "reserving_folder",
+          "creating_branch",
+          "creating_worktree"
+        ],
+        "type": "string"
+      },
+      "CreationStatus": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "queued",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "stage": {
+                "$ref": "#/$defs/CreationStage"
+              },
+              "state": {
+                "const": "running",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "stage"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "ready",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "failed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "uncertain",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "FolderArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "reserved",
+          "worktree",
+          "partial",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "PinnedBase": {
+        "properties": {
+          "commit": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reference",
+          "commit"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Workspace": {
+        "properties": {
+          "artifacts": {
+            "$ref": "#/$defs/Artifacts"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/PinnedBase"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cleanup_unconfirmed": {
+            "type": "boolean"
+          },
+          "creation_action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "id": {
+            "$ref": "#/$defs/WorkspaceId"
+          },
+          "legacy": {
+            "default": false,
+            "type": "boolean"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider": {
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "status": {
+            "$ref": "#/$defs/CreationStatus"
+          }
+        },
+        "required": [
+          "id",
+          "repository_id",
+          "creation_action_id",
+          "name",
+          "branch",
+          "path",
+          "legacy",
+          "provider",
+          "base",
+          "artifacts",
+          "status",
+          "cleanup_unconfirmed"
+        ],
+        "type": "object"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "next": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/WorkspaceId"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "workspaces": {
+        "items": {
+          "$ref": "#/$defs/Workspace"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "workspaces",
+      "next"
+    ],
+    "title": "WorkspacePage",
+    "type": "object"
+  },
+  "WorkspaceReply": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "Artifacts": {
+        "properties": {
+          "branch": {
+            "$ref": "#/$defs/BranchArtifact"
+          },
+          "folder": {
+            "$ref": "#/$defs/FolderArtifact"
+          }
+        },
+        "required": [
+          "branch",
+          "folder"
+        ],
+        "type": "object"
+      },
+      "BranchArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "owned",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "ChangePage": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/$defs/ChangedFile"
+            },
+            "type": "array"
+          },
+          "head": {
+            "type": "string"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FileId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "format": "uint",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "comparison_id",
+          "head",
+          "files",
+          "total",
+          "next"
+        ],
+        "type": "object"
+      },
+      "ChangedFile": {
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "index_status": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "worktree_status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "index_status",
+          "worktree_status",
+          "unsupported"
+        ],
+        "type": "object"
+      },
+      "ChangesObservation": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "page": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ChangePage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/InspectionPhase"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "phase",
+          "page",
+          "error"
+        ],
+        "type": "object"
+      },
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "CreationStage": {
+        "enum": [
+          "allocating_name",
+          "resolving_base",
+          "reserving_folder",
+          "creating_branch",
+          "creating_worktree"
+        ],
+        "type": "string"
+      },
+      "CreationStatus": {
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "queued",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "stage": {
+                "$ref": "#/$defs/CreationStage"
+              },
+              "state": {
+                "const": "running",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "stage"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "ready",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "failed",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              "state": {
+                "const": "uncertain",
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "DiffRow": {
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/RowKind"
+          },
+          "new_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "old_line": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "old_line",
+          "new_line",
+          "text"
+        ],
+        "type": "object"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FilePreview": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "head": {
+            "type": "string"
+          },
+          "limited": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/$defs/DiffRow"
+            },
+            "type": "array"
+          },
+          "unsupported": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UnsupportedContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "comparison_id",
+          "head",
+          "rows",
+          "limited",
+          "unsupported",
+          "note"
+        ],
+        "type": "object"
+      },
+      "FolderArtifact": {
+        "enum": [
+          "unknown",
+          "absent",
+          "reserved",
+          "worktree",
+          "partial",
+          "conflict"
+        ],
+        "type": "string"
+      },
+      "InspectionPhase": {
+        "enum": [
+          "idle",
+          "queued",
+          "running",
+          "ready",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "PinnedBase": {
+        "properties": {
+          "commit": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reference",
+          "commit"
+        ],
+        "type": "object"
+      },
+      "PreviewObservation": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RepositoryError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/InspectionPhase"
+          },
+          "preview": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FilePreview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "$ref": "#/$defs/PreviewTarget"
+          }
+        },
+        "required": [
+          "target",
+          "phase",
+          "preview",
+          "error"
+        ],
+        "type": "object"
+      },
+      "PreviewTarget": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "file_id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "comparison_id",
+          "file_id"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "RowKind": {
+        "enum": [
+          "hunk",
+          "context",
+          "added",
+          "removed",
+          "no_newline"
+        ],
+        "type": "string"
+      },
+      "UnsupportedContent": {
+        "enum": [
+          "binary",
+          "non_utf8",
+          "symlink",
+          "submodule",
+          "conflict",
+          "special_file",
+          "oversized",
+          "preview_limit"
+        ],
+        "type": "string"
+      },
+      "Workspace": {
+        "properties": {
+          "artifacts": {
+            "$ref": "#/$defs/Artifacts"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/PinnedBase"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cleanup_unconfirmed": {
+            "type": "boolean"
+          },
+          "creation_action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "id": {
+            "$ref": "#/$defs/WorkspaceId"
+          },
+          "legacy": {
+            "default": false,
+            "type": "boolean"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider": {
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          },
+          "status": {
+            "$ref": "#/$defs/CreationStatus"
+          }
+        },
+        "required": [
+          "id",
+          "repository_id",
+          "creation_action_id",
+          "name",
+          "branch",
+          "path",
+          "legacy",
+          "provider",
+          "base",
+          "artifacts",
+          "status",
+          "cleanup_unconfirmed"
+        ],
+        "type": "object"
+      },
+      "WorkspaceAction": {
+        "oneOf": [
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "operation": {
+                "const": "create",
+                "type": "string"
+              },
+              "repository_id": {
+                "$ref": "#/$defs/RepositoryId"
+              }
+            },
+            "required": [
+              "operation",
+              "action_id",
+              "repository_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "action_id": {
+                "$ref": "#/$defs/ActionId"
+              },
+              "operation": {
+                "const": "reconcile",
+                "type": "string"
+              },
+              "workspace_id": {
+                "$ref": "#/$defs/WorkspaceId"
+              }
+            },
+            "required": [
+              "operation",
+              "action_id",
+              "workspace_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspacePage": {
+        "properties": {
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkspaceId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workspaces": {
+            "items": {
+              "$ref": "#/$defs/Workspace"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "workspaces",
+          "next"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "changes",
+            "type": "string"
+          },
+          "observation": {
+            "$ref": "#/$defs/ChangesObservation"
+          }
+        },
+        "required": [
+          "kind",
+          "observation"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "change_preview",
+            "type": "string"
+          },
+          "observation": {
+            "$ref": "#/$defs/PreviewObservation"
+          }
+        },
+        "required": [
+          "kind",
+          "observation"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "workspace",
+            "type": "string"
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Workspace"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "workspace"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkspaceAction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "const": "action",
+            "type": "string"
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Workspace"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "action",
+          "workspace"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "workspaces",
+            "type": "string"
+          },
+          "page": {
+            "$ref": "#/$defs/WorkspacePage"
+          }
+        },
+        "required": [
+          "kind",
+          "page"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "WorkspaceReply"
+  },
+  "WorkspaceRequest": {
+    "$defs": {
+      "ActionId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "ComparisonId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "FileId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "PreviewTarget": {
+        "properties": {
+          "comparison_id": {
+            "$ref": "#/$defs/ComparisonId"
+          },
+          "file_id": {
+            "$ref": "#/$defs/FileId"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "comparison_id",
+          "file_id"
+        ],
+        "type": "object"
+      },
+      "RepositoryId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      },
+      "WorkspaceId": {
+        "format": "uuid",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FileId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "comparison_id": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ComparisonId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "operation": {
+            "const": "changes",
+            "type": "string"
+          },
+          "refresh": {
+            "type": "boolean"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "operation",
+          "workspace_id",
+          "refresh",
+          "comparison_id",
+          "after"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "load": {
+            "type": "boolean"
+          },
+          "operation": {
+            "const": "change_preview",
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/$defs/PreviewTarget"
+          }
+        },
+        "required": [
+          "operation",
+          "target",
+          "load"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "operation": {
+            "const": "create",
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          }
+        },
+        "required": [
+          "operation",
+          "action_id",
+          "repository_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "operation": {
+            "const": "reconcile",
+            "type": "string"
+          },
+          "workspace_id": {
+            "$ref": "#/$defs/WorkspaceId"
+          }
+        },
+        "required": [
+          "operation",
+          "action_id",
+          "workspace_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "$ref": "#/$defs/ActionId"
+          },
+          "operation": {
+            "const": "action",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "action_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/WorkspaceId"
+          },
+          "operation": {
+            "const": "get",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkspaceId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "operation": {
+            "const": "list",
+            "type": "string"
+          },
+          "repository_id": {
+            "$ref": "#/$defs/RepositoryId"
+          }
+        },
+        "required": [
+          "operation",
+          "repository_id",
+          "after"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "WorkspaceRequest"
+  }
+}

@@ -1,0 +1,125 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 button Click to show 1 error in the Console
+			10 tab group (selectable)
+				11 tab (selectable) Elements
+				12 tab (selected) Console
+				13 tab (selectable) Sources
+				14 tab (selectable) Network
+				15 tab (selectable) Timelines
+				16 tab (selectable) Storage
+				17 tab (selectable) Graphics
+				18 tab (selectable) Show hidden tabs…
+				19 tab (selectable) Search (⇧⌘F)
+				20 tab (selectable) Settings (⌘,)
+			21 container Console
+				22 search text field (settable)  
+				23 button (disabled) Find Previous (⇧⌘G)
+				24 button (disabled) Find Next (⌘G)
+				25 text All
+				26 text Evaluations
+				27 text Errors
+				28 text Warnings
+				29 text Logs
+				30 button Other filter options…
+				31 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				32 button Run Console Snippet…
+				33 button Collect garbage
+				34 button Clear log (⌘K or ⌃L)
+				35 container
+					36 text Console opened at 9:55:56 PM
+					37 image
+					38 text Unhandled Promise Rejection: Command plugin:webview|internal_toggle_devtools not allowed by ACL
+					39 image
+					40 text Selected Element
+					41 image
+					42 outline (selectable)
+						43 row (selectable) Description: <h1 class=​"min-w-0 truncate">​Workspace​</h1>, Value: <h1 class=​"min-w-0 truncate">​Workspace​</h1>
+<
+h1
+class
+=​"
+min-w-0 truncate
+"
+>
+Workspace
+<
+/h1
+>
+					44 text  = $1
+					45 image
+					46 text (()=>{
+ const q=globalThis.f08={started:performance.now(),log:[],navigation:[],windows:[],active:0,maxActive:0,duplicates:0,keys:new Map()};
+ const original=window.__TAURI_INTERNALS__.invoke;
+ q.invoke=original.bind(window.__TAURI_INTERNALS__);
+ window.__TAURI_INTERNALS__.invoke=function(command,args,...rest){
+  const item={command,args,start:performance.now()};q.log.push(item);
+  const read=['repository_request','workspace_request'].includes(command)&&!['register','create','reconcile'].includes(args?.reque
+					47 image
+					48 text F08-INITIAL:{"snapshot":{"time":94748,"href":"/","visibility":"visible","active":0,"maxActive":0,"duplicates":0,"queries":2,"cacheBodyBytes":933,"queue":0,"pending":0,"physicalActive":0,"freshness":2,"actor":"idle","commands":{},"assets":["tauri__localhost/assets/index-hvIgvl0U.js"],"width":900,"height":148,"dpr":2,"scroll":[],"queryStates":[{"key":["repositories","14646-1794688867448058000",{"operation":"list","after":null}],"active":1,"status":"success","fetch":"idle"},{"key":["workspaces","14646-17946888
+					49 image
+					50 text "
+					51 text F08 instrumentation installed
+					52 text "
+					53 text  = $2
+					54 image
+					55 text console.log('F08:'+JSON.stringify({startup:f08.startup,router:!!f08.router(),app:!!f08.app()}))
+					56 image
+					57 text F08:{"startup":{"navigation":[{"domContentLoaded":83,"load":83,"responseEnd":3}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":119.00000000000001,"duration":0}]},"router":true,"app":true}
+					58 image
+					59 text undefined
+			60 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			61 container
+	62 scroll area
+		63 HTML content Description: Agent Workspace, URL: tauri://localhost
+			64 link Skip to workspace, Value: tauri://localhost#workspace
+			65 container Repository sidebar
+				66 text Agent Workspace
+				67 container Repositories
+					68 heading Repositories, Value: 2
+						69 text Repositories
+					70 content list
+						71 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							72 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							73 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							74 button Create workspace in Alpha
+							75 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							76 text Available
+							77 content list
+								78 button paul-scholes, Help: Workspace ready
+				79 pop up button Add repository
+				80 text Connected
+				81 pop up button Connection details
+				82 link Settings, Value: tauri://localhost/settings/general
+			83 container
+				84 container
+					85 heading Workspace, Value: 1
+						86 text Workspace
+					87 button Refresh status
+				88 heading A place for your next change, Value: 2
+					89 text A place for your next change
+				90 text Add an existing Git repository from the sidebar to get started.
+				91 container
+					92 text Local workspace No repository selected
+		93 scroll bar (settable, float) 0
+	94 close button
+	95 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	96 minimize button
+	97 text Agent Workspace
+98 menu bar
+	99 F08 Inspector current
+	100 File
+	101 Edit
+	102 View
+	103 Window
+	104 Help
+
+The focused UI element is 60 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

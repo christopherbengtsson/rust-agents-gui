@@ -1,0 +1,99 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 11:28:32 PM
+					36 image
+					37 text (()=>{const value=JSON.stringify(({settings:f08.pendingQualification.settings,settled:f08.pendingQualification.settled,after:f08.pendingQualification.after,error:f08.pendingQualification.error,held:f08.pendingQualification.held.map(x=>x.op),requests:f08.pendingQualification.requests,calls:f08.log.slice(f08.pendingQualification.startIndex).map(x=>({command:x.command,op:x.args?.request?.operation,start:x.start,end:x.end})).slice(0,30)})).replaceAll('tauri://','tauri__');for(let i=0;i<value.length;i+=300)conso
+					38 image
+					39 text F08DATA:0:{"settings":{"time":893500,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3","pending":"{\"request\":{\"operation\":\"create\",\"action_id\":\"fc16e29e-c473-4aa8-9d15-4afc8dd5070b\",\"repository_id\":\"b56ac14e-5c7a-489e-b8ad-f86b931366e3\"},\"uncertain\":true}"},"settled":{"time":898501,"hr
+					40 image
+					41 text F08DATA:300:ef":"/settings/general","pending":null,"snapshot":{"time":898501,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":6456}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":52,"cacheBodyBytes":219940,"queue":0,"pending"
+					42 image
+					43 text F08DATA:600::0,"physicalActive":0,"freshness":986,"actor":"idle","commands":{"workspace_request":1451,"observation_acknowledge":1018,"repository_request":2},"assets":["tauri__localhost/assets/index--UGuBMO9.js"],"width":900,"height":648,"dpr":2,"scroll":[]}},"after":{"time":900001,"href":"/settings/general","pe
+					44 image
+					45 text F08DATA:900:nding":null,"snapshot":{"time":900001,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":6456}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":52,"cacheBodyBytes":219940,"queue":0,"pending":0,"physicalActive":0,"fres
+					46 image
+					47 text F08DATA:1200:hness":986,"actor":"idle","commands":{"workspace_request":1451,"observation_acknowledge":1018,"repository_request":2},"assets":["tauri__localhost/assets/index--UGuBMO9.js"],"width":900,"height":648,"dpr":2,"scroll":[]}},"held":["action","create"],"requests":[{"op":"create","args":{"expectedOwner":"4
+					48 image
+					49 text F08DATA:1500:7400-1794690795286464000","request":{"operation":"create","action_id":"fc16e29e-c473-4aa8-9d15-4afc8dd5070b","repository_id":"b56ac14e-5c7a-489e-b8ad-f86b931366e3"}},"time":893398},{"op":"action","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"action","action_id":"fc16e29
+					50 image
+					51 text F08DATA:1800:e-c473-4aa8-9d15-4afc8dd5070b"}},"time":893409}],"calls":[{"command":"workspace_request","op":"changes","start":888738,"end":888764},{"command":"observation_acknowledge","start":888751,"end":888774},{"command":"workspace_request","op":"changes","start":888766,"end":888774},{"command":"observation_ac
+					52 image
+					53 text F08DATA:2100:knowledge","start":888768,"end":888775},{"command":"workspace_request","op":"changes","start":888774,"end":888781.0000000001},{"command":"observation_acknowledge","start":888997.0000000001,"end":889002.0000000001},{"command":"workspace_request","op":"changes","start":889001,"end":889002.0000000001},
+					54 image
+					55 text F08DATA:2400:{"command":"workspace_request","op":"change_preview","start":889003,"end":889021.0000000001},{"command":"observation_acknowledge","start":889013,"end":889054},{"command":"observation_acknowledge","start":889017,"end":889054},{"command":"workspace_request","op":"changes","start":889045.0000000001,"en
+					56 image
+					57 text F08DATA:2700:d":889054},{"command":"workspace_request","op":"change_preview","start":889055.0000000001,"end":889056},{"command":"observation_acknowledge","start":889308,"end":889321},{"command":"workspace_request","op":"changes","start":889317,"end":889321},{"command":"workspace_request","op":"change_preview","s
+					58 image
+					59 text F08DATA:3000:tart":889322,"end":889324.0000000001},{"command":"workspace_request","op":"changes","start":891328,"end":891336},{"command":"observation_acknowledge","start":891331,"end":891349},{"command":"workspace_request","op":"changes","start":891337,"end":891349},{"command":"observation_acknowledge","start":8
+					60 image
+					61 text F08DATA:3300:91346,"end":891350},{"command":"workspace_request","op":"changes","start":891350,"end":891351},{"command":"observation_acknowledge","start":891589,"end":891593.0000000001},{"command":"workspace_request","op":"changes","start":891593.0000000001,"end":891595},{"command":"workspace_request","op":"chang
+					62 image
+					63 text F08DATA:3600:e_preview","start":891596,"end":891608.0000000001},{"command":"observation_acknowledge","start":891605,"end":891635},{"command":"observation_acknowledge","start":891609,"end":891635},{"command":"workspace_request","op":"changes","start":891629,"end":891635},{"command":"workspace_request","op":"chang
+					64 image
+					65 text F08DATA:3900:e_preview","start":891635,"end":891639},{"command":"observation_acknowledge","start":891895,"end":891901.0000000001},{"command":"workspace_request","op":"changes","start":891900,"end":891901.0000000001},{"command":"workspace_request","op":"change_preview","start":891901.0000000001,"end":891904}]}
+					66 image
+					67 text F08LEN:4197
+					68 image
+					69 text undefined
+			70 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			71 container
+	72 scroll area
+		73 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			74 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			75 container
+				76 button Back
+				77 heading Settings, Value: 1
+					78 text Settings
+			79 container Settings
+				80 link General, Value: tauri://localhost/settings/general
+			81 container General
+				82 heading General, Value: 2
+					83 text General
+				84 text General settings will be available here.
+	85 close button
+	86 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	87 minimize button
+	88 text Agent Workspace
+89 menu bar
+	90 F08 Inspector current
+	91 File
+	92 Edit
+	93 View
+	94 Window
+	95 Help
+
+The focused UI element is 70 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

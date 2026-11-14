@@ -1,0 +1,13 @@
+{
+  "terminated_owned_fixture_processes": [
+    {
+      "pid": 31365,
+      "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/MacOS/workspace-desktop"
+    },
+    {
+      "pid": 31372,
+      "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state"
+    }
+  ],
+  "purpose": "same Git wrapper and delay as current; no providers or original checkout edits"
+}

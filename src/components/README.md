@@ -7,6 +7,25 @@ ownership and the [shadcn skill](../../.agents/skills/shadcn/SKILL.md) for toolk
 APIs, composition rules, and CLI documentation lookup. Product responsibilities
 remain governed by [MVP.md](../../docs/MVP.md).
 
+## Upstream shadcn guidance
+
+Keep the shadcn skill upstream-owned; maintain project conventions here under
+[repository precedence](../../AGENTS.md#instruction-precedence). Use its relevant
+toolkit workflow for the requested component work. Project scope and component
+layers govern which additions or customizations are needed.
+
+When the skill's project context contains a shell placeholder rather than actual
+JSON, obtain it with `corepack pnpm dlx shadcn@latest info --json` from the repository
+root. Use `components.json`, installed component source and dependency versions to
+check its output. If lookup fails, report the missing information and inspect
+those local sources before selecting an API or adding a component. Fetch the
+relevant official documentation and check installed-version compatibility as
+described below.
+
+Review upstream skill updates against these conventions and the current stack.
+Keep an unavoidable local skill patch small and record its source revision and
+reason; prefer contributing a general correction upstream.
+
 ## Ownership and selection
 
 | Layer         | Responsibility                                                  | Selection rule                                                                                                                   |
@@ -72,6 +91,20 @@ customizations, and verify affected primitives and blocks. Treat Base UI depende
 updates separately from generated-source updates. Review internal API changes and
 callers together; Git history records their evolution.
 
+## Observation lifetime status
+
+F04f now uses app-scoped Query observations for repository, workspace and inspection
+bodies, with one XState feed actor and one inspection actor above layouts.
+The [amended foundation](../../.scratch/frontend-navigation/spec.md) and
+[observation guidance](../../docs/agents/observations.md) govern their replacement:
+F04e establishes app-lifetime construction and repository/workspace feature
+observations; F04f replaces feed/inspection lifecycle internals with XState and
+completes inspection Query/freshness/polling replacement. Screens receive
+feature-specific observations/callbacks; Query owns records, actors own coordination,
+and Zustand owns presentation memory. Settings releases inspection interest while
+physical work drains. Product source has not changed in F04a; update each entry with
+actual interfaces in its implementation ticket, retaining completed UI evidence.
+
 ## Component decisions
 
 For each new or materially changed custom primitive or block, maintain a concise
@@ -109,9 +142,14 @@ This guide does not authorize regenerating or relocating the foundation.
   action/storage errors and availability. Use for workspace content rather than
   navigation. Long repository names truncate in the header/footer while retaining
   their full accessible text and keeping Refresh visible. Ticket 04 adds
-  selected-workspace context; ticket 05 adds change
+  selected-workspace context. App supplies the stable inspection reader constructed above layouts, sharing
+  its physical-read coordinator with repository/workspace observations. Standalone
+  consumers must likewise keep the reader above keyed presentation.
+  Ticket 05 adds change
   inspection through concrete interfaces in those tickets.
 
+App constructs the Query client, p-queue physical coordinator, feature modules,
+Zustand presentation identity store and inspection reader above layouts.
 App owns the single connection observation Hook and composes the blocks inside
 SidebarProvider with the skip link. Future selection changes must retain that
 owner and bind pending work to its actual domain target. Blocks add no duplicate
@@ -125,9 +163,12 @@ parents control arrangement, while blocks retain internal layout.
   never interprets durability or decides recovery. Native picker results only fill
   the path. Late results from a closed dialog are ignored.
 - **Repository observations:** App calls `useRepositories` once alongside the
-  existing connection Hook. It coordinates bounded pages, selected details and
-  retained action-status lookup. Desktop preferences retain selection/action IDs;
-  SQLite remains authoritative. Mount/reconnect reads status and never resubmits.
+  existing connection Hook. RepositoryObservations hides owner/target/page Query
+  definitions, validation, interests and captured dirty generations. The Hook binds
+  presentation identities and explicit callbacks without retaining observation bodies.
+  Feed baseline acceptance precedes initial reads; hints replace progress polling.
+  Desktop preferences retain selection/action IDs; SQLite remains authoritative.
+  Mount/reconnect reads status and never resubmits.
 - **Registration foundation additions:** Field, Label, Input Group, Textarea,
   Spinner and Collapsible retain official base-nova composition. InputGroupAddon
   has a narrow lint exception for mouse focus assistance; Label's exception
@@ -169,12 +210,15 @@ For primary-source rationale and the article's stack adaptations, consult
   an accessible per-repository +. Existing selection/disclosure remains separate.
   WorkspacePanel composes WorkspaceDetails and retained transport/preference errors.
 - App calls `useWorkspaces` once. It owns bounded pages, workspace selection and
-  pending action status across navigation. Reconnect only reads. Creation and
+  pending action status across navigation through WorkspaceObservations and the
+  app-scoped Query client. Zustand retains selected identities, never workspace
+  records. Reconnect only reads. Creation and
   recovery callbacks retain explicit target IDs; late replies cannot steal changed
   selection. Action settlement uses owner and explicit-navigation generations,
   independent of repository-driven observation resubscription. Admission errors
-  remain visible while unrelated workspace progress continues polling; observation
-  failures pause polling. Stable callbacks own observation subscriptions; the shared
+  remain visible while unrelated workspace progress follows push hints; observation
+  failures retain last-good data and require a new hint or explicit refresh.
+  Stable callbacks own observation interests; the shared
   React-independent async settlement utility preserves cleanup outside compiler lowering.
 - Add repository explains the automatic first workspace and lack of agent launch.
   No additional shadcn component or custom primitive was needed. Existing controls
@@ -198,16 +242,24 @@ retained observations remain readable and marked stale.
   workspace's Workspace/Changes tabs and one `useWorkspaceChanges` owner above
   their content. Use it for workspace-wide uncommitted inspection; existing
   WorkspaceDetails retains creation/recovery presentation. It receives an exact
-  workspace ID and connected supervisor owner. One reader coordinates summary
+  workspace ID and connected supervisor owner. One app-lifetime XState reader coordinates summary
   refresh every two seconds while Changes, the expanded file panel or the open
-  Sheet is visible; selected previews load only in Changes. Pending jobs use
-  observation-only polling. Hidden documents/surfaces, disconnection and failures
+  Sheet is visible; selected previews load only in Changes. Pending jobs follow accepted feed invalidations with
+  observation-only reads; covered 250 ms progress polling is removed. Hidden documents/surfaces, disconnection and failures
   pause automatic reads; manual Refresh remains available after errors. Reconnect
-  first retrieves observations. Generations isolate targets and stale replies;
-  the physical read lane drains before another sequence starts. WorkspacePanel
-  owns the reader's lifetime above the workspace-keyed presentation, so navigation
+  first retrieves observations. Query retains validated observations and last-good data; bounded dirty generations
+  preserve hints during reads. Actor request identities isolate stale replies;
+  the physical sequence drains before another sequence starts. App
+  owns the reader's lifetime above layouts and the workspace-keyed presentation, so navigation
   also drains old IPC before reading the new target. Supply that stable reader
-  when composing WorkspaceInspection; keyed view resets retain no extra readers.
+  when composing WorkspaceInspection; keyed view resets release interest and retain
+  no extra readers. useWorkspaceChanges requires that owner. Zustand persists an allowlist of workspace file/comparison, reading position,
+  panel width/collapse and remembered view defaults. Current view is a controlled `view`/`onViewChange` contract supplied by the route;
+  remembered views supply navigation defaults only. Workspace or Settings-style interest release
+  preserves that memory; a changed comparison rejects restored file/scroll context.
+  Live preview refreshes retain native-validated file identity and reset scroll when
+  the comparison changes. Storage errors remain visible above routed content even when
+  inspection is unmounted; pending action records remain separate.
 - **ChangedFiles** is the bounded file-selection block shared by the desktop
   right panel and the below-880-px Sheet. It receives observations and a selection
   callback. Opaque file IDs, never display labels, target previews. It renders one
@@ -216,9 +268,12 @@ retained observations remain readable and marked stale.
 - **UnifiedDiff** (`primitives/unified-diff.tsx`) composes Code Block and Scroll
   Area for plain, bounded Git rows. Use explicit old/new source numbers, row kinds
   and supplied text; use Code Block directly for ordinary sequential code. It
-  accepts a reading-position ref owned above the tabs and an explicit scroll
-  callback. Tab switches unmount inactive heavy content; changing files resets
-  position. No highlighting or HTML rendering is enabled.
+  accepts `initialPosition` for one keyed mount and an explicit `onPosition`
+  callback. Key by comparison/file identity to reset stale reading position.
+  Scroll reporting is coalesced to 150 ms and flushes pending position on cleanup;
+  consumers capture workspace/comparison/file identity and reject late saves.
+  Tab switches unmount inactive heavy content. No highlighting or HTML rendering
+  is enabled.
 - **Foundation additions:** Tabs, Resizable, Scroll Area and Code Block came from
   shadcn base-nova through the project runner. Existing compact Button source was
   preserved. Tabs forwards orientation to Base UI and uses explicit
@@ -242,3 +297,74 @@ is read-only. A refreshed comparison resets list paging to First; expired
 continuations are explicit errors, and a removed selection stays named until the
 user selects another file. Preview failures label retained content as stale even
 when the retained comparison ID has not changed.
+
+### F04 observation delivery
+
+`App` owns one acknowledged native feed through `useObservationFeed`, independently
+of feature reads. Its XState owner validates owner/subscription/batch/cursor
+and typed hints, then calls the synchronous app acceptance sink before advancing
+the accepted cursor and acknowledging. Repository/workspace modules own Query
+freshness and visible/retained-action interests; the feed has no competing
+feature-dirtiness ledger. A shared bounded generation budget also retains hidden
+inspection invalidations until that feature becomes interested.
+Feed failures appear in the existing connection status/details and retain last-good
+feature observations. The actor serializes replacement after physical stop/join,
+including late registration and Strict Mode cleanup. Configuration changes during
+cleanup update the latest desired owner; failed cleanup stays visible and fences
+replacement until exact native stop/join reconciliation succeeds. Failure remains
+visible while cleanup is pending. Views release interest rather than terminating
+app actors. Historical F04–F04e evidence is preserved; focused actual transport/fixture-desktop
+qualification is recorded in [F04g evidence](../../docs/evidence/frontend-navigation/f04g.md).
+F08 retains cumulative routed/accessibility qualification.
+
+### F06 route composition
+
+`App` constructs one Router and observation composition. Its persistent root runtime
+owns connection/feed and repository/workspace action hooks above child routes.
+Router supplies current repository/workspace IDs and the validated Workspace/Changes
+view; Zustand retains restoration defaults only. Use `WorkspacePanel` for main
+repository/workspace content and supply its controlled view callback. File selection
+requests the Changes route through that callback. The sidebar's callbacks navigate
+once to the complete destination; create/register completions require an unchanged
+history generation. Paging and disclosure do not change the current route.
+
+Route loaders prepare exact feature observations without configuring Query keys or
+native IPC. Missing explicit targets and wrong membership show destination guidance;
+Settings's F06 route placeholder is replaced by the F07 composition below. Route changes release inspection
+interest while its app-lifetime owner drains work and retains validated context.
+
+### F07 routed Settings
+
+- **RepositorySidebar** retains the separate supervisor diagnostics and adds the
+  footer gear. `onSettingsOpen: () => void` records focus provenance for ordinary
+  activation; the typed Link owns navigation to `/settings/general`. Base UI Button
+  composes that Link with `nativeButton={false}` and explicit link semantics,
+  producing one interactive target named “Settings.” Modified clicks retain Link
+  behavior without claiming focus return for the current window.
+- **SettingsLayout** (`blocks/settings-layout.tsx`) owns the Settings header,
+  Back control, navigation and main landmark. Use it for routed app settings;
+  use WorkspacePanel for repository/workspace presentation and SupervisorConnection
+  for transport diagnostics. It receives `onBack: () => void` and route content;
+  the General content supplies `settings-general-heading` for the main landmark.
+  General is the only section and uses Empty with honest placeholder text. No
+  account or provider controls are present.
+- The layout focuses its heading on mount. Its window bubble-phase Escape handler
+  follows installed Base UI overlay dismissal; consumed, composing and repeated
+  Escape events do not navigate. Navigation owns ephemeral return provenance keyed
+  to the Settings history entry, including replacement redirects. Back/Escape uses
+  its preceding app entry; when none is usable, replace with home, per the F07 user
+  decision. Remembered destinations do not create Settings return authority.
+  After routing settles, AppRuntime restores the remounted gear for a gear-origin
+  return, otherwise the main landmark. The skip link follows the current layout.
+- Both layouts share the persistent runtime and SidebarProvider. Settings unmounts
+  WorkspaceInspection, releasing its interest without stopping the reader, feed,
+  action owners or Query client. Hidden collection/detail interests are released,
+  while independent retained-action interests continue. Accepted hints remain
+  dirty until the main layout returns; inactive observation bodies can expire.
+  F05's validated file/comparison/scroll/layout
+  context survives; comparison changes reject stale restoration. Existing
+  Sheet/resizing contracts remain. Actual WebView focus/layout and cumulative
+  responsiveness qualification belongs to F08.
+- [Original milestone 06](../../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+  extends this composition with Settings → Providers → Codex and workspace status
+  links. It remains separate from supervisor diagnostics; F07 implements no setup.

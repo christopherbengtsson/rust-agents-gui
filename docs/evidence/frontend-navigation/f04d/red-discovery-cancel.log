@@ -1,0 +1,22 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.20s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-a93ab365b0aedb8f)
+
+running 1 test
+test connection::tests::discovery_cancellation_wakes_startup_delay_without_waiting ... FAILED
+
+failures:
+
+---- connection::tests::discovery_cancellation_wakes_startup_delay_without_waiting stdout ----
+
+thread 'connection::tests::discovery_cancellation_wakes_startup_delay_without_waiting' (30967291) panicked at crates/core/src/connection/tests.rs:1637:5:
+cancellation must wake discovery without advancing controlled time
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    connection::tests::discovery_cancellation_wakes_startup_delay_without_waiting
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 153 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

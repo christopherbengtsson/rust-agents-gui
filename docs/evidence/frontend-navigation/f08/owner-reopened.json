@@ -1,0 +1,25 @@
+{
+  "command": "snapshot",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 47400,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "revision": 3
+      },
+      "reset": true
+    }
+  },
+  "serving_executable": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Inspector current.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-qualified-wj7lgl6i/state",
+  "serving_sha256": "08b1c32f4076e3d858198cb0a61937f37ac2cb39727ed8109ebdc86c60e16d76",
+  "counts_after_reopen": {
+    "registration_actions": 1,
+    "workspaces": 1,
+    "workspace_actions": 1
+  }
+}

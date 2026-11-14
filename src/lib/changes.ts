@@ -1,140 +1,69 @@
-import { identity, object, type RepositoryError } from "./repositories";
+import { bounded, domainError } from "./observation-contracts";
+import type {
+  ChangedFile,
+  DiffRow,
+  InspectionPhase,
+  UnsupportedContent,
+  WorkspaceRequest,
+  WorkspaceReply,
+  ChangesObservation,
+  PreviewObservation,
+} from "@/generated/contracts/types";
+import { validateWorkspaceReply } from "@/generated/contracts/validators.js";
+export type {
+  InspectionPhase,
+  UnsupportedContent,
+  ChangedFile,
+  ChangePage,
+  ChangesObservation,
+  PreviewTarget,
+  DiffRow,
+  FilePreview,
+  PreviewObservation,
+} from "@/generated/contracts/types";
+export type InspectionRequest = Extract<
+  WorkspaceRequest,
+  { operation: "changes" | "change_preview" }
+>;
+export type InspectionReply = Extract<
+  WorkspaceReply,
+  { kind: "changes" | "change_preview" }
+>;
 
-export type InspectionPhase =
-  | "idle"
-  | "queued"
-  | "running"
-  | "ready"
-  | "failed";
-export type UnsupportedContent =
-  | "binary"
-  | "non_utf8"
-  | "symlink"
-  | "submodule"
-  | "conflict"
-  | "special_file"
-  | "oversized"
-  | "preview_limit";
-export type ChangedFile = {
-  id: string;
-  path: string;
-  index_status: string;
-  worktree_status: string;
-  unsupported: UnsupportedContent | null;
-};
-export type ChangePage = {
-  comparison_id: string;
-  head: string;
-  files: ChangedFile[];
-  total: number;
-  next: string | null;
-};
-export type ChangesObservation = {
-  workspace_id: string;
-  phase: InspectionPhase;
-  page: ChangePage | null;
-  error: RepositoryError | null;
-};
-export type PreviewTarget = {
-  workspace_id: string;
-  comparison_id: string;
-  file_id: string;
-};
-export type DiffRow = {
-  kind: "hunk" | "context" | "added" | "removed" | "no_newline";
-  old_line: number | null;
-  new_line: number | null;
-  text: string;
-};
-export type FilePreview = {
-  comparison_id: string;
-  head: string;
-  rows: DiffRow[];
-  limited: string | null;
-  unsupported: UnsupportedContent | null;
-  note: string | null;
-};
-export type PreviewObservation = {
-  target: PreviewTarget;
-  phase: InspectionPhase;
-  preview: FilePreview | null;
-  error: RepositoryError | null;
-};
-export type InspectionRequest =
-  | {
-      operation: "changes";
-      workspace_id: string;
-      refresh: boolean;
-      comparison_id: string | null;
-      after: string | null;
-    }
-  | { operation: "change_preview"; target: PreviewTarget; load: boolean };
-export type InspectionReply =
-  | { kind: "changes"; observation: ChangesObservation }
-  | { kind: "change_preview"; observation: PreviewObservation };
-
-const unsupported = (v: unknown) =>
-  v === null ||
-  [
-    "binary",
-    "non_utf8",
-    "symlink",
-    "submodule",
-    "conflict",
-    "special_file",
-    "oversized",
-    "preview_limit",
-  ].includes(String(v));
-const nullableText = (v: unknown) => v === null || typeof v === "string";
-const head = (v: unknown) =>
-  typeof v === "string" && /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/i.test(v);
-const number = (v: unknown) => Number.isSafeInteger(v) && Number(v) >= 0;
-const line = (v: unknown) => v === null || (number(v) && Number(v) > 0);
-function status(v: Record<string, unknown>) {
+const head = (value: string) => /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/i.test(value);
+const safeCount = (value: number) => Number.isSafeInteger(value) && value >= 0;
+const line = (value: number | null) =>
+  value === null || (safeCount(value) && value > 0);
+function statusSemantics(
+  value: ChangesObservation | PreviewObservation,
+): boolean {
   return (
-    ["idle", "queued", "running", "ready", "failed"].includes(
-      String(v.phase),
-    ) &&
-    (v.error === null ||
-      (object(v.error) &&
-        typeof v.error.code === "string" &&
-        typeof v.error.message === "string")) &&
-    (v.phase !== "failed" || v.error !== null)
+    (value.error === null || domainError(value.error)) &&
+    (value.phase !== "failed" || value.error !== null) &&
+    // The Rust owner retains the previous error while a retry is queued/running.
+    ((value.phase !== "idle" && value.phase !== "ready") ||
+      value.error === null)
   );
 }
-function file(v: unknown): v is ChangedFile {
+function fileSemantics(value: ChangedFile): boolean {
   return (
-    object(v) &&
-    identity(v.id) &&
-    typeof v.path === "string" &&
-    v.path.length > 0 &&
-    typeof v.index_status === "string" &&
-    /^[.MADRCUT?!]$/.test(v.index_status) &&
-    typeof v.worktree_status === "string" &&
-    /^[.MADRCUT?!]$/.test(v.worktree_status) &&
-    unsupported(v.unsupported)
+    value.path.length > 0 &&
+    /^[.MADRCUT?!]$/.test(value.index_status) &&
+    /^[.MADRCUT?!]$/.test(value.worktree_status)
   );
 }
-function row(v: unknown): v is DiffRow {
-  if (
-    !object(v) ||
-    typeof v.text !== "string" ||
-    !line(v.old_line) ||
-    !line(v.new_line)
-  )
-    return false;
-  switch (v.kind) {
+function rowSemantics(value: DiffRow): boolean {
+  if (!line(value.old_line) || !line(value.new_line)) return false;
+  switch (value.kind) {
     case "hunk":
     case "no_newline":
-      return v.old_line === null && v.new_line === null;
+      return value.old_line === null && value.new_line === null;
     case "context":
-      return v.old_line !== null && v.new_line !== null;
+      return value.old_line !== null && value.new_line !== null;
     case "added":
-      return v.old_line === null && v.new_line !== null;
+      return value.old_line === null && value.new_line !== null;
     case "removed":
-      return v.old_line !== null && v.new_line === null;
-    default:
-      return false;
+      return value.old_line !== null && value.new_line === null;
   }
 }
 export function validInspectionReply(
@@ -142,62 +71,50 @@ export function validInspectionReply(
   value: unknown,
 ): value is InspectionReply {
   if (
-    !object(value) ||
-    !object(value.observation) ||
-    !status(value.observation) ||
-    new TextEncoder().encode(JSON.stringify(value)).byteLength > 48 * 1024
+    !validateWorkspaceReply(value) ||
+    (value.kind !== "changes" && value.kind !== "change_preview") ||
+    !statusSemantics(value.observation) ||
+    !bounded(value, 48 * 1024)
   )
     return false;
-  const v = value.observation;
-  if (request.operation === "changes") {
-    if (value.kind !== "changes" || v.workspace_id !== request.workspace_id)
-      return false;
-    const p = v.page;
-    return (
-      (p === null &&
-        !request.comparison_id &&
-        !request.after &&
-        v.phase !== "ready") ||
-      (object(p) &&
-        identity(p.comparison_id) &&
-        (!request.comparison_id || p.comparison_id === request.comparison_id) &&
-        head(p.head) &&
-        Array.isArray(p.files) &&
-        p.files.length <= 32 &&
-        p.files.every(file) &&
-        new Set(p.files.map((f) => f.id)).size === p.files.length &&
-        number(p.total) &&
-        Number(p.total) >= p.files.length &&
-        (p.next === null ||
-          (identity(p.next) &&
-            p.files.length > 0 &&
-            p.next === p.files.at(-1)?.id)) &&
-        (Number(p.total) !== 0 || (p.files.length === 0 && p.next === null)))
-    );
+  if (request.operation === "changes" && value.kind === "changes") {
+    const observation = value.observation;
+    if (observation.workspace_id !== request.workspace_id) return false;
+    const page = observation.page;
+    return page === null
+      ? !request.comparison_id &&
+          !request.after &&
+          observation.phase !== "ready"
+      : (!request.comparison_id ||
+          page.comparison_id === request.comparison_id) &&
+          head(page.head) &&
+          page.files.length <= 32 &&
+          page.files.every(fileSemantics) &&
+          new Set(page.files.map((file) => file.id)).size ===
+            page.files.length &&
+          safeCount(page.total) &&
+          page.total >= page.files.length &&
+          (page.next === null ||
+            (page.files.length > 0 && page.next === page.files.at(-1)?.id)) &&
+          (page.total !== 0 || (page.files.length === 0 && page.next === null));
   }
+  if (request.operation !== "change_preview" || value.kind !== "change_preview")
+    return false;
+  const observation = value.observation;
   if (
-    value.kind !== "change_preview" ||
-    !object(v.target) ||
-    v.target.workspace_id !== request.target.workspace_id ||
-    v.target.comparison_id !== request.target.comparison_id ||
-    v.target.file_id !== request.target.file_id
+    observation.target.workspace_id !== request.target.workspace_id ||
+    observation.target.comparison_id !== request.target.comparison_id ||
+    observation.target.file_id !== request.target.file_id
   )
     return false;
-  const p = v.preview;
-  return (
-    (p === null && v.phase !== "ready") ||
-    (object(p) &&
-      identity(p.comparison_id) &&
-      (v.phase !== "ready" ||
-        p.comparison_id === request.target.comparison_id) &&
-      head(p.head) &&
-      Array.isArray(p.rows) &&
-      p.rows.length <= 200 &&
-      p.rows.every(row) &&
-      nullableText(p.limited) &&
-      unsupported(p.unsupported) &&
-      nullableText(p.note))
-  );
+  const preview = observation.preview;
+  return preview === null
+    ? observation.phase !== "ready"
+    : (observation.phase !== "ready" ||
+        preview.comparison_id === request.target.comparison_id) &&
+        head(preview.head) &&
+        preview.rows.length <= 200 &&
+        preview.rows.every(rowSemantics);
 }
 export const pendingInspection = (phase: InspectionPhase | undefined) =>
   phase === "queued" || phase === "running";

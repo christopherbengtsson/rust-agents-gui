@@ -1,0 +1,54 @@
+{"name": "verify-initial", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 17.118311457918026}
+{"name": "package-initial", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 44.11802908300888}
+{"name": "process-current", "command": ["corepack", "pnpm", "qualify:process"], "status": 0, "elapsed_seconds": 6.3507104580057785}
+{"name": "socket-current", "command": ["python3", "scripts/qualify-observations.py", "src-tauri/gen/sidecar/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-current.json"], "status": 1, "elapsed_seconds": 0.1191728749545291}
+{"name": "baseline-install", "command": ["corepack", "pnpm", "--dir", "/private/tmp/aw-f08-matched-baseline-p0_aykpa/checkout", "install", "--offline", "--frozen-lockfile"], "status": 0, "elapsed_seconds": 0.7704675410641357}
+{"name": "socket-reported-executable", "command": ["python3", "scripts/qualify-observations.py", "target/release/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-reported-executable.json"], "status": 1, "elapsed_seconds": 7.79495670797769}
+{"name": "socket-drained-precondition", "command": ["python3", "scripts/qualify-observations.py", "target/release/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-drained-precondition.json"], "status": 1, "elapsed_seconds": 12.573265208047815}
+{"name": "units-warm", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 88.26196583395358}
+{"name": "baseline-package", "command": ["env", "CARGO_TARGET_DIR=/private/tmp/aw-f08-matched-baseline-p0_aykpa/target", "corepack", "pnpm", "--dir", "/private/tmp/aw-f08-matched-baseline-p0_aykpa/checkout", "build"], "status": 0, "elapsed_seconds": 71.68485529196914}
+{"name": "staging-red", "command": ["node", "--test", "scripts/prepare-supervisor.test.mjs"], "status": 1, "elapsed_seconds": 0.0671437910059467}
+{"name": "staging-green", "command": ["node", "--test", "scripts/prepare-supervisor.test.mjs"], "status": 0, "elapsed_seconds": 0.07000908406917006}
+{"name": "prepare-fixed", "command": ["node", "scripts/prepare-supervisor.mjs", "release"], "status": 0, "elapsed_seconds": 17.179289040970616}
+{"name": "socket-fixed", "command": ["python3", "scripts/qualify-observations.py", "src-tauri/gen/sidecar/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-fixed.json"], "status": 0, "elapsed_seconds": 34.34852304204833}
+{"name": "package-fixed", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 27.95457012508996}
+{"name": "artifacts", "command": ["node", "docs/evidence/frontend-navigation/f08/measure-artifacts.mjs"], "status": 0, "elapsed_seconds": 1.7590520409867167}
+{"name": "socket-expanded", "command": ["python3", "scripts/qualify-observations.py", "src-tauri/gen/sidecar/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-expanded.json"], "status": 1, "elapsed_seconds": 15.496453333063982}
+{"name": "socket-expanded-settled", "command": ["python3", "scripts/qualify-observations.py", "src-tauri/gen/sidecar/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-expanded-settled.json"], "status": 0, "elapsed_seconds": 34.16031125001609}
+{"name": "inspector-current-package", "command": ["corepack", "pnpm", "tauri", "build", "--features", "tauri/devtools", "--bundles", "app", "--", "--locked"], "status": 0, "elapsed_seconds": 13.404369874973781}
+{"name": "inspector-baseline-package", "command": ["env", "CARGO_TARGET_DIR=/private/tmp/aw-f08-matched-baseline-p0_aykpa/target", "corepack", "pnpm", "--dir", "/private/tmp/aw-f08-matched-baseline-p0_aykpa/checkout", "tauri", "build", "--features", "tauri/devtools", "--bundles", "app", "--", "--locked"], "status": 0, "elapsed_seconds": 15.425575875095092}
+{"name": "reload-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::subscription::tests", "--", "--test-threads=1"], "status": 101, "elapsed_seconds": 1.1881008329801261}
+{"name": "reload-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::subscription::tests", "--", "--test-threads=1"], "status": 101, "elapsed_seconds": 0.7324888749280944}
+{"name": "reload-green-corrected", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::subscription::tests", "--", "--test-threads=1"], "status": 0, "elapsed_seconds": 2.5468440839322284}
+{"name": "package-reload-fixed", "command": ["corepack", "pnpm", "build"], "status": 1, "elapsed_seconds": 2.044775249902159}
+{"name": "generated-reload-update", "command": ["corepack", "pnpm", "generated:write"], "status": 0, "elapsed_seconds": 0.7504653329961002}
+{"name": "baseline-seed", "command": ["python3", "docs/evidence/frontend-navigation/f08/seed-baseline.py"], "status": 0, "elapsed_seconds": 1.1783784590661526}
+{"name": "package-reload-fixed-generated", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 51.57965824997518}
+{"name": "artifacts-reload-fixed", "command": ["node", "docs/evidence/frontend-navigation/f08/measure-artifacts.mjs", "artifacts-reload-fixed.json", "--retained-baseline"], "status": 0, "elapsed_seconds": 1.1863293340429664}
+{"name": "inspector-reload-fixed-package", "command": ["corepack", "pnpm", "tauri", "build", "--features", "tauri/devtools", "--bundles", "app", "--", "--locked"], "status": 0, "elapsed_seconds": 13.497058292035945}
+{"name": "baseline-native-resources", "command": ["python3", "docs/evidence/frontend-navigation/f08/measure-native-resources.py", "baseline"], "status": 0, "elapsed_seconds": 2.145686791976914}
+{"name": "verify-runtime-fixed", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 21.846175624988973}
+{"name": "current-native-resources", "command": ["python3", "docs/evidence/frontend-navigation/f08/measure-native-resources.py", "current"], "status": 0, "elapsed_seconds": 2.135896167019382}
+{"name": "process-runtime-fixed", "command": ["corepack", "pnpm", "qualify:process"], "status": 0, "elapsed_seconds": 9.215640916023403}
+{"name": "socket-runtime-fixed", "command": ["python3", "scripts/qualify-observations.py", "src-tauri/gen/sidecar/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-runtime-fixed.json"], "status": 0, "elapsed_seconds": 34.04083058296237}
+{"name": "units-runtime-fixed", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 83.41498712496832}
+{"name": "off-page-seed", "command": ["python3", "docs/evidence/frontend-navigation/f08/seed-off-page.py"], "status": 0, "elapsed_seconds": 73.15233333304059}
+{"name": "frontend-overflow-producer", "command": ["python3", "docs/evidence/frontend-navigation/f08/force-journal-overflow.py"], "status": 0, "elapsed_seconds": 15.76511241600383}
+{"name": "hidden-collections-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/routing.test.tsx", "--maxWorkers=1"], "status": 1, "elapsed_seconds": 2.726388500072062}
+{"name": "hidden-collections-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/routing.test.tsx", "--maxWorkers=1"], "status": 0, "elapsed_seconds": 2.6236162079731002}
+{"name": "hidden-collections-final", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/routing.test.tsx", "--maxWorkers=1"], "status": 0, "elapsed_seconds": 2.6279310419922695}
+{"name": "verify-visibility-fixed", "command": ["corepack", "pnpm", "verify"], "status": 1, "elapsed_seconds": 2.0726530420361087}
+{"name": "package-visibility-fixed", "command": ["corepack", "pnpm", "build"], "status": 1, "elapsed_seconds": 22.687767958035693}
+{"name": "verify-visibility-complete", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 18.93366729200352}
+{"name": "package-visibility-complete", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 33.25826529203914}
+{"name": "inspector-visibility-package", "command": ["corepack", "pnpm", "exec", "tauri", "build", "--bundles", "app", "--features", "tauri/devtools"], "status": 0, "elapsed_seconds": 13.133702333085239}
+{"name": "baseline-catalog", "command": ["python3", "docs/evidence/frontend-navigation/f08/seed-baseline-catalog.py"], "status": 0, "elapsed_seconds": 69.8748522499809}
+{"name": "units-final", "command": ["node", "scripts/test-unit.mjs", "--measure"], "status": 0, "elapsed_seconds": 83.89265604200773}
+{"name": "fresh-final-checkout", "command": ["python3", "docs/evidence/frontend-navigation/f08/qualify-fresh-checkout.py"], "status": 0, "elapsed_seconds": 91.6802345829783}
+{"name": "current-final-native-resources", "command": ["python3", "docs/evidence/frontend-navigation/f08/measure-final-native-resources.py", "current"], "status": 1, "elapsed_seconds": 0.09267145907506347}
+{"name": "current-final-native-resources-exact", "command": ["python3", "docs/evidence/frontend-navigation/f08/measure-final-native-resources.py", "current"], "status": 0, "elapsed_seconds": 2.1794248750666156}
+{"name": "baseline-final-native-resources", "command": ["python3", "docs/evidence/frontend-navigation/f08/measure-final-native-resources.py", "baseline"], "status": 0, "elapsed_seconds": 2.167268667020835}
+{"name": "fixture-cleanup", "command": ["python3", "docs/evidence/frontend-navigation/f08/finish-fixtures.py"], "status": 1, "elapsed_seconds": 0.04618458298500627}
+{"name": "fixture-cleanup-schema-corrected", "command": ["python3", "docs/evidence/frontend-navigation/f08/finish-fixtures.py"], "status": 1, "elapsed_seconds": 0.03852454200387001}
+{"name": "fixture-cleanup-final", "command": ["python3", "docs/evidence/frontend-navigation/f08/finish-fixtures.py"], "status": 0, "elapsed_seconds": 0.26247920899186283}
+{"name": "socket-fresh-production", "command": ["python3", "scripts/qualify-observations.py", "/private/tmp/aw-f08-final-checkout-re7cv8dp/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor", "docs/evidence/frontend-navigation/f08/socket-fresh-production.json"], "status": 0, "elapsed_seconds": 34.044093291973695}

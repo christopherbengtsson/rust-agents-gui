@@ -1,0 +1,74 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 text Console cleared at 9:57:56 PM
+			35 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			36 container
+	37 scroll area
+		38 HTML content Description: Agent Workspace, URL: tauri://localhost
+			39 link Skip to workspace, Value: tauri://localhost#workspace
+			40 container Repository sidebar
+				41 text Agent Workspace
+				42 container Repositories
+					43 heading Repositories, Value: 2
+						44 text Repositories
+					45 container Loading repositories
+				46 pop up button Add repository
+				47 text Observation delivery stopped
+				48 pop up button Connection details
+				49 link Settings, Value: tauri://localhost/settings/general
+			50 container
+				51 heading Workspace, Value: 1
+					52 text Workspace
+				53 button Refresh status
+				54 heading A place for your next change, Value: 2
+					55 text A place for your next change
+				56 text Add an existing Git repository from the sidebar to get started.
+				57 text Local workspace
+				58 text No repository selected
+		59 scroll bar (settable, float) 0
+	60 close button
+	61 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	62 minimize button
+	63 text Agent Workspace
+64 menu bar
+	65 F08 Inspector current
+	66 File
+	67 Edit
+	68 View
+	69 Window
+	70 Help
+
+The focused UI element is 35 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

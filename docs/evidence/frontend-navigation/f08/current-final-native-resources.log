@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/frontend-navigation/f08/measure-final-native-resources.py", line 7, in <module>
+    assert len(owners)==1,owners
+           ^^^^^^^^^^^^^^
+AssertionError: []

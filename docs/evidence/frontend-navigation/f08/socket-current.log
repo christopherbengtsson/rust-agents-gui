@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 429, in <module>
+    main()
+    ~~~~^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 126, in main
+    assert part, 'supervisor exited before readiness'
+           ^^^^
+AssertionError: supervisor exited before readiness

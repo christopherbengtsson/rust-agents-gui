@@ -1,0 +1,33 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/navigation.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/navigation.test.tsx [ src/lib/navigation.test.tsx ]
+Error: Failed to resolve import "./navigation" from "src/lib/navigation.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/navigation.test.tsx:3:44
+  1  |  import { expect, test } from "vitest";
+  2  |  import { createMemoryHistory } from "@tanstack/react-router";
+  3  |  import { Navigation, workspaceSearch } from "./navigation";
+     |                                               ^
+  4  |  const repository = {
+  5  |  	kind: "repository",
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:8865:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:8862:14
+ ❯ resolveId node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:26552:18
+ ❯ node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:26651:23
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:26624:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:8636:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20112:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  19:59:01
+   Duration  370ms (environment 97%, setup 1%, transform 1%, worker 1%)
+

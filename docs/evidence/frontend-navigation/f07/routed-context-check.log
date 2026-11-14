@@ -1,0 +1,35 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/routing.test.tsx (33 tests | 2 failed | 31 skipped) 236ms
+   × routed Settings and workspace switches retain reading context and revalidate changed comparisons: false 165ms
+   × routed Settings and workspace switches retain reading context and revalidate changed comparisons: true 70ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/routing.test.tsx > routed Settings and workspace switches retain reading context and revalidate changed comparisons: false
+ FAIL  src/routing.test.tsx > routed Settings and workspace switches retain reading context and revalidate changed comparisons: true
+AssertionError: expected 50 to be 41 // Object.is equality
+
+- Expected
++ Received
+
+- 41
++ 50
+
+ ❯ src/routing.test.tsx:404:79
+    402|   await screen.findByText("First workspace diff");
+    403|   expect([viewport().scrollTop, viewport().scrollLeft]).toEqual([37, 1…
+    404|   expect(Number(document.getElementById("inspection-files")?.style.fle…
+       |                                                                               ^
+    405|   await act(async () => history.push(`${repositoryPath}/workspace/${ot…
+    406|   await screen.findByText("Second workspace diff");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 31 skipped (33)
+   Start at  20:53:22
+   Duration  767ms (import 35%, tests 33%, environment 22%, transform 10%)
+

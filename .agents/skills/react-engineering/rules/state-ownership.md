@@ -7,36 +7,43 @@ tags: state, ownership, subscriptions
 
 # Place state with its coordinating owner
 
-Apply when several controls coordinate selection, drafts, or observations. Keep
-interaction state near its consumers and lift it to their closest coordinating
-owner. Calling a custom Hook twice creates two independent instances unless it
-deliberately connects to a shared source.
+Apply when several controls coordinate selection, drafts, or observations. Identify
+the authoritative owner before choosing where state lives. Keep local interaction
+state near its consumers and lift it to their closest coordinating owner. Calling
+a custom Hook twice creates two independent instances unless it deliberately
+connects to a shared source.
 
-**Incorrect (the list and panel cannot share this selection):**
+**Incorrect (the editor and preview cannot share this unsent draft):**
 
 ```tsx
-function RepositoryList() {
-  const [selected, setSelected] = useState<string | null>(null);
-  // Owns a selection unrelated to RepositoryPanel's selection.
+function DraftEditor() {
+  const [draft, setDraft] = useState("");
+  // Owns a draft unrelated to DraftPreview's draft.
 }
-function RepositoryPanel() {
-  const [selected] = useState<string | null>(null);
+function DraftPreview() {
+  const [draft] = useState("");
 }
 ```
 
-**Correct (illustrative child interfaces receive one owner's state):**
+**Correct (illustrative children share the dialog's local draft):**
 
 ```tsx
-function RepositoryScreen() {
-  const [selected, setSelected] = useState<string | null>(null);
-  return <>
-    <RepositoryList selected={selected} onSelect={setSelected} />
-    <RepositoryPanel selected={selected} />
-  </>;
+function NoteDialog() {
+  const [draft, setDraft] = useState("");
+  return (
+    <>
+      <DraftEditor draft={draft} onDraftChange={setDraft} />
+      <DraftPreview draft={draft} />
+    </>
+  );
 }
 ```
 
-A dialog can own disclosure and an unsent draft. Shared supervisor/conversation
-observations need an explicit owner; see [shared observations](shared-observation-owner.md).
+Current destinations and navigable views belong to Router. Retained presentation
+memory supplies restoration defaults rather than a second current-selection owner;
+see [TanStack guidance](../../../../docs/agents/tanstack.md). A dialog can own
+disclosure and an unsent draft. Shared observations use their feature interfaces;
+see [shared observations](shared-observation-owner.md) for Query, actor and
+presentation-store ownership.
 
 Source: [Sharing state](https://react.dev/learn/sharing-state-between-components).

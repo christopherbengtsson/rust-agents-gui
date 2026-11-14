@@ -1,0 +1,433 @@
+{
+  "snapshot": {
+    "time": 352459,
+    "href": "/",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 4,
+    "duplicates": 0,
+    "commands": {
+      "workspace_request": 563
+    },
+    "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "navigation": [
+    {
+      "label": "sam-kerr\n",
+      "trusted": true,
+      "start": 8877,
+      "feedback": 49,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "large.txt\n.M\n",
+      "trusted": true,
+      "start": 18660,
+      "feedback": 24,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 37293,
+      "feedback": 26,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 38304,
+      "feedback": 32,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 39817,
+      "feedback": 29,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 40815,
+      "feedback": 32,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 42350,
+      "feedback": 23,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 43248,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 44781,
+      "feedback": 29,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 45364.00000000001,
+      "feedback": 32.999999999992724,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 46849.00000000001,
+      "feedback": 23.999999999992724,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 47508,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 48985,
+      "feedback": 24,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 49578,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Beta\n",
+      "trusted": true,
+      "start": 300269,
+      "feedback": 30,
+      "href": "/",
+      "heading": "Beta"
+    }
+  ],
+  "windows": [
+    {
+      "label": "steady-visible-ordinary",
+      "start": {
+        "time": 179832,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 325
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 185836,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 338
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      }
+    },
+    {
+      "label": "no-workspace-interest",
+      "start": {
+        "time": 310111,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 563
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 316113,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 563
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      }
+    }
+  ],
+  "log": [
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 180510,
+      "end": 180515.00000000003,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 180765.00000000003,
+      "end": 180774,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "455f2d7e-4152-46fc-8e15-c4391f043ee0",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 180774,
+      "end": 180776,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 181027.00000000003,
+      "end": 181029,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "455f2d7e-4152-46fc-8e15-c4391f043ee0",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 181029,
+      "end": 181031,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 183032,
+      "end": 183037,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 183293,
+      "end": 183301.00000000003,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "3cdd6806-8721-44a2-82ba-ee1d583c4849",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 183301.00000000003,
+      "end": 183304,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 183555,
+      "end": 183562,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "3cdd6806-8721-44a2-82ba-ee1d583c4849",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 183562,
+      "end": 183567,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 185569.00000000003,
+      "end": 185571,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 185822,
+      "end": 185830,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "411baa46-d3d4-4301-b11d-82d8cc49c912",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 185830,
+      "end": 185833,
+      "ok": true
+    }
+  ]
+}

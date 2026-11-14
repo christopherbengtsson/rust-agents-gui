@@ -1,0 +1,31 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: method `allow_write` is never used
+  --> crates/core/src/connection/framed_exchange/tests.rs:89:8
+   |
+78 | impl Control {
+   | ------------ method in this implementation
+...
+89 |     fn allow_write(&self, bytes: usize, flush: bool) {
+   |        ^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `poll` is never used
+   --> crates/core/src/connection/framed_exchange/tests.rs:136:4
+    |
+136 | fn poll<F: Future>(future: Pin<&mut F>) -> Poll<F::Output> { future.poll(&mut Context::from_waker(Waker::noop())) }
+    |    ^^^^
+
+warning: `workspace-core` (lib test) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.95s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-24f99f8bc3c35139)
+
+running 5 tests
+test connection::framed_exchange::tests::codec_bounds_encoding_and_rejects_advertised_oversize_before_body_reservation ... ok
+test connection::framed_exchange::tests::codec_distinguishes_partial_header_and_body_from_clean_boundary_eof ... ok
+test connection::framed_exchange::tests::codec_preserves_split_and_coalesced_frames_and_empty_payloads ... ok
+test connection::framed_exchange::tests::complete_nonzero_header_without_body_is_truncated_even_after_decode_consumes_it ... ok
+test connection::framed_exchange::tests::exchange_returns_complete_frames_and_keeps_prefetched_next_frame ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 140 filtered out; finished in 0.00s
+

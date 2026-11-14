@@ -1,0 +1,24 @@
+{
+  "base": "7fdd217e6e1c920ec6036256713a6a16d1befd62",
+  "files": {
+    "crates/core/src/connection.rs": "32a8e56e9f5e8a6958ec8b3b69210e1fecd9251757c8bb96bd7ed68b547dddf3",
+    "crates/core/src/connection/admission.rs": "2152324986aa79c8468075e32524497366970da84a98c08f9cb55ac3969f779c",
+    "crates/core/src/connection/tests.rs": "e113b636794cc20c978a4668181a7e2018126b758448cb9a7af5e208a717ce55",
+    "crates/supervisor/src/main.rs": "5f0eff1735b8ecec7f826d6fd7d1277687bd99b86f19abb2cb1988bdf907c0f1",
+    "crates/supervisor/tests/discovery.rs": "302e94a35aba51984b42cbb732b34cbcf7efa7f19ee73703241881c88575754f",
+    "src-tauri/src/main.rs": "4c29c7b9ebf415de73f3155fb631c5c5b3396d5015a98ccf3f626dfc4c7e337d",
+    "src/App.test.tsx": "cd9d134fd2c089dec35c6758fad2e9f7a4b25c3feeff8506fad9f5f1bfcd07a4",
+    "src/App.tsx": "c70f9320fba08dbf4bb8450bf8e3b8cdcbabf25404afa9f4a572c2ca49d77eda",
+    "src/components/README.md": "c1de671ddf1aee81cd147554978d15ec3298dc4711f1aed56ca29dc566461481",
+    "src/components/blocks/workspace-panel.tsx": "9827c45872aa52de6015082a81d6ee4c3f982383ce7f1ce0797bb59638e93d7e",
+    "src/frontend-scheduling.test.tsx": "968e1631c02f0927c0e589d6ebf80c34d8994ae1467abf427ba8e711b5565e24",
+    "src/hooks/use-repositories.ts": "72de0c02081026fd5b9f31b95ff0206bc46ec01fbafa4272628d5f07bc8e37b5",
+    "src/hooks/use-supervisor-connection.ts": "ceccac8b773eaf232684d2380c4dd6f9012c0b7b58d99642b35532c670abdeb3",
+    "src/hooks/use-workspaces.ts": "790ab169784d977c3975293ed6c66da8bcb6ce9ebb45e3fbd256e29f35ebc704",
+    "src/lib/observation-coordinator.test.tsx": "004dd3f48f2b514b84a4f47575df5f5820c1f1a3cf2699d957094ccd508fa20a",
+    "src/lib/observation-coordinator.ts": "a73dc9c5bbe817106e9e8416ca217eb40cb3667cf05dbdbab31525321b530b1a",
+    "src/lib/repositories.ts": "59e3d1c0b52a7a372f89c3cd21d94048a83a9a28037535141facd26385ee2f14",
+    "src/lib/workspace-changes-reader.ts": "c0c37efb7c00e30f72958edc96d28b6666f4e3b2058f602609d79106743d7e1a",
+    "src/lib/workspaces.ts": "2eceb184ff1bc3836033d921b18c1230ad583553d669f344ef83f0be263b99b4"
+  }
+}

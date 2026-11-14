@@ -1,0 +1,65 @@
+{
+  "owners": [
+    {
+      "label": "current",
+      "snapshot": {
+        "status": {
+          "state": "ready",
+          "supervisor_pid": 17819,
+          "application_version": "0.1.0"
+        },
+        "cursor": {
+          "owner": "17819-1794674213130326000",
+          "revision": 1283
+        },
+        "reset": true
+      },
+      "command": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g current.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f04g-desktop-tq4w5p9r/state-current",
+      "exited": true
+    },
+    {
+      "label": "baseline",
+      "snapshot": {
+        "status": {
+          "state": "ready",
+          "supervisor_pid": 21028,
+          "application_version": "0.1.0"
+        },
+        "cursor": {
+          "owner": "21028-1794674451767299000",
+          "revision": 683
+        },
+        "reset": true
+      },
+      "command": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g inspect baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f04g-desktop-tq4w5p9r/state-baseline",
+      "exited": true
+    },
+    {
+      "label": "final-release",
+      "snapshot": {
+        "status": {
+          "state": "ready",
+          "supervisor_pid": 44878,
+          "application_version": "0.1.0"
+        },
+        "cursor": {
+          "owner": "44878-1794676963244645000",
+          "revision": 1
+        },
+        "reset": true
+      },
+      "command": "/private/tmp/aw-f04g-desktop-tq4w5p9r/F04g Final Release.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f04g-desktop-tq4w5p9r/state-final-release",
+      "exited": true
+    }
+  ],
+  "original_checkout_hashes": {
+    "/private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha/text.txt": "84bd16f91ec8f223cad47630cf98cc04521ba112acb13942d20865060c28f3d3",
+    "/private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha/large.txt": "b047f5b06f970c49b0474f7e2eb52c41edff0755708ca6ca63d6f4302b3acda6",
+    "/private/tmp/aw-f04g-desktop-tq4w5p9r/Beta/text.txt": "84bd16f91ec8f223cad47630cf98cc04521ba112acb13942d20865060c28f3d3",
+    "/private/tmp/aw-f04g-desktop-tq4w5p9r/Beta/large.txt": "b047f5b06f970c49b0474f7e2eb52c41edff0755708ca6ca63d6f4302b3acda6"
+  },
+  "original_checkouts_preserved": true,
+  "fixture_faults_restored": true,
+  "retained_private_fixtures": "/private/tmp/aw-f04g-desktop-tq4w5p9r",
+  "full_owned_quit_qualified": false
+}

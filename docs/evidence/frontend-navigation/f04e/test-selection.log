@@ -1,0 +1,914 @@
+[
+  {
+    "name": "the fixed shell preserves landmarks and empty navigation at width %i without global collapse or cookies",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 73,
+      "column": 22
+    }
+  },
+  {
+    "name": "diagnostics opens from the keyboard and Escape returns focus without reading status again",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 132,
+      "column": 1
+    }
+  },
+  {
+    "name": "connection failure stays visible until an explicit status retry; diagnostics never replay work",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 160,
+      "column": 1
+    }
+  },
+  {
+    "name": "refresh exposes pending feedback, blocks duplicate reads, and labels retained diagnostics as stale after failure",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 200,
+      "column": 1
+    }
+  },
+  {
+    "name": "remounting retrieves observations and never submits execution actions",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 230,
+      "column": 1
+    }
+  },
+  {
+    "name": "a connection failure with no error text still exposes the alert and retry",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 248,
+      "column": 1
+    }
+  },
+  {
+    "name": "Strict Mode ignores a late %s from the cleaned-up observation request",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 262,
+      "column": 34
+    }
+  },
+  {
+    "name": "a drained obsolete %s cannot replace the subsequent current observation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 316,
+      "column": 34
+    }
+  },
+  {
+    "name": "a failed desktop identity read releases the pending guard for explicit retry",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 362,
+      "column": 1
+    }
+  },
+  {
+    "name": "connection failure replaces initial repository skeletons with unavailable guidance",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 380,
+      "column": 1
+    }
+  },
+  {
+    "name": "the app mounts one feed and exposes native delivery failure without replaying actions",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx",
+    "location": {
+      "line": 392,
+      "column": 1
+    }
+  },
+  {
+    "name": "workspace list fan-out waits behind two physical reads while explicit creation bypasses the queue",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/frontend-scheduling.test.tsx",
+    "location": {
+      "line": 20,
+      "column": 1
+    }
+  },
+  {
+    "name": "repository, workspace and inspection share a budget while status remains independent",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/frontend-scheduling.test.tsx",
+    "location": {
+      "line": 64,
+      "column": 1
+    }
+  },
+  {
+    "name": "navigation drops queued old targets while physically stalled reads drain",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/frontend-scheduling.test.tsx",
+    "location": {
+      "line": 119,
+      "column": 1
+    }
+  },
+  {
+    "name": "a failed desktop identity read cannot release a still-running status request",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/frontend-scheduling.test.tsx",
+    "location": {
+      "line": 161,
+      "column": 1
+    }
+  },
+  {
+    "name": "typed status admission errors retain readable transport feedback",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/frontend-scheduling.test.tsx",
+    "location": {
+      "line": 195,
+      "column": 1
+    }
+  },
+  {
+    "name": "generated serialization contracts require output defaults and allow flattened variants",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 11,
+      "column": 1
+    }
+  },
+  {
+    "name": "structurally valid workspace paths still require normalized absolute locations",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 29,
+      "column": 1
+    }
+  },
+  {
+    "name": "schema-valid numeric and multibyte payloads still require contextual budgets",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 58,
+      "column": 1
+    }
+  },
+  {
+    "name": "every current synthetic corpus root passes its generated serialization validator",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 99,
+      "column": 1
+    }
+  },
+  {
+    "name": "flattened schemas allow additional properties while contextual assertions reject contradictory states",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 126,
+      "column": 1
+    }
+  },
+  {
+    "name": "structurally valid owner, delivery, target and feed relationships still fail contextual assertions",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 170,
+      "column": 1
+    }
+  },
+  {
+    "name": "malformed fields, variants, results and noncanonical UUIDs fail generated structure",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/generated-contracts.test.tsx",
+    "location": {
+      "line": 210,
+      "column": 1
+    }
+  },
+  {
+    "name": "connection observations are decoded before they become presentation truth",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 52,
+      "column": 1
+    }
+  },
+  {
+    "name": "the shared application corpus passes production TypeScript decoders",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 74,
+      "column": 1
+    }
+  },
+  {
+    "name": "owner and result-variant checks happen before feature decoding, including domain errors",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 117,
+      "column": 1
+    }
+  },
+  {
+    "name": "replacement replies before the next status refresh cannot overwrite an owner's observations",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 146,
+      "column": 1
+    }
+  },
+  {
+    "name": "feature decoders reject wrong kind, full payload mismatch and impossible variants",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 169,
+      "column": 1
+    }
+  },
+  {
+    "name": "malformed %s observations leave connection failure visible and preserve the last good snapshot",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 231,
+      "column": 35
+    }
+  },
+  {
+    "name": "inspection retries may retain earlier failure evidence while %s",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx",
+    "location": {
+      "line": 264,
+      "column": 33
+    }
+  },
+  {
+    "name": "repository and workspace progress traverses the mounted Tauri channel with exact acknowledgements",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed-bridge.test.tsx",
+    "location": {
+      "line": 21,
+      "column": 1
+    }
+  },
+  {
+    "name": "acceptance precedes ack, and reconnect uses the feed cursor rather than status",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 49,
+      "column": 1
+    }
+  },
+  {
+    "name": "a next batch may arrive before the preceding IPC acknowledgement promise settles",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 73,
+      "column": 1
+    }
+  },
+  {
+    "name": "stalls and malformed deliveries stop visibly without advancing the accepted cursor",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 92,
+      "column": 1
+    }
+  },
+  {
+    "name": "late setup is stopped and joined before the replacement is subscribed",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 113,
+      "column": 1
+    }
+  },
+  {
+    "name": "the shared protocol corpus passes production feed decoding",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 140,
+      "column": 1
+    }
+  },
+  {
+    "name": "malformed batch cannot advance acceptance: %j",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 169,
+      "column": 3
+    }
+  },
+  {
+    "name": "a failed stop attempt does not permanently block later explicit reconnect",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 190,
+      "column": 1
+    }
+  },
+  {
+    "name": "failed registration requests cleanup of its possibly attached native subscription",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-feed.test.tsx",
+    "location": {
+      "line": 206,
+      "column": 1
+    }
+  },
+  {
+    "name": "the native picker fills a path and only explicit registration submits it",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 76,
+      "column": 1
+    }
+  },
+  {
+    "name": "picker cancellation preserves the draft and picker failure allows manual entry",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 132,
+      "column": 1
+    }
+  },
+  {
+    "name": "restored selection remains selected while its details are collapsed",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 152,
+      "column": 1
+    }
+  },
+  {
+    "name": "registration selects the durable result and never submits twice",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 183,
+      "column": 1
+    }
+  },
+  {
+    "name": "reopening with a retained action retrieves its result without resubmitting",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 220,
+      "column": 1
+    }
+  },
+  {
+    "name": "unavailable repositories stay selected and storage failures retain the last observation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 254,
+      "column": 1
+    }
+  },
+  {
+    "name": "a late folder-picker response cannot overwrite a reopened dialog",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 292,
+      "column": 1
+    }
+  },
+  {
+    "name": "invalid registration permits correction and preserves an actionable error",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 322,
+      "column": 1
+    }
+  },
+  {
+    "name": "lost registration reply reconciles the retained action without another submit",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 349,
+      "column": 1
+    }
+  },
+  {
+    "name": "capacity rejection allows correction of an oversized registration (restored: %s)",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 390,
+      "column": 25
+    }
+  },
+  {
+    "name": "selection during registration is not retargeted by its late completion",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 469,
+      "column": 1
+    }
+  },
+  {
+    "name": "cursor paging retains selection and previous returns to the original page",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 531,
+      "column": 1
+    }
+  },
+  {
+    "name": "malformed repository payloads stay visible rather than becoming empty navigation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 561,
+      "column": 1
+    }
+  },
+  {
+    "name": "a missing action lookup preserves the storage failure that blocked intent",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 585,
+      "column": 1
+    }
+  },
+  {
+    "name": "reconnect ignores the previous owner's late observation without repeating actions (%s)",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 617,
+      "column": 34
+    }
+  },
+  {
+    "name": "reconnect retrieves a retained registration result without resubmitting",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 679,
+      "column": 1
+    }
+  },
+  {
+    "name": "explicit repository refresh reports loading while retaining the last observation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 732,
+      "column": 1
+    }
+  },
+  {
+    "name": "Refresh status retains explicit reprobe through a delayed connection check",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx",
+    "location": {
+      "line": 767,
+      "column": 1
+    }
+  },
+  {
+    "name": "registration retains earlier uncertainty after $error.code until matching status",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/retained-delivery.test.tsx",
+    "location": {
+      "line": 53,
+      "column": 21
+    }
+  },
+  {
+    "name": "workspace retains earlier uncertainty after $error.code until matching status",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/retained-delivery.test.tsx",
+    "location": {
+      "line": 117,
+      "column": 21
+    }
+  },
+  {
+    "name": "a late registration transport failure cannot resurrect an authoritatively settled action",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/retained-delivery.test.tsx",
+    "location": {
+      "line": 196,
+      "column": 1
+    }
+  },
+  {
+    "name": "a callback captured before owner replacement cannot select its old-owner result when invoked later",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/retained-delivery.test.tsx",
+    "location": {
+      "line": 242,
+      "column": 1
+    }
+  },
+  {
+    "name": "retained repository and workspace lookups reject conflicting payloads without clearing identities or submitting",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/retained-delivery.test.tsx",
+    "location": {
+      "line": 290,
+      "column": 1
+    }
+  },
+  {
+    "name": "inspection validates exact workspace/comparison/file targets and display bounds",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 142,
+      "column": 1
+    }
+  },
+  {
+    "name": "manual refresh submits once; observation polling does not requeue work",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 203,
+      "column": 1
+    }
+  },
+  {
+    "name": "changed owner discards late observations and reconnect only reads",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 240,
+      "column": 1
+    }
+  },
+  {
+    "name": "failed refresh retains the comparison and preview; tab switching unmounts diff and preserves selection",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 270,
+      "column": 1
+    }
+  },
+  {
+    "name": "narrow-window Sheet selects the single Changes tab and returns focus",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 317,
+      "column": 1
+    }
+  },
+  {
+    "name": "a removed selection remains named and an old preview is never replaced by another file",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 351,
+      "column": 1
+    }
+  },
+  {
+    "name": "visible summaries refresh every two seconds without overlapping a slow sequence",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 381,
+      "column": 1
+    }
+  },
+  {
+    "name": "collapsed changes surfaces pause automatic reads until shown again",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 425,
+      "column": 1
+    }
+  },
+  {
+    "name": "document visibility, disconnect and unmount stop timers; reconnect only observes",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 459,
+      "column": 1
+    }
+  },
+  {
+    "name": "same-status edits refresh the selected preview only while Changes is active",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 498,
+      "column": 1
+    }
+  },
+  {
+    "name": "tab changes drain an old read and preserve a queued manual refresh",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 558,
+      "column": 1
+    }
+  },
+  {
+    "name": "late selected-file replies cannot replace a new selection, including A to B to A",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 589,
+      "column": 1
+    }
+  },
+  {
+    "name": "inspection failures retain last-good data, pause timers and recover with manual Refresh",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 642,
+      "column": 1
+    }
+  },
+  {
+    "name": "manual Refresh settles a queued comparison after a failed preview",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 672,
+      "column": 1
+    }
+  },
+  {
+    "name": "pending previews poll observations without repeated loads or summary refreshes",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 716,
+      "column": 1
+    }
+  },
+  {
+    "name": "workspace changes isolate retained data and drain late replies before reading the new target",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 760,
+      "column": 1
+    }
+  },
+  {
+    "name": "transport failure during a pending job keeps manual Refresh usable",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 794,
+      "column": 1
+    }
+  },
+  {
+    "name": "maximum preview rendering stays bounded, keeps long paths accessible and resets position for a different file",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 821,
+      "column": 1
+    }
+  },
+  {
+    "name": "keyboard tab activation and Sheet dismissal preserve selection and restore focus",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 889,
+      "column": 1
+    }
+  },
+  {
+    "name": "unmount while IPC is pending ignores its rejection and schedules no reads",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 939,
+      "column": 1
+    }
+  },
+  {
+    "name": "the resize separator remains keyboard reachable and changes the panel allocation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 959,
+      "column": 1
+    }
+  },
+  {
+    "name": "WorkspacePanel navigation keeps one physical read lane across keyed inspection views",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx",
+    "location": {
+      "line": 998,
+      "column": 1
+    }
+  },
+  {
+    "name": "legacy UUID locations appear only after explicit disclosure",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-details.test.tsx",
+    "location": {
+      "line": 22,
+      "column": 1
+    }
+  },
+  {
+    "name": "pending allocation reports missing location without inventing a path or showing IDs",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-details.test.tsx",
+    "location": {
+      "line": 43,
+      "column": 1
+    }
+  },
+  {
+    "name": "a restored uncertain action is read without replaying creation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 44,
+      "column": 1
+    }
+  },
+  {
+    "name": "explicit creation sends once with a retained action identity",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 84,
+      "column": 1
+    }
+  },
+  {
+    "name": "creation in an unselected repository retains selection: %s",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 117,
+      "column": 71
+    }
+  },
+  {
+    "name": "an old owner's creation reply cannot select a workspace after reconnect",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 207,
+      "column": 1
+    }
+  },
+  {
+    "name": "a lost creation reply retrieves the same action and selects its failed workspace",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 247,
+      "column": 1
+    }
+  },
+  {
+    "name": "switching selection prevents a late creation reply from stealing context",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 297,
+      "column": 1
+    }
+  },
+  {
+    "name": "registration's recorded initial workspace is observed without a create request",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 337,
+      "column": 1
+    }
+  },
+  {
+    "name": "a delayed initial-workspace lookup cannot override explicit repository selection",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 364,
+      "column": 1
+    }
+  },
+  {
+    "name": "definite admission rejection retains the error but does not block another workspace's recovery",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 392,
+      "column": 1
+    }
+  },
+  {
+    "name": "a rejected action retains its error while unrelated workspace progress follows hints without polling",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 429,
+      "column": 1
+    }
+  },
+  {
+    "name": "definite rejection follows its pending action across repository navigation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 496,
+      "column": 1
+    }
+  },
+  {
+    "name": "pending name allocation is a valid observation, but partial and ready-without-location replies are rejected",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx",
+    "location": {
+      "line": 535,
+      "column": 1
+    }
+  },
+  {
+    "name": "preserves results and always settles, including a throwing error handler",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/complete-operation.test.tsx",
+    "location": {
+      "line": 4,
+      "column": 1
+    }
+  },
+  {
+    "name": "baseline precedes repository reads, and hints during initial and follow-up reads stay pending",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 13,
+      "column": 1
+    }
+  },
+  {
+    "name": "Query cancellation and remount retain physical identity and the original captured generation",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 94,
+      "column": 1
+    }
+  },
+  {
+    "name": "hidden details do not fan out; overflow and resync remain owed separately by hidden targets",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 133,
+      "column": 1
+    }
+  },
+  {
+    "name": "errors retain last-good data without retries and a new hint permits recovery",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 190,
+      "column": 1
+    }
+  },
+  {
+    "name": "feed records feature dirtiness before ack and starts reads only after synchronous acceptance",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 222,
+      "column": 1
+    }
+  },
+  {
+    "name": "hint-driven reads observe availability; explicit reprobe has a distinct physical flag and no Checking loop",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 270,
+      "column": 1
+    }
+  },
+  {
+    "name": "local observations ignore browser offline/focus events and inactive Query data expires after five minutes",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 326,
+      "column": 1
+    }
+  },
+  {
+    "name": "a failed detail stays paused across hide/remount until a new hint or explicit refresh",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 357,
+      "column": 1
+    }
+  },
+  {
+    "name": "a hint while queued is captured by the eventual failed physical read and cannot trigger an extra retry",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/feature-observations.test.tsx",
+    "location": {
+      "line": 383,
+      "column": 1
+    }
+  },
+  {
+    "name": "two physical reads run; identical queued and active targets coalesce",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/observation-coordinator.test.tsx",
+    "location": {
+      "line": 14,
+      "column": 1
+    }
+  },
+  {
+    "name": "disposal drops queued work and drains active work without admitting a replacement early",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/observation-coordinator.test.tsx",
+    "location": {
+      "line": 36,
+      "column": 1
+    }
+  },
+  {
+    "name": "64 queued targets retain admission and reject only the newest distinct target",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/observation-coordinator.test.tsx",
+    "location": {
+      "line": 62,
+      "column": 1
+    }
+  },
+  {
+    "name": "owner, page and behavior flags distinguish reads; equivalent object keys coalesce",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/observation-coordinator.test.tsx",
+    "location": {
+      "line": 82,
+      "column": 1
+    }
+  },
+  {
+    "name": "one consumer can leave a coalesced read; failures and synchronous throws release capacity without retry",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/observation-coordinator.test.tsx",
+    "location": {
+      "line": 105,
+      "column": 1
+    }
+  },
+  {
+    "name": "a new interest coalesces with a physically draining identical read while the disposed interest stays obsolete",
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/observation-coordinator.test.tsx",
+    "location": {
+      "line": 131,
+      "column": 1
+    }
+  }
+]

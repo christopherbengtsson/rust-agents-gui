@@ -1,0 +1,66 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.64s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-a93ab365b0aedb8f)
+
+running 58 tests
+test connection::framed_exchange::tests::already_cancelled_or_expired_operations_do_no_physical_io ... ok
+test connection::framed_exchange::tests::cancellation_wakes_idle_or_partial_read_and_closes_terminally ... ok
+test connection::framed_exchange::tests::cancelled_or_abandoned_write_closes_without_restarting_partial_io ... ok
+test connection::framed_exchange::tests::codec_bounds_encoding_and_rejects_advertised_oversize_before_body_reservation ... ok
+test connection::framed_exchange::tests::codec_distinguishes_partial_header_and_body_from_clean_boundary_eof ... ok
+test connection::framed_exchange::tests::codec_preserves_split_and_coalesced_frames_and_empty_payloads ... ok
+test connection::framed_exchange::tests::complete_nonzero_header_without_body_is_truncated_even_after_decode_consumes_it ... ok
+test connection::framed_exchange::tests::deadline_timer_wakes_pending_reads_and_writes ... ok
+test connection::framed_exchange::tests::dropped_read_polling_retains_transfer_progress_and_can_finish_before_original_deadline ... ok
+test connection::framed_exchange::tests::eof_decode_and_read_errors_close_the_exchange_once_without_more_io ... ok
+test connection::framed_exchange::tests::exchange_returns_complete_frames_and_keeps_prefetched_next_frame ... ok
+test connection::framed_exchange::tests::first_byte_starts_one_transfer_budget_and_slow_fragments_cannot_extend_it ... ok
+test connection::framed_exchange::tests::handshake_write_preserves_buffered_next_read_and_write_uses_operation_cap ... ok
+test connection::framed_exchange::tests::read_caps_idle_ack_and_buffered_transfer_without_extending_cancelled_polling ... ok
+test connection::framed_exchange::tests::write_deadline_covers_partial_header_body_and_flush_without_fragment_renewal ... ok
+test connection::framed_exchange::tests::write_errors_and_oversize_close_without_retry_or_queued_output ... ok
+test connection::framed_exchange::tests::write_rejects_progress_after_absolute_cap_even_between_timer_ticks ... ok
+test connection::framed_exchange::tests::writes_encode_once_across_partial_progress_and_wait_for_flush ... ok
+test connection::subscription::tests::acknowledgements_match_subscription_batch_and_cursor_exactly ... ok
+test connection::subscription::tests::completed_error_and_panic_workers_are_joined_before_replacement ... ok
+test connection::subscription::tests::idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute ... ok
+test connection::subscription::tests::native_delivery_waits_for_frontend_acceptance_before_acknowledging ... ok
+test connection::subscription::tests::owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery ... ok
+test connection::subscription::tests::server_stops_on_wrong_ack_and_preserves_changes_during_resync ... ok
+test connection::subscription::tests::shared_corpus_matches_rust_feed_serialization_and_delivery_bounds ... ok
+test connection::subscription::tests::sink_failure_and_frontend_stall_close_without_acknowledgement ... ok
+test connection::subscription::tests::stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement ... ok
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::admitted_error_unwind_unstarted_drop_and_server_ceiling_release_capacity ... ok
+test connection::tests::admitted_waiter_drop_retains_capacity_and_allows_status_and_control ... ok
+test connection::tests::application_corpus_matches_pure_rust_serialization ... ok
+test connection::tests::blocking_workers_keep_permits_after_waiter_drop_and_cleanup_awaits_completion ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::cancellation_closes_pending_request_and_server_handlers_without_effects ... ok
+test connection::tests::client_bad_lost_or_stalled_replies_never_reconnect_or_repeat ... ok
+test connection::tests::client_preserves_versions_cursor_chunked_reply_and_incompatibility_without_retry ... ok
+test connection::tests::client_private_access_and_connect_failure_precede_io_and_never_retry ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::desktop_admission_leaves_status_and_intent_independent_of_stalled_observations ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::invalid_snapshot_cannot_replace_the_connections_observed_owner ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::malformed_oversized_and_legacy_framing_close_without_dispatch_or_output ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::only_one_discovery_is_admitted_and_no_state_lock_spans_effects ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::server_routes_workspace_and_repository_errors_without_fabricating_empty_records ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers_without_domain_effects ... ok
+test connection::tests::targeted_client_rejects_replacement_kind_and_target_without_another_exchange ... ok
+test connection::tests::targeted_exchange_reports_delivery_at_physical_boundary_without_replay ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test connection::tests::workspace_variants_share_observation_and_intent_budgets_with_repository_requests ... ok
+test connection::tests::wrong_owner_every_target_and_mixed_context_are_rejected_before_effects ... ok
+
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 91 filtered out; finished in 0.03s
+

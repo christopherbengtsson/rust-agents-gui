@@ -7,7 +7,7 @@ const built = {
 };
 function environment({
   checkout = "/worktree",
-  protocol = "4\n",
+  protocol = "8\n",
   version = "0.1.0",
   env = {},
 } = {}) {
@@ -44,7 +44,7 @@ test("dev state is persistent, canonical-worktree and compatibility specific", (
   );
   assert.notEqual(
     a.AGENT_WORKSPACE_STATE_DIR,
-    environment({ protocol: "5" }).AGENT_WORKSPACE_STATE_DIR,
+    environment({ protocol: "7" }).AGENT_WORKSPACE_STATE_DIR,
   );
   assert.notEqual(
     a.AGENT_WORKSPACE_STATE_DIR,
@@ -52,7 +52,7 @@ test("dev state is persistent, canonical-worktree and compatibility specific", (
   );
   assert.match(
     a.AGENT_WORKSPACE_STATE_DIR,
-    /\/\.agent-workspace\/dev\/[a-f0-9]{12}\/p4-[a-f0-9]{8}$/,
+    /\/\.agent-workspace\/dev\/[a-f0-9]{12}\/p8-[a-f0-9]{8}$/,
   );
   assert.equal(a.AGENT_WORKSPACE_SUPERVISOR, built.executable);
 });

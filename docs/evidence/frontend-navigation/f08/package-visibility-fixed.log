@@ -1,0 +1,88 @@
+$ node scripts/build.mjs
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+   Compiling libsqlite3-sys v0.40.0
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `release` profile [optimized] target(s) in 19.94s
+$ tauri build --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ corepack pnpm generated:check && tsc --noEmit && vite build
+$ node scripts/prepare-generated.mjs --check
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+Generated contracts and routes match source
+src/routing.test.tsx(969,5): error TS2322: Type 'Promise<{ page?: undefined; kind: "action"; registration: { action_id: string; path: string; create_initial_workspace: boolean; state: "completed"; repository_id: string; initial_workspace_id: null; } | { ...; }; } | { ...; }>' is not assignable to type 'Promise<RepositoryReply>'.
+  Type '{ page?: undefined; kind: "action"; registration: { action_id: string; path: string; create_initial_workspace: boolean; state: "completed"; repository_id: string; initial_workspace_id: null; } | { ...; }; } | { ...; }' is not assignable to type 'RepositoryReply'.
+    Type '{ page?: undefined; kind: "action"; registration: { action_id: string; path: string; create_initial_workspace: boolean; state: "completed"; repository_id: string; initial_workspace_id: null; } | { action_id: string; path: string; create_initial_workspace: boolean; state: "pending"; }; }' is not assignable to type 'RepositoryReply'.
+      Type '{ page?: undefined; kind: "action"; registration: { action_id: string; path: string; create_initial_workspace: boolean; state: "completed"; repository_id: string; initial_workspace_id: null; } | { action_id: string; path: string; create_initial_workspace: boolean; state: "pending"; }; }' is not assignable to type '{ kind: "action"; registration: Registration | null; }'.
+        Types of property 'registration' are incompatible.
+          Type '{ action_id: string; path: string; create_initial_workspace: boolean; state: "completed"; repository_id: string; initial_workspace_id: null; } | { action_id: string; path: string; create_initial_workspace: boolean; state: "pending"; }' is not assignable to type 'Registration | null'.
+            Type '{ action_id: string; path: string; create_initial_workspace: boolean; state: "pending"; }' is not assignable to type 'Registration | null'.
+              Type '{ action_id: string; path: string; create_initial_workspace: boolean; state: "pending"; }' is not assignable to type '{ create_initial_workspace: boolean; initial_workspace_id: string | null; action_id: string; path: string; } & { state: "pending"; }'.
+                Property 'initial_workspace_id' is missing in type '{ action_id: string; path: string; create_initial_workspace: boolean; state: "pending"; }' but required in type '{ create_initial_workspace: boolean; initial_workspace_id: string | null; action_id: string; path: string; }'.
+[ELIFECYCLE] Command failed with exit code 1.
+beforeBuildCommand `corepack pnpm frontend:build` failed with exit code 1
+       Error beforeBuildCommand `corepack pnpm frontend:build` failed with exit code 1
+[ELIFECYCLE] Command failed with exit code 1.
+[ELIFECYCLE] Command failed with exit code 1.

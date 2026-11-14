@@ -1,0 +1,178 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 5:47:37 PM
+					36 image
+					37 text for(let i=0;i<Math.min(f04g.exportString.length,9000);i+=300)console.log('F04G:'+i+':'+f04g.exportString.slice(i,i+300))
+					38 image
+					39 text F04G:0:{"snapshot":{"time":405068,"visibility":"visible","active":1,"maxActive":1,"duplicates":0,"logCount":583,"commands":{"workspace_request":329,"observation_acknowledge":254},"assets":["tauri__localhost/assets/index-BRW4CMP_.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/
+					40 image
+					41 text F04G:300:605.1.15 (KHTML, like Gecko)","width":900,"height":148},"navigation":[{"label":"large.txt\n.M\n","start":281331,"trusted":true,"feedback":32,"heading":"dries-mertens","tab":"Changes"},{"label":"Workspace","start":282131,"trusted":true,"feedback":23,"heading":"dries-mertens","tab":"Workspace"},{"labe
+					42 image
+					43 text F04G:600:l":"Changes","start":282931,"trusted":true,"feedback":42,"heading":"dries-mertens","tab":"Changes"},{"label":"Workspace","start":283739.00000000006,"trusted":true,"feedback":31.999999999941792,"heading":"dries-mertens","tab":"Workspace"},{"label":"Changes","start":284539,"trusted":true,"feedback":45
+					44 image
+					45 text F04G:900:,"heading":"dries-mertens","tab":"Changes"},{"label":"Workspace","start":285339,"trusted":true,"feedback":32,"heading":"dries-mertens","tab":"Workspace"},{"label":"Changes","start":286148,"trusted":true,"feedback":42,"heading":"dries-mertens","tab":"Changes"},{"label":"Workspace","start":286964,"tru
+					46 image
+					47 text F04G:1200:sted":true,"feedback":32,"heading":"dries-mertens","tab":"Workspace"},{"label":"Changes","start":287764,"trusted":true,"feedback":44,"heading":"dries-mertens","tab":"Changes"},{"label":"Workspace","start":288581,"trusted":true,"feedback":32,"heading":"dries-mertens","tab":"Workspace"},{"label":"Chan
+					48 image
+					49 text F04G:1500:ges","start":289389,"trusted":true,"feedback":42,"heading":"dries-mertens","tab":"Changes"},{"label":"Workspace","start":290214,"trusted":true,"feedback":31,"heading":"dries-mertens","tab":"Workspace"},{"label":"Changes","start":290997,"trusted":true,"feedback":40,"heading":"dries-mertens","tab":"Ch
+					50 image
+					51 text F04G:1800:anges"}],"log":[{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":256,"cursor":{"owner":"21028-1794674451767299000","sequence":289}}},"start":389310,"end":389310},{"command":"workspace_request","args":{"expectedOwner":
+					52 image
+					53 text F04G:2100:"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":389327,"end":389329},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation
+					54 image
+					55 text F04G:2400:":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"a2df6c6a-ec54-40f3-9c7e-66dc1fb6ee70","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":389330,"end":389340.00000000006},{"command":"observation_acknowledge","args":{"acknowledge
+					56 image
+					57 text F04G:2700:ment":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":257,"cursor":{"owner":"21028-1794674451767299000","sequence":290}}},"start":389339,"end":389341},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_
+					58 image
+					59 text F04G:3000:id":258,"cursor":{"owner":"21028-1794674451767299000","sequence":291}}},"start":389340.00000000006,"end":389342},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"
+					60 image
+					61 text F04G:3300:comparison_id":null,"after":null}},"start":389591,"end":389593},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"a2df6c6a-ec54-40f3-9c7e-66dc1fb6
+					62 image
+					63 text F04G:3600:ee70","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":389593,"end":389597},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":259,"cursor":{"owner":"21028-1794674451767299000","sequence":292}}},
+					64 image
+					65 text F04G:3900:"start":389599,"end":389600},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":389848,"end":389852.00000000006},{"comman
+					66 image
+					67 text F04G:4200:d":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"a2df6c6a-ec54-40f3-9c7e-66dc1fb6ee70","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"
+					68 image
+					69 text F04G:4500:start":389852.00000000006,"end":389855},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":391857,"end":391864.00000000006
+					70 image
+					71 text F04G:4800:},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":260,"cursor":{"owner":"21028-1794674451767299000","sequence":293}}},"start":391860,"end":391871},{"command":"observation_acknowledge","args":{"acknowledgement":{"subs
+					72 image
+					73 text F04G:5100:cription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":261,"cursor":{"owner":"21028-1794674451767299000","sequence":294}}},"start":391867,"end":391871},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3
+					74 image
+					75 text F04G:5400:-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":392116,"end":392117},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":262,"cursor":{"owner":"21028-1794674451767299000","sequen
+					76 image
+					77 text F04G:5700:ce":295}}},"start":392121,"end":392122},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":392369,"end":392372},{"command
+					78 image
+					79 text F04G:6000:":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"3a3452c9-177d-451c-bdf9-56188c459322","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"st
+					80 image
+					81 text F04G:6300:art":392373,"end":392388.00000000006},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":263,"cursor":{"owner":"21028-1794674451767299000","sequence":296}}},"start":392387,"end":392389},{"command":"observation_acknowled
+					82 image
+					83 text F04G:6600:ge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":264,"cursor":{"owner":"21028-1794674451767299000","sequence":297}}},"start":392388.00000000006,"end":392392},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request"
+					84 image
+					85 text F04G:6900::{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":392639,"end":392641},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspa
+					86 image
+					87 text F04G:7200:ce_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"3a3452c9-177d-451c-bdf9-56188c459322","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":392641,"end":392644},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f7
+					88 image
+					89 text F04G:7500:9-f89a1099c5b3","batch_id":265,"cursor":{"owner":"21028-1794674451767299000","sequence":298}}},"start":392650.00000000006,"end":392651},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6e
+					90 image
+					91 text F04G:7800:ba98","refresh":false,"comparison_id":null,"after":null}},"start":392895,"end":392897},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"3a3452c9-
+					92 image
+					93 text F04G:8100:177d-451c-bdf9-56188c459322","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":392899,"end":392902},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refres
+					94 image
+					95 text F04G:8400:h":true,"comparison_id":null,"after":null}},"start":394903,"end":394911},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":266,"cursor":{"owner":"21028-1794674451767299000","sequence":299}}},"start":394909,"end":394918
+					96 image
+					97 text F04G:8700:},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":267,"cursor":{"owner":"21028-1794674451767299000","sequence":300}}},"start":394915,"end":394918},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674
+					98 image
+					99 text undefined
+			100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			101 container
+	102 scroll area
+		103 HTML content Description: Agent Workspace, URL: tauri://localhost
+			104 link Skip to workspace, Value: tauri://localhost#workspace
+			105 container Repository sidebar
+				106 text Agent Workspace
+				107 container Repositories
+					108 heading Repositories, Value: 2
+						109 text Repositories
+					110 content list
+						111 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							112 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							113 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							114 button Create workspace in Alpha
+							115 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							116 text Available
+							117 content list
+								118 button paolo-maldini, Help: Workspace ready
+						119 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							120 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							121 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							122 button Create workspace in Beta
+							123 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							124 text Available
+							125 content list
+								126 button dries-mertens, Help: Workspace ready
+				127 pop up button Add repository
+				128 text Connected
+				129 pop up button Connection details
+			130 container
+				131 container
+					132 heading dries-mertens, Value: 1
+						133 text dries-mertens
+					134 button Refresh status
+				135 container Selected repository
+					136 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					137 text Repository available
+				138 text Uncommitted changes
+				139 button Refresh changes
+				140 button (expanded) Hide changed files, Secondary Actions: Collapse
+				141 container
+					142 text Compared with HEAD  83f047d5f61edacd2fc87605778e6522e8b750b0  ·  2 changed files
+				143 tab group (selectable) Workspace views
+					144 tab (selectable) Workspace
+					145 tab (selected) Changes
+				146 container Changes
+					147 container Selected file changes
+						148 heading large.txt, Value: 2
+							149 text large.txt
+						150 text Preview limited by the 200-row or 48 KiB response budget.
+						151 container Unified file diff
+				152 splitter Resize changed files, Value: 68
+				153 container Changed files
+					154 heading Changed files, Value: 2
+						155 text Changed files
+					156 container
+						157 toggle button large.txt .M, Help: large.txt, Value: on
+						158 toggle button text.txt .M, Help: text.txt, Value: off
+					159 button First page
+					160 button (disabled) Next files
+				161 container
+					162 text Local workspace Beta
+		163 scroll bar (settable, float) 0
+	164 close button
+	165 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	166 minimize button
+	167 text Agent Workspace
+168 menu bar
+	169 F04g inspect baseline
+	170 File
+	171 Edit
+	172 View
+	173 Window
+	174 Help
+
+The focused UI element is 100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

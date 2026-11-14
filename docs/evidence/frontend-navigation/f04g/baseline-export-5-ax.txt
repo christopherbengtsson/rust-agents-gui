@@ -1,0 +1,118 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 5:47:49 PM
+					36 image
+					37 text for(let i=45000;i<Math.min(f04g.exportString.length,54000);i+=300)console.log('F04G:'+i+':'+f04g.exportString.slice(i,i+300))
+					38 image
+					39 text undefined
+			40 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			41 container
+	42 scroll area
+		43 HTML content Description: Agent Workspace, URL: tauri://localhost
+			44 link Skip to workspace, Value: tauri://localhost#workspace
+			45 container Repository sidebar
+				46 text Agent Workspace
+				47 container Repositories
+					48 heading Repositories, Value: 2
+						49 text Repositories
+					50 content list
+						51 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							52 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							53 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							54 button Create workspace in Alpha
+							55 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							56 text Available
+							57 content list
+								58 button paolo-maldini, Help: Workspace ready
+						59 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							60 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							61 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							62 button Create workspace in Beta
+							63 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							64 text Available
+							65 content list
+								66 button dries-mertens, Help: Workspace ready
+				67 pop up button Add repository
+				68 text Connected
+				69 pop up button Connection details
+			70 container
+				71 container
+					72 heading dries-mertens, Value: 1
+						73 text dries-mertens
+					74 button Refresh status
+				75 container Selected repository
+					76 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					77 text Repository available
+				78 text Uncommitted changes
+				79 button Refresh changes
+				80 button (expanded) Hide changed files, Secondary Actions: Collapse
+				81 container
+					82 text Compared with HEAD  83f047d5f61edacd2fc87605778e6522e8b750b0  ·  2 changed files
+				83 tab group (selectable) Workspace views
+					84 tab (selectable) Workspace
+					85 tab (selected) Changes
+				86 container Changes
+					87 container Selected file changes
+						88 heading large.txt, Value: 2
+							89 text large.txt
+						90 text Preview limited by the 200-row or 48 KiB response budget.
+						91 container Unified file diff
+				92 splitter Resize changed files, Value: 68
+				93 container Changed files
+					94 heading Changed files, Value: 2
+						95 text Changed files
+					96 container
+						97 toggle button large.txt .M, Help: large.txt, Value: on
+						98 toggle button text.txt .M, Help: text.txt, Value: off
+					99 button First page
+					100 button (disabled) Next files
+				101 container
+					102 text Local workspace Beta
+		103 scroll bar (settable, float) 0
+	104 close button
+	105 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	106 minimize button
+	107 text Agent Workspace
+108 menu bar
+	109 F04g inspect baseline
+	110 File
+	111 Edit
+	112 View
+	113 Window
+	114 Help
+
+The focused UI element is 40 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

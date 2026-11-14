@@ -1,0 +1,111 @@
+$ node scripts/build.mjs
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+   Compiling libsqlite3-sys v0.40.0
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `release` profile [optimized] target(s) in 16.74s
+$ tauri build --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ corepack pnpm generated:check && tsc --noEmit && vite build
+$ node scripts/prepare-generated.mjs --check
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+Generated contracts and routes match source
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 2625 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                              0.57 kB │ gzip:   0.32 kB
+dist/assets/index-Nt6iarJC.css                                              99.40 kB │ gzip:  16.32 kB
+dist/assets/repository._repositoryId.index-BfyvokOJ.js                       0.07 kB │ gzip:   0.08 kB
+dist/assets/repository._repositoryId.workspace._workspaceId-BfyvokOJ.js      0.07 kB │ gzip:   0.08 kB
+dist/assets/routes-BfyvokOJ.js                                               0.07 kB │ gzip:   0.08 kB
+dist/assets/settings-CvKUAQqX.js                                             0.07 kB │ gzip:   0.08 kB
+dist/assets/repository._repositoryId-CFVmZRKk.js                             0.08 kB │ gzip:   0.09 kB
+dist/assets/repository._repositoryId-DgDqD74I.js                             0.25 kB │ gzip:   0.21 kB
+dist/assets/settings.general-BxnyDDIC.js                                     0.71 kB │ gzip:   0.39 kB
+dist/assets/target-error-BmN6QozZ.js                                         1.01 kB │ gzip:   0.58 kB
+dist/assets/repository._repositoryId.workspace._workspaceId-CEtZldfj.js      1.37 kB │ gzip:   0.65 kB
+dist/assets/useSelector-BsEH0aCU.js                                          1.90 kB │ gzip:   0.83 kB
+dist/assets/matchContext-C3qem50N.js                                        64.22 kB │ gzip:  22.83 kB
+dist/assets/main-BEH697M7.js                                               111.97 kB │ gzip:  36.62 kB
+dist/assets/index-Dzb2DnDj.js                                            1,072.99 kB │ gzip: 223.07 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 346ms
+   Compiling libsqlite3-sys v0.40.0
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `release` profile [optimized] target(s) in 24.47s
+       Built application at: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-desktop
+    Bundling Agent Workspace.app (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app)
+    Finished 1 bundle at:
+        /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app (16.35 MiB)
+

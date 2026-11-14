@@ -1,0 +1,42 @@
+{
+  "unit": "native desktop RSS KiB; excludes WebContent, inspector processes and total JS heap",
+  "conditions": "both desktop windows restored, 900x680, Changes selected, same bounded large-file fixture, inspectors closed; debug desktop/release sidecar; warm caches",
+  "pids": {
+    "current": 46662,
+    "baseline": 21014
+  },
+  "warmup": {
+    "current": 178640,
+    "baseline": 172272
+  },
+  "runs": [
+    {
+      "current": 178640,
+      "baseline": 172288
+    },
+    {
+      "current": 178640,
+      "baseline": 172288
+    },
+    {
+      "current": 178640,
+      "baseline": 172288
+    },
+    {
+      "current": 178640,
+      "baseline": 172288
+    },
+    {
+      "current": 178640,
+      "baseline": 172288
+    }
+  ],
+  "median": {
+    "current": 178640,
+    "baseline": 172288
+  },
+  "range": {
+    "current": [178640, 178640],
+    "baseline": [172288, 172288]
+  }
+}

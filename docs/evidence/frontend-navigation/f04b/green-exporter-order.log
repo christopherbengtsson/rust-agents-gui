@@ -1,0 +1,10 @@
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.612125ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.245042ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.937333

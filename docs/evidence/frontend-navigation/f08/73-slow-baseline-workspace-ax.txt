@@ -1,0 +1,82 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							11 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button Create workspace in Beta
+							14 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							15 text Available
+							16 content list
+								17 button lucy-bronze, Help: Workspace ready
+						18 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							23 text Available
+							24 content list
+								25 button sam-kerr, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading sam-kerr, Value: 1
+					31 text sam-kerr
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					35 text Repository available
+				36 text Uncommitted changes
+				37 button Refresh changes
+				38 button (expanded) Hide changed files, Secondary Actions: Collapse
+				39 text Refresh changes to inspect this workspace.
+				40 tab group (selectable) Workspace views
+					41 tab (selected) Workspace
+					42 tab (selectable) Changes
+				43 container Workspace
+					44 container Selected workspace
+						45 text Workspace ready Codex
+						46 heading Your workspace is ready, Value: 2
+							47 text Your workspace is ready
+						48 text sam-kerr
+						49 description list
+							50 text Branch
+							51 text workspace/sam-kerr
+							52 text Workspace folder
+							53 text /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state/workspaces/alpha/sam-kerr/checkout
+							54 text Local base
+							55 text refs/heads/main · ac721f2849607a00f9583fbb5cc8af2184246986
+							56 text Branch artifact
+							57 text Created by this action
+							58 text Folder artifact
+							59 text Worktree created
+						60 container
+							61 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				62 splitter Resize changed files, Value: 68
+				63 container Changed files
+					64 heading Changed files, Value: 2
+						65 text Changed files
+				66 text Local workspace
+				67 text Alpha
+	68 close button
+	69 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	70 minimize button
+	71 text Agent Workspace
+72 menu bar
+	73 F08 Inspector baseline
+	74 File
+	75 Edit
+	76 View
+	77 Window
+	78 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost

@@ -1,0 +1,2 @@
+PASS: source hashes match reviewed/measured product source and index; corpora/subscription unchanged; staged diff is F04c-only; source/evidence whitespace clean (raw logs excluded).
+Staged files: 39

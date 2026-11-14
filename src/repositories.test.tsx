@@ -1,3 +1,4 @@
+import { ownerBound } from "./test-support/owner-bound-invoke";
 import {
   act,
   cleanup,
@@ -12,9 +13,9 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import { App } from "./App";
+import { App } from "./test-support/app";
 import { StrictMode } from "react";
-import { useRepositories } from "./hooks/use-repositories";
+import { useRepositories } from "./test-support/feature-hooks";
 import {
   PENDING_KEY,
   SELECTION_KEY,
@@ -22,9 +23,18 @@ import {
   type Repository,
   type RepositoryRequest,
   type RepositoryReply,
+  type RegistrationRequest,
 } from "./lib/repositories";
 
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(),
+  Channel: class {
+    onmessage: (value: unknown) => void;
+    constructor(receive: (value: unknown) => void) {
+      this.onmessage = receive;
+    }
+  },
+}));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: vi.fn() }));
 const id = "00000000-0000-4000-8000-000000000001";
 const repository: Repository = {
@@ -47,13 +57,15 @@ beforeEach(() => {
       removeListener() {},
     }),
   );
-  vi.mocked(invoke).mockImplementation(async (command) => {
-    if (command === "workspace_request")
-      return { kind: "workspaces", page: { workspaces: [], next: null } };
-    if (command === "desktop_pid") return 42;
-    if (command === "supervisor_status") return snapshot;
-    return { kind: "repositories", page: { repositories: [], next: null } };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (command) => {
+      if (command === "workspace_request")
+        return { kind: "workspaces", page: { workspaces: [], next: null } };
+      if (command === "desktop_pid") return 42;
+      if (command === "supervisor_status") return snapshot;
+      return { kind: "repositories", page: { repositories: [], next: null } };
+    }),
+  );
 });
 afterEach(() => {
   cleanup();
@@ -93,15 +105,18 @@ test("the native picker fills a path and only explicit registration submits it",
 function replies(
   handler: (request: RepositoryRequest) => Promise<RepositoryReply>,
 ) {
-  vi.mocked(invoke).mockImplementation(async (command, args) => {
-    if (command === "workspace_request")
-      return { kind: "workspaces", page: { workspaces: [], next: null } };
-    if (command === "desktop_pid") return 42;
-    if (command === "supervisor_status") return snapshot;
-    return handler(
-      (object(args) ? args.request : undefined) as RepositoryRequest,
-    );
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (command, args) => {
+      if (command.startsWith("observation_")) return;
+      if (command === "workspace_request")
+        return { kind: "workspaces", page: { workspaces: [], next: null } };
+      if (command === "desktop_pid") return 42;
+      if (command === "supervisor_status") return snapshot;
+      return handler(
+        (object(args) ? args.request : undefined) as RepositoryRequest,
+      );
+    }),
+  );
 }
 function registrations() {
   return vi
@@ -161,7 +176,10 @@ test("restored selection remains selected while its details are collapsed", asyn
     ).getByText("/projects/one"),
   ).toBeDefined();
   expect(selected.getAttribute("aria-current")).toBe("true");
-  expect(localStorage.getItem(SELECTION_KEY)).toBe(id);
+  expect(
+    JSON.parse(localStorage.getItem("agent-workspace.presentation") ?? "null")
+      .state.rememberedMain,
+  ).toEqual({ kind: "repository", repositoryId: id });
   expect(registrations()).toHaveLength(0);
 });
 
@@ -174,6 +192,7 @@ test("registration selects the durable result and never submits twice", async ()
       return {
         kind: "registration",
         registration: {
+          initial_workspace_id: null,
           ...request.request,
           state: "completed",
           repository_id: id,
@@ -197,7 +216,10 @@ test("registration selects the durable result and never submits twice", async ()
   await user.click(screen.getByRole("button", { name: /^Register$/ }));
   await screen.findByRole("heading", { level: 1, name: "one" });
   expect(registrations()).toHaveLength(1);
-  expect(localStorage.getItem(SELECTION_KEY)).toBe(id);
+  expect(
+    JSON.parse(localStorage.getItem("agent-workspace.presentation") ?? "null")
+      .state.rememberedMain,
+  ).toEqual({ kind: "repository", repositoryId: id });
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
 });
 
@@ -215,8 +237,10 @@ test("reopening with a retained action retrieves its result without resubmitting
       return {
         kind: "action",
         registration: {
+          initial_workspace_id: null,
           action_id,
           path: "/projects/one",
+          create_initial_workspace: false,
           state: "completed",
           repository_id: id,
         },
@@ -228,12 +252,16 @@ test("reopening with a retained action retrieves its result without resubmitting
     };
   });
   render(<App />);
-  await screen.findByRole("heading", { level: 1, name: "one" });
+  await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
+  expect(
+    screen.getByRole("heading", { level: 1, name: "Workspace" }),
+  ).toBeDefined();
   expect(registrations()).toHaveLength(0);
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
 });
 
 test("unavailable repositories stay selected and storage failures retain the last observation", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const user = userEvent.setup();
   const missing: Repository = {
     ...repository,
@@ -330,7 +358,7 @@ test("invalid registration permits correction and preserves an actionable error"
 
 test("lost registration reply reconciles the retained action without another submit", async () => {
   const user = userEvent.setup();
-  let saved: { action_id: string; path: string } | undefined;
+  let saved: RegistrationRequest | undefined;
   replies(async (request) => {
     if (request.operation === "register") {
       saved = request.request;
@@ -340,7 +368,12 @@ test("lost registration reply reconciles the retained action without another sub
       return {
         kind: "action",
         registration: saved
-          ? { ...saved, state: "completed", repository_id: id }
+          ? {
+              ...saved,
+              initial_workspace_id: null,
+              state: "completed",
+              repository_id: id,
+            }
           : null,
       };
     if (request.operation === "get") return { kind: "repository", repository };
@@ -392,6 +425,7 @@ test.each([false, true])(
         return {
           kind: "registration",
           registration: {
+            initial_workspace_id: null,
             ...request.request,
             state: "completed",
             repository_id: id,
@@ -443,6 +477,7 @@ test.each([false, true])(
 );
 
 test("selection during registration is not retargeted by its late completion", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const user = userEvent.setup();
   const two: Repository = {
     ...repository,
@@ -451,7 +486,7 @@ test("selection during registration is not retargeted by its late completion", a
     path: "/projects/two",
   };
   let resolve!: (reply: RepositoryReply) => void;
-  let submitted!: { action_id: string; path: string };
+  let submitted!: RegistrationRequest;
   replies(async (request) => {
     if (request.operation === "register") {
       submitted = request.request;
@@ -462,7 +497,11 @@ test("selection during registration is not retargeted by its late completion", a
     if (request.operation === "action")
       return {
         kind: "action",
-        registration: { ...submitted, state: "pending" },
+        registration: {
+          ...submitted,
+          initial_workspace_id: null,
+          state: "pending",
+        },
       };
     if (request.operation === "get")
       return {
@@ -487,7 +526,12 @@ test("selection during registration is not retargeted by its late completion", a
   await act(async () =>
     resolve({
       kind: "registration",
-      registration: { ...submitted, state: "completed", repository_id: id },
+      registration: {
+        ...submitted,
+        initial_workspace_id: null,
+        state: "completed",
+        repository_id: id,
+      },
     }),
   );
   await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
@@ -496,6 +540,7 @@ test("selection during registration is not retargeted by its late completion", a
 });
 
 test("cursor paging retains selection and previous returns to the original page", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const user = userEvent.setup();
   const two: Repository = {
     ...repository,
@@ -526,15 +571,17 @@ test("cursor paging retains selection and previous returns to the original page"
 });
 
 test("malformed repository payloads stay visible rather than becoming empty navigation", async () => {
-  vi.mocked(invoke).mockImplementation(async (command) =>
-    command === "desktop_pid"
-      ? 42
-      : command === "supervisor_status"
-        ? snapshot
-        : {
-            kind: "repositories",
-            page: { repositories: [{ id: "bad" }], next: null },
-          },
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (command) =>
+      command === "desktop_pid"
+        ? 42
+        : command === "supervisor_status"
+          ? snapshot
+          : {
+              kind: "repositories",
+              page: { repositories: [{ id: "bad" }], next: null },
+            },
+    ),
   );
   render(
     <StrictMode>
@@ -619,7 +666,9 @@ test.each(["success", "failure"])(
     rerender({ owner: undefined });
     stage = "old";
     rerender({ owner: "owner-a" });
-    expect(requests.filter((r) => r.operation === "list")).toHaveLength(2);
+    await waitFor(() =>
+      expect(requests.filter((r) => r.operation === "list")).toHaveLength(2),
+    );
     stage = "new";
     rerender({ owner: "owner-b" });
     await waitFor(() => expect(result.current.selected?.name).toBe(fresh.name));
@@ -659,8 +708,10 @@ test("reconnect retrieves a retained registration result without resubmitting", 
       return {
         kind: "action",
         registration: {
+          initial_workspace_id: null,
           action_id,
           path: repository.path,
+          create_initial_workspace: false,
           state: "completed",
           repository_id: id,
         },
@@ -723,4 +774,52 @@ test("explicit repository refresh reports loading while retaining the last obser
   expect(result.current.loading).toBe(false);
   expect(result.current.selected?.id).toBe(id);
   expect(registrations()).toHaveLength(0);
+});
+
+test("Refresh status retains explicit reprobe through a delayed connection check", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
+  const unavailable: Repository = {
+    ...repository,
+    availability: {
+      state: "unavailable",
+      error: { code: "git", message: "Restore access" },
+    },
+  };
+  let statusReads = 0;
+  let resolveStatus: ((value: unknown) => void) | undefined;
+  const refreshes: boolean[] = [];
+  vi.mocked(invoke).mockImplementation(
+    ownerBound((command, args) => {
+      if (command === "desktop_pid") return 42;
+      if (command === "supervisor_status") {
+        if (++statusReads === 1) return snapshot;
+        return new Promise((resolve) => {
+          resolveStatus = resolve;
+        });
+      }
+      if (command.startsWith("observation_")) return;
+      if (command === "workspace_request")
+        return { kind: "workspaces", page: { workspaces: [], next: null } };
+      if (!object(args) || !object(args.request))
+        throw new Error("Missing repository request");
+      const request = args.request;
+      refreshes.push(request.refresh === true);
+      return request.operation === "get"
+        ? { kind: "repository", repository: unavailable }
+        : {
+            kind: "repositories",
+            page: { repositories: [unavailable], next: null },
+          };
+    }),
+  );
+  render(<App />);
+  await screen.findByRole("heading", { level: 1, name: "one" });
+  expect(refreshes.every((refresh) => !refresh)).toBe(true);
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: "Refresh status" }));
+  await screen.findByRole("button", { name: "Checking…" });
+  await act(async () => {
+    resolveStatus?.(snapshot);
+  });
+  await waitFor(() => expect(refreshes.some(Boolean)).toBe(true));
 });

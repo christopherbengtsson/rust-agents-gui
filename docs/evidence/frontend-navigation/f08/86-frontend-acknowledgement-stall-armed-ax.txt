@@ -1,0 +1,71 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:45:29 PM
+					36 image
+					37 text f08.stall={before:f08.compact(),logStart:f08.log.length};f08.withholdAcks=true;setTimeout(()=>{f08.stall.after=f08.compact();f08.stall.held=f08.heldAcks.length},22000);console.log('F08:'+JSON.stringify(f08.stall.before))
+					38 image
+					39 text F08:{"time":831864,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":2441}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":59,"cacheBodyBytes":300678,"queue":0,"pending":0,"physicalActive":0,"freshness":276,"actor":"idle","commands":{"workspace_request":346,"observation_acknowledge":257,"observation_stop":2,"repository_request":38,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/a
+					40 image
+					41 text undefined
+			42 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			43 container
+	44 scroll area
+		45 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			46 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			47 container
+				48 button Back
+				49 heading Settings, Value: 1
+					50 text Settings
+			51 container Settings
+				52 link General, Value: tauri://localhost/settings/general
+			53 container General
+				54 heading General, Value: 2
+					55 text General
+				56 text General settings will be available here.
+	57 close button
+	58 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	59 minimize button
+	60 text Agent Workspace
+61 menu bar
+	62 F08 Inspector current
+	63 File
+	64 Edit
+	65 View
+	66 Window
+	67 Help
+
+The focused UI element is 42 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,432 @@
+docs/evidence/frontend-navigation/f04e/bundle-reviewed.log:11: trailing whitespace.
++[plugin builtin:vite-reporter] 
+docs/evidence/frontend-navigation/f04e/bundle.log:11: trailing whitespace.
++[plugin builtin:vite-reporter] 
+docs/evidence/frontend-navigation/f04e/captured-owner-green.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/captured-owner-red.log:26: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/feature-regressions.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/features-first.log:364: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/features-fourth.log:29: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/features-second.log:2769: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/features-third.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/focused-features.log:12: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/freshness-green.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/freshness-red.log:32: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/generated-write.log:4: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:5: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/generated-write.log:6: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:9: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:10: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/generated-write.log:11: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:14: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:15: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/generated-write.log:16: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:19: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:21: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:24: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:25: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/generated-write.log:26: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:29: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/generated-write.log:30: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/generated-write.log:31: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1429: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1430: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1431: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1434: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1435: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1436: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1439: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1440: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1441: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1444: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1446: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1449: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1450: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1451: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1454: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1455: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure-reviewed.log:1456: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1429: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1430: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure.log:1431: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1434: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1435: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure.log:1436: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1439: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1440: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure.log:1441: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1444: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1446: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1449: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1450: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure.log:1451: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1454: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/measure.log:1455: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/measure.log:1456: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/physical-after.log:109: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/physical-before.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/physical-green.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/progress-no-poll-green.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/progress-no-poll.log:45: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/retained-and-cache.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/review-regressions-complete.log:12: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/review-regressions-green.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/review-regressions-red.log:167: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/reviewed-workspace.log:9: new blank line at EOF.
+docs/evidence/frontend-navigation/f04e/verify-complete.log:250: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:251: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:252: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:255: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:256: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:257: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:260: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:261: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:262: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:265: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:267: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:270: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:271: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:272: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:275: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:276: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:277: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:283: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:284: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:285: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:288: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:289: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:290: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:293: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:294: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:295: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:298: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:300: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:303: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:304: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:305: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:308: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:309: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:310: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:313: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:314: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:315: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:318: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:319: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:320: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:323: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:324: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:325: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:328: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:330: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:333: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:334: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:335: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:338: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:339: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:340: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:345: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:346: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:347: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:350: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:351: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:352: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:355: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:356: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:357: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:360: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:362: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:365: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:366: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:367: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:370: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:371: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-complete.log:372: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:3: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:4: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-final.log:5: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:8: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:9: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-final.log:10: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:13: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:14: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-final.log:15: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:18: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:20: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:23: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:24: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-final.log:25: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:28: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-final.log:29: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-final.log:30: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:250: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:251: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:252: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:255: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:256: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:257: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:260: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:261: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:262: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:265: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:267: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:270: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:271: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:272: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:275: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:276: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:277: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:283: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:284: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:285: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:288: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:289: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:290: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:293: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:294: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:295: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:298: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:300: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:303: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:304: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:305: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:308: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:309: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:310: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:313: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:314: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:315: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:318: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:319: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:320: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:323: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:324: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:325: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:328: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:330: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:333: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:334: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:335: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:338: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:339: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:340: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:344: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:345: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:346: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:349: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:350: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:351: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:354: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:355: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:356: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:359: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:361: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:364: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:365: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:366: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:369: trailing whitespace.
++  | 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:370: trailing whitespace.
++  | transparent 
+docs/evidence/frontend-navigation/f04e/verify-reviewed.log:371: trailing whitespace.
++  | 

@@ -1,0 +1,1170 @@
+{
+  "snapshot": {
+    "time": 617083,
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queryCount": 81,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 717,
+    "logCount": 1322,
+    "commands": {
+      "workspace_request": 781,
+      "observation_acknowledge": 528,
+      "repository_request": 8,
+      "observation_stop": 2,
+      "supervisor_status": 1,
+      "desktop_pid": 1,
+      "observation_subscribe": 1
+    },
+    "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+    "width": 900,
+    "height": 148
+  },
+  "navigation": [
+    {
+      "label": "large.txt\n.M\n",
+      "start": 157313.00000000003,
+      "trusted": true,
+      "feedback": 53.999999999970896,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 158138,
+      "trusted": true,
+      "feedback": 23,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 158946,
+      "trusted": true,
+      "feedback": 45,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 159762,
+      "trusted": true,
+      "feedback": 25,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 160564,
+      "trusted": true,
+      "feedback": 45,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 161397,
+      "trusted": true,
+      "feedback": 33,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 162213,
+      "trusted": true,
+      "feedback": 44,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 163029,
+      "trusted": true,
+      "feedback": 23,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 163838,
+      "trusted": true,
+      "feedback": 44,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 164664.00000000003,
+      "trusted": true,
+      "feedback": 31.999999999970896,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 165464,
+      "trusted": true,
+      "feedback": 50,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 166279,
+      "trusted": true,
+      "feedback": 34.000000000029104,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 167072,
+      "trusted": true,
+      "feedback": 45,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Refresh changes",
+      "start": 188705,
+      "trusted": true,
+      "feedback": 24,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "vincent-aboubakar\n",
+      "start": 189539.00000000003,
+      "trusted": true,
+      "feedback": 40.999999999970896,
+      "heading": "vincent-aboubakar",
+      "tab": "Workspace"
+    },
+    {
+      "label": "thiago-silva\n",
+      "start": 190339,
+      "trusted": true,
+      "feedback": 24,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Refresh changes",
+      "start": 224505,
+      "trusted": true,
+      "feedback": 16.000000000029104,
+      "heading": "thiago-silva",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 290988,
+      "trusted": true,
+      "feedback": 25.000000000058208,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Refresh changes",
+      "start": 310514,
+      "trusted": true,
+      "feedback": 31,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    },
+    {
+      "label": "Refresh status",
+      "start": 405163,
+      "trusted": true,
+      "feedback": 51,
+      "heading": "thiago-silva",
+      "tab": "Changes"
+    }
+  ],
+  "windows": [
+    {
+      "label": "visible",
+      "start": {
+        "time": 155984,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 0,
+        "duplicates": 0,
+        "queryCount": 11,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 206,
+        "logCount": 0,
+        "commands": {},
+        "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 148
+      },
+      "end": {
+        "time": 161985,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queryCount": 12,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 209,
+        "logCount": 16,
+        "commands": {
+          "workspace_request": 13,
+          "observation_acknowledge": 3
+        },
+        "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    },
+    {
+      "start": {
+        "time": 562419,
+        "visibility": "hidden",
+        "active": 0,
+        "maxActive": 2,
+        "duplicates": 0,
+        "queryCount": 79,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 693,
+        "logCount": 1260,
+        "commands": {
+          "workspace_request": 747,
+          "observation_acknowledge": 500,
+          "repository_request": 8,
+          "observation_stop": 2,
+          "supervisor_status": 1,
+          "desktop_pid": 1,
+          "observation_subscribe": 1
+        },
+        "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      },
+      "end": {
+        "time": 566519,
+        "visibility": "hidden",
+        "active": 0,
+        "maxActive": 2,
+        "duplicates": 0,
+        "queryCount": 79,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 694,
+        "logCount": 1261,
+        "commands": {
+          "workspace_request": 747,
+          "observation_acknowledge": 501,
+          "repository_request": 8,
+          "observation_stop": 2,
+          "supervisor_status": 1,
+          "desktop_pid": 1,
+          "observation_subscribe": 1
+        },
+        "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    },
+    {
+      "start": {
+        "time": 583798,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 2,
+        "duplicates": 0,
+        "queryCount": 79,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 694,
+        "logCount": 1265,
+        "commands": {
+          "workspace_request": 747,
+          "observation_acknowledge": 505,
+          "repository_request": 8,
+          "observation_stop": 2,
+          "supervisor_status": 1,
+          "desktop_pid": 1,
+          "observation_subscribe": 1
+        },
+        "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      },
+      "end": {
+        "time": 587799,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 2,
+        "duplicates": 0,
+        "queryCount": 79,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 696,
+        "logCount": 1271,
+        "commands": {
+          "workspace_request": 751,
+          "observation_acknowledge": 507,
+          "repository_request": 8,
+          "observation_stop": 2,
+          "supervisor_status": 1,
+          "desktop_pid": 1,
+          "observation_subscribe": 1
+        },
+        "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    }
+  ],
+  "steady": {
+    "start": {
+      "time": 468022,
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queryCount": 78,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 628,
+      "logCount": 1098,
+      "commands": {
+        "workspace_request": 650,
+        "observation_acknowledge": 435,
+        "repository_request": 8,
+        "observation_stop": 2,
+        "supervisor_status": 1,
+        "desktop_pid": 1,
+        "observation_subscribe": 1
+      },
+      "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 648
+    },
+    "end": {
+      "time": 474023,
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queryCount": 77,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 633,
+      "logCount": 1110,
+      "commands": {
+        "workspace_request": 657,
+        "observation_acknowledge": 440,
+        "repository_request": 8,
+        "observation_stop": 2,
+        "supervisor_status": 1,
+        "desktop_pid": 1,
+        "observation_subscribe": 1
+      },
+      "assets": ["tauri__localhost/assets/index-CqZgu0My.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 648
+    }
+  },
+  "log": [
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 589122,
+      "end": 589125
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "581c2af6-701d-4380-bb72-1d80e401295b",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": true
+        }
+      },
+      "start": 589125,
+      "end": 589130
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 212,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1600
+          }
+        }
+      },
+      "start": 589127.0000000001,
+      "end": 589130
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 213,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1601
+          }
+        }
+      },
+      "start": 589129,
+      "end": 589132.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 589131,
+      "end": 589133
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "581c2af6-701d-4380-bb72-1d80e401295b",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 589133,
+      "end": 589136
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 214,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1602
+          }
+        }
+      },
+      "start": 592407,
+      "end": 592430.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 592427,
+      "end": 592431
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "581c2af6-701d-4380-bb72-1d80e401295b",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 592433,
+      "end": 592437
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 594440,
+      "end": 594445
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 215,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1603
+          }
+        }
+      },
+      "start": 594443,
+      "end": 594461
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 594446,
+      "end": 594461
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 216,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1604
+          }
+        }
+      },
+      "start": 594458,
+      "end": 594462
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 594461,
+      "end": 594463
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 217,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1605
+          }
+        }
+      },
+      "start": 597709.0000000001,
+      "end": 597715
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 597713,
+      "end": 597715
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "88a86d0e-34ca-4d38-b798-8731fc48f675",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": true
+        }
+      },
+      "start": 597715,
+      "end": 597734
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 218,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1606
+          }
+        }
+      },
+      "start": 597728.0000000001,
+      "end": 597738
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 219,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1607
+          }
+        }
+      },
+      "start": 597731,
+      "end": 597739
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 597735,
+      "end": 597739
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "88a86d0e-34ca-4d38-b798-8731fc48f675",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 597740,
+      "end": 597750
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 220,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1608
+          }
+        }
+      },
+      "start": 601039,
+      "end": 601044
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 601043,
+      "end": 601047
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "88a86d0e-34ca-4d38-b798-8731fc48f675",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 601047,
+      "end": 601052
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 603056,
+      "end": 603070
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 221,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1609
+          }
+        }
+      },
+      "start": 603066,
+      "end": 603077
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 603071,
+      "end": 603077
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 222,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1610
+          }
+        }
+      },
+      "start": 603074.0000000001,
+      "end": 603079.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 603078,
+      "end": 603089
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 223,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1611
+          }
+        }
+      },
+      "start": 606350,
+      "end": 606357
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 606354,
+      "end": 606357
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "f329c985-aadf-478b-8823-fe43bf689f72",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": true
+        }
+      },
+      "start": 606358.0000000001,
+      "end": 606379
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 224,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1612
+          }
+        }
+      },
+      "start": 606372,
+      "end": 606386
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 225,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1613
+          }
+        }
+      },
+      "start": 606377.0000000001,
+      "end": 606389
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 606380,
+      "end": 606389
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "f329c985-aadf-478b-8823-fe43bf689f72",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 606390,
+      "end": 606400
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 226,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1614
+          }
+        }
+      },
+      "start": 609686,
+      "end": 609693
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 609690,
+      "end": 609693
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "f329c985-aadf-478b-8823-fe43bf689f72",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 609694,
+      "end": 609699.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 611702,
+      "end": 611710
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 227,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1615
+          }
+        }
+      },
+      "start": 611706,
+      "end": 611719
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 228,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1616
+          }
+        }
+      },
+      "start": 611714,
+      "end": 611719
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 611718,
+      "end": 611720
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 229,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1617
+          }
+        }
+      },
+      "start": 615006,
+      "end": 615013
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 615012,
+      "end": 615015
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "38a7b979-34ab-4559-80f7-1c6bba8771ac",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": true
+        }
+      },
+      "start": 615016,
+      "end": 615025
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 230,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1618
+          }
+        }
+      },
+      "start": 615020,
+      "end": 615029
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "b793a90b-91eb-487c-8999-e20049be2a6d",
+          "batch_id": 231,
+          "cursor": {
+            "owner": "17819-1794674213130326000",
+            "sequence": 1619
+          }
+        }
+      },
+      "start": 615023,
+      "end": 615029
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 615026.0000000001,
+      "end": 615037
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "17819-1794674213130326000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+            "comparison_id": "38a7b979-34ab-4559-80f7-1c6bba8771ac",
+            "file_id": "b059f019-608f-478c-ae9e-04167bb5f318"
+          },
+          "load": false
+        }
+      },
+      "start": 615038,
+      "end": 615041
+    }
+  ]
+}

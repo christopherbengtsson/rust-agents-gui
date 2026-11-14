@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 429, in <module>
+    main()
+    ~~~~^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 124, in main
+    assert remaining > 0 and select.select([process.stdout], [], [], remaining)[0], 'startup timeout'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: startup timeout

@@ -1,0 +1,121 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:17:06 PM
+					36 image
+					37 text sessionStorage.f08Startups=JSON.stringify([...JSON.parse(sessionStorage.f08Startups),{warmup:false,href:location.pathname+location.search,heading:document.querySelector('h1')?.innerText,diff:!!document.querySelector('[aria-label="Unified file diff"]'),deliveryStopped:document.body.innerText.includes('Observation delivery stopped'),navigation:performance.getEntriesByType('navigation').map(e=>({dom:e.domContentLoadedEventEnd,load:e.loadEventEnd})),paint:performance.getEntriesByType('paint').map(e=>e.toJSON())
+					38 image
+					39 text "
+					40 text recorded
+					41 text "
+					42 text  = $1
+			43 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			44 container
+	45 scroll area
+		46 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			47 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			48 container Repository sidebar
+				49 text Agent Workspace
+				50 container Repositories
+					51 heading Repositories, Value: 2
+						52 text Repositories
+					53 content list
+						54 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							55 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							56 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							57 button Create workspace in Beta
+							58 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							59 text Available
+							60 content list
+								61 button lee-jae-sung, Help: Workspace ready
+						62 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							63 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							64 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							65 button Create workspace in Alpha
+							66 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							67 text Available
+							68 content list
+								69 button paul-scholes, Help: Workspace ready
+				70 pop up button Add repository
+				71 text Connected
+				72 pop up button Connection details
+				73 link Settings, Value: tauri://localhost/settings/general
+			74 container
+				75 heading paul-scholes, Value: 1
+					76 text paul-scholes
+				77 button Refresh status
+				78 container Selected repository
+					79 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					80 text Repository available
+				81 text Uncommitted changes
+				82 button Refresh changes
+				83 button (expanded) Hide changed files, Secondary Actions: Collapse
+				84 text Compared with HEAD 
+				85 text ac721f2849607a00f9583fbb5cc8af2184246986
+				86 text  · 
+				87 text 2
+				88 text changed files
+				89 tab group (selectable) Workspace views
+					90 tab (selectable) Workspace
+					91 tab (selected) Changes
+				92 container Changes
+					93 text Select a changed file
+					94 text Refresh the file list, then select a path to inspect its unified diff.
+				95 splitter Resize changed files, Value: 68
+				96 container Changed files
+					97 heading Changed files, Value: 2
+						98 text Changed files
+					99 container
+						100 toggle button large.txt .M, Help: large.txt, Value: off
+						101 toggle button text.txt .M, Help: text.txt, Value: off
+					102 button First page
+					103 button (disabled) Next files
+				104 text Local workspace
+				105 text Alpha
+		106 scroll bar (settable, float) 0
+	107 close button
+	108 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	109 minimize button
+	110 text Agent Workspace
+111 menu bar
+	112 F08 Inspector current
+	113 File
+	114 Edit
+	115 View
+	116 Window
+	117 Help
+
+The focused UI element is 43 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type RefObject } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   CodeBlock,
@@ -10,13 +10,14 @@ import type { DiffRow } from "@/lib/changes";
 // Git supplies both source columns; Code Block's sequential counter stays off.
 export function UnifiedDiff({
   rows,
-  position,
+  initialPosition,
   onPosition,
 }: {
   rows: DiffRow[];
-  position: RefObject<{ top: number; left: number }>;
+  initialPosition: { top: number; left: number };
   onPosition: (position: { top: number; left: number }) => void;
 }) {
+  const position = useRef(initialPosition);
   const root = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const viewport = root.current?.querySelector<HTMLElement>(
@@ -25,13 +26,25 @@ export function UnifiedDiff({
     if (!viewport) return;
     viewport.scrollTop = position.current.top;
     viewport.scrollLeft = position.current.left;
-    const save = () =>
-      onPosition({ top: viewport.scrollTop, left: viewport.scrollLeft });
+    let pending: { top: number; left: number } | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const flush = () => {
+      clearTimeout(timer);
+      timer = undefined;
+      if (pending) onPosition(pending);
+      pending = undefined;
+    };
+    const save = () => {
+      pending = { top: viewport.scrollTop, left: viewport.scrollLeft };
+      // Bounded write cadence while scrolling; release flushes the last position.
+      if (timer === undefined) timer = setTimeout(flush, 150);
+    };
     viewport.addEventListener("scroll", save, { passive: true });
     return () => {
       viewport.removeEventListener("scroll", save);
+      flush();
     };
-  }, [position, onPosition]);
+  }, [onPosition]);
   return (
     <ScrollArea ref={root} className="diff-scroll">
       <CodeBlock size="sm" className="diff-code">

@@ -1,0 +1,327 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:31:34 PM
+					36 image
+					37 text (()=>{const s=JSON.stringify(f08.contextEvents);for(let i=0;i<s.length;i+=300)console.log('F08DATA:'+i+':'+s.slice(i,i+300));return s.length})()
+					38 image
+					39 text F08DATA:0:[{"label":"before-settings","time":663010,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","selected":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"id":"ea35453c-8639-42c5-803a-e625f4dac7cb","path":"large.txt","comparison":"0eca7c6e-3f
+					40 image
+					41 text F08DATA:300:07-4ab2-b89d-16d1c5798674"}},"scroll":[{"top":0,"left":0},{"top":0,"left":0}],"layout":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"view":"changes","filesWidth":32,"collapsed":false}}},{"label":"settings","time":663112,"href":"/settings/general","selected":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"id":
+					42 image
+					43 text F08DATA:600:"ea35453c-8639-42c5-803a-e625f4dac7cb","path":"large.txt","comparison":"0eca7c6e-3f07-4ab2-b89d-16d1c5798674"}},"scroll":[],"layout":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"view":"changes","filesWidth":32,"collapsed":false}}},{"label":"before-escape","time":663821,"href":"/settings/general","selec
+					44 image
+					45 text F08DATA:900:ted":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"id":"ea35453c-8639-42c5-803a-e625f4dac7cb","path":"large.txt","comparison":"0eca7c6e-3f07-4ab2-b89d-16d1c5798674"}},"scroll":[],"layout":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"view":"changes","filesWidth":32,"collapsed":false}}},{"label":"after-escap
+					46 image
+					47 text F08DATA:1200:e","time":663922,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","selected":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"id":"ea35453c-8639-42c5-803a-e625f4dac7cb","path":"large.txt","comparison":"0eca7c6e-3f07-4ab2-b89d-16d1c5798674
+					48 image
+					49 text F08DATA:1500:"}},"scroll":[{"top":0,"left":0},{"top":0,"left":0}],"layout":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"view":"changes","filesWidth":32,"collapsed":false}}},{"label":"before-settings","time":684463,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c283
+					50 image
+					51 text F08DATA:1800:0?view=changes","selected":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"id":"ea35453c-8639-42c5-803a-e625f4dac7cb","path":"large.txt","comparison":"37b76c87-808e-4cc1-b698-2d42991e4136"}},"scroll":[{"top":0,"left":0},{"top":0,"left":0}],"layout":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"view":"changes"
+					52 image
+					53 text F08DATA:2100:,"filesWidth":32,"collapsed":false}}},{"label":"settings","time":684564,"href":"/settings/general","selected":{"cfe8f76f-e41e-4e87-bb91-42e4419c2830":{"id":"ea35453c-8639-42c5-803a-e625f4dac7cb","path":"large.txt","comparison":"37b76c87-808e-4cc1-b698-2d42991e4136"}},"scroll":[],"layout":{"cfe8f76f-
+					54 image
+					55 text F08DATA:2400:e41e-4e87-bb91-42e4419c2830":{"view":"changes","filesWidth":32,"collapsed":false}}}]
+					56 image
+					57 text 2484
+					58 text  = $1
+			59 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			60 container
+	61 scroll area
+		62 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/6e800468-fdab-420a-af6a-d21d8dfe0507/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			63 link Skip to workspace, Value: tauri://localhost/repository/6e800468-fdab-420a-af6a-d21d8dfe0507/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			64 container Repository sidebar
+				65 text Agent Workspace
+				66 container Repositories
+					67 heading Repositories, Value: 2
+						68 text Repositories
+					69 content list
+						70 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01 Available
+							71 button Catalog-01, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01
+							72 button (expanded) Toggle details for Catalog-01, Secondary Actions: Collapse
+							73 button Create workspace in Catalog-01
+							74 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01
+							75 text Available
+						76 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16 Available
+							77 button Catalog-16, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16
+							78 button (expanded) Toggle details for Catalog-16, Secondary Actions: Collapse
+							79 button Create workspace in Catalog-16
+							80 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16
+							81 text Available
+						82 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20 Available
+							83 button Catalog-20, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20
+							84 button (expanded) Toggle details for Catalog-20, Secondary Actions: Collapse
+							85 button Create workspace in Catalog-20
+							86 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20
+							87 text Available
+						88 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04 Available
+							89 button Catalog-04, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04
+							90 button (expanded) Toggle details for Catalog-04, Secondary Actions: Collapse
+							91 button Create workspace in Catalog-04
+							92 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04
+							93 text Available
+						94 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21 Available
+							95 button Catalog-21, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21
+							96 button (expanded) Toggle details for Catalog-21, Secondary Actions: Collapse
+							97 button Create workspace in Catalog-21
+							98 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21
+							99 text Available
+						100 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30 Available
+							101 button Catalog-30, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30
+							102 button (expanded) Toggle details for Catalog-30, Secondary Actions: Collapse
+							103 button Create workspace in Catalog-30
+							104 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30
+							105 text Available
+						106 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25 Available
+							107 button Catalog-25, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25
+							108 button (expanded) Toggle details for Catalog-25, Secondary Actions: Collapse
+							109 button Create workspace in Catalog-25
+							110 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25
+							111 text Available
+						112 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00 Available
+							113 button Catalog-00, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00
+							114 button (expanded) Toggle details for Catalog-00, Secondary Actions: Collapse
+							115 button Create workspace in Catalog-00
+							116 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00
+							117 text Available
+						118 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28 Available
+							119 button Catalog-28, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28
+							120 button (expanded) Toggle details for Catalog-28, Secondary Actions: Collapse
+							121 button Create workspace in Catalog-28
+							122 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28
+							123 text Available
+						124 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15 Available
+							125 button Catalog-15, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15
+							126 button (expanded) Toggle details for Catalog-15, Secondary Actions: Collapse
+							127 button Create workspace in Catalog-15
+							128 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15
+							129 text Available
+						130 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32 Available
+							131 button Catalog-32, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32
+							132 button (expanded) Toggle details for Catalog-32, Secondary Actions: Collapse
+							133 button Create workspace in Catalog-32
+							134 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32
+							135 text Available
+						136 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12 Available
+							137 button Catalog-12, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12
+							138 button (expanded) Toggle details for Catalog-12, Secondary Actions: Collapse
+							139 button Create workspace in Catalog-12
+							140 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12
+							141 text Available
+						142 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11 Available
+							143 button Catalog-11, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11
+							144 button (expanded) Toggle details for Catalog-11, Secondary Actions: Collapse
+							145 button Create workspace in Catalog-11
+							146 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11
+							147 text Available
+						148 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23 Available
+							149 button Catalog-23, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23
+							150 button (expanded) Toggle details for Catalog-23, Secondary Actions: Collapse
+							151 button Create workspace in Catalog-23
+							152 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23
+							153 text Available
+						154 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08 Available
+							155 button Catalog-08, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08
+							156 button (expanded) Toggle details for Catalog-08, Secondary Actions: Collapse
+							157 button Create workspace in Catalog-08
+							158 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08
+							159 text Available
+						160 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							161 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							162 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							163 button Create workspace in Beta
+							164 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							165 text Available
+							166 content list
+								167 button lee-jae-sung, Help: Workspace ready
+						168 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24 Available
+							169 button Catalog-24, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24
+							170 button (expanded) Toggle details for Catalog-24, Secondary Actions: Collapse
+							171 button Create workspace in Catalog-24
+							172 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24
+							173 text Available
+						174 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22 Available
+							175 button Catalog-22, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22
+							176 button (expanded) Toggle details for Catalog-22, Secondary Actions: Collapse
+							177 button Create workspace in Catalog-22
+							178 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22
+							179 text Available
+						180 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18 Available
+							181 button Catalog-18, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18
+							182 button (expanded) Toggle details for Catalog-18, Secondary Actions: Collapse
+							183 button Create workspace in Catalog-18
+							184 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18
+							185 text Available
+						186 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19 Available
+							187 button Catalog-19, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19
+							188 button (expanded) Toggle details for Catalog-19, Secondary Actions: Collapse
+							189 button Create workspace in Catalog-19
+							190 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19
+							191 text Available
+						192 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07 Available
+							193 button Catalog-07, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07
+							194 button (expanded) Toggle details for Catalog-07, Secondary Actions: Collapse
+							195 button Create workspace in Catalog-07
+							196 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07
+							197 text Available
+						198 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17 Available
+							199 button Catalog-17, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17
+							200 button (expanded) Toggle details for Catalog-17, Secondary Actions: Collapse
+							201 button Create workspace in Catalog-17
+							202 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17
+							203 text Available
+						204 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27 Available
+							205 button Catalog-27, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27
+							206 button (expanded) Toggle details for Catalog-27, Secondary Actions: Collapse
+							207 button Create workspace in Catalog-27
+							208 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27
+							209 text Available
+						210 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available Workspace pages for Alpha
+							211 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							212 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							213 button Create workspace in Alpha
+							214 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							215 text Available
+							216 content list
+								217 button cristhian-stuani, Help: Workspace ready
+								218 button alvaro-morata, Help: Workspace ready
+								219 button amandine-henry, Help: Workspace ready
+								220 button dani-parejo, Help: Workspace ready
+								221 button paolo-guerrero, Help: Workspace ready
+								222 button luis-suarez-miramontes, Help: Workspace ready
+								223 button antoine-griezmann, Help: Workspace ready
+								224 button miranda, Help: Workspace ready
+								225 button john-barnes, Help: Workspace ready
+								226 button donny-van-de-beek, Help: Workspace ready
+								227 button duncan-edwards, Help: Workspace ready
+								228 button andres-guardado, Help: Workspace ready
+								229 button rivaldo, Help: Workspace ready
+								230 button vivianne-miedema, Help: Workspace ready
+								231 button gabriel-batistuta, Help: Workspace ready
+								232 button bente-nordby, Help: Workspace ready
+								233 button pele, Help: Workspace ready
+								234 button thibaut-courtois, Help: Workspace ready
+								235 button jesse-lingard, Help: Workspace ready
+								236 button eran-zahavi, Help: Workspace ready
+								237 button jan-vertonghen, Help: Workspace ready
+								238 button radja-nainggolan, Help: Workspace ready
+								239 button duvan-zapata, Help: Workspace ready
+								240 button ricardo-quaresma, Help: Workspace ready
+								241 button heidi-mohr, Help: Workspace ready
+								242 button lee-jae-sung, Help: Workspace ready
+								243 button edin-dzeko, Help: Workspace ready
+								244 button paul-scholes, Help: Workspace ready
+								245 button alex-greenwood, Help: Workspace ready
+								246 button sandor-kocsis, Help: Workspace ready
+								247 button philippe-coutinho, Help: Workspace ready
+								248 button david-de-gea, Help: Workspace ready
+							249 container Workspace pages for Alpha
+								250 button (disabled) Previous
+								251 button Next
+						252 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03 Available
+							253 button Catalog-03, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03
+							254 button (expanded) Toggle details for Catalog-03, Secondary Actions: Collapse
+							255 button Create workspace in Catalog-03
+							256 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03
+							257 text Available
+						258 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02 Available
+							259 button Catalog-02, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02
+							260 button (expanded) Toggle details for Catalog-02, Secondary Actions: Collapse
+							261 button Create workspace in Catalog-02
+							262 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02
+							263 text Available
+						264 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29 Available
+							265 button Catalog-29, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29
+							266 button (expanded) Toggle details for Catalog-29, Secondary Actions: Collapse
+							267 button Create workspace in Catalog-29
+							268 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29
+							269 text Available
+						270 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13 Available
+							271 button Catalog-13, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13
+							272 button (expanded) Toggle details for Catalog-13, Secondary Actions: Collapse
+							273 button Create workspace in Catalog-13
+							274 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13
+							275 text Available
+						276 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31 Available
+							277 button Catalog-31, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31
+							278 button (expanded) Toggle details for Catalog-31, Secondary Actions: Collapse
+							279 button Create workspace in Catalog-31
+							280 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31
+							281 text Available
+						282 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06 Available
+							283 button Catalog-06, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06
+							284 button (expanded) Toggle details for Catalog-06, Secondary Actions: Collapse
+							285 button Create workspace in Catalog-06
+							286 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06
+							287 text Available
+						288 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14 Available
+							289 button Catalog-14, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14
+							290 button (expanded) Toggle details for Catalog-14, Secondary Actions: Collapse
+							291 button Create workspace in Catalog-14
+							292 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14
+							293 text Available
+						294 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09 Available
+							295 button Catalog-09, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09
+							296 button (expanded) Toggle details for Catalog-09, Secondary Actions: Collapse
+							297 button Create workspace in Catalog-09
+							298 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09
+							299 text Available
+					300 container Repository pages
+						301 button (disabled) Previous
+						302 button Next
+				303 pop up button Add repository
+				304 text Connected
+				305 pop up button Connection details
+				306 link Settings, Value: tauri://localhost/settings/general
+			307 container
+				308 heading Destination unavailable, Value: 1
+					309 text Destination unavailable
+				310 text This repository or workspace does not exist, or the workspace belongs to another repository.
+				311 button Retry destination
+		312 scroll bar (settable, float) 0
+	313 close button
+	314 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	315 minimize button
+	316 text Agent Workspace
+317 menu bar
+	318 F08 Inspector current
+	319 File
+	320 Edit
+	321 View
+	322 Window
+	323 Help
+
+The focused UI element is 59 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,14 @@
+{"name": "test-selection", "command": ["corepack", "pnpm", "exec", "vitest", "list", "--filesOnly"], "status": 0, "elapsed_seconds": 0.30170149996411055}
+{"name": "full-verify", "command": ["corepack", "pnpm", "verify"], "status": 1, "elapsed_seconds": 15.804292000015266}
+{"name": "reviewed-verify", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 13.35319895891007}
+{"name": "production-packaging", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 44.526717958040535}
+{"name": "unit-measurements", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 73.6803666659398}
+{"name": "cleanup", "command": ["python3", "docs/evidence/frontend-navigation/f06/cleanup-fixture.py"], "status": 0, "elapsed_seconds": 0.10304033302236348}
+{"name": "final-verify", "command": ["corepack", "pnpm", "verify"], "status": 1, "elapsed_seconds": 0.9947327499976382}
+{"name": "final-reviewed-verify", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 14.26566516701132}
+{"name": "final-production-packaging", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 42.39845008403063}
+{"name": "final-unit-measurements", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 72.1770487499889}
+{"name": "final-cleanup", "command": ["python3", "docs/evidence/frontend-navigation/f06/cleanup-fixture.py"], "status": 0, "elapsed_seconds": 0.09945995802991092}
+{"name": "final-format", "command": ["corepack", "pnpm", "format:check"], "status": 0, "elapsed_seconds": 0.23096941597759724}
+{"name": "final-source-identity", "command": ["python3", "docs/evidence/frontend-navigation/f06/check-source.py"], "status": 0, "elapsed_seconds": 0.04006966599263251}
+{"name": "source-diff-check", "command": ["git", "diff", "--cached", "--check", "--", "src", "scripts", ".github/workflows/ci.yml", ".gitignore", ".prettierignore", "package.json", "tsr.config.json", "vite.config.ts", "README.md", ".scratch/frontend-navigation", "docs/evidence/frontend-navigation/f06.md", "docs/evidence/frontend-navigation/f06/review.md"], "status": 0, "elapsed_seconds": 0.0091575839323923}

@@ -1,0 +1,129 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:52:06 PM
+					36 image
+					37 text for(let i=0;i<Math.min(f08.exportString.length,9000);i+=300)console.log('F08DATA:'+i+':'+f08.exportString.slice(i,i+300))
+					38 image
+					39 text F08DATA:0:{"before":{"time":831864,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":2441}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":59,"cacheBodyBytes":300678,"queue":0,"pending":0,"physicalActive":0,"freshness":276,"a
+					40 image
+					41 text F08DATA:300:ctor":"idle","commands":{"workspace_request":346,"observation_acknowledge":257,"observation_stop":2,"repository_request":38,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-hvIgvl0U.js"],"width":900,"height":148,"dpr":2,"scroll":[]},"stalled":
+					42 image
+					43 text F08DATA:600:{"time":853866,"feed":{"state":"stopped","message":"Observation delivery stalled. Refresh connection explicitly.","accepted":{"owner":"47400-1794690795286464000","sequence":2441}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":55,"cacheBodyBytes":
+					44 image
+					45 text F08DATA:900:246315,"queue":0,"pending":0,"physicalActive":0,"freshness":276,"actor":"idle","commands":{"workspace_request":346,"observation_acknowledge":258,"observation_stop":4,"repository_request":38,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-hvIg
+					46 image
+					47 text F08DATA:1200:vl0U.js"],"width":900,"height":148,"dpr":2,"scroll":[]},"recovery":{"time":1198101,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":2788}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":40,"cacheBodyBytes":42453,"q
+					48 image
+					49 text F08DATA:1500:ueue":0,"pending":0,"physicalActive":0,"freshness":344,"actor":"idle","commands":{"workspace_request":384,"observation_acknowledge":292,"observation_stop":4,"repository_request":74,"supervisor_status":2,"desktop_pid":2,"observation_subscribe":2},"assets":["tauri__localhost/assets/index-hvIgvl0U.js"]
+					50 image
+					51 text F08DATA:1800:,"width":900,"height":148,"dpr":2,"scroll":[]},"afterLateAck":{"time":1198603,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":2788}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":40,"cacheBodyBytes":42453,"queue"
+					52 image
+					53 text F08DATA:2100::0,"pending":0,"physicalActive":0,"freshness":344,"actor":"idle","commands":{"workspace_request":384,"observation_acknowledge":292,"observation_stop":4,"repository_request":74,"supervisor_status":2,"desktop_pid":2,"observation_subscribe":2},"assets":["tauri__localhost/assets/index-hvIgvl0U.js"],"wid
+					54 image
+					55 text F08DATA:2400:th":900,"height":148,"dpr":2,"scroll":[]},"newSession":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","acceptedBatches":[{"kind":"resync_required","cursor":{"owner":"47400-1794690795286464000","sequence":2724}},{"kind":"resync_required","cursor":{"owner":"47400-1794690795286464000","sequence":2756}},{"kind"
+					56 image
+					57 text F08DATA:2700::"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2757},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2758},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2759},"targets":2},{"kind":"hints","cursor":{"owne
+					58 image
+					59 text F08DATA:3000:r":"47400-1794690795286464000","sequence":2760},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2761},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2762},"targets":2},{"kind":"hints","cursor":{"owner":"47400-17946907952864
+					60 image
+					61 text F08DATA:3300:64000","sequence":2763},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2764},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2765},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2766},
+					62 image
+					63 text F08DATA:3600:"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2767},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2768},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2769},"targets":2},{"kind":"hi
+					64 image
+					65 text F08DATA:3900:nts","cursor":{"owner":"47400-1794690795286464000","sequence":2770},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2771},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2772},"targets":2},{"kind":"hints","cursor":{"owner":"
+					66 image
+					67 text F08DATA:4200:47400-1794690795286464000","sequence":2773},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2774},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2775},"targets":2},{"kind":"hints","cursor":{"owner":"47400-179469079528646400
+					68 image
+					69 text F08DATA:4500:0","sequence":2776},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2777},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2778},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2779},"tar
+					70 image
+					71 text F08DATA:4800:gets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2780},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2781},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2782},"targets":2},{"kind":"hints"
+					72 image
+					73 text F08DATA:5100:,"cursor":{"owner":"47400-1794690795286464000","sequence":2783},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2784},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2785},"targets":2},{"kind":"hints","cursor":{"owner":"4740
+					74 image
+					75 text F08DATA:5400:0-1794690795286464000","sequence":2786},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2787},"targets":2},{"kind":"hints","cursor":{"owner":"47400-1794690795286464000","sequence":2788},"targets":2},{"kind":"heartbeat","cursor":{"owner":"47400-179469079528646400
+					76 image
+					77 text F08DATA:5700:0","sequence":2788}},{"kind":"heartbeat","cursor":{"owner":"47400-1794690795286464000","sequence":2788}},{"kind":"heartbeat","cursor":{"owner":"47400-1794690795286464000","sequence":2788}},{"kind":"heartbeat","cursor":{"owner":"47400-1794690795286464000","sequence":2788}},{"kind":"heartbeat","cursor
+					78 image
+					79 text F08DATA:6000:":{"owner":"47400-1794690795286464000","sequence":2788}},{"kind":"heartbeat","cursor":{"owner":"47400-1794690795286464000","sequence":2788}}],"subscriptionCalls":[{"command":"supervisor_status","args":{},"start":1190627,"end":1190655,"ok":true},{"command":"observation_subscribe","args":{"expectedOwn
+					80 image
+					81 text F08DATA:6300:er":"47400-1794690795286464000","subscriptionId":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","after":{"owner":"47400-1794690795286464000","sequence":2441},"onEvent":"__CHANNEL__:1472423108"},"start":1190691,"end":1190711,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscrip
+					82 image
+					83 text F08DATA:6600:tion_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":1,"cursor":{"owner":"47400-1794690795286464000","sequence":2724}}},"start":1190696,"end":1190716.0000000002,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","
+					84 image
+					85 text F08DATA:6900:batch_id":2,"cursor":{"owner":"47400-1794690795286464000","sequence":2756}}},"start":1190711,"end":1190735.0000000002,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":3,"cursor":{"owner":"47400-179469079528
+					86 image
+					87 text F08DATA:7200:6464000","sequence":2757}}},"start":1190815,"end":1190823,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":4,"cursor":{"owner":"47400-1794690795286464000","sequence":2758}}},"start":1190920,"end":1190926,"o
+					88 image
+					89 text F08DATA:7500:k":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":5,"cursor":{"owner":"47400-1794690795286464000","sequence":2759}}},"start":1191024,"end":1191029,"ok":true},{"command":"observation_acknowledge","args":{"ackno
+					90 image
+					91 text F08DATA:7800:wledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":6,"cursor":{"owner":"47400-1794690795286464000","sequence":2760}}},"start":1191128,"end":1191133,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a
+					92 image
+					93 text F08DATA:8100:9dfa1fc4","batch_id":7,"cursor":{"owner":"47400-1794690795286464000","sequence":2761}}},"start":1191233,"end":1191237,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":8,"cursor":{"owner":"47400-179469079528
+					94 image
+					95 text F08DATA:8400:6464000","sequence":2762}}},"start":1191333,"end":1191338,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":9,"cursor":{"owner":"47400-1794690795286464000","sequence":2763}}},"start":1191438,"end":1191443,"o
+					96 image
+					97 text F08DATA:8700:k":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":10,"cursor":{"owner":"47400-1794690795286464000","sequence":2764}}},"start":1191543.0000000002,"end":1191549,"ok":true},{"command":"observation_acknowledge","a
+					98 image
+					99 text undefined
+			100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			101 container
+	102 scroll area
+		103 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			104 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			105 container
+				106 button Back
+				107 heading Settings, Value: 1
+					108 text Settings
+			109 container Settings
+				110 link General, Value: tauri://localhost/settings/general
+			111 container General
+				112 heading General, Value: 2
+					113 text General
+				114 text General settings will be available here.
+	115 close button
+	116 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	117 minimize button
+	118 text Agent Workspace
+119 menu bar
+	120 F08 Inspector current
+	121 File
+	122 Edit
+	123 View
+	124 Window
+	125 Help
+
+The focused UI element is 100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

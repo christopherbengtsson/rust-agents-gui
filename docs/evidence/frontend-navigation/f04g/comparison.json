@@ -1,0 +1,50 @@
+{
+  "current": {
+    "navigation": {
+      "Workspace": {
+        "warmup_ms": 23,
+        "runs_ms": [25, 33, 23, 31.999999999970896, 34.000000000029104],
+        "median_ms": 31.999999999970896,
+        "range_ms": [23, 34.000000000029104]
+      },
+      "Changes": {
+        "warmup_ms": 45,
+        "runs_ms": [45, 44, 44, 50, 45],
+        "median_ms": 45,
+        "range_ms": [44, 50]
+      }
+    },
+    "pending_workload": {
+      "seconds": 6.001,
+      "workspace_exchanges": 7,
+      "max_active": 2,
+      "duplicates": 0,
+      "queue_after": 0,
+      "pending_after": 0
+    }
+  },
+  "baseline": {
+    "navigation": {
+      "Workspace": {
+        "warmup_ms": 23,
+        "runs_ms": [31.999999999941792, 32, 32, 32, 31],
+        "median_ms": 32,
+        "range_ms": [31, 32]
+      },
+      "Changes": {
+        "warmup_ms": 42,
+        "runs_ms": [45, 42, 44, 42, 40],
+        "median_ms": 42,
+        "range_ms": [40, 45]
+      }
+    },
+    "pending_workload": {
+      "seconds": 6.001000000000466,
+      "workspace_exchanges": 29,
+      "max_active": 1,
+      "duplicates": 0,
+      "queue_after": 0,
+      "pending_after": 0
+    }
+  }
+}

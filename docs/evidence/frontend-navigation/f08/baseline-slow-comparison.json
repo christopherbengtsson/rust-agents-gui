@@ -1,0 +1,397 @@
+{
+  "snapshot": {
+    "time": 193376,
+    "href": "/",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "commands": {
+      "workspace_request": 659
+    },
+    "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "windows": [
+    {
+      "label": "slow-git-visible",
+      "start": {
+        "time": 91931,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 186
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 97936,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 208
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      }
+    }
+  ],
+  "log": [
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 91949,
+      "end": 91951.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "b2e57a11-7f6b-4c56-92b2-79c794f40506",
+            "file_id": "67a3c179-0604-4d77-9afe-1828732e20b0"
+          },
+          "load": false
+        }
+      },
+      "start": 91951.00000000001,
+      "end": 91954.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 92205,
+      "end": 92207.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "b2e57a11-7f6b-4c56-92b2-79c794f40506",
+            "file_id": "67a3c179-0604-4d77-9afe-1828732e20b0"
+          },
+          "load": false
+        }
+      },
+      "start": 92207.00000000001,
+      "end": 92210.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 92461,
+      "end": 92464,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "b2e57a11-7f6b-4c56-92b2-79c794f40506",
+            "file_id": "67a3c179-0604-4d77-9afe-1828732e20b0"
+          },
+          "load": false
+        }
+      },
+      "start": 92464,
+      "end": 92469.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 92720,
+      "end": 92725.00000000001,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "b2e57a11-7f6b-4c56-92b2-79c794f40506",
+            "file_id": "67a3c179-0604-4d77-9afe-1828732e20b0"
+          },
+          "load": false
+        }
+      },
+      "start": 92725.00000000001,
+      "end": 92730,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 92981.00000000001,
+      "end": 92983,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "b2e57a11-7f6b-4c56-92b2-79c794f40506",
+            "file_id": "67a3c179-0604-4d77-9afe-1828732e20b0"
+          },
+          "load": false
+        }
+      },
+      "start": 92983,
+      "end": 92986,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 94987.00000000001,
+      "end": 94996,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 95246,
+      "end": 95248,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 95499,
+      "end": 95501,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 95752,
+      "end": 95754,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 96008,
+      "end": 96012,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 96263,
+      "end": 96271,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 96522,
+      "end": 96528,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 96779,
+      "end": 96780,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 97031,
+      "end": 97038,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 97289,
+      "end": 97295,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 97546,
+      "end": 97551,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 97802,
+      "end": 97809,
+      "ok": true
+    }
+  ]
+}

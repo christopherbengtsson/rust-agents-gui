@@ -1,0 +1,12 @@
+{
+  "src/App.test.tsx": "28008f206248fd18cc8f7c2d2af69d4d463a7682aad6b3c022304ff1d24d544d",
+  "src/components/README.md": "dd8cbbbd4ba8e72208d6d601d5e9c2fa90649820b1e1d08ea9eae0e947fa0c58",
+  "src/components/blocks/workspace-changes.tsx": "09b4478229cb992355046e1069f6da8ce9572d9acdbd4a5506bde46eee2a481d",
+  "src/components/blocks/workspace-panel.tsx": "aab3e5cb8e3899d41dbb19e39457fb18d6d8200dc56b4f5955b9fbd79283b073",
+  "src/components/primitives/unified-diff.tsx": "623d1e46053d1b98b25dfb5c7dc65864377d73342d1dc4dbc549ac8cdab08fc8",
+  "src/lib/inspection-actor.test.tsx": "9d12d803436255030cd1e5f67cd37f08a2b7c6c8f64e42a4a2bb49024fcdc0a9",
+  "src/lib/presentation-store.test.tsx": "c297ab2dc9c0b6f2ee6a939599431695dfde2a0f0f572fd1f969596d958e8ae7",
+  "src/lib/presentation-store.ts": "1b7684ab9c62d8ce5cf70cd359eb5472f138937f1a1850be76af348f5d318e98",
+  "src/lib/workspace-changes-reader.ts": "f8f9ad590c3f662845ad5c1a86de031ae45c98fda32ab4194b4b8e513d294165",
+  "src/workspace-changes.test.tsx": "03bbaadc207f9610d0090e3ee5e3af0ed4094ff69040ecfeba12b41f31e8249c"
+}

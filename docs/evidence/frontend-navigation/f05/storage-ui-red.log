@@ -1,0 +1,280 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/App.test.tsx (16 tests | 1 failed | 15 skipped) 1039ms
+   × presentation storage failure stays visible without a mounted inspection view 1038ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > presentation storage failure stays visible without a mounted inspection view
+TestingLibraryElementError: Unable to find an element with the text: /could not read or migrate presentation preferences/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"group/sidebar-wrapper flex w-full has-data-[variant=inset]:bg-sidebar h-dvh min-h-0"[39m
+      [33mdata-slot[39m=[32m"sidebar-wrapper"[39m
+      [33mstyle[39m=[32m"--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"skip-link"[39m
+        [33mhref[39m=[32m"#workspace"[39m
+      [36m>[39m
+        [0mSkip to workspace[0m
+      [36m</a>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Repository sidebar"[39m
+        [33mclass[39m=[32m"flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground repository-sidebar min-w-0 shrink-0 border-r"[39m
+        [33mdata-slot[39m=[32m"sidebar"[39m
+        [33mrole[39m=[32m"complementary"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col gap-2 p-2 h-(--shell-header-height) shrink-0 justify-center border-b px-4 py-0 [@media(max-width:700px)]:px-3"[39m
+          [33mdata-sidebar[39m=[32m"header"[39m
+          [33mdata-slot[39m=[32m"sidebar-header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"app-identity flex items-center gap-2"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-layers-2"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mAgent Workspace[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden"[39m
+          [33mdata-sidebar[39m=[32m"content"[39m
+          [33mdata-slot[39m=[32m"sidebar-content"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative flex w-full min-w-0 flex-col p-2 px-4 py-[22px]"[39m
+            [33mdata-sidebar[39m=[32m"group"[39m
+            [33mdata-slot[39m=[32m"sidebar-group"[39m
+          [36m>[39m
+            [36m<nav[39m
+              [33maria-labelledby[39m=[32m"repositories-heading"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"flex shrink-0 items-center rounded-md text-[11px] font-medium tracking-[0.04em] text-muted-foreground ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 h-auto px-0"[39m
+                [33mdata-sidebar[39m=[32m"group-label"[39m
+                [33mdata-slot[39m=[32m"sidebar-group-label"[39m
+                [33mid[39m=[32m"repositories-heading"[39m
+              [36m>[39m
+                [0mRepositories[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full text-sm"[39m
+                [33mdata-sidebar[39m=[32m"group-content"[39m
+                [33mdata-slot[39m=[32m"sidebar-group-content"[39m
+              [36m>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"navigation-empty"[39m
+                [36m>[39m
+                  [0mNo repositories yet[0m
+                [36m</p>[39m
+              [36m</div>[39m
+            [36m</nav>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col gap-2 p-2 connection-footer shrink-0"[39m
+          [33mdata-sidebar[39m=[32m"footer"[39m
+          [33mdata-slot[39m=[32m"sidebar-footer"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5 w-full justify-start"[39m
+            [33mdata-base-ui-click-trigger[39m=[32m""[39m
+            [33mdata-slot[39m=[32m"dialog-trigger"[39m
+            [33mid[39m=[32m"base-ui-_r_2_"[39m
+            [33mtabindex[39m=[32m"0"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-folder-plus"[39m
+              [33mdata-icon[39m=[32m"inline-start"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 10v6"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 13h6"[39m
+              [36m/>[39m
+              [36m<path[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"group/sidebar-wrapper flex w-full has-data-[variant=inset]:bg-sidebar h-dvh min-h-0"[39m
+      [33mdata-slot[39m=[32m"sidebar-wrapper"[39m
+      [33mstyle[39m=[32m"--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"skip-link"[39m
+        [33mhref[39m=[32m"#workspace"[39m
+      [36m>[39m
+        [0mSkip to workspace[0m
+      [36m</a>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Repository sidebar"[39m
+        [33mclass[39m=[32m"flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground repository-sidebar min-w-0 shrink-0 border-r"[39m
+        [33mdata-slot[39m=[32m"sidebar"[39m
+        [33mrole[39m=[32m"complementary"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col gap-2 p-2 h-(--shell-header-height) shrink-0 justify-center border-b px-4 py-0 [@media(max-width:700px)]:px-3"[39m
+          [33mdata-sidebar[39m=[32m"header"[39m
+          [33mdata-slot[39m=[32m"sidebar-header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"app-identity flex items-center gap-2"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-layers-2"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mAgent Workspace[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden"[39m
+          [33mdata-sidebar[39m=[32m"content"[39m
+          [33mdata-slot[39m=[32m"sidebar-content"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative flex w-full min-w-0 flex-col p-2 px-4 py-[22px]"[39m
+            [33mdata-sidebar[39m=[32m"group"[39m
+            [33mdata-slot[39m=[32m"sidebar-group"[39m
+          [36m>[39m
+            [36m<nav[39m
+              [33maria-labelledby[39m=[32m"repositories-heading"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"flex shrink-0 items-center rounded-md text-[11px] font-medium tracking-[0.04em] text-muted-foreground ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 h-auto px-0"[39m
+                [33mdata-sidebar[39m=[32m"group-label"[39m
+                [33mdata-slot[39m=[32m"sidebar-group-label"[39m
+                [33mid[39m=[32m"repositories-heading"[39m
+              [36m>[39m
+                [0mRepositories[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full text-sm"[39m
+                [33mdata-sidebar[39m=[32m"group-content"[39m
+                [33mdata-slot[39m=[32m"sidebar-group-content"[39m
+              [36m>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"navigation-empty"[39m
+                [36m>[39m
+                  [0mNo repositories yet[0m
+                [36m</p>[39m
+              [36m</div>[39m
+            [36m</nav>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col gap-2 p-2 connection-footer shrink-0"[39m
+          [33mdata-sidebar[39m=[32m"footer"[39m
+          [33mdata-slot[39m=[32m"sidebar-footer"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5 w-full justify-start"[39m
+            [33mdata-base-ui-click-trigger[39m=[32m""[39m
+            [33mdata-slot[39m=[32m"dialog-trigger"[39m
+            [33mid[39m=[32m"base-ui-_r_2_"[39m
+            [33mtabindex[39m=[32m"0"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-folder-plus"[39m
+              [33mdata-icon[39m=[32m"inline-start"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 10v6"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 13h6"[39m
+              [36m/>[39m
+              [36m<path[39m
+                ...
+ ❯ waitForWrapper node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:452:23
+    450|   mockConnection(async (command) => command === "desktop_pid" ? 42 : s…
+    451|   render(<App />);
+    452|   expect(await screen.findByText(/could not read or migrate presentati…
+       |                       ^
+    453|   expect(screen.queryByLabelText("Selected file changes")).toBeNull();
+    454|   expect(localStorage.getItem("agent-workspace.presentation")).toBe("{…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  19:31:35
+   Duration  1.58s (tests 69%, import 16%, environment 11%, transform 4%)
+

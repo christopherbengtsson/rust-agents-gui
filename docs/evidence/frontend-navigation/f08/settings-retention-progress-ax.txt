@@ -1,0 +1,77 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 11:23:38 PM
+					36 image
+					37 text (()=>{const value=JSON.stringify(({start:f08.retention?.start&&{time:f08.retention.start.time,queries:f08.retention.start.queries,cacheBodyBytes:f08.retention.start.cacheBodyBytes,activeInterests:f08.retention.start.queryStates.reduce((n,q)=>n+q.active,0)},now:f08.compact(),done:!!f08.retention?.end,inspectionViewBytes:JSON.stringify(f08.app().inspection.getView()).length})).replaceAll('tauri://','tauri__');for(let i=0;i<value.length;i+=300)console.log('F08DATA:'+i+':'+value.slice(i,i+300));console.log('F08
+					38 image
+					39 text F08DATA:0:{"start":{"time":464626.00000000006,"queries":126,"cacheBodyBytes":1251983,"activeInterests":0},"now":{"time":619376,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":6363}},"href":"/settings/general","visibility":"visible","active":0,"maxActive":1,"duplicates":0,"que
+					40 image
+					41 text F08DATA:300:ries":66,"cacheBodyBytes":436523,"queue":0,"pending":0,"physicalActive":0,"freshness":888,"actor":"idle","commands":{"workspace_request":1297,"observation_acknowledge":882},"assets":["tauri__localhost/assets/index--UGuBMO9.js"],"width":900,"height":148,"dpr":2,"scroll":[]},"done":false,"inspectionVi
+					42 image
+					43 text F08DATA:600:ewBytes":14174}
+					44 image
+					45 text F08LEN:615
+					46 image
+					47 text undefined
+			48 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			49 container
+	50 scroll area
+		51 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			52 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			53 container
+				54 button Back
+				55 heading Settings, Value: 1
+					56 text Settings
+			57 container Settings
+				58 link General, Value: tauri://localhost/settings/general
+			59 container General
+				60 heading General, Value: 2
+					61 text General
+				62 text General settings will be available here.
+	63 close button
+	64 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	65 minimize button
+	66 text Agent Workspace
+67 menu bar
+	68 F08 Inspector current
+	69 File
+	70 Edit
+	71 View
+	72 Window
+	73 Help
+
+The focused UI element is 48 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

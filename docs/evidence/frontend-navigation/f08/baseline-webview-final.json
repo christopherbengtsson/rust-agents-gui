@@ -1,0 +1,823 @@
+{
+  "snapshot": {
+    "time": 271259,
+    "href": "/",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 4,
+    "duplicates": 0,
+    "commands": {
+      "workspace_request": 505
+    },
+    "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "navigation": [
+    {
+      "label": "sam-kerr\n",
+      "trusted": true,
+      "start": 8877,
+      "feedback": 49,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "large.txt\n.M\n",
+      "trusted": true,
+      "start": 18660,
+      "feedback": 24,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 37293,
+      "feedback": 26,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 38304,
+      "feedback": 32,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 39817,
+      "feedback": 29,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 40815,
+      "feedback": 32,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 42350,
+      "feedback": 23,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 43248,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 44781,
+      "feedback": 29,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 45364.00000000001,
+      "feedback": 32.999999999992724,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 46849.00000000001,
+      "feedback": 23.999999999992724,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 47508,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 48985,
+      "feedback": 24,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 49578,
+      "feedback": 31,
+      "href": "/",
+      "heading": "sam-kerr",
+      "tab": "Changes"
+    }
+  ],
+  "windows": [
+    {
+      "label": "steady-visible",
+      "start": {
+        "time": 81387,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 130
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 148,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 87390,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 143
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      }
+    },
+    {
+      "label": "steady-visible-ordinary",
+      "start": {
+        "time": 179832,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 325
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 185836,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 338
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      }
+    },
+    {
+      "label": "native-minimized",
+      "start": {
+        "time": 225138,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 415
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 231140.00000000003,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 4,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 425
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      }
+    }
+  ],
+  "log": [
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 81912,
+      "end": 81917,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 82169,
+      "end": 82171,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "fa2158e8-5a15-4cb8-ab2f-f1b66fa72be7",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 82171,
+      "end": 82181,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 82431,
+      "end": 82434,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "fa2158e8-5a15-4cb8-ab2f-f1b66fa72be7",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 82434,
+      "end": 82444,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 84445.00000000001,
+      "end": 84447,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 84698.00000000001,
+      "end": 84700,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "d624fc0c-2506-4c74-b136-dc18aa9a6745",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 84700,
+      "end": 84708,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 84959,
+      "end": 84961,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "d624fc0c-2506-4c74-b136-dc18aa9a6745",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 84961,
+      "end": 84965,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 86966.00000000001,
+      "end": 86968,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 87219.00000000001,
+      "end": 87226,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "954df4d5-74fb-4aeb-bbc1-6dbacd483cc6",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 87227,
+      "end": 87230,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 180510,
+      "end": 180515.00000000003,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 180765.00000000003,
+      "end": 180774,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "455f2d7e-4152-46fc-8e15-c4391f043ee0",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 180774,
+      "end": 180776,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 181027.00000000003,
+      "end": 181029,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "455f2d7e-4152-46fc-8e15-c4391f043ee0",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 181029,
+      "end": 181031,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 183032,
+      "end": 183037,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 183293,
+      "end": 183301.00000000003,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "3cdd6806-8721-44a2-82ba-ee1d583c4849",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 183301.00000000003,
+      "end": 183304,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 183555,
+      "end": 183562,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "3cdd6806-8721-44a2-82ba-ee1d583c4849",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 183562,
+      "end": 183567,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 185569.00000000003,
+      "end": 185571,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 185822,
+      "end": 185830,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "411baa46-d3d4-4301-b11d-82d8cc49c912",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 185830,
+      "end": 185833,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 226769,
+      "end": 226773,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 227025,
+      "end": 227030,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "d4a9a4b6-d7c1-470f-8f77-51499019e485",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 227030,
+      "end": 227035,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 227286,
+      "end": 227287,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "d4a9a4b6-d7c1-470f-8f77-51499019e485",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 227287,
+      "end": 227290,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 229291,
+      "end": 229297,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 229548,
+      "end": 229556,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "c730a0f8-3646-405c-8394-53796f8b2efe",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": true
+        }
+      },
+      "start": 229556,
+      "end": 229558,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "changes",
+          "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 229809,
+      "end": 229816,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+            "comparison_id": "c730a0f8-3646-405c-8394-53796f8b2efe",
+            "file_id": "750a6b3d-c7bf-46c8-b21d-fc8bd38b0d49"
+          },
+          "load": false
+        }
+      },
+      "start": 229816,
+      "end": 229817,
+      "ok": true
+    }
+  ]
+}

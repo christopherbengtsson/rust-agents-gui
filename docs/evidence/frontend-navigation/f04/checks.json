@@ -1,0 +1,32 @@
+[
+  {
+    "name": "verify-format-failed",
+    "command": ["corepack", "pnpm", "verify"],
+    "exit_status": 1,
+    "wall_seconds": 0.144153
+  },
+  {
+    "name": "verify-evidence-format-failed",
+    "command": ["corepack", "pnpm", "verify"],
+    "exit_status": 1,
+    "wall_seconds": 0.141338
+  },
+  {
+    "name": "verify-final",
+    "command": ["corepack", "pnpm", "verify"],
+    "exit_status": 0,
+    "wall_seconds": 11.41775
+  },
+  {
+    "name": "unit-measurement-final",
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exit_status": 0,
+    "wall_seconds": 49.333753
+  },
+  {
+    "name": "frontend-build",
+    "command": ["corepack", "pnpm", "exec", "vite", "build"],
+    "exit_status": 0,
+    "wall_seconds": 0.492949
+  }
+]

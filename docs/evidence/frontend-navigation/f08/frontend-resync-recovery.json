@@ -1,0 +1,1126 @@
+{
+  "before": {
+    "time": 831864,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2441
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 59,
+    "cacheBodyBytes": 300678,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 276,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 346,
+      "observation_acknowledge": 257,
+      "observation_stop": 2,
+      "repository_request": 38,
+      "supervisor_status": 1,
+      "desktop_pid": 1,
+      "observation_subscribe": 1
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "stalled": {
+    "time": 853866,
+    "feed": {
+      "state": "stopped",
+      "message": "Observation delivery stalled. Refresh connection explicitly.",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2441
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 55,
+    "cacheBodyBytes": 246315,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 276,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 346,
+      "observation_acknowledge": 258,
+      "observation_stop": 4,
+      "repository_request": 38,
+      "supervisor_status": 1,
+      "desktop_pid": 1,
+      "observation_subscribe": 1
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "recovery": {
+    "time": 1198101,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 40,
+    "cacheBodyBytes": 42453,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 344,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 384,
+      "observation_acknowledge": 292,
+      "observation_stop": 4,
+      "repository_request": 74,
+      "supervisor_status": 2,
+      "desktop_pid": 2,
+      "observation_subscribe": 2
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "afterLateAck": {
+    "time": 1198603,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 40,
+    "cacheBodyBytes": 42453,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 344,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 384,
+      "observation_acknowledge": 292,
+      "observation_stop": 4,
+      "repository_request": 74,
+      "supervisor_status": 2,
+      "desktop_pid": 2,
+      "observation_subscribe": 2
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "newSession": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+  "acceptedBatches": [
+    {
+      "kind": "resync_required",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2724
+      }
+    },
+    {
+      "kind": "resync_required",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2756
+      }
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2757
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2758
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2759
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2760
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2761
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2762
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2763
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2764
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2765
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2766
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2767
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2768
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2769
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2770
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2771
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2772
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2773
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2774
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2775
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2776
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2777
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2778
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2779
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2780
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2781
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2782
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2783
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2784
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2785
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2786
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2787
+      },
+      "targets": 2
+    },
+    {
+      "kind": "hints",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      },
+      "targets": 2
+    },
+    {
+      "kind": "heartbeat",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    {
+      "kind": "heartbeat",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    {
+      "kind": "heartbeat",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    {
+      "kind": "heartbeat",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    {
+      "kind": "heartbeat",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    },
+    {
+      "kind": "heartbeat",
+      "cursor": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2788
+      }
+    }
+  ],
+  "subscriptionCalls": [
+    {
+      "command": "supervisor_status",
+      "args": {},
+      "start": 1190627,
+      "end": 1190655,
+      "ok": true
+    },
+    {
+      "command": "observation_subscribe",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "subscriptionId": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+        "after": {
+          "owner": "47400-1794690795286464000",
+          "sequence": 2441
+        },
+        "onEvent": "__CHANNEL__:1472423108"
+      },
+      "start": 1190691,
+      "end": 1190711,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 1,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2724
+          }
+        }
+      },
+      "start": 1190696,
+      "end": 1190716.0000000002,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 2,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2756
+          }
+        }
+      },
+      "start": 1190711,
+      "end": 1190735.0000000002,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 3,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2757
+          }
+        }
+      },
+      "start": 1190815,
+      "end": 1190823,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 4,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2758
+          }
+        }
+      },
+      "start": 1190920,
+      "end": 1190926,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 5,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2759
+          }
+        }
+      },
+      "start": 1191024,
+      "end": 1191029,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 6,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2760
+          }
+        }
+      },
+      "start": 1191128,
+      "end": 1191133,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 7,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2761
+          }
+        }
+      },
+      "start": 1191233,
+      "end": 1191237,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 8,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2762
+          }
+        }
+      },
+      "start": 1191333,
+      "end": 1191338,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 9,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2763
+          }
+        }
+      },
+      "start": 1191438,
+      "end": 1191443,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 10,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2764
+          }
+        }
+      },
+      "start": 1191543.0000000002,
+      "end": 1191549,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 11,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2765
+          }
+        }
+      },
+      "start": 1191642,
+      "end": 1191648.0000000002,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 12,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2766
+          }
+        }
+      },
+      "start": 1191749,
+      "end": 1191750,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 13,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2767
+          }
+        }
+      },
+      "start": 1191852,
+      "end": 1191857,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 14,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2768
+          }
+        }
+      },
+      "start": 1191956.0000000002,
+      "end": 1191957,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 15,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2769
+          }
+        }
+      },
+      "start": 1192055,
+      "end": 1192056,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 16,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2770
+          }
+        }
+      },
+      "start": 1192168.0000000002,
+      "end": 1192169,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 17,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2771
+          }
+        }
+      },
+      "start": 1192273.0000000002,
+      "end": 1192275,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 18,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2772
+          }
+        }
+      },
+      "start": 1192372,
+      "end": 1192373,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 19,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2773
+          }
+        }
+      },
+      "start": 1192536,
+      "end": 1192537,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 20,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2774
+          }
+        }
+      },
+      "start": 1192589,
+      "end": 1192590,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 21,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2775
+          }
+        }
+      },
+      "start": 1192700,
+      "end": 1192701,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 22,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2776
+          }
+        }
+      },
+      "start": 1192827,
+      "end": 1192829,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 23,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2777
+          }
+        }
+      },
+      "start": 1192921,
+      "end": 1192923,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 24,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2778
+          }
+        }
+      },
+      "start": 1193016,
+      "end": 1193017,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 25,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2779
+          }
+        }
+      },
+      "start": 1193110.0000000002,
+      "end": 1193111,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 26,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2780
+          }
+        }
+      },
+      "start": 1193203,
+      "end": 1193204,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 27,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2781
+          }
+        }
+      },
+      "start": 1193302.0000000002,
+      "end": 1193303,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 28,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2782
+          }
+        }
+      },
+      "start": 1193394,
+      "end": 1193395,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 29,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2783
+          }
+        }
+      },
+      "start": 1193486,
+      "end": 1193487,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 30,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2784
+          }
+        }
+      },
+      "start": 1193597,
+      "end": 1193598,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 31,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2785
+          }
+        }
+      },
+      "start": 1193712,
+      "end": 1193721,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 32,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2786
+          }
+        }
+      },
+      "start": 1193820,
+      "end": 1193823,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 33,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2787
+          }
+        }
+      },
+      "start": 1193930,
+      "end": 1193932,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 34,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1194034,
+      "end": 1194036,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 35,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1199037,
+      "end": 1199039,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 36,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1204041,
+      "end": 1204045,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 37,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1209049,
+      "end": 1209054,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 38,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1214056,
+      "end": 1214057,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 39,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1219060,
+      "end": 1219066,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4",
+          "batch_id": 40,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2788
+          }
+        }
+      },
+      "start": 1224070,
+      "end": 1224074,
+      "ok": true
+    }
+  ]
+}

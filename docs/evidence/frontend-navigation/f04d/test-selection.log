@@ -1,0 +1,192 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.31s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-b1a480319bfd89d6)
+codegen::parity_tests::input_defaults_do_not_omit_serialized_response_fields: test
+codegen::parity_tests::nullable_omitted_and_default_fields_describe_serialization_separately: test
+codegen::parity_tests::pure_export_is_deterministic_and_uses_uuid_and_json_number_contracts: test
+codegen::tests::serialized_registration_defaults_are_required_and_flattened: test
+connection::framed_exchange::tests::already_cancelled_or_expired_operations_do_no_physical_io: test
+connection::framed_exchange::tests::cancellation_wakes_idle_or_partial_read_and_closes_terminally: test
+connection::framed_exchange::tests::cancelled_or_abandoned_write_closes_without_restarting_partial_io: test
+connection::framed_exchange::tests::codec_bounds_encoding_and_rejects_advertised_oversize_before_body_reservation: test
+connection::framed_exchange::tests::codec_distinguishes_partial_header_and_body_from_clean_boundary_eof: test
+connection::framed_exchange::tests::codec_preserves_split_and_coalesced_frames_and_empty_payloads: test
+connection::framed_exchange::tests::complete_nonzero_header_without_body_is_truncated_even_after_decode_consumes_it: test
+connection::framed_exchange::tests::deadline_timer_wakes_pending_reads_and_writes: test
+connection::framed_exchange::tests::dropped_read_polling_retains_transfer_progress_and_can_finish_before_original_deadline: test
+connection::framed_exchange::tests::eof_decode_and_read_errors_close_the_exchange_once_without_more_io: test
+connection::framed_exchange::tests::exchange_returns_complete_frames_and_keeps_prefetched_next_frame: test
+connection::framed_exchange::tests::first_byte_starts_one_transfer_budget_and_slow_fragments_cannot_extend_it: test
+connection::framed_exchange::tests::handshake_write_preserves_buffered_next_read_and_write_uses_operation_cap: test
+connection::framed_exchange::tests::read_caps_idle_ack_and_buffered_transfer_without_extending_cancelled_polling: test
+connection::framed_exchange::tests::write_deadline_covers_partial_header_body_and_flush_without_fragment_renewal: test
+connection::framed_exchange::tests::write_errors_and_oversize_close_without_retry_or_queued_output: test
+connection::framed_exchange::tests::write_rejects_progress_after_absolute_cap_even_between_timer_ticks: test
+connection::framed_exchange::tests::writes_encode_once_across_partial_progress_and_wait_for_flush: test
+connection::subscription::tests::acknowledgements_match_subscription_batch_and_cursor_exactly: test
+connection::subscription::tests::completed_error_and_panic_workers_are_joined_before_replacement: test
+connection::subscription::tests::idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute: test
+connection::subscription::tests::native_delivery_waits_for_frontend_acceptance_before_acknowledging: test
+connection::subscription::tests::owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery: test
+connection::subscription::tests::server_stops_on_wrong_ack_and_preserves_changes_during_resync: test
+connection::subscription::tests::shared_corpus_matches_rust_feed_serialization_and_delivery_bounds: test
+connection::subscription::tests::sink_failure_and_frontend_stall_close_without_acknowledgement: test
+connection::subscription::tests::stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement: test
+connection::subscription::tests::stopped_before_delivery_cannot_offer_or_acknowledge: test
+connection::tests::absent_owner_starts_once_and_waits_for_readiness: test
+connection::tests::admitted_error_unwind_unstarted_drop_and_server_ceiling_release_capacity: test
+connection::tests::admitted_waiter_drop_retains_capacity_and_allows_status_and_control: test
+connection::tests::application_corpus_matches_pure_rust_serialization: test
+connection::tests::blocking_workers_keep_permits_after_waiter_drop_and_cleanup_awaits_completion: test
+connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures: test
+connection::tests::cancellation_closes_pending_request_and_server_handlers_without_effects: test
+connection::tests::client_bad_lost_or_stalled_replies_never_reconnect_or_repeat: test
+connection::tests::client_preserves_versions_cursor_chunked_reply_and_incompatibility_without_retry: test
+connection::tests::client_private_access_and_connect_failure_precede_io_and_never_retry: test
+connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor: test
+connection::tests::desktop_admission_leaves_status_and_intent_independent_of_stalled_observations: test
+connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting: test
+connection::tests::existing_owner_is_discovered_without_lock_probe_or_start: test
+connection::tests::invalid_snapshot_cannot_replace_the_connections_observed_owner: test
+connection::tests::large_chunked_reply_survives_eof_after_payload_and_preserves_buffered_next_frame: test
+connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry: test
+connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner: test
+connection::tests::malformed_oversized_and_legacy_framing_close_without_dispatch_or_output: test
+connection::tests::non_transient_readiness_failure_is_not_retried: test
+connection::tests::only_one_discovery_is_admitted_and_no_state_lock_spans_effects: test
+connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport: test
+connection::tests::oversized_request_rejects_before_private_checks_or_socket_access: test
+connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay: test
+connection::tests::server_routes_workspace_and_repository_errors_without_fabricating_empty_records: test
+connection::tests::spawn_command_preserves_executable_and_single_state_argument: test
+connection::tests::startup_timeout_is_controlled_and_does_not_launch_again: test
+connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers_without_domain_effects: test
+connection::tests::targeted_client_rejects_replacement_kind_and_target_without_another_exchange: test
+connection::tests::targeted_exchange_reports_delivery_at_physical_boundary_without_replay: test
+connection::tests::two_running_observations_leave_status_and_intent_effects_responsive: test
+connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner: test
+connection::tests::workspace_variants_share_observation_and_intent_budgets_with_repository_requests: test
+connection::tests::wrong_owner_every_target_and_mixed_context_are_rejected_before_effects: test
+git::inspection::tests::inspection_commands_preserve_literal_raw_paths_and_isolated_environment: test
+git::tests::bare_repository_is_rejected_before_further_git_queries: test
+git::tests::batch_inventory_keeps_nested_refs_missing_worktree_locations_and_occupied_folders: test
+git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries: test
+git::tests::output_budget_fails_instead_of_parsing_truncated_output: test
+git::tests::timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup: test
+observations::bounds_tests::async_wait_observes_publication_before_wait_and_cancels_idle: test
+observations::bounds_tests::batches_deduplicate_and_retention_has_an_exact_boundary: test
+observations::bounds_tests::exhausted_sequence_never_aliases_an_accepted_cursor: test
+observations::bounds_tests::publication_before_wait_cannot_be_lost_and_idle_does_not_advance_cursor: test
+observations::bounds_tests::tag_overflow_resync_and_new_changes_survive_the_sampled_watermark: test
+observations::tests::baseline_and_expired_or_future_cursors_require_resync: test
+storage::tests::corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result: test
+storage::tests::failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible: test
+storage::tests::success_requires_commit_and_begin_failure_blocks_the_write: test
+supervisor::tests::admission_stops_on_each_filesystem_failure: test
+supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket: test
+supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint: test
+supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint: test
+supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link: test
+supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure: test
+supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks: test
+supervisor::tests::state_creation_always_validates_existing_or_new_directories: test
+supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced: test
+tests::initial_status_reports_the_execution_owner_without_starting_work: test
+tests::snapshot_catches_up_or_resets_observations_from_another_owner: test
+workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects: test
+workspaces::creation::policy_tests::failed_intent_or_reservation_stops_effects_and_inventory_failure_is_explicit: test
+workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation: test
+workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts: test
+workspaces::creation::policy_tests::name_reservation_precedes_mutation_and_recovery_never_reallocates: test
+workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable: test
+workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release: test
+workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default: test
+workspaces::inspection::tests::a_duplicate_active_preview_can_be_selected_again_without_losing_completion: test
+workspaces::inspection::tests::a_hunk_header_does_not_hide_an_individually_oversized_content_row: test
+workspaces::inspection::tests::acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows: test
+workspaces::inspection::tests::binary_marker_words_inside_text_hunks_are_regular_content: test
+workspaces::inspection::tests::escaped_failure_details_rebudget_the_last_good_preview: test
+workspaces::inspection::tests::existing_jobs_and_inspection_take_fair_turns: test
+workspaces::inspection::tests::head_status_and_selected_evidence_changes_reject_obsolete_preview_reads: test
+workspaces::inspection::tests::inventory_capture_failures_do_not_establish_clean_and_can_recover: test
+workspaces::inspection::tests::line_endings_and_untracked_missing_final_newline_preserve_bytes_and_numbers: test
+workspaces::inspection::tests::list_byte_budget_and_pending_retention_are_bounded: test
+workspaces::inspection::tests::list_pages_expire_and_responses_stay_bounded: test
+workspaces::inspection::tests::manual_inspection_coalesces_and_retains_last_good_after_git_failure: test
+workspaces::inspection::tests::manual_text_add_delete_and_clean_outcomes_are_distinct: test
+workspaces::inspection::tests::previews_bound_rows_and_escaped_bytes_without_diff_pagination: test
+workspaces::inspection::tests::refreshed_comparisons_invalidate_queued_previews_before_effects: test
+workspaces::inspection::tests::refreshed_same_status_keeps_file_identity_and_replaces_selected_content: test
+workspaces::inspection::tests::selected_file_failure_retains_previous_comparison_with_explicit_identity: test
+workspaces::inspection::tests::status_keeps_index_worktree_and_raw_path_identity: test
+workspaces::inspection::tests::supplied_content_outcomes_keep_unsupported_empty_and_net_cancellation_distinct: test
+workspaces::inspection::tests::supplied_read_and_diff_failures_retain_last_good_then_clear_on_success: test
+workspaces::inspection::tests::unified_rows_keep_source_numbers_and_missing_newline_markers: test
+workspaces::inspection::tests::unsafe_content_labels_and_changed_evidence_do_not_read_text: test
+workspaces::inspection::tests::unsafe_inventory_entries_never_read_or_diff_as_text: test
+workspaces::inspection::tests::unsupported_content_is_not_read_and_failed_diff_is_not_a_prefix: test
+workspaces::inspection::tests::unusual_paths_keep_raw_identity_even_when_display_labels_collide: test
+workspaces::naming::tests::catalog_is_unique_safe_and_all_entries_can_be_selected: test
+workspaces::naming::tests::foreign_refs_folders_and_registered_worktree_ancestors_are_skipped: test
+workspaces::naming::tests::full_catalog_reservations_use_numbers_and_legacy_migration_preserves_artifacts: test
+workspaces::naming::tests::lowest_tier_and_permanent_history_reservations_precede_numbering: test
+workspaces::naming::tests::registered_ancestor_conflicts_fail_before_trying_name_tiers: test
+workspaces::tests::admissions_and_ambiguous_failures_publish_without_claiming_action_success: test
+workspaces::tests::bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count: test
+workspaces::tests::conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect: test
+workspaces::tests::creation_keeps_pending_observations_readable_during_every_effect: test
+workspaces::tests::eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission: test
+workspaces::tests::escaped_path_serialization_reduces_page_size_and_retains_next_cursor: test
+workspaces::tests::failed_creation_publishes_active_admission_write_attempt_and_fault_overlay: test
+workspaces::tests::failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault: test
+workspaces::tests::incompatible_saved_workspace_paths_are_rejected_without_retargeting: test
+workspaces::tests::initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace: test
+workspaces::tests::inspection_requests_admit_only_the_exact_ready_workspace_without_writes: test
+workspaces::tests::invalid_validation_records_an_actionable_failure_without_a_saved_repository: test
+workspaces::tests::multiple_faults_are_skipped_and_explicit_recovery_releases_only_its_target: test
+workspaces::tests::recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded: test
+workspaces::tests::registration_completion_and_availability_publish_targeted_hints_after_owner_unlock: test
+workspaces::tests::registration_path_budget_counts_utf8_bytes_before_recording_intent: test
+workspaces::tests::registration_records_intent_and_replays_its_status_without_another_effect: test
+workspaces::tests::restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it: test
+workspaces::tests::restored_pending_intent_runs_read_only_validation_while_status_remains_readable: test
+workspaces::tests::separate_clones_keep_separate_identity_even_with_the_same_name: test
+workspaces::tests::state_resolution_precedes_storage_and_provides_the_only_allocation_root: test
+workspaces::tests::unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover: test
+workspaces::tests::uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent: test
+workspaces::tests::unrelated_recovery_and_completion_preserve_a_failed_write_fence: test
+workspaces::tests::validated_aliases_and_linked_worktrees_share_identity_and_first_location: test
+workspaces::tests::workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity: test
+workspaces::tests::workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit: test
+
+157 tests, 0 benchmarks

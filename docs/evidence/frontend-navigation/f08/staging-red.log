@@ -1,0 +1,72 @@
+✖ stages Cargo's exact executable from a private target and records its provenance (1.073958ms)
+✔ debug staging records the dev profile and a clean source tree (0.115292ms)
+✔ rejects missing executable without touching staged resources (0.63575ms)
+✔ rejects test executable without touching staged resources (0.07875ms)
+✔ rejects ambiguous executables without touching staged resources (0.085333ms)
+✔ a failed build cannot stage a previously available executable (0.071291ms)
+✖ failCopy preserves the previous published executable and removes temporary bytes (0.169791ms)
+✖ failPublish preserves the previous published executable and removes temporary bytes (0.084375ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 5
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40.579583
+
+✖ failing tests:
+
+test at scripts/prepare-supervisor.test.mjs:95:1
+✖ stages Cargo's exact executable from a private target and records its provenance (1.073958ms)
+  AssertionError [ERR_ASSERTION]: never overwrite the published executable inode
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-supervisor.test.mjs:111:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor',
+    expected: '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/prepare-supervisor.test.mjs:199:3
+✖ failCopy preserves the previous published executable and removes temporary bytes (0.169791ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+  
+  '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor'
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-supervisor.test.mjs:203:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor',
+    expected: '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/prepare-supervisor.test.mjs:199:3
+✖ failPublish preserves the previous published executable and removes temporary bytes (0.084375ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-supervisor.test.mjs:201:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /failed/,
+    operator: 'throws',
+    diff: 'simple'
+  }

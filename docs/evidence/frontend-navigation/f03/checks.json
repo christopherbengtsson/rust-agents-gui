@@ -1,0 +1,63 @@
+[
+  {
+    "name": "selected-tests",
+    "utc": "2026-11-14T02:04:50.717268+00:00",
+    "command": ["corepack", "pnpm", "exec", "vitest", "list", "--json"],
+    "status": 0,
+    "wall_seconds": 0.302522
+  },
+  {
+    "name": "review-regression-red",
+    "utc": "2026-11-14T02:05:50.802835+00:00",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/lib/observation-coordinator.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "status": 1,
+    "wall_seconds": 0.475333
+  },
+  {
+    "name": "review-regression-green",
+    "utc": "2026-11-14T02:06:06.255418+00:00",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/lib/observation-coordinator.test.tsx",
+      "src/frontend-scheduling.test.tsx",
+      "src/workspace-changes.test.tsx",
+      "src/repositories.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "status": 0,
+    "wall_seconds": 3.496598
+  },
+  {
+    "name": "verify-final",
+    "utc": "2026-11-14T02:07:42.692776+00:00",
+    "command": ["corepack", "pnpm", "verify"],
+    "status": 0,
+    "wall_seconds": 10.889371
+  },
+  {
+    "name": "unit-measurement-final",
+    "utc": "2026-11-14T02:08:33.349894+00:00",
+    "command": ["corepack", "pnpm", "test:measure"],
+    "status": 0,
+    "wall_seconds": 46.608217
+  },
+  {
+    "name": "frontend-build",
+    "utc": "2026-11-14T02:08:58.138547+00:00",
+    "command": ["corepack", "pnpm", "exec", "vite", "build"],
+    "status": 0,
+    "wall_seconds": 0.362564
+  }
+]

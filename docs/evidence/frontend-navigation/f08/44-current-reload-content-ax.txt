@@ -1,0 +1,120 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:17:33 PM
+					36 image
+					37 text console.log('F08:'+JSON.stringify({href:location.pathname+location.search,text:document.body.innerText.slice(-1400),regions:[...document.querySelectorAll('[aria-label]')].map(e=>e.getAttribute('aria-label'))}))
+					38 image
+					39 text F08:{"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","text":"Skip to workspace\nAgent Workspace\n\n\nAdd repository\nConnected\nConnection details\npaul-scholes\nRefresh status\n/private/tmp/aw-f08-qualified-wj7lgl6i/Alpha\nRepository available\nUncommitted changes\nRefresh changes\nHide changed files\nCompared with HEAD ac721f2849607a00f9583fbb5cc8af2184246986 · 2 changed files\nWorkspace\nChanges\nSelect a changed file\nRefresh the file
+					40 image
+					41 text undefined
+			42 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			43 container
+	44 scroll area
+		45 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			46 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			47 container Repository sidebar
+				48 text Agent Workspace
+				49 container Repositories
+					50 heading Repositories, Value: 2
+						51 text Repositories
+					52 content list
+						53 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							54 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							55 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							56 button Create workspace in Beta
+							57 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							58 text Available
+							59 content list
+								60 button lee-jae-sung, Help: Workspace ready
+						61 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							62 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							63 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							64 button Create workspace in Alpha
+							65 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							66 text Available
+							67 content list
+								68 button paul-scholes, Help: Workspace ready
+				69 pop up button Add repository
+				70 text Connected
+				71 pop up button Connection details
+				72 link Settings, Value: tauri://localhost/settings/general
+			73 container
+				74 heading paul-scholes, Value: 1
+					75 text paul-scholes
+				76 button Refresh status
+				77 container Selected repository
+					78 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					79 text Repository available
+				80 text Uncommitted changes
+				81 button Refresh changes
+				82 button (expanded) Hide changed files, Secondary Actions: Collapse
+				83 text Compared with HEAD 
+				84 text ac721f2849607a00f9583fbb5cc8af2184246986
+				85 text  · 
+				86 text 2
+				87 text changed files
+				88 tab group (selectable) Workspace views
+					89 tab (selectable) Workspace
+					90 tab (selected) Changes
+				91 container Changes
+					92 text Select a changed file
+					93 text Refresh the file list, then select a path to inspect its unified diff.
+				94 splitter Resize changed files, Value: 68
+				95 container Changed files
+					96 heading Changed files, Value: 2
+						97 text Changed files
+					98 container
+						99 toggle button large.txt .M, Help: large.txt, Value: off
+						100 toggle button text.txt .M, Help: text.txt, Value: off
+					101 button First page
+					102 button (disabled) Next files
+				103 text Local workspace
+				104 text Alpha
+		105 scroll bar (settable, float) 0
+	106 close button
+	107 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	108 minimize button
+	109 text Agent Workspace
+110 menu bar
+	111 F08 Inspector current
+	112 File
+	113 Edit
+	114 View
+	115 Window
+	116 Help
+
+The focused UI element is 42 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,294 @@
+{
+  "root": "/private/tmp/aw-f04g-a82z8etn",
+  "pid": 22094,
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor",
+  "sha256": "4e74c726badd01b743da9dad32c2c07b1797533ae2f99acb9c4206f3026fbd2a",
+  "checks": [
+    {
+      "name": "private_directory_and_endpoint",
+      "status": "pass",
+      "seconds": 2.4583074264228344e-5,
+      "detail": {
+        "directory": "0700",
+        "endpoint": "0600"
+      }
+    },
+    {
+      "name": "fragmented_header_and_body",
+      "status": "pass",
+      "seconds": 0.11394370801281184,
+      "detail": null
+    },
+    {
+      "name": "exact_payload_limit_and_oversized_header",
+      "status": "pass",
+      "seconds": 0.0003471249947324395,
+      "detail": null
+    },
+    {
+      "name": "partial_header",
+      "status": "pass",
+      "seconds": 4.004104994237423e-5,
+      "detail": null
+    },
+    {
+      "name": "header_without_body",
+      "status": "pass",
+      "seconds": 3.875000402331352e-5,
+      "detail": null
+    },
+    {
+      "name": "partial_body",
+      "status": "pass",
+      "seconds": 5.200004670768976e-5,
+      "detail": null
+    },
+    {
+      "name": "empty_json",
+      "status": "pass",
+      "seconds": 4.129204899072647e-5,
+      "detail": null
+    },
+    {
+      "name": "legacy_v6_v7_newline",
+      "status": "pass",
+      "seconds": 3.5041943192481995e-5,
+      "detail": null
+    },
+    {
+      "name": "incompatible_versions_and_owner_before_dispatch",
+      "status": "pass",
+      "seconds": 0.00026187498588114977,
+      "detail": null
+    },
+    {
+      "name": "absolute_transfer_deadline_not_renewed_by_fragments",
+      "status": "pass",
+      "seconds": 2.0025484580546618,
+      "detail": 2.0025009169476107
+    },
+    {
+      "name": "eight_server_clients_then_handler_recovery",
+      "status": "pass",
+      "seconds": 0.0006206670077517629,
+      "detail": null
+    },
+    {
+      "name": "baseline_exact_ack_and_five_second_heartbeat",
+      "status": "pass",
+      "seconds": 5.003011499997228,
+      "detail": {
+        "seconds": 5.001831542002037,
+        "cursor": {
+          "owner": "22094-1794689237463693000",
+          "sequence": 1
+        }
+      }
+    },
+    {
+      "name": "mismatched_ack_closes_subscription",
+      "status": "pass",
+      "seconds": 0.0003911249805241823,
+      "detail": null
+    },
+    {
+      "name": "repository_workspace_push_progress_and_accepted_cursor_reconnect",
+      "status": "pass",
+      "seconds": 0.06606312503572553,
+      "detail": {
+        "admission": {
+          "kind": "registration",
+          "registration": {
+            "create_initial_workspace": true,
+            "initial_workspace_id": null,
+            "action_id": "99779e9c-ca23-4b6a-a4ca-9a7346290727",
+            "path": "/private/tmp/aw-f04g-a82z8etn/repository",
+            "state": "pending"
+          }
+        },
+        "batches": [
+          {
+            "subscription_id": "c129d4c2-068c-4373-9116-dda8415c8189",
+            "batch_id": 2,
+            "cursor": {
+              "owner": "22094-1794689237463693000",
+              "sequence": 2
+            },
+            "sample": {
+              "kind": "hints",
+              "watermark": 2,
+              "targets": [
+                {
+                  "kind": "registration",
+                  "action_id": "99779e9c-ca23-4b6a-a4ca-9a7346290727"
+                },
+                {
+                  "kind": "repositories"
+                }
+              ]
+            }
+          },
+          {
+            "subscription_id": "c129d4c2-068c-4373-9116-dda8415c8189",
+            "batch_id": 3,
+            "cursor": {
+              "owner": "22094-1794689237463693000",
+              "sequence": 4
+            },
+            "sample": {
+              "kind": "hints",
+              "watermark": 4,
+              "targets": [
+                {
+                  "kind": "registration",
+                  "action_id": "99779e9c-ca23-4b6a-a4ca-9a7346290727"
+                },
+                {
+                  "kind": "repositories"
+                },
+                {
+                  "kind": "workspaces",
+                  "repository_id": null
+                },
+                {
+                  "kind": "repository",
+                  "repository_id": "b54ee930-6f64-4aab-95fa-9d50c961d311"
+                },
+                {
+                  "kind": "workspace",
+                  "workspace_id": "f283cbe2-1f87-40c2-b31e-acc6ce12fd15"
+                }
+              ]
+            }
+          }
+        ],
+        "accepted_reconnect": {
+          "owner": "22094-1794689237463693000",
+          "sequence": 1
+        }
+      }
+    },
+    {
+      "name": "repeating_exact_action_returns_status_without_duplicate_workspace",
+      "status": "pass",
+      "seconds": 0.0006015839753672481,
+      "detail": {
+        "action_id": "99779e9c-ca23-4b6a-a4ca-9a7346290727",
+        "repository_id": "b54ee930-6f64-4aab-95fa-9d50c961d311",
+        "workspace_id": "f283cbe2-1f87-40c2-b31e-acc6ce12fd15",
+        "registration_rows": 1,
+        "workspace_rows": 1
+      }
+    },
+    {
+      "name": "started_blocking_work_keeps_physical_admission_after_peer_close",
+      "status": "pass",
+      "seconds": 5.156665415968746,
+      "detail": {
+        "blocked_handlers": 8,
+        "capacity_retained_after_peer_close": true,
+        "recovered_after_database_unlock": true
+      }
+    },
+    {
+      "name": "inspection_push_result_large_preview_and_absolute_partial_write",
+      "status": "pass",
+      "seconds": 2.477215167018585,
+      "detail": {
+        "rows": 199,
+        "wire_bytes": 49036,
+        "partial_write_bytes": 8192,
+        "advertised_payload": 49032,
+        "small_receive_buffer": 1024
+      }
+    },
+    {
+      "name": "availability_failure_retains_identity_and_explicit_reprobe_recovers",
+      "status": "pass",
+      "seconds": 0.04556025005877018,
+      "detail": {
+        "unavailable": {
+          "id": "b54ee930-6f64-4aab-95fa-9d50c961d311",
+          "name": "repository",
+          "path": "/private/tmp/aw-f04g-a82z8etn/repository",
+          "availability": {
+            "state": "unavailable",
+            "error": {
+              "code": "invalid_path",
+              "message": "Cannot open /private/tmp/aw-f04g-a82z8etn/repository: No such file or directory (os error 2). Restore access or choose an existing repository folder."
+            }
+          }
+        },
+        "recovered": {
+          "id": "b54ee930-6f64-4aab-95fa-9d50c961d311",
+          "name": "repository",
+          "path": "/private/tmp/aw-f04g-a82z8etn/repository",
+          "availability": {
+            "state": "available"
+          }
+        },
+        "retained_registration": {
+          "create_initial_workspace": true,
+          "initial_workspace_id": "f283cbe2-1f87-40c2-b31e-acc6ce12fd15",
+          "action_id": "99779e9c-ca23-4b6a-a4ca-9a7346290727",
+          "path": "/private/tmp/aw-f04g-a82z8etn/repository",
+          "state": "completed",
+          "repository_id": "b54ee930-6f64-4aab-95fa-9d50c961d311"
+        }
+      }
+    },
+    {
+      "name": "one_inflight_and_256_entry_overflow_resync",
+      "status": "pass",
+      "seconds": 4.1445226250216365,
+      "detail": {
+        "subscription_id": "2a727a88-549b-4df0-bcec-ae128ceb13d3",
+        "batch_id": 2,
+        "cursor": {
+          "owner": "22094-1794689237463693000",
+          "sequence": 311
+        },
+        "sample": {
+          "kind": "resync_required",
+          "watermark": 311
+        }
+      }
+    },
+    {
+      "name": "unacknowledged_delivery_closes_at_15_seconds",
+      "status": "pass",
+      "seconds": 15.003316958900541,
+      "detail": 15.003021917073056
+    },
+    {
+      "name": "owner_alive_after_fault_cohort",
+      "status": "pass",
+      "seconds": 0.00028725003357976675,
+      "detail": {
+        "status": {
+          "state": "ready",
+          "supervisor_pid": 22094,
+          "application_version": "0.1.0"
+        },
+        "cursor": {
+          "owner": "22094-1794689237463693000",
+          "revision": 304
+        },
+        "reset": true
+      }
+    }
+  ],
+  "owner": "22094-1794689237463693000",
+  "registration": {
+    "create_initial_workspace": true,
+    "initial_workspace_id": "f283cbe2-1f87-40c2-b31e-acc6ce12fd15",
+    "action_id": "99779e9c-ca23-4b6a-a4ca-9a7346290727",
+    "path": "/private/tmp/aw-f04g-a82z8etn/repository",
+    "state": "completed",
+    "repository_id": "b54ee930-6f64-4aab-95fa-9d50c961d311"
+  },
+  "cleanup": {
+    "child_joined": true,
+    "returncode": -15
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "snapshot": {
+    "time": 867994,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 6383
+      }
+    },
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "visibility": "visible",
+    "active": 1,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 40,
+    "cacheBodyBytes": 83163,
+    "queue": 0,
+    "pending": 1,
+    "physicalActive": 1,
+    "freshness": 908,
+    "actor": "reading",
+    "commands": {
+      "workspace_request": 1361,
+      "observation_acknowledge": 950,
+      "repository_request": 2
+    },
+    "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "inspection": "running",
+  "latestReads": [
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "list",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "change_preview",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes",
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "operation": "changes"
+    }
+  ]
+}

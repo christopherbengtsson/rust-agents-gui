@@ -1,0 +1,133 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 6:43:43 PM
+					36 image
+					37 text Array.from({length:30},(_,j)=>9000+j*300).filter(i=>i<f04g.exportString.length).forEach(i=>console.log("F04G:"+i+":"+f04g.exportString.slice(i,i+300)))
+					38 image
+					39 text F04G:9000:er":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"60626156-ad65-4ab7-905c-2a3aecf1a217","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":3753367,"end":3753373},{"command":"w
+					40 image
+					41 text F04G:9300:orkspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":3753625,"end":3753635},{"command":"workspace_request","args":{"expectedOwner":"2102
+					42 image
+					43 text F04G:9600:8-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"60626156-ad65-4ab7-905c-2a3aecf1a217","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":3753636,"end":3753639},{"command":"observatio
+					44 image
+					45 text F04G:9900:n_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":1075,"cursor":{"owner":"21028-1794674451767299000","sequence":478}}},"start":3753791,"end":3753792},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","reques
+					46 image
+					47 text F04G:10200:t":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":3753890,"end":3753895},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"wor
+					48 image
+					49 text F04G:10500:kspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"60626156-ad65-4ab7-905c-2a3aecf1a217","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":3753895,"end":3753902}]}
+					50 image
+					51 text undefined
+			52 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			53 container
+	54 scroll area
+		55 HTML content Description: Agent Workspace, URL: tauri://localhost
+			56 link Skip to workspace, Value: tauri://localhost#workspace
+			57 container Repository sidebar
+				58 text Agent Workspace
+				59 container Repositories
+					60 heading Repositories, Value: 2
+						61 text Repositories
+					62 content list
+						63 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							64 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							65 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							66 button Create workspace in Alpha
+							67 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							68 text Available
+							69 content list
+								70 button paolo-maldini, Help: Workspace ready
+						71 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							72 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							73 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							74 button Create workspace in Beta
+							75 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							76 text Available
+							77 content list
+								78 button dries-mertens, Help: Workspace ready
+				79 pop up button Add repository
+				80 text Connected
+				81 pop up button Connection details
+			82 container
+				83 container
+					84 heading dries-mertens, Value: 1
+						85 text dries-mertens
+					86 button Refresh status
+				87 container Selected repository
+					88 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					89 text Repository available
+				90 text Uncommitted changes
+				91 button Refresh changes
+				92 button (expanded) Hide changed files, Secondary Actions: Collapse
+				93 container
+					94 text Compared with HEAD  83f047d5f61edacd2fc87605778e6522e8b750b0  ·  2 changed files
+				95 tab group (selectable) Workspace views
+					96 tab (selectable) Workspace
+					97 tab (selected) Changes
+				98 container Changes
+					99 container Selected file changes
+						100 heading large.txt, Value: 2
+							101 text large.txt
+						102 text Loading selected-file preview…
+						103 container
+							104 text Showing the last-good preview against HEAD 83f047d5f61edacd2fc87605778e6522e8b750b0 ; it may be stale.
+						105 text Preview limited by the 200-row or 48 KiB response budget.
+						106 container Unified file diff
+				107 splitter Resize changed files, Value: 68
+				108 container Changed files
+					109 heading Changed files, Value: 2
+						110 text Changed files
+					111 container
+						112 toggle button large.txt .M, Help: large.txt, Value: on
+						113 toggle button text.txt .M, Help: text.txt, Value: off
+					114 button First page
+					115 button (disabled) Next files
+				116 container
+					117 text Local workspace Beta
+		118 scroll bar (settable, float) 0
+	119 close button
+	120 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	121 minimize button
+	122 text Agent Workspace
+123 menu bar
+	124 F04g inspect baseline
+	125 File
+	126 Edit
+	127 View
+	128 Window
+	129 Help
+
+The focused UI element is 52 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,93 @@
+Window: "Agent Workspace", App: F04g Final Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							11 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button Create workspace in Beta
+							14 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							15 text Available
+							16 content list
+								17 button franco-armani, Help: Workspace ready
+								18 button thiago-silva, Help: Workspace ready
+						19 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							20 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							21 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							22 button Create workspace in Alpha
+							23 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							24 text Available
+							25 content list
+								26 button vincent-aboubakar, Help: Workspace ready
+				27 pop up button Add repository
+				28 text Connected
+				29 pop up button Connection details
+			30 container
+				31 heading thiago-silva, Value: 1
+					32 text thiago-silva
+				33 button Refresh status
+				34 container Selected repository
+					35 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					36 text Repository available
+				37 text Uncommitted changes
+				38 button (disabled) Refreshing…
+				39 button (expanded) Hide changed files, Secondary Actions: Collapse
+				40 text Compared with HEAD 
+				41 text 83f047d5f61edacd2fc87605778e6522e8b750b0
+				42 text  · 
+				43 text 2
+				44 text changed files
+				45 text Refreshing the retained comparison…
+				46 tab group (selectable) Workspace views
+					47 tab (selected) Workspace
+					48 tab (selectable) Changes
+				49 container Workspace
+					50 container Selected workspace
+						51 text Workspace ready Codex
+						52 heading Your workspace is ready, Value: 2
+							53 text Your workspace is ready
+						54 text thiago-silva
+						55 description list
+							56 text Branch
+							57 text workspace/thiago-silva
+							58 text Workspace folder
+							59 text /private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/beta/thiago-silva/checkout
+							60 text Local base
+							61 text refs/heads/main · 83f047d5f61edacd2fc87605778e6522e8b750b0
+							62 text Branch artifact
+							63 text Created by this action
+							64 text Folder artifact
+							65 text Worktree created
+						66 container
+							67 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				68 splitter Resize changed files, Value: 68
+				69 container Changed files
+					70 heading Changed files, Value: 2
+						71 text Changed files
+					72 container
+						73 toggle button large.txt .M, Help: large.txt, Value: on
+						74 toggle button text.txt .M, Help: text.txt, Value: off
+					75 button First page
+					76 button (disabled) Next files
+				77 text Local workspace
+				78 text Beta
+	79 close button
+	80 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	81 minimize button
+	82 text Agent Workspace
+83 menu bar
+	84 F04g Final Inspection
+	85 File
+	86 Edit
+	87 View
+	88 Window
+	89 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost

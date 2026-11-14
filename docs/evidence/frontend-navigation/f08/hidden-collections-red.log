@@ -1,0 +1,53 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/routing.test.tsx (37 tests | 2 failed) 1539ms
+   × Settings releases collection interests, retains dirty generations and refreshes them on return 36ms
+   × direct Settings keeps retained action status interested without reading hidden collections or replaying 60ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/routing.test.tsx > Settings releases collection interests, retains dirty generations and refreshes them on return
+AssertionError: expected [ …(8) ] to have a length of 5 but got 8
+
+- Expected
++ Received
+
+- 5
++ 8
+
+ ❯ src/routing.test.tsx:893:19
+    891|     ] },
+    892|   } }));
+    893|   expect(reads()).toHaveLength(before);
+       |                   ^
+    894|   await userEvent.setup().keyboard("{Escape}");
+    895|   await screen.findByRole("heading", { name: "updated workspace", leve…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/routing.test.tsx > direct Settings keeps retained action status interested without reading hidden collections or replaying
+AssertionError: expected [ …(4) ] to have a length of 2 but got 4
+
+- Expected
++ Received
+
+- 2
++ 4
+
+ ❯ src/routing.test.tsx:929:125
+    927|   await waitFor(() => expect(localStorage.getItem("agent-workspace.pen…
+    928|   expect(actions()).toHaveLength(2);
+    929|   expect(vi.mocked(invoke).mock.calls.filter(([command]) => ["reposito…
+       |                                                                                                                             ^
+    930|   expect(history.location.pathname).toBe("/settings/general");
+    931| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 35 passed (37)
+   Start at  23:00:43
+   Duration  2.30s (tests 69%, import 17%, environment 10%, transform 4%)
+

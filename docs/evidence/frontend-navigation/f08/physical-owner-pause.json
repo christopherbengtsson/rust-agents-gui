@@ -1,0 +1,7 @@
+{
+  "pid": 47400,
+  "verified_command": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Inspector current.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-qualified-wj7lgl6i/state",
+  "start": 632475.284274833,
+  "fault": "SIGSTOP for ten seconds, always SIGCONT in finally",
+  "resumed": 632485.2891645
+}

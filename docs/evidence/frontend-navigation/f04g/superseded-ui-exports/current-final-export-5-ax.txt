@@ -1,0 +1,149 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 text Console cleared at 5:54:18 PM
+			35 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+				36 text (settable) Array.from({length:30},(_,j)=>36000+j*300).filter(i=>i<f04g.exportString.length).forEach(i=>console.log("F04G:"+i+":"+f04g.exportString.slice(i,i+3
+			37 container
+				38 text Array
+				39 text .
+				40 text from
+				41 text ({
+				42 text length
+				43 text :
+				44 text 30
+				45 text },(
+				46 text _
+				47 text ,
+				48 text j
+				49 text )
+				50 text =>
+				51 text 36000
+				52 text +
+				53 text j
+				54 text *
+				55 text 300
+				56 text ).
+				57 text filter
+				58 text (
+				59 text i
+				60 text =>
+				61 text i
+				62 text <
+				63 text f04g
+				64 text .
+				65 text exportString
+				66 text .
+				67 text length
+				68 text ).
+				69 text forEach
+				70 text (
+				71 text i
+				72 text =>
+				73 text console
+				74 text .
+				75 text log
+				76 text (
+				77 text "F04G:"
+				78 text +
+				79 text i
+				80 text +
+				81 text ":"
+				82 text +
+				83 text f04g
+				84 text .
+				85 text exportString
+				86 text .
+				87 text slice
+				88 text (
+				89 text i
+				90 text ,
+				91 text i
+				92 text +
+				93 text 3
+	94 scroll area
+		95 HTML content Description: Agent Workspace, URL: tauri://localhost
+			96 link Skip to workspace, Value: tauri://localhost#workspace
+			97 container Repository sidebar
+				98 text Agent Workspace
+				99 container Repositories
+					100 heading Repositories, Value: 2
+						101 text Repositories
+					102 content list
+						103 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							104 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							105 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							106 button Create workspace in Beta
+							107 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							108 text Available
+							109 content list
+								110 button thiago-silva, Help: Workspace ready
+						111 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							112 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							113 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							114 button Create workspace in Alpha
+							115 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							116 text Available
+							117 content list
+								118 button vincent-aboubakar, Help: Workspace ready
+				119 pop up button Add repository
+				120 text Connected
+				121 pop up button Connection details
+			122 container
+				123 container
+					124 heading Beta, Value: 1
+						125 text Beta
+					126 button Refresh status
+				127 container Selected repository
+					128 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					129 text Repository available
+				130 heading Repository registered, Value: 2
+					131 text Repository registered
+				132 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				133 button Create workspace
+				134 container
+					135 text Local workspace Beta
+		136 scroll bar (settable, float) 0
+	137 close button
+	138 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	139 minimize button
+	140 text Agent Workspace
+141 menu bar
+	142 F04g inspect current
+	143 File
+	144 Edit
+	145 View
+	146 Window
+	147 Help

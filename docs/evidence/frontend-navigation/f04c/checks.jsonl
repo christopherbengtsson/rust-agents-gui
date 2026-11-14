@@ -1,0 +1,26 @@
+{"label": "admission-baseline", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "--features", "codegen", "connection::", "--", "--test-threads=1"], "exit": 0, "seconds": 0.17533}
+{"label": "admission-semaphore", "command": ["node", "scripts/cargo.mjs", "test", "-p", "workspace-core", "--lib", "--features", "codegen", "connection::", "--", "--test-threads=1"], "exit": 0, "seconds": 7.644347}
+{"label": "strict-eof-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 2.915072}
+{"label": "strict-eof-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.146305}
+{"label": "exchange-read-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 0.546064}
+{"label": "exchange-read-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.636232}
+{"label": "transfer-deadline-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 1.301526}
+{"label": "transfer-deadline-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.325983}
+{"label": "read-cancel-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 1.360852}
+{"label": "read-cancel-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.236227}
+{"label": "write-frame-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 0.479683}
+{"label": "write-frame-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.443049}
+{"label": "write-deadline-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 1.231401}
+{"label": "write-deadline-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.222362}
+{"label": "write-cancel-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 1.399234}
+{"label": "write-cancel-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.309006}
+{"label": "framing-scenarios", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "--features", "codegen", "connection::", "--", "--test-threads=1"], "exit": 0, "seconds": 3.182963}
+{"label": "generated-drift-before-refresh", "command": ["corepack", "pnpm", "generated:check"], "exit": 1, "seconds": 3.71764}
+{"label": "generated-refresh", "command": ["corepack", "pnpm", "generated:write"], "exit": 0, "seconds": 0.503696}
+{"label": "static-check", "command": ["corepack", "pnpm", "check"], "exit": 0, "seconds": 3.441788}
+{"label": "precise-write-deadline-red", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 101, "seconds": 1.77102}
+{"label": "precise-write-deadline-green", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "connection::framed_exchange::", "--", "--test-threads=1"], "exit": 0, "seconds": 1.252415}
+{"label": "test-selection", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-core", "--lib", "--features", "codegen", "--", "--list"], "exit": 0, "seconds": 1.557074}
+{"label": "warm-measurements", "command": ["corepack", "pnpm", "test:measure"], "exit": 0, "seconds": 52.815343}
+{"label": "verify-final", "command": ["corepack", "pnpm", "verify"], "exit": 0, "seconds": 12.161787}
+{"label": "final-audit", "command": ["python3", "/tmp/f04c-audit.py"], "exit": 0, "seconds": 0.111174}

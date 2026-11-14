@@ -1,0 +1,142 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.06s
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+
+
+running 8 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.57s
+
+warm-up 5.9904827090213075
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+
+running 8 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.59s
+
+run 1 5.639560166047886
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+
+running 8 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.59s
+
+run 2 5.646022375090979
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+
+running 8 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.57s
+
+run 3 5.622782249934971
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+
+running 8 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.58s
+
+run 4 5.636416916968301
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+
+running 8 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.57s
+
+run 5 5.624820708064362
+{
+  "compilation_seconds": 0.17523129098117352,
+  "executables": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/startup-38799f2f8e72c286",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/discovery-2174909665c3c691"
+  ],
+  "threads": 1,
+  "warmup": 5.9904827090213075,
+  "runs": [
+    5.639560166047886,
+    5.646022375090979,
+    5.622782249934971,
+    5.636416916968301,
+    5.624820708064362
+  ],
+  "median": 5.636416916968301,
+  "range": [
+    5.622782249934971,
+    5.646022375090979
+  ]
+}

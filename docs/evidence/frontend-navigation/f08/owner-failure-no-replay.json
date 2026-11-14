@@ -1,0 +1,10 @@
+{
+  "no_owner_after_refresh": true,
+  "counts_before_reopen": {
+    "registration_actions": 1,
+    "workspaces": 1,
+    "workspace_actions": 1
+  },
+  "desktop_pid": 42511,
+  "verified_executable": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Inspector current.app/Contents/MacOS/workspace-desktop"
+}

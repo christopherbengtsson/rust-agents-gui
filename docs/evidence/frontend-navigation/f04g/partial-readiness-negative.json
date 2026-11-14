@@ -1,0 +1,11 @@
+{
+  "root": "/private/tmp/aw-f04g-uhv98e3f",
+  "pid": 39614,
+  "executable": "/private/tmp/f04g-partial-ready",
+  "sha256": "5c26880cfd4036f801eb2606f3d01e54d2007ea11ccd4a2738930ff05727a072",
+  "checks": [],
+  "cleanup": {
+    "child_joined": true,
+    "returncode": -15
+  }
+}

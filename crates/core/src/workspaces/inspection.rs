@@ -5,6 +5,7 @@ identity!(ComparisonId);
 identity!(FileId);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum UnsupportedContent {
     Binary,
@@ -111,6 +112,7 @@ fn parse_status(bytes: &[u8]) -> Result<Vec<FileEntry>> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum RowKind {
     Hunk,
@@ -120,6 +122,7 @@ pub enum RowKind {
     NoNewline,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct DiffRow {
     pub kind: RowKind,
     pub old_line: Option<u32>,
@@ -239,6 +242,7 @@ const PENDING_JOBS: usize = 8;
 pub(crate) const CONTENT_BYTES: usize = 256 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum InspectionPhase {
     Idle,
@@ -248,12 +252,14 @@ pub enum InspectionPhase {
     Failed,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct PreviewTarget {
     pub workspace_id: WorkspaceId,
     pub comparison_id: ComparisonId,
     pub file_id: FileId,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ChangedFile {
     pub id: FileId,
     pub path: String,
@@ -262,6 +268,7 @@ pub struct ChangedFile {
     pub unsupported: Option<UnsupportedContent>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ChangePage {
     pub comparison_id: ComparisonId,
     pub head: String,
@@ -270,6 +277,7 @@ pub struct ChangePage {
     pub next: Option<FileId>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ChangesObservation {
     pub workspace_id: WorkspaceId,
     pub phase: InspectionPhase,
@@ -277,6 +285,7 @@ pub struct ChangesObservation {
     pub error: Option<RepositoryError>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct FilePreview {
     pub comparison_id: ComparisonId,
     pub head: String,
@@ -286,6 +295,7 @@ pub struct FilePreview {
     pub note: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct PreviewObservation {
     pub target: PreviewTarget,
     pub phase: InspectionPhase,
@@ -359,6 +369,8 @@ impl Job {
 }
 #[derive(Default)]
 pub(super) struct Inspections {
+    generation: u64,
+    evicted: Option<WorkspaceId>,
     records: VecDeque<Inspection>,
     pending: VecDeque<Job>,
     active: Option<Job>,
@@ -384,7 +396,7 @@ impl Inspections {
                             .is_none_or(|j| j.workspace_id() != r.workspace_id)
                 });
                 if let Some(index) = evict {
-                    self.records.remove(index);
+                    self.evicted = self.records.remove(index).map(|record| record.workspace_id);
                 } else {
                     return Err(RepositoryError::new(
                         ErrorCode::Capacity,
@@ -392,6 +404,7 @@ impl Inspections {
                     ));
                 }
             }
+            self.generation = self.generation.wrapping_add(1);
             self.records.push_back(Inspection {
                 workspace_id: id,
                 phase: InspectionPhase::Idle,
@@ -427,6 +440,7 @@ impl Inspections {
                 "Eight inspection jobs are pending; wait and refresh observations.",
             ));
         }
+        self.generation = self.generation.wrapping_add(1);
         self.pending.push_back(job);
         Ok(true)
     }
@@ -567,6 +581,7 @@ impl Inspections {
                 .as_ref()
                 .filter(|p| p.target.file_id == target.file_id)
                 .and_then(|p| p.preview.clone());
+            self.generation = self.generation.wrapping_add(1);
             self.record(workspace.id)?.preview = Some(PreviewObservation {
                 target: target.clone(),
                 phase,
@@ -828,7 +843,7 @@ pub(super) fn process_inspection(
     effects: &mut impl InspectionEffects,
 ) -> bool {
     let job = {
-        let Ok(mut state) = shared.lock() else {
+        let Ok(mut state) = lock_state(shared) else {
             return false;
         };
         let Some(job) = state.inspections.pending.pop_front() else {
@@ -845,6 +860,9 @@ pub(super) fn process_inspection(
             }
         }
         state.inspections.active = Some(job.clone());
+        state.publish(vec![crate::observations::Target::Inspection {
+            workspace_id: job.workspace_id(),
+        }]);
         let _ = state.change();
         job
     };
@@ -855,7 +873,7 @@ pub(super) fn process_inspection(
             repository,
         } => {
             let result = capture(workspace, repository, effects);
-            if let Ok(mut state) = shared.lock() {
+            if let Ok(mut state) = lock_state(shared) {
                 if result.is_ok() {
                     state.inspections.pending.retain(|pending| {
                         !matches!(pending, Job::Preview { workspace: queued, .. } if queued.id == workspace.id)
@@ -889,6 +907,9 @@ pub(super) fn process_inspection(
                     }
                 }
                 state.inspections.active = None;
+                state.publish(vec![crate::observations::Target::Inspection {
+                    workspace_id: workspace.id,
+                }]);
                 let _ = state.change();
             }
         }
@@ -900,7 +921,7 @@ pub(super) fn process_inspection(
             file,
         } => {
             let result = acquire_preview(workspace, repository, target, comparison, file, effects);
-            if let Ok(mut state) = shared.lock() {
+            if let Ok(mut state) = lock_state(shared) {
                 if let Ok(record) = state.inspections.record(workspace.id)
                     && record
                         .comparison
@@ -918,6 +939,9 @@ pub(super) fn process_inspection(
                     }
                 }
                 state.inspections.active = None;
+                state.publish(vec![crate::observations::Target::Inspection {
+                    workspace_id: workspace.id,
+                }]);
                 let _ = state.change();
             }
         }
@@ -947,6 +971,7 @@ impl Workspaces {
             .store()?
             .repository(workspace.repository_id)?
             .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Repository not found."))?;
+        let before = state.inspections.generation;
         let reply = match request {
             WorkspaceRequest::Changes {
                 refresh,
@@ -961,6 +986,16 @@ impl Workspaces {
                 .preview(workspace, repository, target, load),
             _ => unreachable!(),
         };
+        if state.inspections.generation != before {
+            state.publish(vec![crate::observations::Target::Inspection {
+                workspace_id: id,
+            }]);
+        }
+        if let Some(workspace_id) = state.inspections.evicted.take() {
+            state.publish(vec![crate::observations::Target::Inspection {
+                workspace_id,
+            }]);
+        }
         drop(state);
         self.notify();
         reply
@@ -969,3 +1004,19 @@ impl Workspaces {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<ComparisonId>();
+    exports.add::<FileId>();
+    exports.add::<UnsupportedContent>();
+    exports.add::<RowKind>();
+    exports.add::<DiffRow>();
+    exports.add::<InspectionPhase>();
+    exports.add::<PreviewTarget>();
+    exports.add::<ChangedFile>();
+    exports.add::<ChangePage>();
+    exports.add::<ChangesObservation>();
+    exports.add::<FilePreview>();
+    exports.add::<PreviewObservation>();
+}

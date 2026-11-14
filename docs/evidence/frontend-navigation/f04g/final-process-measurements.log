@@ -1,0 +1,149 @@
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+
+running 9 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.02s
+
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+warm-up 6.5104727080324665
+
+running 9 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.64s
+
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+run 1 5.698431083932519
+
+running 9 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.63s
+
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+run 2 5.686161958030425
+
+running 9 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.64s
+
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+run 3 5.7001791249495
+
+running 9 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.65s
+
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+run 4 5.69690070906654
+
+running 9 tests
+test actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats ... ok
+test cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work ... ok
+test concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot ... ok
+test desktop_process ... ignored, subprocess helper, launched by killed_desktop_process test
+test killed_desktop_process_leaves_owner_and_reopening_catches_up ... ok
+test lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status ... ok
+test private_endpoint_rejects_incompatible_versions_and_unbounded_frames ... ok
+test public_or_symlinked_state_is_rejected_without_starting_an_owner ... ok
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.62s
+
+
+running 1 test
+test desktop_client_receives_status_from_a_separate_supervisor_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+run 5 5.670795499929227
+{
+  "compilation_seconds": 0.35267283394932747,
+  "executables": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/discovery-2174909665c3c691",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/startup-38799f2f8e72c286"
+  ],
+  "threads": 1,
+  "warmup": 6.5104727080324665,
+  "runs": [
+    5.698431083932519,
+    5.686161958030425,
+    5.7001791249495,
+    5.69690070906654,
+    5.670795499929227
+  ],
+  "median": 5.69690070906654,
+  "range": [
+    5.670795499929227,
+    5.7001791249495
+  ]
+}

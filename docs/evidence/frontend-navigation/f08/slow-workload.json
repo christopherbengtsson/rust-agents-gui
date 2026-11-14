@@ -1,0 +1,6 @@
+{
+  "fault": "1.5 second delay for each Git status invocation; same private wrapper used by both native supervisors",
+  "marker": "/private/tmp/aw-f08-qualified-wj7lgl6i/delay-git",
+  "restored": true,
+  "scope": "Inspection operation counts are compared separately from the later off-page catalog stress. Baseline has two workspaces; current has added catalog records, so no whole-app throughput claim is made."
+}

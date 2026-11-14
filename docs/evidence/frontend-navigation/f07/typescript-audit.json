@@ -1,0 +1,5 @@
+{
+  "scope": "added source/test lines against completed F06; generated files unchanged",
+  "escape_candidates": [],
+  "result": "No new manual any, double assertions, suppressions, declaration shims or weakened checking coverage."
+}

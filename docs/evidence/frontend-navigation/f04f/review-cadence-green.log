@@ -1,0 +1,9 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  2 passed (2)
+      Tests  32 passed (32)
+   Start at  17:04:24
+   Duration  1.13s (tests 42%, environment 29%, import 24%, transform 4%, setup 1%)
+

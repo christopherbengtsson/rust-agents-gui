@@ -2,8 +2,7 @@
 
 Status: ready-for-agent
 
-Implementation baseline: tickets 01–02 and 02a are complete. Tickets 03–04 implement repository registration/navigation and isolated workspace
-creation/recovery. Product behavior in tickets 05–13 remains unimplemented.
+Implementation baseline: tickets 01–05, including 02a, are complete for their recorded fixture scope. Tickets 06–13 and whole-milestone qualification remain incomplete. The [frontend foundation spec](../frontend-navigation/spec.md) defines the prerequisite implementation and qualification sequence.
 
 ## Problem Statement
 
@@ -160,7 +159,7 @@ These are sequencing limits. Retain the product contract's ownership and identit
 - Preparation confirmed one spec, separate-session tickets, bootstrap before product behavior, a clear usable desktop, stable reproducible versions, and lasting modules without speculative abstractions. Automated coverage follows the repository testing policy; desktop and native qualification remain separate.
 - Published to the configured local Markdown tracker with `ready-for-agent` status. Implementation tickets are separate files with explicit blockers under this feature's `issues/` directory.
 - Exact stable dependency versions and the supported Codex runtime/schema cohort are selected and recorded during their respective implementation gates. The agreed presentation stack is recorded above; no transport library, message schema, or provider compatibility result is implied by that choice.
-- Tickets 01–02 are complete and predate the testing policy. Tickets 03–04 are complete; product behavior in tickets 05–13 remains unimplemented. The ticket 03 verification gate is in place, with [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
+- Tickets 01–02 are complete and predate the testing policy. Tickets 03–05 are complete for their recorded fixture scope; see [05 qualification](../../docs/evidence/milestone-01-change-inspection-qualification.md). Product behavior in tickets 06–13 remains unimplemented. The [frontend foundation](../frontend-navigation/spec.md) precedes 06, and [storage research](issues/06a-evaluate-storage-before-durable-chat.md) follows 06 before 07. The ticket 03 verification gate is in place, with [policy-alignment evidence](../../docs/evidence/milestone-01-verification-policy-alignment.md). Record implementation revision, hardware, versions, effective test configuration, reproducible commands, screenshots, A1–A10 pass/fail/not-run results, fixture/native distinction, live allowance/actual usage, and unresolved limits in the milestone evidence.
 - Mark the milestone Passed only when its deterministic, desktop, and required native checks succeed. If native checks are unauthorized or fail, retain completed evidence and leave the milestone incomplete. Preserve the completed milestone when defining the next one.
 
 ## Workspace-flow decision — 2026-11-13
@@ -179,3 +178,15 @@ The approved [readable-workspaces plan](readable-workspaces-plan.md) refines tic
 use the curated footballer catalog with permanent reservations and numeric tiers.
 This does not expand creation into a composer, base picker or provider launch.
 See [evidence](../../docs/evidence/readable-workspaces.md) for qualification and limits.
+
+### 2026-11-14 — frontend library refactor handoff
+
+The [amended frontend foundation](../frontend-navigation/spec.md) inserts F04a–F04g
+before F05: this session publishes documentation only; separate sessions introduce
+generated contracts, async owned transport and complete feature observation/actor
+modules. F04g actual qualification precedes F05 retained context/integration, then
+F06–F08 routes/Settings/cumulative qualification. Milestone 06 still waits for F08.
+Original completed ticket results remain unchanged. Later Codex/chat work consumes
+the resulting interfaces and does not assume a synchronous transport or recreate
+frontend observation owners. Durable conversation delivery stays separate from the
+invalidation journal and its accepted cursor; storage research sequencing is unchanged.

@@ -1,0 +1,26 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/inspection-actor.test.tsx (7 tests | 1 failed) 31ms
+   × failed inspection stays paused across hide/remount and recovers on a newer hint 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/inspection-actor.test.tsx > failed inspection stays paused across hide/remount and recovers on a newer hint
+AssertionError: expected "vi.fn()" to be called 2 times, but got 3 times
+ ❯ src/lib/inspection-actor.test.tsx:123:18
+    121|   const calls = vi.mocked(invoke).mock.calls.length;
+    122|   s.app.inspection.release(); s.configure(); await flush();
+    123|   expect(invoke).toHaveBeenCalledTimes(calls);
+       |                  ^
+    124|   expect(s.app.inspection.getView().observation?.phase).toBe("ready");
+    125|   s.hint(); await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  16:55:19
+   Duration  354ms (environment 54%, import 23%, transform 11%, tests 10%, setup 1%, worker 1%)
+

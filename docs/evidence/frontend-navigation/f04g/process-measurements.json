@@ -1,0 +1,15 @@
+{
+  "compilation_seconds": 0.17523129098117352,
+  "executables": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/startup-38799f2f8e72c286",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/discovery-2174909665c3c691"
+  ],
+  "threads": 1,
+  "warmup": 5.9904827090213075,
+  "runs": [
+    5.639560166047886, 5.646022375090979, 5.622782249934971, 5.636416916968301,
+    5.624820708064362
+  ],
+  "median": 5.636416916968301,
+  "range": [5.622782249934971, 5.646022375090979]
+}

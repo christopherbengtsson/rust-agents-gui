@@ -1,0 +1,21 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.85s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-a93ab365b0aedb8f)
+
+running 13 tests
+test connection::subscription::tests::acknowledgements_match_subscription_batch_and_cursor_exactly ... ok
+test connection::subscription::tests::cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_it ... ok
+test connection::subscription::tests::completed_error_and_panic_workers_are_joined_before_replacement ... ok
+test connection::subscription::tests::idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute ... ok
+test connection::subscription::tests::invalid_reload_replacement_cannot_stop_the_current_feed ... ok
+test connection::subscription::tests::native_delivery_waits_for_frontend_acceptance_before_acknowledging ... ok
+test connection::subscription::tests::owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery ... ok
+test connection::subscription::tests::reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_replacements ... ok
+test connection::subscription::tests::server_stops_on_wrong_ack_and_preserves_changes_during_resync ... ok
+test connection::subscription::tests::shared_corpus_matches_rust_feed_serialization_and_delivery_bounds ... ok
+test connection::subscription::tests::sink_failure_and_frontend_stall_close_without_acknowledgement ... ok
+test connection::subscription::tests::stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement ... ok
+test connection::subscription::tests::stopped_before_delivery_cannot_offer_or_acknowledge ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.01s
+

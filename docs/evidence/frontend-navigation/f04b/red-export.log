@@ -1,0 +1,35 @@
+ Downloading crates ...
+  Downloaded schemars_derive v1.2.3
+  Downloaded termcolor v1.4.1
+  Downloaded serde_derive_internals v0.30.0
+  Downloaded ts-rs v12.0.1
+  Downloaded ts-rs-macros v12.0.1
+   Compiling proc-macro2 v1.0.107
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling ref-cast v1.0.27
+   Compiling serde v1.0.229
+   Compiling termcolor v1.4.1
+   Compiling dyn-clone v1.0.20
+   Compiling quote v1.0.47
+   Compiling syn v3.0.10
+   Compiling syn v2.0.119
+   Compiling serde_derive_internals v0.30.0
+   Compiling ref-cast-impl v1.0.27
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling uuid v1.29.2
+   Compiling schemars_derive v1.2.3
+   Compiling thiserror v2.0.21
+   Compiling ts-rs-macros v12.0.1
+   Compiling ts-rs v12.0.1
+   Compiling schemars v1.2.3
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0425]: cannot find function `render` in module `super`
+ --> crates/core/src/codegen.rs:6:31
+  |
+6 |         let exported = super::render();
+  |                               ^^^^^^ not found in `super`
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `workspace-core` (lib test) due to 1 previous error

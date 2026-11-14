@@ -1,0 +1,75 @@
+    Checking tokio v1.54.1
+    Checking futures-util v0.3.34
+    Checking serde v1.0.229
+    Checking tokio-util v0.7.20
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0658]: use of unstable library feature `async_fn_traits`
+   --> crates/core/src/connection/subscription.rs:116:17
+    |
+116 |         for<'a> <R as AsyncFnOnce<(&'a str, &'a str, Option<FeedCursor>, &'a Control, &'a D)>>::CallOnceFuture: Send,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0658]: the precise format of `Fn`-family traits' type parameters is subject to change
+   --> crates/core/src/connection/subscription.rs:116:17
+    |
+116 |         for<'a> <R as AsyncFnOnce<(&'a str, &'a str, Option<FeedCursor>, &'a Control, &'a D)>>::CallOnceFuture: Send,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use parenthetical notation instead: `AsyncFnOnce(&'a str, &'a str, Option<FeedCursor>, &'a Control, &'a D) -> ()`
+    |
+    = note: see issue #29625 <https://github.com/rust-lang/rust/issues/29625> for more information
+
+error: implementation of `Send` is not general enough
+   --> crates/core/src/connection/subscription.rs:126:22
+    |
+126 |           let worker = tokio::spawn(async move {
+    |                        ^            ---------- this async block captures a value whose type is not `Send`
+    |  ______________________|
+    | |
+127 | |             let _permit = permit;
+128 | |             let result = run(&expected_owner, &id, after, &owned_control, &deliver).await;
+129 | |             owned_control.stop();
+130 | |             let message = match result { Ok(()) => "Observation delivery stopped".into(...
+131 | |             let _ = deliver(FeedEvent::Stopped { subscription_id: id, message });
+132 | |         });
+    | |__________^ implementation of `Send` is not general enough
+    |
+    = note: `Send` would have to be implemented for the type `<R as AsyncFnOnce<(&'0 str, &'1 str, Option<_>, &_, &D)>>::CallOnceFuture`, for any two lifetimes `'0` and `'1`...
+    = note: ...but `Send` is actually implemented for the type `<R as AsyncFnOnce<(&'2 str, &'2 str, Option<_>, &'2 _, &'2 D)>>::CallOnceFuture`, for some specific lifetime `'2`
+
+error: implementation of `Send` is not general enough
+   --> crates/core/src/connection/subscription.rs:126:22
+    |
+126 |           let worker = tokio::spawn(async move {
+    |                        ^            ---------- this async block captures a value whose type is not `Send`
+    |  ______________________|
+    | |
+127 | |             let _permit = permit;
+128 | |             let result = run(&expected_owner, &id, after, &owned_control, &deliver).await;
+129 | |             owned_control.stop();
+130 | |             let message = match result { Ok(()) => "Observation delivery stopped".into(...
+131 | |             let _ = deliver(FeedEvent::Stopped { subscription_id: id, message });
+132 | |         });
+    | |__________^ implementation of `Send` is not general enough
+    |
+    = note: `Send` would have to be implemented for the type `<R as AsyncFnOnce<(&str, &'0 str, Option<_>, &'1 _, &D)>>::CallOnceFuture`, for any two lifetimes `'0` and `'1`...
+    = note: ...but `Send` is actually implemented for the type `<R as AsyncFnOnce<(&'2 str, &'2 str, Option<_>, &'2 _, &'2 D)>>::CallOnceFuture`, for some specific lifetime `'2`
+
+error: implementation of `Send` is not general enough
+   --> crates/core/src/connection/subscription.rs:126:22
+    |
+126 |           let worker = tokio::spawn(async move {
+    |                        ^            ---------- this async block captures a value whose type is not `Send`
+    |  ______________________|
+    | |
+127 | |             let _permit = permit;
+128 | |             let result = run(&expected_owner, &id, after, &owned_control, &deliver).await;
+129 | |             owned_control.stop();
+130 | |             let message = match result { Ok(()) => "Observation delivery stopped".into(...
+131 | |             let _ = deliver(FeedEvent::Stopped { subscription_id: id, message });
+132 | |         });
+    | |__________^ implementation of `Send` is not general enough
+    |
+    = note: `Send` would have to be implemented for the type `<R as AsyncFnOnce<(&str, &'0 str, Option<_>, &_, &'1 D)>>::CallOnceFuture`, for any two lifetimes `'0` and `'1`...
+    = note: ...but `Send` is actually implemented for the type `<R as AsyncFnOnce<(&'2 str, &'2 str, Option<_>, &'2 _, &'2 D)>>::CallOnceFuture`, for some specific lifetime `'2`
+
+For more information about this error, try `rustc --explain E0658`.
+error: could not compile `workspace-core` (lib) due to 5 previous errors

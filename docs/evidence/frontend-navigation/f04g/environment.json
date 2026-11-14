@@ -1,0 +1,46 @@
+{
+  "baseline": "/private/tmp/aw-f04g-baseline-zl3472ms/checkout",
+  "target": "/private/tmp/aw-f04g-baseline-zl3472ms/target",
+  "root": "/private/tmp/aw-f04g-baseline-zl3472ms",
+  "starting_revision": "5140ecee8a938c996cd4759917c8355eebc3ac2e",
+  "branch": "feature/m01-frontend-navigation",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "versions": {
+    "node": "v26.13.1",
+    "corepack": "12.18.0",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "git": "git version 2.50.0",
+    "sw_vers": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56"
+  },
+  "hardware": {
+    "model": "Mac16,8",
+    "memory_bytes": 51539607552,
+    "logical_cpus": 12,
+    "cpu": "Apple M4 Pro"
+  },
+  "current_target": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+  "cache": "current warm target; baseline fresh private Cargo target; shared download caches",
+  "unit_profile": "test, codegen feature; one Rust test thread, one tooling/UI worker",
+  "packaging_profile": "release; separate matched debug desktop inspector cohorts with bundled release sidecars",
+  "initial_tree_and_index": "clean",
+  "dependencies": {
+    "@base-ui/react": "1.9.0",
+    "@tanstack/react-query": "5.107.1",
+    "@tanstack/react-router": "1.170.46",
+    "@tauri-apps/api": "2.12.4",
+    "@tauri-apps/plugin-dialog": "^2.8.4",
+    "@xstate/react": "6.1.0",
+    "class-variance-authority": "0.7.1",
+    "cn": "0.5.2",
+    "lucide-react": "1.72.0",
+    "p-queue": "10.0.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-resizable-panels": "^4.21.0",
+    "shiki": "^4.6.0",
+    "tw-animate-css": "1.4.0",
+    "xstate": "5.33.4",
+    "zustand": "5.1.0"
+  }
+}

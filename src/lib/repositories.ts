@@ -1,126 +1,111 @@
 import { invoke } from "@tauri-apps/api/core";
 
-export type RepositoryError = { code: string; message: string };
-export type Availability =
-  | { state: "checking" | "available" }
-  | { state: "unavailable"; error: RepositoryError };
-export type Repository = {
-  id: string;
-  name: string;
-  path: string;
-  availability: Availability;
-};
-export type RepositoryPage = {
-  repositories: Repository[];
-  next: string | null;
-};
-export type Registration = {
-  action_id: string;
-  path: string;
-  initial_workspace_id?: string | null;
-  create_initial_workspace?: boolean;
-} & (
-  | { state: "pending" }
-  | { state: "completed"; repository_id: string }
-  | { state: "failed"; error: RepositoryError }
-);
-export type RegistrationRequest = {
-  action_id: string;
-  path: string;
-  create_initial_workspace?: boolean;
-};
-export type RepositoryRequest =
-  | { operation: "register"; request: RegistrationRequest }
-  | { operation: "action"; action_id: string }
-  | { operation: "list"; after: string | null; refresh: boolean }
-  | { operation: "get"; id: string; refresh: boolean };
-export type RepositoryReply =
-  | { kind: "registration"; registration: Registration }
-  | { kind: "action"; registration: Registration | null }
-  | { kind: "repositories"; page: RepositoryPage }
-  | { kind: "repository"; repository: Repository | null };
+import {
+  object,
+  identity,
+  bounded,
+  absent,
+  text,
+  domainError,
+  decodeOwnedReply,
+  decodeRequestFailure,
+  replyUnavailable,
+  type ObservationError,
+} from "./observation-contracts";
+export { object, identity } from "./observation-contracts";
+export type RepositoryError = ObservationError;
+export type {
+  Availability,
+  Repository,
+  RepositoryPage,
+  Registration,
+  RepositoryRequest,
+  RepositoryReply,
+} from "@/generated/contracts/types";
+export type RegistrationRequest = RegisterRepository;
+import type {
+  RegisterRepository,
+  Repository,
+  Registration,
+  RepositoryRequest,
+  RepositoryReply,
+} from "@/generated/contracts/types";
+import { validateRepositoryReply } from "@/generated/contracts/validators.js";
 
-export function object(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-export function identity(value: unknown): value is string {
+function repositorySemantics(value: Repository): boolean {
   return (
-    typeof value === "string" &&
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      value,
-    )
+    text(value.name, 24 * 1024) &&
+    value.name.length > 0 &&
+    text(value.path, 24 * 1024) &&
+    bounded(value, 24 * 1024) &&
+    (value.availability.state === "unavailable"
+      ? domainError(value.availability.error)
+      : absent(value.availability, "error"))
   );
 }
-function error(value: unknown): value is RepositoryError {
+function registrationSemantics(value: Registration): boolean {
   return (
-    object(value) &&
-    typeof value.code === "string" &&
-    typeof value.message === "string"
+    text(value.path, 4096) &&
+    (value.state === "completed" || value.initial_workspace_id === null) &&
+    (value.initial_workspace_id === null || value.create_initial_workspace) &&
+    (value.state === "pending"
+      ? absent(value, "repository_id", "error")
+      : value.state === "completed"
+        ? absent(value, "error")
+        : absent(value, "repository_id") && domainError(value.error))
   );
 }
-function availability(value: unknown): value is Availability {
-  return (
-    object(value) &&
-    (value.state === "available" ||
-      value.state === "checking" ||
-      (value.state === "unavailable" && error(value.error)))
-  );
-}
-function repository(value: unknown): value is Repository {
-  return (
-    object(value) &&
-    identity(value.id) &&
-    typeof value.name === "string" &&
-    typeof value.path === "string" &&
-    availability(value.availability)
-  );
-}
-function registration(value: unknown): value is Registration {
-  return (
-    object(value) &&
-    identity(value.action_id) &&
-    typeof value.path === "string" &&
-    (value.initial_workspace_id === undefined ||
-      value.initial_workspace_id === null ||
-      identity(value.initial_workspace_id)) &&
-    (value.state === "pending" ||
-      (value.state === "completed" && identity(value.repository_id)) ||
-      (value.state === "failed" && error(value.error)))
-  );
-}
-function reply(value: unknown): value is RepositoryReply {
-  if (!object(value)) return false;
+function replySemantics(value: RepositoryReply): boolean {
+  if (!bounded(value, 48 * 1024)) return false;
   switch (value.kind) {
     case "registration":
-      return registration(value.registration);
+      return registrationSemantics(value.registration);
     case "action":
-      return value.registration === null || registration(value.registration);
+      return (
+        value.registration === null || registrationSemantics(value.registration)
+      );
     case "repository":
-      return value.repository === null || repository(value.repository);
+      return value.repository === null || repositorySemantics(value.repository);
     case "repositories":
       return (
-        object(value.page) &&
-        Array.isArray(value.page.repositories) &&
         value.page.repositories.length <= 32 &&
-        value.page.repositories.every(repository) &&
-        (value.page.next === null || identity(value.page.next))
+        value.page.repositories.every(repositorySemantics)
       );
-    default:
-      return false;
   }
 }
 export async function repositoryRequest(
+  expectedOwner: string,
   request: RepositoryRequest,
 ): Promise<RepositoryReply> {
-  const value = await invoke<unknown>("repository_request", { request });
+  let value: unknown;
+  try {
+    value = await invoke<unknown>("repository_request", {
+      expectedOwner,
+      request,
+    });
+  } catch (error) {
+    throw decodeRequestFailure(error);
+  }
+  return decodeOwnedReply(expectedOwner, value, (reply) =>
+    decodeRepositoryReply(request, reply),
+  );
+}
+export function decodeRepositoryReply(
+  request: RepositoryRequest,
+  value: unknown,
+): RepositoryReply {
   const expected = {
     register: "registration",
     action: "action",
     list: "repositories",
     get: "repository",
   }[request.operation];
-  if (!reply(value) || value.kind !== expected)
-    throw new Error(
+  if (
+    !validateRepositoryReply(value) ||
+    !replySemantics(value) ||
+    value.kind !== expected
+  )
+    throw replyUnavailable(
       "The supervisor returned an invalid repository observation. Refresh to reconnect to a matching build.",
     );
   if (
@@ -135,9 +120,11 @@ export async function repositoryRequest(
     if (
       value.registration.action_id !== id ||
       (request.operation === "register" &&
-        value.registration.path !== request.request.path)
+        (value.registration.path !== request.request.path ||
+          value.registration.create_initial_workspace !==
+            (request.request.create_initial_workspace ?? false)))
     )
-      throw new Error(
+      throw replyUnavailable(
         "Repository action observation has the wrong identity. Refresh its recorded status.",
       );
   }
@@ -147,12 +134,14 @@ export async function repositoryRequest(
     value.repository &&
     value.repository.id !== request.id
   )
-    throw new Error("Repository observation has the wrong identity.");
+    throw replyUnavailable("Repository observation has the wrong identity.");
   return value;
 }
 export function repositoryError(value: unknown): RepositoryError {
-  return error(value)
-    ? value
+  return object(value) &&
+    typeof value.code === "string" &&
+    typeof value.message === "string"
+    ? (value as RepositoryError)
     : {
         code: "connection",
         message: value instanceof Error ? value.message : String(value),
@@ -164,6 +153,7 @@ export const PENDING_KEY = "agent-workspace.pending-registration";
 export type PendingRegistration = {
   request: RegistrationRequest;
   selection: string | null;
+  uncertain?: boolean;
 };
 export function readSelection(): string | null {
   try {
@@ -175,8 +165,8 @@ export function readSelection(): string | null {
 }
 export function readPending(): PendingRegistration | null {
   try {
-    const text = localStorage.getItem(PENDING_KEY);
-    const value: unknown = text ? JSON.parse(text) : null;
+    const stored = localStorage.getItem(PENDING_KEY);
+    const value: unknown = stored ? JSON.parse(stored) : null;
     if (
       object(value) &&
       object(value.request) &&
@@ -194,6 +184,8 @@ export function readPending(): PendingRegistration | null {
             value.request.create_initial_workspace === true,
         },
         selection: value.selection,
+        // Legacy records may already have crossed IPC. An over-budget path could never be sent.
+        uncertain: value.uncertain !== false && text(value.request.path, 4096),
       };
     }
   } catch {

@@ -1,0 +1,28 @@
+(()=>{
+ const q=globalThis.f08={started:performance.now(),log:[],navigation:[],windows:[],active:0,maxActive:0,duplicates:0,keys:new Map(),heldAcks:[]};
+ const original=window.fetch;
+ q.invoke=window.__TAURI_INTERNALS__.invoke.bind(window.__TAURI_INTERNALS__);
+ // Tauri's invoke property is non-writable. Trace its actual custom-protocol fetch.
+ window.fetch=function(url,options){
+  if(!String(url).startsWith('ipc:'))return original.call(this,url,options);
+  const command=String(url).split('/').pop();let args;
+  try{args=JSON.parse(typeof options.body==='string'?options.body:new TextDecoder().decode(options.body))}catch{}
+  const item={command,args,start:performance.now()};q.log.push(item);
+  const read=['repository_request','workspace_request'].includes(command)&&!['register','create','reconcile'].includes(args?.request?.operation);
+  const key=JSON.stringify([command,args]);
+  if(read){q.active++;q.maxActive=Math.max(q.active,q.maxActive);if(q.keys.has(key))q.duplicates++;q.keys.set(key,(q.keys.get(key)||0)+1)}
+  const result=command==='observation_acknowledge'&&q.withholdAcks?new Promise((resolve,reject)=>{item.withheld=true;q.heldAcks.push(()=>original.call(this,url,options).then(resolve,reject))}):original.call(this,url,options);
+  const end=(ok,value)=>{item.end=performance.now();item.ok=ok;if(!ok)item.error=String(value);if(read){q.active--;const n=q.keys.get(key)-1;n?q.keys.set(key,n):q.keys.delete(key)}};
+  result.then(value=>end(true,value),error=>end(false,error));return result;
+ };
+ q.values=()=>{const root=document.getElementById('root');const first=root[Object.keys(root).find(k=>k.startsWith('__reactContainer$'))];const stack=[first,first?.alternate],seen=new Set(),values=[];while(stack.length){const f=stack.pop();if(!f||seen.has(f))continue;seen.add(f);for(let h=f.memoizedState;h;h=h.next){values.push(h.memoizedState)}stack.push(f.child,f.sibling)}return values};
+ q.app=()=>q.values().find(v=>v?.client?.getQueryCache&&v?.inspection&&v?.reads);
+ q.feed=()=>q.values().find(v=>v?.actor&&v?.connect&&v?.getSnapshot);
+ q.router=()=>q.values().find(v=>v?.options?.context?.navigation);
+ q.snapshot=()=>{const app=q.app(),queries=app?.client.getQueryCache().getAll();return {time:performance.now(),feed:q.feed()?.getSnapshot(),href:location.pathname+location.search,visibility:document.visibilityState,active:q.active,maxActive:q.maxActive,duplicates:q.duplicates,queries:queries?.length,cacheBodyBytes:queries?.reduce((n,x)=>n+new TextEncoder().encode(JSON.stringify(x.state.data)||'').length,0),queue:app?.reads.queue.size,pending:app?.reads.pending.size,physicalActive:app?.reads.queue.pending,freshness:app?.freshness.clock,actor:app?.inspection.actor.getSnapshot().value,commands:q.log.reduce((a,x)=>(a[x.command]=(a[x.command]||0)+1,a),{}),assets:[...document.scripts].map(x=>x.src.replaceAll('tauri://','tauri__')),width:innerWidth,height:innerHeight,dpr:devicePixelRatio,scroll:[...document.querySelectorAll('*')].filter(e=>e.scrollTop>0).map(e=>({role:e.getAttribute('aria-label'),class:e.className,top:e.scrollTop})),queryStates:queries?.map(x=>({key:x.queryKey,active:x.getObserversCount(),status:x.state.status,fetch:x.state.fetchStatus}))}};
+ q.mark=(label,ms=6000)=>{const start=q.snapshot();setTimeout(()=>q.windows.push({label,start,end:q.snapshot()}),ms)};
+ document.addEventListener('click',event=>{const el=event.target.closest('button,a,[role=tab]');if(!el)return;const item={label:el.innerText||el.getAttribute('aria-label'),trusted:event.isTrusted,start:performance.now()};requestAnimationFrame(()=>requestAnimationFrame(()=>{item.feedback=performance.now()-item.start;item.href=location.pathname+location.search;item.heading=document.querySelector('h1')?.innerText;item.tab=document.querySelector('[role=tab][aria-selected=true]')?.innerText;q.navigation.push(item)}))},true);
+ q.startup={navigation:performance.getEntriesByType('navigation').map(e=>({domContentLoaded:e.domContentLoadedEventEnd,load:e.loadEventEnd,responseEnd:e.responseEnd})),paint:performance.getEntriesByType('paint').map(e=>e.toJSON())};
+ console.log('F08-INITIAL:'+JSON.stringify({snapshot:q.snapshot(),startup:q.startup,router:!!q.router()}));
+ return 'F08 instrumentation installed';
+})()

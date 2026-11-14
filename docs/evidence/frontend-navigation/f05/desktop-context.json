@@ -1,0 +1,9 @@
+{
+  "root": "/private/tmp/aw-f05-ostgc58_",
+  "state": "/private/tmp/aw-f05-ostgc58_/state",
+  "repository": "/private/tmp/aw-f05-ostgc58_/Context",
+  "bundle": "/private/tmp/aw-f05-ostgc58_/F05 Context.app",
+  "desktop_pid": 65698,
+  "desktop_hash": "f0ccf666aa95ef34f757fe638cfb7c46dc44631481b44cbfde32aedd0f528046",
+  "bundle_identifier": "dev.christopherbengtsson.f05.context"
+}

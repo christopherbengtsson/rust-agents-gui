@@ -1,0 +1,119 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:52:09 PM
+					36 image
+					37 text for(let i=9000;i<Math.min(f08.exportString.length,18000);i+=300)console.log('F08DATA:'+i+':'+f08.exportString.slice(i,i+300))
+					38 image
+					39 text F08DATA:9000:rgs":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":11,"cursor":{"owner":"47400-1794690795286464000","sequence":2765}}},"start":1191642,"end":1191648.0000000002,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a
+					40 image
+					41 text F08DATA:9300:1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":12,"cursor":{"owner":"47400-1794690795286464000","sequence":2766}}},"start":1191749,"end":1191750,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":13,"cursor":{"
+					42 image
+					43 text F08DATA:9600:owner":"47400-1794690795286464000","sequence":2767}}},"start":1191852,"end":1191857,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":14,"cursor":{"owner":"47400-1794690795286464000","sequence":2768}}},"star
+					44 image
+					45 text F08DATA:9900:t":1191956.0000000002,"end":1191957,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":15,"cursor":{"owner":"47400-1794690795286464000","sequence":2769}}},"start":1192055,"end":1192056,"ok":true},{"command":"
+					46 image
+					47 text F08DATA:10200:observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":16,"cursor":{"owner":"47400-1794690795286464000","sequence":2770}}},"start":1192168.0000000002,"end":1192169,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgemen
+					48 image
+					49 text F08DATA:10500:t":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":17,"cursor":{"owner":"47400-1794690795286464000","sequence":2771}}},"start":1192273.0000000002,"end":1192275,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-9
+					50 image
+					51 text F08DATA:10800:08a9dfa1fc4","batch_id":18,"cursor":{"owner":"47400-1794690795286464000","sequence":2772}}},"start":1192372,"end":1192373,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":19,"cursor":{"owner":"47400-1794690
+					52 image
+					53 text F08DATA:11100:795286464000","sequence":2773}}},"start":1192536,"end":1192537,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":20,"cursor":{"owner":"47400-1794690795286464000","sequence":2774}}},"start":1192589,"end":1192
+					54 image
+					55 text F08DATA:11400:590,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":21,"cursor":{"owner":"47400-1794690795286464000","sequence":2775}}},"start":1192700,"end":1192701,"ok":true},{"command":"observation_acknowledge","args":
+					56 image
+					57 text F08DATA:11700:{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":22,"cursor":{"owner":"47400-1794690795286464000","sequence":2776}}},"start":1192827,"end":1192829,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a
+					58 image
+					59 text F08DATA:12000:94f-908a9dfa1fc4","batch_id":23,"cursor":{"owner":"47400-1794690795286464000","sequence":2777}}},"start":1192921,"end":1192923,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":24,"cursor":{"owner":"47400-17
+					60 image
+					61 text F08DATA:12300:94690795286464000","sequence":2778}}},"start":1193016,"end":1193017,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":25,"cursor":{"owner":"47400-1794690795286464000","sequence":2779}}},"start":1193110.00000
+					62 image
+					63 text F08DATA:12600:00002,"end":1193111,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":26,"cursor":{"owner":"47400-1794690795286464000","sequence":2780}}},"start":1193203,"end":1193204,"ok":true},{"command":"observation_ackn
+					64 image
+					65 text F08DATA:12900:owledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":27,"cursor":{"owner":"47400-1794690795286464000","sequence":2781}}},"start":1193302.0000000002,"end":1193303,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscriptio
+					66 image
+					67 text F08DATA:13200:n_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":28,"cursor":{"owner":"47400-1794690795286464000","sequence":2782}}},"start":1193394,"end":1193395,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":29,
+					68 image
+					69 text F08DATA:13500:"cursor":{"owner":"47400-1794690795286464000","sequence":2783}}},"start":1193486,"end":1193487,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":30,"cursor":{"owner":"47400-1794690795286464000","sequence":27
+					70 image
+					71 text F08DATA:13800:84}}},"start":1193597,"end":1193598,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":31,"cursor":{"owner":"47400-1794690795286464000","sequence":2785}}},"start":1193712,"end":1193721,"ok":true},{"command":"
+					72 image
+					73 text F08DATA:14100:observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":32,"cursor":{"owner":"47400-1794690795286464000","sequence":2786}}},"start":1193820,"end":1193823,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscr
+					74 image
+					75 text F08DATA:14400:iption_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":33,"cursor":{"owner":"47400-1794690795286464000","sequence":2787}}},"start":1193930,"end":1193932,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id
+					76 image
+					77 text F08DATA:14700:":34,"cursor":{"owner":"47400-1794690795286464000","sequence":2788}}},"start":1194034,"end":1194036,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":35,"cursor":{"owner":"47400-1794690795286464000","sequenc
+					78 image
+					79 text F08DATA:15000:e":2788}}},"start":1199037,"end":1199039,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":36,"cursor":{"owner":"47400-1794690795286464000","sequence":2788}}},"start":1204041,"end":1204045,"ok":true},{"comma
+					80 image
+					81 text F08DATA:15300:nd":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":37,"cursor":{"owner":"47400-1794690795286464000","sequence":2788}}},"start":1209049,"end":1209054,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"s
+					82 image
+					83 text F08DATA:15600:ubscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":38,"cursor":{"owner":"47400-1794690795286464000","sequence":2788}}},"start":1214056,"end":1214057,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","bat
+					84 image
+					85 text F08DATA:15900:ch_id":39,"cursor":{"owner":"47400-1794690795286464000","sequence":2788}}},"start":1219060,"end":1219066,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"5b4a1018-f8c9-49ef-a94f-908a9dfa1fc4","batch_id":40,"cursor":{"owner":"47400-1794690795286464000","se
+					86 image
+					87 text F08DATA:16200:quence":2788}}},"start":1224070,"end":1224074,"ok":true}]}
+					88 image
+					89 text undefined
+			90 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			91 container
+	92 scroll area
+		93 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			94 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			95 container
+				96 button Back
+				97 heading Settings, Value: 1
+					98 text Settings
+			99 container Settings
+				100 link General, Value: tauri://localhost/settings/general
+			101 container General
+				102 heading General, Value: 2
+					103 text General
+				104 text General settings will be available here.
+	105 close button
+	106 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	107 minimize button
+	108 text Agent Workspace
+109 menu bar
+	110 F08 Inspector current
+	111 File
+	112 Edit
+	113 View
+	114 Window
+	115 Help
+
+The focused UI element is 90 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

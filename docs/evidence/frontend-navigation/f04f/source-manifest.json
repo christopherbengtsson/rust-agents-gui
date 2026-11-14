@@ -1,0 +1,29 @@
+{
+  "baseline": "1fc3d936bd1670f9451d21387975bc116204bb65",
+  "branch": "feature/m01-frontend-navigation",
+  "reviewed_product_tree": "9c8a60db98eb51de0adc0b0467eecd81fda4ad42",
+  "dirty": true,
+  "sources": {
+    "package.json": "370a3e31dffcbf0aa72badedc0d2058eca8857390e343b8c30401dae19e599e3",
+    "pnpm-lock.yaml": "1205860fa858b2143db1667c0f8dd9ef7337279d1755bce7240b94e07aa4e6ea",
+    "src/App.test.tsx": "e49d262312a35e21368e07be15e4721322297f7cf9de550ef9c95dbf2ef3b7b4",
+    "src/components/README.md": "330e6d8b02134e97ec00fae9143174f9be37760d906e1274ee81ad6139b92207",
+    "src/components/blocks/supervisor-connection.tsx": "07cc916c601a9f9710b2afbbf2feb01f14162a05fe2dd1ca6507e804ed886b47",
+    "src/frontend-scheduling.test.tsx": "d2cc2dd5064013587dab3739b39f74e756fb8150b03afa838487a922a7fa6956",
+    "src/generated/contracts/manifest.json": "b4c486bbdd07872f35041cf98ece50909edb3d519d0dfd1ee6ec7848a440caa1",
+    "src/hooks/use-observation-feed.ts": "2e4130cc6e0f22b580decce23b0d651047d9088987593ff0f61f40dbec22582a",
+    "src/hooks/use-workspace-changes.ts": "87927d86f98733c63a8e2c95b6d4a9e193ff7c4a7f0481d09accd8a44b305c78",
+    "src/lib/app-observations.ts": "686c6d5959bdb317537c3649c624714efa3601d5917d37c0dbca3c1e67160aed",
+    "src/lib/inspection-actor.test.tsx": "7ac26bbcba24cdf5a8d8e3eb46128e0ba12b4bcca06ee65bcd3b012560ce87e5",
+    "src/lib/observation-feed.ts": "51575a839c851712d7d0921f8f5fe4d4e33870061a0b9a264e9a598a18b1891c",
+    "src/lib/presentation-store.ts": "f66216bead6813184e714cd9528d7de8a3e86037aa0f3f3a1195c784d49d54a1",
+    "src/lib/workspace-changes-reader.ts": "84f89431003aafe28f40a9640221d435c8feec436f09682358bc296ae7bbff8f",
+    "src/observation-feed-bridge.test.tsx": "d8e758b45990a5070693fb23c27201ca72d3f87e3cb90affac3e7b18e70c863d",
+    "src/observation-feed.test.tsx": "7c887c20edca9d007d7991a58f5c84683033c4d5ef66a93f62f1f0f1c770afa6",
+    "src/workspace-changes.test.tsx": "fc689aae376f6873c406423e495a7ae2d914076603bbff5016925c9552e0c289"
+  },
+  "rust_unit_executable": {
+    "path": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-b1a480319bfd89d6",
+    "sha256": "9b3fa6ab0e29acdc8cc96edaa92832b955d9b235781eed4be9f5da38e9a9ba6c"
+  }
+}

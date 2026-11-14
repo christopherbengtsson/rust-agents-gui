@@ -1,7 +1,7 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import {
   WorkspaceChangesReader,
-  type ChangesView,
+  useInspectionView,
 } from "@/lib/workspace-changes-reader";
 
 function subscribeVisibility(changed: () => void) {
@@ -16,19 +16,15 @@ export function useWorkspaceChanges(
   workspaceId: string,
   active: boolean,
   visible = true,
-  sharedReader?: WorkspaceChangesReader,
+  reader: WorkspaceChangesReader,
 ) {
-  const [view, setView] = useState<ChangesView>({ loading: false });
-  // WorkspacePanel supplies a stable lane above keyed presentation resets.
-  const [reader] = useState(() => sharedReader ?? new WorkspaceChangesReader());
+  // App supplies the lifetime owner; view cleanup releases only its interest.
+  const view = useInspectionView(reader);
   const shown = useSyncExternalStore(subscribeVisibility, documentVisible);
   useEffect(() => {
-    reader.configure(
-      { owner, workspaceId, active, visible: visible && shown },
-      setView,
-    );
+    reader.configure({ owner, workspaceId, active, visible: visible && shown });
   }, [reader, owner, workspaceId, active, visible, shown]);
-  useEffect(() => () => reader.dispose(), [reader]);
+  useEffect(() => () => reader.release(), [reader]);
   return {
     ...view,
     select: reader.select,

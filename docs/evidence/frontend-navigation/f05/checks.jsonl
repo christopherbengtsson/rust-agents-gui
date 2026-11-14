@@ -1,0 +1,11 @@
+{"name": "test-selection", "command": ["corepack", "pnpm", "exec", "vitest", "list", "--filesOnly"], "status": 0, "elapsed_seconds": 0.20195058302488178}
+{"name": "full-verify", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 11.6549745000666}
+{"name": "unit-measurements", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 58.117484709015116}
+{"name": "reviewed-verify", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 11.341268249903806}
+{"name": "production-packaging", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 43.402482541045174}
+{"name": "reviewed-unit-measurements", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 62.448615000001155}
+{"name": "hidden-native-refresh", "command": ["python3", "docs/evidence/frontend-navigation/f05/refresh-hidden-comparison.py"], "status": 0, "elapsed_seconds": 0.08186204195953906}
+{"name": "cleanup", "command": ["python3", "docs/evidence/frontend-navigation/f05/cleanup-fixture.py"], "status": 0, "elapsed_seconds": 0.09097374998964369}
+{"name": "final-format", "command": ["corepack", "pnpm", "format:check"], "status": 0, "elapsed_seconds": 0.2263786670519039}
+{"name": "source-diff-check", "command": ["git", "diff", "--cached", "--check", "--", "src", ".scratch/frontend-navigation/issues/05-feature-observations-and-ui-context.md", ".scratch/frontend-navigation/spec.md", "docs/evidence/frontend-navigation/f05.md", "docs/evidence/frontend-navigation/f05/review.md"], "status": 0, "elapsed_seconds": 0.007031542016193271}
+{"name": "final-format-reviewed", "command": ["corepack", "pnpm", "format:check"], "status": 0, "elapsed_seconds": 0.22694149997550994}

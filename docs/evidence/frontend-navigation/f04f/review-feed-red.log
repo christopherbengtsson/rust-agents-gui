@@ -1,0 +1,26 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-feed.test.tsx (18 tests | 1 failed) 15ms
+   × owner changes preserve the delivery failure while exact native cleanup is pending 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-feed.test.tsx > owner changes preserve the delivery failure while exact native cleanup is pending
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ src/observation-feed.test.tsx:274:40
+    272|   s.feed.connect("owner-b");
+    273|   expect(s.feed.getSnapshot().state).toBe("stopping");
+    274|   expect(s.feed.getSnapshot().message).toContain("Delivery failed");
+       |                                        ^
+    275|   expect(s.deliveries).toHaveLength(1);
+    276|   join(); await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  17:02:47
+   Duration  268ms (environment 69%, transform 12%, import 10%, tests 7%, setup 1%, worker 1%)
+

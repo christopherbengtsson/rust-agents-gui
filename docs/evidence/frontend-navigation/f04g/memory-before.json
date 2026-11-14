@@ -1,0 +1,4 @@
+{
+  "timestamp": 1794675833.947762,
+  "processes": "  PID  PPID    RSS  %CPU ELAPSED COMMAND\n21014     1 168176   0.0   23:03 /private/tmp/aw-f04g-desktop-tq4w5p9r/F04g inspect baseline.app/Contents/MacOS/workspace-desktop\n31618     1 198800   1.9   01:39 /private/tmp/aw-f04g-desktop-tq4w5p9r/F04g Fixed Inspection.app/Contents/MacOS/workspace-desktop\n"
+}

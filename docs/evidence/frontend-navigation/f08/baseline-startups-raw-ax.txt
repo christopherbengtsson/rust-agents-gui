@@ -1,0 +1,107 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:05:15 PM
+					36 image
+					37 text (()=>{const s=JSON.stringify(JSON.parse(sessionStorage.f08Startups));for(let i=0;i<s.length;i+=300)console.log('F08DATA:'+i+':'+s.slice(i,i+300));return s.length})()
+					38 image
+					39 text F08DATA:0:[{"warmup":true,"navigation":[{"dom":82,"load":83}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":104.00000000000001,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":25,"load":25}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":48
+					40 image
+					41 text F08DATA:300:,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":20,"load":21}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":29,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":20,"load":20}],"paint":[{"name":"first-contentful-paint","entryType":"paint","s
+					42 image
+					43 text F08DATA:600:tartTime":28,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":19,"load":20}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":29,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":20,"load":21}],"paint":[{"name":"first-contentful-paint","entryType
+					44 image
+					45 text F08DATA:900:":"paint","startTime":29,"duration":0}]}]
+					46 image
+					47 text 941
+					48 text  = $1
+			49 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			50 container
+	51 scroll area
+		52 HTML content Description: Agent Workspace, URL: tauri://localhost
+			53 link Skip to workspace, Value: tauri://localhost#workspace
+			54 container Repository sidebar
+				55 text Agent Workspace
+				56 container Repositories
+					57 heading Repositories, Value: 2
+						58 text Repositories
+					59 content list
+						60 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							61 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							62 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							63 button Create workspace in Beta
+							64 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							65 text Available
+							66 content list
+								67 button lucy-bronze, Help: Workspace ready
+						68 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							69 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							70 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							71 button Create workspace in Alpha
+							72 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							73 text Available
+							74 content list
+								75 button sam-kerr, Help: Workspace ready
+				76 pop up button Add repository
+				77 text Connected
+				78 pop up button Connection details
+			79 container
+				80 heading Beta, Value: 1
+					81 text Beta
+				82 button Refresh status
+				83 container Selected repository
+					84 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+					85 text Repository available
+				86 heading Repository registered, Value: 2
+					87 text Repository registered
+				88 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				89 button Create workspace
+				90 text Local workspace
+				91 text Beta
+		92 scroll bar (settable, float) 0
+	93 close button
+	94 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	95 minimize button
+	96 text Agent Workspace
+97 menu bar
+	98 F08 Inspector baseline
+	99 File
+	100 Edit
+	101 View
+	102 Window
+	103 Help
+
+The focused UI element is 49 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

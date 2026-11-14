@@ -1,0 +1,109 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/observation-coordinator.test.tsx (6 tests | 6 failed) 4ms
+   × two physical reads run; identical queued and active targets coalesce 2ms
+   × disposal drops queued work and drains active work without admitting a replacement early 0ms
+   × 64 queued targets retain admission and reject only the newest distinct target 0ms
+   × owner, page and behavior flags distinguish reads; equivalent object keys coalesce 0ms
+   × one consumer can leave a coalesced read; failures and synchronous throws release capacity without retry 0ms
+   × a new interest coalesces with a physically draining identical read while the disposed interest stays obsolete 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > two physical reads run; identical queued and active targets coalesce
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ src/lib/observation-coordinator.test.tsx:15:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > disposal drops queued work and drains active work without admitting a replacement early
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ src/lib/observation-coordinator.test.tsx:37:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > 64 queued targets retain admission and reject only the newest distinct target
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ src/lib/observation-coordinator.test.tsx:63:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > owner, page and behavior flags distinguish reads; equivalent object keys coalesce
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ src/lib/observation-coordinator.test.tsx:83:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > one consumer can leave a coalesced read; failures and synchronous throws release capacity without retry
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ src/lib/observation-coordinator.test.tsx:106:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > a new interest coalesces with a physically draining identical read while the disposed interest stays obsolete
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ src/lib/observation-coordinator.test.tsx:132:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  16:04:37
+   Duration  234ms (environment 87%, transform 7%, import 3%, tests 2%, worker 1%)
+

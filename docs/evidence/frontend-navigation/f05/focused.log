@@ -1,0 +1,12 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  7 passed (7)
+      Tests  109 passed (109)
+   Start at  19:33:09
+   Duration  4.72s (tests 56%, environment 23%, import 18%, transform 2%)
+
+    Isolate  7 workers spawned · ~192ms startup each (spawn + environment, per file)
+             at least ~1.15s faster with isolate: false — reuses workers across files instead of one per file
+

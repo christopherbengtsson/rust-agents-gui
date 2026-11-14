@@ -32,5 +32,14 @@ does not cancel sibling work. Choose aggregate versus partial error presentation
 from the feature contract; preserve cleanup and target checks. Independent reads
 do not establish safe parallel mutations. No dependency helper library is required.
 
+For feature observations, schedule through the shared physical-read interface;
+the direct command example only shows an independent dependency graph. Query's
+logical request settlement, an AbortSignal or actor disposal cannot prove that
+native IPC finished. Keep an active queue task pending until its physical promise
+settles, even after its consumer leaves. The
+[physical-completion guidance](../../../../docs/agents/observations.md#physical-completion-and-cancellation)
+owns pending-only abort forwarding, coalescing identity and drain accounting.
+Those mechanics belong below feature Hooks, not in every component.
+
 Sources: [Promise.all semantics](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all),
 [Vercel dependency scheduling](https://github.com/vercel-labs/agent-skills/blob/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices/rules/async-dependencies.md).

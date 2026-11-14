@@ -1,0 +1,102 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:11:43 PM
+					36 image
+					37 text setTimeout(()=>f08.mark('no-workspace-interest',6000),4000);'armed'
+					38 image
+					39 text "
+					40 text armed
+					41 text "
+					42 text  = $1
+			43 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			44 container
+	45 scroll area
+		46 HTML content Description: Agent Workspace, URL: tauri://localhost
+			47 link Skip to workspace, Value: tauri://localhost#workspace
+			48 container Repository sidebar
+				49 text Agent Workspace
+				50 container Repositories
+					51 heading Repositories, Value: 2
+						52 text Repositories
+					53 content list
+						54 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							55 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							56 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							57 button Create workspace in Beta
+							58 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							59 text Available
+							60 content list
+								61 button lucy-bronze, Help: Workspace ready
+						62 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							63 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							64 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							65 button Create workspace in Alpha
+							66 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							67 text Available
+							68 content list
+								69 button sam-kerr, Help: Workspace ready
+				70 pop up button Add repository
+				71 text Connected
+				72 pop up button Connection details
+			73 container
+				74 container
+					75 heading Beta, Value: 1
+						76 text Beta
+					77 button Refresh status
+				78 container Selected repository
+					79 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+					80 text Repository available
+				81 heading Repository registered, Value: 2
+					82 text Repository registered
+				83 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				84 button Create workspace
+				85 container
+					86 text Local workspace Beta
+		87 scroll bar (settable, float) 0
+	88 close button
+	89 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	90 minimize button
+	91 text Agent Workspace
+92 menu bar
+	93 F08 Inspector baseline
+	94 File
+	95 Edit
+	96 View
+	97 Window
+	98 Help
+
+The focused UI element is 43 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,79 @@
+{
+  "root": "/private/tmp/aw-f04g-6__rfahc",
+  "pid": 11525,
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "sha256": "49961db50c0705479c56ec4f5b7eca49d275eb185bff99465a0c4691bb9fd555",
+  "checks": [
+    {
+      "name": "private_directory_and_endpoint",
+      "status": "pass",
+      "seconds": 2.6417081244289875e-5,
+      "detail": ["0o700", "0o600"]
+    },
+    {
+      "name": "fragmented_header_and_body",
+      "status": "pass",
+      "seconds": 0.09992091590538621,
+      "detail": null
+    },
+    {
+      "name": "exact_payload_limit_and_oversized_header",
+      "status": "pass",
+      "seconds": 0.001013625063933432,
+      "detail": null
+    },
+    {
+      "name": "partial_header",
+      "status": "pass",
+      "seconds": 6.920797750353813e-5,
+      "detail": null
+    },
+    {
+      "name": "header_without_body",
+      "status": "pass",
+      "seconds": 6.433296948671341e-5,
+      "detail": null
+    },
+    {
+      "name": "partial_body",
+      "status": "pass",
+      "seconds": 4.63749747723341e-5,
+      "detail": null
+    },
+    {
+      "name": "empty_json",
+      "status": "pass",
+      "seconds": 3.470794763416052e-5,
+      "detail": null
+    },
+    {
+      "name": "legacy_v6_v7_newline",
+      "status": "pass",
+      "seconds": 3.466603811830282e-5,
+      "detail": null
+    },
+    {
+      "name": "incompatible_versions_and_owner_before_dispatch",
+      "status": "pass",
+      "seconds": 0.00040904106572270393,
+      "detail": null
+    },
+    {
+      "name": "absolute_transfer_deadline_not_renewed_by_fragments",
+      "status": "pass",
+      "seconds": 2.0030349999433383,
+      "detail": 2.0029707910725847
+    },
+    {
+      "name": "eight_server_clients_then_handler_recovery",
+      "status": "fail",
+      "seconds": 0.0006083749467507005,
+      "error": "BrokenPipeError(32, 'Broken pipe')"
+    }
+  ],
+  "owner": "11525-1794674001001042000",
+  "cleanup": {
+    "child_joined": true,
+    "returncode": -15
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "database": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspace.sqlite3",
+  "start": 632622.779723791,
+  "released": 632662.781369291,
+  "fault": "exclusive private SQLite transaction; production 100ms busy budget unchanged"
+}

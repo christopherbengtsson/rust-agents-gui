@@ -1,0 +1,45 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/feature-observations.test.tsx (7 tests | 1 failed) 20ms
+   × hint-driven reads observe availability; explicit reprobe has a distinct physical flag and no Checking loop 4ms
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 20 passed (21)
+   Start at  16:23:42
+   Duration  969ms (tests 45%, environment 36%, import 12%, transform 6%, setup 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/feature-observations.test.tsx > hint-driven reads observe availability; explicit reprobe has a distinct physical flag and no Checking loop
+AssertionError: expected { Object (kind, page) } to match object { Object (kind, page) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -2,11 +2,11 @@
+    "kind": "repositories",
+    "page": {
+      "repositories": [
+        {
+          "availability": {
+-           "state": "unavailable",
++           "state": "available",
+          },
+        },
+      ],
+    },
+  }
+
+ ❯ src/lib/feature-observations.test.tsx:312:59
+    310|   await vi.advanceTimersByTimeAsync(1000);
+    311|   expect(refreshes).toHaveLength(3);
+    312|   expect(feature.peek("owner", listRequest)?.data?.value).toMatchObjec…
+       |                                                           ^
+    313|   release();
+    314|   app.client.clear();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

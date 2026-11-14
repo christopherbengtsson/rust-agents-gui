@@ -1,0 +1,26 @@
+[
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/App.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/observation-contracts.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/repositories.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/retained-delivery.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-changes.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspace-details.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/workspaces.test.tsx"
+  },
+  {
+    "file": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/lib/complete-operation.test.tsx"
+  }
+]

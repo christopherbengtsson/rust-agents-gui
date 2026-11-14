@@ -1,0 +1,364 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:16:12]
+ 15 |   const selection = useRef(selectedIdentity);
+ 16 |   selection.current = selectedIdentity;
+    :   ^^^^|^^^^^^^^|^^^
+    :       |        `-- Cannot update ref value during render
+    :       `-- This value is a ref
+ 17 |   const [restoredPending] = useState(readWorkspacePending);
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:32:23]
+ 31 |   const lastOwner = useRef(owner);
+ 32 |   if (owner) lastOwner.current = owner;
+    :              ^^^^|^^^^^^^^|^^^
+    :                  |        `-- Cannot update ref value during render
+    :                  `-- This value is a ref
+ 33 |   const shownOwner = owner ?? lastOwner.current;
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:37:48]
+ 36 |   const wanted = selectedIdentity && selectedIdentity.repository_id === repositoryId ? selectedIdentity.workspace_id :
+ 37 |     initial?.repository_id === repositoryId && handledInitial.current !== initial?.workspace_id ? initial?.workspace_id : undefined;
+    :                                                ^^^^^^^^^^^^^^^^^^^^^^^^|^^^^^^^^^^^^^^^^^^^^^^^
+    :                                                                        `-- Cannot access ref value during render
+ 38 |   const lists = shownOwner ? targets.map((target) => feature.peek(shownOwner, target)) : [];
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:37:5]
+ 36 |   const wanted = selectedIdentity && selectedIdentity.repository_id === repositoryId ? selectedIdentity.workspace_id :
+ 37 |     initial?.repository_id === repositoryId && handledInitial.current !== initial?.workspace_id ? initial?.workspace_id : undefined;
+    :     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    :                                                  `-- Cannot access ref value during render
+ 38 |   const lists = shownOwner ? targets.map((target) => feature.peek(shownOwner, target)) : [];
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:33:31]
+ 32 |   if (owner) lastOwner.current = owner;
+ 33 |   const shownOwner = owner ?? lastOwner.current;
+    :                               ^^^^^^^^|^^^^^^^^
+    :                                       `-- Cannot access ref value during render
+ 34 |   const targets = useMemo(() => Array.from(new Set([...repositoryIds.split(",").filter(Boolean), ...(repositoryId ? [repositoryId] : [])])).map((id) =>
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts:33:31]
+ 32 |   if (owner) lastOwner.current = owner;
+ 33 |   const shownOwner = owner ?? lastOwner.current;
+    :                               ^^^^^^^^|^^^^^^^^
+    :                                       `-- Passing a ref to a function may read its value during render
+ 34 |   const targets = useMemo(() => Array.from(new Set([...repositoryIds.split(",").filter(Boolean), ...(repositoryId ? [repositoryId] : [])])).map((id) =>
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspaces.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts:14:12]
+ 13 |   const selection = useRef(selectedId);
+ 14 |   selection.current = selectedId;
+    :   ^^^^|^^^^^^^^|^^^
+    :       |        `-- Cannot update ref value during render
+    :       `-- This value is a ref
+ 15 |   const [after, setAfter] = useState<string | null>(null);
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts:29:23]
+ 28 |   const lastOwner = useRef(owner);
+ 29 |   if (owner) lastOwner.current = owner;
+    :              ^^^^|^^^^^^^^|^^^
+    :                  |        `-- Cannot update ref value during render
+    :                  `-- This value is a ref
+ 30 |   const shownOwner = owner ?? lastOwner.current;
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts:30:31]
+ 29 |   if (owner) lastOwner.current = owner;
+ 30 |   const shownOwner = owner ?? lastOwner.current;
+    :                               ^^^^^^^^|^^^^^^^^
+    :                                       `-- Cannot access ref value during render
+ 31 |   const list = shownOwner ? feature.peek(shownOwner, { operation: "list", after }) : undefined;
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts
+4:11:06 PM [vite] (client) warning: Cannot access refs during render
+
+  x react-compiler(Refs): Cannot access refs during render
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts:30:31]
+ 29 |   if (owner) lastOwner.current = owner;
+ 30 |   const shownOwner = owner ?? lastOwner.current;
+    :                               ^^^^^^^^|^^^^^^^^
+    :                                       `-- Passing a ref to a function may read its value during render
+ 31 |   const list = shownOwner ? feature.peek(shownOwner, { operation: "list", after }) : undefined;
+    `----
+  help: React refs are values that are not needed for rendering. Refs should
+        only be accessed outside of render, such as in event handlers or
+        effects. Accessing a ref value (the `current` property) during
+        render can cause your component not to update as expected
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-repositories.ts
+ ❯ src/repositories.test.tsx (19 tests | 18 failed) 95ms
+   × picker cancellation preserves the draft and picker failure allows manual entry 3ms
+   × restored selection remains selected while its details are collapsed 1ms
+   × registration selects the durable result and never submits twice 0ms
+   × reopening with a retained action retrieves its result without resubmitting 0ms
+   × unavailable repositories stay selected and storage failures retain the last observation 0ms
+   × a late folder-picker response cannot overwrite a reopened dialog 0ms
+   × invalid registration permits correction and preserves an actionable error 0ms
+   × lost registration reply reconciles the retained action without another submit 0ms
+   × capacity rejection allows correction of an oversized registration (restored: false) 0ms
+   × capacity rejection allows correction of an oversized registration (restored: true) 0ms
+   × selection during registration is not retargeted by its late completion 0ms
+   × cursor paging retains selection and previous returns to the original page 0ms
+   × malformed repository payloads stay visible rather than becoming empty navigation 0ms
+   × a missing action lookup preserves the storage failure that blocked intent 0ms
+   × reconnect ignores the previous owner's late observation without repeating actions (success) 0ms
+   × reconnect ignores the previous owner's late observation without repeating actions (failure) 0ms
+   × reconnect retrieves a retained registration result without resubmitting 0ms
+   × explicit repository refresh reports loading while retaining the last observation 0ms
+ ❯ src/retained-delivery.test.tsx (9 tests | 8 failed) 129ms
+   × registration retains earlier uncertainty after owner_changed until matching status 5ms
+   × registration retains earlier uncertainty after not_connected until matching status 1ms
+   × registration retains earlier uncertainty after capacity until matching status 1ms
+   × workspace retains earlier uncertainty after busy until matching status 1ms
+   × workspace retains earlier uncertainty after owner_changed until matching status 0ms
+   × workspace retains earlier uncertainty after not_connected until matching status 1ms
+   × workspace retains earlier uncertainty after capacity until matching status 0ms
+   × a late registration transport failure cannot resurrect an authoritatively settled action 1ms
+ ❯ src/workspaces.test.tsx (14 tests | 12 failed) 70ms
+   × explicit creation sends once with a retained action identity 4ms
+   × creation in an unselected repository retains selection: create-first 1ms
+   × creation in an unselected repository retains selection: lookup-first 1ms
+   × creation in an unselected repository retains selection: lookup-before-admission 1ms
+   × an old owner's creation reply cannot select a workspace after reconnect 1ms
+   × a lost creation reply retrieves the same action and selects its failed workspace 0ms
+   × switching selection prevents a late creation reply from stealing context 0ms
+   × registration's recorded initial workspace is observed without a create request 0ms
+   × a delayed initial-workspace lookup cannot override explicit repository selection 0ms
+   × definite admission rejection retains the error but does not block another workspace's recovery 0ms
+   × a rejected action retains its error while unrelated workspace progress keeps polling 1ms
+   × definite rejection follows its pending action across repository navigation 0ms
+ ❯ src/App.test.tsx (14 tests | 13 failed) 65ms
+   × the fixed shell preserves landmarks and empty navigation at width 900 without global collapse or cookies 3ms
+   × diagnostics opens from the keyboard and Escape returns focus without reading status again 1ms
+   × connection failure stays visible until an explicit status retry; diagnostics never replay work 1ms
+   × refresh exposes pending feedback, blocks duplicate reads, and labels retained diagnostics as stale after failure 0ms
+   × remounting retrieves observations and never submits execution actions 0ms
+   × a connection failure with no error text still exposes the alert and retry 0ms
+   × Strict Mode ignores a late success from the cleaned-up observation request 0ms
+   × Strict Mode ignores a late failure from the cleaned-up observation request 0ms
+   × a drained obsolete success cannot replace the subsequent current observation 0ms
+   × a drained obsolete failure cannot replace the subsequent current observation 0ms
+   × a failed desktop identity read releases the pending guard for explicit retry 0ms
+   × connection failure replaces initial repository skeletons with unavailable guidance 0ms
+   × the app mounts one feed and exposes native delivery failure without replaying actions 0ms
+ ❯ src/frontend-scheduling.test.tsx (5 tests | 1 failed) 233ms
+   × workspace list fan-out waits behind two physical reads while explicit creation bypasses the queue 65ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 52 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > the fixed shell preserves landmarks and empty navigation at width 900 without global collapse or cookies
+ FAIL  src/App.test.tsx > diagnostics opens from the keyboard and Escape returns focus without reading status again
+ FAIL  src/App.test.tsx > connection failure stays visible until an explicit status retry; diagnostics never replay work
+ FAIL  src/App.test.tsx > refresh exposes pending feedback, blocks duplicate reads, and labels retained diagnostics as stale after failure
+ FAIL  src/App.test.tsx > remounting retrieves observations and never submits execution actions
+ FAIL  src/App.test.tsx > a connection failure with no error text still exposes the alert and retry
+ FAIL  src/App.test.tsx > Strict Mode ignores a late success from the cleaned-up observation request
+ FAIL  src/App.test.tsx > Strict Mode ignores a late failure from the cleaned-up observation request
+ FAIL  src/App.test.tsx > a drained obsolete success cannot replace the subsequent current observation
+ FAIL  src/App.test.tsx > a drained obsolete failure cannot replace the subsequent current observation
+ FAIL  src/App.test.tsx > a failed desktop identity read releases the pending guard for explicit retry
+ FAIL  src/App.test.tsx > connection failure replaces initial repository skeletons with unavailable guidance
+ FAIL  src/App.test.tsx > the app mounts one feed and exposes native delivery failure without replaying actions
+ FAIL  src/repositories.test.tsx > picker cancellation preserves the draft and picker failure allows manual entry
+ FAIL  src/repositories.test.tsx > restored selection remains selected while its details are collapsed
+ FAIL  src/repositories.test.tsx > registration selects the durable result and never submits twice
+ FAIL  src/repositories.test.tsx > reopening with a retained action retrieves its result without resubmitting
+ FAIL  src/repositories.test.tsx > unavailable repositories stay selected and storage failures retain the last observation
+ FAIL  src/repositories.test.tsx > a late folder-picker response cannot overwrite a reopened dialog
+ FAIL  src/repositories.test.tsx > invalid registration permits correction and preserves an actionable error
+ FAIL  src/repositories.test.tsx > lost registration reply reconciles the retained action without another submit
+ FAIL  src/repositories.test.tsx > capacity rejection allows correction of an oversized registration (restored: false)
+ FAIL  src/repositories.test.tsx > capacity rejection allows correction of an oversized registration (restored: true)
+ FAIL  src/repositories.test.tsx > selection during registration is not retargeted by its late completion
+ FAIL  src/repositories.test.tsx > cursor paging retains selection and previous returns to the original page
+ FAIL  src/repositories.test.tsx > malformed repository payloads stay visible rather than becoming empty navigation
+ FAIL  src/repositories.test.tsx > a missing action lookup preserves the storage failure that blocked intent
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ new AppObservations src/lib/app-observations.ts:25:32
+ ❯ _temp src/App.tsx:13:41
+ ❯ mountStateImpl node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:8650:24
+ ❯ mountState node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:8671:22
+ ❯ Object.useState node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:28913:18
+ ❯ process.env.NODE_ENV.exports.useState node_modules/.pnpm/react@19.3.1/node_modules/react/cjs/react.development.js:1309:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/52]⎯
+
+ FAIL  src/frontend-scheduling.test.tsx > workspace list fan-out waits behind two physical reads while explicit creation bypasses the queue
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/frontend-scheduling.test.tsx:56:5
+     54|   expect(
+     55|     requests.filter((request) => request.operation === "create"),
+     56|   ).toHaveLength(1);
+       |     ^
+     57|   first.unmount();
+     58|   await act(async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/52]⎯
+
+ FAIL  src/repositories.test.tsx > reconnect ignores the previous owner's late observation without repeating actions (success)
+ FAIL  src/repositories.test.tsx > reconnect ignores the previous owner's late observation without repeating actions (failure)
+ FAIL  src/repositories.test.tsx > reconnect retrieves a retained registration result without resubmitting
+ FAIL  src/repositories.test.tsx > explicit repository refresh reports loading while retaining the last observation
+ FAIL  src/retained-delivery.test.tsx > registration retains earlier uncertainty after owner_changed until matching status
+ FAIL  src/retained-delivery.test.tsx > registration retains earlier uncertainty after not_connected until matching status
+ FAIL  src/retained-delivery.test.tsx > registration retains earlier uncertainty after capacity until matching status
+ FAIL  src/retained-delivery.test.tsx > workspace retains earlier uncertainty after busy until matching status
+ FAIL  src/retained-delivery.test.tsx > workspace retains earlier uncertainty after owner_changed until matching status
+ FAIL  src/retained-delivery.test.tsx > workspace retains earlier uncertainty after not_connected until matching status
+ FAIL  src/retained-delivery.test.tsx > workspace retains earlier uncertainty after capacity until matching status
+ FAIL  src/retained-delivery.test.tsx > a late registration transport failure cannot resurrect an authoritatively settled action
+ FAIL  src/workspaces.test.tsx > explicit creation sends once with a retained action identity
+ FAIL  src/workspaces.test.tsx > creation in an unselected repository retains selection: create-first
+ FAIL  src/workspaces.test.tsx > creation in an unselected repository retains selection: lookup-first
+ FAIL  src/workspaces.test.tsx > creation in an unselected repository retains selection: lookup-before-admission
+ FAIL  src/workspaces.test.tsx > an old owner's creation reply cannot select a workspace after reconnect
+ FAIL  src/workspaces.test.tsx > a lost creation reply retrieves the same action and selects its failed workspace
+ FAIL  src/workspaces.test.tsx > switching selection prevents a late creation reply from stealing context
+ FAIL  src/workspaces.test.tsx > registration's recorded initial workspace is observed without a create request
+ FAIL  src/workspaces.test.tsx > a delayed initial-workspace lookup cannot override explicit repository selection
+ FAIL  src/workspaces.test.tsx > definite admission rejection retains the error but does not block another workspace's recovery
+ FAIL  src/workspaces.test.tsx > a rejected action retains its error while unrelated workspace progress keeps polling
+ FAIL  src/workspaces.test.tsx > definite rejection follows its pending action across repository navigation
+TypeError: The "eventTargets" argument must be an instance of EventEmitter or EventTarget. Received an instance of PQueue
+ ❯ new PQueue node_modules/.pnpm/p-queue@10.0.0/node_modules/p-queue/dist/index.js:85:64
+ ❯ ObservationCoordinator.<instance_members_initializer> src/lib/observation-coordinator.ts:29:19
+     27|
+     28| export class ObservationCoordinator {
+     29|   private queue = new PQueue({ concurrency: 2 });
+       |                   ^
+     30|   private pending = new Map<string, Read>();
+     31|
+ ❯ new ObservationCoordinator src/lib/observation-coordinator.ts:28:8
+ ❯ new AppObservations src/lib/app-observations.ts:25:32
+ ❯ t0 src/test-support/feature-hooks.ts:10:32
+ ❯ mountStateImpl node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:8650:24
+ ❯ mountState node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:8671:22
+ ❯ Object.useState node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:28913:18
+ ❯ process.env.NODE_ENV.exports.useState node_modules/.pnpm/react@19.3.1/node_modules/react/cjs/react.development.js:1309:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/52]⎯
+
+
+ Test Files  5 failed | 3 passed (8)
+      Tests  52 failed | 26 passed (78)
+   Start at  16:11:05
+   Duration  3.54s (environment 41%, import 25%, tests 24%, transform 9%, setup 1%)
+
+    Isolate  8 workers spawned · ~189ms startup each (spawn + environment, per file)
+             at least ~1.32s faster with isolate: false — reuses workers across files instead of one per file
+

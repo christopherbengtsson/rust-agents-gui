@@ -1,0 +1,126 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console opened at 6:07:13 PM
+					36 image
+					37 text Selected Element
+					38 image
+					39 outline (selectable)
+						40 row (selectable) Description: <h1 class=​"min-w-0 truncate">​Beta​</h1>, Value: <h1 class=​"min-w-0 truncate">​Beta​</h1>
+<
+h1
+class
+=​"
+min-w-0 truncate
+"
+>
+Beta
+<
+/h1
+>
+					41 text  = $1
+					42 image
+					43 text f04g.gc={before:f04g.snapshot()};setTimeout(()=>{f04g.gc.after=f04g.snapshot()},310000)
+					44 image
+					45 text 1408
+					46 text  = $2
+					47 image
+					48 text (()=>{const q=f04g,app=q.findObservations(),owner=app.freshness.currentOwner();q.bounds={scopes:[],keys:[],results:[],duplicateRuns:0};for(let i=0;i<67;i++){const scope=app.reads.scope(),request={operation:'get',id:'00000000-0000-4000-8000-00000000'+String(i).padStart(4,'0')},key=['native-qualification',owner,request];q.bounds.scopes.push(scope);q.bounds.keys.push(key);scope.read(key,()=>window.__TAURI_INTERNALS__.invoke('repository_request',{expectedOwner:owner,request})).then(()=>q.bounds.results.push('ok
+					49 image
+					50 text "
+					51 text {\"time\":336503,\"visibility\":\"visible\",\"active\":2,\"maxActive\":2,\"duplicates\":0,\"queryCount\":50,\"queue\":64,\"pending\":66,\"physicalActive\":2,\"freshness\":305,\"logCount\":669,\"commands\":{\"workspace_request\":386,\"observation_acknowledge\":281,\"repository_request\":2},\"assets\":[\"
+					52 link tauri://localhost/assets/index-DWHwtLtg.js\, Value: tauri://localhost/assets/index-DWHwtLtg.js%5C
+					53 text "],\"userAgent\":\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)\",\"width\":900,\"height\":148,\"actor\":\"idle\",\"cacheBodyBytes\":1178724}
+					54 text "
+					55 text  = $3
+			56 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			57 container
+	58 scroll area
+		59 HTML content Description: Agent Workspace, URL: tauri://localhost
+			60 link Skip to workspace, Value: tauri://localhost#workspace
+			61 container Repository sidebar
+				62 text Agent Workspace
+				63 container Repositories
+					64 heading Repositories, Value: 2
+						65 text Repositories
+					66 content list
+						67 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							68 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							69 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							70 button Create workspace in Beta
+							71 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							72 text Available
+							73 content list
+								74 button thiago-silva, Help: Workspace ready
+						75 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							76 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							77 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							78 button Create workspace in Alpha
+							79 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							80 text Available
+							81 content list
+								82 button vincent-aboubakar, Help: Workspace ready
+				83 pop up button Add repository
+				84 text Connected
+				85 pop up button Connection details
+			86 container
+				87 container
+					88 heading Beta, Value: 1
+						89 text Beta
+					90 button Refresh status
+				91 container Selected repository
+					92 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					93 text Repository available
+				94 heading Repository registered, Value: 2
+					95 text Repository registered
+				96 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				97 button Create workspace
+				98 container
+					99 text Local workspace Beta
+		100 scroll bar (settable, float) 0
+	101 close button
+	102 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	103 minimize button
+	104 text Agent Workspace
+105 menu bar
+	106 F04g Fixed Inspection
+	107 File
+	108 Edit
+	109 View
+	110 Window
+	111 Help
+
+The focused UI element is 56 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

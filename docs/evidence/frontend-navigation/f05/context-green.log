@@ -1,0 +1,67 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspace-changes.test.tsx (23 tests | 3 failed) 443ms
+   × a removed selection remains named and an old preview is never replaced by another file 59ms
+   × same-status edits refresh the selected preview only while Changes is active 3ms
+   × manual Refresh settles a queued comparison after a failed preview 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspace-changes.test.tsx > a removed selection remains named and an old preview is never replaced by another file
+AssertionError: expected undefined to be '00000000-0000-4000-8000-000000000003' // Object.is equality
+
+- Expected:
+"00000000-0000-4000-8000-000000000003"
+
++ Received:
+undefined
+
+ ❯ src/workspace-changes.test.tsx:435:39
+    433|     await result.current.refresh();
+    434|   });
+    435|   expect(result.current.selected?.id).toBe(file_id);
+       |                                       ^
+    436|   expect(result.current.error).toMatch(/no longer appears/);
+    437|   expect(result.current.preview?.preview?.comparison_id).toBe(comparis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/workspace-changes.test.tsx > same-status edits refresh the selected preview only while Changes is active
+AssertionError: expected 'new content' to be 'further edit' // Object.is equality
+
+Expected: "further edit"
+Received: "new content"
+
+ ❯ src/workspace-changes.test.tsx:597:57
+    595|     await vi.advanceTimersByTimeAsync(2000);
+    596|   });
+    597|   expect(result.current.preview?.preview?.rows[0].text).toBe("further …
+       |                                                         ^
+    598|   rerender({ active: false });
+    599|   await act(async () => {});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/workspace-changes.test.tsx > manual Refresh settles a queued comparison after a failed preview
+AssertionError: expected 'failed' to be 'ready' // Object.is equality
+
+Expected: "ready"
+Received: "failed"
+
+ ❯ src/workspace-changes.test.tsx:773:41
+    771|     await Promise.resolve();
+    772|   });
+    773|   expect(result.current.preview?.phase).toBe("ready");
+       |                                         ^
+    774|   expect(result.current.preview?.error).toBeNull();
+    775| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 20 passed (23)
+   Start at  19:30:23
+   Duration  919ms (tests 51%, import 23%, environment 18%, transform 7%)
+

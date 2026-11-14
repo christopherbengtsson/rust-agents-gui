@@ -11,8 +11,21 @@ Read [verification policy](../../../docs/agents/verification.md) before applying
 this skill. Read [the MVP](../../../docs/MVP.md) for behavior, architecture, or
 execution ownership, and the relevant milestone for its acceptance criteria.
 Before component work, read [the component guide](../../../src/components/README.md)
-and use [shadcn](../shadcn/SKILL.md) for toolkit APIs and conventions. These owners
-remain authoritative; rule examples support their implementation.
+and use [shadcn](../shadcn/SKILL.md) for toolkit APIs and conventions. Apply these
+documents under [repository precedence](../../../AGENTS.md#instruction-precedence);
+rule examples support their implementation.
+
+For routing, query/cache work or TanStack dependency updates, read
+[TanStack guidance](../../../docs/agents/tanstack.md) for installed skill selection
+and application constraints.
+
+For XState machine or actor design, implementation, and review, use
+[xstate-v5](../xstate-v5/SKILL.md) for machine modeling and library APIs.
+
+For native IPC, generated contracts, feature observations or observation resource
+lifetimes, read [observation engineering](../../../docs/agents/observations.md).
+It supplies repository ownership and physical-cleanup constraints; these rules
+explain their React integration.
 
 ## How to use
 
@@ -26,6 +39,29 @@ be omitted; illustrative adapters/components are identified rather than presente
 as existing product APIs. Use current installed-version docs when implementing.
 For a complete reference or broad review, [AGENTS.md](AGENTS.md) expands all rules.
 Individual rules are the editable source; the full guide is generated.
+
+## TypeScript policy
+
+Apply to production code, tests, and TypeScript configuration.
+
+- Preserve strictness and checked inputs when fixing diagnostics. Keep existing
+  checks effective rather than relaxing flags, narrowing config membership, or
+  adding `skipLibCheck` for convenience. Preserve runtime behavior; report and
+  verify any real bug fix separately through repository policy.
+- Model types precisely, retain generic relationships, and narrow `unknown`
+  input. Do not silence diagnostics with new `any`, double assertions
+  (`as unknown as T`), or suppression comments. Use type assertions and non-null
+  assertions only for evidenced invariants that inference or narrowing cannot
+  express; document the invariant. Dedicated negative type tests may use
+  `@ts-expect-error` with a reason for the expected rejection.
+- Inspect installed upstream declarations and supported type entry points before
+  adding a local declaration shim. A necessary shim must preserve argument,
+  result, and generic relationships; cite its contract source and verify both
+  valid usage and rejection of invalid usage.
+- Before completion, audit changed and newly added code for `any`, assertions,
+  suppressions, declaration shims, and weakened checking coverage. Distinguish
+  existing patterns from new escapes; report each new escape's invariant or
+  limitation and what would remove it. Keep unrelated cleanup outside the task.
 
 ## Components, state and identity
 
@@ -77,37 +113,44 @@ Source: [rules/state-ownership.md](rules/state-ownership.md)
 
 #### Place state with its coordinating owner
 
-Apply when several controls coordinate selection, drafts, or observations. Keep
-interaction state near its consumers and lift it to their closest coordinating
-owner. Calling a custom Hook twice creates two independent instances unless it
-deliberately connects to a shared source.
+Apply when several controls coordinate selection, drafts, or observations. Identify
+the authoritative owner before choosing where state lives. Keep local interaction
+state near its consumers and lift it to their closest coordinating owner. Calling
+a custom Hook twice creates two independent instances unless it deliberately
+connects to a shared source.
 
-**Incorrect (the list and panel cannot share this selection):**
+**Incorrect (the editor and preview cannot share this unsent draft):**
 
 ```tsx
-function RepositoryList() {
-  const [selected, setSelected] = useState<string | null>(null);
-  // Owns a selection unrelated to RepositoryPanel's selection.
+function DraftEditor() {
+  const [draft, setDraft] = useState("");
+  // Owns a draft unrelated to DraftPreview's draft.
 }
-function RepositoryPanel() {
-  const [selected] = useState<string | null>(null);
+function DraftPreview() {
+  const [draft] = useState("");
 }
 ```
 
-**Correct (illustrative child interfaces receive one owner's state):**
+**Correct (illustrative children share the dialog's local draft):**
 
 ```tsx
-function RepositoryScreen() {
-  const [selected, setSelected] = useState<string | null>(null);
-  return <>
-    <RepositoryList selected={selected} onSelect={setSelected} />
-    <RepositoryPanel selected={selected} />
-  </>;
+function NoteDialog() {
+  const [draft, setDraft] = useState("");
+  return (
+    <>
+      <DraftEditor draft={draft} onDraftChange={setDraft} />
+      <DraftPreview draft={draft} />
+    </>
+  );
 }
 ```
 
-A dialog can own disclosure and an unsent draft. Shared supervisor/conversation
-observations need an explicit owner; see [shared observations](rules/shared-observation-owner.md).
+Current destinations and navigable views belong to Router. Retained presentation
+memory supplies restoration defaults rather than a second current-selection owner;
+see [TanStack guidance](../../../docs/agents/tanstack.md). A dialog can own
+disclosure and an unsent draft. Shared observations use their feature interfaces;
+see [shared observations](rules/shared-observation-owner.md) for Query, actor and
+presentation-store ownership.
 
 Source: [Sharing state](https://react.dev/learn/sharing-state-between-components).
 
@@ -537,8 +580,12 @@ and targeted callbacks. A custom Hook's name does not imply shared state.
 **Incorrect (two instances install two independent sources):**
 
 ```tsx
-function Sidebar() { const connection = useConnection(); /* ... */ }
-function Diagnostics() { const connection = useConnection(); /* ... */ }
+function Sidebar() {
+  const connection = useConnection(); /* ... */
+}
+function Diagnostics() {
+  const connection = useConnection(); /* ... */
+}
 ```
 
 **Correct (illustrative child props share one source):**
@@ -546,16 +593,25 @@ function Diagnostics() { const connection = useConnection(); /* ... */ }
 ```tsx
 function Shell() {
   const connection = useConnection();
-  return <>
-    <Sidebar connection={connection} />
-    <Diagnostics connection={connection} />
-  </>;
+  return (
+    <>
+      <Sidebar connection={connection} />
+      <Diagnostics connection={connection} />
+    </>
+  );
 }
 ```
 
 Use context or an [actual external store](rules/external-store-snapshots.md) if consumers
-need that distribution model. SWR or another state library is a separate justified
-choice, not a required fix for repeated Hook calls. Place a continuing source
+need that distribution model. Multiple feature Hook calls can correctly subscribe
+to the same app-scoped Query client or actor; share the underlying owner rather
+than requiring prop distribution for every consumer. The example's defect is
+independent source creation, not repeated subscription to a shared source.
+
+Follow [observation ownership](../../../docs/agents/observations.md#cache-actor-and-presentation-ownership)
+for the approved Query/XState/Zustand split. Feature interfaces hide cache keys and
+coordination; consumers select observations and submit targeted callbacks instead
+of copying records into component or presentation state. Place a continuing source
 outside [visibility-owned subtrees](rules/view-resource-lifetimes.md).
 
 Source: [Custom Hooks share logic, not state](https://react.dev/learn/reusing-logic-with-custom-hooks).
@@ -570,8 +626,8 @@ Source: [rules/external-store-snapshots.md](rules/external-store-snapshots.md)
 
 #### Give external stores stable immutable snapshots
 
-Apply when integrating an actual subscribable frontend store with
-`useSyncExternalStore`. Keep subscription identity stable where possible and
+Apply when integrating an actual subscribable frontend store or a library's React
+bindings. For `useSyncExternalStore`, keep subscription identity stable where possible and
 return the same snapshot reference until the observed data changes.
 
 **Incorrect (every read invents a changed snapshot):**
@@ -598,7 +654,34 @@ for global state. Keep snapshots immutable and publish only meaningful changes.
 Simple owned observations can remain ordinary React state; introducing a store is
 not a prerequisite for calling IPC.
 
-Source: [React useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore).
+For adopted libraries, use their supported bindings inside feature interfaces
+rather than rebuilding their subscription adapters or mirroring snapshots in an
+Effect. Select the part needed for rendering. Illustrative integration with an
+already app-owned actor and vanilla presentation store:
+
+```tsx
+import { useSelector } from "@xstate/react";
+import { useStore } from "zustand";
+
+function useReadingStatus() {
+  const live = useSelector(feedActor, (snapshot) => snapshot.matches("live"));
+  const panelWidth = useStore(presentationStore, (state) => state.panelWidth);
+  return { live, panelWidth };
+}
+```
+
+Actor/store names and selected fields are illustrative, not current app interfaces.
+An object-producing selector needs the selected binding's supported
+equality/stability handling; React Compiler does not define
+external-store snapshot identity. Query feature Hooks likewise select what their
+consumer needs, preserving loading/error status where it affects presentation.
+See [ownership guidance](../../../docs/agents/observations.md#cache-actor-and-presentation-ownership)
+for where each record belongs.
+
+Sources: [React useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore),
+[XState React selectors](https://stately.ai/docs/xstate-react#useselectoractorref-selector-compare-getsnapshot),
+[Zustand vanilla-store bindings](https://github.com/pmndrs/zustand/blob/v5.1.0/src/react.ts),
+[Query render subscriptions](https://tanstack.com/query/v5/docs/framework/react/guides/render-optimizations).
 
 ### app-initialization
 
@@ -663,20 +746,33 @@ type Status = { state: "ready"; owner: string };
 const status = await invoke<Status>("example_status");
 ```
 
-**Correct (illustrative command and minimal schema are explicitly checked):**
+**Correct (illustrative generated shape check precedes contextual assertions):**
 
 ```ts
+// Stand-ins for a generated declaration/validator and a local contextual assertion.
+declare const validateStatus: (value: unknown) => value is Status;
+declare const assertStatusContext: (
+  value: Status,
+  expectedOwner: string,
+) => void;
+
 const value = await invoke<unknown>("example_status");
-if (typeof value !== "object" || value === null ||
-    !("state" in value) || value.state !== "ready" ||
-    !("owner" in value) || typeof value.owner !== "string") {
+if (!validateStatus(value)) {
   throw new Error("Invalid status observation");
 }
+assertStatusContext(value, expectedOwner);
+// Only now may the feature observation module publish/cache value.
 ```
 
-`example_status` is an illustrative command, not a new application API. Real
-adapters validate the actual schema and domain identities, preserving structured
-errors needed by consumers. Toolkit components receive data/callbacks rather than
+`example_status`, `Status` and the helper names illustrate a validation boundary;
+they are not product APIs or manually maintained wire shapes.
+Rust-generated declarations/standalone validators establish structure. Local
+assertions establish exact owner/target, state and delivery semantics before Query
+accepts a result. Preserve structured errors rather than adopting this sketch's
+generic error message. See [contract preparation](../../../docs/agents/observations.md#contract-preparation)
+for generator settings, CSP and numeric/byte pitfalls.
+
+Toolkit components receive data/callbacks rather than
 importing Tauri directly or through application Hooks; see the
 [component guide](../../../src/components/README.md).
 
@@ -841,6 +937,15 @@ does not cancel sibling work. Choose aggregate versus partial error presentation
 from the feature contract; preserve cleanup and target checks. Independent reads
 do not establish safe parallel mutations. No dependency helper library is required.
 
+For feature observations, schedule through the shared physical-read interface;
+the direct command example only shows an independent dependency graph. Query's
+logical request settlement, an AbortSignal or actor disposal cannot prove that
+native IPC finished. Keep an active queue task pending until its physical promise
+settles, even after its consumer leaves. The
+[physical-completion guidance](../../../docs/agents/observations.md#physical-completion-and-cancellation)
+owns pending-only abort forwarding, coalescing identity and drain accounting.
+Those mechanics belong below feature Hooks, not in every component.
+
 Sources: [Promise.all semantics](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all),
 [Vercel dependency scheduling](https://github.com/vercel-labs/agent-skills/blob/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices/rules/async-dependencies.md).
 
@@ -953,9 +1058,11 @@ cleans up hidden Effects and re-creates them on reveal.
 
 ```tsx
 const stream = useSharedStream();
-return <Activity mode={visible ? "visible" : "hidden"}>
-  <ConversationPanel stream={stream} />
-</Activity>;
+return (
+  <Activity mode={visible ? "visible" : "hidden"}>
+    <ConversationPanel stream={stream} />
+  </Activity>
+);
 ```
 
 Draft retention/reset is a feature decision: lift per-target drafts or preserve
@@ -963,7 +1070,16 @@ appropriate view identity when required. Bound the number of retained views.
 Activity is optional, not a universal menu/tab wrapper. Supervisor work and
 conversation lifetime are independent of UI visibility.
 
-Source: [React Activity](https://react.dev/reference/react/Activity).
+With app-owned actors, a view releases its feature interest on hide/unmount while
+the owner drains actual work. Creating a fresh `useMachine`/`useActor` instance in
+each routed screen would bind that actor to the screen's lifetime. Subscribe to
+the existing owner through feature interfaces instead. Keep actor construction,
+replacement and awaited native cleanup at the app boundary described in
+[observation guidance](../../../docs/agents/observations.md#cache-actor-and-presentation-ownership).
+Stopping a React subscription or promise actor is not evidence of native cleanup.
+
+Sources: [React Activity](https://react.dev/reference/react/Activity),
+[XState React actor lifetimes](https://stately.ai/docs/xstate-react#useactoractorlogic-options).
 
 ### bounded-streams-and-history
 
@@ -1643,33 +1759,53 @@ Source: [rules/owned-bounded-caches.md](rules/owned-bounded-caches.md)
 
 #### Give shared caches an owner, invalidation, and bounds
 
-Apply when measurement justifies caching beyond routine Compiler memoization.
+Apply to shared computation caches and external observation caches, including
+architecture-required Query caches. Their correctness obligations apply whether
+they exist for shared freshness, retained observations or performance.
 Define the key's complete identity/revision, invalidation, capacity/lifetime, and
-other writers. Component-owned initialized state is often enough for preferences.
+other writers. Use measurement to justify optional computation-cache optimizations
+and claimed performance gains; an approved observation cache needs no new
+performance case. Component-owned initialized state is often enough for local
+preferences.
 
 **Incorrect (a file name alone aliases different revisions forever):**
 
 ```ts
 const cache = new Map<string, string>();
-function remember(path: string, rendered: string) { cache.set(path, rendered); }
+function remember(path: string, rendered: string) {
+  cache.set(path, rendered);
+}
 ```
 
 **Correct (illustrative one-entry cache is bounded and revision-specific):**
 
 ```ts
-type Entry = { workspace: string; path: string; revision: string; rendered: string };
+type Entry = {
+  workspace: string;
+  path: string;
+  revision: string;
+  rendered: string;
+};
 let last: Entry | undefined;
 function cached(workspace: string, path: string, revision: string) {
-  return last?.workspace === workspace && last.path === path && last.revision === revision
-    ? last.rendered : undefined;
+  return last?.workspace === workspace &&
+    last.path === path &&
+    last.revision === revision
+    ? last.rendered
+    : undefined;
 }
-function remember(entry: Entry) { last = entry; }
+function remember(entry: Entry) {
+  last = entry;
+}
 ```
 
 The actual cache belongs to a chosen resource owner and clears on relevant context
 changes. A one-entry cache is an example, not a required capacity. Suppressing
 duplicate reads cannot replace Rust action deduplication or snapshot/cursor
 reconciliation. Account for storage events or other writers if that source exists.
+Use the approved Query cache for observations rather than adding the illustrative
+Map beside it. [Observation guidance](../../../docs/agents/observations.md#cache-actor-and-presentation-ownership)
+owns feature freshness and the separation from actors and presentation memory.
 
 Sources: [React memoization scope](https://react.dev/learn/react-compiler/introduction),
 [storage event semantics](https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event).
@@ -1802,10 +1938,10 @@ qualification, and justified convention exceptions separately.
 ## Provenance and maintenance
 
 Adapted selectively from [Vercel at 1a2c79d](https://github.com/vercel-labs/agent-skills/tree/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices)
-and primary stack documentation, checked 2026-11-13. The
-[coverage research](../../../docs/research/vercel-react-best-practices-fit.md)
-records every upstream disposition, dependency coverage, and source corrections.
-Rules own maintained recommendations; research records the rationale.
+and primary stack documentation. Rule sources identify the relevant API contracts;
+local examples and applicability are curated rather than copied wholesale.
+The TypeScript policy also draws on Microsoft's
+[typescript-strict skill](https://github.com/microsoft/typescript-skills/blob/main/plugins/typescript/skills/typescript-strict/SKILL.md).
 
 Edit the index/rules, then run `node .agents/skills/react-engineering/scripts/build-guide.mjs`
 from the repository root. Use `--check` to validate without writing. Review source

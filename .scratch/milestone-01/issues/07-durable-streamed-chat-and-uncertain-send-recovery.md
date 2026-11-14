@@ -2,7 +2,7 @@
 
 **What to build:** Send multiline text in a workspace, follow streamed replies/tool activity in the correct conversation, and reconnect after desktop loss without replaying uncertain work.
 
-**Blocked by:** 04: Create isolated workspaces with recoverable retries; 06: Connect Codex with actionable setup diagnostics
+**Blocked by:** [06a: Storage evaluation](06a-evaluate-storage-before-durable-chat.md); 04: Create isolated workspaces with recoverable retries; 06: Connect Codex with actionable setup diagnostics
 
 **Status:** ready-for-agent
 
@@ -24,3 +24,13 @@
 - [ ] Unit-test send/routing/recovery decisions for delayed or lost replies, duplicate/late events, storage failures and reconnect observations. Distinguish non-delivery from admitted work with an unavailable reply; verify intent-before-send and catch-up without resubmission. Separately demonstrate active-work desktop disconnect/reconnect through the production supervisor path and retain unit/desktop evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.
+
+### 2026-11-14 — library refactor handoff
+
+Consume the foundation's qualified async transport, generated-contract preparation,
+feature observations and app-lifetime coordination. Extend owning modules for
+conversation observations rather than duplicating a scheduler/cache/lifecycle.
+Durable conversation events require their own retention, paging and accepted cursor;
+the in-memory invalidation journal and its feed cursor cannot substitute for them.
+Rust conversation policy owns durable sends/reconciliation; XState remains presentation
+coordination and no frontend library retries uncertain actions automatically.

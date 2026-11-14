@@ -1,0 +1,18 @@
+{
+  "assets": [
+    {
+      "path": "dist/assets/index-CeIGrpMV.js",
+      "sha256": "f99cabb663ac6322f944575f22bcbd1d92a412f0dc8140db37ecc62e4944754d",
+      "raw": 1165801,
+      "gzip": 248143,
+      "brotli": 194261
+    },
+    {
+      "path": "dist/assets/index-Nt6iarJC.css",
+      "sha256": "2c47da13a5996c082bda2d6d021c55f87ad1f64c1d9459fcacb19cd6d95ccd64",
+      "raw": 99404,
+      "gzip": 16317,
+      "brotli": 13995
+    }
+  ]
+}

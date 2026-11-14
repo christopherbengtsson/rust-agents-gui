@@ -1,3 +1,4 @@
+import { ownerBound } from "./test-support/owner-bound-invoke";
 import { StrictMode } from "react";
 import {
   act,
@@ -10,9 +11,19 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { App } from "./App";
+import { App } from "./test-support/app";
+import { SupervisorConnection } from "./components/blocks/supervisor-connection";
+import { decodeSnapshot } from "./lib/observation-contracts";
 
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(),
+  Channel: class {
+    onmessage: (value: unknown) => void;
+    constructor(receive: (value: unknown) => void) {
+      this.onmessage = receive;
+    }
+  },
+}));
 beforeEach(() => {
   localStorage.clear();
   vi.stubGlobal("matchMedia", (media: string): MediaQueryList =>
@@ -35,16 +46,23 @@ afterEach(() => {
 function connectionCalls() {
   return vi
     .mocked(invoke)
-    .mock.calls.filter(([command]) => command !== "repository_request");
+    .mock.calls.filter(
+      ([command]) =>
+        command === "supervisor_status" || command === "desktop_pid",
+    );
 }
 function mockConnection(implementation: (command: string) => Promise<unknown>) {
-  vi.mocked(invoke).mockImplementation((command) =>
-    command === "repository_request"
-      ? Promise.resolve({
-          kind: "repositories",
-          page: { repositories: [], next: null },
-        })
-      : implementation(command),
+  vi.mocked(invoke).mockImplementation(
+    ownerBound((command) =>
+      command === "observation_stop" || command === "observation_acknowledge"
+        ? Promise.resolve(undefined)
+        : command === "repository_request"
+          ? Promise.resolve({
+              kind: "repositories",
+              page: { repositories: [], next: null },
+            })
+          : implementation(command),
+    ),
   );
 }
 
@@ -163,8 +181,10 @@ test("connection failure stays visible until an explicit status retry; diagnosti
     "Unsafe socket <details>",
   );
   await user.keyboard("{Escape}");
-  expect(document.activeElement).toBe(
-    screen.getByRole("button", { name: "Connection details" }),
+  await waitFor(() =>
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "Connection details" }),
+    ),
   );
   expect(connectionCalls()).toHaveLength(2);
 
@@ -267,6 +287,7 @@ test.each(["success", "failure"])(
         <App />
       </StrictMode>,
     );
+    await waitFor(() => expect(statusReads).toBe(1)); // Cleanup cannot release a physical status exchange.
     await act(async () => {
       if (outcome === "success") resolveOld(snapshot);
       else rejectOld("Obsolete setup failed");
@@ -297,7 +318,7 @@ test.each(["success", "failure"])(
 );
 
 test.each(["success", "failure"])(
-  "an obsolete %s cannot overwrite a completed current observation",
+  "a drained obsolete %s cannot replace the subsequent current observation",
   async (outcome) => {
     let resolveOld!: (value: typeof snapshot) => void;
     let rejectOld!: (error: string) => void;
@@ -320,11 +341,12 @@ test.each(["success", "failure"])(
         <App />
       </StrictMode>,
     );
-    await screen.findByRole("button", { name: "Refresh status" });
+    await waitFor(() => expect(reads).toBe(1));
     await act(async () => {
       if (outcome === "success") resolveOld(snapshot);
       else rejectOld("Obsolete failure");
     });
+    await screen.findByRole("button", { name: "Refresh status" });
     expect(screen.queryByRole("alert")).toBeNull();
     const user = userEvent.setup();
     await user.click(
@@ -369,4 +391,73 @@ test("connection failure replaces initial repository skeletons with unavailable 
   expect(
     view.container.querySelector('[data-slot="sidebar-menu-skeleton"]'),
   ).toBeNull();
+});
+
+test("the app mounts one feed and exposes native delivery failure without replaying actions", async () => {
+  mockConnection(async (command) => {
+    if (command === "desktop_pid") return 42;
+    if (command === "observation_subscribe")
+      throw new Error("Controlled subscription failure");
+    return snapshot;
+  });
+  render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+  await screen.findByText("Observation delivery stopped");
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "observation_subscribe"),
+  ).toHaveLength(1);
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: "Connection details" }));
+  expect(screen.getByRole("alert").textContent).toContain(
+    "Controlled subscription failure",
+  );
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.some(([command]) => command === "workspace_request"),
+  ).toBe(false);
+});
+
+test("feed failures stay visible while native cleanup is still pending", async () => {
+  render(
+    <SupervisorConnection
+      connection={{
+        state: "connected",
+        observation: { snapshot: decodeSnapshot(snapshot), desktopPid: 42 },
+        feed: {
+          state: "stopping",
+          message: "Observation delivery stalled. Native cleanup pending.",
+        },
+      }}
+    />,
+  );
+  expect(screen.getByRole("status").textContent).toContain(
+    "Observation delivery stopped",
+  );
+  await userEvent
+    .setup()
+    .click(screen.getByRole("button", { name: "Connection details" }));
+  expect(screen.getByRole("alert").textContent).toContain(
+    "Native cleanup pending",
+  );
+});
+
+test("presentation storage failure stays visible without a mounted inspection view", async () => {
+  localStorage.setItem("agent-workspace.presentation", "{invalid");
+  mockConnection(async (command) =>
+    command === "desktop_pid" ? 42 : snapshot,
+  );
+  render(<App />);
+  expect(
+    await screen.findByText(
+      /could not read or migrate presentation preferences/,
+    ),
+  ).toBeDefined();
+  expect(screen.queryByLabelText("Selected file changes")).toBeNull();
+  expect(localStorage.getItem("agent-workspace.presentation")).toBe("{invalid");
 });

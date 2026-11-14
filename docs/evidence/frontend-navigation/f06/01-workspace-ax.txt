@@ -1,0 +1,43 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 56-72
+~						39 container /private/tmp/aw-f06-8dbl1nft/route-fixture Available
+~							42 button Create workspace in route-fixture
+~							44 text Available
+~								46 button manuel-akanji, Help: Workspace ready
+~					55 text Repository available
++				75 text Uncommitted changes
++				76 button Refresh changes
++				77 button (expanded) Hide changed files, Secondary Actions: Collapse
++				78 text Compared with HEAD 
++				79 text 84fb07966c08015898f5eedb8b5251a3fb35f6a2
++				80 text  · 
++				81 text 0
++				82 text changed files
++				83 text No uncommitted changes.
++				84 tab group (selectable) Workspace views
++					85 tab (selected) Workspace
++					86 tab (selectable) Changes
++				87 container Workspace
++					88 container Selected workspace
++						89 text Workspace ready Codex
++						90 heading Your workspace is ready, Value: 2
++							91 text Your workspace is ready
++						92 text manuel-akanji
++						93 description list
++							94 text Branch
++							95 text workspace/manuel-akanji
++							96 text Workspace folder
++							97 text /private/tmp/aw-f06-8dbl1nft/state/workspaces/route-fixture/manuel-akanji/checkout
++							98 text Local base
++							99 text refs/heads/main · 84fb07966c08015898f5eedb8b5251a3fb35f6a2
++							100 text Branch artifact
++							101 text Created by this action
++							102 text Folder artifact
++							103 text Worktree created
++						104 container
++							105 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
++				106 splitter Resize changed files, Value: 68
++				107 container Changed files
++					108 heading Changed files, Value: 2
++						109 text Changed files
+The focused UI element is 47 pop up button Add repository

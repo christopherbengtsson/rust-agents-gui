@@ -1,0 +1,167 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/repositories.test.tsx (20 tests | 1 failed) 2171ms
+   × Refresh status retains explicit reprobe through a delayed connection check 1056ms
+ ❯ src/lib/feature-observations.test.tsx (8 tests | 1 failed) 19ms
+   × a failed detail stays paused across hide/remount until a new hint or explicit refresh 2ms
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 26 passed (28)
+   Start at  16:30:45
+   Duration  2.96s (tests 77%, environment 11%, import 9%, transform 3%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/repositories.test.tsx > Refresh status retains explicit reprobe through a delayed connection check
+AssertionError: expected false to be true // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body[39m
+    [33mstyle[39m=[32m""[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"group/sidebar-wrapper flex w-full has-data-[variant=inset]:bg-sidebar h-dvh min-h-0"[39m
+        [33mdata-slot[39m=[32m"sidebar-wrapper"[39m
+        [33mstyle[39m=[32m"--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"skip-link"[39m
+          [33mhref[39m=[32m"#workspace"[39m
+        [36m>[39m
+          [0mSkip to workspace[0m
+        [36m</a>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Repository sidebar"[39m
+          [33mclass[39m=[32m"flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground repository-sidebar min-w-0 shrink-0 border-r"[39m
+          [33mdata-slot[39m=[32m"sidebar"[39m
+          [33mrole[39m=[32m"complementary"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col gap-2 p-2 h-(--shell-header-height) shrink-0 justify-center border-b px-4 py-0 [@media(max-width:700px)]:px-3"[39m
+            [33mdata-sidebar[39m=[32m"header"[39m
+            [33mdata-slot[39m=[32m"sidebar-header"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"app-identity flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-layers-2"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mAgent Workspace[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden"[39m
+            [33mdata-sidebar[39m=[32m"content"[39m
+            [33mdata-slot[39m=[32m"sidebar-content"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative flex w-full min-w-0 flex-col p-2 px-4 py-[22px]"[39m
+              [33mdata-sidebar[39m=[32m"group"[39m
+              [33mdata-slot[39m=[32m"sidebar-group"[39m
+            [36m>[39m
+              [36m<nav[39m
+                [33maria-labelledby[39m=[32m"repositories-heading"[39m
+              [36m>[39m
+                [36m<h2[39m
+                  [33mclass[39m=[32m"flex shrink-0 items-center rounded-md text-[11px] font-medium tracking-[0.04em] text-muted-foreground ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 h-auto px-0"[39m
+                  [33mdata-sidebar[39m=[32m"group-label"[39m
+                  [33mdata-slot[39m=[32m"sidebar-group-label"[39m
+                  [33mid[39m=[32m"repositories-heading"[39m
+                [36m>[39m
+                  [0mRepositories[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-full text-sm"[39m
+                  [33mdata-sidebar[39m=[32m"group-content"[39m
+                  [33mdata-slot[39m=[32m"sidebar-group-content"[39m
+                [36m>[39m
+                  [36m<ul[39m
+                    [33mclass[39m=[32m"flex w-full min-w-0 flex-col gap-0 mt-3"[39m
+                    [33mdata-sidebar[39m=[32m"menu"[39m
+                    [33mdata-slot[39m=[32m"sidebar-menu"[39m
+                  [36m>[39m
+                    [36m<li[39m
+                      [33mclass[39m=[32m"group/menu-item relative"[39m
+                      [33mdata-sidebar[39m=[32m"menu-item"[39m
+                      [33mdata-slot[39m=[32m"sidebar-menu-item"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mdata-open[39m=[32m""[39m
+                        [33mdata-slot[39m=[32m"collapsible"[39m
+                      [36m>[39m
+                        [36m<button[39m
+                          [33maria-current[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"peer/menu-button group/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left ring-sidebar-ring outline-hidden transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground [&_svg]:size-4 [&_svg]:shrink-0 [&>span:last-child]:truncate hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-7 text-xs pr-14!"[39m
+                          [33mdata-active[39m=[32m""[39m
+                          [33mdata-sidebar[39m=[32m"menu-button"[39m
+                          [33mdata-size[39m=[32m"sm"[39m
+                          [33mdata-slot[39m=[32m"sidebar-menu-button"[39m
+                          [33mtitle[39m=[32m"/projects/one"[39m
+                          [33mtype[39m=[32m"button"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                            [33mclass[39m=[32m"lucide lucide-folder-git-2"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mheight[39m=[32m"24"[39m
+                            [33mstroke[39m=[32m"currentColor"[39m
+                            [33mstroke-li...
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/repositories.test.tsx:792:55
+    790|   await screen.findByRole("button", { name: "Checking…" });
+    791|   await act(async () => { resolveStatus?.(snapshot); });
+    792|   await waitFor(() => expect(refreshes.some(Boolean)).toBe(true));
+       |                                                       ^
+    793| });
+    794|
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/feature-observations.test.tsx > a failed detail stays paused across hide/remount until a new hint or explicit refresh
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/lib/feature-observations.test.tsx:364:18
+    362|   expect(invoke).toHaveBeenCalledOnce();
+    363|   hide(); const hideAgain = feature.observe("owner", target); await fl…
+    364|   expect(invoke).toHaveBeenCalledOnce();
+       |                  ^
+    365|   send([{ kind: "repository", repository_id: repository.id }]); await …
+    366|   expect(invoke).toHaveBeenCalledTimes(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

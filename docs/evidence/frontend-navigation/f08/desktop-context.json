@@ -1,0 +1,26 @@
+{
+  "root": "/private/tmp/aw-f08-qualified-wj7lgl6i",
+  "state": "/private/tmp/aw-f08-qualified-wj7lgl6i/state",
+  "repositories": [
+    "/private/tmp/aw-f08-qualified-wj7lgl6i/Alpha",
+    "/private/tmp/aw-f08-qualified-wj7lgl6i/Beta"
+  ],
+  "bundle": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Qualified.app",
+  "bundle_id": "dev.christopherbengtsson.f08.qualified",
+  "hashes": {
+    "Contents/MacOS/workspace-desktop": "dba94e40881b3e5061beaca481684d48beca24c6b8df388891653624b34cea15"
+  },
+  "sidecar_sha256": "4e74c726badd01b743da9dad32c2c07b1797533ae2f99acb9c4206f3026fbd2a",
+  "original_files": {
+    "/private/tmp/aw-f08-qualified-wj7lgl6i/Alpha/large.txt": "b047f5b06f970c49b0474f7e2eb52c41edff0755708ca6ca63d6f4302b3acda6",
+    "/private/tmp/aw-f08-qualified-wj7lgl6i/Alpha/text.txt": "84bd16f91ec8f223cad47630cf98cc04521ba112acb13942d20865060c28f3d3",
+    "/private/tmp/aw-f08-qualified-wj7lgl6i/Beta/large.txt": "b047f5b06f970c49b0474f7e2eb52c41edff0755708ca6ca63d6f4302b3acda6",
+    "/private/tmp/aw-f08-qualified-wj7lgl6i/Beta/text.txt": "84bd16f91ec8f223cad47630cf98cc04521ba112acb13942d20865060c28f3d3"
+  },
+  "desktop_pid": 28181,
+  "launch_monotonic": 629652.156095666,
+  "workspace_path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paul-scholes/checkout",
+  "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+  "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+  "main_url": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes"
+}

@@ -1,0 +1,21 @@
+{
+  "command": "kill-owner",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 14646,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "14646-1794688867448058000",
+        "revision": 390
+      },
+      "reset": true
+    }
+  },
+  "pid": 14646,
+  "verified_executable": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Qualified.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-qualified-wj7lgl6i/state",
+  "signal": "SIGKILL"
+}

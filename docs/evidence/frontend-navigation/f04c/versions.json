@@ -1,0 +1,16 @@
+{
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+  "hardware": "machdep.cpu.brand_string: Apple M4 Pro\nhw.logicalcpu: 12\nhw.memsize: 51539607552",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "node": "v26.13.1",
+  "pnpm": "12.18.0",
+  "architecture": "arm64",
+  "baseline": "b96b74376332ef69ee8bcdbb31e6bcf8886d79af",
+  "branch": "feature/m01-frontend-navigation",
+  "target": "worktree default target; claimed by scripts/cargo.mjs",
+  "profile": "test (warm caches)",
+  "rust_threads": 1,
+  "node_concurrency": 1,
+  "vitest_max_workers": 1
+}

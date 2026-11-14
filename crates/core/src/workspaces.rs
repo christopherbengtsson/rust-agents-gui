@@ -17,8 +17,12 @@ macro_rules! identity {
         #[derive(
             Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize,
         )]
+        #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
         #[serde(transparent)]
-        pub struct $name(pub Uuid);
+        pub struct $name(
+            #[cfg_attr(feature = "codegen", schemars(regex(pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")))]
+            pub Uuid,
+        );
     };
 }
 identity!(RepositoryId);
@@ -34,6 +38,7 @@ pub(crate) mod naming;
 pub use creation::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum ErrorCode {
     InvalidPath,
@@ -48,6 +53,7 @@ pub enum ErrorCode {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RepositoryError {
     pub code: ErrorCode,
     pub message: String,
@@ -83,6 +89,7 @@ impl std::error::Error for RepositoryError {}
 pub(crate) type Result<T> = std::result::Result<T, RepositoryError>;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RegisterRepository {
     #[serde(default)]
     pub create_initial_workspace: bool,
@@ -90,6 +97,7 @@ pub struct RegisterRepository {
     pub path: String,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "state", rename_all = "snake_case")]
 pub enum RegistrationState {
     Pending,
@@ -97,6 +105,7 @@ pub enum RegistrationState {
     Failed { error: RepositoryError },
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Registration {
     #[serde(default)]
     pub create_initial_workspace: bool,
@@ -116,6 +125,7 @@ pub(crate) struct RepositoryRecord {
     pub common_dir: String,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "state", rename_all = "snake_case")]
 pub enum Availability {
     Checking,
@@ -123,6 +133,7 @@ pub enum Availability {
     Unavailable { error: RepositoryError },
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Repository {
     pub id: RepositoryId,
     pub name: String,
@@ -130,12 +141,14 @@ pub struct Repository {
     pub availability: Availability,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RepositoryPage {
     pub repositories: Vec<Repository>,
     pub next: Option<RepositoryId>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "operation", rename_all = "snake_case")]
 pub enum RepositoryRequest {
     Register {
@@ -156,6 +169,7 @@ pub enum RepositoryRequest {
     },
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum RepositoryReply {
     Registration { registration: Registration },
@@ -303,6 +317,7 @@ const PAGE_BYTES: usize = 48 * 1024;
 const CACHE_SIZE: usize = 64;
 
 struct OwnerState {
+    journal: Arc<crate::observations::Journal>,
     inspections: inspection::Inspections,
     directory: PathBuf,
     store: Result<Box<dyn RepositoryStore>>,
@@ -334,6 +349,7 @@ impl OwnerState {
             probes: VecDeque::new(),
             fault: None,
             revision: 1,
+            journal: Arc::new(crate::observations::Journal::default()),
             active_workspace: None,
             workspace_faults: BTreeMap::new(),
         })
@@ -347,6 +363,17 @@ impl OwnerState {
             Ok(store) => Ok(store.as_mut()),
             Err(error) => Err(error.clone()),
         }
+    }
+    fn publish(&mut self, targets: Vec<crate::observations::Target>) {
+        self.journal.publish(targets);
+    }
+    fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: RepositoryId) {
+        self.publish(vec![
+            crate::observations::Target::Workspace { workspace_id },
+            crate::observations::Target::Workspaces {
+                repository_id: Some(repository_id),
+            },
+        ]);
     }
     fn change(&mut self) -> Result<()> {
         self.revision = self.revision.checked_add(1).ok_or_else(|| {
@@ -372,6 +399,10 @@ impl OwnerState {
             self.cache.pop_front();
         }
         self.cache.push_back((id, value));
+        self.publish(vec![
+            crate::observations::Target::Repositories,
+            crate::observations::Target::Repository { repository_id: id },
+        ]);
         self.change()
     }
     fn queue(&mut self, record: &RepositoryRecord, refresh: bool) -> Result<Availability> {
@@ -416,6 +447,36 @@ impl OwnerState {
         }
         Ok(page)
     }
+}
+
+struct OwnerGuard<'a> {
+    inner: Option<MutexGuard<'a, OwnerState>>,
+    journal: Arc<crate::observations::Journal>,
+}
+impl std::ops::Deref for OwnerGuard<'_> {
+    type Target = OwnerState;
+    fn deref(&self) -> &OwnerState {
+        self.inner.as_ref().expect("live owner guard")
+    }
+}
+impl std::ops::DerefMut for OwnerGuard<'_> {
+    fn deref_mut(&mut self) -> &mut OwnerState {
+        self.inner.as_mut().expect("live owner guard")
+    }
+}
+impl Drop for OwnerGuard<'_> {
+    fn drop(&mut self) {
+        drop(self.inner.take());
+        self.journal.wake();
+    }
+}
+fn lock_state(shared: &Mutex<OwnerState>) -> Result<OwnerGuard<'_>> {
+    let inner = shared.lock().map_err(RepositoryError::storage)?;
+    let journal = inner.journal.clone();
+    Ok(OwnerGuard {
+        inner: Some(inner),
+        journal,
+    })
 }
 
 /// One supervisor-owned worker; requests never create per-repository runtimes.
@@ -487,8 +548,15 @@ impl Workspaces {
             worker: Some(worker),
         })
     }
-    fn state(&self) -> Result<MutexGuard<'_, OwnerState>> {
-        self.shared.lock().map_err(RepositoryError::storage)
+    fn state(&self) -> Result<OwnerGuard<'_>> {
+        lock_state(&self.shared)
+    }
+    pub(crate) fn journal(&self) -> Arc<crate::observations::Journal> {
+        self.shared
+            .lock()
+            .expect("workspace owner lock poisoned")
+            .journal
+            .clone()
     }
     fn notify(&self) {
         if let Some(wake) = &self.wake {
@@ -499,7 +567,15 @@ impl Workspaces {
         self.shared.lock().map_or(1, |s| s.revision)
     }
     pub fn register(&self, request: RegisterRepository) -> Result<Registration> {
-        let result = admit(self.state()?.store()?, &request);
+        let mut state = self.state()?;
+        let result = state.store().and_then(|store| admit(store, &request));
+        state.publish(vec![
+            crate::observations::Target::Registration {
+                action_id: request.action_id,
+            },
+            crate::observations::Target::Repositories,
+        ]);
+        drop(state);
         // A failed insert may still have committed intent. Only the owner reconciles it.
         self.notify();
         result
@@ -571,13 +647,15 @@ fn process_one(
         Probe(RepositoryRecord),
     }
     let work = {
-        let Ok(mut state) = shared.lock() else {
+        let Ok(mut state) = lock_state(shared) else {
             return false;
         };
         match state.store().and_then(|store| store.pending()) {
             Ok(Some(action)) => Work::Register(action),
             Ok(None) => {
-                state.fault = None;
+                if state.fault.take().is_some() {
+                    state.publish(vec![crate::observations::Target::Repositories]);
+                }
                 match state.probes.pop_front() {
                     Some(record) => Work::Probe(record),
                     None => return false,
@@ -585,6 +663,7 @@ fn process_one(
             }
             Err(error) => {
                 state.fault = Some(error);
+                state.publish(vec![crate::observations::Target::Repositories]);
                 return false;
             }
         }
@@ -594,16 +673,37 @@ fn process_one(
         Work::Register(action) => &action.path,
         Work::Probe(record) => &record.path,
     });
-    let Ok(mut state) = shared.lock() else {
+    let Ok(mut state) = lock_state(shared) else {
         return false;
     };
     let result = match work {
         Work::Register(action) => {
+            state.publish(vec![
+                crate::observations::Target::Registration {
+                    action_id: action.action_id,
+                },
+                crate::observations::Target::Repositories,
+                crate::observations::Target::Workspaces {
+                    repository_id: None,
+                },
+            ]);
             let directory = state.directory.clone();
             state
                 .store()
                 .and_then(|store| finish_registration(store, &action, validation, &directory))
-                .and_then(|_| state.change())
+                .and_then(|registration| {
+                    let mut targets = vec![crate::observations::Target::Registration {
+                        action_id: registration.action_id,
+                    }];
+                    if let RegistrationState::Completed { repository_id } = registration.state {
+                        targets.push(crate::observations::Target::Repository { repository_id });
+                    }
+                    if let Some(workspace_id) = registration.initial_workspace_id {
+                        targets.push(crate::observations::Target::Workspace { workspace_id });
+                    }
+                    state.publish(targets);
+                    state.change()
+                })
         }
         Work::Probe(record) => {
             let availability = match validation {
@@ -635,11 +735,14 @@ fn process_one(
     };
     match result {
         Ok(()) => {
-            state.fault = None;
+            if state.fault.take().is_some() {
+                state.publish(vec![crate::observations::Target::Repositories]);
+            }
             true
         }
         Err(error) => {
             state.fault = Some(error);
+            state.publish(vec![crate::observations::Target::Repositories]);
             false
         }
     }
@@ -647,3 +750,21 @@ fn process_one(
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<RepositoryId>();
+    exports.add::<ActionId>();
+    exports.add::<ErrorCode>();
+    exports.add::<RepositoryError>();
+    exports.add::<RegisterRepository>();
+    exports.add::<RegistrationState>();
+    exports.add::<Registration>();
+    exports.add::<Availability>();
+    exports.add::<Repository>();
+    exports.add::<RepositoryPage>();
+    exports.add::<RepositoryRequest>();
+    exports.add::<RepositoryReply>();
+    creation::export_contracts(exports);
+    inspection::export_contracts(exports);
+}

@@ -1,0 +1,591 @@
+{
+  "snapshot": {
+    "time": 3754654,
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "logCount": 2231,
+    "commands": {
+      "workspace_request": 1191,
+      "observation_acknowledge": 1040
+    },
+    "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+    "width": 900,
+    "height": 148
+  },
+  "steady": {
+    "start": {
+      "time": 3663429,
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 1,
+      "duplicates": 0,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "logCount": 1736,
+      "commands": {
+        "workspace_request": 757,
+        "observation_acknowledge": 979
+      },
+      "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 648
+    },
+    "end": {
+      "time": 3669430.0000000005,
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 1,
+      "duplicates": 0,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "logCount": 1768,
+      "commands": {
+        "workspace_request": 786,
+        "observation_acknowledge": 982
+      },
+      "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+      "width": 900,
+      "height": 648
+    }
+  },
+  "windows": [
+    {
+      "label": "visible",
+      "start": {
+        "time": 270203.00000000006,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 0,
+        "duplicates": 0,
+        "logCount": 0,
+        "commands": {},
+        "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 148
+      },
+      "end": {
+        "time": 276205,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "logCount": 15,
+        "commands": {
+          "workspace_request": 6,
+          "observation_acknowledge": 9
+        },
+        "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    },
+    {
+      "start": {
+        "time": 422126.00000000006,
+        "visibility": "hidden",
+        "active": 1,
+        "maxActive": 1,
+        "duplicates": 0,
+        "logCount": 659,
+        "commands": {
+          "workspace_request": 369,
+          "observation_acknowledge": 290
+        },
+        "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      },
+      "end": {
+        "time": 426225,
+        "visibility": "hidden",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "logCount": 659,
+        "commands": {
+          "workspace_request": 369,
+          "observation_acknowledge": 290
+        },
+        "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    },
+    {
+      "start": {
+        "time": 3578843,
+        "visibility": "visible",
+        "active": 1,
+        "maxActive": 1,
+        "duplicates": 0,
+        "logCount": 1290,
+        "commands": {
+          "workspace_request": 370,
+          "observation_acknowledge": 920
+        },
+        "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      },
+      "end": {
+        "time": 3582844,
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "logCount": 1301,
+        "commands": {
+          "workspace_request": 379,
+          "observation_acknowledge": 922
+        },
+        "assets": ["tauri__localhost/assets/index-BRW4CMP_.js"],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "width": 900,
+        "height": 648
+      }
+    }
+  ],
+  "navigation": [
+    {
+      "label": "large.txt\n.M\n",
+      "start": 281331,
+      "trusted": true,
+      "feedback": 32,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 282131,
+      "trusted": true,
+      "feedback": 23,
+      "heading": "dries-mertens",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 282931,
+      "trusted": true,
+      "feedback": 42,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 283739.00000000006,
+      "trusted": true,
+      "feedback": 31.999999999941792,
+      "heading": "dries-mertens",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 284539,
+      "trusted": true,
+      "feedback": 45,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 285339,
+      "trusted": true,
+      "feedback": 32,
+      "heading": "dries-mertens",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 286148,
+      "trusted": true,
+      "feedback": 42,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 286964,
+      "trusted": true,
+      "feedback": 32,
+      "heading": "dries-mertens",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 287764,
+      "trusted": true,
+      "feedback": 44,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 288581,
+      "trusted": true,
+      "feedback": 32,
+      "heading": "dries-mertens",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 289389,
+      "trusted": true,
+      "feedback": 42,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "start": 290214,
+      "trusted": true,
+      "feedback": 31,
+      "heading": "dries-mertens",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "start": 290997,
+      "trusted": true,
+      "feedback": 40,
+      "heading": "dries-mertens",
+      "tab": "Changes"
+    }
+  ],
+  "log": [
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3751532,
+      "end": 3751538
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3751789,
+      "end": 3751797
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3751797,
+      "end": 3751802
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3752054,
+      "end": 3752058
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3752058,
+      "end": 3752064
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3752315,
+      "end": 3752317
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3752317,
+      "end": 3752321
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3752572,
+      "end": 3752579
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3752579,
+      "end": 3752582
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3752833,
+      "end": 3752843.0000000005
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3752843.0000000005,
+      "end": 3752846
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3753098,
+      "end": 3753103
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3753103,
+      "end": 3753111
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3753363.0000000005,
+      "end": 3753367
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3753367,
+      "end": 3753373
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3753625,
+      "end": 3753635
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3753636,
+      "end": 3753639
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "9229a40a-acf0-443b-8f79-f89a1099c5b3",
+          "batch_id": 1075,
+          "cursor": {
+            "owner": "21028-1794674451767299000",
+            "sequence": 478
+          }
+        }
+      },
+      "start": 3753791,
+      "end": 3753792
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 3753890,
+      "end": 3753895
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "21028-1794674451767299000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+            "comparison_id": "60626156-ad65-4ab7-905c-2a3aecf1a217",
+            "file_id": "1a9080bc-067d-403f-b789-b2885056e0fa"
+          },
+          "load": false
+        }
+      },
+      "start": 3753895,
+      "end": 3753902
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/frontend-navigation/f08/finish-fixtures.py", line 9
+    workspaces=db.execute('SELECT COUNT(*) FROM workspaces WHERE json_extract(record, '$.creation_action_id')=?',(action,)).fetchone()[0]
+                                                                                       ^
+SyntaxError: invalid syntax

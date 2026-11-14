@@ -1,0 +1,43 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-feed.test.tsx (17 tests | 2 failed) 14ms
+   × stalls and malformed deliveries stop visibly without advancing the accepted cursor 4ms
+   × failed registration requests cleanup of its possibly attached native subscription 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-feed.test.tsx > stalls and malformed deliveries stop visibly without advancing the accepted cursor
+AssertionError: expected 'stopping' to be 'stopped' // Object.is equality
+
+Expected: "stopped"
+Received: "stopping"
+
+ ❯ src/observation-feed.test.tsx:108:38
+    106|   await flush();
+    107|   s.deliveries[1].receive({ kind: "batch", batch: {} });
+    108|   expect(s.feed.getSnapshot().state).toBe("stopped");
+       |                                      ^
+    109|   expect(s.feed.getSnapshot().accepted?.sequence).toBe(7);
+    110|   s.feed.connect(undefined);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/observation-feed.test.tsx > failed registration requests cleanup of its possibly attached native subscription
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/observation-feed.test.tsx:214:28
+    212|   await flush();
+    213|   expect(s.feed.getSnapshot().state).toBe("stopped");
+    214|   expect(s.transport.stop).toHaveBeenCalledTimes(1);
+       |                            ^
+    215|   s.feed.connect(undefined);
+    216|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 16 passed (18)
+   Start at  16:45:48
+   Duration  585ms (environment 60%, tests 16%, import 16%, transform 6%, setup 1%, worker 1%)
+

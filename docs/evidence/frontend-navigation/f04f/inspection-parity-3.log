@@ -1,0 +1,61 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+stderr | src/workspace-changes.test.tsx > workspace changes isolate retained data and drain late replies before reading the new target
+[["inspection","inactive","summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","preview"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","previous"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","preview"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","previous"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","preview"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","previous"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","preview"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","previous"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+
+stderr | src/workspace-changes.test.tsx > unmount while IPC is pending ignores its rejection and schedules no reads
+[["inspection","inactive","summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","preview"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","previous"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","preview"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["inspection","inactive","previous"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+
+ ❯ src/workspace-changes.test.tsx (22 tests | 2 failed) 404ms
+   × workspace changes isolate retained data and drain late replies before reading the new target 3ms
+   × unmount while IPC is pending ignores its rejection and schedules no reads 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspace-changes.test.tsx > workspace changes isolate retained data and drain late replies before reading the new target
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/workspace-changes.test.tsx:829:18
+    827|   rerender({ workspace: other });
+    828|   expect(result.current.observation).toBeUndefined();
+    829|   expect(invoke).toHaveBeenCalledTimes(1);
+       |                  ^
+    830|   await act(async () => finish?.(changes()));
+    831|   expect(result.current.observation?.workspace_id).toBe(other);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/workspace-changes.test.tsx > unmount while IPC is pending ignores its rejection and schedules no reads
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/workspace-changes.test.tsx:1010:18
+    1008|   await act(async () => { await vi.advanceTimersByTimeAsync(10000); });
+    1009|   expect(invoke).toHaveBeenCalledTimes(reads);
+    1010|   expect(invoke).toHaveBeenCalledTimes(1);
+       |                  ^
+    1011| });
+    1012|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 21 passed (23)
+   Start at  16:53:28
+   Duration  1.12s (tests 41%, environment 30%, import 22%, transform 7%, setup 1%)
+

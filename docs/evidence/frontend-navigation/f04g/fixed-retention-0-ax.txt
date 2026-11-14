@@ -1,0 +1,159 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 6:17:17 PM
+					36 image
+					37 text Array.from({length:30},(_,j)=>j*300).filter(i=>i<f04g.exportString.length).forEach(i=>console.log("F04G:"+i+":"+f04g.exportString.slice(i,i+300)))
+					38 image
+					39 text F04G:0:{"snapshot":{"time":902134,"visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":4,"queue":0,"pending":0,"physicalActive":0,"freshness":335,"logCount":809,"commands":{"workspace_request":392,"observation_acknowledge":379,"repository_request":23,"observation_stop":6,"supervisor_
+					40 image
+					41 text F04G:300:status":3,"desktop_pid":3,"observation_subscribe":3},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148,"actor":"idle","cacheBodyBytes":2020},"navigation":[{"label":"la
+					42 image
+					43 text F04G:600:rge.txt\n.M\n","start":76690,"trusted":true,"feedback":67,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":77498,"trusted":true,"feedback":33,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":78297,"trusted":true,"feedback":46,"heading":"thiago-silva","tab"
+					44 image
+					45 text F04G:900::"Changes"},{"label":"Workspace","start":79114,"trusted":true,"feedback":23,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":79915,"trusted":true,"feedback":49,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":80731.00000000001,"trusted":true,"feedback":22.
+					46 image
+					47 text F04G:1200:999999999985448,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":81531,"trusted":true,"feedback":44,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":82347.00000000001,"trusted":true,"feedback":32.99999999998545,"heading":"thiago-silva","tab":"Workspace"},{
+					48 image
+					49 text F04G:1500:"label":"Changes","start":83156,"trusted":true,"feedback":44,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":83981.00000000001,"trusted":true,"feedback":24.999999999985448,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":84764,"trusted":true,"feedback":44
+					50 image
+					51 text F04G:1800:,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":85581,"trusted":true,"feedback":24,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":86364,"trusted":true,"feedback":43,"heading":"thiago-silva","tab":"Changes"},{"label":"Beta\n","start":296427,"trusted":tr
+					52 image
+					53 text F04G:2100:ue,"feedback":24,"heading":"Beta"},{"label":"Refresh status","start":462012,"trusted":true,"feedback":25.000000000058208,"heading":"Beta"},{"label":"Refresh status","start":477359.00000000006,"trusted":true,"feedback":15.999999999941792,"heading":"Beta"},{"label":"Refresh status","start":698977,"tru
+					54 image
+					55 text F04G:2400:sted":true,"feedback":14,"heading":"Beta"}],"windows":[{"label":"visible","start":{"time":75387,"visibility":"visible","active":0,"maxActive":0,"duplicates":0,"queryCount":9,"queue":0,"pending":0,"physicalActive":0,"freshness":53,"logCount":0,"commands":{},"assets":["tauri__localhost/assets/index-DW
+					56 image
+					57 text F04G:2700:HwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148},"end":{"time":81388,"visibility":"visible","active":0,"maxActive":1,"duplicates":0,"queryCount":10,"queue":0,"pending":0,"physicalActive":0,"freshness":59,"log
+					58 image
+					59 text F04G:3000:Count":23,"commands":{"workspace_request":17,"observation_acknowledge":6},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648}},{"start":{"time":175470,"visibility":"hid
+					60 image
+					61 text F04G:3300:den","active":0,"maxActive":1,"duplicates":0,"queryCount":44,"queue":0,"pending":0,"physicalActive":0,"freshness":266,"logCount":545,"commands":{"workspace_request":330,"observation_acknowledge":215},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Ma
+					62 image
+					63 text F04G:3600:c OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"idle","cacheBodyBytes":982801},"end":{"time":179488,"visibility":"hidden","active":0,"maxActive":1,"duplicates":0,"queryCount":44,"queue":0,"pending":0,"physicalActive":0,"freshness":266,"logCount":545,"comma
+					64 image
+					65 text F04G:3900:nds":{"workspace_request":330,"observation_acknowledge":215},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"idle","cacheBodyBytes":982801}},{"label":"stead
+					66 image
+					67 text F04G:4200:y-visible","start":{"time":173649,"visibility":"visible","active":0,"maxActive":1,"duplicates":0,"queryCount":44,"queue":0,"pending":0,"physicalActive":0,"freshness":263,"logCount":539,"commands":{"workspace_request":327,"observation_acknowledge":212},"assets":["tauri__localhost/assets/index-DWHwtLt
+					68 image
+					69 text F04G:4500:g.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148,"actor":"waiting","cacheBodyBytes":982799},"end":{"time":179688.00000000003,"visibility":"hidden","active":0,"maxActive":1,"duplicates":0,"queryCount":44,"queue":0,"
+					70 image
+					71 text F04G:4800:pending":0,"physicalActive":0,"freshness":266,"logCount":545,"commands":{"workspace_request":330,"observation_acknowledge":215},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"h
+					72 image
+					73 text F04G:5100:eight":648,"actor":"idle","cacheBodyBytes":982801}},{"start":{"time":280303,"visibility":"visible","active":1,"maxActive":1,"duplicates":0,"queryCount":44,"queue":0,"pending":1,"physicalActive":1,"freshness":266,"logCount":566,"commands":{"workspace_request":331,"observation_acknowledge":235},"asset
+					74 image
+					75 text F04G:5400:s":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"reading","cacheBodyBytes":982801},"end":{"time":284305,"visibility":"visible","active":0,"maxActive":1,"duplicates
+					76 image
+					77 text F04G:5700:":0,"queryCount":46,"queue":0,"pending":0,"physicalActive":0,"freshness":275,"logCount":587,"commands":{"workspace_request":343,"observation_acknowledge":244},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHT
+					78 image
+					79 text F04G:6000:ML, like Gecko)","width":900,"height":648,"actor":"waiting","cacheBodyBytes":1038777}},{"start":{"time":280335,"visibility":"hidden","active":1,"maxActive":1,"duplicates":0,"queryCount":45,"queue":0,"pending":1,"physicalActive":1,"freshness":268,"logCount":570,"commands":{"workspace_request":333,"ob
+					80 image
+					81 text F04G:6300:servation_acknowledge":237},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"draining","cacheBodyBytes":1010789},"end":{"time":284339,"visibility":"visible",
+					82 image
+					83 text F04G:6600:"active":0,"maxActive":1,"duplicates":0,"queryCount":46,"queue":0,"pending":0,"physicalActive":0,"freshness":275,"logCount":587,"commands":{"workspace_request":343,"observation_acknowledge":244},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS 
+					84 image
+					85 text F04G:6900:X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"waiting","cacheBodyBytes":1038777}},{"start":{"time":281270,"visibility":"visible","active":1,"maxActive":1,"duplicates":0,"queryCount":45,"queue":0,"pending":1,"physicalActive":1,"freshness":269,"logCount":572,"c
+					86 image
+					87 text F04G:7200:ommands":{"workspace_request":334,"observation_acknowledge":238},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"reading","cacheBodyBytes":1010789},"end":{"
+					88 image
+					89 text F04G:7500:time":285271,"visibility":"visible","active":0,"maxActive":1,"duplicates":0,"queryCount":46,"queue":0,"pending":0,"physicalActive":0,"freshness":275,"logCount":587,"commands":{"workspace_request":343,"observation_acknowledge":244},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"M
+					90 image
+					91 text F04G:7800:ozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"waiting","cacheBodyBytes":1038777}}],"gc":{"before":{"time":314788,"visibility":"visible","active":0,"maxActive":1,"duplicates":0,"queryCount":51,"queue":0,"pending":0,"physical
+					92 image
+					93 text F04G:8100:Active":0,"freshness":305,"logCount":663,"commands":{"workspace_request":386,"observation_acknowledge":277},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148,"actor":"
+					94 image
+					95 text F04G:8400:idle","cacheBodyBytes":1178724},"after":{"time":624794,"visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":4,"queue":0,"pending":0,"physicalActive":0,"freshness":326,"logCount":737,"commands":{"workspace_request":390,"observation_acknowledge":321,"repository_request":16,"obse
+					96 image
+					97 text F04G:8700:rvation_stop":4,"supervisor_status":2,"desktop_pid":2,"observation_subscribe":2},"assets":["tauri__localhost/assets/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648,"actor":"idle","cacheBodyBytes":2416
+					98 image
+					99 text undefined
+			100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			101 container
+	102 scroll area
+		103 HTML content Description: Agent Workspace, URL: tauri://localhost
+			104 link Skip to workspace, Value: tauri://localhost#workspace
+			105 container Repository sidebar
+				106 text Agent Workspace
+				107 container Repositories
+					108 heading Repositories, Value: 2
+						109 text Repositories
+					110 content list
+						111 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							112 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							113 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							114 button Create workspace in Beta
+							115 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							116 text Available
+							117 content list
+								118 button thiago-silva, Help: Workspace ready
+						119 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							120 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							121 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							122 button Create workspace in Alpha
+							123 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							124 text Available
+							125 content list
+								126 button vincent-aboubakar, Help: Workspace ready
+				127 pop up button Add repository
+				128 text Connected
+				129 pop up button Connection details
+			130 container
+				131 container
+					132 heading Beta, Value: 1
+						133 text Beta
+					134 button Refresh status
+				135 container Selected repository
+					136 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					137 text Repository available
+				138 heading Repository registered, Value: 2
+					139 text Repository registered
+				140 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				141 button Create workspace
+				142 container
+					143 text Local workspace Beta
+		144 scroll bar (settable, float) 0
+	145 close button
+	146 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	147 minimize button
+	148 text Agent Workspace
+149 menu bar
+	150 F04g Fixed Inspection
+	151 File
+	152 Edit
+	153 View
+	154 Window
+	155 Help
+
+The focused UI element is 100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

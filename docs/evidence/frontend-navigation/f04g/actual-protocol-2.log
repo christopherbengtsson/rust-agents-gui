@@ -1,0 +1,26 @@
+{"name": "private_directory_and_endpoint", "status": "pass", "seconds": 2.9666931368410587e-05, "detail": {"directory": "0700", "endpoint": "0600"}}
+{"name": "fragmented_header_and_body", "status": "pass", "seconds": 0.0951036250917241, "detail": null}
+{"name": "exact_payload_limit_and_oversized_header", "status": "pass", "seconds": 0.0012490830849856138, "detail": null}
+{"name": "partial_header", "status": "pass", "seconds": 7.483398076146841e-05, "detail": null}
+{"name": "header_without_body", "status": "pass", "seconds": 7.208308670669794e-05, "detail": null}
+{"name": "partial_body", "status": "pass", "seconds": 6.212503649294376e-05, "detail": null}
+{"name": "empty_json", "status": "pass", "seconds": 5.4625095799565315e-05, "detail": null}
+{"name": "legacy_v6_v7_newline", "status": "pass", "seconds": 5.141599103808403e-05, "detail": null}
+{"name": "incompatible_versions_and_owner_before_dispatch", "status": "pass", "seconds": 0.00037166697438806295, "detail": null}
+{"name": "absolute_transfer_deadline_not_renewed_by_fragments", "status": "pass", "seconds": 2.0024346670834348, "detail": 2.0024088339414448}
+{"name": "eight_server_clients_then_handler_recovery", "status": "pass", "seconds": 0.02548637497238815, "detail": null}
+{"name": "baseline_exact_ack_and_five_second_heartbeat", "status": "pass", "seconds": 5.001300333067775, "detail": {"seconds": 5.001142916968092, "cursor": {"owner": "11626-1794674049379837000", "sequence": 1}}}
+{"name": "mismatched_ack_closes_subscription", "status": "pass", "seconds": 0.0001662500435486436, "detail": null}
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 308, in <module>
+    main()
+    ~~~~^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 263, in main
+    check('repository_workspace_push_progress_and_accepted_cursor_reconnect', progress)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 63, in check
+    detail = run()
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 251, in progress
+    if current and current['state']['kind'] != 'pending':
+                   ~~~~~~~~~~~~~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'

@@ -1,0 +1,110 @@
+{
+  "measurement_limit": "Executed before wall-time recorder; no independent elapsed measurement or UTC timestamp retained. Logs preserve diagnostics. These are development smoke/red checks, not final complete-gate measurements.",
+  "commands": [
+    {
+      "label": "red-journal",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib async_wait_observes_publication -- --test-threads=1",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "red-journal.log"
+    },
+    {
+      "label": "green-journal",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib async_wait_observes_publication -- --test-threads=1",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "green-journal.log"
+    },
+    {
+      "label": "check-migration-first",
+      "command": "node scripts/cargo.mjs check -p workspace-core",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "check-migration-first.log"
+    },
+    {
+      "label": "check-core-migration",
+      "command": "node scripts/cargo.mjs check -p workspace-core",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "check-core-migration.log"
+    },
+    {
+      "label": "check-workspace-first",
+      "command": "node scripts/cargo.mjs check --locked --workspace",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "check-workspace-first.log"
+    },
+    {
+      "label": "compile-unit-migration",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib --no-run",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "compile-unit-migration.log"
+    },
+    {
+      "label": "compile-unit-migration-2",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib --no-run",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "compile-unit-migration-2.log"
+    },
+    {
+      "label": "clippy-first",
+      "command": "node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "clippy-first.log"
+    },
+    {
+      "label": "clippy-2",
+      "command": "node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "clippy-2.log"
+    },
+    {
+      "label": "clippy-3",
+      "command": "node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "clippy-3.log"
+    },
+    {
+      "label": "clippy-4",
+      "command": "node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "exit_status": 101,
+      "wall_seconds": null,
+      "log": "clippy-4.log"
+    },
+    {
+      "label": "clippy-5",
+      "command": "node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "clippy-5.log"
+    },
+    {
+      "label": "unit-connection-first",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib connection -- --test-threads=1",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "unit-connection-first.log"
+    },
+    {
+      "label": "unit-connection-2",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib connection -- --test-threads=1",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "unit-connection-2.log"
+    },
+    {
+      "label": "unit-connection-3",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib connection -- --test-threads=1",
+      "exit_status": 0,
+      "wall_seconds": null,
+      "log": "unit-connection-3.log"
+    }
+  ]
+}

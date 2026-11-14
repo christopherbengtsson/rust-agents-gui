@@ -1,0 +1,26 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspace-changes.test.tsx (25 tests | 1 failed | 24 skipped) 92ms
+   × desktop panel remount uses the latest retained layout after a narrow-window switch 91ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspace-changes.test.tsx > desktop panel remount uses the latest retained layout after a narrow-window switch
+AssertionError: expected 32 to be close to 37, received difference is 5, but expected 0.005
+ ❯ src/workspace-changes.test.tsx:1283:44
+    1281|   await act(async () => { narrow = false; query.dispatchEvent(new Even…
+    1282|   const restored = document.getElementById("inspection-files");
+    1283|   expect(Number(restored?.style.flexGrow)).toBeCloseTo(remembered ?? 0…
+       |                                            ^
+    1284| });
+    1285|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 24 skipped (25)
+   Start at  19:37:55
+   Duration  566ms (import 39%, environment 31%, tests 18%, transform 12%, setup 1%)
+

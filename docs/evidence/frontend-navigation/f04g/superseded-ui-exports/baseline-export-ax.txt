@@ -1,0 +1,316 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container (showing 88-188 of 188 items)
+					35 image
+					36 text F04G:25200:6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":299115,"end":299118},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison
+					37 image
+					38 text F04G:25500:_id":"8a7bc6f2-c4f5-4aca-a2bf-9437bc0e874b","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":299118,"end":299123},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":73,"cursor":{"owner":"21028-17
+					39 image
+					40 text F04G:25800:94674451767299000","sequence":106}}},"start":299122,"end":299123},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":30112
+					41 image
+					42 text F04G:26100:4,"end":301135},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":74,"cursor":{"owner":"21028-1794674451767299000","sequence":107}}},"start":301127,"end":301135},{"command":"observation_acknowledge","args":{"acknowledg
+					43 image
+					44 text F04G:26400:ement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":75,"cursor":{"owner":"21028-1794674451767299000","sequence":108}}},"start":301134,"end":301138.00000000006},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c
+					45 image
+					46 text F04G:26700:5b3","batch_id":76,"cursor":{"owner":"21028-1794674451767299000","sequence":109}}},"start":301381,"end":301381},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"c
+					47 image
+					48 text F04G:27000:omparison_id":null,"after":null}},"start":301385,"end":301388.00000000006},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"cdca4882-ade1-4537-a5
+					49 image
+					50 text F04G:27300:a9-a18610ef2368","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":301389,"end":301393},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":77,"cursor":{"owner":"21028-1794674451767299000","sequence
+					51 image
+					52 text F04G:27600:":110}}},"start":301391,"end":301391},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":78,"cursor":{"owner":"21028-1794674451767299000","sequence":111}}},"start":301392,"end":301392},{"command":"workspace_request","ar
+					53 image
+					54 text F04G:27900:gs":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":301644,"end":301648},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000",
+					55 image
+					56 text F04G:28200:"request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"cdca4882-ade1-4537-a5a9-a18610ef2368","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":301648,"end":301650.00000000006},{"command":"observation_acknowledge
+					57 image
+					58 text F04G:28500:","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":79,"cursor":{"owner":"21028-1794674451767299000","sequence":112}}},"start":301654,"end":301655.00000000006},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"
+					59 image
+					60 text F04G:28800:operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":301901,"end":301906},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_
+					61 image
+					62 text F04G:29100:id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"cdca4882-ade1-4537-a5a9-a18610ef2368","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":301906,"end":301909},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"c
+					63 image
+					64 text F04G:29400:hanges","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":303911,"end":303919},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":80,"cursor":{"owner":"2102
+					65 image
+					66 text F04G:29700:8-1794674451767299000","sequence":113}}},"start":303918,"end":303921},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":81,"cursor":{"owner":"21028-1794674451767299000","sequence":114}}},"start":303922,"end":303922},{"
+					67 image
+					68 text F04G:30000:command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":304170,"end":304173},{"command":"observation_acknowledge","args":{"ackno
+					69 image
+					70 text F04G:30300:wledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":82,"cursor":{"owner":"21028-1794674451767299000","sequence":115}}},"start":304180,"end":304181},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","worksp
+					71 image
+					72 text F04G:30600:ace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":304424,"end":304429.00000000006},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d6
+					73 image
+					74 text F04G:30900:3b-4fb6-aedd-751d6e6eba98","comparison_id":"7a69f687-80b5-478e-887e-d0721c6eb782","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":304429.00000000006,"end":304432},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a10
+					75 image
+					76 text F04G:31200:99c5b3","batch_id":83,"cursor":{"owner":"21028-1794674451767299000","sequence":116}}},"start":304431,"end":304432},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":84,"cursor":{"owner":"21028-1794674451767299000","seq
+					77 image
+					78 text F04G:31500:uence":117}}},"start":304432,"end":304432},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":304683,"end":304687},{"comm
+					79 image
+					80 text F04G:31800:and":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"7a69f687-80b5-478e-887e-d0721c6eb782","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}}
+					81 image
+					82 text F04G:32100:,"start":304687,"end":304690},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":85,"cursor":{"owner":"21028-1794674451767299000","sequence":118}}},"start":304704,"end":304706},{"command":"workspace_request","args":{"ex
+					83 image
+					84 text F04G:32400:pectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":304941.00000000006,"end":304944},{"command":"workspace_request","args":{"expectedOwner":"21028-17946744517672990
+					85 image
+					86 text F04G:32700:00","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"7a69f687-80b5-478e-887e-d0721c6eb782","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":304944,"end":304949},{"command":"workspace_request","args":{"exp
+					87 image
+					88 text F04G:33000:ectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":306950,"end":306958},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-a
+					89 image
+					90 text F04G:33300:cf0-443b-8f79-f89a1099c5b3","batch_id":86,"cursor":{"owner":"21028-1794674451767299000","sequence":119}}},"start":306957,"end":306958},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":87,"cursor":{"owner":"21028-17946
+					91 image
+					92 text F04G:33600:74451767299000","sequence":120}}},"start":306958,"end":306959},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":307208,
+					93 image
+					94 text F04G:33900:"end":307211},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":88,"cursor":{"owner":"21028-1794674451767299000","sequence":121}}},"start":307215.00000000006,"end":307216},{"command":"workspace_request","args":{"expect
+					95 image
+					96 text F04G:34200:edOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":307462,"end":307468},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"
+					97 image
+					98 text F04G:34500:operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"439c49d0-1f01-491e-accb-c72a57c68f17","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":307468,"end":307472},{"command":"observation_acknowledge","args":{"acknowledgemen
+					99 image
+					100 text F04G:34800:t":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":89,"cursor":{"owner":"21028-1794674451767299000","sequence":122}}},"start":307471,"end":307471},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":
+					101 image
+					102 text F04G:35100:90,"cursor":{"owner":"21028-1794674451767299000","sequence":123}}},"start":307471,"end":307472},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":nu
+					103 image
+					104 text F04G:35400:ll,"after":null}},"start":307723,"end":307726},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"439c49d0-1f01-491e-accb-c72a57c68f17","file_id":"
+					105 image
+					106 text F04G:35700:1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":307727.00000000006,"end":307731},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":91,"cursor":{"owner":"21028-1794674451767299000","sequence":124}}},"start
+					107 image
+					108 text F04G:36000:":307762,"end":307763.00000000006},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":307983,"end":307986},{"command":"wo
+					109 image
+					110 text F04G:36300:rkspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"439c49d0-1f01-491e-accb-c72a57c68f17","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start"
+					111 image
+					112 text F04G:36600::307986,"end":307990},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":309992,"end":310000},{"command":"observation_ackn
+					113 image
+					114 text F04G:36900:owledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":92,"cursor":{"owner":"21028-1794674451767299000","sequence":125}}},"start":309999,"end":310000},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443
+					115 image
+					116 text F04G:37200:b-8f79-f89a1099c5b3","batch_id":93,"cursor":{"owner":"21028-1794674451767299000","sequence":126}}},"start":310000,"end":310002},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","r
+					117 image
+					118 text F04G:37500:efresh":false,"comparison_id":null,"after":null}},"start":310251.00000000006,"end":310254},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":94,"cursor":{"owner":"21028-1794674451767299000","sequence":127}}},"start":31
+					119 image
+					120 text F04G:37800:0253,"end":310255},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":310505,"end":310507},{"command":"workspace_request"
+					121 image
+					122 text F04G:38100:,"args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"e6707045-83fd-43e9-9759-7b58c13d141b","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":310508,"end":310
+					123 image
+					124 text F04G:38400:518},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":95,"cursor":{"owner":"21028-1794674451767299000","sequence":128}}},"start":310517,"end":310521},{"command":"observation_acknowledge","args":{"acknowledgement":{"su
+					125 image
+					126 text F04G:38700:bscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":96,"cursor":{"owner":"21028-1794674451767299000","sequence":129}}},"start":310522,"end":310522},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd
+					127 image
+					128 text F04G:39000:3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":310769,"end":310773},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","
+					129 image
+					130 text F04G:39300:comparison_id":"e6707045-83fd-43e9-9759-7b58c13d141b","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":310773,"end":310775.00000000006},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":97,"curs
+					131 image
+					132 text F04G:39600:or":{"owner":"21028-1794674451767299000","sequence":130}}},"start":310783,"end":310784},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"afte
+					133 image
+					134 text F04G:39900:r":null}},"start":311027,"end":311031},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"e6707045-83fd-43e9-9759-7b58c13d141b","file_id":"1a9080bc
+					135 image
+					136 text F04G:40200:-067d-403f-b789-b2885056e0fa"},"load":false}},"start":311031,"end":311034},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"sta
+					137 image
+					138 text F04G:40500:rt":313035,"end":313044},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":98,"cursor":{"owner":"21028-1794674451767299000","sequence":131}}},"start":313043,"end":313047},{"command":"observation_acknowledge","args":{"a
+					139 image
+					140 text F04G:40800:cknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":99,"cursor":{"owner":"21028-1794674451767299000","sequence":132}}},"start":313048,"end":313049},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3
+					141 image
+					142 text F04G:41100:","batch_id":100,"cursor":{"owner":"21028-1794674451767299000","sequence":133}}},"start":313290,"end":313291},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"com
+					143 image
+					144 text F04G:41400:parison_id":null,"after":null}},"start":313295,"end":313297},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"abfaeec2-45d0-448b-ab6f-ce553ec0b8f
+					145 image
+					146 text F04G:41700:1","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":313298,"end":313300},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":101,"cursor":{"owner":"21028-1794674451767299000","sequence":134}}},"sta
+					147 image
+					148 text F04G:42000:rt":313300,"end":313300},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":102,"cursor":{"owner":"21028-1794674451767299000","sequence":135}}},"start":313300,"end":313301},{"command":"workspace_request","args":{"expect
+					149 image
+					150 text F04G:42300:edOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":313552,"end":313555},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"
+					151 image
+					152 text F04G:42600:operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"abfaeec2-45d0-448b-ab6f-ce553ec0b8f1","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":313555,"end":313558},{"command":"observation_acknowledge","args":{"acknowledgeme
+					153 image
+					154 text F04G:42900:nt":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":103,"cursor":{"owner":"21028-1794674451767299000","sequence":136}}},"start":313573,"end":313574},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id"
+					155 image
+					156 text F04G:43200::"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":313808,"end":313812},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e
+					157 image
+					158 text F04G:43500:6eba98","comparison_id":"abfaeec2-45d0-448b-ab6f-ce553ec0b8f1","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":313812,"end":313815},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d6
+					159 image
+					160 text F04G:43800:3b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":315817,"end":315825},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":104,"cursor":{"owner":"21028-1794674451767299000","sequence":
+					161 image
+					162 text F04G:44100:137}}},"start":315824,"end":315826},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":105,"cursor":{"owner":"21028-1794674451767299000","sequence":138}}},"start":315825,"end":315826},{"command":"workspace_request","arg
+					163 image
+					164 text F04G:44400:s":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":316076,"end":316079},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9
+					165 image
+					166 text F04G:44700:229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":106,"cursor":{"owner":"21028-1794674451767299000","sequence":139}}},"start":316086,"end":316087},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd
+					167 image
+					168 text F04G:45000:-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":316330,"end":316332},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"
+					169 image
+					170 text F04G:45300:af86122b-aa4f-4b69-9389-2038432fe978","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":316334,"end":316340.00000000006},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":107,"cursor":{"owner":"21
+					171 image
+					172 text F04G:45600:028-1794674451767299000","sequence":140}}},"start":316338,"end":316339},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":108,"cursor":{"owner":"21028-1794674451767299000","sequence":141}}},"start":316339,"end":316339}
+					173 image
+					174 text F04G:45900:,{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":316591,"end":316594},{"command":"workspace_request","args":{"expected
+					175 image
+					176 text F04G:46200:Owner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"af86122b-aa4f-4b69-9389-2038432fe978","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":316594,"end":316599},{"command":"
+					177 image
+					178 text F04G:46500:observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":109,"cursor":{"owner":"21028-1794674451767299000","sequence":142}}},"start":316631,"end":316632},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000",
+					179 image
+					180 text F04G:46800:"request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":316850,"end":316853},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":
+					181 image
+					182 text F04G:47100:{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"af86122b-aa4f-4b69-9389-2038432fe978","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":316853,"end":316856},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"o
+					183 image
+					184 text F04G:47400:peration":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":318858,"end":318861},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":110,"cursor":{
+					185 image
+					186 text F04G:47700:"owner":"21028-1794674451767299000","sequence":143}}},"start":318860,"end":318863},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":111,"cursor":{"owner":"21028-1794674451767299000","sequence":144}}},"start":318864.00
+					187 image
+					188 text F04G:48000:000000006,"end":318865},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":112,"cursor":{"owner":"21028-1794674451767299000","sequence":145}}},"start":319081,"end":319082},{"command":"workspace_request","args":{"expecte
+					189 image
+					190 text F04G:48300:dOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":319112,"end":319114.00000000006},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","
+					191 image
+					192 text F04G:48600:request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"736e9a82-882f-4ba0-9e5e-7971f501d2d0","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":true}},"start":319114.00000000006,"end":319117},{"command":"observation_acknowledge",
+					193 image
+					194 text F04G:48900:"args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":113,"cursor":{"owner":"21028-1794674451767299000","sequence":146}}},"start":319115,"end":319117},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f
+					195 image
+					196 text F04G:49200:89a1099c5b3","batch_id":114,"cursor":{"owner":"21028-1794674451767299000","sequence":147}}},"start":319118,"end":319118},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh"
+					197 image
+					198 text F04G:49500::false,"comparison_id":null,"after":null}},"start":319369,"end":319373},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"736e9a82-882f-4ba0-9e5e-
+					199 image
+					200 text F04G:49800:7971f501d2d0","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":319373,"end":319375},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":115,"cursor":{"owner":"21028-1794674451767299000","sequence"
+					201 image
+					202 text F04G:50100::148}}},"start":319378,"end":319379},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":319627,"end":319630},{"command":"
+					203 image
+					204 text F04G:50400:workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"736e9a82-882f-4ba0-9e5e-7971f501d2d0","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"star
+					205 image
+					206 text F04G:50700:t":319630,"end":319632},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":true,"comparison_id":null,"after":null}},"start":321635,"end":321655.00000000006},{"command":"ob
+					207 image
+					208 text F04G:51000:servation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":116,"cursor":{"owner":"21028-1794674451767299000","sequence":149}}},"start":321651,"end":321658},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"92
+					209 image
+					210 text F04G:51300:29a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":117,"cursor":{"owner":"21028-1794674451767299000","sequence":150}}},"start":321654,"end":321683},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":118,"cursor":{"owner":"2
+					211 image
+					212 text F04G:51600:1028-1794674451767299000","sequence":151}}},"start":321880,"end":321881},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"star
+					213 image
+					214 text F04G:51900:t":321908,"end":321910},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"40c3c371-bbc2-438b-8abd-48c103b69146","file_id":"1a9080bc-067d-403f-b789
+					215 image
+					216 text F04G:52200:-b2885056e0fa"},"load":true}},"start":321911,"end":321922},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":119,"cursor":{"owner":"21028-1794674451767299000","sequence":152}}},"start":321921,"end":321927},{"command":"
+					217 image
+					218 text F04G:52500:observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":120,"cursor":{"owner":"21028-1794674451767299000","sequence":153}}},"start":321923,"end":321927},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000",
+					219 image
+					220 text F04G:52800:"request":{"operation":"changes","workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":322174.00000000006,"end":322176},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_previe
+					221 image
+					222 text F04G:53100:w","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comparison_id":"40c3c371-bbc2-438b-8abd-48c103b69146","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":322176,"end":322180},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"9
+					223 image
+					224 text F04G:53400:229a40a-acf0-443b-8f79-f89a1099c5b3","batch_id":121,"cursor":{"owner":"21028-1794674451767299000","sequence":154}}},"start":322190,"end":322191.00000000006},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"changes","workspace_id":"5b4e9bd3-d6
+					225 image
+					226 text F04G:53700:3b-4fb6-aedd-751d6e6eba98","refresh":false,"comparison_id":null,"after":null}},"start":322430,"end":322433},{"command":"workspace_request","args":{"expectedOwner":"21028-1794674451767299000","request":{"operation":"change_preview","target":{"workspace_id":"5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98","comp
+					227 image
+					228 text F04G:54000:arison_id":"40c3c371-bbc2-438b-8abd-48c103b69146","file_id":"1a9080bc-067d-403f-b789-b2885056e0fa"},"load":false}},"start":322433,"end":322437}],"windows":[{"label":"visible","start":{"time":270203.00000000006,"visibility":"visible","active":0,"maxActive":0,"duplicates":0,"logCount":0,"commands":{},
+					229 image
+					230 text F04G:54300:"assets":["tauri__localhost/assets/index-BRW4CMP_.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148},"end":{"time":276205,"visibility":"visible","active":0,"maxActive":1,"duplicates":0,"logCount":15,"commands":{"works
+					231 image
+					232 text F04G:54600:pace_request":6,"observation_acknowledge":9},"assets":["tauri__localhost/assets/index-BRW4CMP_.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648}}]}
+					233 image
+					234 text "
+					235 text exported 54831
+					236 text "
+					237 text  = $2
+			238 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			239 container
+	240 scroll area
+		241 HTML content Description: Agent Workspace, URL: tauri://localhost
+			242 link Skip to workspace, Value: tauri://localhost#workspace
+			243 container Repository sidebar
+				244 text Agent Workspace
+				245 container Repositories
+					246 heading Repositories, Value: 2
+						247 text Repositories
+					248 content list
+						249 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							250 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							251 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							252 button Create workspace in Alpha
+							253 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							254 text Available
+							255 content list
+								256 button paolo-maldini, Help: Workspace ready
+						257 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							258 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							259 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							260 button Create workspace in Beta
+							261 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							262 text Available
+							263 content list
+								264 button dries-mertens, Help: Workspace ready
+				265 pop up button Add repository
+				266 text Connected
+				267 pop up button Connection details
+			268 container
+				269 container
+					270 heading dries-mertens, Value: 1
+						271 text dries-mertens
+					272 button Refresh status
+				273 container Selected repository
+					274 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					275 text Repository available
+				276 text Uncommitted changes
+				277 button Refresh changes
+				278 button (expanded) Hide changed files, Secondary Actions: Collapse
+				279 container
+					280 text Compared with HEAD  83f047d5f61edacd2fc87605778e6522e8b750b0  ·  2 changed files
+				281 tab group (selectable) Workspace views
+					282 tab (selectable) Workspace
+					283 tab (selected) Changes
+				284 container Changes
+					285 container Selected file changes
+						286 heading large.txt, Value: 2
+							287 text large.txt
+						288 text Preview limited by the 200-row or 48 KiB response budget.
+						289 container Unified file diff
+				290 splitter Resize changed files, Value: 68
+				291 container Changed files
+					292 heading Changed files, Value: 2
+						293 text Changed files
+					294 container
+						295 toggle button large.txt .M, Help: large.txt, Value: on
+						296 toggle button text.txt .M, Help: text.txt, Value: off
+					297 button First page
+					298 button (disabled) Next files
+				299 container
+					300 text Local workspace Beta
+		301 scroll bar (settable, float) 0
+	302 close button
+	303 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	304 minimize button
+	305 text Agent Workspace
+306 menu bar
+	307 F04g inspect baseline
+	308 File
+	309 Edit
+	310 View
+	311 Window
+	312 Help
+
+The focused UI element is 238 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

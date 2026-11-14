@@ -1,0 +1,73 @@
+{
+  "windows": [
+    {
+      "label": "no-workspace-interest",
+      "start": {
+        "time": 114403,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 2
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": [
+          {
+            "role": null,
+            "class": "no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+            "top": 2777
+          }
+        ]
+      },
+      "end": {
+        "time": 120405,
+        "href": "/",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "commands": {
+          "workspace_request": 2
+        },
+        "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": [
+          {
+            "role": null,
+            "class": "no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+            "top": 2777
+          }
+        ]
+      }
+    }
+  ],
+  "snapshot": {
+    "time": 399258,
+    "href": "/",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "commands": {
+      "workspace_request": 2
+    },
+    "assets": ["tauri__localhost/assets/index-BH_usD4q.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": [
+      {
+        "role": null,
+        "class": "no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "top": 2777
+      }
+    ]
+  }
+}

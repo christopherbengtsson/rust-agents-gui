@@ -1,0 +1,130 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:18:41 PM
+					36 image
+					37 text (()=>{
+ const q=globalThis.f08={started:performance.now(),log:[],navigation:[],windows:[],active:0,maxActive:0,duplicates:0,keys:new Map(),heldAcks:[]};
+ const original=window.fetch;
+ q.invoke=window.__TAURI_INTERNALS__.invoke.bind(window.__TAURI_INTERNALS__);
+ // Tauri's invoke property is non-writable. Trace its actual custom-protocol fetch.
+ window.fetch=function(url,options){
+  if(!String(url).startsWith('ipc:'))return original.call(this,url,options);
+  const command=String(url).split('/').pop();let arg
+					38 image
+					39 text F08-INITIAL:{"snapshot":{"time":81720,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":405}},"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","visibility":"visible","active":0,"maxActive":0,"duplicates":0,"queries":9,"cacheBodyBytes":3161,"queue":0,"pending":1,"physicalActive":1,"freshness":107,"actor":"reading","commands":{},"assets":["tauri__localhost/assets/index-hvIgvl0U.js"],"width":900,"height":148,"d
+					40 image
+					41 text "
+					42 text F08 instrumentation installed
+					43 text "
+					44 text  = $1
+			45 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			46 container
+	47 scroll area
+		48 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			49 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			50 container Repository sidebar
+				51 text Agent Workspace
+				52 container Repositories
+					53 heading Repositories, Value: 2
+						54 text Repositories
+					55 content list
+						56 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							57 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							58 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							59 button Create workspace in Beta
+							60 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							61 text Available
+							62 content list
+								63 button lee-jae-sung, Help: Workspace ready
+						64 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							65 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							66 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							67 button Create workspace in Alpha
+							68 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							69 text Available
+							70 content list
+								71 button paul-scholes, Help: Workspace ready
+				72 pop up button Add repository
+				73 text Connected
+				74 pop up button Connection details
+				75 link Settings, Value: tauri://localhost/settings/general
+			76 container
+				77 heading paul-scholes, Value: 1
+					78 text paul-scholes
+				79 button Refresh status
+				80 container Selected repository
+					81 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					82 text Repository available
+				83 text Uncommitted changes
+				84 button Refresh changes
+				85 button (expanded) Hide changed files, Secondary Actions: Collapse
+				86 text Compared with HEAD 
+				87 text ac721f2849607a00f9583fbb5cc8af2184246986
+				88 text  · 
+				89 text 2
+				90 text changed files
+				91 tab group (selectable) Workspace views
+					92 tab (selectable) Workspace
+					93 tab (selected) Changes
+				94 container Changes
+					95 text Select a changed file
+					96 text Refresh the file list, then select a path to inspect its unified diff.
+				97 splitter Resize changed files, Value: 68
+				98 container Changed files
+					99 heading Changed files, Value: 2
+						100 text Changed files
+					101 container
+						102 toggle button large.txt .M, Help: large.txt, Value: off
+						103 toggle button text.txt .M, Help: text.txt, Value: off
+					104 button First page
+					105 button (disabled) Next files
+				106 text Local workspace
+				107 text Alpha
+		108 scroll bar (settable, float) 0
+	109 close button
+	110 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	111 minimize button
+	112 text Agent Workspace
+113 menu bar
+	114 F08 Inspector current
+	115 File
+	116 Edit
+	117 View
+	118 Window
+	119 Help
+
+The focused UI element is 45 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
