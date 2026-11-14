@@ -1,0 +1,22 @@
+{
+  "version": "0.93.0",
+  "build": "0.93.0",
+  "bundleIdentifier": "com.conductor.app",
+  "sources": [
+    {
+      "path": "/Applications/Conductor.app/Contents/MacOS/conductor",
+      "bytes": 68776816,
+      "sha256": "062937acd521353151df361604d08af8d16b6ba687b6a6e74c67ff8a1e6d05e4"
+    },
+    {
+      "path": "/private/tmp/conductor-frontend-research/main-B00nPG1d.js",
+      "bytes": 3601846,
+      "sha256": "e79bc002a09829f0e9903c7d9520243ef52213abf32d2700a4cc720fbc65720f"
+    },
+    {
+      "path": "/private/tmp/conductor-frontend-research/renderApp-Ec9d1ssb.js",
+      "bytes": 12557027,
+      "sha256": "e161ae52a909a2f093274faf587eacb9d890f82e644721e293773521b8746094"
+    }
+  ]
+}

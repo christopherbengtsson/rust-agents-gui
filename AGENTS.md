@@ -35,6 +35,10 @@ Before creating, choosing, styling, moving, updating, or reviewing frontend comp
 For React/TypeScript frontend implementation, refactoring, and review, use [react-engineering](.agents/skills/react-engineering/SKILL.md).
 For shadcn/ui component implementation and customization, use [shadcn](.agents/skills/shadcn/SKILL.md). Add components as working screens need them under the agreed milestone scope.
 
+For routing, query/cache work, or TanStack dependency updates, read
+[TanStack guidance](docs/agents/tanstack.md) for task mapping and local-IPC constraints.
+
+
 ### Issue tracker
 
 Specs and tickets use local Markdown under `.scratch/`.
@@ -49,3 +53,15 @@ See `docs/agents/triage-labels.md`.
 
 Use one root glossary and repository-wide ADRs.
 See `docs/agents/domain.md`.
+
+<!-- intent-skills:start -->
+## Skill Loading
+
+Use the repository’s installed Intent. If it is unavailable, report the missing dependency instead of downloading a replacement.
+Before editing files for a substantial task:
+- Run `corepack pnpm exec intent list` from the workspace root to see available local skills.
+- If a listed skill matches the task, run `corepack pnpm exec intent load <package>#<skill>` before changing files.
+- Use the loaded `SKILL.md` guidance while making the change.
+- Monorepos: when working across packages, run the skill check from the workspace root and prefer the local skill for the package being changed.
+- Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
+<!-- intent-skills:end -->

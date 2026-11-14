@@ -1,0 +1,32 @@
+{
+  "intentVersion": "0.5.6",
+  "selectedSkillCount": 11,
+  "loaded": [
+    "@tanstack/react-router#compositions/router-query",
+    "@tanstack/react-router#react-router",
+    "@tanstack/router-core#router-core",
+    "@tanstack/router-core#router-core/code-splitting",
+    "@tanstack/router-core#router-core/data-loading",
+    "@tanstack/router-core#router-core/navigation",
+    "@tanstack/router-core#router-core/not-found-and-errors",
+    "@tanstack/router-core#router-core/path-params",
+    "@tanstack/router-core#router-core/search-params",
+    "@tanstack/router-core#router-core/type-safety",
+    "@tanstack/router-plugin#router-plugin"
+  ],
+  "warnings": [],
+  "conflicts": [],
+  "managedGuidanceMatchesInstaller": true,
+  "queryVersion": "5.107.1",
+  "standaloneQuerySkillAvailable": false,
+  "queryGuidance": "Router composition and official Query sources",
+  "optionalHookEnforcement": "Not installed by F01; guidance mode",
+  "lockfileMatchesHead": false,
+  "lockfileSha256": "aa4e7d9613c8a77d923573714152d027efac062e3ec8a2a8584010cdf7cc9ea2",
+  "scope": "F01 documentation audit; no F02-F08 implementation",
+  "cliProbeNote": "hooks status is not supported in Intent 0.5.6 (exit 1); hooks --help confirms install-only interface. No hooks were installed.",
+  "localLinksAndAnchorsValid": true,
+  "successorAcceptanceUnchecked": true,
+  "productSourceMatchesHead": true,
+  "freshSessionEntry": ".scratch/frontend-navigation/spec.md#starting-a-fresh-session"
+}

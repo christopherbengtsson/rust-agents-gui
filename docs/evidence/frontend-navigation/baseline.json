@@ -1,0 +1,21 @@
+{
+  "revision": "99adb6366ef7eed1cc72d310f75b6fbec361d436",
+  "node": "v26.13.1",
+  "command": "corepack pnpm frontend:build",
+  "profile": "production",
+  "viteMilliseconds": 306,
+  "assets": [
+    {
+      "name": "index-D4XeIzmN.js",
+      "raw": 567086,
+      "gzip": 178093,
+      "brotli": 150780
+    },
+    {
+      "name": "index-Nt6iarJC.css",
+      "raw": 99404,
+      "gzip": 16238,
+      "brotli": 13995
+    }
+  ]
+}

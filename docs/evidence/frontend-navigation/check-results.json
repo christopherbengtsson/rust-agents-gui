@@ -1,0 +1,14 @@
+[
+  {
+    "name": "unit-measurement",
+    "command": "corepack pnpm test:measure",
+    "exitCode": 0,
+    "wallSeconds": 34.396685
+  },
+  {
+    "name": "frontend-build",
+    "command": "corepack pnpm frontend:build",
+    "exitCode": 0,
+    "wallSeconds": 0.603442
+  }
+]

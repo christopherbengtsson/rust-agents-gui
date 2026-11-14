@@ -1,0 +1,61 @@
+{
+  "intentVersion": "0.5.6",
+  "skills": [
+    {
+      "use": "@tanstack/react-router#compositions/router-query",
+      "packageVersion": "1.170.46",
+      "sha256": "b866bed6c12157ac1e5acc75f3d9628598367900a48544eb82e4c15dab2d4dab"
+    },
+    {
+      "use": "@tanstack/react-router#react-router",
+      "packageVersion": "1.170.46",
+      "sha256": "864c4c444ab3a1a6e03ea51513f5f1a6939dcc964abf535ae75517efb1213514"
+    },
+    {
+      "use": "@tanstack/router-plugin#router-plugin",
+      "packageVersion": "1.169.0",
+      "sha256": "fb5a96721da24fc392d3746df79685687de09c9a8fe79fbef98ff4c23731bcfa"
+    },
+    {
+      "use": "@tanstack/router-core#router-core",
+      "packageVersion": "1.171.39",
+      "sha256": "03fc990919c2c025704de46ef87ee8efa133f811478a7eb66e04d11714608db0"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/code-splitting",
+      "packageVersion": "1.171.39",
+      "sha256": "12604138af8a6c65ceb5f7303453bf2c62eb291bae6e89c7c6a63f789b88caf3"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/data-loading",
+      "packageVersion": "1.171.39",
+      "sha256": "9510f3b50763eb6a47db678accf6e25eaad0a865dd8e4658050472043e3cc9dd"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/navigation",
+      "packageVersion": "1.171.39",
+      "sha256": "6d024af66514645e81347100f401ba8a1e2457cbe8b5024660ae9e409700ac80"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/not-found-and-errors",
+      "packageVersion": "1.171.39",
+      "sha256": "b79f903049856322275bd524de982172790b06416efb54760740ee7a8156f8cb"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/path-params",
+      "packageVersion": "1.171.39",
+      "sha256": "caa1abefbf7751beaca3b1b55e5fe217cb56108cc037de757d7c5e8d09218b99"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/search-params",
+      "packageVersion": "1.171.39",
+      "sha256": "e886e5c3285309a0e95c52e30e73d4ff52cffc366f0d97d02003b9696e8a8804"
+    },
+    {
+      "use": "@tanstack/router-core#router-core/type-safety",
+      "packageVersion": "1.171.39",
+      "sha256": "fc009f3dcf18fc2db2e5cf20b7dbb621e15f66959b405b8843e2911ca017bb83"
+    }
+  ],
+  "standaloneQuerySkill": "Not shipped by @tanstack/react-query 5.107.1 or query-core 5.107.1; use Router/Query composition plus official Query docs."
+}

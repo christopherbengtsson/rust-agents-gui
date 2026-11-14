@@ -2,7 +2,7 @@
 
 **What to build:** Provide Codex connection/setup behavior through the desktop and establish the real and deterministic execution adapters against a recorded supported protocol cohort.
 
-**Blocked by:** 02a: Establish the incremental UI foundation
+**Blocked by:** 02a: Establish the incremental UI foundation; [F08: Qualify the frontend foundation](../../frontend-navigation/issues/08-qualify-frontend-foundation.md)
 
 **Status:** ready-for-agent
 
@@ -23,3 +23,9 @@
 - [ ] Separate protocol interpretation from process/stdio mechanics with small internal substitutions. Test deadline decisions using controlled time/events or immediate timeout outcomes; keep production deadlines intact and unit execution free of runtime processes or waits.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.
+
+## Comments
+
+### 2026-11-14 — frontend foundation prerequisite
+
+Follow the [agreed foundation](../../frontend-navigation/spec.md). Runtime setup belongs at Settings → Providers → Codex, with relevant workspace status linking there. Keep SupervisorConnection transport diagnostics separate. This does not authorize provider sessions.

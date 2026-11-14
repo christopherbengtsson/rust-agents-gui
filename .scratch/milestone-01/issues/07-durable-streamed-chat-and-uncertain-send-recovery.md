@@ -2,7 +2,7 @@
 
 **What to build:** Send multiline text in a workspace, follow streamed replies/tool activity in the correct conversation, and reconnect after desktop loss without replaying uncertain work.
 
-**Blocked by:** 04: Create isolated workspaces with recoverable retries; 06: Connect Codex with actionable setup diagnostics
+**Blocked by:** [06a: Storage evaluation](06a-evaluate-storage-before-durable-chat.md); 04: Create isolated workspaces with recoverable retries; 06: Connect Codex with actionable setup diagnostics
 
 **Status:** ready-for-agent
 
