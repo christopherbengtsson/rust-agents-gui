@@ -1,0 +1,285 @@
+{
+  "snapshot": {
+    "time": 338015,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 6229
+      }
+    },
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queries": 148,
+    "cacheBodyBytes": 1550982,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 752,
+    "actor": "waiting",
+    "commands": {
+      "workspace_request": 1089,
+      "observation_acknowledge": 717
+    },
+    "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "navigation": [
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 117590,
+      "feedback": 59,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 118261,
+      "feedback": 46,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 119877.00000000001,
+      "feedback": 35.99999999998545,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 120549,
+      "feedback": 53,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 122130,
+      "feedback": 38,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 123196,
+      "feedback": 45,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 124694,
+      "feedback": 33,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 125756,
+      "feedback": 42,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 127251,
+      "feedback": 34,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 127925,
+      "feedback": 43,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    },
+    {
+      "label": "Workspace",
+      "trusted": true,
+      "start": 129521.00000000001,
+      "feedback": 31.999999999985448,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+      "heading": "paul-scholes",
+      "tab": "Workspace"
+    },
+    {
+      "label": "Changes",
+      "trusted": true,
+      "start": 130479.00000000001,
+      "feedback": 45.99999999998545,
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "heading": "paul-scholes",
+      "tab": "Changes"
+    }
+  ],
+  "windows": [
+    {
+      "label": "matched-visible-fast",
+      "start": {
+        "time": 119015,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 5749
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 85,
+        "cacheBodyBytes": 653960,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 272,
+        "actor": "waiting",
+        "commands": {
+          "workspace_request": 358,
+          "observation_acknowledge": 234
+        },
+        "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 125018,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 5749
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 85,
+        "cacheBodyBytes": 653960,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 272,
+        "actor": "waiting",
+        "commands": {
+          "workspace_request": 365,
+          "observation_acknowledge": 235
+        },
+        "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "calls": {
+        "workspace_request:changes": 5,
+        "workspace_request:change_preview": 2,
+        "observation_acknowledge:": 1
+      }
+    },
+    {
+      "label": "matched-steady-fast",
+      "start": {
+        "time": 149576,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 5791
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 92,
+        "cacheBodyBytes": 749097,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 314,
+        "actor": "waiting",
+        "commands": {
+          "workspace_request": 436,
+          "observation_acknowledge": 279
+        },
+        "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "end": {
+        "time": 155583,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 5803
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 94,
+        "cacheBodyBytes": 776279,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 326,
+        "actor": "waiting",
+        "commands": {
+          "workspace_request": 454,
+          "observation_acknowledge": 291
+        },
+        "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": []
+      },
+      "calls": {
+        "workspace_request:changes": 12,
+        "observation_acknowledge:": 12,
+        "workspace_request:change_preview": 6
+      }
+    }
+  ]
+}

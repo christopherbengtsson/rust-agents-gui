@@ -1,0 +1,48 @@
+{
+  "workspaces": [
+    {
+      "id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "39d69e8d-d310-4a6b-9d33-2d8fc7be7d3f",
+      "name": "paul-scholes",
+      "branch": "workspace/paul-scholes",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paul-scholes/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "cd6897c9-61b5-4d60-bac9-73b35ec58fd8",
+      "repository_id": "6e800468-fdab-420a-af6a-d21d8dfe0507",
+      "creation_action_id": "bb751430-d570-4335-892c-c3d001c97176",
+      "name": "lee-jae-sung",
+      "branch": "workspace/lee-jae-sung",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/beta/lee-jae-sung/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    }
+  ]
+}

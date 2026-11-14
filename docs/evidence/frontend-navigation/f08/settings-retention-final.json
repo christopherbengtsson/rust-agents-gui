@@ -1,0 +1,93 @@
+{
+  "start": {
+    "time": 464626.00000000006,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 6361
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queries": 126,
+    "cacheBodyBytes": 1251983,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 884,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 1297,
+      "observation_acknowledge": 849
+    },
+    "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+    "width": 900,
+    "height": 648,
+    "dpr": 2,
+    "scroll": [],
+    "activeInterests": 0
+  },
+  "end": {
+    "time": 774634,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 6363
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queries": 0,
+    "cacheBodyBytes": 0,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 888,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 1297,
+      "observation_acknowledge": 913
+    },
+    "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+    "width": 900,
+    "height": 648,
+    "dpr": 2,
+    "scroll": [],
+    "activeInterests": 0
+  },
+  "calls": {
+    "observation_acknowledge:": 64
+  },
+  "presentation": {
+    "inspection": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "c1c4d535-db8d-48a1-8924-184df039473b"
+      }
+    },
+    "contexts": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    },
+    "rememberedMain": {
+      "kind": "workspace",
+      "repositoryId": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "workspaceId": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+      "view": "changes"
+    }
+  },
+  "inspectionViewBytes": 17,
+  "now": 824064
+}

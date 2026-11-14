@@ -855,3 +855,262 @@ test("explicit route views update remembered defaults for later workspace select
   await screen.findByRole("heading", { name: "exact workspace", level: 1 });
   expect(history.location.search).toBe("?view=changes");
 });
+
+test("Settings releases collection interests, retains dirty generations and refreshes them on return", async () => {
+  let updated = false;
+  const secondRepository = {
+    ...repository,
+    id: otherId,
+    name: "second repository",
+  };
+  repositoryRead = async (request) => {
+    const current = {
+      ...repository,
+      name: updated ? "updated repository" : repository.name,
+    };
+    if (request.operation === "list")
+      return {
+        kind: "repositories",
+        page: { repositories: [current, secondRepository], next: null },
+      };
+    if (request.operation === "get")
+      return { kind: "repository", repository: current };
+    return { kind: "action", registration: null };
+  };
+  workspaceRead = async (request) =>
+    request.operation === "get"
+      ? {
+          kind: "workspace",
+          workspace: {
+            ...workspace,
+            name: updated ? "updated workspace" : workspace.name,
+          },
+        }
+      : { kind: "workspaces", page: { workspaces: [], next: null } };
+  mount(workspacePath);
+  await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+  await userEvent.setup().click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  await act(async () => {});
+  const reads = () =>
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(
+        ([command, args]) =>
+          (command === "repository_request" ||
+            command === "workspace_request") &&
+          object(args) &&
+          object(args.request) &&
+          ["get", "list"].includes(String(args.request.operation)),
+      );
+  const before = reads().length;
+  const subscription = vi
+    .mocked(invoke)
+    .mock.calls.find(([command]) => command === "observation_subscribe")?.[1];
+  if (
+    !object(subscription) ||
+    !object(subscription.onEvent) ||
+    typeof subscription.onEvent.onmessage !== "function"
+  )
+    throw new Error("Missing controlled feed channel");
+  const receive = subscription.onEvent.onmessage;
+  updated = true;
+  await act(async () =>
+    receive({
+      kind: "batch",
+      batch: {
+        subscription_id: subscription.subscriptionId,
+        batch_id: 2,
+        cursor: { owner: "owner-41", sequence: 2 },
+        sample: {
+          kind: "hints",
+          watermark: 2,
+          targets: [
+            { kind: "repositories" },
+            { kind: "workspaces", repository_id: null },
+            { kind: "repository", repository_id: repositoryId },
+            { kind: "workspace", workspace_id: workspaceId },
+          ],
+        },
+      },
+    }),
+  );
+  expect(reads()).toHaveLength(before);
+  await userEvent.setup().keyboard("{Escape}");
+  await screen.findByRole("heading", { name: "updated workspace", level: 1 });
+  expect(
+    screen.getByRole("button", { name: "updated repository" }),
+  ).toBeTruthy();
+  expect(reads().length).toBeGreaterThan(before);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "observation_subscribe"),
+  ).toHaveLength(1);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "observation_stop"),
+  ).toHaveLength(0);
+});
+
+test("direct Settings keeps retained action status interested without reading hidden collections or replaying", async () => {
+  const request = {
+    action_id: actionId,
+    path: "/fixture/pending",
+    create_initial_workspace: false,
+  };
+  localStorage.setItem(
+    "agent-workspace.pending-registration",
+    JSON.stringify({ request, selection: null, uncertain: true }),
+  );
+  let complete = false;
+  repositoryRead = async (operation) =>
+    operation.operation === "action"
+      ? {
+          kind: "action",
+          registration: complete
+            ? {
+                ...request,
+                state: "completed",
+                repository_id: repositoryId,
+                initial_workspace_id: null,
+              }
+            : { ...request, initial_workspace_id: null, state: "pending" },
+        }
+      : { kind: "repositories", page: { repositories: [], next: null } };
+  const history = mount("/settings/general");
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  const actions = () =>
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(
+        ([command, args]) =>
+          command === "repository_request" &&
+          object(args) &&
+          object(args.request) &&
+          args.request.operation === "action",
+      );
+  await waitFor(() => expect(actions()).toHaveLength(1));
+  const subscription = vi
+    .mocked(invoke)
+    .mock.calls.find(([command]) => command === "observation_subscribe")?.[1];
+  if (
+    !object(subscription) ||
+    !object(subscription.onEvent) ||
+    typeof subscription.onEvent.onmessage !== "function"
+  )
+    throw new Error("Missing controlled feed channel");
+  const receive = subscription.onEvent.onmessage;
+  complete = true;
+  await act(async () =>
+    receive({
+      kind: "batch",
+      batch: {
+        subscription_id: subscription.subscriptionId,
+        batch_id: 2,
+        cursor: { owner: "owner-41", sequence: 2 },
+        sample: {
+          kind: "hints",
+          watermark: 2,
+          targets: [
+            { kind: "registration", action_id: actionId },
+            { kind: "repositories" },
+            { kind: "workspaces", repository_id: null },
+          ],
+        },
+      },
+    }),
+  );
+  await waitFor(() =>
+    expect(
+      localStorage.getItem("agent-workspace.pending-registration"),
+    ).toBeNull(),
+  );
+  expect(actions()).toHaveLength(2);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) =>
+        ["repository_request", "workspace_request"].includes(command),
+      ),
+  ).toHaveLength(2);
+  expect(history.location.pathname).toBe("/settings/general");
+});
+
+test("Settings retains uncertain workspace action lookup without hidden reads or replay", async () => {
+  const request: Extract<WorkspaceRequest, { operation: "create" }> = {
+    operation: "create",
+    action_id: actionId,
+    repository_id: repositoryId,
+  };
+  localStorage.setItem(
+    "agent-workspace.pending-workspace",
+    JSON.stringify({ request, uncertain: true }),
+  );
+  let complete = false;
+  workspaceRead = async (operation) =>
+    operation.operation === "action"
+      ? {
+          kind: "action",
+          action: complete ? request : null,
+          workspace: complete ? workspace : null,
+        }
+      : { kind: "workspaces", page: { workspaces: [], next: null } };
+  const history = mount("/settings/general");
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  const actions = () =>
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(
+        ([command, args]) =>
+          command === "workspace_request" &&
+          object(args) &&
+          object(args.request) &&
+          args.request.operation === "action",
+      );
+  await waitFor(() => expect(actions()).toHaveLength(1));
+  const subscription = vi
+    .mocked(invoke)
+    .mock.calls.find(([command]) => command === "observation_subscribe")?.[1];
+  if (
+    !object(subscription) ||
+    !object(subscription.onEvent) ||
+    typeof subscription.onEvent.onmessage !== "function"
+  )
+    throw new Error("Missing controlled feed channel");
+  const receive = subscription.onEvent.onmessage;
+  complete = true;
+  await act(async () =>
+    receive({
+      kind: "batch",
+      batch: {
+        subscription_id: subscription.subscriptionId,
+        batch_id: 2,
+        cursor: { owner: "owner-41", sequence: 2 },
+        sample: {
+          kind: "hints",
+          watermark: 2,
+          targets: [
+            { kind: "workspace_action", action_id: actionId },
+            { kind: "workspaces", repository_id: repositoryId },
+          ],
+        },
+      },
+    }),
+  );
+  await waitFor(() =>
+    expect(
+      localStorage.getItem("agent-workspace.pending-workspace"),
+    ).toBeNull(),
+  );
+  expect(actions()).toHaveLength(2);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) =>
+        ["repository_request", "workspace_request"].includes(command),
+      ),
+  ).toHaveLength(2);
+  expect(history.location.pathname).toBe("/settings/general");
+});

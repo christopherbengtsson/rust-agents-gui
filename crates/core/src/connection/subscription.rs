@@ -45,6 +45,9 @@ struct NativeSubscription {
 #[derive(Default)]
 pub(super) struct FeedOwner {
     current: Mutex<Option<NativeSubscription>>,
+    // A new WebView document has no old subscription ID. Admit at most one
+    // replacement while its predecessor is physically draining.
+    replacement: tokio::sync::Mutex<()>,
     // Serializes join polling; the handle stays in current if a stop waiter is dropped.
     cleanup: tokio::sync::Mutex<()>,
 }
@@ -175,6 +178,53 @@ impl FeedOwner {
     }
 }
 impl SupervisorConnection {
+    /// Replace this desktop connection's feed after a WebView document reload.
+    /// The old worker remains owned and joined before the new feed is admitted.
+    pub async fn replace_subscription(
+        &self,
+        expected_owner: String,
+        subscription_id: String,
+        after: Option<FeedCursor>,
+        deliver: impl Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
+    ) -> Result<(), RequestFailure> {
+        let client = self.client();
+        self.replace_subscription_with(
+            expected_owner,
+            subscription_id,
+            after,
+            deliver,
+            async move |owner, id, after, control, deliver| {
+                run_client(&client, &owner, &id, after, &control, &*deliver).await
+            },
+        )
+        .await
+    }
+    async fn replace_subscription_with<D, R, F>(
+        &self,
+        expected_owner: String,
+        subscription_id: String,
+        after: Option<FeedCursor>,
+        deliver: D,
+        run: R,
+    ) -> Result<(), RequestFailure>
+    where
+        D: Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
+        R: FnOnce(String, String, Option<FeedCursor>, Arc<Control>, Arc<D>) -> F + Send + 'static,
+        F: Future<Output = io::Result<()>> + Send + 'static,
+    {
+        validate_subscription_id(&subscription_id).map_err(unavailable)?;
+        self.require_connection(&expected_owner)?;
+        let _replacement = self.feed.replacement.try_lock().map_err(|_| {
+            RequestFailure::transport(
+                TransportCode::Busy,
+                Delivery::NotSent,
+                "Previous frontend subscription replacement is still draining",
+            )
+        })?;
+        self.feed.stop_all().await?;
+        // Revalidate owner and shutdown state after awaiting physical cleanup.
+        self.start_subscription_with(expected_owner, subscription_id, after, deliver, run)
+    }
     pub fn start_subscription(
         &self,
         expected_owner: String,

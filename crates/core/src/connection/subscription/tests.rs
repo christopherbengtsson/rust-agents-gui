@@ -403,3 +403,177 @@ fn stopped_before_delivery_cannot_offer_or_acknowledge() {
     assert!(control.offer(ack.clone()).is_err());
     assert!(control.acknowledge(&ack).is_err());
 }
+
+#[test]
+fn reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_replacements() {
+    run(async {
+        let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
+        initialize(&connection);
+        let (started, entered) = tokio::sync::oneshot::channel();
+        let (release, finish) = tokio::sync::oneshot::channel();
+        connection
+            .start_subscription_with(
+                "owner-a".into(),
+                "old-page".into(),
+                None,
+                |_| Ok(()),
+                async move |_, _, _, control, _| {
+                    started.send(()).unwrap();
+                    finish.await.unwrap();
+                    assert!(control.cancel.is_cancelled());
+                    Ok(())
+                },
+            )
+            .unwrap();
+        entered.await.unwrap();
+        let (replacement_started, replacement_entered) = tokio::sync::oneshot::channel();
+        let replacement = connection.replace_subscription_with(
+            "owner-a".into(),
+            "new-page".into(),
+            None,
+            |_| Ok(()),
+            async move |owner, id, after, control, _| {
+                assert_eq!(owner, "owner-a");
+                assert_eq!(id, "new-page");
+                assert!(after.is_none());
+                replacement_started.send(()).unwrap();
+                control.cancel.cancelled().await;
+                Ok(())
+            },
+        );
+        tokio::pin!(replacement);
+        assert!(pending(replacement.as_mut()).await);
+        assert!(connection.subscription.try_acquire().is_none());
+        assert_eq!(
+            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
+            "old-page"
+        );
+        let competing = connection.replace_subscription_with(
+            "owner-a".into(),
+            "competing-page".into(),
+            None,
+            |_| Ok(()),
+            async |_, _, _, _, _| -> io::Result<()> {
+                panic!("competing replacement must not start")
+            },
+        );
+        assert!(matches!(
+            competing.await.unwrap_err(),
+            RequestFailure::Transport {
+                error: TransportFailure {
+                    code: TransportCode::Busy,
+                    ..
+                }
+            }
+        ));
+        release.send(()).unwrap();
+        replacement.await.unwrap();
+        replacement_entered.await.unwrap();
+        connection.stop_subscription("old-page").await.unwrap();
+        assert_eq!(
+            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
+            "new-page"
+        );
+        connection.stop_subscription("new-page").await.unwrap();
+        assert!(connection.subscription.try_acquire().is_some());
+    });
+}
+
+#[test]
+fn invalid_reload_replacement_cannot_stop_the_current_feed() {
+    run(async {
+        for (owner, id) in [("other-owner", "new-page"), ("owner-a", "invalid id")] {
+            let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
+            initialize(&connection);
+            let (started, entered) = tokio::sync::oneshot::channel();
+            connection
+                .start_subscription_with(
+                    "owner-a".into(),
+                    "current-page".into(),
+                    None,
+                    |_| Ok(()),
+                    async move |_, _, _, control, _| {
+                        assert!(started.send(control.clone()).is_ok());
+                        control.cancel.cancelled().await;
+                        Ok(())
+                    },
+                )
+                .unwrap();
+            let control = entered.await.unwrap();
+            assert!(
+                connection
+                    .replace_subscription_with(
+                        owner.into(),
+                        id.into(),
+                        None,
+                        |_| Ok(()),
+                        async |_, _, _, _, _| -> io::Result<()> {
+                            panic!("invalid replacement must not start")
+                        }
+                    )
+                    .await
+                    .is_err()
+            );
+            assert!(!control.cancel.is_cancelled());
+            connection.stop_subscription("current-page").await.unwrap();
+        }
+    });
+}
+
+#[test]
+fn cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_it() {
+    run(async {
+        let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
+        initialize(&connection);
+        let (release, finish) = tokio::sync::oneshot::channel();
+        connection
+            .start_subscription_with(
+                "owner-a".into(),
+                "old-page".into(),
+                None,
+                |_| Ok(()),
+                async move |_, _, _, _, _| {
+                    finish.await.unwrap();
+                    Ok(())
+                },
+            )
+            .unwrap();
+        {
+            let replacement = connection.replace_subscription_with(
+                "owner-a".into(),
+                "abandoned-page".into(),
+                None,
+                |_| Ok(()),
+                async |_, _, _, _, _| -> io::Result<()> {
+                    panic!("cancelled replacement must not start")
+                },
+            );
+            tokio::pin!(replacement);
+            assert!(pending(replacement.as_mut()).await);
+        }
+        assert!(connection.subscription.try_acquire().is_none());
+        assert_eq!(
+            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
+            "old-page"
+        );
+        let replacement = connection.replace_subscription_with(
+            "owner-a".into(),
+            "latest-page".into(),
+            None,
+            |_| Ok(()),
+            async |_, _, _, control, _| {
+                control.cancel.cancelled().await;
+                Ok(())
+            },
+        );
+        tokio::pin!(replacement);
+        assert!(pending(replacement.as_mut()).await);
+        release.send(()).unwrap();
+        replacement.await.unwrap();
+        assert_eq!(
+            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
+            "latest-page"
+        );
+        connection.stop_subscription("latest-page").await.unwrap();
+    });
+}

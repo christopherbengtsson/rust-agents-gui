@@ -1,0 +1,16 @@
+✔ stages Cargo's exact executable from a private target and records its provenance (1.449167ms)
+✔ debug staging records the dev profile and a clean source tree (0.096458ms)
+✔ rejects missing executable without touching staged resources (0.310458ms)
+✔ rejects test executable without touching staged resources (0.079208ms)
+✔ rejects ambiguous executables without touching staged resources (0.078834ms)
+✔ a failed build cannot stage a previously available executable (0.109917ms)
+✔ failCopy preserves the previous published executable and removes temporary bytes (0.110042ms)
+✔ failPublish preserves the previous published executable and removes temporary bytes (0.075459ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.544166

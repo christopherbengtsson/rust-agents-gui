@@ -1,0 +1,12 @@
+{
+  "compared_with": "F07 at 024bd636c184bcddaac8645d83cf20423fcf2b17",
+  "changed_frontend_files": [
+    "src/app-runtime.tsx",
+    "src/components/README.md",
+    "src/generated/contracts/manifest.json",
+    "src/hooks/use-repositories.ts",
+    "src/hooks/use-workspaces.ts",
+    "src/routing.test.tsx"
+  ],
+  "reason": "Release hidden Settings collection/detail interests while preserving independent retained-action interests; generated manifest records native source hash only."
+}

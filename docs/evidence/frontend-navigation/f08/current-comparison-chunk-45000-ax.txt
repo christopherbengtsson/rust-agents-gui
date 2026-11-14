@@ -1,0 +1,892 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:22:46 PM
+					36 image
+					37 text for(let i=45000;i<Math.min(f08.exportString.length,54000);i+=300)console.log('F08DATA:'+i+':'+f08.exportString.slice(i,i+300))
+					38 image
+					39 text F08DATA:45000:id":178,"cursor":{"owner":"47400-1794690795286464000","sequence":474}}},"start":124767,"end":124770,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"co
+					40 image
+					41 text F08DATA:45300:mparison_id":null,"after":null}},"start":124769,"end":124770,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"7a72a3cc-c8f4-45af-baf8-
+					42 image
+					43 text F08DATA:45600:6bbf7411c85d","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":true}},"start":124771,"end":124782,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":179,"cursor":{"owner":"47400-1794690795286464000","
+					44 image
+					45 text F08DATA:45900:sequence":475}}},"start":124778,"end":124801,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":180,"cursor":{"owner":"47400-1794690795286464000","sequence":476}}},"start":124780,"end":124801,"ok":true},{"com
+					46 image
+					47 text F08DATA:46200:mand":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":124794,"end":124801,"ok":true},{"command":"workspace_request","args":{"expe
+					48 image
+					49 text F08DATA:46500:ctedOwner":"47400-1794690795286464000","request":{"operation":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"7a72a3cc-c8f4-45af-baf8-6bbf7411c85d","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":false}},"start":124801,"end":124802,"ok":true
+					50 image
+					51 text F08DATA:46800:},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":181,"cursor":{"owner":"47400-1794690795286464000","sequence":477}}},"start":125071,"end":125075,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"474
+					52 image
+					53 text F08DATA:47100:00-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":125073.00000000001,"end":125075,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","re
+					54 image
+					55 text F08DATA:47400:quest":{"operation":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"7a72a3cc-c8f4-45af-baf8-6bbf7411c85d","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":false}},"start":125075,"end":125077,"ok":true},{"command":"workspace_request","args":{"
+					56 image
+					57 text F08DATA:47700:expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":true,"comparison_id":null,"after":null}},"start":127080,"end":127087,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id
+					58 image
+					59 text F08DATA:48000:":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":182,"cursor":{"owner":"47400-1794690795286464000","sequence":478}}},"start":127085.00000000001,"end":127090,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id
+					60 image
+					61 text F08DATA:48300:":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":127087,"end":127090,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":183,"cursor":{"owner":"47400-1794690
+					62 image
+					63 text F08DATA:48600:795286464000","sequence":479}}},"start":127089,"end":127091.00000000001,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":nu
+					64 image
+					65 text F08DATA:48900:ll}},"start":127090,"end":127091.00000000001,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":184,"cursor":{"owner":"47400-1794690795286464000","sequence":480}}},"start":127338.00000000001,"end":127341.0000
+					66 image
+					67 text F08DATA:49200:0000001,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":127340,"end":127343,"ok":true},{"command":"workspac
+					68 image
+					69 text F08DATA:49500:e_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"c439dfd1-b301-4afb-b4c9-65e341190e4c","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":true}},"start":127343
+					70 image
+					71 text F08DATA:49800:,"end":127345,"ok":true},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":185,"cursor":{"owner":"47400-1794690795286464000","sequence":481}}},"start":127344.00000000001,"end":127365.00000000001,"ok":true},{"command":"
+					72 image
+					73 text F08DATA:50100:workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":127358,"end":127365.00000000001,"ok":true},{"command":"observation_acknowledge","a
+					74 image
+					75 text F08DATA:50400:rgs":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":186,"cursor":{"owner":"47400-1794690795286464000","sequence":482}}},"start":127363,"end":127366,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"opera
+					76 image
+					77 text F08DATA:50700:tion":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"c439dfd1-b301-4afb-b4c9-65e341190e4c","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":false}},"start":127365.00000000001,"end":127367,"ok":true},{"command":"workspace_request","args":{"ex
+					78 image
+					79 text F08DATA:51000:pectedOwner":"47400-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":127368.00000000001,"end":127369,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690
+					80 image
+					81 text F08DATA:51300:795286464000","request":{"operation":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"c439dfd1-b301-4afb-b4c9-65e341190e4c","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":false}},"start":127370,"end":127371.00000000001,"ok":true},{"command":
+					82 image
+					83 text F08DATA:51600:"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"ab5f9185-bcd8-426a-a59e-f87b22380149","batch_id":187,"cursor":{"owner":"47400-1794690795286464000","sequence":483}}},"start":127627.00000000001,"end":127629,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"4740
+					84 image
+					85 text F08DATA:51900:0-1794690795286464000","request":{"operation":"changes","workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","refresh":false,"comparison_id":null,"after":null}},"start":127629,"end":127631,"ok":true},{"command":"workspace_request","args":{"expectedOwner":"47400-1794690795286464000","request":{"oper
+					86 image
+					87 text F08DATA:52200:ation":"change_preview","target":{"workspace_id":"cfe8f76f-e41e-4e87-bb91-42e4419c2830","comparison_id":"c439dfd1-b301-4afb-b4c9-65e341190e4c","file_id":"ea35453c-8639-42c5-803a-e625f4dac7cb"},"load":false}},"start":127632,"end":127637,"ok":true}]}
+					88 image
+					89 text undefined
+			90 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			91 container
+	92 scroll area
+		93 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			94 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			95 container Repository sidebar
+				96 text Agent Workspace
+				97 container Repositories
+					98 heading Repositories, Value: 2
+						99 text Repositories
+					100 content list
+						101 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							102 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							103 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							104 button Create workspace in Beta
+							105 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							106 text Available
+							107 content list
+								108 button lee-jae-sung, Help: Workspace ready
+						109 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							110 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							111 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							112 button Create workspace in Alpha
+							113 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							114 text Available
+							115 content list
+								116 button paul-scholes, Help: Workspace ready
+				117 pop up button Add repository
+				118 text Connected
+				119 pop up button Connection details
+				120 link Settings, Value: tauri://localhost/settings/general
+			121 container
+				122 container
+					123 heading paul-scholes, Value: 1
+						124 text paul-scholes
+					125 button Refresh status
+				126 container Selected repository
+					127 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					128 text Repository available
+				129 text Uncommitted changes
+				130 button Refresh changes
+				131 button (expanded) Hide changed files, Secondary Actions: Collapse
+				132 container
+					133 text Compared with HEAD  ac721f2849607a00f9583fbb5cc8af2184246986  ·  2 changed files
+				134 tab group (selectable) Workspace views
+					135 tab (selectable) Workspace
+					136 tab (selected) Changes
+				137 container Changes
+					138 container Selected file changes
+						139 heading large.txt, Value: 2
+							140 text large.txt
+						141 container Unified file diff
+							142 container
+								143 container Old line
+								144 container New line
+								145 text @@ -1,120 +1,120 @@
+								146 container Old line
+									147 text 1
+								148 container New line
+								149 text Line 0: original text
+								150 container Old line
+								151 container New line
+									152 text 1
+								153 text Line 0: changed original text
+								154 container Old line
+									155 text 2
+								156 container New line
+									157 text 2
+								158 text Line 1: original text
+								159 container Old line
+									160 text 3
+								161 container New line
+									162 text 3
+								163 text Line 2: original text
+								164 container Old line
+									165 text 4
+								166 container New line
+								167 text Line 3: original text
+								168 container Old line
+								169 container New line
+									170 text 4
+								171 text Line 3: changed original text
+								172 container Old line
+									173 text 5
+								174 container New line
+									175 text 5
+								176 text Line 4: original text
+								177 container Old line
+									178 text 6
+								179 container New line
+									180 text 6
+								181 text Line 5: original text
+								182 container Old line
+									183 text 7
+								184 container New line
+								185 text Line 6: original text
+								186 container Old line
+								187 container New line
+									188 text 7
+								189 text Line 6: changed original text
+								190 container Old line
+									191 text 8
+								192 container New line
+									193 text 8
+								194 text Line 7: original text
+								195 container Old line
+									196 text 9
+								197 container New line
+									198 text 9
+								199 text Line 8: original text
+								200 container Old line
+									201 text 10
+								202 container New line
+								203 text Line 9: original text
+								204 container Old line
+								205 container New line
+									206 text 10
+								207 text Line 9: changed original text
+								208 container Old line
+									209 text 11
+								210 container New line
+									211 text 11
+								212 text Line 10: original text
+								213 container Old line
+									214 text 12
+								215 container New line
+									216 text 12
+								217 text Line 11: original text
+								218 container Old line
+									219 text 13
+								220 container New line
+								221 text Line 12: original text
+								222 container Old line
+								223 container New line
+									224 text 13
+								225 text Line 12: changed original text
+								226 container Old line
+									227 text 14
+								228 container New line
+									229 text 14
+								230 text Line 13: original text
+								231 container Old line
+									232 text 15
+								233 container New line
+									234 text 15
+								235 text Line 14: original text
+								236 container Old line
+									237 text 16
+								238 container New line
+								239 text Line 15: original text
+								240 container Old line
+								241 container New line
+									242 text 16
+								243 text Line 15: changed original text
+								244 container Old line
+									245 text 17
+								246 container New line
+									247 text 17
+								248 text Line 16: original text
+								249 container Old line
+									250 text 18
+								251 container New line
+									252 text 18
+								253 text Line 17: original text
+								254 container Old line
+									255 text 19
+								256 container New line
+								257 text Line 18: original text
+								258 container Old line
+								259 container New line
+									260 text 19
+								261 text Line 18: changed original text
+								262 container Old line
+									263 text 20
+								264 container New line
+									265 text 20
+								266 text Line 19: original text
+								267 container Old line
+									268 text 21
+								269 container New line
+									270 text 21
+								271 text Line 20: original text
+								272 container Old line
+									273 text 22
+								274 container New line
+								275 text Line 21: original text
+								276 container Old line
+								277 container New line
+									278 text 22
+								279 text Line 21: changed original text
+								280 container Old line
+									281 text 23
+								282 container New line
+									283 text 23
+								284 text Line 22: original text
+								285 container Old line
+									286 text 24
+								287 container New line
+									288 text 24
+								289 text Line 23: original text
+								290 container Old line
+									291 text 25
+								292 container New line
+								293 text Line 24: original text
+								294 container Old line
+								295 container New line
+									296 text 25
+								297 text Line 24: changed original text
+								298 container Old line
+									299 text 26
+								300 container New line
+									301 text 26
+								302 text Line 25: original text
+								303 container Old line
+									304 text 27
+								305 container New line
+									306 text 27
+								307 text Line 26: original text
+								308 container Old line
+									309 text 28
+								310 container New line
+								311 text Line 27: original text
+								312 container Old line
+								313 container New line
+									314 text 28
+								315 text Line 27: changed original text
+								316 container Old line
+									317 text 29
+								318 container New line
+									319 text 29
+								320 text Line 28: original text
+								321 container Old line
+									322 text 30
+								323 container New line
+									324 text 30
+								325 text Line 29: original text
+								326 container Old line
+									327 text 31
+								328 container New line
+								329 text Line 30: original text
+								330 container Old line
+								331 container New line
+									332 text 31
+								333 text Line 30: changed original text
+								334 container Old line
+									335 text 32
+								336 container New line
+									337 text 32
+								338 text Line 31: original text
+								339 container Old line
+									340 text 33
+								341 container New line
+									342 text 33
+								343 text Line 32: original text
+								344 container Old line
+									345 text 34
+								346 container New line
+								347 text Line 33: original text
+								348 container Old line
+								349 container New line
+									350 text 34
+								351 text Line 33: changed original text
+								352 container Old line
+									353 text 35
+								354 container New line
+									355 text 35
+								356 text Line 34: original text
+								357 container Old line
+									358 text 36
+								359 container New line
+									360 text 36
+								361 text Line 35: original text
+								362 container Old line
+									363 text 37
+								364 container New line
+								365 text Line 36: original text
+								366 container Old line
+								367 container New line
+									368 text 37
+								369 text Line 36: changed original text
+								370 container Old line
+									371 text 38
+								372 container New line
+									373 text 38
+								374 text Line 37: original text
+								375 container Old line
+									376 text 39
+								377 container New line
+									378 text 39
+								379 text Line 38: original text
+								380 container Old line
+									381 text 40
+								382 container New line
+								383 text Line 39: original text
+								384 container Old line
+								385 container New line
+									386 text 40
+								387 text Line 39: changed original text
+								388 container Old line
+									389 text 41
+								390 container New line
+									391 text 41
+								392 text Line 40: original text
+								393 container Old line
+									394 text 42
+								395 container New line
+									396 text 42
+								397 text Line 41: original text
+								398 container Old line
+									399 text 43
+								400 container New line
+								401 text Line 42: original text
+								402 container Old line
+								403 container New line
+									404 text 43
+								405 text Line 42: changed original text
+								406 container Old line
+									407 text 44
+								408 container New line
+									409 text 44
+								410 text Line 43: original text
+								411 container Old line
+									412 text 45
+								413 container New line
+									414 text 45
+								415 text Line 44: original text
+								416 container Old line
+									417 text 46
+								418 container New line
+								419 text Line 45: original text
+								420 container Old line
+								421 container New line
+									422 text 46
+								423 text Line 45: changed original text
+								424 container Old line
+									425 text 47
+								426 container New line
+									427 text 47
+								428 text Line 46: original text
+								429 container Old line
+									430 text 48
+								431 container New line
+									432 text 48
+								433 text Line 47: original text
+								434 container Old line
+									435 text 49
+								436 container New line
+								437 text Line 48: original text
+								438 container Old line
+								439 container New line
+									440 text 49
+								441 text Line 48: changed original text
+								442 container Old line
+									443 text 50
+								444 container New line
+									445 text 50
+								446 text Line 49: original text
+								447 container Old line
+									448 text 51
+								449 container New line
+									450 text 51
+								451 text Line 50: original text
+								452 container Old line
+									453 text 52
+								454 container New line
+								455 text Line 51: original text
+								456 container Old line
+								457 container New line
+									458 text 52
+								459 text Line 51: changed original text
+								460 container Old line
+									461 text 53
+								462 container New line
+									463 text 53
+								464 text Line 52: original text
+								465 container Old line
+									466 text 54
+								467 container New line
+									468 text 54
+								469 text Line 53: original text
+								470 container Old line
+									471 text 55
+								472 container New line
+								473 text Line 54: original text
+								474 container Old line
+								475 container New line
+									476 text 55
+								477 text Line 54: changed original text
+								478 container Old line
+									479 text 56
+								480 container New line
+									481 text 56
+								482 text Line 55: original text
+								483 container Old line
+									484 text 57
+								485 container New line
+									486 text 57
+								487 text Line 56: original text
+								488 container Old line
+									489 text 58
+								490 container New line
+								491 text Line 57: original text
+								492 container Old line
+								493 container New line
+									494 text 58
+								495 text Line 57: changed original text
+								496 container Old line
+									497 text 59
+								498 container New line
+									499 text 59
+								500 text Line 58: original text
+								501 container Old line
+									502 text 60
+								503 container New line
+									504 text 60
+								505 text Line 59: original text
+								506 container Old line
+									507 text 61
+								508 container New line
+								509 text Line 60: original text
+								510 container Old line
+								511 container New line
+									512 text 61
+								513 text Line 60: changed original text
+								514 container Old line
+									515 text 62
+								516 container New line
+									517 text 62
+								518 text Line 61: original text
+								519 container Old line
+									520 text 63
+								521 container New line
+									522 text 63
+								523 text Line 62: original text
+								524 container Old line
+									525 text 64
+								526 container New line
+								527 text Line 63: original text
+								528 container Old line
+								529 container New line
+									530 text 64
+								531 text Line 63: changed original text
+								532 container Old line
+									533 text 65
+								534 container New line
+									535 text 65
+								536 text Line 64: original text
+								537 container Old line
+									538 text 66
+								539 container New line
+									540 text 66
+								541 text Line 65: original text
+								542 container Old line
+									543 text 67
+								544 container New line
+								545 text Line 66: original text
+								546 container Old line
+								547 container New line
+									548 text 67
+								549 text Line 66: changed original text
+								550 container Old line
+									551 text 68
+								552 container New line
+									553 text 68
+								554 text Line 67: original text
+								555 container Old line
+									556 text 69
+								557 container New line
+									558 text 69
+								559 text Line 68: original text
+								560 container Old line
+									561 text 70
+								562 container New line
+								563 text Line 69: original text
+								564 container Old line
+								565 container New line
+									566 text 70
+								567 text Line 69: changed original text
+								568 container Old line
+									569 text 71
+								570 container New line
+									571 text 71
+								572 text Line 70: original text
+								573 container Old line
+									574 text 72
+								575 container New line
+									576 text 72
+								577 text Line 71: original text
+								578 container Old line
+									579 text 73
+								580 container New line
+								581 text Line 72: original text
+								582 container Old line
+								583 container New line
+									584 text 73
+								585 text Line 72: changed original text
+								586 container Old line
+									587 text 74
+								588 container New line
+									589 text 74
+								590 text Line 73: original text
+								591 container Old line
+									592 text 75
+								593 container New line
+									594 text 75
+								595 text Line 74: original text
+								596 container Old line
+									597 text 76
+								598 container New line
+								599 text Line 75: original text
+								600 container Old line
+								601 container New line
+									602 text 76
+								603 text Line 75: changed original text
+								604 container Old line
+									605 text 77
+								606 container New line
+									607 text 77
+								608 text Line 76: original text
+								609 container Old line
+									610 text 78
+								611 container New line
+									612 text 78
+								613 text Line 77: original text
+								614 container Old line
+									615 text 79
+								616 container New line
+								617 text Line 78: original text
+								618 container Old line
+								619 container New line
+									620 text 79
+								621 text Line 78: changed original text
+								622 container Old line
+									623 text 80
+								624 container New line
+									625 text 80
+								626 text Line 79: original text
+								627 container Old line
+									628 text 81
+								629 container New line
+									630 text 81
+								631 text Line 80: original text
+								632 container Old line
+									633 text 82
+								634 container New line
+								635 text Line 81: original text
+								636 container Old line
+								637 container New line
+									638 text 82
+								639 text Line 81: changed original text
+								640 container Old line
+									641 text 83
+								642 container New line
+									643 text 83
+								644 text Line 82: original text
+								645 container Old line
+									646 text 84
+								647 container New line
+									648 text 84
+								649 text Line 83: original text
+								650 container Old line
+									651 text 85
+								652 container New line
+								653 text Line 84: original text
+								654 container Old line
+								655 container New line
+									656 text 85
+								657 text Line 84: changed original text
+								658 container Old line
+									659 text 86
+								660 container New line
+									661 text 86
+								662 text Line 85: original text
+								663 container Old line
+									664 text 87
+								665 container New line
+									666 text 87
+								667 text Line 86: original text
+								668 container Old line
+									669 text 88
+								670 container New line
+								671 text Line 87: original text
+								672 container Old line
+								673 container New line
+									674 text 88
+								675 text Line 87: changed original text
+								676 container Old line
+									677 text 89
+								678 container New line
+									679 text 89
+								680 text Line 88: original text
+								681 container Old line
+									682 text 90
+								683 container New line
+									684 text 90
+								685 text Line 89: original text
+								686 container Old line
+									687 text 91
+								688 container New line
+								689 text Line 90: original text
+								690 container Old line
+								691 container New line
+									692 text 91
+								693 text Line 90: changed original text
+								694 container Old line
+									695 text 92
+								696 container New line
+									697 text 92
+								698 text Line 91: original text
+								699 container Old line
+									700 text 93
+								701 container New line
+									702 text 93
+								703 text Line 92: original text
+								704 container Old line
+									705 text 94
+								706 container New line
+								707 text Line 93: original text
+								708 container Old line
+								709 container New line
+									710 text 94
+								711 text Line 93: changed original text
+								712 container Old line
+									713 text 95
+								714 container New line
+									715 text 95
+								716 text Line 94: original text
+								717 container Old line
+									718 text 96
+								719 container New line
+									720 text 96
+								721 text Line 95: original text
+								722 container Old line
+									723 text 97
+								724 container New line
+								725 text Line 96: original text
+								726 container Old line
+								727 container New line
+									728 text 97
+								729 text Line 96: changed original text
+								730 container Old line
+									731 text 98
+								732 container New line
+									733 text 98
+								734 text Line 97: original text
+								735 container Old line
+									736 text 99
+								737 container New line
+									738 text 99
+								739 text Line 98: original text
+								740 container Old line
+									741 text 100
+								742 container New line
+								743 text Line 99: original text
+								744 container Old line
+								745 container New line
+									746 text 100
+								747 text Line 99: changed original text
+								748 container Old line
+									749 text 101
+								750 container New line
+									751 text 101
+								752 text Line 100: original text
+								753 container Old line
+									754 text 102
+								755 container New line
+									756 text 102
+								757 text Line 101: original text
+								758 container Old line
+									759 text 103
+								760 container New line
+								761 text Line 102: original text
+								762 container Old line
+								763 container New line
+									764 text 103
+								765 text Line 102: changed original text
+								766 container Old line
+									767 text 104
+								768 container New line
+									769 text 104
+								770 text Line 103: original text
+								771 container Old line
+									772 text 105
+								773 container New line
+									774 text 105
+								775 text Line 104: original text
+								776 container Old line
+									777 text 106
+								778 container New line
+								779 text Line 105: original text
+								780 container Old line
+								781 container New line
+									782 text 106
+								783 text Line 105: changed original text
+								784 container Old line
+									785 text 107
+								786 container New line
+									787 text 107
+								788 text Line 106: original text
+								789 container Old line
+									790 text 108
+								791 container New line
+									792 text 108
+								793 text Line 107: original text
+								794 container Old line
+									795 text 109
+								796 container New line
+								797 text Line 108: original text
+								798 container Old line
+								799 container New line
+									800 text 109
+								801 text Line 108: changed original text
+								802 container Old line
+									803 text 110
+								804 container New line
+									805 text 110
+								806 text Line 109: original text
+								807 container Old line
+									808 text 111
+								809 container New line
+									810 text 111
+								811 text Line 110: original text
+								812 container Old line
+									813 text 112
+								814 container New line
+								815 text Line 111: original text
+								816 container Old line
+								817 container New line
+									818 text 112
+								819 text Line 111: changed original text
+								820 container Old line
+									821 text 113
+								822 container New line
+									823 text 113
+								824 text Line 112: original text
+								825 container Old line
+									826 text 114
+								827 container New line
+									828 text 114
+								829 text Line 113: original text
+								830 container Old line
+									831 text 115
+								832 container New line
+								833 text Line 114: original text
+								834 container Old line
+								835 container New line
+									836 text 115
+								837 text Line 114: changed original text
+								838 container Old line
+									839 text 116
+								840 container New line
+									841 text 116
+								842 text Line 115: original text
+								843 container Old line
+									844 text 117
+								845 container New line
+									846 text 117
+								847 text Line 116: original text
+								848 container Old line
+									849 text 118
+								850 container New line
+								851 text Line 117: original text
+								852 container Old line
+								853 container New line
+									854 text 118
+								855 text Line 117: changed original text
+								856 container Old line
+									857 text 119
+								858 container New line
+									859 text 119
+								860 text Line 118: original text
+								861 container Old line
+									862 text 120
+								863 container New line
+									864 text 120
+								865 text Line 119: original text
+				866 splitter Resize changed files, Value: 68
+				867 container Changed files
+					868 heading Changed files, Value: 2
+						869 text Changed files
+					870 container
+						871 toggle button large.txt .M, Help: large.txt, Value: on
+						872 toggle button text.txt .M, Help: text.txt, Value: off
+					873 button First page
+					874 button (disabled) Next files
+				875 container
+					876 text Local workspace Alpha
+		877 scroll bar (settable, float) 0
+	878 close button
+	879 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	880 minimize button
+	881 text Agent Workspace
+882 menu bar
+	883 F08 Inspector current
+	884 File
+	885 Edit
+	886 View
+	887 Window
+	888 Help
+
+The focused UI element is 90 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

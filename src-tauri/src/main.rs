@@ -76,16 +76,13 @@ async fn observation_subscribe(
     on_event: tauri::ipc::Channel<workspace_core::connection::FeedEvent>,
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
 ) -> Result<(), RequestFailure> {
-    connected(&connection)?.start_subscription(
-        expected_owner,
-        subscription_id,
-        after,
-        move |event| {
+    connected(&connection)?
+        .replace_subscription(expected_owner, subscription_id, after, move |event| {
             on_event
                 .send(event)
                 .map_err(|error| std::io::Error::other(error.to_string()))
-        },
-    )
+        })
+        .await
 }
 
 #[tauri::command]

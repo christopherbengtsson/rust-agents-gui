@@ -1,0 +1,149 @@
+[
+  {
+    "label": "before-settings",
+    "time": 663010,
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "selected": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "0eca7c6e-3f07-4ab2-b89d-16d1c5798674"
+      }
+    },
+    "scroll": [
+      {
+        "top": 0,
+        "left": 0
+      },
+      {
+        "top": 0,
+        "left": 0
+      }
+    ],
+    "layout": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    }
+  },
+  {
+    "label": "settings",
+    "time": 663112,
+    "href": "/settings/general",
+    "selected": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "0eca7c6e-3f07-4ab2-b89d-16d1c5798674"
+      }
+    },
+    "scroll": [],
+    "layout": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    }
+  },
+  {
+    "label": "before-escape",
+    "time": 663821,
+    "href": "/settings/general",
+    "selected": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "0eca7c6e-3f07-4ab2-b89d-16d1c5798674"
+      }
+    },
+    "scroll": [],
+    "layout": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    }
+  },
+  {
+    "label": "after-escape",
+    "time": 663922,
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "selected": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "0eca7c6e-3f07-4ab2-b89d-16d1c5798674"
+      }
+    },
+    "scroll": [
+      {
+        "top": 0,
+        "left": 0
+      },
+      {
+        "top": 0,
+        "left": 0
+      }
+    ],
+    "layout": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    }
+  },
+  {
+    "label": "before-settings",
+    "time": 684463,
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "selected": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "37b76c87-808e-4cc1-b698-2d42991e4136"
+      }
+    },
+    "scroll": [
+      {
+        "top": 0,
+        "left": 0
+      },
+      {
+        "top": 0,
+        "left": 0
+      }
+    ],
+    "layout": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    }
+  },
+  {
+    "label": "settings",
+    "time": 684564,
+    "href": "/settings/general",
+    "selected": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+        "path": "large.txt",
+        "comparison": "37b76c87-808e-4cc1-b698-2d42991e4136"
+      }
+    },
+    "scroll": [],
+    "layout": {
+      "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    }
+  }
+]

@@ -26,6 +26,7 @@ export function useRepositories(
   app: AppObservations,
   selectedId: string | null,
   navigation: Navigation,
+  visible = true,
 ) {
   const feature = app.repositories;
   useSyncExternalStore(feature.subscribe, feature.getSnapshot);
@@ -75,13 +76,13 @@ export function useRepositories(
     };
   }, [owner]);
   useEffect(() => {
-    if (!owner) return;
+    if (!owner || !visible) return;
     return feature.observe(owner, { operation: "list", after });
-  }, [feature, owner, after]);
+  }, [feature, owner, after, visible]);
   useEffect(() => {
-    if (!owner || !selectedId) return;
+    if (!owner || !visible || !selectedId) return;
     return feature.observe(owner, { operation: "get", id: selectedId });
-  }, [feature, owner, selectedId]);
+  }, [feature, owner, selectedId, visible]);
   useEffect(() => {
     if (!owner || !actionId) return;
     return feature.observe(owner, { operation: "action", action_id: actionId });

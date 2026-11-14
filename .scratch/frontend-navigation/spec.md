@@ -83,8 +83,8 @@ restoration, completion eligibility and generated-route preparation, with passin
 controlled gates, packaging and focused private-state desktop smoke.
 [F07 evidence](../../docs/evidence/frontend-navigation/f07.md) records routed General
 Settings, history/focus return and retained-context checks. The F07 user decision
-below simplifies absent return context to home. F08 and successors remain separate,
-unimplemented sessions; the dependency chain authorizes no successor work.
+below simplifies absent return context to home. [F08 evidence](../../docs/evidence/frontend-navigation/f08.md) records cumulative qualification and scoped fixes.
+Material costs are returned for decision; F09 and milestone successors remain separate and unimplemented.
 
 F04a changes documentation/tickets only: manifests, lockfiles, generated assets,
 product implementation and implementation acceptance stay untouched. Add each
@@ -513,3 +513,15 @@ units; production packaging, execution measurements and focused packaged desktop
 restoration passed. Review ended with Standards 0 / Spec 0 outstanding. Only F05
 was implemented; F06 routing/migration, F07 Settings and F08 cumulative qualification
 remain separate. No provider work or whole-foundation completion is claimed.
+
+### 2026-11-14 — cumulative F08 fixture qualification
+
+[F08 evidence](../../docs/evidence/frontend-navigation/f08.md) cross-checks the
+foundation requirements and preserves controlled, native and routed desktop results
+separately, including all failures and unperformed checks. Sidecar publication,
+WebView reload subscription replacement and Settings hidden interests are fixed.
+Current configured gates, separate production packaging, actual fixture recovery,
+physical bounds, focus/return, off-page routes and real cache expiry pass. Material
+bundle/fast-workload costs are measured and explicitly returned for decision.
+Milestone 01 acceptance remains open; no provider allowance or successor work is
+created by this checkpoint.

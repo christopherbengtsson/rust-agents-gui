@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–05, including 02a, are complete for their recorded fixture scope. Frontend F01–F04 have implementation/controlled evidence; F04a publishes the library refactor plan only. F04b–F04g and F05–F08, milestone 06–13, the complete workflow and native-provider qualification remain open.
+Status: In progress — tickets 01–05, including 02a, are complete for their recorded fixture scope. Frontend F01–F08 have recorded foundation implementation and scoped qualification evidence. F08 returns material size/performance costs for decision. Milestone 06–13, the complete workflow and native-provider qualification remain open.
 
 ## Outcome and authority
 
@@ -73,9 +73,10 @@ left actual transport/desktop qualification outstanding. F04a published the amen
 architecture and session tickets only. F04b–F04f implemented shared library mechanisms and complete
 feature observation slices. [F04g evidence](evidence/frontend-navigation/f04g.md)
 records focused actual sockets/process/fixture desktop, packaging and matched
-baseline qualification, including inspection retry-loop fixes. F05 remains
-presentation context/integration, followed by routing/Settings and cumulative F08
-qualification. Preserve all earlier results as historical evidence. This adds no
+baseline qualification, including inspection retry-loop fixes. F05–F07 record
+presentation context, routing and Settings. [F08 evidence](evidence/frontend-navigation/f08.md)
+records cumulative fixture qualification and scoped fixes, with material costs
+returned for decision. Preserve all earlier results as historical evidence. This adds no
 provider allowance and does not change Rust execution/storage authority.
 
 During qualification, record:

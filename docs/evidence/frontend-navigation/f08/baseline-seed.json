@@ -1,0 +1,63 @@
+{
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 31372,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "31372-1794690185794473000",
+        "revision": 27
+      },
+      "reset": true
+    }
+  },
+  "workspaces": [
+    {
+      "id": "ea6fb5fd-2cea-4367-a406-921dc68319c7",
+      "repository_id": "b1a47634-a6bd-485e-9e5c-43b758b60082",
+      "creation_action_id": "5bc982de-72d5-4b24-badb-7812e9595740",
+      "name": "sam-kerr",
+      "branch": "workspace/sam-kerr",
+      "path": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/state/workspaces/alpha/sam-kerr/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "9470d9c4-750f-4f97-8455-95a1fc3cced8",
+      "repository_id": "a5caacb2-0b6b-458e-b253-34e9a72a939a",
+      "creation_action_id": "94e12c92-a897-41b1-be0d-548526f243ab",
+      "name": "lucy-bronze",
+      "branch": "workspace/lucy-bronze",
+      "path": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/state/workspaces/beta/lucy-bronze/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "start": {
+    "time": 464626.00000000006,
+    "queries": 126,
+    "cacheBodyBytes": 1251983,
+    "activeInterests": 0
+  },
+  "now": {
+    "time": 619376,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 6363
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queries": 66,
+    "cacheBodyBytes": 436523,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 888,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 1297,
+      "observation_acknowledge": 882
+    },
+    "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "done": false,
+  "inspectionViewBytes": 14174
+}

@@ -1,0 +1,17 @@
+{
+  "status": "not-run",
+  "attempt": "cua.getApp(\"dev.christopherbengtsson.f08.qualified\")",
+  "result": "Computer Use was not approved to use Agent Workspace",
+  "user_input": "Enable Agent Workspace Computer Use access requested asynchronously; no approval received as of this recording.",
+  "unperformed": [
+    "actual packaged nested-route reload/assets/IPC",
+    "actual missing and off-page route destinations",
+    "Settings keyboard/focus/return at 900x680 and 600x480",
+    "narrow Sheet and resizable inspection",
+    "current routed frontend acknowledgement stall/resync/physical queue limits",
+    "rendered navigation versus 100 ms and startup",
+    "frontend IPC counts, duplicate/outstanding/hidden activity",
+    "frontend cache/queue retention and memory after navigation/five-minute expiry"
+  ],
+  "scope": "No alternate UI automation used to bypass the access refusal."
+}

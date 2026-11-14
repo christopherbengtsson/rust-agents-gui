@@ -1,0 +1,91 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 button Click to show 2 warnings in the Console
+			10 tab group (selectable)
+				11 tab (selectable) Elements
+				12 tab (selected) Console
+				13 tab (selectable) Sources
+				14 tab (selectable) Network
+				15 tab (selectable) Timelines
+				16 tab (selectable) Storage
+				17 tab (selectable) Graphics
+				18 tab (selectable) Show hidden tabs…
+				19 tab (selectable) Search (⇧⌘F)
+				20 tab (selectable) Settings (⌘,)
+			21 container Console
+				22 search text field (settable)  
+				23 button (disabled) Find Previous (⇧⌘G)
+				24 button (disabled) Find Next (⌘G)
+				25 text All
+				26 text Evaluations
+				27 text Errors
+				28 text Warnings
+				29 text Logs
+				30 button Other filter options…
+				31 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				32 button Run Console Snippet…
+				33 button Collect garbage
+				34 button Clear log (⌘K or ⌃L)
+				35 container
+					36 text Console cleared at 9:58:13 PM
+					37 image
+					38 text 2
+					39 container
+						40 image
+							41 image
+							42 image
+						43 text runCallback  — 
+						44 link user-script:5:286, Help: user-script:5:286:20, Value: user-script:5
+					45 text [TAURI] Couldn't find callback id 1304754288. This might happen when the app is reloaded while Rust is running an asynchronous operation.
+					46 image
+					47 text sessionStorage.f08Startups=JSON.stringify([...JSON.parse(sessionStorage.f08Startups),{warmup:false,href:location.pathname,navigation:performance.getEntriesByType('navigation').map(e=>({dom:e.domContentLoadedEventEnd,load:e.loadEventEnd})),paint:performance.getEntriesByType('paint').map(e=>e.toJSON())}]);console.log('F08:'+sessionStorage.f08Startups)
+					48 image
+					49 text F08:[{"warmup":true,"navigation":[{"dom":83,"load":83}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":119.00000000000001,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":37,"load":37}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":73,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":31,"load":31}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":58,"duration":0}]},{"warmup":false,"href":"/","navigat
+					50 image
+					51 text undefined
+			52 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			53 container
+	54 scroll area
+		55 HTML content Description: Agent Workspace, URL: tauri://localhost
+			56 link Skip to workspace, Value: tauri://localhost#workspace
+			57 container Repository sidebar
+				58 text Agent Workspace
+				59 container Repositories
+					60 heading Repositories, Value: 2
+						61 text Repositories
+					62 container Loading repositories
+				63 pop up button Add repository
+				64 text Observation delivery stopped
+				65 pop up button Connection details
+				66 link Settings, Value: tauri://localhost/settings/general
+			67 container
+				68 heading Workspace, Value: 1
+					69 text Workspace
+				70 button Refresh status
+				71 heading A place for your next change, Value: 2
+					72 text A place for your next change
+				73 text Add an existing Git repository from the sidebar to get started.
+				74 text Local workspace
+				75 text No repository selected
+		76 scroll bar (settable, float) 0
+	77 close button
+	78 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	79 minimize button
+	80 text Agent Workspace
+81 menu bar
+	82 F08 Inspector current
+	83 File
+	84 Edit
+	85 View
+	86 Window
+	87 Help
+
+The focused UI element is 52 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,43 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							15 text Available
+							16 content list
+								17 button paul-scholes, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Observation delivery stopped
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 heading Workspace, Value: 1
+					24 text Workspace
+				25 button Refresh status
+				26 heading A place for your next change, Value: 2
+					27 text A place for your next change
+				28 text Add an existing Git repository from the sidebar to get started.
+				29 text Local workspace
+				30 text No repository selected
+	31 close button
+	32 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	33 minimize button
+	34 text Agent Workspace
+35 menu bar
+	36 F08 Inspector current
+	37 File
+	38 Edit
+	39 View
+	40 Window
+	41 Help

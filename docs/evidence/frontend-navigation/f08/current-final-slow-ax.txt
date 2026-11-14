@@ -1,0 +1,1072 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 11:20:32 PM
+					36 image
+					37 text (()=>{const value=JSON.stringify(f08.windows.filter(w=>w.label==='matched-steady-slow').map(w=>({label:w.label,start:(({queryStates,...s})=>s)(w.start),end:(({queryStates,...s})=>s)(w.end),calls:f08.log.filter(x=>x.start>=w.start.time&&x.start<w.end.time).reduce((a,x)=>(a[x.command+':'+(x.args?.request?.operation||'')]=(a[x.command+':'+(x.args?.request?.operation||'')]||0)+1,a),{})}))).replaceAll('tauri://','tauri__');for(let i=0;i<value.length;i+=300)console.log('F08DATA:'+i+':'+value.slice(i,i+300));conso
+					38 image
+					39 text F08DATA:0:[{"label":"matched-steady-slow","start":{"time":353733,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":6247}},"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","visibility":"visible","active":0,"max
+					40 image
+					41 text F08DATA:300:Active":1,"duplicates":0,"queries":145,"cacheBodyBytes":1510212,"queue":0,"pending":0,"physicalActive":0,"freshness":770,"actor":"waiting","commands":{"workspace_request":1116,"observation_acknowledge":735},"assets":["tauri__localhost/assets/index--UGuBMO9.js"],"width":900,"height":648,"dpr":2,"scro
+					42 image
+					43 text F08DATA:600:ll":[]},"end":{"time":359738,"feed":{"state":"live","accepted":{"owner":"47400-1794690795286464000","sequence":6252}},"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","visibility":"visible","active":0,"maxActive":1,"duplicates":0,"
+					44 image
+					45 text F08DATA:900:queries":143,"cacheBodyBytes":1483032,"queue":0,"pending":0,"physicalActive":0,"freshness":775,"actor":"idle","commands":{"workspace_request":1125,"observation_acknowledge":740},"assets":["tauri__localhost/assets/index--UGuBMO9.js"],"width":900,"height":648,"dpr":2,"scroll":[]},"calls":{"workspace_r
+					46 image
+					47 text F08DATA:1200:equest:changes":6,"observation_acknowledge:":5,"workspace_request:change_preview":3}}]
+					48 image
+					49 text F08LEN:1286
+					50 image
+					51 text undefined
+			52 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			53 container
+	54 scroll area
+		55 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			56 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			57 container Repository sidebar
+				58 text Agent Workspace
+				59 container Repositories
+					60 heading Repositories, Value: 2
+						61 text Repositories
+					62 content list
+						63 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01 Available
+							64 button Catalog-01, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01
+							65 button (expanded) Toggle details for Catalog-01, Secondary Actions: Collapse
+							66 button Create workspace in Catalog-01
+							67 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01
+							68 text Available
+						69 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16 Available
+							70 button Catalog-16, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16
+							71 button (expanded) Toggle details for Catalog-16, Secondary Actions: Collapse
+							72 button Create workspace in Catalog-16
+							73 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16
+							74 text Available
+						75 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20 Available
+							76 button Catalog-20, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20
+							77 button (expanded) Toggle details for Catalog-20, Secondary Actions: Collapse
+							78 button Create workspace in Catalog-20
+							79 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20
+							80 text Available
+						81 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04 Available
+							82 button Catalog-04, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04
+							83 button (expanded) Toggle details for Catalog-04, Secondary Actions: Collapse
+							84 button Create workspace in Catalog-04
+							85 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04
+							86 text Available
+						87 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21 Available
+							88 button Catalog-21, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21
+							89 button (expanded) Toggle details for Catalog-21, Secondary Actions: Collapse
+							90 button Create workspace in Catalog-21
+							91 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21
+							92 text Available
+						93 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30 Available
+							94 button Catalog-30, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30
+							95 button (expanded) Toggle details for Catalog-30, Secondary Actions: Collapse
+							96 button Create workspace in Catalog-30
+							97 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30
+							98 text Available
+						99 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25 Available
+							100 button Catalog-25, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25
+							101 button (expanded) Toggle details for Catalog-25, Secondary Actions: Collapse
+							102 button Create workspace in Catalog-25
+							103 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25
+							104 text Available
+						105 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00 Available
+							106 button Catalog-00, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00
+							107 button (expanded) Toggle details for Catalog-00, Secondary Actions: Collapse
+							108 button Create workspace in Catalog-00
+							109 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00
+							110 text Available
+						111 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28 Available
+							112 button Catalog-28, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28
+							113 button (expanded) Toggle details for Catalog-28, Secondary Actions: Collapse
+							114 button Create workspace in Catalog-28
+							115 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28
+							116 text Available
+						117 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15 Available
+							118 button Catalog-15, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15
+							119 button (expanded) Toggle details for Catalog-15, Secondary Actions: Collapse
+							120 button Create workspace in Catalog-15
+							121 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15
+							122 text Available
+						123 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32 Available
+							124 button Catalog-32, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32
+							125 button (expanded) Toggle details for Catalog-32, Secondary Actions: Collapse
+							126 button Create workspace in Catalog-32
+							127 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32
+							128 text Available
+						129 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12 Available
+							130 button Catalog-12, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12
+							131 button (expanded) Toggle details for Catalog-12, Secondary Actions: Collapse
+							132 button Create workspace in Catalog-12
+							133 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12
+							134 text Available
+						135 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11 Available
+							136 button Catalog-11, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11
+							137 button (expanded) Toggle details for Catalog-11, Secondary Actions: Collapse
+							138 button Create workspace in Catalog-11
+							139 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11
+							140 text Available
+						141 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23 Available
+							142 button Catalog-23, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23
+							143 button (expanded) Toggle details for Catalog-23, Secondary Actions: Collapse
+							144 button Create workspace in Catalog-23
+							145 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23
+							146 text Available
+						147 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08 Available
+							148 button Catalog-08, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08
+							149 button (expanded) Toggle details for Catalog-08, Secondary Actions: Collapse
+							150 button Create workspace in Catalog-08
+							151 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08
+							152 text Available
+						153 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							154 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							155 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							156 button Create workspace in Beta
+							157 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							158 text Available
+							159 content list
+								160 button lee-jae-sung, Help: Workspace ready
+						161 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24 Available
+							162 button Catalog-24, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24
+							163 button (expanded) Toggle details for Catalog-24, Secondary Actions: Collapse
+							164 button Create workspace in Catalog-24
+							165 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24
+							166 text Available
+						167 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22 Available
+							168 button Catalog-22, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22
+							169 button (expanded) Toggle details for Catalog-22, Secondary Actions: Collapse
+							170 button Create workspace in Catalog-22
+							171 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22
+							172 text Available
+						173 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18 Available
+							174 button Catalog-18, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18
+							175 button (expanded) Toggle details for Catalog-18, Secondary Actions: Collapse
+							176 button Create workspace in Catalog-18
+							177 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18
+							178 text Available
+						179 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19 Available
+							180 button Catalog-19, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19
+							181 button (expanded) Toggle details for Catalog-19, Secondary Actions: Collapse
+							182 button Create workspace in Catalog-19
+							183 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19
+							184 text Available
+						185 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07 Available
+							186 button Catalog-07, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07
+							187 button (expanded) Toggle details for Catalog-07, Secondary Actions: Collapse
+							188 button Create workspace in Catalog-07
+							189 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07
+							190 text Available
+						191 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17 Available
+							192 button Catalog-17, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17
+							193 button (expanded) Toggle details for Catalog-17, Secondary Actions: Collapse
+							194 button Create workspace in Catalog-17
+							195 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17
+							196 text Available
+						197 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27 Available
+							198 button Catalog-27, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27
+							199 button (expanded) Toggle details for Catalog-27, Secondary Actions: Collapse
+							200 button Create workspace in Catalog-27
+							201 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27
+							202 text Available
+						203 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available Workspace pages for Alpha
+							204 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							205 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							206 button Create workspace in Alpha
+							207 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							208 text Available
+							209 content list
+								210 button cristhian-stuani, Help: Workspace ready
+								211 button alvaro-morata, Help: Workspace ready
+								212 button amandine-henry, Help: Workspace ready
+								213 button dani-parejo, Help: Workspace ready
+								214 button paolo-guerrero, Help: Workspace ready
+								215 button luis-suarez-miramontes, Help: Workspace ready
+								216 button antoine-griezmann, Help: Workspace ready
+								217 button miranda, Help: Workspace ready
+								218 button john-barnes, Help: Workspace ready
+								219 button donny-van-de-beek, Help: Workspace ready
+								220 button duncan-edwards, Help: Workspace ready
+								221 button andres-guardado, Help: Workspace ready
+								222 button rivaldo, Help: Workspace ready
+								223 button vivianne-miedema, Help: Workspace ready
+								224 button gabriel-batistuta, Help: Workspace ready
+								225 button bente-nordby, Help: Workspace ready
+								226 button pele, Help: Workspace ready
+								227 button thibaut-courtois, Help: Workspace ready
+								228 button jesse-lingard, Help: Workspace ready
+								229 button eran-zahavi, Help: Workspace ready
+								230 button jan-vertonghen, Help: Workspace ready
+								231 button radja-nainggolan, Help: Workspace ready
+								232 button duvan-zapata, Help: Workspace ready
+								233 button ricardo-quaresma, Help: Workspace ready
+								234 button heidi-mohr, Help: Workspace ready
+								235 button lee-jae-sung, Help: Workspace ready
+								236 button edin-dzeko, Help: Workspace ready
+								237 button paul-scholes, Help: Workspace ready
+								238 button alex-greenwood, Help: Workspace ready
+								239 button sandor-kocsis, Help: Workspace ready
+								240 button philippe-coutinho, Help: Workspace ready
+								241 button david-de-gea, Help: Workspace ready
+							242 container Workspace pages for Alpha
+								243 button (disabled) Previous
+								244 button Next
+						245 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03 Available
+							246 button Catalog-03, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03
+							247 button (expanded) Toggle details for Catalog-03, Secondary Actions: Collapse
+							248 button Create workspace in Catalog-03
+							249 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03
+							250 text Available
+						251 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02 Available
+							252 button Catalog-02, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02
+							253 button (expanded) Toggle details for Catalog-02, Secondary Actions: Collapse
+							254 button Create workspace in Catalog-02
+							255 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02
+							256 text Available
+						257 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29 Available
+							258 button Catalog-29, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29
+							259 button (expanded) Toggle details for Catalog-29, Secondary Actions: Collapse
+							260 button Create workspace in Catalog-29
+							261 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29
+							262 text Available
+						263 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13 Available
+							264 button Catalog-13, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13
+							265 button (expanded) Toggle details for Catalog-13, Secondary Actions: Collapse
+							266 button Create workspace in Catalog-13
+							267 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13
+							268 text Available
+						269 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31 Available
+							270 button Catalog-31, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31
+							271 button (expanded) Toggle details for Catalog-31, Secondary Actions: Collapse
+							272 button Create workspace in Catalog-31
+							273 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31
+							274 text Available
+						275 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06 Available
+							276 button Catalog-06, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06
+							277 button (expanded) Toggle details for Catalog-06, Secondary Actions: Collapse
+							278 button Create workspace in Catalog-06
+							279 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06
+							280 text Available
+						281 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14 Available
+							282 button Catalog-14, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14
+							283 button (expanded) Toggle details for Catalog-14, Secondary Actions: Collapse
+							284 button Create workspace in Catalog-14
+							285 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14
+							286 text Available
+						287 container /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09 Available
+							288 button Catalog-09, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09
+							289 button (expanded) Toggle details for Catalog-09, Secondary Actions: Collapse
+							290 button Create workspace in Catalog-09
+							291 text /private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09
+							292 text Available
+					293 container Repository pages
+						294 button (disabled) Previous
+						295 button Next
+				296 pop up button Add repository
+				297 text Connected
+				298 pop up button Connection details
+				299 link Settings, Value: tauri://localhost/settings/general
+			300 container
+				301 container
+					302 heading paul-scholes, Value: 1
+						303 text paul-scholes
+					304 button Refresh status
+				305 container Selected repository
+					306 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					307 text Repository available
+				308 text Uncommitted changes
+				309 button (disabled) Refreshing…
+				310 button (expanded) Hide changed files, Secondary Actions: Collapse
+				311 container
+					312 text Compared with HEAD  ac721f2849607a00f9583fbb5cc8af2184246986  ·  2 changed files
+				313 text Refreshing the retained comparison…
+				314 tab group (selectable) Workspace views
+					315 tab (selectable) Workspace
+					316 tab (selected) Changes
+				317 container Changes
+					318 container Selected file changes
+						319 heading large.txt, Value: 2
+							320 text large.txt
+						321 container Unified file diff
+							322 container
+								323 container Old line
+								324 container New line
+								325 text @@ -1,120 +1,120 @@
+								326 container Old line
+									327 text 1
+								328 container New line
+								329 text Line 0: original text
+								330 container Old line
+								331 container New line
+									332 text 1
+								333 text Line 0: changed original text
+								334 container Old line
+									335 text 2
+								336 container New line
+									337 text 2
+								338 text Line 1: original text
+								339 container Old line
+									340 text 3
+								341 container New line
+									342 text 3
+								343 text Line 2: original text
+								344 container Old line
+									345 text 4
+								346 container New line
+								347 text Line 3: original text
+								348 container Old line
+								349 container New line
+									350 text 4
+								351 text Line 3: changed original text
+								352 container Old line
+									353 text 5
+								354 container New line
+									355 text 5
+								356 text Line 4: original text
+								357 container Old line
+									358 text 6
+								359 container New line
+									360 text 6
+								361 text Line 5: original text
+								362 container Old line
+									363 text 7
+								364 container New line
+								365 text Line 6: original text
+								366 container Old line
+								367 container New line
+									368 text 7
+								369 text Line 6: changed original text
+								370 container Old line
+									371 text 8
+								372 container New line
+									373 text 8
+								374 text Line 7: original text
+								375 container Old line
+									376 text 9
+								377 container New line
+									378 text 9
+								379 text Line 8: original text
+								380 container Old line
+									381 text 10
+								382 container New line
+								383 text Line 9: original text
+								384 container Old line
+								385 container New line
+									386 text 10
+								387 text Line 9: changed original text
+								388 container Old line
+									389 text 11
+								390 container New line
+									391 text 11
+								392 text Line 10: original text
+								393 container Old line
+									394 text 12
+								395 container New line
+									396 text 12
+								397 text Line 11: original text
+								398 container Old line
+									399 text 13
+								400 container New line
+								401 text Line 12: original text
+								402 container Old line
+								403 container New line
+									404 text 13
+								405 text Line 12: changed original text
+								406 container Old line
+									407 text 14
+								408 container New line
+									409 text 14
+								410 text Line 13: original text
+								411 container Old line
+									412 text 15
+								413 container New line
+									414 text 15
+								415 text Line 14: original text
+								416 container Old line
+									417 text 16
+								418 container New line
+								419 text Line 15: original text
+								420 container Old line
+								421 container New line
+									422 text 16
+								423 text Line 15: changed original text
+								424 container Old line
+									425 text 17
+								426 container New line
+									427 text 17
+								428 text Line 16: original text
+								429 container Old line
+									430 text 18
+								431 container New line
+									432 text 18
+								433 text Line 17: original text
+								434 container Old line
+									435 text 19
+								436 container New line
+								437 text Line 18: original text
+								438 container Old line
+								439 container New line
+									440 text 19
+								441 text Line 18: changed original text
+								442 container Old line
+									443 text 20
+								444 container New line
+									445 text 20
+								446 text Line 19: original text
+								447 container Old line
+									448 text 21
+								449 container New line
+									450 text 21
+								451 text Line 20: original text
+								452 container Old line
+									453 text 22
+								454 container New line
+								455 text Line 21: original text
+								456 container Old line
+								457 container New line
+									458 text 22
+								459 text Line 21: changed original text
+								460 container Old line
+									461 text 23
+								462 container New line
+									463 text 23
+								464 text Line 22: original text
+								465 container Old line
+									466 text 24
+								467 container New line
+									468 text 24
+								469 text Line 23: original text
+								470 container Old line
+									471 text 25
+								472 container New line
+								473 text Line 24: original text
+								474 container Old line
+								475 container New line
+									476 text 25
+								477 text Line 24: changed original text
+								478 container Old line
+									479 text 26
+								480 container New line
+									481 text 26
+								482 text Line 25: original text
+								483 container Old line
+									484 text 27
+								485 container New line
+									486 text 27
+								487 text Line 26: original text
+								488 container Old line
+									489 text 28
+								490 container New line
+								491 text Line 27: original text
+								492 container Old line
+								493 container New line
+									494 text 28
+								495 text Line 27: changed original text
+								496 container Old line
+									497 text 29
+								498 container New line
+									499 text 29
+								500 text Line 28: original text
+								501 container Old line
+									502 text 30
+								503 container New line
+									504 text 30
+								505 text Line 29: original text
+								506 container Old line
+									507 text 31
+								508 container New line
+								509 text Line 30: original text
+								510 container Old line
+								511 container New line
+									512 text 31
+								513 text Line 30: changed original text
+								514 container Old line
+									515 text 32
+								516 container New line
+									517 text 32
+								518 text Line 31: original text
+								519 container Old line
+									520 text 33
+								521 container New line
+									522 text 33
+								523 text Line 32: original text
+								524 container Old line
+									525 text 34
+								526 container New line
+								527 text Line 33: original text
+								528 container Old line
+								529 container New line
+									530 text 34
+								531 text Line 33: changed original text
+								532 container Old line
+									533 text 35
+								534 container New line
+									535 text 35
+								536 text Line 34: original text
+								537 container Old line
+									538 text 36
+								539 container New line
+									540 text 36
+								541 text Line 35: original text
+								542 container Old line
+									543 text 37
+								544 container New line
+								545 text Line 36: original text
+								546 container Old line
+								547 container New line
+									548 text 37
+								549 text Line 36: changed original text
+								550 container Old line
+									551 text 38
+								552 container New line
+									553 text 38
+								554 text Line 37: original text
+								555 container Old line
+									556 text 39
+								557 container New line
+									558 text 39
+								559 text Line 38: original text
+								560 container Old line
+									561 text 40
+								562 container New line
+								563 text Line 39: original text
+								564 container Old line
+								565 container New line
+									566 text 40
+								567 text Line 39: changed original text
+								568 container Old line
+									569 text 41
+								570 container New line
+									571 text 41
+								572 text Line 40: original text
+								573 container Old line
+									574 text 42
+								575 container New line
+									576 text 42
+								577 text Line 41: original text
+								578 container Old line
+									579 text 43
+								580 container New line
+								581 text Line 42: original text
+								582 container Old line
+								583 container New line
+									584 text 43
+								585 text Line 42: changed original text
+								586 container Old line
+									587 text 44
+								588 container New line
+									589 text 44
+								590 text Line 43: original text
+								591 container Old line
+									592 text 45
+								593 container New line
+									594 text 45
+								595 text Line 44: original text
+								596 container Old line
+									597 text 46
+								598 container New line
+								599 text Line 45: original text
+								600 container Old line
+								601 container New line
+									602 text 46
+								603 text Line 45: changed original text
+								604 container Old line
+									605 text 47
+								606 container New line
+									607 text 47
+								608 text Line 46: original text
+								609 container Old line
+									610 text 48
+								611 container New line
+									612 text 48
+								613 text Line 47: original text
+								614 container Old line
+									615 text 49
+								616 container New line
+								617 text Line 48: original text
+								618 container Old line
+								619 container New line
+									620 text 49
+								621 text Line 48: changed original text
+								622 container Old line
+									623 text 50
+								624 container New line
+									625 text 50
+								626 text Line 49: original text
+								627 container Old line
+									628 text 51
+								629 container New line
+									630 text 51
+								631 text Line 50: original text
+								632 container Old line
+									633 text 52
+								634 container New line
+								635 text Line 51: original text
+								636 container Old line
+								637 container New line
+									638 text 52
+								639 text Line 51: changed original text
+								640 container Old line
+									641 text 53
+								642 container New line
+									643 text 53
+								644 text Line 52: original text
+								645 container Old line
+									646 text 54
+								647 container New line
+									648 text 54
+								649 text Line 53: original text
+								650 container Old line
+									651 text 55
+								652 container New line
+								653 text Line 54: original text
+								654 container Old line
+								655 container New line
+									656 text 55
+								657 text Line 54: changed original text
+								658 container Old line
+									659 text 56
+								660 container New line
+									661 text 56
+								662 text Line 55: original text
+								663 container Old line
+									664 text 57
+								665 container New line
+									666 text 57
+								667 text Line 56: original text
+								668 container Old line
+									669 text 58
+								670 container New line
+								671 text Line 57: original text
+								672 container Old line
+								673 container New line
+									674 text 58
+								675 text Line 57: changed original text
+								676 container Old line
+									677 text 59
+								678 container New line
+									679 text 59
+								680 text Line 58: original text
+								681 container Old line
+									682 text 60
+								683 container New line
+									684 text 60
+								685 text Line 59: original text
+								686 container Old line
+									687 text 61
+								688 container New line
+								689 text Line 60: original text
+								690 container Old line
+								691 container New line
+									692 text 61
+								693 text Line 60: changed original text
+								694 container Old line
+									695 text 62
+								696 container New line
+									697 text 62
+								698 text Line 61: original text
+								699 container Old line
+									700 text 63
+								701 container New line
+									702 text 63
+								703 text Line 62: original text
+								704 container Old line
+									705 text 64
+								706 container New line
+								707 text Line 63: original text
+								708 container Old line
+								709 container New line
+									710 text 64
+								711 text Line 63: changed original text
+								712 container Old line
+									713 text 65
+								714 container New line
+									715 text 65
+								716 text Line 64: original text
+								717 container Old line
+									718 text 66
+								719 container New line
+									720 text 66
+								721 text Line 65: original text
+								722 container Old line
+									723 text 67
+								724 container New line
+								725 text Line 66: original text
+								726 container Old line
+								727 container New line
+									728 text 67
+								729 text Line 66: changed original text
+								730 container Old line
+									731 text 68
+								732 container New line
+									733 text 68
+								734 text Line 67: original text
+								735 container Old line
+									736 text 69
+								737 container New line
+									738 text 69
+								739 text Line 68: original text
+								740 container Old line
+									741 text 70
+								742 container New line
+								743 text Line 69: original text
+								744 container Old line
+								745 container New line
+									746 text 70
+								747 text Line 69: changed original text
+								748 container Old line
+									749 text 71
+								750 container New line
+									751 text 71
+								752 text Line 70: original text
+								753 container Old line
+									754 text 72
+								755 container New line
+									756 text 72
+								757 text Line 71: original text
+								758 container Old line
+									759 text 73
+								760 container New line
+								761 text Line 72: original text
+								762 container Old line
+								763 container New line
+									764 text 73
+								765 text Line 72: changed original text
+								766 container Old line
+									767 text 74
+								768 container New line
+									769 text 74
+								770 text Line 73: original text
+								771 container Old line
+									772 text 75
+								773 container New line
+									774 text 75
+								775 text Line 74: original text
+								776 container Old line
+									777 text 76
+								778 container New line
+								779 text Line 75: original text
+								780 container Old line
+								781 container New line
+									782 text 76
+								783 text Line 75: changed original text
+								784 container Old line
+									785 text 77
+								786 container New line
+									787 text 77
+								788 text Line 76: original text
+								789 container Old line
+									790 text 78
+								791 container New line
+									792 text 78
+								793 text Line 77: original text
+								794 container Old line
+									795 text 79
+								796 container New line
+								797 text Line 78: original text
+								798 container Old line
+								799 container New line
+									800 text 79
+								801 text Line 78: changed original text
+								802 container Old line
+									803 text 80
+								804 container New line
+									805 text 80
+								806 text Line 79: original text
+								807 container Old line
+									808 text 81
+								809 container New line
+									810 text 81
+								811 text Line 80: original text
+								812 container Old line
+									813 text 82
+								814 container New line
+								815 text Line 81: original text
+								816 container Old line
+								817 container New line
+									818 text 82
+								819 text Line 81: changed original text
+								820 container Old line
+									821 text 83
+								822 container New line
+									823 text 83
+								824 text Line 82: original text
+								825 container Old line
+									826 text 84
+								827 container New line
+									828 text 84
+								829 text Line 83: original text
+								830 container Old line
+									831 text 85
+								832 container New line
+								833 text Line 84: original text
+								834 container Old line
+								835 container New line
+									836 text 85
+								837 text Line 84: changed original text
+								838 container Old line
+									839 text 86
+								840 container New line
+									841 text 86
+								842 text Line 85: original text
+								843 container Old line
+									844 text 87
+								845 container New line
+									846 text 87
+								847 text Line 86: original text
+								848 container Old line
+									849 text 88
+								850 container New line
+								851 text Line 87: original text
+								852 container Old line
+								853 container New line
+									854 text 88
+								855 text Line 87: changed original text
+								856 container Old line
+									857 text 89
+								858 container New line
+									859 text 89
+								860 text Line 88: original text
+								861 container Old line
+									862 text 90
+								863 container New line
+									864 text 90
+								865 text Line 89: original text
+								866 container Old line
+									867 text 91
+								868 container New line
+								869 text Line 90: original text
+								870 container Old line
+								871 container New line
+									872 text 91
+								873 text Line 90: changed original text
+								874 container Old line
+									875 text 92
+								876 container New line
+									877 text 92
+								878 text Line 91: original text
+								879 container Old line
+									880 text 93
+								881 container New line
+									882 text 93
+								883 text Line 92: original text
+								884 container Old line
+									885 text 94
+								886 container New line
+								887 text Line 93: original text
+								888 container Old line
+								889 container New line
+									890 text 94
+								891 text Line 93: changed original text
+								892 container Old line
+									893 text 95
+								894 container New line
+									895 text 95
+								896 text Line 94: original text
+								897 container Old line
+									898 text 96
+								899 container New line
+									900 text 96
+								901 text Line 95: original text
+								902 container Old line
+									903 text 97
+								904 container New line
+								905 text Line 96: original text
+								906 container Old line
+								907 container New line
+									908 text 97
+								909 text Line 96: changed original text
+								910 container Old line
+									911 text 98
+								912 container New line
+									913 text 98
+								914 text Line 97: original text
+								915 container Old line
+									916 text 99
+								917 container New line
+									918 text 99
+								919 text Line 98: original text
+								920 container Old line
+									921 text 100
+								922 container New line
+								923 text Line 99: original text
+								924 container Old line
+								925 container New line
+									926 text 100
+								927 text Line 99: changed original text
+								928 container Old line
+									929 text 101
+								930 container New line
+									931 text 101
+								932 text Line 100: original text
+								933 container Old line
+									934 text 102
+								935 container New line
+									936 text 102
+								937 text Line 101: original text
+								938 container Old line
+									939 text 103
+								940 container New line
+								941 text Line 102: original text
+								942 container Old line
+								943 container New line
+									944 text 103
+								945 text Line 102: changed original text
+								946 container Old line
+									947 text 104
+								948 container New line
+									949 text 104
+								950 text Line 103: original text
+								951 container Old line
+									952 text 105
+								953 container New line
+									954 text 105
+								955 text Line 104: original text
+								956 container Old line
+									957 text 106
+								958 container New line
+								959 text Line 105: original text
+								960 container Old line
+								961 container New line
+									962 text 106
+								963 text Line 105: changed original text
+								964 container Old line
+									965 text 107
+								966 container New line
+									967 text 107
+								968 text Line 106: original text
+								969 container Old line
+									970 text 108
+								971 container New line
+									972 text 108
+								973 text Line 107: original text
+								974 container Old line
+									975 text 109
+								976 container New line
+								977 text Line 108: original text
+								978 container Old line
+								979 container New line
+									980 text 109
+								981 text Line 108: changed original text
+								982 container Old line
+									983 text 110
+								984 container New line
+									985 text 110
+								986 text Line 109: original text
+								987 container Old line
+									988 text 111
+								989 container New line
+									990 text 111
+								991 text Line 110: original text
+								992 container Old line
+									993 text 112
+								994 container New line
+								995 text Line 111: original text
+								996 container Old line
+								997 container New line
+									998 text 112
+								999 text Line 111: changed original text
+								1000 container Old line
+									1001 text 113
+								1002 container New line
+									1003 text 113
+								1004 text Line 112: original text
+								1005 container Old line
+									1006 text 114
+								1007 container New line
+									1008 text 114
+								1009 text Line 113: original text
+								1010 container Old line
+									1011 text 115
+								1012 container New line
+								1013 text Line 114: original text
+								1014 container Old line
+								1015 container New line
+									1016 text 115
+								1017 text Line 114: changed original text
+								1018 container Old line
+									1019 text 116
+								1020 container New line
+									1021 text 116
+								1022 text Line 115: original text
+								1023 container Old line
+									1024 text 117
+								1025 container New line
+									1026 text 117
+								1027 text Line 116: original text
+								1028 container Old line
+									1029 text 118
+								1030 container New line
+								1031 text Line 117: original text
+								1032 container Old line
+								1033 container New line
+									1034 text 118
+								1035 text Line 117: changed original text
+								1036 container Old line
+									1037 text 119
+								1038 container New line
+									1039 text 119
+								1040 text Line 118: original text
+								1041 container Old line
+									1042 text 120
+								1043 container New line
+									1044 text 120
+								1045 text Line 119: original text
+				1046 splitter Resize changed files, Value: 68
+				1047 container Changed files
+					1048 heading Changed files, Value: 2
+						1049 text Changed files
+					1050 container
+						1051 toggle button large.txt .M, Help: large.txt, Value: on
+						1052 toggle button text.txt .M, Help: text.txt, Value: off
+					1053 button First page
+					1054 button (disabled) Next files
+				1055 container
+					1056 text Local workspace Alpha
+		1057 scroll bar (settable, float) 0
+	1058 close button
+	1059 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	1060 minimize button
+	1061 text Agent Workspace
+1062 menu bar
+	1063 F08 Inspector current
+	1064 File
+	1065 Edit
+	1066 View
+	1067 Window
+	1068 Help
+
+The focused UI element is 52 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

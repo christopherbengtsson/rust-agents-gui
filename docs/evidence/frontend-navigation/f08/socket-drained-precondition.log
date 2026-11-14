@@ -1,0 +1,27 @@
+{"name": "private_directory_and_endpoint", "status": "pass", "seconds": 3.704091068357229e-05, "detail": {"directory": "0700", "endpoint": "0600"}}
+{"name": "fragmented_header_and_body", "status": "pass", "seconds": 0.09804937499575317, "detail": null}
+{"name": "exact_payload_limit_and_oversized_header", "status": "pass", "seconds": 0.001623665913939476, "detail": null}
+{"name": "partial_header", "status": "pass", "seconds": 0.00011416699271649122, "detail": null}
+{"name": "header_without_body", "status": "pass", "seconds": 0.0002762910444289446, "detail": null}
+{"name": "partial_body", "status": "pass", "seconds": 0.0002180000301450491, "detail": null}
+{"name": "empty_json", "status": "pass", "seconds": 0.0005192090757191181, "detail": null}
+{"name": "legacy_v6_v7_newline", "status": "pass", "seconds": 0.0001722919987514615, "detail": null}
+{"name": "incompatible_versions_and_owner_before_dispatch", "status": "pass", "seconds": 0.0022423339542001486, "detail": null}
+{"name": "absolute_transfer_deadline_not_renewed_by_fragments", "status": "pass", "seconds": 2.010990250040777, "detail": 2.009939666953869}
+{"name": "eight_server_clients_then_handler_recovery", "status": "pass", "seconds": 0.028764249989762902, "detail": null}
+{"name": "baseline_exact_ack_and_five_second_heartbeat", "status": "pass", "seconds": 5.008534500026144, "detail": {"seconds": 5.008286333060823, "cursor": {"owner": "17288-1794688968704048000", "sequence": 1}}}
+{"name": "mismatched_ack_closes_subscription", "status": "pass", "seconds": 0.002985041937790811, "detail": null}
+{"name": "repository_workspace_push_progress_and_accepted_cursor_reconnect", "status": "pass", "seconds": 0.07975812500808388, "detail": {"admission": {"kind": "registration", "registration": {"create_initial_workspace": true, "initial_workspace_id": null, "action_id": "c96a4b19-2789-4733-862a-6fd309e429c5", "path": "/private/tmp/aw-f04g-z8tzulpe/repository", "state": "pending"}}, "batches": [{"subscription_id": "780e46ff-3517-4646-b25b-acb829e9b40a", "batch_id": 2, "cursor": {"owner": "17288-1794688968704048000", "sequence": 2}, "sample": {"kind": "hints", "watermark": 2, "targets": [{"kind": "registration", "action_id": "c96a4b19-2789-4733-862a-6fd309e429c5"}, {"kind": "repositories"}]}}, {"subscription_id": "780e46ff-3517-4646-b25b-acb829e9b40a", "batch_id": 3, "cursor": {"owner": "17288-1794688968704048000", "sequence": 4}, "sample": {"kind": "hints", "watermark": 4, "targets": [{"kind": "registration", "action_id": "c96a4b19-2789-4733-862a-6fd309e429c5"}, {"kind": "repositories"}, {"kind": "workspaces", "repository_id": null}, {"kind": "repository", "repository_id": "eb1b362a-309f-4d95-b5e5-1bc6f96fc089"}, {"kind": "workspace", "workspace_id": "1b4535d6-f378-461f-a1c8-7ab1f6bb6b96"}]}}], "accepted_reconnect": {"owner": "17288-1794688968704048000", "sequence": 1}}}
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 433, in <module>
+    main()
+    ~~~~^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 318, in main
+    check('started_blocking_work_keeps_physical_admission_after_peer_close', blocking_admission)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 66, in check
+    detail = run()
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-observations.py", line 301, in blocking_admission
+    ninth.sendall(encode(request()))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 57] Socket is not connected

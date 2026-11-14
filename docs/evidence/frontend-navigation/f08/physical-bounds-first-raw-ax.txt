@@ -1,0 +1,100 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:42:45 PM
+					36 image
+					37 text (()=>{const s=JSON.stringify(({full:f08.bounds.full,draining:f08.bounds.draining,completed:f08.bounds.completed,results:f08.bounds.results,duplicateRuns:f08.bounds.duplicateRuns}));for(let i=0;i<s.length;i+=300)console.log('F08DATA:'+i+':'+s.slice(i,i+300));return s.length})()
+					38 image
+					39 text F08DATA:0:{"full":{"time":619637,"feed":{"state":"stopped","message":"Observation delivery stopped: Frame deadline exceeded. Refresh connection explicitly.","accepted":{"owner":"47400-1794690795286464000","sequence":2377}},"href":"/settings/general","visibility":"visible","active":2,"maxActive":2,"duplicates"
+					40 image
+					41 text F08DATA:300::0,"queries":73,"cacheBodyBytes":490872,"queue":64,"pending":66,"physicalActive":2,"freshness":209,"actor":"idle","commands":{"workspace_request":311,"observation_acknowledge":206,"observation_stop":2,"repository_request":2},"assets":["tauri__localhost/assets/index-hvIgvl0U.js"],"width":900,"height"
+					42 image
+					43 text F08DATA:600::148,"dpr":2,"scroll":[]},"draining":{"time":619690,"feed":{"state":"stopped","message":"Observation delivery stopped: Frame deadline exceeded. Refresh connection explicitly.","accepted":{"owner":"47400-1794690795286464000","sequence":2377}},"href":"/settings/general","visibility":"visible","active"
+					44 image
+					45 text F08DATA:900::0,"maxActive":2,"duplicates":0,"queries":73,"cacheBodyBytes":490872,"queue":0,"pending":0,"physicalActive":0,"freshness":209,"actor":"idle","commands":{"workspace_request":311,"observation_acknowledge":206,"observation_stop":2,"repository_request":2},"assets":["tauri__localhost/assets/index-hvIgvl0
+					46 image
+					47 text F08DATA:1200:U.js"],"width":900,"height":148,"dpr":2,"scroll":[]},"completed":{"time":631639,"feed":{"state":"stopped","message":"Observation delivery stopped: Frame deadline exceeded. Refresh connection explicitly.","accepted":{"owner":"47400-1794690795286464000","sequence":2377}},"href":"/settings/general","vi
+					48 image
+					49 text F08DATA:1500:sibility":"visible","active":0,"maxActive":2,"duplicates":0,"queries":73,"cacheBodyBytes":490872,"queue":0,"pending":0,"physicalActive":0,"freshness":209,"actor":"idle","commands":{"workspace_request":311,"observation_acknowledge":206,"observation_stop":2,"repository_request":2},"assets":["tauri__lo
+					50 image
+					51 text F08DATA:1800:calhost/assets/index-hvIgvl0U.js"],"width":900,"height":148,"dpr":2,"scroll":[]},"results":["busy","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is o
+					52 image
+					53 text F08DATA:2100:bsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observatio
+					54 image
+					55 text F08DATA:2400:n interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsole
+					56 image
+					57 text F08DATA:2700:te","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation int
+					58 image
+					59 text F08DATA:3000:erest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","
+					60 image
+					61 text F08DATA:3300:Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest
+					62 image
+					63 text F08DATA:3600: is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Obser
+					64 image
+					65 text F08DATA:3900:vation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","equivalent-ok","Observati
+					66 image
+					67 text F08DATA:4200:on interest is obsolete"],"duplicateRuns":0}
+					68 image
+					69 text 4244
+					70 text  = $1
+			71 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			72 container
+	73 scroll area
+		74 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			75 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			76 container
+				77 button Back
+				78 heading Settings, Value: 1
+					79 text Settings
+			80 container Settings
+				81 link General, Value: tauri://localhost/settings/general
+			82 container General
+				83 heading General, Value: 2
+					84 text General
+				85 text General settings will be available here.
+	86 close button
+	87 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	88 minimize button
+	89 text Agent Workspace
+90 menu bar
+	91 F08 Inspector current
+	92 File
+	93 Edit
+	94 View
+	95 Window
+	96 Help
+
+The focused UI element is 71 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

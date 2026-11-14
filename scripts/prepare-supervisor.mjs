@@ -1,5 +1,12 @@
-import { createHash } from "node:crypto";
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import {
+  copyFileSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { cargoMetadata, claimTarget, root, runCommand } from "./cargo.mjs";
@@ -12,6 +19,8 @@ export function prepareSupervisor(
     mkdir = mkdirSync,
     readFile = readFileSync,
     writeFile = writeFileSync,
+    rename = renameSync,
+    remove = rmSync,
     claim = claimTarget,
   } = {},
 ) {
@@ -59,7 +68,16 @@ export function prepareSupervisor(
   const staging = path.join(root, "src-tauri/gen/sidecar");
   const binary = path.join(staging, "workspace-supervisor");
   mkdir(staging, { recursive: true });
-  copyFile(artifact.executable, binary);
+  // macOS caches code signatures by inode. Never overwrite executable bytes in
+  // place: publish a fresh same-directory file, preserving the old binary if
+  // copying fails. See Apple's "Updating Mac Software" guidance.
+  const temporary = path.join(staging, `.workspace-supervisor-${randomUUID()}`);
+  try {
+    copyFile(artifact.executable, temporary);
+    rename(temporary, binary);
+  } finally {
+    remove(temporary, { force: true });
+  }
   const provenance = {
     sourceRevision,
     applicationVersion: supervisor.version,

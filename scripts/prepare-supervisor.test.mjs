@@ -21,18 +21,24 @@ function stagingScenario({
   messages = [artifact],
   dirty = false,
   failBuild = false,
+  failCopy = false,
+  failPublish = false,
 } = {}) {
   const commands = [];
   const copies = [];
   const directories = [];
   const writes = [];
   const reads = [];
+  const renames = [];
+  const removals = [];
   return {
     commands,
     copies,
     directories,
     writes,
     reads,
+    renames,
+    removals,
     effects: {
       claim(target) {
         assert.equal(target, "/private/build-target");
@@ -63,6 +69,14 @@ function stagingScenario({
       },
       copyFile(source, destination) {
         copies.push([source, destination]);
+        if (failCopy) throw new Error("copy failed");
+      },
+      rename(source, destination) {
+        renames.push([source, destination]);
+        if (failPublish) throw new Error("publication failed");
+      },
+      remove(file, options) {
+        removals.push([file, options]);
       },
       mkdir(directory, options) {
         directories.push([directory, options]);
@@ -93,7 +107,16 @@ test("stages Cargo's exact executable from a private target and records its prov
   });
   const provenance = prepareSupervisor("release", scenario.effects);
   const staged = path.join(root, "src-tauri/gen/sidecar/workspace-supervisor");
-  assert.deepEqual(scenario.copies, [[artifact.executable, staged]]);
+  const temporary = scenario.copies[0][1];
+  assert.notEqual(
+    temporary,
+    staged,
+    "never overwrite the published executable inode",
+  );
+  assert.equal(path.dirname(temporary), path.dirname(staged));
+  assert.deepEqual(scenario.copies, [[artifact.executable, temporary]]);
+  assert.deepEqual(scenario.renames, [[temporary, staged]]);
+  assert.deepEqual(scenario.removals, [[temporary, { force: true }]]);
   assert.deepEqual(scenario.reads, [staged]);
   assert.deepEqual(scenario.directories, [
     [path.dirname(staged), { recursive: true }],
@@ -175,3 +198,22 @@ test("a failed build cannot stage a previously available executable", () => {
   assert.deepEqual(scenario.copies, []);
   assert.deepEqual(scenario.writes, []);
 });
+
+for (const failure of ["failCopy", "failPublish"]) {
+  test(`${failure} preserves the previous published executable and removes temporary bytes`, () => {
+    const scenario = stagingScenario({ [failure]: true });
+    assert.throws(
+      () => prepareSupervisor("release", scenario.effects),
+      /failed/,
+    );
+    const temporary = scenario.copies[0][1];
+    assert.notEqual(
+      temporary,
+      path.join(root, "src-tauri/gen/sidecar/workspace-supervisor"),
+    );
+    assert.deepEqual(scenario.removals, [[temporary, { force: true }]]);
+    assert.deepEqual(scenario.writes, []);
+    assert.deepEqual(scenario.reads, []);
+    if (failure === "failCopy") assert.deepEqual(scenario.renames, []);
+  });
+}

@@ -1,0 +1,251 @@
+{
+  "compression": "Node 26.13.1 zlib gzipSync and brotliCompressSync defaults; independently compressed emitted chunks",
+  "baseline": {
+    "root": "/private/tmp/aw-f08-matched-baseline-p0_aykpa/checkout",
+    "target": "/private/tmp/aw-f08-matched-baseline-p0_aykpa/target",
+    "initial": ["index-BH_usD4q.js"],
+    "lazy": [],
+    "assets": {
+      "index-BH_usD4q.js": {
+        "raw": 567086,
+        "gzip": 178410,
+        "brotli": 150780,
+        "sha256": "97cb1c121204c2dc8df38b950d3e8a06a623836f4c4b2480045583c3edc9c983"
+      }
+    },
+    "initialJavaScript": {
+      "raw": 567086,
+      "gzip": 178410,
+      "brotli": 150780
+    },
+    "lazyJavaScript": {
+      "raw": 0,
+      "gzip": 0,
+      "brotli": 0
+    },
+    "totalJavaScript": {
+      "raw": 567086,
+      "gzip": 178410,
+      "brotli": 150780
+    },
+    "bundleBytes": 15000631,
+    "executables": {
+      "Contents/MacOS/workspace-desktop": {
+        "bytes": 11596416,
+        "sha256": "0b855ffe6377afa4646ecc491c0c937368a14ad0679a40fc2f40f206be3abe13"
+      },
+      "Contents/Resources/workspace-supervisor": {
+        "bytes": 3403264,
+        "sha256": "c58d7ea26a585eb705cabaaea3530601d5261f06c65a8af899e75d04a2ac51fe"
+      }
+    },
+    "sidecarProvenance": {
+      "sourceRevision": "99adb6366ef7eed1cc72d310f75b6fbec361d436",
+      "applicationVersion": "0.1.0",
+      "dirty": false,
+      "targetDirectory": "/private/tmp/aw-f08-matched-baseline-p0_aykpa/target",
+      "profile": "release",
+      "cargoProfile": {
+        "opt_level": "3",
+        "debuginfo": 0,
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "executable": "/private/tmp/aw-f08-matched-baseline-p0_aykpa/target/release/workspace-supervisor",
+      "sha256": "c58d7ea26a585eb705cabaaea3530601d5261f06c65a8af899e75d04a2ac51fe"
+    }
+  },
+  "current": {
+    "root": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui",
+    "target": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "initial": [
+      "index--UGuBMO9.js",
+      "jsx-runtime-D_Haqy6R.js",
+      "matchContext-BtDqw2sa.js",
+      "dist-BV1HJemj.js",
+      "button-BkK1RviJ.js",
+      "useSelector-DdFe2ywY.js",
+      "Match-BRTduizL.js",
+      "useMatch-CUXcU6IH.js",
+      "app-runtime-DimQTICO.js"
+    ],
+    "lazy": [
+      "empty-Dn3ewsdA.js",
+      "main-CR8AL-9t.js",
+      "repository._repositoryId-DaUnzvob.js",
+      "repository._repositoryId-DxB1rHxL.js",
+      "repository._repositoryId.index-CgApWG3t.js",
+      "repository._repositoryId.workspace._workspaceId-BPlqklLn.js",
+      "repository._repositoryId.workspace._workspaceId-CgApWG3t.js",
+      "routes-CgApWG3t.js",
+      "settings-DGtBgice.js",
+      "settings.general-Cew9Kp7f.js",
+      "target-error-c_COoP3a.js"
+    ],
+    "assets": {
+      "Match-BRTduizL.js": {
+        "raw": 4596,
+        "gzip": 1805,
+        "brotli": 1646,
+        "sha256": "bbc338768965c23425f3023d7152c594fe4f7d4aaabe66ac272b9b6e72321083"
+      },
+      "app-runtime-DimQTICO.js": {
+        "raw": 738251,
+        "gzip": 114625,
+        "brotli": 82716,
+        "sha256": "9bc9525119e619edfca489974f21aae4b6e16caa940b13bf32a1e971ab7860ed"
+      },
+      "button-BkK1RviJ.js": {
+        "raw": 16547,
+        "gzip": 6765,
+        "brotli": 6114,
+        "sha256": "f4b3796ac6bc7fdf22993d3e1a88e0dd340922a816e83c9f5baed3ac8b05a264"
+      },
+      "dist-BV1HJemj.js": {
+        "raw": 26679,
+        "gzip": 11060,
+        "brotli": 9624,
+        "sha256": "c38c917333b7d9a2ada3e5640508622d5526f878f6e4223d606612ab70c73044"
+      },
+      "empty-Dn3ewsdA.js": {
+        "raw": 2292,
+        "gzip": 796,
+        "brotli": 700,
+        "sha256": "a4589ab69b29d9d29dcb762a86015c0b48aa6ecf4405fb7828b1267e2eb7a548"
+      },
+      "index--UGuBMO9.js": {
+        "raw": 290568,
+        "gzip": 89640,
+        "brotli": 78252,
+        "sha256": "152605e994a0be2df0dc6e99d585237048b9dc6cd7f4a3f7f7c1479e67a6ac85"
+      },
+      "jsx-runtime-D_Haqy6R.js": {
+        "raw": 8951,
+        "gzip": 3358,
+        "brotli": 3013,
+        "sha256": "1820641da87208f73e1eab92129ce51984b798d643bafdcb121bb012796a073d"
+      },
+      "main-CR8AL-9t.js": {
+        "raw": 110013,
+        "gzip": 35701,
+        "brotli": 31283,
+        "sha256": "d8c88314cddf1a073913b0c61cecd44716d03d2cdde0f017b6177a7bb6e30898"
+      },
+      "matchContext-BtDqw2sa.js": {
+        "raw": 55447,
+        "gzip": 19521,
+        "brotli": 17826,
+        "sha256": "0be8ec702dc52b344ee5dee6106353c066049a2000862531860c2d4a7f7b7489"
+      },
+      "repository._repositoryId-DaUnzvob.js": {
+        "raw": 83,
+        "gzip": 92,
+        "brotli": 85,
+        "sha256": "dc17c802dd1a22ff5b13b7bf834f321544234b3abd20f7edab63aaff6875d918"
+      },
+      "repository._repositoryId-DxB1rHxL.js": {
+        "raw": 244,
+        "gzip": 214,
+        "brotli": 187,
+        "sha256": "8c372dd9781aa5989a5a01e64cad661cac53440152f638064e77bd90cf8a5d0f"
+      },
+      "repository._repositoryId.index-CgApWG3t.js": {
+        "raw": 70,
+        "gzip": 82,
+        "brotli": 74,
+        "sha256": "4ec6fa198dbe0a474535dd56cc64988e85ef9f182c72784f661a0dea2dae38e0"
+      },
+      "repository._repositoryId.workspace._workspaceId-BPlqklLn.js": {
+        "raw": 1437,
+        "gzip": 686,
+        "brotli": 606,
+        "sha256": "d89e98b5364e1d45a237ac4ca585fcc7897c18088e8c0e1c75b6d6b39262f69e"
+      },
+      "repository._repositoryId.workspace._workspaceId-CgApWG3t.js": {
+        "raw": 70,
+        "gzip": 82,
+        "brotli": 74,
+        "sha256": "4ec6fa198dbe0a474535dd56cc64988e85ef9f182c72784f661a0dea2dae38e0"
+      },
+      "routes-CgApWG3t.js": {
+        "raw": 70,
+        "gzip": 82,
+        "brotli": 74,
+        "sha256": "4ec6fa198dbe0a474535dd56cc64988e85ef9f182c72784f661a0dea2dae38e0"
+      },
+      "settings-DGtBgice.js": {
+        "raw": 2555,
+        "gzip": 1219,
+        "brotli": 1084,
+        "sha256": "03a109e82e1f292a9deae92aa092661620b31121e432d0e437c803b644e242f4"
+      },
+      "settings.general-Cew9Kp7f.js": {
+        "raw": 577,
+        "gzip": 358,
+        "brotli": 287,
+        "sha256": "79b758a59d99e87ee8833fc786b7142f5f566447cf0105c396a657f9357d243e"
+      },
+      "target-error-c_COoP3a.js": {
+        "raw": 1040,
+        "gzip": 596,
+        "brotli": 511,
+        "sha256": "aefe452dacdebc6d0da24aa089f61ce5f2834a47122a51e4ed951519afbafd52"
+      },
+      "useMatch-CUXcU6IH.js": {
+        "raw": 539,
+        "gzip": 357,
+        "brotli": 308,
+        "sha256": "539f10a3ed081c9d5d3eb4e0b5c57a44a6cbc9722da964c854393274f0a454be"
+      },
+      "useSelector-DdFe2ywY.js": {
+        "raw": 1902,
+        "gzip": 837,
+        "brotli": 753,
+        "sha256": "4883a48bb0d721ef63da7d061cac05423b4642f30eb7da2b27409530a7964bda"
+      }
+    },
+    "initialJavaScript": {
+      "raw": 1143480,
+      "gzip": 247968,
+      "brotli": 200252
+    },
+    "lazyJavaScript": {
+      "raw": 118451,
+      "gzip": 39908,
+      "brotli": 34965
+    },
+    "totalJavaScript": {
+      "raw": 1261931,
+      "gzip": 287876,
+      "brotli": 235217
+    },
+    "bundleBytes": 17145175,
+    "executables": {
+      "Contents/MacOS/workspace-desktop": {
+        "bytes": 13069920,
+        "sha256": "1cb805a8ab4f03ba8bce0b7b86b9671e74057b4b989a4cad7b65ef75aa9438a2"
+      },
+      "Contents/Resources/workspace-supervisor": {
+        "bytes": 4074304,
+        "sha256": "08b1c32f4076e3d858198cb0a61937f37ac2cb39727ed8109ebdc86c60e16d76"
+      }
+    },
+    "sidecarProvenance": {
+      "sourceRevision": "024bd636c184bcddaac8645d83cf20423fcf2b17",
+      "applicationVersion": "0.1.0",
+      "dirty": true,
+      "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+      "profile": "release",
+      "cargoProfile": {
+        "opt_level": "3",
+        "debuginfo": 0,
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+      "sha256": "08b1c32f4076e3d858198cb0a61937f37ac2cb39727ed8109ebdc86c60e16d76"
+    }
+  }
+}

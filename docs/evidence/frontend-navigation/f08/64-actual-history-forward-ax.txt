@@ -1,0 +1,69 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:29:00 PM
+					36 image
+					37 text history.forward()
+					38 image
+					39 text undefined
+			40 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			41 container
+	42 scroll area
+		43 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			44 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			45 container
+				46 button Back
+				47 heading Settings, Value: 1
+					48 text Settings
+			49 container Settings
+				50 link General, Value: tauri://localhost/settings/general
+			51 container General
+				52 heading General, Value: 2
+					53 text General
+				54 text General settings will be available here.
+	55 close button
+	56 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	57 minimize button
+	58 text Agent Workspace
+59 menu bar
+	60 F08 Inspector current
+	61 File
+	62 Edit
+	63 View
+	64 Window
+	65 Help
+
+The focused UI element is 47 heading Settings, Value: 1

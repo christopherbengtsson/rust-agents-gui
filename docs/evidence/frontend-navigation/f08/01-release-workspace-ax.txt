@@ -1,0 +1,58 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 39, 43-52
+~		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace
+~			34 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace#workspace
++					43 content list
++						44 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
++							45 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
++							46 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
++							47 button Create workspace in Alpha
++							48 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
++							49 text Available
++							50 content list
++								51 button paul-scholes, Help: Workspace ready
++			52 container
++				53 heading paul-scholes, Value: 1
++					54 text paul-scholes
++				55 button Refresh status
++				56 container Selected repository
++					57 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
++					58 text Repository available
++				59 text Uncommitted changes
++				60 button Refresh changes
++				61 button (expanded) Hide changed files, Secondary Actions: Collapse
++				62 text Compared with HEAD 
++				63 text ac721f2849607a00f9583fbb5cc8af2184246986
++				64 text  · 
++				65 text 0
++				66 text changed files
++				67 text No uncommitted changes.
++				68 tab group (selectable) Workspace views
++					69 tab (selected) Workspace
++					70 tab (selectable) Changes
++				71 container Workspace
++					72 container Selected workspace
++						73 text Workspace ready Codex
++						74 heading Your workspace is ready, Value: 2
++							75 text Your workspace is ready
++						76 text paul-scholes
++						77 description list
++							78 text Branch
++							79 text workspace/paul-scholes
++							80 text Workspace folder
++							81 text /private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paul-scholes/checkout
++							82 text Local base
++							83 text refs/heads/main · ac721f2849607a00f9583fbb5cc8af2184246986
++							84 text Branch artifact
++							85 text Created by this action
++							86 text Folder artifact
++							87 text Worktree created
++						88 container
++							89 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
++				90 splitter Resize changed files, Value: 68
++				91 container Changed files
++					92 heading Changed files, Value: 2
++						93 text Changed files
++				94 text Local workspace
++				95 text Alpha
+The focused UI element is 40 pop up button Add repository

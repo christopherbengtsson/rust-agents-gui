@@ -1,0 +1,111 @@
+{
+  "before": {
+    "time": 831864,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2441
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 59,
+    "cacheBodyBytes": 300678,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 276,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 346,
+      "observation_acknowledge": 257,
+      "observation_stop": 2,
+      "repository_request": 38,
+      "supervisor_status": 1,
+      "desktop_pid": 1,
+      "observation_subscribe": 1
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "after": {
+    "time": 853866,
+    "feed": {
+      "state": "stopped",
+      "message": "Observation delivery stalled. Refresh connection explicitly.",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2441
+      }
+    },
+    "href": "/settings/general",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 2,
+    "duplicates": 0,
+    "queries": 55,
+    "cacheBodyBytes": 246315,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 276,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 346,
+      "observation_acknowledge": 258,
+      "observation_stop": 4,
+      "repository_request": 38,
+      "supervisor_status": 1,
+      "desktop_pid": 1,
+      "observation_subscribe": 1
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": []
+  },
+  "held": 1,
+  "log": [
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "2497e614-b3b1-44d9-9269-adc57fb8c719",
+          "batch_id": 52,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2441
+          }
+        }
+      },
+      "start": 832740,
+      "withheld": true
+    },
+    {
+      "command": "observation_stop",
+      "args": {
+        "subscriptionId": "2497e614-b3b1-44d9-9269-adc57fb8c719"
+      },
+      "start": 847742,
+      "end": 847744,
+      "ok": true
+    },
+    {
+      "command": "observation_stop",
+      "args": {
+        "subscriptionId": "2497e614-b3b1-44d9-9269-adc57fb8c719"
+      },
+      "start": 847744,
+      "end": 847745,
+      "ok": true
+    }
+  ]
+}

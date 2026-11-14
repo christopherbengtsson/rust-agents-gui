@@ -1,0 +1,37 @@
+{
+  "bundle": "/private/tmp/aw-f08-qualified-wj7lgl6i/F08 Final Release.app",
+  "bundle_id": "dev.christopherbengtsson.f08.finalrelease",
+  "state": "/private/tmp/aw-f08-qualified-wj7lgl6i/state",
+  "source": {
+    "revision": "024bd636c184bcddaac8645d83cf20423fcf2b17",
+    "patch_sha256": "b005cbd8397212e66d3a526e1148fe9f93f3aa34839e3bc7e7d9cda5506f779d",
+    "checkout": "/private/tmp/aw-f08-final-checkout-re7cv8dp/checkout",
+    "target": "/private/tmp/aw-f08-final-checkout-re7cv8dp/target",
+    "cache": "fresh private Cargo target; shared immutable download caches; offline frozen pnpm install",
+    "commands": [
+      {
+        "args": [
+          "corepack",
+          "pnpm",
+          "install",
+          "--offline",
+          "--frozen-lockfile"
+        ],
+        "status": 0,
+        "seconds": 0.9443564590765163
+      },
+      {
+        "args": ["corepack", "pnpm", "build"],
+        "status": 0,
+        "seconds": 90.17739804100711
+      }
+    ]
+  },
+  "hashes": {
+    "Contents/MacOS/workspace-desktop": "ff2df4864fb78d5a53a4d8beb64787261bf66a4533e917201b01eb0510a716de",
+    "Contents/Resources/workspace-supervisor": "27447f1914b7c60be253b88c931c698d4248be92b34c5ac283fc5c1b4a7e532d"
+  },
+  "frontend_matches_measured_release": true,
+  "desktop_pid": 10776,
+  "first_unretained_launcher_pid": 10633
+}

@@ -1,0 +1,5 @@
+{
+  "compared_with": "F07 recorded product source manifest",
+  "differences": {},
+  "note": "F08 runtime fixes are Rust connection/Tauri and sidecar staging; no frontend product file changed."
+}

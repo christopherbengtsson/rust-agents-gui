@@ -358,7 +358,10 @@ interest while its app-lifetime owner drains work and retains validated context.
   return, otherwise the main landmark. The skip link follows the current layout.
 - Both layouts share the persistent runtime and SidebarProvider. Settings unmounts
   WorkspaceInspection, releasing its interest without stopping the reader, feed,
-  action owners or Query client. F05's validated file/comparison/scroll/layout
+  action owners or Query client. Hidden collection/detail interests are released,
+  while independent retained-action interests continue. Accepted hints remain
+  dirty until the main layout returns; inactive observation bodies can expire.
+  F05's validated file/comparison/scroll/layout
   context survives; comparison changes reject stale restoration. Existing
   Sheet/resizing contracts remain. Actual WebView focus/layout and cumulative
   responsiveness qualification belongs to F08.

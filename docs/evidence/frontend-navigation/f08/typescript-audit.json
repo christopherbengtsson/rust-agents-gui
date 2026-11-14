@@ -1,0 +1,5 @@
+{
+  "scope": "Added TypeScript/TSX lines since F07, strict configuration unchanged",
+  "new_escape_candidates": [],
+  "result": "No new any, assertions, non-null assertions, suppression comments or declaration shims; no tsconfig membership/strictness changes."
+}

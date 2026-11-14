@@ -1,0 +1,124 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 button Click to show 2 warnings in the Console
+			10 tab group (selectable)
+				11 tab (selectable) Elements
+				12 tab (selected) Console
+				13 tab (selectable) Sources
+				14 tab (selectable) Network
+				15 tab (selectable) Timelines
+				16 tab (selectable) Storage
+				17 tab (selectable) Graphics
+				18 tab (selectable) Show hidden tabs…
+				19 tab (selectable) Search (⇧⌘F)
+				20 tab (selectable) Settings (⌘,)
+			21 container Console
+				22 search text field (settable)  
+				23 button (disabled) Find Previous (⇧⌘G)
+				24 button (disabled) Find Next (⌘G)
+				25 text All
+				26 text Evaluations
+				27 text Errors
+				28 text Warnings
+				29 text Logs
+				30 button Other filter options…
+				31 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				32 button Run Console Snippet…
+				33 button Collect garbage
+				34 button Clear log (⌘K or ⌃L)
+				35 container
+					36 text Console cleared at 10:16:37 PM
+					37 image
+					38 text 2
+					39 container
+						40 image
+							41 image
+							42 image
+						43 text runCallback  — 
+						44 link user-script:5:286, Help: user-script:5:286:20, Value: user-script:5
+					45 text [TAURI] Couldn't find callback id 935713363. This might happen when the app is reloaded while Rust is running an asynchronous operation.
+			46 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			47 container
+	48 scroll area
+		49 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			50 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			51 container Repository sidebar
+				52 text Agent Workspace
+				53 container Repositories
+					54 heading Repositories, Value: 2
+						55 text Repositories
+					56 content list
+						57 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							58 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							59 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							60 button Create workspace in Beta
+							61 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							62 text Available
+							63 content list
+								64 button lee-jae-sung, Help: Workspace ready
+						65 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							66 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							67 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							68 button Create workspace in Alpha
+							69 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							70 text Available
+							71 content list
+								72 button paul-scholes, Help: Workspace ready
+				73 pop up button Add repository
+				74 text Connected
+				75 pop up button Connection details
+				76 link Settings, Value: tauri://localhost/settings/general
+			77 container
+				78 heading paul-scholes, Value: 1
+					79 text paul-scholes
+				80 button Refresh status
+				81 container Selected repository
+					82 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					83 text Repository available
+				84 text Uncommitted changes
+				85 button Refresh changes
+				86 button (expanded) Hide changed files, Secondary Actions: Collapse
+				87 text Compared with HEAD 
+				88 text ac721f2849607a00f9583fbb5cc8af2184246986
+				89 text  · 
+				90 text 2
+				91 text changed files
+				92 tab group (selectable) Workspace views
+					93 tab (selectable) Workspace
+					94 tab (selected) Changes
+				95 container Changes
+					96 text Select a changed file
+					97 text Refresh the file list, then select a path to inspect its unified diff.
+				98 splitter Resize changed files, Value: 68
+				99 container Changed files
+					100 heading Changed files, Value: 2
+						101 text Changed files
+					102 container
+						103 toggle button large.txt .M, Help: large.txt, Value: off
+						104 toggle button text.txt .M, Help: text.txt, Value: off
+					105 button First page
+					106 button (disabled) Next files
+				107 text Local workspace
+				108 text Alpha
+		109 scroll bar (settable, float) 0
+	110 close button
+	111 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	112 minimize button
+	113 text Agent Workspace
+114 menu bar
+	115 F08 Inspector current
+	116 File
+	117 Edit
+	118 View
+	119 Window
+	120 Help
+
+The focused UI element is 46 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

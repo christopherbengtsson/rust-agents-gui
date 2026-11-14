@@ -1,0 +1,250 @@
+{
+  "snapshot": {
+    "time": 501598,
+    "feed": {
+      "state": "live",
+      "accepted": {
+        "owner": "47400-1794690795286464000",
+        "sequence": 2241
+      }
+    },
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "visibility": "visible",
+    "active": 0,
+    "maxActive": 1,
+    "duplicates": 0,
+    "queries": 50,
+    "cacheBodyBytes": 178284,
+    "queue": 0,
+    "pending": 0,
+    "physicalActive": 0,
+    "freshness": 73,
+    "actor": "idle",
+    "commands": {
+      "workspace_request": 108,
+      "observation_acknowledge": 68
+    },
+    "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+    "width": 900,
+    "height": 148,
+    "dpr": 2,
+    "scroll": [
+      {
+        "role": null,
+        "class": "no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "top": 3420
+      }
+    ]
+  },
+  "windows": [
+    {
+      "label": "slow-git-visible",
+      "start": {
+        "time": 418490,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2184
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 41,
+        "cacheBodyBytes": 55974,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 16,
+        "actor": "idle",
+        "commands": {
+          "workspace_request": 17,
+          "observation_acknowledge": 11
+        },
+        "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": [
+          {
+            "role": null,
+            "class": "no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+            "top": 3420
+          }
+        ]
+      },
+      "end": {
+        "time": 424492,
+        "feed": {
+          "state": "live",
+          "accepted": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2187
+          }
+        },
+        "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+        "visibility": "visible",
+        "active": 0,
+        "maxActive": 1,
+        "duplicates": 0,
+        "queries": 41,
+        "cacheBodyBytes": 55974,
+        "queue": 0,
+        "pending": 0,
+        "physicalActive": 0,
+        "freshness": 19,
+        "actor": "idle",
+        "commands": {
+          "workspace_request": 22,
+          "observation_acknowledge": 14
+        },
+        "assets": ["tauri__localhost/assets/index-hvIgvl0U.js"],
+        "width": 900,
+        "height": 648,
+        "dpr": 2,
+        "scroll": [
+          {
+            "role": null,
+            "class": "no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+            "top": 3420
+          }
+        ]
+      }
+    }
+  ],
+  "log": [
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "7e1ef095-0c16-43b3-b810-2e9c7c257663",
+          "batch_id": 95,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2185
+          }
+        }
+      },
+      "start": 420212,
+      "end": 420222.00000000006,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 420216,
+      "end": 420222.00000000006,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "change_preview",
+          "target": {
+            "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+            "comparison_id": "928d5eae-87eb-4aba-8f26-0887bc80dc4c",
+            "file_id": "ea35453c-8639-42c5-803a-e625f4dac7cb"
+          },
+          "load": false
+        }
+      },
+      "start": 420223,
+      "end": 420227.00000000006,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": true,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 422230,
+      "end": 422239.00000000006,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "7e1ef095-0c16-43b3-b810-2e9c7c257663",
+          "batch_id": 96,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2186
+          }
+        }
+      },
+      "start": 422233,
+      "end": 422255,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 422239.00000000006,
+      "end": 422255,
+      "ok": true
+    },
+    {
+      "command": "observation_acknowledge",
+      "args": {
+        "acknowledgement": {
+          "subscription_id": "7e1ef095-0c16-43b3-b810-2e9c7c257663",
+          "batch_id": 97,
+          "cursor": {
+            "owner": "47400-1794690795286464000",
+            "sequence": 2187
+          }
+        }
+      },
+      "start": 422251.00000000006,
+      "end": 422257,
+      "ok": true
+    },
+    {
+      "command": "workspace_request",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "changes",
+          "workspace_id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+          "refresh": false,
+          "comparison_id": null,
+          "after": null
+        }
+      },
+      "start": 422256,
+      "end": 422257,
+      "ok": true
+    }
+  ]
+}

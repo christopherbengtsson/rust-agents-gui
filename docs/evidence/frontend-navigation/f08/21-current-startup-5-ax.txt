@@ -1,0 +1,81 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 9:58:24 PM
+					36 image
+					37 text sessionStorage.f08Startups=JSON.stringify([...JSON.parse(sessionStorage.f08Startups),{warmup:false,href:location.pathname,navigation:performance.getEntriesByType('navigation').map(e=>({dom:e.domContentLoadedEventEnd,load:e.loadEventEnd})),paint:performance.getEntriesByType('paint').map(e=>e.toJSON())}]);console.log('F08:'+sessionStorage.f08Startups)
+					38 image
+					39 text F08:[{"warmup":true,"navigation":[{"dom":83,"load":83}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":119.00000000000001,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":37,"load":37}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":73,"duration":0}]},{"warmup":false,"href":"/","navigation":[{"dom":31,"load":31}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":58,"duration":0}]},{"warmup":false,"href":"/","navigat
+					40 image
+					41 text undefined
+			42 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			43 container
+	44 scroll area
+		45 HTML content Description: Agent Workspace, URL: tauri://localhost
+			46 link Skip to workspace, Value: tauri://localhost#workspace
+			47 container Repository sidebar
+				48 text Agent Workspace
+				49 container Repositories
+					50 heading Repositories, Value: 2
+						51 text Repositories
+					52 container Loading repositories
+				53 pop up button Add repository
+				54 text Observation delivery stopped
+				55 pop up button Connection details
+				56 link Settings, Value: tauri://localhost/settings/general
+			57 container
+				58 heading Workspace, Value: 1
+					59 text Workspace
+				60 button Refresh status
+				61 heading A place for your next change, Value: 2
+					62 text A place for your next change
+				63 text Add an existing Git repository from the sidebar to get started.
+				64 text Local workspace
+				65 text No repository selected
+		66 scroll bar (settable, float) 0
+	67 close button
+	68 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	69 minimize button
+	70 text Agent Workspace
+71 menu bar
+	72 F08 Inspector current
+	73 File
+	74 Edit
+	75 View
+	76 Window
+	77 Help
+
+The focused UI element is 42 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

@@ -1,0 +1,81 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							11 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button Create workspace in Beta
+							14 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							15 text Available
+							16 content list
+								17 button lucy-bronze, Help: Workspace ready
+						18 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							23 text Available
+							24 content list
+								25 button sam-kerr, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading sam-kerr, Value: 1
+					31 text sam-kerr
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					35 text Repository available
+				36 text Uncommitted changes
+				37 button Refresh changes
+				38 button (expanded) Hide changed files, Secondary Actions: Collapse
+				39 text Compared with HEAD 
+				40 text ac721f2849607a00f9583fbb5cc8af2184246986
+				41 text  · 
+				42 text 2
+				43 text changed files
+				44 tab group (selectable) Workspace views
+					45 tab (selectable) Workspace
+					46 tab (selected) Changes
+				47 container Changes
+					48 container Selected file changes
+						49 heading large.txt, Value: 2
+							50 text large.txt
+						51 text Loading selected-file preview…
+				52 splitter Resize changed files, Value: 68
+				53 container Changed files
+					54 heading Changed files, Value: 2
+						55 text Changed files
+					56 container
+						57 toggle button large.txt .M, Help: large.txt, Value: on
+						58 toggle button text.txt .M, Help: text.txt, Value: off
+					59 button First page
+					60 button (disabled) Next files
+				61 text Local workspace
+				62 text Alpha
+	63 close button
+	64 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	65 minimize button
+	66 text Agent Workspace
+67 menu bar
+	68 F08 Inspector baseline
+	69 File
+	70 Edit
+	71 View
+	72 Window
+	73 Help
+
+Selected text: ```
+-
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

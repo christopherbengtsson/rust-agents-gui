@@ -1,0 +1,568 @@
+{
+  "owner": "47400-1794690795286464000",
+  "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+  "explicit_probes": [
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    },
+    {
+      "checking": "checking",
+      "settled": "available"
+    }
+  ],
+  "minimum_published_transitions": 280,
+  "seconds": 15.738838957971893
+}

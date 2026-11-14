@@ -1,0 +1,80 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							15 text Available
+							16 content list
+								17 button paul-scholes, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 heading paul-scholes, Value: 1
+					24 text paul-scholes
+				25 button Refresh status
+				26 container Selected repository
+					27 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					28 text Repository available
+				29 text Uncommitted changes
+				30 button Refresh changes
+				31 button (expanded) Hide changed files, Secondary Actions: Collapse
+				32 text Compared with HEAD 
+				33 text ac721f2849607a00f9583fbb5cc8af2184246986
+				34 text  · 
+				35 text 0
+				36 text changed files
+				37 text No uncommitted changes.
+				38 tab group (selectable) Workspace views
+					39 tab (selected) Workspace
+					40 tab (selectable) Changes
+				41 container Workspace
+					42 container Selected workspace
+						43 text Workspace ready Codex
+						44 heading Your workspace is ready, Value: 2
+							45 text Your workspace is ready
+						46 text paul-scholes
+						47 description list
+							48 text Branch
+							49 text workspace/paul-scholes
+							50 text Workspace folder
+							51 text /private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paul-scholes/checkout
+							52 text Local base
+							53 text refs/heads/main · ac721f2849607a00f9583fbb5cc8af2184246986
+							54 text Branch artifact
+							55 text Created by this action
+							56 text Folder artifact
+							57 text Worktree created
+						58 container
+							59 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				60 splitter Resize changed files, Value: 68
+				61 container Changed files
+					62 heading Changed files, Value: 2
+						63 text Changed files
+				64 text Local workspace
+				65 text Alpha
+	66 close button
+	67 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	68 minimize button
+	69 text Agent Workspace
+70 menu bar
+	71 F08 Qualified
+	72 File
+	73 Edit
+	74 View
+	75 Window
+	76 Help
+
+The focused UI element is 21 link Settings, Value: tauri://localhost/settings/general

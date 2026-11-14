@@ -1,0 +1,112 @@
+{
+  "before": {
+    "time": 87435,
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "comparison": "c2814405-ca17-4917-b9bc-0732b806326e",
+    "presentation": {
+      "inspection": {
+        "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+          "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+          "path": "large.txt",
+          "comparison": "c2814405-ca17-4917-b9bc-0732b806326e"
+        }
+      },
+      "contexts": {
+        "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+          "view": "changes",
+          "filesWidth": 32,
+          "collapsed": false
+        }
+      },
+      "rememberedMain": {
+        "kind": "workspace",
+        "repositoryId": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "workspaceId": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+        "view": "changes"
+      }
+    },
+    "viewport": [
+      {
+        "top": 220,
+        "height": 272,
+        "scrollHeight": 3059
+      }
+    ],
+    "width": 900,
+    "height": 648
+  },
+  "settings": {
+    "time": 87640,
+    "href": "/settings/general",
+    "comparison": "c2814405-ca17-4917-b9bc-0732b806326e",
+    "presentation": {
+      "inspection": {
+        "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+          "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+          "path": "large.txt",
+          "comparison": "c2814405-ca17-4917-b9bc-0732b806326e",
+          "position": {
+            "top": 220,
+            "left": 0
+          }
+        }
+      },
+      "contexts": {
+        "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+          "view": "changes",
+          "filesWidth": 32,
+          "collapsed": false
+        }
+      },
+      "rememberedMain": {
+        "kind": "workspace",
+        "repositoryId": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "workspaceId": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+        "view": "changes"
+      }
+    },
+    "viewport": [],
+    "width": 900,
+    "height": 648
+  },
+  "after": {
+    "time": 87741,
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+    "comparison": "c2814405-ca17-4917-b9bc-0732b806326e",
+    "presentation": {
+      "inspection": {
+        "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+          "id": "ea35453c-8639-42c5-803a-e625f4dac7cb",
+          "path": "large.txt",
+          "comparison": "c2814405-ca17-4917-b9bc-0732b806326e",
+          "position": {
+            "top": 220,
+            "left": 0
+          }
+        }
+      },
+      "contexts": {
+        "cfe8f76f-e41e-4e87-bb91-42e4419c2830": {
+          "view": "changes",
+          "filesWidth": 32,
+          "collapsed": false
+        }
+      },
+      "rememberedMain": {
+        "kind": "workspace",
+        "repositoryId": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "workspaceId": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+        "view": "changes"
+      }
+    },
+    "viewport": [
+      {
+        "top": 220,
+        "height": 348,
+        "scrollHeight": 3059
+      }
+    ],
+    "width": 900,
+    "height": 648
+  }
+}

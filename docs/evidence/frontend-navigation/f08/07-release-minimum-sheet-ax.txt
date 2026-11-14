@@ -1,0 +1,35 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			3 container Repository sidebar
+				4 text Connected
+			5 container
+				6 button
+				7 container Uncommitted changes
+					8 heading Uncommitted changes, Value: 2
+						9 text Uncommitted changes
+					10 text Select a file to read its diff.
+					11 container Changed files
+						12 heading Changed files, Value: 2
+							13 text Changed files
+						14 container
+							15 toggle button large.txt .M, Help: large.txt, Value: on
+							16 toggle button text.txt .M, Help: text.txt, Value: off
+						17 button First page
+						18 button (disabled) Next files
+					19 button Close
+				20 button
+	21 close button
+	22 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	23 minimize button
+	24 text Agent Workspace
+25 menu bar
+	26 F08 Qualified
+	27 File
+	28 Edit
+	29 View
+	30 Window
+	31 Help
+
+The focused UI element is 15 toggle button large.txt .M, Help: large.txt, Value: on

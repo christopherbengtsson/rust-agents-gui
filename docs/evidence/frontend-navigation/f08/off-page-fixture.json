@@ -1,0 +1,1975 @@
+{
+  "source_owner": "47400-1794690795286464000",
+  "created_workspaces": [
+    {
+      "id": "4cd376e6-61d3-49f6-980c-0662336c48d8",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "3cfdd719-a162-4ec4-bb3e-5cc8e137ad85",
+      "name": "john-barnes",
+      "branch": "workspace/john-barnes",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/john-barnes/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "2df9652a-ff5a-44a4-8212-f3759d18fa8d",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "b0e4ec1c-0ca6-445d-a9a7-4b729bf60a53",
+      "name": "paolo-guerrero",
+      "branch": "workspace/paolo-guerrero",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paolo-guerrero/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "3cb0a150-b65a-4c26-8bca-a7eeae58097b",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "0e4bb1d2-7586-45ee-b8ea-08d356c49d22",
+      "name": "antoine-griezmann",
+      "branch": "workspace/antoine-griezmann",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/antoine-griezmann/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "2f8acaed-044f-4052-b716-dc582a746744",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "76e5f6e3-e947-4032-b640-46d248802773",
+      "name": "luis-suarez-miramontes",
+      "branch": "workspace/luis-suarez-miramontes",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/luis-suarez-miramontes/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "de6813fb-d628-4469-8ebd-17a6d1432819",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "8468975a-6d06-449d-b49e-74c5718d018c",
+      "name": "alex-greenwood",
+      "branch": "workspace/alex-greenwood",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/alex-greenwood/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "86f07f8d-d50b-486b-a040-3772cf4b9078",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "ff69ae2f-a1a8-47f9-8267-cf4a2080f0e3",
+      "name": "eran-zahavi",
+      "branch": "workspace/eran-zahavi",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/eran-zahavi/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "ba00cca7-2095-4392-967f-2df41463781a",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "42c90b07-70a2-49ca-aed2-9d3f5bb0c1c0",
+      "name": "lee-jae-sung",
+      "branch": "workspace/lee-jae-sung",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/lee-jae-sung/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "aa8cdb44-0f0e-46b8-b7d4-2366b5cc8e6d",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "76818358-420a-4593-af70-dacd961ed9ab",
+      "name": "ricardo-quaresma",
+      "branch": "workspace/ricardo-quaresma",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/ricardo-quaresma/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "992d25b7-312a-4202-a3f7-9c96b0f7dcf1",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "1bcfab63-17c4-4ce5-a144-c4a34d329fd0",
+      "name": "duvan-zapata",
+      "branch": "workspace/duvan-zapata",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/duvan-zapata/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "1fc2bbc0-1306-419d-ac10-469d6c6ecf7b",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "9be94d73-fe8b-4685-807c-ac041294aa21",
+      "name": "cristhian-stuani",
+      "branch": "workspace/cristhian-stuani",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/cristhian-stuani/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "80ed35ac-23f5-4426-8bce-9c3291050043",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "1b743e6e-8f8d-41df-a2af-945c67996eed",
+      "name": "thibaut-courtois",
+      "branch": "workspace/thibaut-courtois",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/thibaut-courtois/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "e98faea7-4ef4-4165-bafe-13646d0d45ec",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "258ccf28-2c60-4d6f-afa6-faf994a3ba7f",
+      "name": "david-de-gea",
+      "branch": "workspace/david-de-gea",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/david-de-gea/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "4a83db01-678a-4661-b368-0927be196eaa",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "395ad2c1-3a32-4548-b99d-fb91a7c404f3",
+      "name": "miranda",
+      "branch": "workspace/miranda",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/miranda/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "608f3fd8-d563-47d9-8ebe-641d91032b6b",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "f78f94ad-60c6-4858-a1b5-b764254d0ef5",
+      "name": "andres-guardado",
+      "branch": "workspace/andres-guardado",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/andres-guardado/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "8bf9faf1-d2f8-4347-84e0-726b4e4adc09",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "530649b8-03e7-40a5-9130-3b9e33c8992e",
+      "name": "jan-vertonghen",
+      "branch": "workspace/jan-vertonghen",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/jan-vertonghen/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "72137fac-8472-4d32-a270-a83c91e49d68",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "f946e22d-dec0-4f33-a0e6-fd08d36140be",
+      "name": "gabriel-batistuta",
+      "branch": "workspace/gabriel-batistuta",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/gabriel-batistuta/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "2c4a1b50-9008-4d11-adf2-fbd916226ee7",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "df94ef03-3aba-4430-9cdb-0f1cef553c86",
+      "name": "dani-parejo",
+      "branch": "workspace/dani-parejo",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/dani-parejo/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "c0808e42-f1d7-49bd-9ff4-a6c2a8a0c596",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "7ad14e66-06a8-4024-aab3-348c8cc943ae",
+      "name": "edin-dzeko",
+      "branch": "workspace/edin-dzeko",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/edin-dzeko/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "79bd160f-0c15-4a50-af8f-f9508893e39e",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "fce7870d-8981-4a4b-ba02-a5b5cabb996c",
+      "name": "pele",
+      "branch": "workspace/pele",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/pele/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "707b9082-5938-49a8-9a54-c42d35b67910",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "cc7126ef-848f-4d1c-9c5a-8874a02a5f88",
+      "name": "rivaldo",
+      "branch": "workspace/rivaldo",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/rivaldo/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "59549e11-c8f3-4f05-b464-48bfdc2d5b0c",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "f5525841-c224-40a2-a5dd-ddae8ea68cc2",
+      "name": "duncan-edwards",
+      "branch": "workspace/duncan-edwards",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/duncan-edwards/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "df125b20-329d-4f2d-a47e-ace640918ac0",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "4b11d0a0-0141-481d-92cc-7fa55f2f0368",
+      "name": "sandor-kocsis",
+      "branch": "workspace/sandor-kocsis",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/sandor-kocsis/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "71c22c8a-755e-43d2-8ffb-7f6ad408fc71",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "29ce2c4d-ac24-4729-ae2e-ade6eb82b5dd",
+      "name": "vivianne-miedema",
+      "branch": "workspace/vivianne-miedema",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/vivianne-miedema/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "b60ab994-81f6-40cc-ae39-7a022916f1aa",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "f14c04e4-2f8e-4753-84e0-16c5585bed2b",
+      "name": "heidi-mohr",
+      "branch": "workspace/heidi-mohr",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/heidi-mohr/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "ed8266a2-58df-436c-bd72-67e65286d17e",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "5913f6d2-d7f9-446e-bc3b-c4cb8f3f5a40",
+      "name": "kasper-schmeichel",
+      "branch": "workspace/kasper-schmeichel",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/kasper-schmeichel/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "23652350-d19a-40e1-a384-2502b23f6993",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "61d1e453-1726-4931-ae5c-7a4b34a582fd",
+      "name": "alvaro-morata",
+      "branch": "workspace/alvaro-morata",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/alvaro-morata/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "54830705-7150-4fbf-9fc5-0ce71f7e09eb",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "98479957-730d-4491-887f-43a3d6a31cf1",
+      "name": "donny-van-de-beek",
+      "branch": "workspace/donny-van-de-beek",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/donny-van-de-beek/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "e958b621-0037-49d2-860c-b2840cb684f9",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "dce9a36e-94bb-4368-9b2e-24b52b90fdec",
+      "name": "philippe-coutinho",
+      "branch": "workspace/philippe-coutinho",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/philippe-coutinho/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "744b7f32-010c-43e5-a81f-a3a934f24426",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "11913a7b-4506-40ca-8d04-58278f7f9fb6",
+      "name": "bente-nordby",
+      "branch": "workspace/bente-nordby",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/bente-nordby/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "93d315a7-9c58-4005-a7be-2525b09402bf",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "4cfddad5-3489-4c41-bf8a-5bb57b07b1aa",
+      "name": "radja-nainggolan",
+      "branch": "workspace/radja-nainggolan",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/radja-nainggolan/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "867f22b1-1656-4367-a5b9-09b2b064d0f3",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "dc814e73-2025-47f5-9286-57e85480d633",
+      "name": "jesse-lingard",
+      "branch": "workspace/jesse-lingard",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/jesse-lingard/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "26440e2f-f69b-48fa-907e-c0e878c2e4e2",
+      "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+      "creation_action_id": "06f545c6-5a2b-4c07-a057-a5c45fd874bc",
+      "name": "amandine-henry",
+      "branch": "workspace/amandine-henry",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/amandine-henry/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    }
+  ],
+  "registrations": [
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "fd77fc6c-d1aa-4419-9f2e-f2ccafbf0251",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00",
+      "state": "completed",
+      "repository_id": "32ecc0fa-2553-4c6e-80d7-15296e8e1323"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "f010813f-52be-46bd-ad32-33dbd7a94306",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01",
+      "state": "completed",
+      "repository_id": "0245c106-5197-4af2-813e-4c3224c7c338"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "2be93db8-7415-4d26-97d0-a15efea41d7b",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02",
+      "state": "completed",
+      "repository_id": "ba4313fa-ca86-483d-988c-ab8508edfb8d"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "468efae3-baf9-42ae-9788-71f14472a632",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03",
+      "state": "completed",
+      "repository_id": "b88067c2-30d4-4866-86d6-144e1506a7ae"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "b0a82891-8096-42cd-b14a-4cda93781b6d",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04",
+      "state": "completed",
+      "repository_id": "07c33bbe-4b51-40a7-b8f2-97fd8ecd027d"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "04d4d374-4b48-4084-8599-01fc4993e5cc",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-05",
+      "state": "completed",
+      "repository_id": "f7a5be77-cf9f-4816-a751-b05521502e2c"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "f2d5df72-4a55-407f-8546-19c84251af49",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06",
+      "state": "completed",
+      "repository_id": "da26aae5-00de-45e4-b106-1b045812922f"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "431364d9-3be2-4821-a159-f454535e32cc",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07",
+      "state": "completed",
+      "repository_id": "9df371be-70e7-484d-b499-295ffb14ff40"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "d68bec44-76b3-46f7-806d-7fec196a320c",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08",
+      "state": "completed",
+      "repository_id": "6867c091-f355-444c-af11-e9ba1428b732"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "e13e7840-bb36-418d-acfa-f80a56f0a835",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09",
+      "state": "completed",
+      "repository_id": "f4eeb3f8-185d-4a43-92a2-5b1b77a14b13"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "777542e9-7a82-485b-b7d3-26b2bf08715c",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-10",
+      "state": "completed",
+      "repository_id": "fcd2413b-405d-4007-b005-f2c274945b29"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "30aad3f3-730d-45e1-899d-9b2d5152b258",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11",
+      "state": "completed",
+      "repository_id": "5ccea901-b2f9-4f66-8573-3f1c78b70045"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "e5eb9657-edc4-4e2f-8318-523a14403613",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12",
+      "state": "completed",
+      "repository_id": "55af2b58-8cd3-45f5-b593-25a5e956282f"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "2705052b-f3e8-42cc-ac52-c99923e7b164",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13",
+      "state": "completed",
+      "repository_id": "be9c6f98-59ad-42b6-b5db-e26b54c7e1b3"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "12f91872-4cc9-4401-8659-130c1795bd8f",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14",
+      "state": "completed",
+      "repository_id": "e651585a-5041-4be6-a2b6-509b23c36c2c"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "d9dc1cf0-60e0-4c6d-bf3b-07081cfb6fc3",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15",
+      "state": "completed",
+      "repository_id": "425b0467-5346-407c-8690-4dcbcc72826f"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "62c54f01-ce06-4da7-8993-1d673de6d20f",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16",
+      "state": "completed",
+      "repository_id": "027b9718-936e-426f-a799-0c94a8b5b56f"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "bf566861-b1ce-46e9-bd50-346b2660853a",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17",
+      "state": "completed",
+      "repository_id": "af69759a-c7fa-46cc-9435-61532f73d154"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "fc45b9b9-b6cf-4f7f-bcc0-c773f0c42d2f",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18",
+      "state": "completed",
+      "repository_id": "8ce968cd-f12a-4882-9f74-21702b180ead"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "16996a16-114e-48d6-8fe9-1064dd2fef6c",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19",
+      "state": "completed",
+      "repository_id": "90b268b5-38fb-4525-8ca9-a7c28a08ac84"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "7cf5820e-cbdb-4d14-ae6a-fd08ab76d20e",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20",
+      "state": "completed",
+      "repository_id": "038d147f-b654-468c-a6dd-5d634045d713"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "5465dc72-c4c4-423f-bb5c-f8e10d4b53ad",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21",
+      "state": "completed",
+      "repository_id": "1b6e93b0-0df0-499e-a83b-23b3bfa98677"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "b6174cfd-a0d3-4d51-b700-1cfd2e6cea4b",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22",
+      "state": "completed",
+      "repository_id": "8964d0ae-c576-46f9-9a98-f56307748169"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "8a931b7b-8377-4adc-8b84-26bf3ca49e8d",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23",
+      "state": "completed",
+      "repository_id": "66f0c32c-4a62-4f32-94cc-e6463890712f"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "afd09bfb-89d4-457a-bcf0-31c9b8a3834d",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24",
+      "state": "completed",
+      "repository_id": "7a00a341-eb38-487a-89c5-7ad78a2bac40"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "8473c3df-f829-492f-95a5-5a603d8a038a",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25",
+      "state": "completed",
+      "repository_id": "20e46134-f7de-4b25-aa4c-47b234589aee"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "602cc1a4-9f21-40a9-a615-2ec5011de43b",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-26",
+      "state": "completed",
+      "repository_id": "fb864402-7884-46f8-a702-a4015aadfdc7"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "e13d046a-6075-483c-a0c3-0a4d14e39643",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27",
+      "state": "completed",
+      "repository_id": "b494c8ce-20f5-4d19-b8e5-11655a9a2f6d"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "e99d0815-f089-48c8-bd81-9d8b0174f580",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28",
+      "state": "completed",
+      "repository_id": "357ae0bb-7c20-4a12-8784-5dd1536c4f0b"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "98e43ccd-ea6b-47b0-a531-a9b653dd78f1",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29",
+      "state": "completed",
+      "repository_id": "bdcdc977-f99b-4f7e-bf65-51259d349833"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "66fa1bfc-408d-4265-94ff-10b3ef15ecbf",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30",
+      "state": "completed",
+      "repository_id": "1d0c705f-cfb0-4df6-b4bf-b9d7c4eb1f4c"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "1d3b1ae1-0dc2-4995-922d-c34fbe96d97b",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31",
+      "state": "completed",
+      "repository_id": "bf4a9af9-bcee-405c-9be8-99bb08a784b2"
+    },
+    {
+      "create_initial_workspace": false,
+      "initial_workspace_id": null,
+      "action_id": "9d032885-bae3-400d-bfe2-91733211eec1",
+      "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32",
+      "state": "completed",
+      "repository_id": "4ca0b67e-5ab4-410b-9908-8a5a48819546"
+    }
+  ],
+  "workspace_first_page": {
+    "workspaces": [
+      {
+        "id": "1fc2bbc0-1306-419d-ac10-469d6c6ecf7b",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "9be94d73-fe8b-4685-807c-ac041294aa21",
+        "name": "cristhian-stuani",
+        "branch": "workspace/cristhian-stuani",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/cristhian-stuani/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "23652350-d19a-40e1-a384-2502b23f6993",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "61d1e453-1726-4931-ae5c-7a4b34a582fd",
+        "name": "alvaro-morata",
+        "branch": "workspace/alvaro-morata",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/alvaro-morata/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "26440e2f-f69b-48fa-907e-c0e878c2e4e2",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "06f545c6-5a2b-4c07-a057-a5c45fd874bc",
+        "name": "amandine-henry",
+        "branch": "workspace/amandine-henry",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/amandine-henry/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "2c4a1b50-9008-4d11-adf2-fbd916226ee7",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "df94ef03-3aba-4430-9cdb-0f1cef553c86",
+        "name": "dani-parejo",
+        "branch": "workspace/dani-parejo",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/dani-parejo/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "2df9652a-ff5a-44a4-8212-f3759d18fa8d",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "b0e4ec1c-0ca6-445d-a9a7-4b729bf60a53",
+        "name": "paolo-guerrero",
+        "branch": "workspace/paolo-guerrero",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paolo-guerrero/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "2f8acaed-044f-4052-b716-dc582a746744",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "76e5f6e3-e947-4032-b640-46d248802773",
+        "name": "luis-suarez-miramontes",
+        "branch": "workspace/luis-suarez-miramontes",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/luis-suarez-miramontes/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "3cb0a150-b65a-4c26-8bca-a7eeae58097b",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "0e4bb1d2-7586-45ee-b8ea-08d356c49d22",
+        "name": "antoine-griezmann",
+        "branch": "workspace/antoine-griezmann",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/antoine-griezmann/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "4a83db01-678a-4661-b368-0927be196eaa",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "395ad2c1-3a32-4548-b99d-fb91a7c404f3",
+        "name": "miranda",
+        "branch": "workspace/miranda",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/miranda/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "4cd376e6-61d3-49f6-980c-0662336c48d8",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "3cfdd719-a162-4ec4-bb3e-5cc8e137ad85",
+        "name": "john-barnes",
+        "branch": "workspace/john-barnes",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/john-barnes/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "54830705-7150-4fbf-9fc5-0ce71f7e09eb",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "98479957-730d-4491-887f-43a3d6a31cf1",
+        "name": "donny-van-de-beek",
+        "branch": "workspace/donny-van-de-beek",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/donny-van-de-beek/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "59549e11-c8f3-4f05-b464-48bfdc2d5b0c",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "f5525841-c224-40a2-a5dd-ddae8ea68cc2",
+        "name": "duncan-edwards",
+        "branch": "workspace/duncan-edwards",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/duncan-edwards/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "608f3fd8-d563-47d9-8ebe-641d91032b6b",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "f78f94ad-60c6-4858-a1b5-b764254d0ef5",
+        "name": "andres-guardado",
+        "branch": "workspace/andres-guardado",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/andres-guardado/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "707b9082-5938-49a8-9a54-c42d35b67910",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "cc7126ef-848f-4d1c-9c5a-8874a02a5f88",
+        "name": "rivaldo",
+        "branch": "workspace/rivaldo",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/rivaldo/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "71c22c8a-755e-43d2-8ffb-7f6ad408fc71",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "29ce2c4d-ac24-4729-ae2e-ade6eb82b5dd",
+        "name": "vivianne-miedema",
+        "branch": "workspace/vivianne-miedema",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/vivianne-miedema/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "72137fac-8472-4d32-a270-a83c91e49d68",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "f946e22d-dec0-4f33-a0e6-fd08d36140be",
+        "name": "gabriel-batistuta",
+        "branch": "workspace/gabriel-batistuta",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/gabriel-batistuta/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "744b7f32-010c-43e5-a81f-a3a934f24426",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "11913a7b-4506-40ca-8d04-58278f7f9fb6",
+        "name": "bente-nordby",
+        "branch": "workspace/bente-nordby",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/bente-nordby/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "79bd160f-0c15-4a50-af8f-f9508893e39e",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "fce7870d-8981-4a4b-ba02-a5b5cabb996c",
+        "name": "pele",
+        "branch": "workspace/pele",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/pele/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "80ed35ac-23f5-4426-8bce-9c3291050043",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "1b743e6e-8f8d-41df-a2af-945c67996eed",
+        "name": "thibaut-courtois",
+        "branch": "workspace/thibaut-courtois",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/thibaut-courtois/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "867f22b1-1656-4367-a5b9-09b2b064d0f3",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "dc814e73-2025-47f5-9286-57e85480d633",
+        "name": "jesse-lingard",
+        "branch": "workspace/jesse-lingard",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/jesse-lingard/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "86f07f8d-d50b-486b-a040-3772cf4b9078",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "ff69ae2f-a1a8-47f9-8267-cf4a2080f0e3",
+        "name": "eran-zahavi",
+        "branch": "workspace/eran-zahavi",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/eran-zahavi/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "8bf9faf1-d2f8-4347-84e0-726b4e4adc09",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "530649b8-03e7-40a5-9130-3b9e33c8992e",
+        "name": "jan-vertonghen",
+        "branch": "workspace/jan-vertonghen",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/jan-vertonghen/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "93d315a7-9c58-4005-a7be-2525b09402bf",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "4cfddad5-3489-4c41-bf8a-5bb57b07b1aa",
+        "name": "radja-nainggolan",
+        "branch": "workspace/radja-nainggolan",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/radja-nainggolan/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "992d25b7-312a-4202-a3f7-9c96b0f7dcf1",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "1bcfab63-17c4-4ce5-a144-c4a34d329fd0",
+        "name": "duvan-zapata",
+        "branch": "workspace/duvan-zapata",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/duvan-zapata/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "aa8cdb44-0f0e-46b8-b7d4-2366b5cc8e6d",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "76818358-420a-4593-af70-dacd961ed9ab",
+        "name": "ricardo-quaresma",
+        "branch": "workspace/ricardo-quaresma",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/ricardo-quaresma/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "b60ab994-81f6-40cc-ae39-7a022916f1aa",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "f14c04e4-2f8e-4753-84e0-16c5585bed2b",
+        "name": "heidi-mohr",
+        "branch": "workspace/heidi-mohr",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/heidi-mohr/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "ba00cca7-2095-4392-967f-2df41463781a",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "42c90b07-70a2-49ca-aed2-9d3f5bb0c1c0",
+        "name": "lee-jae-sung",
+        "branch": "workspace/lee-jae-sung",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/lee-jae-sung/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "c0808e42-f1d7-49bd-9ff4-a6c2a8a0c596",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "7ad14e66-06a8-4024-aab3-348c8cc943ae",
+        "name": "edin-dzeko",
+        "branch": "workspace/edin-dzeko",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/edin-dzeko/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "cfe8f76f-e41e-4e87-bb91-42e4419c2830",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "39d69e8d-d310-4a6b-9d33-2d8fc7be7d3f",
+        "name": "paul-scholes",
+        "branch": "workspace/paul-scholes",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/paul-scholes/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "de6813fb-d628-4469-8ebd-17a6d1432819",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "8468975a-6d06-449d-b49e-74c5718d018c",
+        "name": "alex-greenwood",
+        "branch": "workspace/alex-greenwood",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/alex-greenwood/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "df125b20-329d-4f2d-a47e-ace640918ac0",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "4b11d0a0-0141-481d-92cc-7fa55f2f0368",
+        "name": "sandor-kocsis",
+        "branch": "workspace/sandor-kocsis",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/sandor-kocsis/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "e958b621-0037-49d2-860c-b2840cb684f9",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "dce9a36e-94bb-4368-9b2e-24b52b90fdec",
+        "name": "philippe-coutinho",
+        "branch": "workspace/philippe-coutinho",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/philippe-coutinho/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      },
+      {
+        "id": "e98faea7-4ef4-4165-bafe-13646d0d45ec",
+        "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "creation_action_id": "258ccf28-2c60-4d6f-afa6-faf994a3ba7f",
+        "name": "david-de-gea",
+        "branch": "workspace/david-de-gea",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/david-de-gea/checkout",
+        "legacy": false,
+        "provider": "codex",
+        "base": {
+          "reference": "refs/heads/main",
+          "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+        },
+        "artifacts": {
+          "branch": "owned",
+          "folder": "worktree"
+        },
+        "status": {
+          "state": "ready"
+        },
+        "cleanup_unconfirmed": false
+      }
+    ],
+    "next": "e98faea7-4ef4-4165-bafe-13646d0d45ec"
+  },
+  "repository_first_page": {
+    "repositories": [
+      {
+        "id": "0245c106-5197-4af2-813e-4c3224c7c338",
+        "name": "Catalog-01",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-01",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "027b9718-936e-426f-a799-0c94a8b5b56f",
+        "name": "Catalog-16",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-16",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "038d147f-b654-468c-a6dd-5d634045d713",
+        "name": "Catalog-20",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-20",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "07c33bbe-4b51-40a7-b8f2-97fd8ecd027d",
+        "name": "Catalog-04",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-04",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "1b6e93b0-0df0-499e-a83b-23b3bfa98677",
+        "name": "Catalog-21",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-21",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "1d0c705f-cfb0-4df6-b4bf-b9d7c4eb1f4c",
+        "name": "Catalog-30",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-30",
+        "availability": {
+          "state": "checking"
+        }
+      },
+      {
+        "id": "20e46134-f7de-4b25-aa4c-47b234589aee",
+        "name": "Catalog-25",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-25",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "32ecc0fa-2553-4c6e-80d7-15296e8e1323",
+        "name": "Catalog-00",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-00",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "357ae0bb-7c20-4a12-8784-5dd1536c4f0b",
+        "name": "Catalog-28",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-28",
+        "availability": {
+          "state": "checking"
+        }
+      },
+      {
+        "id": "425b0467-5346-407c-8690-4dcbcc72826f",
+        "name": "Catalog-15",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-15",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "4ca0b67e-5ab4-410b-9908-8a5a48819546",
+        "name": "Catalog-32",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-32",
+        "availability": {
+          "state": "checking"
+        }
+      },
+      {
+        "id": "55af2b58-8cd3-45f5-b593-25a5e956282f",
+        "name": "Catalog-12",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-12",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "5ccea901-b2f9-4f66-8573-3f1c78b70045",
+        "name": "Catalog-11",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-11",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "66f0c32c-4a62-4f32-94cc-e6463890712f",
+        "name": "Catalog-23",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-23",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "6867c091-f355-444c-af11-e9ba1428b732",
+        "name": "Catalog-08",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-08",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "6e800468-fdab-420a-af6a-d21d8dfe0507",
+        "name": "Beta",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/Beta",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "7a00a341-eb38-487a-89c5-7ad78a2bac40",
+        "name": "Catalog-24",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-24",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "8964d0ae-c576-46f9-9a98-f56307748169",
+        "name": "Catalog-22",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-22",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "8ce968cd-f12a-4882-9f74-21702b180ead",
+        "name": "Catalog-18",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-18",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "90b268b5-38fb-4525-8ca9-a7c28a08ac84",
+        "name": "Catalog-19",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-19",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "9df371be-70e7-484d-b499-295ffb14ff40",
+        "name": "Catalog-07",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-07",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "af69759a-c7fa-46cc-9435-61532f73d154",
+        "name": "Catalog-17",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-17",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "b494c8ce-20f5-4d19-b8e5-11655a9a2f6d",
+        "name": "Catalog-27",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-27",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+        "name": "Alpha",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/Alpha",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "b88067c2-30d4-4866-86d6-144e1506a7ae",
+        "name": "Catalog-03",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-03",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "ba4313fa-ca86-483d-988c-ab8508edfb8d",
+        "name": "Catalog-02",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-02",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "bdcdc977-f99b-4f7e-bf65-51259d349833",
+        "name": "Catalog-29",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-29",
+        "availability": {
+          "state": "checking"
+        }
+      },
+      {
+        "id": "be9c6f98-59ad-42b6-b5db-e26b54c7e1b3",
+        "name": "Catalog-13",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-13",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "bf4a9af9-bcee-405c-9be8-99bb08a784b2",
+        "name": "Catalog-31",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-31",
+        "availability": {
+          "state": "checking"
+        }
+      },
+      {
+        "id": "da26aae5-00de-45e4-b106-1b045812922f",
+        "name": "Catalog-06",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-06",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "e651585a-5041-4be6-a2b6-509b23c36c2c",
+        "name": "Catalog-14",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-14",
+        "availability": {
+          "state": "available"
+        }
+      },
+      {
+        "id": "f4eeb3f8-185d-4a43-92a2-5b1b77a14b13",
+        "name": "Catalog-09",
+        "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-09",
+        "availability": {
+          "state": "available"
+        }
+      }
+    ],
+    "next": "f4eeb3f8-185d-4a43-92a2-5b1b77a14b13"
+  },
+  "off_page_workspace": {
+    "id": "ed8266a2-58df-436c-bd72-67e65286d17e",
+    "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+    "creation_action_id": "5913f6d2-d7f9-446e-bc3b-c4cb8f3f5a40",
+    "name": "kasper-schmeichel",
+    "branch": "workspace/kasper-schmeichel",
+    "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/alpha/kasper-schmeichel/checkout",
+    "legacy": false,
+    "provider": "codex",
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "ac721f2849607a00f9583fbb5cc8af2184246986"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "off_page_repository": {
+    "create_initial_workspace": false,
+    "initial_workspace_id": null,
+    "action_id": "04d4d374-4b48-4084-8599-01fc4993e5cc",
+    "path": "/private/tmp/aw-f08-qualified-wj7lgl6i/catalog/Catalog-05",
+    "state": "completed",
+    "repository_id": "f7a5be77-cf9f-4816-a751-b05521502e2c"
+  }
+}

@@ -1,0 +1,131 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 10:17:25 PM
+					36 image
+					37 text (()=>{const s=JSON.stringify(JSON.parse(sessionStorage.f08Startups));for(let i=0;i<s.length;i+=300)console.log('F08DATA:'+i+':'+s.slice(i,i+300));return s.length})()
+					38 image
+					39 text F08DATA:0:[{"warmup":true,"navigation":[{"dom":82,"load":83}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":121,"duration":0}]},{"warmup":false,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","heading":"paul-scho
+					40 image
+					41 text F08DATA:300:les","diff":false,"deliveryStopped":false,"navigation":[{"dom":43,"load":43}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":79,"duration":0}]},{"warmup":false,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=chan
+					42 image
+					43 text F08DATA:600:ges","heading":"paul-scholes","diff":false,"deliveryStopped":false,"navigation":[{"dom":29,"load":30}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":48,"duration":0}]},{"warmup":false,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb
+					44 image
+					45 text F08DATA:900:91-42e4419c2830?view=changes","heading":"paul-scholes","diff":false,"deliveryStopped":false,"navigation":[{"dom":28,"load":28}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":48,"duration":0}]},{"warmup":false,"href":"/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/worksp
+					46 image
+					47 text F08DATA:1200:ace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","heading":"paul-scholes","diff":false,"deliveryStopped":false,"navigation":[{"dom":27,"load":27}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":45,"duration":0}]},{"warmup":false,"href":"/repository/b56ac14e-5c7a-489e
+					48 image
+					49 text F08DATA:1500:-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes","heading":"paul-scholes","diff":false,"deliveryStopped":false,"navigation":[{"dom":28,"load":29}],"paint":[{"name":"first-contentful-paint","entryType":"paint","startTime":47,"duration":0}]}]
+					50 image
+					51 text 1771
+					52 text  = $1
+			53 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			54 container
+	55 scroll area
+		56 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes
+			57 link Skip to workspace, Value: tauri://localhost/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes#workspace
+			58 container Repository sidebar
+				59 text Agent Workspace
+				60 container Repositories
+					61 heading Repositories, Value: 2
+						62 text Repositories
+					63 content list
+						64 container /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Available
+							65 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							66 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							67 button Create workspace in Beta
+							68 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							69 text Available
+							70 content list
+								71 button lee-jae-sung, Help: Workspace ready
+						72 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							73 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							74 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							75 button Create workspace in Alpha
+							76 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							77 text Available
+							78 content list
+								79 button paul-scholes, Help: Workspace ready
+				80 pop up button Add repository
+				81 text Connected
+				82 pop up button Connection details
+				83 link Settings, Value: tauri://localhost/settings/general
+			84 container
+				85 heading paul-scholes, Value: 1
+					86 text paul-scholes
+				87 button Refresh status
+				88 container Selected repository
+					89 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+					90 text Repository available
+				91 text Uncommitted changes
+				92 button Refresh changes
+				93 button (expanded) Hide changed files, Secondary Actions: Collapse
+				94 text Compared with HEAD 
+				95 text ac721f2849607a00f9583fbb5cc8af2184246986
+				96 text  · 
+				97 text 2
+				98 text changed files
+				99 tab group (selectable) Workspace views
+					100 tab (selectable) Workspace
+					101 tab (selected) Changes
+				102 container Changes
+					103 text Select a changed file
+					104 text Refresh the file list, then select a path to inspect its unified diff.
+				105 splitter Resize changed files, Value: 68
+				106 container Changed files
+					107 heading Changed files, Value: 2
+						108 text Changed files
+					109 container
+						110 toggle button large.txt .M, Help: large.txt, Value: off
+						111 toggle button text.txt .M, Help: text.txt, Value: off
+					112 button First page
+					113 button (disabled) Next files
+				114 text Local workspace
+				115 text Alpha
+		116 scroll bar (settable, float) 0
+	117 close button
+	118 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	119 minimize button
+	120 text Agent Workspace
+121 menu bar
+	122 F08 Inspector current
+	123 File
+	124 Edit
+	125 View
+	126 Window
+	127 Help
+
+The focused UI element is 53 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

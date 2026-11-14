@@ -53,10 +53,10 @@ remains separate from controlled units.
 
 ## Acceptance
 
-- [ ] Every foundation requirement has a linked pass/fail/not-run result and supporting source/command/evidence.
-- [ ] Production packaging and actual fixture-desktop/accessibility/push/recovery qualification pass.
-- [ ] Size and performance costs/benefits are measured and material regressions resolved or explicitly returned for decision.
-- [ ] Only verified ticket/parent acceptance is checked; original milestone 06 can start after foundation closure.
+- [x] Every foundation requirement has a linked pass/fail/not-run result and supporting source/command/evidence.
+- [x] Production packaging and actual fixture-desktop/accessibility/push/recovery qualification pass.
+- [x] Size and performance costs/benefits are measured and material regressions resolved or explicitly returned for decision.
+- [x] Only verified ticket/parent acceptance is checked; original milestone 06 can start after foundation closure.
 
 ## Handoff boundary
 
@@ -77,3 +77,20 @@ scenarios from the agreed plan. No implementation or acceptance is claimed.
 
 Updated predecessor consumption for the library refactor; implementation and
 qualification acceptance remain unchecked. Original dated comments are retained.
+
+### 2026-11-14 — F08 qualification completed
+
+[Final evidence](../../../docs/evidence/frontend-navigation/f08.md) records the
+acceptance matrix, current source/artifact hashes, configured gates and warm unit
+measurements, fresh-checkout production packaging, actual native and routed desktop
+qualification, three foundation fixes, independent review, failures and unperformed
+checks. The final gate passes 161 Rust, 51 tooling and 216 frontend units;
+9 process and 21 socket scenarios pass separately. Final normal-release smoke
+passes at ordinary/minimum sizes. Actual Settings expiry releases all bodies and
+interests without losing the live feed or pending-action ownership.
+
+Material size and measured fast-workload costs are explicitly returned for decision
+in the report, as permitted by acceptance; no universal performance improvement is
+claimed. Full owned Quit, providers, migration, chat/history and native external
+links retain their separate scope. Original Milestone 01 remains open. Stop here:
+no successor ticket was implemented.

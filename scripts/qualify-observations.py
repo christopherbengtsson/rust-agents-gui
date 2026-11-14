@@ -5,6 +5,7 @@ Uses only disposable /private/tmp state/repositories. Faults are synthetic,
 application-owned peer bytes/delays, not native-provider evidence. Retains private
 fixtures and failed results; terminates and joins only its own child process.
 """
+import errno
 import hashlib
 import json
 import os
@@ -91,8 +92,19 @@ def main():
     def closed(peer):
         try:
             assert peer.recv(1) == b'', 'unexpected data'
-        except ConnectionResetError:
-            pass
+        except OSError as error:
+            if error.errno not in (errno.ECONNRESET, errno.ENOTCONN):
+                raise
+
+    def send_to_rejected_peer(peer, payload):
+        # A server that closes immediately at admission can win the race with
+        # sendall. macOS reports ENOTCONN as well as EPIPE/ECONNRESET.
+        try:
+            peer.sendall(payload)
+        except OSError as error:
+            if error.errno not in (errno.EPIPE, errno.ECONNRESET, errno.ENOTCONN):
+                raise
+        closed(peer)
 
     def rejected_bytes(payload):
         with connect() as peer:
@@ -189,11 +201,7 @@ def main():
                 # Status is the ninth accepted peer; the eight occupied handlers
                 # must not wait for it or enqueue another handler.
                 with connect() as ninth:
-                    try:
-                        ninth.sendall(encode(request()))
-                    except BrokenPipeError:
-                        pass
-                    closed(ninth)
+                    send_to_rejected_peer(ninth, encode(request()))
             finally:
                 for peer in peers:
                     peer.close()
@@ -275,7 +283,53 @@ def main():
                 return {'admission': admission, 'batches': seen, 'accepted_reconnect': accepted}
         check('repository_workspace_push_progress_and_accepted_cursor_reconnect', progress)
 
+        def repeat_action():
+            original = result['registration']
+            repeated = repo(operation='register', request={
+                'action_id': original['action_id'], 'path': str(repository),
+                'create_initial_workspace': True})['registration']
+            assert repeated == original, (original, repeated)
+            with sqlite3.connect(state / 'workspace.sqlite3') as database:
+                registrations = database.execute('SELECT COUNT(*) FROM registration_actions').fetchone()[0]
+                workspaces = database.execute('SELECT COUNT(*) FROM workspaces WHERE repository_id=?',
+                    (original['repository_id'],)).fetchone()[0]
+            assert registrations == 1 and workspaces == 1, (registrations, workspaces)
+            return {'action_id': original['action_id'], 'repository_id': original['repository_id'],
+                    'workspace_id': original['initial_workspace_id'],
+                    'registration_rows': registrations, 'workspace_rows': workspaces}
+        check('repeating_exact_action_returns_status_without_duplicate_workspace', repeat_action)
+
+        def availability_recovery():
+            identity = result['registration']['repository_id']
+            moved = root / 'temporarily-unavailable'
+
+            def settle():
+                repo(operation='list', after=None, refresh=True)
+                for _ in range(200):
+                    page = repo(operation='list', after=None, refresh=False)['page']
+                    item = next(item for item in page['repositories'] if item['id'] == identity)
+                    if item['availability']['state'] != 'checking':
+                        return item
+                    time.sleep(0.01)
+                raise AssertionError('availability did not settle')
+
+            repository.rename(moved)
+            try:
+                failed = settle()
+                assert failed['availability']['state'] == 'unavailable', failed
+                assert repo(operation='action', action_id=result['registration']['action_id'])['registration'] == result['registration']
+            finally:
+                moved.rename(repository)
+            recovered = settle()
+            assert recovered['availability']['state'] == 'available', recovered
+            return {'unavailable': failed, 'recovered': recovered,
+                    'retained_registration': result['registration']}
+
         def blocking_admission():
+            # Prior subscription peers were closed after an accepted replay.
+            # Their physical handlers may wait for the next five-second heartbeat
+            # before observing EOF; this capacity probe needs all eight slots.
+            time.sleep(5.1)
             # Lock only this disposable database. Production repository reads
             # enter real synchronous SQLite work, then wait on its lock/core
             # mutex. Closing their peers must not release handler capacity.
@@ -293,11 +347,7 @@ def main():
                     peer.close()
                 time.sleep(0.005)
                 with connect() as ninth:
-                    try:
-                        ninth.sendall(encode(request()))
-                    except BrokenPipeError:
-                        pass
-                    closed(ninth)
+                    send_to_rejected_peer(ninth, encode(request()))
             finally:
                 for peer in peers:
                     peer.close()
@@ -375,6 +425,9 @@ def main():
                     'partial_write_bytes': len(data), 'advertised_payload': advertised,
                     'small_receive_buffer': 1024}
         check('inspection_push_result_large_preview_and_absolute_partial_write', inspection)
+        # Move the source checkout only after its initial workspace is ready;
+        # faulting an in-progress checkout would test creation failure instead.
+        check('availability_failure_retains_identity_and_explicit_reprobe_recovers', availability_recovery)
 
         def overflow():
             with subscribe() as peer:

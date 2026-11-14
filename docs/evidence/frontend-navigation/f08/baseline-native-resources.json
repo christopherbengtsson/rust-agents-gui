@@ -1,0 +1,98 @@
+{
+  "label": "baseline",
+  "scope": "native desktop + supervisor RSS only; excludes WebContent, total JS heap and inspector process memory",
+  "samples": [
+    {
+      "time": 630476.186172458,
+      "processes": [
+        {
+          "pid": 31365,
+          "rss_kib": 148784,
+          "threads": 24,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/MacOS/workspace-desktop"
+        },
+        {
+          "pid": 31372,
+          "rss_kib": 5344,
+          "threads": 2,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state"
+        }
+      ],
+      "total_rss_kib": 154128
+    },
+    {
+      "time": 630476.710382875,
+      "processes": [
+        {
+          "pid": 31365,
+          "rss_kib": 148784,
+          "threads": 24,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/MacOS/workspace-desktop"
+        },
+        {
+          "pid": 31372,
+          "rss_kib": 5344,
+          "threads": 2,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state"
+        }
+      ],
+      "total_rss_kib": 154128
+    },
+    {
+      "time": 630477.228156208,
+      "processes": [
+        {
+          "pid": 31365,
+          "rss_kib": 148800,
+          "threads": 25,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/MacOS/workspace-desktop"
+        },
+        {
+          "pid": 31372,
+          "rss_kib": 5344,
+          "threads": 2,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state"
+        }
+      ],
+      "total_rss_kib": 154144
+    },
+    {
+      "time": 630477.74565925,
+      "processes": [
+        {
+          "pid": 31365,
+          "rss_kib": 148800,
+          "threads": 25,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/MacOS/workspace-desktop"
+        },
+        {
+          "pid": 31372,
+          "rss_kib": 5344,
+          "threads": 2,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state"
+        }
+      ],
+      "total_rss_kib": 154144
+    },
+    {
+      "time": 630478.267438875,
+      "processes": [
+        {
+          "pid": 31365,
+          "rss_kib": 148784,
+          "threads": 24,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/MacOS/workspace-desktop"
+        },
+        {
+          "pid": 31372,
+          "rss_kib": 5344,
+          "threads": 2,
+          "command": "/private/tmp/aw-f08-baseline-desktop-1m5z3ota/F08 Inspector baseline.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-baseline-desktop-1m5z3ota/state"
+        }
+      ],
+      "total_rss_kib": 154128
+    }
+  ],
+  "median_kib": 154128,
+  "range_kib": [154128, 154144]
+}

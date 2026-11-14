@@ -1,0 +1,30 @@
+{
+  "afterSettingsBeforeCreateReply": [
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    },
+    {
+      "command": "observation_acknowledge"
+    }
+  ],
+  "nativeCreateCount": 1,
+  "stillSettings": "/settings/general"
+}

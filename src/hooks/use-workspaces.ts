@@ -27,6 +27,7 @@ export function useWorkspaces(
   workspaceId: string | undefined,
   app: AppObservations,
   navigation: Navigation,
+  visible = true,
 ) {
   const feature = app.workspaces;
   useSyncExternalStore(feature.subscribe, feature.getSnapshot);
@@ -94,14 +95,14 @@ export function useWorkspaces(
     };
   }, [owner]);
   useEffect(() => {
-    if (!owner) return;
+    if (!owner || !visible) return;
     const releases = targets.map((target) => feature.observe(owner, target));
     return () => releases.forEach((release) => release());
-  }, [feature, owner, targets]);
+  }, [feature, owner, targets, visible]);
   useEffect(() => {
-    if (!owner || !wanted) return;
+    if (!owner || !visible || !wanted) return;
     return feature.observe(owner, { operation: "get", id: wanted });
-  }, [feature, owner, wanted]);
+  }, [feature, owner, wanted, visible]);
   useEffect(() => {
     if (!owner || !actionId) return;
     return feature.observe(owner, { operation: "action", action_id: actionId });

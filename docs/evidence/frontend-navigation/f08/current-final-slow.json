@@ -1,0 +1,72 @@
+[
+  {
+    "label": "matched-steady-slow",
+    "start": {
+      "time": 353733,
+      "feed": {
+        "state": "live",
+        "accepted": {
+          "owner": "47400-1794690795286464000",
+          "sequence": 6247
+        }
+      },
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 1,
+      "duplicates": 0,
+      "queries": 145,
+      "cacheBodyBytes": 1510212,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 770,
+      "actor": "waiting",
+      "commands": {
+        "workspace_request": 1116,
+        "observation_acknowledge": 735
+      },
+      "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+      "width": 900,
+      "height": 648,
+      "dpr": 2,
+      "scroll": []
+    },
+    "end": {
+      "time": 359738,
+      "feed": {
+        "state": "live",
+        "accepted": {
+          "owner": "47400-1794690795286464000",
+          "sequence": 6252
+        }
+      },
+      "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3/workspace/cfe8f76f-e41e-4e87-bb91-42e4419c2830?view=changes",
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 1,
+      "duplicates": 0,
+      "queries": 143,
+      "cacheBodyBytes": 1483032,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 775,
+      "actor": "idle",
+      "commands": {
+        "workspace_request": 1125,
+        "observation_acknowledge": 740
+      },
+      "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+      "width": 900,
+      "height": 648,
+      "dpr": 2,
+      "scroll": []
+    },
+    "calls": {
+      "workspace_request:changes": 6,
+      "observation_acknowledge:": 5,
+      "workspace_request:change_preview": 3
+    }
+  }
+]

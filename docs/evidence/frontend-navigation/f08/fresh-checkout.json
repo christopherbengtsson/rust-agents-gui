@@ -1,0 +1,19 @@
+{
+  "revision": "024bd636c184bcddaac8645d83cf20423fcf2b17",
+  "patch_sha256": "b005cbd8397212e66d3a526e1148fe9f93f3aa34839e3bc7e7d9cda5506f779d",
+  "checkout": "/private/tmp/aw-f08-final-checkout-re7cv8dp/checkout",
+  "target": "/private/tmp/aw-f08-final-checkout-re7cv8dp/target",
+  "cache": "fresh private Cargo target; shared immutable download caches; offline frozen pnpm install",
+  "commands": [
+    {
+      "args": ["corepack", "pnpm", "install", "--offline", "--frozen-lockfile"],
+      "status": 0,
+      "seconds": 0.9443564590765163
+    },
+    {
+      "args": ["corepack", "pnpm", "build"],
+      "status": 0,
+      "seconds": 90.17739804100711
+    }
+  ]
+}

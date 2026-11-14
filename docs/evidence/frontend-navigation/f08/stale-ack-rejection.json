@@ -1,0 +1,17 @@
+{
+  "error": {
+    "error": {
+      "code": "reply_unavailable",
+      "delivery": "unknown",
+      "message": "Supervisor reply unavailable: Unknown subscription acknowledgement. Refresh recorded action status; no action has been replayed."
+    },
+    "kind": "transport"
+  },
+  "feed": {
+    "state": "live",
+    "accepted": {
+      "owner": "47400-1794690795286464000",
+      "sequence": 2788
+    }
+  }
+}

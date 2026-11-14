@@ -1,0 +1,70 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/6e800468-fdab-420a-af6a-d21d8dfe0507/workspace/cd6897c9-61b5-4d60-bac9-73b35ec58fd8?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/6e800468-fdab-420a-af6a-d21d8dfe0507/workspace/cd6897c9-61b5-4d60-bac9-73b35ec58fd8?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container Create workspace in Beta /private/tmp/aw-f08-qualified-wj7lgl6i/Beta Checking…
+							11 button Beta, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button (disabled) Create workspace in Beta
+							14 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+							15 text Checking…
+							16 content list
+								17 button lee-jae-sung, Help: Resolving local default branch…
+						18 container /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-f08-qualified-wj7lgl6i/Alpha
+							23 text Available
+							24 content list
+								25 button paul-scholes, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+				29 link Settings, Value: tauri://localhost/settings/general
+			30 container
+				31 heading lee-jae-sung, Value: 1
+					32 text lee-jae-sung
+				33 button Refresh status
+				34 container Selected repository
+					35 text /private/tmp/aw-f08-qualified-wj7lgl6i/Beta
+					36 text Checking repository availability…
+				37 container Selected workspace
+					38 text Resolving local default branch… Codex
+					39 heading Preparing your workspace, Value: 2
+						40 text Preparing your workspace
+					41 text lee-jae-sung
+					42 description list
+						43 text Branch
+						44 text workspace/lee-jae-sung
+						45 text Workspace folder
+						46 text /private/tmp/aw-f08-qualified-wj7lgl6i/state/workspaces/beta/lee-jae-sung/checkout
+						47 text Local base
+						48 text refs/heads/main · ac721f2849607a00f9583fbb5cc8af2184246986
+						49 text Branch artifact
+						50 text Not yet confirmed
+						51 text Folder artifact
+						52 text Not yet confirmed
+					53 text Resolving local default branch…
+				54 text Local workspace
+				55 text Beta
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+	59 text Agent Workspace
+60 menu bar
+	61 F08 Inspector current
+	62 File
+	63 Edit
+	64 View
+	65 Window
+	66 Help
+
+The focused UI element is 26 pop up button Add repository

@@ -1,0 +1,277 @@
+{
+  "settings": {
+    "time": 893500,
+    "href": "/repository/b56ac14e-5c7a-489e-b8ad-f86b931366e3",
+    "pending": "{\"request\":{\"operation\":\"create\",\"action_id\":\"fc16e29e-c473-4aa8-9d15-4afc8dd5070b\",\"repository_id\":\"b56ac14e-5c7a-489e-b8ad-f86b931366e3\"},\"uncertain\":true}"
+  },
+  "settled": {
+    "time": 898501,
+    "href": "/settings/general",
+    "pending": null,
+    "snapshot": {
+      "time": 898501,
+      "feed": {
+        "state": "live",
+        "accepted": {
+          "owner": "47400-1794690795286464000",
+          "sequence": 6456
+        }
+      },
+      "href": "/settings/general",
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queries": 52,
+      "cacheBodyBytes": 219940,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 986,
+      "actor": "idle",
+      "commands": {
+        "workspace_request": 1451,
+        "observation_acknowledge": 1018,
+        "repository_request": 2
+      },
+      "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+      "width": 900,
+      "height": 648,
+      "dpr": 2,
+      "scroll": []
+    }
+  },
+  "after": {
+    "time": 900001,
+    "href": "/settings/general",
+    "pending": null,
+    "snapshot": {
+      "time": 900001,
+      "feed": {
+        "state": "live",
+        "accepted": {
+          "owner": "47400-1794690795286464000",
+          "sequence": 6456
+        }
+      },
+      "href": "/settings/general",
+      "visibility": "visible",
+      "active": 0,
+      "maxActive": 2,
+      "duplicates": 0,
+      "queries": 52,
+      "cacheBodyBytes": 219940,
+      "queue": 0,
+      "pending": 0,
+      "physicalActive": 0,
+      "freshness": 986,
+      "actor": "idle",
+      "commands": {
+        "workspace_request": 1451,
+        "observation_acknowledge": 1018,
+        "repository_request": 2
+      },
+      "assets": ["tauri__localhost/assets/index--UGuBMO9.js"],
+      "width": 900,
+      "height": 648,
+      "dpr": 2,
+      "scroll": []
+    }
+  },
+  "held": ["action", "create"],
+  "requests": [
+    {
+      "op": "create",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "create",
+          "action_id": "fc16e29e-c473-4aa8-9d15-4afc8dd5070b",
+          "repository_id": "b56ac14e-5c7a-489e-b8ad-f86b931366e3"
+        }
+      },
+      "time": 893398
+    },
+    {
+      "op": "action",
+      "args": {
+        "expectedOwner": "47400-1794690795286464000",
+        "request": {
+          "operation": "action",
+          "action_id": "fc16e29e-c473-4aa8-9d15-4afc8dd5070b"
+        }
+      },
+      "time": 893409
+    }
+  ],
+  "calls": [
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 888738,
+      "end": 888764
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 888751,
+      "end": 888774
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 888766,
+      "end": 888774
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 888768,
+      "end": 888775
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 888774,
+      "end": 888781.0000000001
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 888997.0000000001,
+      "end": 889002.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 889001,
+      "end": 889002.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "op": "change_preview",
+      "start": 889003,
+      "end": 889021.0000000001
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 889013,
+      "end": 889054
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 889017,
+      "end": 889054
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 889045.0000000001,
+      "end": 889054
+    },
+    {
+      "command": "workspace_request",
+      "op": "change_preview",
+      "start": 889055.0000000001,
+      "end": 889056
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 889308,
+      "end": 889321
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 889317,
+      "end": 889321
+    },
+    {
+      "command": "workspace_request",
+      "op": "change_preview",
+      "start": 889322,
+      "end": 889324.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 891328,
+      "end": 891336
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 891331,
+      "end": 891349
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 891337,
+      "end": 891349
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 891346,
+      "end": 891350
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 891350,
+      "end": 891351
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 891589,
+      "end": 891593.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 891593.0000000001,
+      "end": 891595
+    },
+    {
+      "command": "workspace_request",
+      "op": "change_preview",
+      "start": 891596,
+      "end": 891608.0000000001
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 891605,
+      "end": 891635
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 891609,
+      "end": 891635
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 891629,
+      "end": 891635
+    },
+    {
+      "command": "workspace_request",
+      "op": "change_preview",
+      "start": 891635,
+      "end": 891639
+    },
+    {
+      "command": "observation_acknowledge",
+      "start": 891895,
+      "end": 891901.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "op": "changes",
+      "start": 891900,
+      "end": 891901.0000000001
+    },
+    {
+      "command": "workspace_request",
+      "op": "change_preview",
+      "start": 891901.0000000001,
+      "end": 891904
+    }
+  ]
+}

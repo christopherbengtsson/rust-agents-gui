@@ -1,0 +1,109 @@
+[
+  {
+    "warmup": true,
+    "navigation": [
+      {
+        "dom": 82,
+        "load": 83
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-contentful-paint",
+        "entryType": "paint",
+        "startTime": 104.00000000000001,
+        "duration": 0
+      }
+    ]
+  },
+  {
+    "warmup": false,
+    "href": "/",
+    "navigation": [
+      {
+        "dom": 25,
+        "load": 25
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-contentful-paint",
+        "entryType": "paint",
+        "startTime": 48,
+        "duration": 0
+      }
+    ]
+  },
+  {
+    "warmup": false,
+    "href": "/",
+    "navigation": [
+      {
+        "dom": 20,
+        "load": 21
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-contentful-paint",
+        "entryType": "paint",
+        "startTime": 29,
+        "duration": 0
+      }
+    ]
+  },
+  {
+    "warmup": false,
+    "href": "/",
+    "navigation": [
+      {
+        "dom": 20,
+        "load": 20
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-contentful-paint",
+        "entryType": "paint",
+        "startTime": 28,
+        "duration": 0
+      }
+    ]
+  },
+  {
+    "warmup": false,
+    "href": "/",
+    "navigation": [
+      {
+        "dom": 19,
+        "load": 20
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-contentful-paint",
+        "entryType": "paint",
+        "startTime": 29,
+        "duration": 0
+      }
+    ]
+  },
+  {
+    "warmup": false,
+    "href": "/",
+    "navigation": [
+      {
+        "dom": 20,
+        "load": 21
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-contentful-paint",
+        "entryType": "paint",
+        "startTime": 29,
+        "duration": 0
+      }
+    ]
+  }
+]

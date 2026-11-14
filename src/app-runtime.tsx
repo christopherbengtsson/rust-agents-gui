@@ -46,6 +46,7 @@ export function targetStatus(
 function useRuntime() {
   const { app, navigation } = useRouteContext({ from: "__root__" });
   const location = useLocation();
+  const mainVisible = !isSettingsPath(location.pathname);
   const target = mainDestination(location.href);
   const { connection, refreshStatus } = useSupervisorConnection();
   const owner =
@@ -61,6 +62,7 @@ function useRuntime() {
     app,
     repositoryId ?? null,
     navigation,
+    mainVisible,
   );
   const workspaces = useWorkspaces(
     owner,
@@ -69,6 +71,7 @@ function useRuntime() {
     target?.kind === "workspace" ? target.workspaceId : undefined,
     app,
     navigation,
+    mainVisible,
   );
   const status = targetStatus(app, owner, target);
   useEffect(() => {
