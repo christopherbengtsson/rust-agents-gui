@@ -1,5 +1,7 @@
 //! UI-independent application interface hosted by the local supervisor.
 
+#[cfg(feature = "codegen")]
+pub mod codegen;
 pub mod connection;
 mod git;
 pub mod observations;
@@ -9,13 +11,18 @@ pub mod workspaces;
 
 use serde::{Deserialize, Serialize};
 
+/// The desktop identity command returns this scalar wire type.
+pub type DesktopPid = u32;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum SupervisorState {
     Ready,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct SupervisorStatus {
     pub state: SupervisorState,
     pub supervisor_pid: u32,
@@ -23,12 +30,14 @@ pub struct SupervisorStatus {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct SnapshotCursor {
     pub owner: String,
     pub revision: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct SupervisorSnapshot {
     pub status: SupervisorStatus,
     pub cursor: SnapshotCursor,

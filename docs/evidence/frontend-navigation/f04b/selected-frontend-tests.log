@@ -1,0 +1,13 @@
+src/App.test.tsx
+src/frontend-scheduling.test.tsx
+src/generated-contracts.test.tsx
+src/observation-contracts.test.tsx
+src/observation-feed-bridge.test.tsx
+src/observation-feed.test.tsx
+src/repositories.test.tsx
+src/retained-delivery.test.tsx
+src/workspace-changes.test.tsx
+src/workspace-details.test.tsx
+src/workspaces.test.tsx
+src/lib/complete-operation.test.tsx
+src/lib/observation-coordinator.test.tsx

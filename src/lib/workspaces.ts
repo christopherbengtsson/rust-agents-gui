@@ -1,145 +1,71 @@
 import type { ObservationScope } from "./observation-coordinator";
 import { invoke } from "@tauri-apps/api/core";
-import { type RepositoryError } from "./repositories";
 import {
   identity,
   object,
   bounded,
   domainError,
+  absent,
   decodeOwnedReply,
   decodeRequestFailure,
   replyUnavailable,
 } from "./observation-contracts";
-import {
-  validInspectionReply,
-  type InspectionRequest,
-  type InspectionReply,
-} from "./changes";
+import { validInspectionReply } from "./changes";
 
-export type WorkspaceStatus =
-  | { state: "queued" | "ready" }
-  | {
-      state: "running";
-      stage:
-        | "allocating_name"
-        | "resolving_base"
-        | "reserving_folder"
-        | "creating_branch"
-        | "creating_worktree";
-    }
-  | { state: "failed" | "uncertain"; error: RepositoryError };
-export type Workspace = {
-  id: string;
-  repository_id: string;
-  creation_action_id: string;
-  name: string | null;
-  branch: string | null;
-  path: string | null;
-  legacy: boolean;
-  provider: "codex";
-  base: { reference: string; commit: string } | null;
-  artifacts: {
-    branch: "unknown" | "absent" | "owned" | "conflict";
-    folder:
-      | "unknown"
-      | "absent"
-      | "reserved"
-      | "worktree"
-      | "partial"
-      | "conflict";
-  };
-  status: WorkspaceStatus;
-  cleanup_unconfirmed: boolean;
-};
-export type WorkspaceAction =
-  | { operation: "create"; action_id: string; repository_id: string }
-  | { operation: "reconcile"; action_id: string; workspace_id: string };
-export type WorkspaceRequest =
-  | WorkspaceAction
-  | InspectionRequest
-  | { operation: "action"; action_id: string }
-  | { operation: "get"; id: string }
-  | { operation: "list"; repository_id: string; after: string | null };
-export type WorkspacePage = { workspaces: Workspace[]; next: string | null };
-export type WorkspaceReply =
-  | InspectionReply
-  | { kind: "workspace"; workspace: Workspace | null }
-  | {
-      kind: "action";
-      action: WorkspaceAction | null;
-      workspace: Workspace | null;
-    }
-  | { kind: "workspaces"; page: WorkspacePage };
-function action(value: unknown): value is WorkspaceAction {
+export type {
+  Workspace,
+  WorkspaceAction,
+  WorkspaceRequest,
+  WorkspacePage,
+  WorkspaceReply,
+} from "@/generated/contracts/types";
+export type WorkspaceStatus = CreationStatus;
+import type {
+  CreationStatus,
+  Workspace,
+  WorkspaceAction,
+  WorkspaceRequest,
+  WorkspaceReply,
+} from "@/generated/contracts/types";
+import {
+  validateWorkspaceAction,
+  validateWorkspaceReply,
+} from "@/generated/contracts/validators.js";
+
+function normalizedWorkspacePath(path: string): boolean {
   return (
-    object(value) &&
-    identity(value.action_id) &&
-    ((value.operation === "create" && identity(value.repository_id)) ||
-      (value.operation === "reconcile" && identity(value.workspace_id)))
+    path === "/" ||
+    (path.startsWith("/") &&
+      path
+        .slice(1)
+        .split("/")
+        .every((part) => part.length > 0 && part !== "." && part !== ".."))
   );
 }
-function workspace(value: unknown): value is Workspace {
-  if (
-    !object(value) ||
-    !identity(value.id) ||
-    !identity(value.repository_id) ||
-    !identity(value.creation_action_id) ||
-    !(
-      (value.name === null && value.branch === null && value.path === null) ||
-      (typeof value.name === "string" &&
-        value.name.length > 0 &&
-        typeof value.branch === "string" &&
-        value.branch.length > 0 &&
-        typeof value.path === "string" &&
-        value.path.length > 0)
-    ) ||
-    typeof value.legacy !== "boolean" ||
-    value.provider !== "codex" ||
-    typeof value.cleanup_unconfirmed !== "boolean" ||
-    !object(value.status) ||
-    !object(value.artifacts)
-  )
-    return false;
-  if (
-    (value.status.state === "running") !== (value.status.stage !== undefined) ||
-    ["failed", "uncertain"].includes(String(value.status.state)) !==
-      (value.status.error !== undefined)
-  )
-    return false;
+function workspaceSemantics(value: Workspace): boolean {
+  const allocated =
+    value.name !== null &&
+    value.name.length > 0 &&
+    value.branch !== null &&
+    value.branch.length > 0 &&
+    value.path !== null &&
+    value.path.length > 0;
+  const pending =
+    value.name === null && value.branch === null && value.path === null;
+  const status = value.status;
   return (
-    (value.name !== null ||
-      (value.status.state !== "ready" &&
-        (value.status.state !== "running" ||
-          value.status.stage === "allocating_name"))) &&
+    (allocated || pending) &&
+    value.provider === "codex" &&
+    (value.path === null || normalizedWorkspacePath(value.path)) &&
+    (status.state === "running" || absent(status, "stage")) &&
+    (status.state === "failed" || status.state === "uncertain"
+      ? domainError(status.error)
+      : absent(status, "error")) &&
+    (allocated ||
+      (status.state !== "ready" &&
+        (status.state !== "running" || status.stage === "allocating_name"))) &&
     (value.base === null ||
-      (object(value.base) &&
-        typeof value.base.reference === "string" &&
-        typeof value.base.commit === "string" &&
-        /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/i.test(value.base.commit))) &&
-    ["unknown", "absent", "owned", "conflict"].includes(
-      String(value.artifacts.branch),
-    ) &&
-    [
-      "unknown",
-      "absent",
-      "reserved",
-      "worktree",
-      "partial",
-      "conflict",
-    ].includes(String(value.artifacts.folder)) &&
-    (value.status.state === "queued" ||
-      value.status.state === "ready" ||
-      (value.status.state === "running" &&
-        [
-          "allocating_name",
-          "resolving_base",
-          "reserving_folder",
-          "creating_branch",
-          "creating_worktree",
-        ].includes(String(value.status.stage))) ||
-      ((value.status.state === "failed" ||
-        value.status.state === "uncertain") &&
-        domainError(value.status.error)))
+      /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/i.test(value.base.commit))
   );
 }
 export function readWorkspace(
@@ -174,52 +100,54 @@ export function decodeWorkspaceReply(
   value: unknown,
 ): WorkspaceReply {
   let valid = false;
-  if (object(value) && bounded(value, 48 * 1024)) {
+  if (validateWorkspaceReply(value) && bounded(value, 48 * 1024)) {
     if (
       request.operation === "changes" ||
       request.operation === "change_preview"
     )
       valid = validInspectionReply(request, value);
-    else if (request.operation === "list")
+    else if (request.operation === "list" && value.kind === "workspaces")
       valid =
-        value.kind === "workspaces" &&
-        object(value.page) &&
-        Array.isArray(value.page.workspaces) &&
         value.page.workspaces.length <= 32 &&
         value.page.workspaces.every(
-          (w: unknown) =>
-            workspace(w) && w.repository_id === request.repository_id,
-        ) &&
-        (value.page.next === null || identity(value.page.next));
-    else if (request.operation === "get")
+          (w) =>
+            workspaceSemantics(w) && w.repository_id === request.repository_id,
+        );
+    else if (request.operation === "get" && value.kind === "workspace")
       valid =
-        value.kind === "workspace" &&
-        (value.workspace === null ||
-          (workspace(value.workspace) && value.workspace.id === request.id));
-    else
+        value.workspace === null ||
+        (workspaceSemantics(value.workspace) &&
+          value.workspace.id === request.id);
+    else if (
+      request.operation !== "get" &&
+      request.operation !== "list" &&
+      value.kind === "action"
+    ) {
+      const action = value.action;
+      const workspace = value.workspace;
       valid =
-        value.kind === "action" &&
-        ((request.operation === "action" &&
-          value.action === null &&
-          value.workspace === null) ||
-          (action(value.action) &&
-            workspace(value.workspace) &&
-            value.action.action_id === request.action_id &&
-            (value.action.operation === "create"
-              ? value.action.repository_id === value.workspace.repository_id &&
-                value.workspace.creation_action_id === value.action.action_id
-              : value.action.workspace_id === value.workspace.id) &&
-            (request.operation === "action" ||
-              (request.operation === value.action.operation &&
-                (request.operation === "create"
-                  ? request.repository_id === value.workspace.repository_id
-                  : request.workspace_id === value.workspace.id)))));
+        (request.operation === "action" &&
+          action === null &&
+          workspace === null) ||
+        (action !== null &&
+          workspace !== null &&
+          workspaceSemantics(workspace) &&
+          action.action_id === request.action_id &&
+          (action.operation === "create"
+            ? action.repository_id === workspace.repository_id &&
+              workspace.creation_action_id === action.action_id
+            : action.workspace_id === workspace.id) &&
+          (request.operation === "action" ||
+            (request.operation === action.operation &&
+              (request.operation === "create"
+                ? request.repository_id === workspace.repository_id
+                : request.workspace_id === workspace.id))));
+    }
+    if (valid) return value;
   }
-  if (!valid)
-    throw replyUnavailable(
-      "Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/supervisor build.",
-    );
-  return value as WorkspaceReply; // Runtime contracts and exact targets checked above.
+  throw replyUnavailable(
+    "Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/supervisor build.",
+  );
 }
 export const WORKSPACE_SELECTION = "agent-workspace.selected-workspace";
 export const WORKSPACE_PENDING = "agent-workspace.pending-workspace";
@@ -244,9 +172,9 @@ export function readWorkspacePending(): PendingWorkspace | null {
     const v: unknown = JSON.parse(
       localStorage.getItem(WORKSPACE_PENDING) ?? "null",
     );
-    if (object(v) && action(v.request))
+    if (object(v) && validateWorkspaceAction(v.request))
       return { request: v.request, uncertain: v.uncertain !== false };
-    if (action(v)) return { request: v, uncertain: true };
+    if (validateWorkspaceAction(v)) return { request: v, uncertain: true };
   } catch {
     /* Reconnect never invents a request or removes stored recovery evidence. */
   }

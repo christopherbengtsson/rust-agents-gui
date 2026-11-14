@@ -7,18 +7,21 @@ const HEARTBEAT: Duration = Duration::from_secs(5);
 const ACK_TIMEOUT: Duration = Duration::from_secs(15);
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct FeedAck {
     pub subscription_id: String,
     pub batch_id: u64,
     pub cursor: FeedCursor,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct FeedBatch {
     #[serde(flatten)]
     pub acknowledgement: FeedAck,
     pub sample: Sample,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum FeedEvent {
     Batch {
@@ -767,4 +770,11 @@ mod corpus_tests {
             assert!(encode_frame(&Response::Feed { batch }).unwrap().len() <= DELIVERY_BYTES);
         }
     }
+}
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<FeedAck>();
+    exports.add::<FeedBatch>();
+    exports.add::<FeedEvent>();
 }

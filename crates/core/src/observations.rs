@@ -15,6 +15,7 @@ pub const DELIVERY_BYTES: usize = 4096;
 pub const MAX_SEQUENCE: u64 = 9_007_199_254_740_991;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 // Collection hints invalidate all related details and retained pending-action interests too.
 // Narrow identity tags permit consumers to avoid unrelated work when identities are known.
@@ -29,12 +30,14 @@ pub enum Target {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct FeedCursor {
     pub owner: String,
     pub sequence: u64,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Sample {
     Hints {
@@ -277,4 +280,11 @@ mod bounds_tests {
             }
         );
     }
+}
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<Target>();
+    exports.add::<FeedCursor>();
+    exports.add::<Sample>();
 }

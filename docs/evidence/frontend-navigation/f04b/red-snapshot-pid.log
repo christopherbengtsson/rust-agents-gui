@@ -1,0 +1,26 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/generated-contracts.test.tsx (7 tests | 1 failed) 10ms
+   × schema-valid numeric and multibyte payloads still require contextual budgets 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/generated-contracts.test.tsx > schema-valid numeric and multibyte payloads still require contextual budgets
+AssertionError: expected [Function] to throw an error
+ ❯ src/generated-contracts.test.tsx:67:42
+     65|   const largePid = { ...corpus.snapshot, status: { ...corpus.snapshot.…
+     66|   expect(validateSupervisorSnapshot(largePid)).toBe(true);
+     67|   expect(() => decodeSnapshot(largePid)).toThrow();
+       |                                          ^
+     68|   const multibyte = {
+     69|     ...corpus.snapshot,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  15:02:11
+   Duration  258ms (environment 72%, import 12%, transform 10%, tests 5%, worker 1%)
+

@@ -20,11 +20,13 @@ pub(crate) fn choose_base<'a>(
 identity!(WorkspaceId);
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct PinnedBase {
     pub reference: String,
     pub commit: String,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum CreationStage {
     AllocatingName,
@@ -34,6 +36,7 @@ pub enum CreationStage {
     CreatingWorktree,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "state", rename_all = "snake_case")]
 pub enum CreationStatus {
     Queued,
@@ -43,6 +46,7 @@ pub enum CreationStatus {
     Uncertain { error: RepositoryError },
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum BranchArtifact {
     Unknown,
@@ -51,6 +55,7 @@ pub enum BranchArtifact {
     Conflict,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum FolderArtifact {
     Unknown,
@@ -61,11 +66,13 @@ pub enum FolderArtifact {
     Conflict,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Artifacts {
     pub branch: BranchArtifact,
     pub folder: FolderArtifact,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Workspace {
     pub id: WorkspaceId,
     pub repository_id: RepositoryId,
@@ -83,6 +90,7 @@ pub struct Workspace {
     pub cleanup_unconfirmed: bool,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "operation", rename_all = "snake_case")]
 pub enum WorkspaceAction {
     Create {
@@ -143,6 +151,7 @@ impl WorkspaceAction {
     }
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "operation", rename_all = "snake_case")]
 pub enum WorkspaceRequest {
     Changes {
@@ -175,11 +184,13 @@ pub enum WorkspaceRequest {
     },
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct WorkspacePage {
     pub workspaces: Vec<Workspace>,
     pub next: Option<WorkspaceId>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum WorkspaceReply {
     Changes {
@@ -1229,4 +1240,20 @@ fn result_is_success(shared: &Mutex<OwnerState>, id: WorkspaceId) -> bool {
     shared
         .lock()
         .is_ok_and(|s| !s.workspace_faults.contains_key(&id))
+}
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<WorkspaceId>();
+    exports.add::<PinnedBase>();
+    exports.add::<CreationStage>();
+    exports.add::<CreationStatus>();
+    exports.add::<BranchArtifact>();
+    exports.add::<FolderArtifact>();
+    exports.add::<Artifacts>();
+    exports.add::<Workspace>();
+    exports.add::<WorkspaceAction>();
+    exports.add::<WorkspaceRequest>();
+    exports.add::<WorkspacePage>();
+    exports.add::<WorkspaceReply>();
 }

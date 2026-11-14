@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    {
+      "path": "dist/assets/index-Nt6iarJC.css",
+      "bytes": 99404,
+      "sha256": "2c47da13a5996c082bda2d6d021c55f87ad1f64c1d9459fcacb19cd6d95ccd64"
+    },
+    {
+      "path": "dist/assets/index-seWmndH_.js",
+      "bytes": 1062429,
+      "sha256": "c0b39a4ede191b09000907578d7ddb8327bf8fba9dcaa023186a168be01140c2"
+    }
+  ],
+  "dynamicEvaluationAndCommonJsAbsent": true,
+  "cspUnchanged": true
+}

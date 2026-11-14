@@ -102,13 +102,6 @@ jobs:
             exit 1
           fi
 
-      # Static Tauri checks require the resource; this builds but never runs it.
-      - name: Prepare supervisor resource
-        run: node scripts/prepare-supervisor.mjs debug
-
-      # Tauri static checks need assets; verify handles the separate typecheck.
-      - name: Build frontend assets
-        run: corepack pnpm exec vite build
-
-      - name: Verify
-        run: corepack pnpm verify
+      # Preparation, resource compilation, bundling, static checks and units remain distinct.
+      - name: Verify and build assets
+        run: corepack pnpm verify:ci

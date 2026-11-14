@@ -27,6 +27,7 @@ pub const PROTOCOL_VERSION: u32 = 7;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum Delivery {
     NotSent,
@@ -35,6 +36,7 @@ pub enum Delivery {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum TransportCode {
     Busy,
@@ -45,6 +47,7 @@ pub enum TransportCode {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct TransportFailure {
     pub code: TransportCode,
     pub delivery: Delivery,
@@ -52,6 +55,7 @@ pub struct TransportFailure {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum RequestFailure {
     Transport {
@@ -83,6 +87,7 @@ fn transport_failure(
 
 /// Serving identity is returned even when the domain rejected the request.
 #[derive(Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct OwnedReply<T> {
     pub owner: String,
     pub result: Result<T, RepositoryError>,
@@ -1085,3 +1090,13 @@ fn write_frame(stream: &mut impl Write, value: &impl Serialize) -> io::Result<()
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<Delivery>();
+    exports.add::<TransportCode>();
+    exports.add::<TransportFailure>();
+    exports.add::<RequestFailure>();
+    exports.owned_replies();
+    subscription::export_contracts(exports);
+}

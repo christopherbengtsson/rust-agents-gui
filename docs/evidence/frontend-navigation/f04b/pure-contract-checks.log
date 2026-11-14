@@ -1,0 +1,42 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.47s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-6eb6beb4d8e37ffa)
+
+running 4 tests
+test codegen::parity_tests::input_defaults_do_not_omit_serialized_response_fields ... ok
+test codegen::parity_tests::nullable_omitted_and_default_fields_describe_serialization_separately ... ok
+test codegen::parity_tests::pure_export_is_deterministic_and_uses_uuid_and_json_number_contracts ... ok
+test codegen::tests::serialized_registration_defaults_are_required_and_flattened ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 140 filtered out; finished in 0.02s
+

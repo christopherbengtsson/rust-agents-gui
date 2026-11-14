@@ -136,7 +136,7 @@ async fn observation_stop(
 }
 
 #[tauri::command]
-fn desktop_pid() -> u32 {
+fn desktop_pid() -> workspace_core::DesktopPid {
     std::process::id()
 }
 

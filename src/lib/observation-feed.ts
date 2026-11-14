@@ -1,49 +1,23 @@
-import {
-  bounded,
-  identity,
-  object,
-  owner as validOwner,
-  text,
-} from "./observation-contracts";
+import { bounded, owner as validOwner, text } from "./observation-contracts";
 
-export type FeedCursor = { owner: string; sequence: number };
-export type DirtyTarget =
-  | { kind: "repositories" }
-  | { kind: "repository"; repository_id: string }
-  | { kind: "registration" | "workspace_action"; action_id: string }
-  | { kind: "workspaces"; repository_id: string | null }
-  | { kind: "workspace" | "inspection"; workspace_id: string };
-export type FeedAck = {
-  subscription_id: string;
-  batch_id: number;
-  cursor: FeedCursor;
-};
-export type FeedBatch = FeedAck & {
-  sample:
-    | { kind: "hints"; watermark: number; targets: DirtyTarget[] }
-    | { kind: "resync_required" | "heartbeat"; watermark: number };
-};
-function sequence(value: unknown): value is number {
-  return typeof value === "number" && Number.isSafeInteger(value) && value > 0;
-}
-function target(value: unknown): value is DirtyTarget {
-  if (!object(value)) return false;
-  switch (value.kind) {
-    case "repositories":
-      return true;
-    case "repository":
-      return identity(value.repository_id);
-    case "workspaces":
-      return value.repository_id === null || identity(value.repository_id);
-    case "registration":
-    case "workspace_action":
-      return identity(value.action_id);
-    case "workspace":
-    case "inspection":
-      return identity(value.workspace_id);
-    default:
-      return false;
-  }
+import type {
+  FeedCursor,
+  FeedBatch,
+  FeedAck,
+  Target,
+} from "@/generated/contracts/types";
+import {
+  validateFeedBatch,
+  validateFeedEvent,
+} from "@/generated/contracts/validators.js";
+export type {
+  FeedCursor,
+  FeedBatch,
+  FeedAck,
+} from "@/generated/contracts/types";
+export type DirtyTarget = Target;
+function sequence(value: number): boolean {
+  return Number.isSafeInteger(value) && value > 0;
 }
 export function decodeFeedBatch(
   value: unknown,
@@ -53,26 +27,22 @@ export function decodeFeedBatch(
   cursor?: FeedCursor,
 ): FeedBatch {
   if (
-    !object(value) ||
+    !validateFeedBatch(value) ||
     !bounded(value, 4096) ||
     value.subscription_id !== id ||
     !sequence(value.batch_id) ||
     value.batch_id !== previous + 1 ||
-    !object(value.cursor) ||
     !validOwner(value.cursor.owner) ||
     value.cursor.owner !== owner ||
     !sequence(value.cursor.sequence) ||
-    !object(value.sample) ||
     value.sample.watermark !== value.cursor.sequence
   )
     throw new Error("Invalid observation delivery identity or bounds");
   const sample = value.sample;
   if (
     sample.kind === "hints" &&
-    Array.isArray(sample.targets) &&
     sample.targets.length > 0 &&
     sample.targets.length <= 32 &&
-    sample.targets.every(target) &&
     (!cursor || value.cursor.sequence > cursor.sequence)
   )
     return {
@@ -239,7 +209,7 @@ export class ObservationFeed {
           (value) => {
             if (!live()) return;
             try {
-              if (!object(value))
+              if (!validateFeedEvent(value))
                 throw new Error("Invalid observation delivery");
               if (
                 value.kind === "stopped" &&

@@ -75,6 +75,7 @@ test.each(rejection)(
             registration: recorded
               ? {
                   ...submissions[0],
+                  initial_workspace_id: null,
                   state: "completed",
                   repository_id: repositoryId,
                 }
@@ -211,6 +212,7 @@ test("a late registration transport failure cannot resurrect an authoritatively 
           kind: "action",
           registration: {
             ...sent,
+            initial_workspace_id: null,
             state: "completed",
             repository_id: repositoryId,
           },

@@ -1,0 +1,209 @@
+Indexed source tree: 4a07a2210aa4a1926e5958dab994fc7251cb0c45
+Private target: /private/tmp/f04b-clean-3kmjycvv/target ; fresh preparation; shared installed Node dependencies/download caches
+$ node scripts/prepare-generated.mjs --check 
+    Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling serde_core v1.0.229
+   Compiling libc v0.2.191
+   Compiling getrandom v0.4.3
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.15
+   Compiling zmij v1.0.23
+   Compiling vcpkg v0.2.15
+   Compiling pkg-config v0.3.34
+   Compiling cfg-if v1.0.5
+   Compiling serde_json v1.0.154
+   Compiling serde v1.0.229
+   Compiling cc v1.11.1
+   Compiling thiserror v2.0.21
+   Compiling foldhash v0.2.0
+   Compiling ref-cast v1.0.27
+   Compiling hashbrown v0.17.1
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.19
+   Compiling termcolor v1.4.1
+   Compiling hashlink v0.12.2
+   Compiling libsqlite3-sys v0.40.0
+   Compiling dyn-clone v1.0.20
+   Compiling smallvec v1.16.5
+   Compiling fallible-streaming-iterator v0.1.9
+   Compiling fallible-iterator v0.3.0
+   Compiling bitflags v2.13.2
+   Compiling syn v3.0.10
+   Compiling syn v2.0.119
+   Compiling uuid v1.29.2
+   Compiling serde_derive_internals v0.30.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling ref-cast-impl v1.0.27
+   Compiling schemars_derive v1.2.3
+   Compiling ts-rs-macros v12.0.1
+   Compiling ts-rs v12.0.1
+   Compiling schemars v1.2.3
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/private/tmp/f04b-clean-3kmjycvv/checkout/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 7.24s
+Generated contracts match source
+ 
+exit 0 ; wall 7.766402042005211
+$ node scripts/prepare-generated.mjs --check 
+ warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+file:///private/tmp/f04b-clean-3kmjycvv/checkout/scripts/prepare-generated.mjs:49
+    throw new Error(
+          ^
+
+Error: Generated contract drift; run corepack pnpm generated:write:
+missing: types.ts
+missing: schemas.json
+missing: validators.js
+missing: validators.d.ts
+missing: manifest.json
+    at reconcileArtifacts (file:///private/tmp/f04b-clean-3kmjycvv/checkout/scripts/prepare-generated.mjs:49:11)
+    at prepareGenerated (file:///private/tmp/f04b-clean-3kmjycvv/checkout/scripts/prepare-generated.mjs:173:3)
+    at file:///private/tmp/f04b-clean-3kmjycvv/checkout/scripts/prepare-generated.mjs:180:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.13.1
+ 
+exit 1 ; wall 0.466194040956907
+$ node scripts/prepare-generated.mjs --write 
+ warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+Generated contracts written
+ 
+exit 0 ; wall 0.47225441702175885
+$ node scripts/prepare-generated.mjs --check 
+ warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+Generated contracts match source
+ 
+exit 0 ; wall 0.48084829200524837
+Clean indexed source: committed outputs pass; missing outputs fail; explicit write reproduces every artifact byte.
+{
+  "validators.js": "ec400f091c5d783b8f9e1c7080b6d0b07d583d45c16c0d151e32819627eeceb4",
+  "validators.d.ts": "4ab1d6f020db28995641be77613925a09dbfdb1002d8b1509ffe2ac92342ab34",
+  "types.ts": "8bb3c2e5eab89e810dfdc0ea94b4f9653b80b04450a7033022aaf1325bf60c01",
+  "manifest.json": "6bb760c645a5d23847b41f0369f0df712a235ad9f99354a0a3900c5e5caef419",
+  "schemas.json": "7d3612154ecbb522a94c1402bab3c4315ed6adce8d8c504b4cfc06b5f923f0bd"
+}

@@ -60,10 +60,10 @@ Follow moved definitions rather than inventing per-command forwarding modules.
 
 ## Acceptance
 
-- [ ] All selected wire roots use generated declarations/validators; removed duplication and retained semantic assertions are mapped.
-- [ ] Explicit generation/drift commands serve every required entry point with target ownership/provenance preserved.
-- [ ] Relevant pure contract/frontend/tooling checks and configured static checks pass; bundle result is recorded separately.
-- [ ] Evidence records versions, commands, source/artifact identity, failures and unperformed native qualification.
+- [x] All selected wire roots use generated declarations/validators; removed duplication and retained semantic assertions are mapped.
+- [x] Explicit generation/drift commands serve every required entry point with target ownership/provenance preserved.
+- [x] Relevant pure contract/frontend/tooling checks and configured static checks pass; bundle result is recorded separately.
+- [x] Evidence records versions, commands, source/artifact identity, failures and unperformed native qualification.
 
 F04c owns admission/framing. This ticket changes no socket protocol, provider adapter,
 storage layout, routing or lifecycle controller.
@@ -75,3 +75,23 @@ storage layout, routing or lifecycle controller.
 Published after the user approved library refactors and all four deepening
 opportunities. Acceptance remains unchecked until this ticket's implementation
 and verification produce linked evidence. No provider submissions are authorized.
+
+### 2026-11-14 — F04b implementation complete
+
+Confirmed F04a's checked acceptance/evidence and continued the clean
+`feature/m01-frontend-navigation` branch from `f3d325f`. Added optional Rust codegen,
+committed Rust-owned declarations/serialization schemas/standalone ESM validators,
+replaced frontend structural duplication and retained named contextual assertions
+and preference migrations. Shared explicit write/read-only drift preparation serves
+dev/check/build/Tauri/CI while retaining target ownership and sidecar provenance.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f04b.md) records source/artifact
+identities, pinned versions, failure/red checks, deterministic and clean-source
+preparation, gate selection, 144 Rust + 40 tooling + 126 frontend checks, warm
+measurements, separate bundle cost and independent Standards/Spec reviews (0 findings
+each). Final configured verification passed; both corpus files and prior evidence
+are preserved. Packaging, actual sockets/fixture-desktop/WebView/accessibility,
+hosted CI and native-provider qualification were not performed; no provider
+submissions were made. Protocol remains 7. F04c is next and was not started;
+successors and whole-foundation acceptance remain open. The containing commit owns
+this ticket's changes and evidence.

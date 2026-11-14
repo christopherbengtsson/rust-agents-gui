@@ -4,3 +4,4 @@ target/
 dist/
 src-tauri/gen/
 docs/evidence/**/*.png
+src/generated/contracts/

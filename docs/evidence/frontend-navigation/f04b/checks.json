@@ -1,0 +1,395 @@
+[
+  {
+    "label": "red-export",
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "-p",
+      "workspace-core",
+      "--lib",
+      "--features",
+      "codegen",
+      "codegen::tests",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitStatus": 101,
+    "wallSeconds": 5.931765125016682,
+    "logFile": "red-export.log"
+  },
+  {
+    "label": "green-export",
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "--locked",
+      "-p",
+      "workspace-core",
+      "--lib",
+      "--features",
+      "codegen",
+      "codegen::tests",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitStatus": 101,
+    "wallSeconds": 1.2400967919966206,
+    "logFile": null,
+    "note": "Intermediate compile failure after a partial editing helper stopped; this label was reused and its raw output was overwritten. Command/status/time retained; summarized in f04b.md."
+  },
+  {
+    "label": "green-export",
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "--locked",
+      "-p",
+      "workspace-core",
+      "--lib",
+      "--features",
+      "codegen",
+      "codegen::tests",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 3.2796981249703094,
+    "logFile": "green-export.log"
+  },
+  {
+    "label": "red-preparation",
+    "command": ["node", "--test", "scripts/prepare-generated.test.mjs"],
+    "exitStatus": 1,
+    "wallSeconds": 0.06108712498098612,
+    "logFile": "red-preparation.log"
+  },
+  {
+    "label": "green-preparation",
+    "command": ["node", "--test", "scripts/prepare-generated.test.mjs"],
+    "exitStatus": 0,
+    "wallSeconds": 0.08296749996952713,
+    "logFile": "green-preparation.log"
+  },
+  {
+    "label": "red-exporter-order",
+    "command": ["node", "--test", "scripts/prepare-generated.test.mjs"],
+    "exitStatus": 1,
+    "wallSeconds": 0.05681341700255871,
+    "logFile": "red-exporter-order.log"
+  },
+  {
+    "label": "green-exporter-order",
+    "command": ["node", "--test", "scripts/prepare-generated.test.mjs"],
+    "exitStatus": 0,
+    "wallSeconds": 0.0757809579372406,
+    "logFile": "green-exporter-order.log"
+  },
+  {
+    "label": "generation-initial",
+    "command": ["node", "scripts/prepare-generated.mjs", "--write"],
+    "exitStatus": 0,
+    "wallSeconds": 2.662607125006616,
+    "logFile": "generation-initial.log"
+  },
+  {
+    "label": "red-path-semantics",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/generated-contracts.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 1,
+    "wallSeconds": 0.9853547909297049,
+    "logFile": "red-path-semantics.log"
+  },
+  {
+    "label": "path-and-contracts",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/generated-contracts.test.tsx",
+      "src/observation-contracts.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 1,
+    "wallSeconds": 0.979429625091143,
+    "logFile": "path-and-contracts.log"
+  },
+  {
+    "label": "typecheck-first",
+    "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+    "exitStatus": 1,
+    "wallSeconds": 0.35075991693884134,
+    "logFile": "typecheck-first.log"
+  },
+  {
+    "label": "typecheck-migration",
+    "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+    "exitStatus": 0,
+    "wallSeconds": 0.2793352499138564,
+    "logFile": "typecheck-migration.log"
+  },
+  {
+    "label": "contract-feed-inspection",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/generated-contracts.test.tsx",
+      "src/observation-contracts.test.tsx",
+      "src/observation-feed.test.tsx",
+      "src/observation-feed-bridge.test.tsx",
+      "src/changes.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 1.4972779999952763,
+    "logFile": "contract-feed-inspection.log"
+  },
+  {
+    "label": "red-gate-order",
+    "command": ["node", "--test", "scripts/check.test.mjs"],
+    "exitStatus": 1,
+    "wallSeconds": 0.05650629207957536,
+    "logFile": "red-gate-order.log"
+  },
+  {
+    "label": "green-gate-order",
+    "command": ["node", "--test", "scripts/check.test.mjs"],
+    "exitStatus": 0,
+    "wallSeconds": 0.06851904094219208,
+    "logFile": "green-gate-order.log"
+  },
+  {
+    "label": "generation-uuid",
+    "command": ["corepack", "pnpm", "generated:write"],
+    "exitStatus": 0,
+    "wallSeconds": 1.9427128750830889,
+    "logFile": "generation-uuid.log"
+  },
+  {
+    "label": "pure-contract-checks",
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "--locked",
+      "-p",
+      "workspace-core",
+      "--lib",
+      "--features",
+      "codegen",
+      "codegen::",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 2.1695017920574173,
+    "logFile": "pure-contract-checks.log"
+  },
+  {
+    "label": "retained-fixture-checks",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/repositories.test.tsx",
+      "src/retained-delivery.test.tsx",
+      "src/workspace-changes.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 3.998312333947979,
+    "logFile": "retained-fixture-checks.log"
+  },
+  {
+    "label": "contract-corpus-expanded",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/generated-contracts.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 0.46903941698838025,
+    "logFile": "contract-corpus-expanded.log"
+  },
+  {
+    "label": "tooling-expanded",
+    "command": [
+      "node",
+      "--test",
+      "scripts/prepare-generated.test.mjs",
+      "scripts/check.test.mjs"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 0.07508929097093642,
+    "logFile": "tooling-expanded.log"
+  },
+  {
+    "label": "typecheck-expanded",
+    "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+    "exitStatus": 0,
+    "wallSeconds": 0.2810322920558974,
+    "logFile": "typecheck-expanded.log"
+  },
+  {
+    "label": "generation-formatted",
+    "command": ["corepack", "pnpm", "generated:write"],
+    "exitStatus": 0,
+    "wallSeconds": 1.5557878749677911,
+    "logFile": "generation-formatted.log"
+  },
+  {
+    "label": "generated-check",
+    "command": ["corepack", "pnpm", "generated:check"],
+    "exitStatus": 0,
+    "wallSeconds": 0.5993757500546053,
+    "logFile": "generated-check.log"
+  },
+  {
+    "label": "deterministic-and-drift",
+    "command": ["node", "/tmp/f04b-drift.mjs"],
+    "exitStatus": 0,
+    "wallSeconds": 2.929786958033219,
+    "logFile": "deterministic-and-drift.log"
+  },
+  {
+    "label": "clean-source-preparation",
+    "command": ["python3", "/tmp/f04b-clean.py"],
+    "exitStatus": 0,
+    "wallSeconds": 9.554914458072744,
+    "logFile": "clean-source-preparation.log"
+  },
+  {
+    "label": "prepare-static-resource",
+    "command": ["node", "scripts/prepare-supervisor.mjs", "debug"],
+    "exitStatus": 0,
+    "wallSeconds": 2.083021083031781,
+    "logFile": "prepare-static-resource.log"
+  },
+  {
+    "label": "selected-frontend-tests",
+    "command": ["corepack", "pnpm", "exec", "vitest", "list", "--filesOnly"],
+    "exitStatus": 0,
+    "wallSeconds": 0.19422529195435345,
+    "logFile": "selected-frontend-tests.log"
+  },
+  {
+    "label": "verify-final",
+    "command": ["corepack", "pnpm", "verify"],
+    "exitStatus": 0,
+    "wallSeconds": 15.921692625037394,
+    "logFile": "verify-final.log"
+  },
+  {
+    "label": "red-snapshot-pid",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/generated-contracts.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 1,
+    "wallSeconds": 0.4631700830068439,
+    "logFile": "red-snapshot-pid.log"
+  },
+  {
+    "label": "green-snapshot-pid",
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/generated-contracts.test.tsx",
+      "src/observation-contracts.test.tsx",
+      "--maxWorkers=1"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 0.9305124999955297,
+    "logFile": "green-snapshot-pid.log"
+  },
+  {
+    "label": "typecheck-before-review",
+    "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+    "exitStatus": 0,
+    "wallSeconds": 0.2775315420003608,
+    "logFile": "typecheck-before-review.log"
+  },
+  {
+    "label": "frontend-bundle",
+    "command": ["corepack", "pnpm", "exec", "vite", "build"],
+    "exitStatus": 0,
+    "wallSeconds": 0.5396113749593496,
+    "logFile": "frontend-bundle.log"
+  },
+  {
+    "label": "unit-measurement",
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exitStatus": 0,
+    "wallSeconds": 52.93657462496776,
+    "logFile": "unit-measurement.log"
+  },
+  {
+    "label": "verify-reviewed",
+    "command": ["corepack", "pnpm", "verify"],
+    "exitStatus": 0,
+    "wallSeconds": 10.886461000074632
+  },
+  {
+    "label": "generation-whitespace",
+    "command": ["corepack", "pnpm", "generated:write"],
+    "exitStatus": 0,
+    "wallSeconds": 0.5830997920129448
+  },
+  {
+    "label": "deterministic-and-drift-final",
+    "command": ["node", "/tmp/f04b-drift.mjs"],
+    "exitStatus": 0,
+    "wallSeconds": 3.222428834065795
+  },
+  {
+    "label": "clean-source-preparation-final",
+    "command": ["python3", "/tmp/f04b-clean.py"],
+    "exitStatus": 0,
+    "wallSeconds": 9.300126416026615
+  },
+  {
+    "label": "static-final-whitespace",
+    "command": ["corepack", "pnpm", "check"],
+    "exitStatus": 0,
+    "wallSeconds": 1.1144540829118341
+  },
+  {
+    "label": "tooling-final-whitespace",
+    "command": [
+      "node",
+      "--test",
+      "scripts/prepare-generated.test.mjs",
+      "scripts/check.test.mjs"
+    ],
+    "exitStatus": 0,
+    "wallSeconds": 0.07060033292509615
+  }
+]

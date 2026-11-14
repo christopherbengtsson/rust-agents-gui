@@ -15,6 +15,8 @@ const output = runCommand("cargo", [
   "-p",
   "workspace-core",
   "--lib",
+  "--features",
+  "codegen",
   "--no-run",
   "--message-format=json-render-diagnostics",
 ]);

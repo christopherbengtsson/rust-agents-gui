@@ -17,8 +17,12 @@ macro_rules! identity {
         #[derive(
             Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize,
         )]
+        #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
         #[serde(transparent)]
-        pub struct $name(pub Uuid);
+        pub struct $name(
+            #[cfg_attr(feature = "codegen", schemars(regex(pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")))]
+            pub Uuid,
+        );
     };
 }
 identity!(RepositoryId);
@@ -34,6 +38,7 @@ pub(crate) mod naming;
 pub use creation::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum ErrorCode {
     InvalidPath,
@@ -48,6 +53,7 @@ pub enum ErrorCode {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RepositoryError {
     pub code: ErrorCode,
     pub message: String,
@@ -83,6 +89,7 @@ impl std::error::Error for RepositoryError {}
 pub(crate) type Result<T> = std::result::Result<T, RepositoryError>;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RegisterRepository {
     #[serde(default)]
     pub create_initial_workspace: bool,
@@ -90,6 +97,7 @@ pub struct RegisterRepository {
     pub path: String,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "state", rename_all = "snake_case")]
 pub enum RegistrationState {
     Pending,
@@ -97,6 +105,7 @@ pub enum RegistrationState {
     Failed { error: RepositoryError },
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Registration {
     #[serde(default)]
     pub create_initial_workspace: bool,
@@ -116,6 +125,7 @@ pub(crate) struct RepositoryRecord {
     pub common_dir: String,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "state", rename_all = "snake_case")]
 pub enum Availability {
     Checking,
@@ -123,6 +133,7 @@ pub enum Availability {
     Unavailable { error: RepositoryError },
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Repository {
     pub id: RepositoryId,
     pub name: String,
@@ -130,12 +141,14 @@ pub struct Repository {
     pub availability: Availability,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RepositoryPage {
     pub repositories: Vec<Repository>,
     pub next: Option<RepositoryId>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "operation", rename_all = "snake_case")]
 pub enum RepositoryRequest {
     Register {
@@ -156,6 +169,7 @@ pub enum RepositoryRequest {
     },
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum RepositoryReply {
     Registration { registration: Registration },
@@ -736,3 +750,21 @@ fn process_one(
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<RepositoryId>();
+    exports.add::<ActionId>();
+    exports.add::<ErrorCode>();
+    exports.add::<RepositoryError>();
+    exports.add::<RegisterRepository>();
+    exports.add::<RegistrationState>();
+    exports.add::<Registration>();
+    exports.add::<Availability>();
+    exports.add::<Repository>();
+    exports.add::<RepositoryPage>();
+    exports.add::<RepositoryRequest>();
+    exports.add::<RepositoryReply>();
+    creation::export_contracts(exports);
+    inspection::export_contracts(exports);
+}

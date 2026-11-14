@@ -23,6 +23,7 @@ import {
   type Repository,
   type RepositoryRequest,
   type RepositoryReply,
+  type RegistrationRequest,
 } from "./lib/repositories";
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -187,6 +188,7 @@ test("registration selects the durable result and never submits twice", async ()
       return {
         kind: "registration",
         registration: {
+          initial_workspace_id: null,
           ...request.request,
           state: "completed",
           repository_id: id,
@@ -228,6 +230,7 @@ test("reopening with a retained action retrieves its result without resubmitting
       return {
         kind: "action",
         registration: {
+          initial_workspace_id: null,
           action_id,
           path: "/projects/one",
           create_initial_workspace: false,
@@ -344,7 +347,7 @@ test("invalid registration permits correction and preserves an actionable error"
 
 test("lost registration reply reconciles the retained action without another submit", async () => {
   const user = userEvent.setup();
-  let saved: { action_id: string; path: string } | undefined;
+  let saved: RegistrationRequest | undefined;
   replies(async (request) => {
     if (request.operation === "register") {
       saved = request.request;
@@ -354,7 +357,12 @@ test("lost registration reply reconciles the retained action without another sub
       return {
         kind: "action",
         registration: saved
-          ? { ...saved, state: "completed", repository_id: id }
+          ? {
+              ...saved,
+              initial_workspace_id: null,
+              state: "completed",
+              repository_id: id,
+            }
           : null,
       };
     if (request.operation === "get") return { kind: "repository", repository };
@@ -406,6 +414,7 @@ test.each([false, true])(
         return {
           kind: "registration",
           registration: {
+            initial_workspace_id: null,
             ...request.request,
             state: "completed",
             repository_id: id,
@@ -465,7 +474,7 @@ test("selection during registration is not retargeted by its late completion", a
     path: "/projects/two",
   };
   let resolve!: (reply: RepositoryReply) => void;
-  let submitted!: { action_id: string; path: string };
+  let submitted!: RegistrationRequest;
   replies(async (request) => {
     if (request.operation === "register") {
       submitted = request.request;
@@ -476,7 +485,11 @@ test("selection during registration is not retargeted by its late completion", a
     if (request.operation === "action")
       return {
         kind: "action",
-        registration: { ...submitted, state: "pending" },
+        registration: {
+          ...submitted,
+          initial_workspace_id: null,
+          state: "pending",
+        },
       };
     if (request.operation === "get")
       return {
@@ -501,7 +514,12 @@ test("selection during registration is not retargeted by its late completion", a
   await act(async () =>
     resolve({
       kind: "registration",
-      registration: { ...submitted, state: "completed", repository_id: id },
+      registration: {
+        ...submitted,
+        initial_workspace_id: null,
+        state: "completed",
+        repository_id: id,
+      },
     }),
   );
   await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
@@ -675,6 +693,7 @@ test("reconnect retrieves a retained registration result without resubmitting", 
       return {
         kind: "action",
         registration: {
+          initial_workspace_id: null,
           action_id,
           path: repository.path,
           create_initial_workspace: false,

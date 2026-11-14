@@ -5,6 +5,7 @@ identity!(ComparisonId);
 identity!(FileId);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum UnsupportedContent {
     Binary,
@@ -111,6 +112,7 @@ fn parse_status(bytes: &[u8]) -> Result<Vec<FileEntry>> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum RowKind {
     Hunk,
@@ -120,6 +122,7 @@ pub enum RowKind {
     NoNewline,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct DiffRow {
     pub kind: RowKind,
     pub old_line: Option<u32>,
@@ -239,6 +242,7 @@ const PENDING_JOBS: usize = 8;
 pub(crate) const CONTENT_BYTES: usize = 256 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum InspectionPhase {
     Idle,
@@ -248,12 +252,14 @@ pub enum InspectionPhase {
     Failed,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct PreviewTarget {
     pub workspace_id: WorkspaceId,
     pub comparison_id: ComparisonId,
     pub file_id: FileId,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ChangedFile {
     pub id: FileId,
     pub path: String,
@@ -262,6 +268,7 @@ pub struct ChangedFile {
     pub unsupported: Option<UnsupportedContent>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ChangePage {
     pub comparison_id: ComparisonId,
     pub head: String,
@@ -270,6 +277,7 @@ pub struct ChangePage {
     pub next: Option<FileId>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ChangesObservation {
     pub workspace_id: WorkspaceId,
     pub phase: InspectionPhase,
@@ -277,6 +285,7 @@ pub struct ChangesObservation {
     pub error: Option<RepositoryError>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct FilePreview {
     pub comparison_id: ComparisonId,
     pub head: String,
@@ -286,6 +295,7 @@ pub struct FilePreview {
     pub note: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct PreviewObservation {
     pub target: PreviewTarget,
     pub phase: InspectionPhase,
@@ -994,3 +1004,19 @@ impl Workspaces {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(feature = "codegen")]
+pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
+    exports.add::<ComparisonId>();
+    exports.add::<FileId>();
+    exports.add::<UnsupportedContent>();
+    exports.add::<RowKind>();
+    exports.add::<DiffRow>();
+    exports.add::<InspectionPhase>();
+    exports.add::<PreviewTarget>();
+    exports.add::<ChangedFile>();
+    exports.add::<ChangePage>();
+    exports.add::<ChangesObservation>();
+    exports.add::<FilePreview>();
+    exports.add::<PreviewObservation>();
+}

@@ -5,6 +5,7 @@ import {
   object,
   identity,
   bounded,
+  absent,
   text,
   domainError,
   decodeOwnedReply,
@@ -14,106 +15,63 @@ import {
 } from "./observation-contracts";
 export { object, identity } from "./observation-contracts";
 export type RepositoryError = ObservationError;
-export type Availability =
-  | { state: "checking" | "available" }
-  | { state: "unavailable"; error: RepositoryError };
-export type Repository = {
-  id: string;
-  name: string;
-  path: string;
-  availability: Availability;
-};
-export type RepositoryPage = {
-  repositories: Repository[];
-  next: string | null;
-};
-export type Registration = {
-  action_id: string;
-  path: string;
-  initial_workspace_id?: string | null;
-  create_initial_workspace?: boolean;
-} & (
-  | { state: "pending" }
-  | { state: "completed"; repository_id: string }
-  | { state: "failed"; error: RepositoryError }
-);
-export type RegistrationRequest = {
-  action_id: string;
-  path: string;
-  create_initial_workspace?: boolean;
-};
-export type RepositoryRequest =
-  | { operation: "register"; request: RegistrationRequest }
-  | { operation: "action"; action_id: string }
-  | { operation: "list"; after: string | null; refresh: boolean }
-  | { operation: "get"; id: string; refresh: boolean };
-export type RepositoryReply =
-  | { kind: "registration"; registration: Registration }
-  | { kind: "action"; registration: Registration | null }
-  | { kind: "repositories"; page: RepositoryPage }
-  | { kind: "repository"; repository: Repository | null };
+export type {
+  Availability,
+  Repository,
+  RepositoryPage,
+  Registration,
+  RepositoryRequest,
+  RepositoryReply,
+} from "@/generated/contracts/types";
+export type RegistrationRequest = RegisterRepository;
+import type {
+  RegisterRepository,
+  Repository,
+  Registration,
+  RepositoryRequest,
+  RepositoryReply,
+} from "@/generated/contracts/types";
+import { validateRepositoryReply } from "@/generated/contracts/validators.js";
 
-function availability(value: unknown): value is Availability {
+function repositorySemantics(value: Repository): boolean {
   return (
-    object(value) &&
-    ((value.state === "available" && value.error === undefined) ||
-      (value.state === "checking" && value.error === undefined) ||
-      (value.state === "unavailable" && domainError(value.error)))
-  );
-}
-function repository(value: unknown): value is Repository {
-  return (
-    object(value) &&
-    identity(value.id) &&
     text(value.name, 24 * 1024) &&
     value.name.length > 0 &&
     text(value.path, 24 * 1024) &&
     bounded(value, 24 * 1024) &&
-    availability(value.availability)
+    (value.availability.state === "unavailable"
+      ? domainError(value.availability.error)
+      : absent(value.availability, "error"))
   );
 }
-function registration(value: unknown): value is Registration {
+function registrationSemantics(value: Registration): boolean {
   return (
-    object(value) &&
-    identity(value.action_id) &&
     text(value.path, 4096) &&
-    typeof value.create_initial_workspace === "boolean" &&
-    (value.initial_workspace_id === undefined ||
-      value.initial_workspace_id === null ||
-      identity(value.initial_workspace_id)) &&
-    (value.state === "completed" || value.initial_workspace_id == null) &&
-    (value.initial_workspace_id == null ||
-      value.create_initial_workspace === true) &&
-    ((value.state === "pending" &&
-      value.repository_id === undefined &&
-      value.error === undefined) ||
-      (value.state === "completed" &&
-        identity(value.repository_id) &&
-        value.error === undefined) ||
-      (value.state === "failed" &&
-        domainError(value.error) &&
-        value.repository_id === undefined))
+    (value.state === "completed" || value.initial_workspace_id === null) &&
+    (value.initial_workspace_id === null || value.create_initial_workspace) &&
+    (value.state === "pending"
+      ? absent(value, "repository_id", "error")
+      : value.state === "completed"
+        ? absent(value, "error")
+        : absent(value, "repository_id") && domainError(value.error))
   );
 }
-function reply(value: unknown): value is RepositoryReply {
-  if (!object(value) || !bounded(value, 48 * 1024)) return false;
+function replySemantics(value: RepositoryReply): boolean {
+  if (!bounded(value, 48 * 1024)) return false;
   switch (value.kind) {
     case "registration":
-      return registration(value.registration);
+      return registrationSemantics(value.registration);
     case "action":
-      return value.registration === null || registration(value.registration);
+      return (
+        value.registration === null || registrationSemantics(value.registration)
+      );
     case "repository":
-      return value.repository === null || repository(value.repository);
+      return value.repository === null || repositorySemantics(value.repository);
     case "repositories":
       return (
-        object(value.page) &&
-        Array.isArray(value.page.repositories) &&
         value.page.repositories.length <= 32 &&
-        value.page.repositories.every(repository) &&
-        (value.page.next === null || identity(value.page.next))
+        value.page.repositories.every(repositorySemantics)
       );
-    default:
-      return false;
   }
 }
 // Automatic observation entry point; durable submissions cannot enter this queue.
@@ -154,7 +112,11 @@ export function decodeRepositoryReply(
     list: "repositories",
     get: "repository",
   }[request.operation];
-  if (!reply(value) || value.kind !== expected)
+  if (
+    !validateRepositoryReply(value) ||
+    !replySemantics(value) ||
+    value.kind !== expected
+  )
     throw replyUnavailable(
       "The supervisor returned an invalid repository observation. Refresh to reconnect to a matching build.",
     );
