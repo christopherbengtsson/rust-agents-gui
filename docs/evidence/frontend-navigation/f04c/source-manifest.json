@@ -1,0 +1,20 @@
+{
+  "baseline": "b96b74376332ef69ee8bcdbb31e6bcf8886d79af",
+  "sha256": {
+    "Cargo.lock": "a654e1b1a3d883d82b6dc78c4527757243475971b8d8f624d2558a52737f04cc",
+    "crates/core/Cargo.toml": "f427787523db27ebe7dcaef17345c4a74a0f7a3964fb6c919740d5a8dc0fa7c7",
+    "crates/core/src/connection.rs": "9949edd069990da7e58520fcfaa2664fa2d3d4e18eec1a70a4f53d7e1ffa0d00",
+    "crates/core/src/connection/admission.rs": "92938366eb752cbde88754dada79393d10e82704a0ba07be313b4de19aa0fe75",
+    "crates/core/src/connection/tests.rs": "2f598b8cb0d6d8b9452998186dea6535944ba2761a6d4d61e7546eb2bc41fdeb",
+    "crates/core/src/connection/framed_exchange.rs": "e04f9b2404221631231635f9ae0e1a9c2c260fd2466647d1a37aaca41bc4973d",
+    "crates/core/src/connection/framed_exchange/tests.rs": "dd2d8019369586e607bca27052ed1a84aadca65f02f1e0f57e005a7e55d843a4",
+    "crates/core/src/connection/subscription.rs": "ebd0ddd47d388b2e2e53bb0b2d89dae36ffbd152c0742fc38683593c06541d59",
+    "src/generated/contracts/manifest.json": "8692185a132e89a3e07d5a944ad8691c8fe95f59a08ed249aafdd800747f2bcc",
+    "src/generated/contracts/schemas.json": "7d3612154ecbb522a94c1402bab3c4315ed6adce8d8c504b4cfc06b5f923f0bd",
+    "src/generated/contracts/types.ts": "d86dcdc4f99002f72d0509dd9745054156d5864a051f542b4e931f04d7fca611",
+    "src/generated/contracts/validators.d.ts": "4ab1d6f020db28995641be77613925a09dbfdb1002d8b1509ffe2ac92342ab34",
+    "src/generated/contracts/validators.js": "ec400f091c5d783b8f9e1c7080b6d0b07d583d45c16c0d151e32819627eeceb4",
+    "contracts/observations-v6.json": "8d288e8fb94925c9231002128da226ed10630e48c83f6f918397f8c6f7d85cf3",
+    "contracts/observations-v7.json": "af6f197f24a78c0938b7b80235f8487a15d751a7348bcf8c5a53b3b00006d9e2"
+  }
+}

@@ -17,6 +17,12 @@ use std::{
     time::{Duration, Instant},
 };
 mod admission;
+// F04c builds the kernel; F04d migrates both production callers together.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "F04d adopts the framed-exchange kernel")
+)]
+mod framed_exchange;
 mod subscription;
 pub use admission::{Admitted, ConnectionSlots};
 pub use subscription::{FeedAck, FeedBatch, FeedEvent};

@@ -113,7 +113,8 @@ fn admitted_failure_unwind_and_unstarted_drop_release_their_slots() {
         permit: slots.try_acquire().unwrap(),
         work: || panic!("controlled worker unwind"),
     };
-    assert!(std::panic::catch_unwind(|| unwinds.run()).is_err());
+    // Tokio's permit is not UnwindSafe; this controlled panic mutates no shared policy state.
+    assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unwinds.run())).is_err());
     drop(Admitted {
         permit: slots.try_acquire().unwrap(),
         work: || (),

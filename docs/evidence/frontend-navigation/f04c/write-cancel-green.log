@@ -1,0 +1,19 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.77s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-24f99f8bc3c35139)
+
+running 11 tests
+test connection::framed_exchange::tests::cancellation_wakes_idle_or_partial_read_and_closes_terminally ... ok
+test connection::framed_exchange::tests::cancelled_or_abandoned_write_closes_without_restarting_partial_io ... ok
+test connection::framed_exchange::tests::codec_bounds_encoding_and_rejects_advertised_oversize_before_body_reservation ... ok
+test connection::framed_exchange::tests::codec_distinguishes_partial_header_and_body_from_clean_boundary_eof ... ok
+test connection::framed_exchange::tests::codec_preserves_split_and_coalesced_frames_and_empty_payloads ... ok
+test connection::framed_exchange::tests::complete_nonzero_header_without_body_is_truncated_even_after_decode_consumes_it ... ok
+test connection::framed_exchange::tests::exchange_returns_complete_frames_and_keeps_prefetched_next_frame ... ok
+test connection::framed_exchange::tests::first_byte_starts_one_transfer_budget_and_slow_fragments_cannot_extend_it ... ok
+test connection::framed_exchange::tests::read_caps_idle_ack_and_buffered_transfer_without_extending_cancelled_polling ... ok
+test connection::framed_exchange::tests::write_deadline_covers_partial_header_body_and_flush_without_fragment_renewal ... ok
+test connection::framed_exchange::tests::writes_encode_once_across_partial_progress_and_wait_for_flush ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 140 filtered out; finished in 0.00s
+

@@ -1,0 +1,9 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0433]: cannot find type `FramedExchange` in this scope
+   --> crates/core/src/connection/framed_exchange/tests.rs:144:28
+    |
+144 |         let mut exchange = FramedExchange::new(Scenario(control.clone()));
+    |                            ^^^^^^^^^^^^^^ use of undeclared type `FramedExchange`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `workspace-core` (lib test) due to 1 previous error
