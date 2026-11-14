@@ -1,0 +1,37 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/inspection-actor.test.tsx (12 tests | 1 failed) 35ms
+   × changed comparisons reject saved opaque file and reading context after workspace and Settings-style release 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/inspection-actor.test.tsx > changed comparisons reject saved opaque file and reading context after workspace and Settings-style release
+AssertionError: expected { …(3) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "comparison": "00000000-0000-4000-8000-000000000002",
+  "id": "00000000-0000-4000-8000-000000000003",
+  "path": "src/a.txt",
+}
+
+ ❯ src/lib/inspection-actor.test.tsx:268:47
+    266|   s.configure(workspaceId, true, true);
+    267|   await flush();
+    268|   expect(s.app.inspection.getView().selected).toBeUndefined();
+       |                                               ^
+    269|   expect(s.app.presentation.getState().inspection[workspaceId]).toBeUn…
+    270|   expect(request(vi.mocked(invoke).mock.calls.at(-1)?.[1]).operation).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  19:29:07
+   Duration  361ms (environment 49%, import 27%, tests 11%, transform 11%, setup 1%)
+

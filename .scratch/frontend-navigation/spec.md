@@ -75,9 +75,11 @@ physical scheduling, Query observations and XState coordination. F04g records th
 focused actual socket/process/fixture-desktop, packaging and matched-baseline
 qualification in [its evidence](../../docs/evidence/frontend-navigation/f04g.md).
 Historical F04 evidence retains its original controlled-only limits; the new
-baseline measurements belong to F04g. F05–F08 remain separate, unimplemented
-sessions. The next selected ticket is F05 presentation context/integration, not
-another observation/cache migration. No successor is authorized by this handoff.
+baseline measurements belong to F04g. [F05 evidence](../../docs/evidence/frontend-navigation/f05.md)
+now records retained presentation persistence/integration, passing deterministic
+checks, production packaging and focused private-state desktop restoration.
+F06–F08 remain separate, unimplemented sessions. F06 is the next dependency-chain
+ticket, requiring its own user selection. No successor is authorized by this handoff.
 
 F04a changes documentation/tickets only: manifests, lockfiles, generated assets,
 product implementation and implementation acceptance stay untouched. Add each
@@ -490,3 +492,15 @@ integration. [ADR 0007](../../docs/adr/0007-library-backed-observation-modules.m
 [research](../../docs/research/frontend-navigation-library-refactor.md) and
 [F04a evidence](../../docs/evidence/frontend-navigation/f04a.md) record the decision.
 F01–F04 results remain historical; no new product or native qualification is claimed.
+
+### 2026-11-14 — F05 complete
+
+[F05 evidence](../../docs/evidence/frontend-navigation/f05.md) records validated,
+allowlisted Zustand persistence/migration, visible storage errors, comparison-bound
+reading context, retained panel/view defaults and independent pending identities.
+F04e/F04f/F04g fulfill the original observation requirements; their evidence remains
+linked and unchanged. Final verification passed 158 Rust + 40 tooling + 174 frontend
+units; production packaging, execution measurements and focused packaged desktop
+restoration passed. Review ended with Standards 0 / Spec 0 outstanding. Only F05
+was implemented; F06 routing/migration, F07 Settings and F08 cumulative qualification
+remain separate. No provider work or whole-foundation completion is claimed.

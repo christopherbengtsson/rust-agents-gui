@@ -1,3 +1,4 @@
+import { useStore } from "zustand";
 import type { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { CircleAlert, FolderGit2, RefreshCw } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -60,6 +61,7 @@ export function WorkspacePanel({
         </Button>
       </header>
       <div className="workspace-content">
+        <PresentationStorageStatus store={changeReader.presentation} />
         {repositories.pending && (
           <p role="status">
             {repositories.actionError
@@ -224,4 +226,18 @@ export function WorkspacePanel({
       </footer>
     </main>
   );
+}
+
+function PresentationStorageStatus({
+  store,
+}: {
+  store: WorkspaceChangesReader["presentation"];
+}) {
+  const error = useStore(store, (state) => state.storageError);
+  return error ? (
+    <Alert>
+      <AlertTitle>Desktop presentation preferences unavailable</AlertTitle>
+      <AlertDescription>{error}</AlertDescription>
+    </Alert>
+  ) : null;
 }

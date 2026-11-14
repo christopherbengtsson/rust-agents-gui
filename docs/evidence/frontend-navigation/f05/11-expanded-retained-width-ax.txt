@@ -1,0 +1,13 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~				70 button (expanded) Hide changed files, Secondary Actions: Collapse
+~					78 tab (selected) Changes
+~				98 splitter Resize changed files, Value: 58
++				102 container Changed files
++					103 heading Changed files, Value: 2
++						104 text Changed files
++					105 container
++						106 toggle button large.txt .M, Help: large.txt, Value: off
++						107 toggle button text.txt .M, Help: text.txt, Value: off
++					108 button First page
++					109 button (disabled) Next files
+The focused UI element is 70 button (expanded) Hide changed files, Secondary Actions: Collapse

@@ -444,3 +444,18 @@ test("feed failures stay visible while native cleanup is still pending", async (
     "Native cleanup pending",
   );
 });
+
+test("presentation storage failure stays visible without a mounted inspection view", async () => {
+  localStorage.setItem("agent-workspace.presentation", "{invalid");
+  mockConnection(async (command) =>
+    command === "desktop_pid" ? 42 : snapshot,
+  );
+  render(<App />);
+  expect(
+    await screen.findByText(
+      /could not read or migrate presentation preferences/,
+    ),
+  ).toBeDefined();
+  expect(screen.queryByLabelText("Selected file changes")).toBeNull();
+  expect(localStorage.getItem("agent-workspace.presentation")).toBe("{invalid");
+});

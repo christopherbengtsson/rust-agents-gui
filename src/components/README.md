@@ -253,9 +253,13 @@ retained observations remain readable and marked stale.
   owns the reader's lifetime above layouts and the workspace-keyed presentation, so navigation
   also drains old IPC before reading the new target. Supply that stable reader
   when composing WorkspaceInspection; keyed view resets release interest and retain
-  no extra readers. useWorkspaceChanges requires that owner. Zustand keeps selected
-  file/comparison context in memory and the reader revalidates it through the current
-  comparison before previewing. Durable reading-context persistence remains F05.
+  no extra readers. useWorkspaceChanges requires that owner. Zustand persists an allowlist of workspace file/comparison, reading position,
+  panel width/collapse and remembered view defaults. Current tab selection stays local
+  until F06 supplies route authority. Workspace or Settings-style interest release
+  preserves that memory; a changed comparison rejects restored file/scroll context.
+  Live preview refreshes retain native-validated file identity and reset scroll when
+  the comparison changes. Storage errors remain visible in WorkspacePanel even when
+  inspection is unmounted; pending action records remain separate.
 - **ChangedFiles** is the bounded file-selection block shared by the desktop
   right panel and the below-880-px Sheet. It receives observations and a selection
   callback. Opaque file IDs, never display labels, target previews. It renders one
@@ -264,9 +268,12 @@ retained observations remain readable and marked stale.
 - **UnifiedDiff** (`primitives/unified-diff.tsx`) composes Code Block and Scroll
   Area for plain, bounded Git rows. Use explicit old/new source numbers, row kinds
   and supplied text; use Code Block directly for ordinary sequential code. It
-  accepts a reading-position ref owned above the tabs and an explicit scroll
-  callback. Tab switches unmount inactive heavy content; changing files resets
-  position. No highlighting or HTML rendering is enabled.
+  accepts `initialPosition` for one keyed mount and an explicit `onPosition`
+  callback. Key by comparison/file identity to reset stale reading position.
+  Scroll reporting is coalesced to 150 ms and flushes pending position on cleanup;
+  consumers capture workspace/comparison/file identity and reject late saves.
+  Tab switches unmount inactive heavy content. No highlighting or HTML rendering
+  is enabled.
 - **Foundation additions:** Tabs, Resizable, Scroll Area and Code Block came from
   shadcn base-nova through the project runner. Existing compact Button source was
   preserved. Tabs forwards orientation to Base UI and uses explicit

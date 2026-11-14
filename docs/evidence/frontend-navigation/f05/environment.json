@@ -1,0 +1,15 @@
+{
+  "base": "c49555d807fb375dd4b9333b619894cf0750c446",
+  "branch": "feature/m01-frontend-navigation",
+  "dirty": "M  src/App.test.tsx\nM  src/components/blocks/workspace-changes.tsx\nM  src/components/blocks/workspace-panel.tsx\nM  src/components/primitives/unified-diff.tsx\nM  src/lib/inspection-actor.test.tsx\nA  src/lib/presentation-store.test.tsx\nM  src/lib/presentation-store.ts\nM  src/lib/workspace-changes-reader.ts\nM  src/workspace-changes.test.tsx\n?? docs/evidence/frontend-navigation/f05/",
+  "system": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "hardware": "Apple M4 Pro",
+  "logical_cpus": "12",
+  "memory_bytes": "51539607552",
+  "node": "v26.13.1",
+  "pnpm": "12.18.0",
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "harness": "Rust/tooling threads=1; Vitest maxWorkers=1",
+  "target": "default worktree target; warm cache; test profile, compilation recorded separately"
+}

@@ -46,10 +46,10 @@ preference helpers identify existing behavior, not required final file organizat
 
 ## Acceptance
 
-- [ ] Allowlisted presentation context persists/migrates with visible storage errors and validated comparison restoration.
-- [ ] Pending action identity/uncertainty remains independent of presentation migrations.
-- [ ] Shared app-lifetime owners and feature interfaces integrate without duplicate caches, lifecycle state or covered polling.
-- [ ] Original observation requirements have linked passing predecessor evidence plus relevant current integration checks.
+- [x] Allowlisted presentation context persists/migrates with visible storage errors and validated comparison restoration.
+- [x] Pending action identity/uncertainty remains independent of presentation migrations.
+- [x] Shared app-lifetime owners and feature interfaces integrate without duplicate caches, lifecycle state or covered polling.
+- [x] Original observation requirements have linked passing predecessor evidence plus relevant current integration checks.
 
 ## Handoff boundary
 
@@ -74,3 +74,30 @@ The user selected complete feature slices: Query/freshness/covered polling repla
 now finishes in F04e/F04f, followed by F04g actual qualification. This ticket retains
 presentation persistence and integration. Historical comments describe the former
 scope; acceptance above is current and remains unchecked.
+
+### 2026-11-14 — F05 implemented and verified
+
+Confirmed F04g checked acceptance and actual qualification at
+`c49555d807fb375dd4b9333b619894cf0750c446`; continued the current feature branch
+with a clean tree/index, preserving historical evidence and successor scope.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f05.md) records allowlisted
+Zustand persistence, explicit migration/validation, visible storage failures,
+comparison-bound reading restoration, independent pending identities, source and
+sidecar hashes, exact checks, measurements, failed attempts and qualification limits.
+Original F05 observation requirements are mapped to completed F04e/F04f/F04g evidence
+and passing current integration checks.
+
+Final configured verification passed **158 Rust + 40 tooling + 174 frontend units**;
+separate production packaging and required warm-up/five-run measurements passed.
+Actual private-state packaged WebView checks restored a 680-pixel reading position,
+42% panel width, collapse and remembered view across desktop reopening; changed
+released comparisons rejected stale file/scroll context. Responsive narrow/wide
+remount retained the edited layout. Fixture desktop/owner exited and the original
+checkout remained unchanged. Storage faults use substituted unit outcomes;
+F08 cumulative and native-provider qualification remain separate.
+
+Independent Standards and Spec review resolved both findings and ended with
+**0 / 0 outstanding**. The containing commit owns this ticket's implementation
+and evidence. F06 supplies route authority and old selection migration; F07 supplies
+Settings. Both and all successors remain unimplemented by this session. Stop after F05.

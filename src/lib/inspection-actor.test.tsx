@@ -1,4 +1,4 @@
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { AppObservations } from "./app-observations";
 import { ownerBound } from "@/test-support/owner-bound-invoke";
@@ -9,6 +9,7 @@ import { validateWorkspaceRequest } from "@/generated/contracts/validators.js";
 import type { ChangePage, InspectionRequest, InspectionReply } from "./changes";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+beforeEach(() => localStorage.clear());
 const workspaceId = "00000000-0000-4000-8000-000000000001";
 const flush = async () => {
   for (let i = 0; i < 40; i++) await Promise.resolve();
@@ -242,7 +243,7 @@ test("failed inspection stays paused across hide/remount and recovers on a newer
   expect(invoke).toHaveBeenCalledTimes(calls + 1);
   expect(s.app.inspection.getView().error).toBeUndefined();
 });
-test("restored file context targets the newly observed comparison after workspace and Settings-style release", async () => {
+test("changed comparisons reject saved opaque file and reading context after workspace and Settings-style release", async () => {
   const s = scenario();
   s.hint();
   s.configure(workspaceId, true, true);
@@ -264,21 +265,11 @@ test("restored file context targets the newly observed comparison after workspac
   s.app.inspection.release();
   s.configure(workspaceId, true, true);
   await flush();
-  expect(s.app.inspection.getView().selected?.id).toBe(fileId);
-  expect(s.app.inspection.getView().preview?.target).toEqual({
-    workspace_id: workspaceId,
-    comparison_id: nextComparison,
-    file_id: fileId,
-  });
-  expect(request(vi.mocked(invoke).mock.calls.at(-1)?.[1])).toEqual({
-    operation: "change_preview",
-    target: {
-      workspace_id: workspaceId,
-      comparison_id: nextComparison,
-      file_id: fileId,
-    },
-    load: true,
-  });
+  expect(s.app.inspection.getView().selected).toBeUndefined();
+  expect(s.app.presentation.getState().inspection[workspaceId]).toBeUndefined();
+  expect(request(vi.mocked(invoke).mock.calls.at(-1)?.[1]).operation).toBe(
+    "changes",
+  );
 });
 test("paging pins comparison identity and explicit refresh returns to First", async () => {
   const s = scenario();
@@ -466,3 +457,91 @@ test.each(["pending", "rejected"])(
     s.app.inspection.release();
   },
 );
+
+test("unchanged comparison restores a saved file outside the listed page through exact native validation", async () => {
+  const s = scenario();
+  s.app.presentation.getState().rememberFile(workspaceId, {
+    id: fileId,
+    path: "src/a.txt",
+    comparison,
+    position: { top: 37, left: 12 },
+  });
+  const offPage = summary();
+  if (offPage.kind !== "changes" || !offPage.observation.page)
+    throw new Error("Fixture page");
+  offPage.observation.page.files = [
+    { ...offPage.observation.page.files[0], id: otherWorkspace, path: "b.txt" },
+  ];
+  offPage.observation.page.total = 33;
+  vi.mocked(invoke).mockImplementationOnce(ownerBound(() => offPage));
+  s.hint();
+  s.configure(workspaceId, true, true);
+  await flush();
+  expect(s.app.inspection.getView().selected?.position).toEqual({
+    top: 37,
+    left: 12,
+  });
+  expect(s.app.inspection.getView().preview?.target).toEqual({
+    workspace_id: workspaceId,
+    comparison_id: comparison,
+    file_id: fileId,
+  });
+});
+
+test("live comparison revalidation resets reading position without losing the selected preview", async () => {
+  const s = scenario();
+  s.hint();
+  s.configure(workspaceId, true, true);
+  await flush();
+  s.app.inspection.select({
+    id: fileId,
+    path: "src/a.txt",
+    index_status: ".",
+    worktree_status: "M",
+    unsupported: null,
+  });
+  await flush();
+  s.app.presentation
+    .getState()
+    .rememberPosition(workspaceId, comparison, fileId, { top: 37, left: 12 });
+  vi.mocked(invoke).mockImplementationOnce(
+    ownerBound(() => summary(workspaceId, nextComparison)),
+  );
+  s.app.inspection.refresh();
+  await flush();
+  expect(s.app.inspection.getView().selected?.id).toBe(fileId);
+  expect(s.app.inspection.getView().selected?.comparison).toBe(nextComparison);
+  expect(s.app.inspection.getView().selected?.position).toBeUndefined();
+  expect(s.app.inspection.getView().preview?.target.comparison_id).toBe(
+    nextComparison,
+  );
+});
+
+test("late physical drain cannot turn a released selection into a live restoration", async () => {
+  const s = scenario();
+  s.hint();
+  s.configure(workspaceId, true, true);
+  await flush();
+  s.app.inspection.select({
+    id: fileId,
+    path: "src/a.txt",
+    index_status: ".",
+    worktree_status: "M",
+    unsupported: null,
+  });
+  await flush();
+  const held = deferred<InspectionReply>();
+  vi.mocked(invoke).mockImplementationOnce(ownerBound(() => held.promise));
+  s.app.inspection.refresh();
+  await flush();
+  s.app.inspection.release();
+  held.resolve(summary());
+  await flush();
+  vi.mocked(invoke).mockImplementationOnce(
+    ownerBound(() => summary(workspaceId, nextComparison)),
+  );
+  s.configure(workspaceId, true, true);
+  await flush();
+  expect(s.app.inspection.getView().selected).toBeUndefined();
+  expect(s.app.presentation.getState().inspection[workspaceId]).toBeUndefined();
+});

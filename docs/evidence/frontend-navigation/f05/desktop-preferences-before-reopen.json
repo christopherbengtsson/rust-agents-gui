@@ -1,0 +1,5 @@
+{
+  "agent-workspace.selected-repository": "3a06dbdf-e6f1-401b-a4d9-5d88a54b7f86",
+  "agent-workspace.selected-workspace": "{\"repository_id\":\"3a06dbdf-e6f1-401b-a4d9-5d88a54b7f86\",\"workspace_id\":\"2a799c18-e502-4440-a42c-6cda4e44d08a\"}",
+  "agent-workspace.presentation": "{\"state\":{\"inspection\":{\"2a799c18-e502-4440-a42c-6cda4e44d08a\":{\"id\":\"6a83bfa1-6498-4c4f-8747-4b3826e0b871\",\"path\":\"large.txt\",\"comparison\":\"8b9133f1-6f65-494d-96f0-74e0c4c17e16\"}},\"contexts\":{\"2a799c18-e502-4440-a42c-6cda4e44d08a\":{\"view\":\"workspace\",\"filesWidth\":42,\"collapsed\":true}}},\"version\":1}"
+}

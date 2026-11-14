@@ -1,0 +1,36 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/presentation-store.test.tsx (12 tests | 1 failed) 7ms
+   × reselecting the same comparison and file preserves reading context 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/presentation-store.test.tsx > reselecting the same comparison and file preserves reading context
+AssertionError: expected undefined to deeply equal { top: 37, left: 12 }
+
+- Expected:
+{
+  "left": 12,
+  "top": 37,
+}
+
++ Received:
+undefined
+
+ ❯ src/lib/presentation-store.test.tsx:111:60
+    109|   store.getState().rememberPosition(workspace, comparison, file, { top…
+    110|   store.getState().rememberFile(workspace, { id: file, path: "a", comp…
+    111|   expect(store.getState().inspection[workspace]?.position).toEqual({ t…
+       |                                                            ^
+    112| });
+    113|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  19:32:03
+   Duration  260ms (environment 74%, import 10%, transform 10%, tests 3%, setup 2%, worker 1%)
+

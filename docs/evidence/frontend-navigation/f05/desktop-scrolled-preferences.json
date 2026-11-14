@@ -1,0 +1,23 @@
+{
+  "state": {
+    "inspection": {
+      "2a799c18-e502-4440-a42c-6cda4e44d08a": {
+        "id": "6a83bfa1-6498-4c4f-8747-4b3826e0b871",
+        "path": "large.txt",
+        "comparison": "2f88ab8a-1da2-4bf5-85f4-b370963f3d52",
+        "position": {
+          "top": 680,
+          "left": 0
+        }
+      }
+    },
+    "contexts": {
+      "2a799c18-e502-4440-a42c-6cda4e44d08a": {
+        "view": "workspace",
+        "filesWidth": 42,
+        "collapsed": true
+      }
+    }
+  },
+  "version": 1
+}

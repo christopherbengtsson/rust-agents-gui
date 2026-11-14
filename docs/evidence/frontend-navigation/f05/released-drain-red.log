@@ -1,0 +1,37 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/inspection-actor.test.tsx (15 tests | 1 failed | 14 skipped) 17ms
+   × late physical drain cannot turn a released selection into a live restoration 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/inspection-actor.test.tsx > late physical drain cannot turn a released selection into a live restoration
+AssertionError: expected { …(3) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "comparison": "00000000-0000-4000-8000-000000000005",
+  "id": "00000000-0000-4000-8000-000000000003",
+  "path": "src/a.txt",
+}
+
+ ❯ src/lib/inspection-actor.test.tsx:539:47
+    537|   s.configure(workspaceId, true, true);
+    538|   await flush();
+    539|   expect(s.app.inspection.getView().selected).toBeUndefined();
+       |                                               ^
+    540|   expect(s.app.presentation.getState().inspection[workspaceId]).toBeUn…
+    541| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  19:34:49
+   Duration  326ms (environment 55%, import 24%, transform 13%, tests 6%, setup 1%, worker 1%)
+

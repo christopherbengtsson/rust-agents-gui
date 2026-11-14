@@ -5,6 +5,10 @@
 - Auto discovered local repos when user explicitly adding new repo
 - Auto discovered remote repos when user explicitly adding new repo (auto clone)
 
+# MVP fix
+
+- profile scrolling with many remembered workspaces and a large diff. If it becomes costly, the first changes would be isolating scroll updates from broader rendering and batching storage writes further. Existing checks prove restoration works; they don’t quantify that performance cost.
+
 # Improvements
 
 - tsconfig build: exclude stuff like test-support

@@ -1,0 +1,26 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/presentation-store.test.tsx (1 test | 1 failed) 2ms
+   × reopening restores only allowlisted workspace presentation context 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/presentation-store.test.tsx > reopening restores only allowlisted workspace presentation context
+TypeError: store.getState(...).rememberFile is not a function
+ ❯ src/lib/presentation-store.test.tsx:20:20
+     18|   const storage = memory();
+     19|   const store = createPresentationStore(() => storage);
+     20|   store.getState().rememberFile(workspace, { id: file, path: "src/a.ts…
+       |                    ^
+     21|   store.getState().rememberPosition(workspace, comparison, file, { top…
+     22|   store.getState().rememberLayout(workspace, { filesWidth: 41, collaps…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  19:27:10
+   Duration  272ms (environment 77%, import 10%, transform 10%, setup 1%, tests 1%, worker 1%)
+

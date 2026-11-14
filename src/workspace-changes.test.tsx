@@ -116,6 +116,7 @@ function request(args: unknown) {
   return (args as { request: InspectionRequest }).request;
 }
 beforeEach(() => {
+  localStorage.clear();
   Object.defineProperty(document, "visibilityState", {
     configurable: true,
     value: "visible",
@@ -1185,4 +1186,123 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
     refresh: false,
   });
   expect(screen.queryByText("Old target failure")).toBeNull();
+});
+
+test("reopening inspection restores remembered view and reading position after Settings-style interest removal", async () => {
+  const first = new WorkspaceChangesReader();
+  const mount = (reader: InspectionReader) => (
+    <WorkspaceInspection
+      reader={reader}
+      owner="owner"
+      workspaceId={workspace_id}
+    >
+      <p>Details</p>
+    </WorkspaceInspection>
+  );
+  const view = render(mount(first));
+  fireEvent.click(await screen.findByRole("button", { name: /src\/file.txt/ }));
+  await screen.findByText("new content");
+  const viewport = screen
+    .getByLabelText("Unified file diff")
+    .closest<HTMLElement>("[data-slot=scroll-area-viewport]");
+  if (!viewport) throw new Error("Missing diff viewport");
+  viewport.scrollTop = 37;
+  viewport.scrollLeft = 12;
+  fireEvent.scroll(viewport);
+  view.unmount();
+  const afterRelease = vi.mocked(invoke).mock.calls.length;
+  await act(async () => {});
+  expect(invoke).toHaveBeenCalledTimes(afterRelease);
+  // A new store/reader proves durable restoration, beyond the original lifetime.
+  const reopened = new WorkspaceChangesReader();
+  render(mount(reopened));
+  await screen.findByText("new content");
+  expect(
+    screen.getByRole("tab", { name: "Changes" }).getAttribute("aria-selected"),
+  ).toBe("true");
+  const restored = screen
+    .getByLabelText("Unified file diff")
+    .closest<HTMLElement>("[data-slot=scroll-area-viewport]");
+  expect([restored?.scrollTop, restored?.scrollLeft]).toEqual([37, 12]);
+});
+
+test("remembered collapsed layout starts no hidden reads and expands using its retained width", async () => {
+  const reader = new WorkspaceChangesReader();
+  reader.presentation
+    .getState()
+    .rememberLayout(workspace_id, { filesWidth: 41, collapsed: true });
+  render(
+    <WorkspaceInspection
+      reader={reader}
+      owner="owner"
+      workspaceId={workspace_id}
+    >
+      <p>Details</p>
+    </WorkspaceInspection>,
+  );
+  await act(async () => {});
+  expect(invoke).not.toHaveBeenCalled();
+  expect(screen.queryByRole("button", { name: /src\/file.txt/ })).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Show changed files" }),
+  ).toBeDefined();
+  fireEvent.click(screen.getByRole("button", { name: "Show changed files" }));
+  expect(reader.presentation.getState().contexts[workspace_id]).toEqual({
+    view: "workspace",
+    filesWidth: 41,
+    collapsed: false,
+  });
+});
+
+test("desktop panel remount uses the latest retained layout after a narrow-window switch", async () => {
+  let narrow = false;
+  const query: MediaQueryList = Object.assign(new EventTarget(), {
+    media: "(max-width: 879px)",
+    matches: false,
+    onchange: null,
+    addListener() {},
+    removeListener() {},
+  });
+  Object.defineProperty(query, "matches", { get: () => narrow });
+  vi.mocked(window.matchMedia).mockReturnValue(query);
+  const reader = new WorkspaceChangesReader();
+  render(
+    <WorkspaceInspection
+      reader={reader}
+      owner="owner"
+      workspaceId={workspace_id}
+    >
+      <p>Details</p>
+    </WorkspaceInspection>,
+  );
+  await screen.findByRole("button", { name: /src\/file.txt/ });
+  const files = document.getElementById("inspection-files");
+  const main = document.getElementById("inspection-main");
+  const group = files?.closest("[data-slot=resizable-panel-group]");
+  if (!files || !main || !group) throw new Error("Missing resize group");
+  Object.defineProperty(main, "offsetWidth", {
+    configurable: true,
+    value: 680,
+  });
+  await act(async () => {
+    resizeCallbacks.get(group)?.(1000);
+    resizeCallbacks.get(files)?.(320);
+  });
+  const user = (await import("@testing-library/user-event")).default.setup();
+  screen.getByRole("separator", { name: "Resize changed files" }).focus();
+  await user.keyboard("{ArrowLeft}");
+  const remembered =
+    reader.presentation.getState().contexts[workspace_id]?.filesWidth;
+  expect(remembered).toBeGreaterThan(32);
+  await act(async () => {
+    narrow = true;
+    query.dispatchEvent(new Event("change"));
+  });
+  expect(document.getElementById("inspection-files")).toBeNull();
+  await act(async () => {
+    narrow = false;
+    query.dispatchEvent(new Event("change"));
+  });
+  const restored = document.getElementById("inspection-files");
+  expect(Number(restored?.style.flexGrow)).toBeCloseTo(remembered ?? 0);
 });

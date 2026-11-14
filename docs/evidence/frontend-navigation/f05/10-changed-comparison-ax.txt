@@ -1,0 +1,8 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 79-97
+~					77 tab (selectable) Workspace
+~					78 tab (selected) Changes, Value: on
++				99 container Changes
++					100 text Select a changed file
++					101 text Refresh the file list, then select a path to inspect its unified diff.
+The focused UI element is 78 tab (selected) Changes, Value: on

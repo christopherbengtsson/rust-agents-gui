@@ -26,12 +26,15 @@ import {
   type InspectionReply,
 } from "./changes";
 import { repositoryError } from "./repositories";
-import { createPresentationStore } from "./presentation-store";
+import {
+  createPresentationStore,
+  type InspectionSelection,
+} from "./presentation-store";
 
 export type ChangesView = {
   observation?: ChangesObservation;
   preview?: PreviewObservation;
-  selected?: Pick<ChangedFile, "id" | "path">;
+  selected?: InspectionSelection;
   error?: string;
   loading: boolean;
 };
@@ -72,6 +75,7 @@ function projectView(
   previous: CachedState | undefined,
   selected: ChangesView["selected"],
   loading: boolean,
+  restoring = false,
 ): ChangesView {
   const observation =
     summary?.data?.reply.kind === "changes"
@@ -87,7 +91,13 @@ function projectView(
       : undefined;
   return {
     observation,
-    selected,
+    selected:
+      selected &&
+      (!restoring || selected.comparison === observation?.page?.comparison_id)
+        ? selected.comparison === observation?.page?.comparison_id
+          ? selected
+          : { ...selected, position: undefined }
+        : undefined,
     loading,
     preview: latest
       ? { ...latest, preview: latest.preview ?? retained?.preview ?? null }
@@ -103,6 +113,7 @@ type Flight = {
   promise: Promise<void>;
 };
 type Coordination = {
+  restoring?: boolean;
   desired?: Context;
   page: Page;
   queued?: "observe" | "refresh";
@@ -173,6 +184,8 @@ function inspectionMachine(
           (!!event.context.owner && previous.owner !== event.context.owner);
         return {
           desired: event.context,
+          restoring:
+            changed || !event.context.visible ? true : context.restoring,
           queued: event.context.visible
             ? changed
               ? "observe"
@@ -197,6 +210,7 @@ function inspectionMachine(
           ? { ...context.desired, visible: false }
           : undefined,
         queued: undefined,
+        restoring: true,
       })),
       request: assign(({ context, event }) => ({
         queued:
@@ -210,6 +224,7 @@ function inspectionMachine(
           : {},
       ),
       select: assign(({ context }) => ({
+        restoring: false,
         preview: undefined,
         previousPreview: undefined,
         queued: context.queued ?? "observe",
@@ -252,6 +267,7 @@ function inspectionMachine(
       preview: assign(({ context, event }) =>
         event.type === "preview"
           ? {
+              restoring: false,
               preview: event.key,
               previousPreview: context.preview ?? context.previousPreview,
             }
@@ -386,6 +402,7 @@ export class WorkspaceChangesReader {
       previous,
       this.selected(context),
       snapshot.matches("reading") || snapshot.matches("draining"),
+      context.restoring,
     );
   };
 
@@ -414,12 +431,9 @@ export class WorkspaceChangesReader {
       summary?.kind === "changes"
         ? summary.observation.page?.comparison_id
         : undefined;
-    this.presentation.setState((state) => ({
-      inspection: {
-        ...state.inspection,
-        [workspace]: { id: file.id, path: file.path, comparison },
-      },
-    }));
+    this.presentation
+      .getState()
+      .rememberFile(workspace, { id: file.id, path: file.path, comparison });
     this.actor.send({ type: "select" });
   };
   refresh = () => {
@@ -559,9 +573,23 @@ export class WorkspaceChangesReader {
       const result = await this.read(owner, request, scope, context);
       if (!current() || result.reply.kind !== "changes") return;
       const summary = result.reply.observation;
-      if (!active || !selected || summary.phase !== "ready" || !summary.page)
+      if (summary.phase !== "ready" || !summary.page) return;
+      if (
+        context.restoring &&
+        selected &&
+        selected.comparison !== summary.page.comparison_id
+      ) {
+        // File IDs are comparison-scoped. Reusing one under a fresh comparison
+        // cannot validate restoration, even when a display path still matches.
+        if (
+          this.selected(context)?.id === selected.id &&
+          this.selected(context)?.comparison === selected.comparison
+        )
+          this.presentation.getState().rememberFile(workspaceId, undefined);
         return;
-      // Always resolve restored opaque file identity against the current comparison.
+      }
+      if (!active || !selected) return;
+      // Native validation resolves the exact file even outside the current page.
       const target = {
         workspace_id: workspaceId,
         comparison_id: summary.page.comparison_id,
@@ -579,6 +607,17 @@ export class WorkspaceChangesReader {
       const previewKey = keyFor(owner, previewRequest);
       publish("preview", previewKey);
       await this.read(owner, previewRequest, scope, context);
+      if (
+        current() &&
+        this.selected(context)?.id === selected.id &&
+        this.selected(context)?.comparison === selected.comparison &&
+        selected.comparison !== target.comparison_id
+      )
+        this.presentation.getState().rememberFile(workspaceId, {
+          id: selected.id,
+          path: selected.path,
+          comparison: target.comparison_id,
+        });
     } catch {
       // Query retains exact-target failures and last-good data; the actor pauses.
     }
@@ -596,6 +635,7 @@ export function useInspectionView(reader: WorkspaceChangesReader): ChangesView {
       preview: snapshot.context.preview,
       previous: snapshot.context.previousPreview,
       loading: snapshot.matches("reading") || snapshot.matches("draining"),
+      restoring: snapshot.context.restoring,
     }),
     shallowEqual,
   );
@@ -626,5 +666,12 @@ export function useInspectionView(reader: WorkspaceChangesReader): ChangesView {
     },
     reader.client,
   );
-  return projectView(summary, preview, previous, selected, reading.loading);
+  return projectView(
+    summary,
+    preview,
+    previous,
+    selected,
+    reading.loading,
+    reading.restoring,
+  );
 }

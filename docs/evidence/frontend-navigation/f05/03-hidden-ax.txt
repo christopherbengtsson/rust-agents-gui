@@ -1,0 +1,25 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 39-43, 46-53, 67
+~				30 button (collapsed) Show changed files, Secondary Actions: Expand
+~					37 tab (selected) Workspace, Value: on
+~					38 tab (selectable) Changes
++				67 container Workspace
++					68 container Selected workspace
++						69 text Workspace ready Codex
++						70 heading Your workspace is ready, Value: 2
++							71 text Your workspace is ready
++						72 text sandra-minnert
++						73 description list
++							74 text Branch
++							75 text workspace/sandra-minnert
++							76 text Workspace folder
++							77 text /private/tmp/aw-f05-ostgc58_/state/workspaces/context/sandra-minnert/checkout
++							78 text Local base
++							79 text refs/heads/main · 7d01da921f532d76094a17552479a42bb5221826
++							80 text Branch artifact
++							81 text Created by this action
++							82 text Folder artifact
++							83 text Worktree created
++						84 container
++							85 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+The focused UI element is 37 tab (selected) Workspace, Value: on

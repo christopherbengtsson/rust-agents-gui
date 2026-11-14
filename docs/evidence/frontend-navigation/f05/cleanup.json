@@ -1,0 +1,23 @@
+{
+  "owner": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 65806,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "65806-1794681599217594000",
+      "revision": 124
+    },
+    "reset": true
+  },
+  "command": "/private/tmp/aw-f05-ostgc58_/F05 Context.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f05-ostgc58_/state",
+  "owner_exited": true,
+  "original_checkout_preserved": true,
+  "original_hashes": {
+    "text.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218",
+    "large.txt": "b047f5b06f970c49b0474f7e2eb52c41edff0755708ca6ca63d6f4302b3acda6"
+  },
+  "private_fixtures_retained": "/private/tmp/aw-f05-ostgc58_",
+  "full_owned_quit_qualified": false
+}
