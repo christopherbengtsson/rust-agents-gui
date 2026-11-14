@@ -1,0 +1,95 @@
+{
+  "source_manifest": "source-manifest.json",
+  "bundle": "target/release/bundle/macos/Agent Workspace.app",
+  "bundle_bytes": 17148263,
+  "files": {
+    "target/release/workspace-desktop": {
+      "bytes": 13073008,
+      "sha256": "dba94e40881b3e5061beaca481684d48beca24c6b8df388891653624b34cea15"
+    },
+    "target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": {
+      "bytes": 13073008,
+      "sha256": "dba94e40881b3e5061beaca481684d48beca24c6b8df388891653624b34cea15"
+    },
+    "dist/assets/Match-BRTduizL.js": {
+      "bytes": 4596,
+      "sha256": "bbc338768965c23425f3023d7152c594fe4f7d4aaabe66ac272b9b6e72321083"
+    },
+    "dist/assets/app-runtime-5d8NqVsc.js": {
+      "bytes": 738010,
+      "sha256": "92d39b467a9a64e1f5e30e891d66da51f4de44180800cc9c35a7b069ff129bf6"
+    },
+    "dist/assets/button-BkK1RviJ.js": {
+      "bytes": 16547,
+      "sha256": "f4b3796ac6bc7fdf22993d3e1a88e0dd340922a816e83c9f5baed3ac8b05a264"
+    },
+    "dist/assets/dist-BV1HJemj.js": {
+      "bytes": 26679,
+      "sha256": "c38c917333b7d9a2ada3e5640508622d5526f878f6e4223d606612ab70c73044"
+    },
+    "dist/assets/empty-Dn3ewsdA.js": {
+      "bytes": 2292,
+      "sha256": "a4589ab69b29d9d29dcb762a86015c0b48aa6ecf4405fb7828b1267e2eb7a548"
+    },
+    "dist/assets/index-hvIgvl0U.js": {
+      "bytes": 290568,
+      "sha256": "700b836b95abf7a6f6f1e8ba6606fe80de7dc7080f2494586e5d6b38cdaadf67"
+    },
+    "dist/assets/jsx-runtime-D_Haqy6R.js": {
+      "bytes": 8951,
+      "sha256": "1820641da87208f73e1eab92129ce51984b798d643bafdcb121bb012796a073d"
+    },
+    "dist/assets/main-D9tQRhyF.js": {
+      "bytes": 110013,
+      "sha256": "92eeb36684db227dd430746e39230ba828c83e6275647d19643d29c7abbed778"
+    },
+    "dist/assets/matchContext-BtDqw2sa.js": {
+      "bytes": 55447,
+      "sha256": "0be8ec702dc52b344ee5dee6106353c066049a2000862531860c2d4a7f7b7489"
+    },
+    "dist/assets/repository._repositoryId-DaUnzvob.js": {
+      "bytes": 83,
+      "sha256": "dc17c802dd1a22ff5b13b7bf834f321544234b3abd20f7edab63aaff6875d918"
+    },
+    "dist/assets/repository._repositoryId-DxB1rHxL.js": {
+      "bytes": 244,
+      "sha256": "8c372dd9781aa5989a5a01e64cad661cac53440152f638064e77bd90cf8a5d0f"
+    },
+    "dist/assets/repository._repositoryId.index-DKEUw71c.js": {
+      "bytes": 70,
+      "sha256": "d1cde3e8ca03f6019c8017030794d9d9ce085e02b6d84afc6aed3b499b15e424"
+    },
+    "dist/assets/repository._repositoryId.workspace._workspaceId-2fjL_rYI.js": {
+      "bytes": 1437,
+      "sha256": "2c9d0e9882c09f81ecb564378c725009e3d1442721b865b262a6ec4d7354bbdf"
+    },
+    "dist/assets/repository._repositoryId.workspace._workspaceId-DKEUw71c.js": {
+      "bytes": 70,
+      "sha256": "d1cde3e8ca03f6019c8017030794d9d9ce085e02b6d84afc6aed3b499b15e424"
+    },
+    "dist/assets/routes-DKEUw71c.js": {
+      "bytes": 70,
+      "sha256": "d1cde3e8ca03f6019c8017030794d9d9ce085e02b6d84afc6aed3b499b15e424"
+    },
+    "dist/assets/settings-CGVPxl-x.js": {
+      "bytes": 2555,
+      "sha256": "46f25aaebb825fe4cd9f55688cf2bd06c8a3c29ddd6287d645652e26123927c4"
+    },
+    "dist/assets/settings.general-Cew9Kp7f.js": {
+      "bytes": 577,
+      "sha256": "79b758a59d99e87ee8833fc786b7142f5f566447cf0105c396a657f9357d243e"
+    },
+    "dist/assets/target-error-c_COoP3a.js": {
+      "bytes": 1040,
+      "sha256": "aefe452dacdebc6d0da24aa089f61ce5f2834a47122a51e4ed951519afbafd52"
+    },
+    "dist/assets/useMatch-CUXcU6IH.js": {
+      "bytes": 539,
+      "sha256": "539f10a3ed081c9d5d3eb4e0b5c57a44a6cbc9722da964c854393274f0a454be"
+    },
+    "dist/assets/useSelector-DdFe2ywY.js": {
+      "bytes": 1902,
+      "sha256": "4883a48bb0d721ef63da7d061cac05423b4642f30eb7da2b27409530a7964bda"
+    }
+  }
+}

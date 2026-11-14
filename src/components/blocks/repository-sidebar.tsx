@@ -4,7 +4,9 @@ import {
   Layers2,
   Plus,
   GitBranch,
+  Settings,
 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -41,10 +43,12 @@ export function RepositorySidebar({
   connection,
   repositories,
   workspaces,
+  onSettingsOpen,
 }: {
   connection: Connection;
   repositories: Repositories;
   workspaces: Workspaces;
+  onSettingsOpen: () => void;
 }) {
   return (
     <Sidebar
@@ -261,6 +265,28 @@ export function RepositorySidebar({
           connected={connection.state === "connected"}
         />
         <SupervisorConnection connection={connection} />
+        <Button
+          id="settings-entry"
+          variant="ghost"
+          size="icon-sm"
+          nativeButton={false}
+          render={<Link to="/settings/general" role="link" />}
+          aria-label="Settings"
+          title="Settings"
+          onClick={(event) => {
+            if (
+              !event.defaultPrevented &&
+              event.button === 0 &&
+              !event.metaKey &&
+              !event.ctrlKey &&
+              !event.shiftKey &&
+              !event.altKey
+            )
+              onSettingsOpen();
+          }}
+        >
+          <Settings aria-hidden="true" />
+        </Button>
       </SidebarFooter>
     </Sidebar>
   );

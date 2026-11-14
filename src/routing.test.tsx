@@ -2,12 +2,25 @@ import {
   validateRepositoryRequest,
   validateWorkspaceRequest,
 } from "./generated/contracts/validators";
-import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { createMemoryHistory } from "@tanstack/react-router";
 import { App } from "./App";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "./components/ui/dialog";
 import { ownerBound } from "./test-support/owner-bound-invoke";
 import { object } from "./lib/observation-contracts";
 import { PRESENTATION_KEY } from "./lib/presentation-store";
@@ -121,6 +134,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.resetAllMocks();
   vi.unstubAllGlobals();
 });
@@ -260,6 +274,296 @@ test("settings replacement preserves one feed and returning retains workspace co
       .mock.calls.filter(([command]) => command === "observation_stop"),
   ).toHaveLength(0);
 });
+
+test("the footer gear opens full-page General settings by keyboard", async () => {
+  const history = mount(workspacePath);
+  await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+  const gear = screen.getByRole("link", { name: "Settings" });
+  gear.focus();
+  await userEvent.setup().keyboard("{Enter}");
+  const heading = await screen.findByRole("heading", {
+    name: "Settings",
+    level: 1,
+  });
+  expect(history.location.pathname).toBe("/settings/general");
+  expect(document.activeElement).toBe(heading);
+  expect(screen.getByRole("navigation", { name: "Settings" })).toBeTruthy();
+  expect(
+    screen.getByRole("link", { name: "General" }).getAttribute("aria-current"),
+  ).toBe("page");
+  expect(screen.getByRole("main", { name: "General" })).toBeTruthy();
+  expect(
+    screen.getByText("General settings will be available here."),
+  ).toBeTruthy();
+  expect(
+    screen.queryByRole("complementary", { name: "Repository sidebar" }),
+  ).toBeNull();
+  expect(screen.queryByRole("tab", { name: "Workspace" })).toBeNull();
+  expect(
+    screen.getByRole("link", { name: "Skip to settings" }).getAttribute("href"),
+  ).toBe("#settings-main");
+});
+
+test.each(["Back", "Escape", "history"])(
+  "Settings %s returns to the preceding workspace and restores gear focus",
+  async (method) => {
+    const history = mount(`${workspacePath}?view=changes`);
+    await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("link", { name: "Settings" }));
+    await screen.findByRole("heading", { name: "Settings", level: 1 });
+    if (method === "Back")
+      await user.click(screen.getByRole("button", { name: "Back" }));
+    else if (method === "Escape") await user.keyboard("{Escape}");
+    else await act(async () => history.back());
+    await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+    expect(history.location.href).toBe(`${workspacePath}?view=changes`);
+    expect(document.activeElement).toBe(
+      screen.getByRole("link", { name: "Settings" }),
+    );
+    await act(async () => history.forward());
+    await screen.findByRole("heading", { name: "Settings", level: 1 });
+    await user.keyboard("{Escape}");
+    await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+    expect(history.location.href).toBe(`${workspacePath}?view=changes`);
+  },
+);
+
+test.each([false, true])(
+  "direct Settings entry falls home even with remembered context: %s",
+  async (saved) => {
+    if (saved) remember("changes");
+    const history = mount("/settings/general");
+    await screen.findByRole("heading", { name: "Settings", level: 1 });
+    await userEvent.setup().click(screen.getByRole("button", { name: "Back" }));
+    await screen.findByRole("heading", { name: "Workspace", level: 1 });
+    expect(history.location.pathname).toBe("/");
+    expect(history.length).toBe(1);
+    expect(document.activeElement).toBe(screen.getByRole("main"));
+  },
+);
+
+test("the settings redirect retains the preceding app entry and returns focus to main", async () => {
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  await act(async () => history.push("/settings"));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  expect(history.location.pathname).toBe("/settings/general");
+  expect(history.length).toBe(2);
+  await userEvent.setup().keyboard("{Escape}");
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  expect(history.location.pathname).toBe(repositoryPath);
+  expect(document.activeElement).toBe(screen.getByRole("main"));
+});
+
+test("a nested Base UI overlay consumes Escape before Settings navigation", async () => {
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  // A real portaled overlay exercises the installed dismissal contract; the
+  // placeholder itself adds no artificial controls just to open one.
+  const overlay = render(
+    <Dialog defaultOpen>
+      <DialogContent>
+        <DialogTitle>Nested overlay</DialogTitle>
+        <DialogDescription>Controlled overlay fixture.</DialogDescription>
+      </DialogContent>
+    </Dialog>,
+  );
+  await screen.findByRole("dialog", { name: "Nested overlay" });
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  expect(history.location.pathname).toBe("/settings/general");
+  overlay.unmount();
+  await user.keyboard("{Escape}");
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+});
+
+test("activating General keeps one Settings history entry and its return destination", async () => {
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  await user.click(screen.getByRole("link", { name: "General" }));
+  expect(history.length).toBe(2);
+  await user.click(screen.getByRole("button", { name: "Back" }));
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  expect(history.location.pathname).toBe(repositoryPath);
+});
+
+test("Settings ignores prevented, composing and repeated Escape events", async () => {
+  const history = mount("/settings/general");
+  const heading = await screen.findByRole("heading", {
+    name: "Settings",
+    level: 1,
+  });
+  const prevent = (event: KeyboardEvent) => event.preventDefault();
+  heading.addEventListener("keydown", prevent);
+  fireEvent.keyDown(heading, { key: "Escape" });
+  heading.removeEventListener("keydown", prevent);
+  fireEvent.keyDown(heading, { key: "Escape", isComposing: true });
+  fireEvent.keyDown(heading, { key: "Escape", repeat: true });
+  expect(history.location.pathname).toBe("/settings/general");
+  await userEvent.setup().keyboard("{Escape}");
+  await screen.findByRole("heading", { name: "Workspace", level: 1 });
+});
+
+test.each([false, true])(
+  "routed Settings and workspace switches retain reading context and revalidate changed comparisons: %s",
+  async (changed) => {
+    const comparison = "00000000-0000-4000-8000-000000000005";
+    const replacement = "00000000-0000-4000-8000-000000000006";
+    let currentComparison = comparison;
+    const ordinary = workspaceRead;
+    workspaceRead = async (request) => {
+      if (request.operation === "get")
+        return {
+          kind: "workspace",
+          workspace: {
+            ...workspace,
+            id: request.id,
+            name:
+              request.id === workspaceId
+                ? "exact workspace"
+                : "second workspace",
+          },
+        };
+      if (request.operation === "changes")
+        return {
+          kind: "changes",
+          observation: {
+            workspace_id: request.workspace_id,
+            phase: "ready",
+            error: null,
+            page: {
+              comparison_id: currentComparison,
+              head: "a".repeat(40),
+              total: 1,
+              next: null,
+              files: [
+                {
+                  id: actionId,
+                  path: "src/retained.txt",
+                  index_status: ".",
+                  worktree_status: "M",
+                  unsupported: null,
+                },
+              ],
+            },
+          },
+        };
+      if (request.operation === "change_preview")
+        return {
+          kind: "change_preview",
+          observation: {
+            target: request.target,
+            phase: "ready",
+            error: null,
+            preview: {
+              comparison_id: request.target.comparison_id,
+              head: "a".repeat(40),
+              unsupported: null,
+              limited: null,
+              note: null,
+              rows: [
+                {
+                  kind: "added",
+                  old_line: null,
+                  new_line: 1,
+                  text:
+                    request.target.workspace_id === workspaceId
+                      ? "First workspace diff"
+                      : "Second workspace diff",
+                },
+              ],
+            },
+          },
+        };
+      return ordinary(request);
+    };
+    localStorage.setItem(
+      PRESENTATION_KEY,
+      JSON.stringify({
+        version: 2,
+        state: {
+          contexts: {
+            [workspaceId]: {
+              view: "changes",
+              filesWidth: 41,
+              collapsed: false,
+            },
+            [otherId]: { view: "changes", filesWidth: 27, collapsed: true },
+          },
+          inspection: {
+            [otherId]: {
+              id: actionId,
+              path: "src/retained.txt",
+              comparison,
+              position: { top: 73, left: 4 },
+            },
+          },
+        },
+      }),
+    );
+    const history = mount(`${workspacePath}?view=changes`);
+    const user = userEvent.setup();
+    await user.click(
+      await screen.findByRole("button", { name: /src\/retained.txt/ }),
+    );
+    await screen.findByText("First workspace diff");
+    const viewport = () => {
+      const element = screen
+        .getByLabelText("Unified file diff")
+        .closest<HTMLElement>("[data-slot=scroll-area-viewport]");
+      if (!element) throw new Error("Missing diff viewport");
+      return element;
+    };
+    viewport().scrollTop = 37;
+    viewport().scrollLeft = 12;
+    fireEvent.scroll(viewport());
+    await user.click(screen.getByRole("link", { name: "Settings" }));
+    await screen.findByRole("heading", { name: "Settings", level: 1 });
+    expect(screen.queryByText("First workspace diff")).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    await screen.findByText("First workspace diff");
+    expect([viewport().scrollTop, viewport().scrollLeft]).toEqual([37, 12]);
+    // jsdom has no panel geometry; assert retained policy here. Existing resize
+    // scenarios drive controlled dimensions, while F08 qualifies actual layout.
+    expect(
+      JSON.parse(localStorage.getItem(PRESENTATION_KEY) ?? "null").state
+        .contexts[workspaceId],
+    ).toEqual({ view: "changes", filesWidth: 41, collapsed: false });
+    await act(async () =>
+      history.push(`${repositoryPath}/workspace/${otherId}?view=changes`),
+    );
+    await screen.findByText("Second workspace diff");
+    expect([viewport().scrollTop, viewport().scrollLeft]).toEqual([73, 4]);
+    expect(
+      screen.getByRole("button", { name: "Show changed files" }),
+    ).toBeTruthy();
+    await act(async () => history.back());
+    await screen.findByText("First workspace diff");
+    expect([viewport().scrollTop, viewport().scrollLeft]).toEqual([37, 12]);
+    await user.click(screen.getByRole("link", { name: "Settings" }));
+    await screen.findByRole("heading", { name: "Settings", level: 1 });
+    if (changed) currentComparison = replacement;
+    await user.keyboard("{Escape}");
+    if (changed) {
+      await screen.findByText("Select a changed file");
+      expect(screen.queryByLabelText("Unified file diff")).toBeNull();
+      expect(
+        JSON.parse(localStorage.getItem(PRESENTATION_KEY) ?? "null").state
+          .inspection[workspaceId],
+      ).toBeUndefined();
+    } else {
+      await screen.findByText("First workspace diff");
+      expect([viewport().scrollTop, viewport().scrollLeft]).toEqual([37, 12]);
+    }
+  },
+);
 
 test.each(["settings", "history", "aba"])(
   "delayed registration cannot redirect after %s navigation",
@@ -408,45 +712,58 @@ test("an explicit navigation wins while startup detail validation is delayed", a
   expect(history.location.pathname).toBe("/settings/general");
 });
 
-test("slow inspection drains across Settings and return without creating a second physical read", async () => {
-  const ordinary = workspaceRead;
-  let reads = 0;
-  let active = 0;
-  let maximum = 0;
-  const releases: (() => void)[] = [];
-  workspaceRead = async (request) => {
-    if (request.operation !== "changes") return ordinary(request);
-    reads++;
-    active++;
-    maximum = Math.max(maximum, active);
-    return new Promise((resolve) =>
-      releases.push(() => {
-        active--;
-        resolve({
-          kind: "changes",
-          observation: {
-            workspace_id: workspaceId,
-            phase: "idle",
-            page: null,
-            error: null,
-          },
-        });
-      }),
-    );
-  };
-  const history = mount(workspacePath);
-  await waitFor(() => expect(reads).toBe(1));
-  await act(async () => history.push("/settings/general"));
-  await screen.findByRole("heading", { name: "Settings", level: 1 });
-  expect(reads).toBe(1);
-  await act(async () => history.back());
-  await screen.findByRole("heading", { name: "exact workspace", level: 1 });
-  expect(reads).toBe(1);
-  await act(async () => releases[0]());
-  await waitFor(() => expect(reads).toBe(2));
-  await act(async () => releases[1]());
-  expect(maximum).toBe(1);
-});
+test.each([false, true])(
+  "slow inspection drains across Settings without duplicate or hidden reads; return before completion: %s",
+  async (returnFirst) => {
+    const ordinary = workspaceRead;
+    let reads = 0;
+    let active = 0;
+    let maximum = 0;
+    const releases: (() => void)[] = [];
+    workspaceRead = async (request) => {
+      if (request.operation !== "changes") return ordinary(request);
+      reads++;
+      active++;
+      maximum = Math.max(maximum, active);
+      return new Promise((resolve) =>
+        releases.push(() => {
+          active--;
+          resolve({
+            kind: "changes",
+            observation: {
+              workspace_id: workspaceId,
+              phase: "idle",
+              page: null,
+              error: null,
+            },
+          });
+        }),
+      );
+    };
+    const history = mount(workspacePath);
+    await waitFor(() => expect(reads).toBe(1));
+    await act(async () => history.push("/settings/general"));
+    await screen.findByRole("heading", { name: "Settings", level: 1 });
+    expect(reads).toBe(1);
+    if (!returnFirst) {
+      await act(async () => releases[0]());
+      vi.useFakeTimers();
+      await act(async () => vi.advanceTimersByTimeAsync(10_000));
+      expect(reads).toBe(1);
+      expect(active).toBe(0);
+      vi.useRealTimers();
+    }
+    await act(async () => history.back());
+    await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+    if (returnFirst) {
+      expect(reads).toBe(1);
+      await act(async () => releases[0]());
+    }
+    await waitFor(() => expect(reads).toBe(2));
+    await act(async () => releases[1]());
+    expect(maximum).toBe(1);
+  },
+);
 
 test.each([
   "/repository/not-an-id",

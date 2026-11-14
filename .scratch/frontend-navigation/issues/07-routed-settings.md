@@ -29,7 +29,7 @@ inspection activity pauses; returning restores validated lightweight context.
 
 - Compose existing Base UI/shadcn controls with one interactive target and accessible Settings name. Follow installed-version composition and retain semantic tokens.
 - Add independent settings navigation/main landmark at /settings/general; redirect /settings with replacement. Use the existing empty/placeholder patterns without fake controls.
-- Back/Escape uses preceding app navigation; direct entry falls back to remembered valid main destination, then home. Nested overlays handle Escape first and focus returns appropriately.
+- Back/Escape uses preceding app navigation; when no usable preceding app destination exists, replace with home. Nested overlays handle Escape first and focus returns appropriately. This follows the F07 user decision below, superseding the original remembered-destination fallback.
 - Preserve per-workspace selected file, comparison context, scroll and panel layout through Settings and workspace switches; revalidate stale comparison context.
 - Document changed block contracts. Link original milestone 06 to Settings → Providers → Codex without implementing provider setup or merging supervisor diagnostics.
 
@@ -53,10 +53,10 @@ remains separate from controlled units.
 
 ## Acceptance
 
-- [ ] Footer gear opens a full-page routed General placeholder directly.
-- [ ] Return, keyboard/focus and retained-context behavior pass controlled checks.
-- [ ] Main and settings layouts share one observation/action lifetime with inspection paused when hidden.
-- [ ] Component guide and milestone-06 extension pointers match the actual composition.
+- [x] Footer gear opens a full-page routed General placeholder directly.
+- [x] Return, keyboard/focus and retained-context behavior pass controlled checks.
+- [x] Main and settings layouts share one observation/action lifetime with inspection paused when hidden.
+- [x] Component guide and milestone-06 extension pointers match the actual composition.
 
 ## Handoff boundary
 
@@ -77,3 +77,33 @@ scenarios from the agreed plan. No implementation or acceptance is claimed.
 
 Updated predecessor consumption for the library refactor; implementation and
 qualification acceptance remain unchecked. Original dated comments are retained.
+
+### 2026-11-14 — return behavior agreed during F07 planning
+
+The user simplified direct-entry handling: normal launch does not open Settings,
+and this ticket adds no reload/deep-link or reconnect machinery. Back/Escape uses
+the preceding app destination when available; otherwise replace with home, even
+when a remembered destination exists. This explicit decision supersedes the older
+remembered-destination fallback in this ticket and the parent Settings section.
+Actual cumulative WebView qualification remains F08.
+
+### 2026-11-14 — F07 implemented and verified
+
+Confirmed F06 checked acceptance and dated evidence at
+`4be1962e37a1d6c97a6918ca8e95c9b972ac2b8b`; initial tree/index were clean. Continued
+the current feature branch and preserved all predecessor evidence.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f07.md) records the footer gear,
+full-page routed General placeholder, history/Back/Escape/focus behavior, overlay
+precedence and retained workspace reading/layout context. The user-selected
+absent-origin home fallback above is implemented; no reconnect, account or provider
+setup was added. App-lifetime owners remain shared and hidden inspection drains.
+
+Final configured gate passed **158 Rust + 49 tooling + 213 frontend units**, plus
+production packaging and one warm-up/five-run measurements. The established
+controlled native physical-completion checks passed. Failed red/intermediate
+attempts, exact commands/timings, source/package hashes, independent review
+(**Standards 0 / Spec 0**) and qualification limits are retained. No live-provider
+submissions or actual desktop/process cohort was performed for F07. F08 retains
+cumulative real WebView layout/focus/reload/responsiveness qualification and remains
+unimplemented. The containing commit owns F07. Stop after F07.

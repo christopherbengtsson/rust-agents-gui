@@ -65,20 +65,88 @@ export function mainDestination(href: string): MainDestination | undefined {
   }
 }
 
-// History supplies the current destination. This owner retains only eligibility,
-// never another current selection or observation body.
+export function isSettingsPath(pathname: string) {
+  return pathname === "/settings" || pathname.startsWith("/settings/");
+}
+
+// History supplies the current destination. This owner retains eligibility and
+// ephemeral Settings return metadata, never another current selection or body.
 export class Navigation {
   private generation = 0;
   private restorationClaimed = false;
   private restorationGeneration?: number;
+  private settingsTriggerKey?: string;
+  private settingsReturn?: {
+    key: string | undefined;
+    focus: "settings-entry" | "workspace";
+  };
+  private returnFocus?: "settings-entry" | "workspace";
+  private returningSettings = false;
   constructor(
     readonly history: RouterHistory,
     private navigate: (target: MainDestination, replace?: boolean) => void,
   ) {}
   start() {
-    return this.history.subscribe(() => {
+    let previous = this.history.location;
+    return this.history.subscribe(({ location, action }) => {
       this.generation++;
+      this.returningSettings = false;
+      this.returnFocus = undefined;
+      const wasSettings = isSettingsPath(previous.pathname);
+      const settings = isSettingsPath(location.pathname);
+      if (settings && !wasSettings && action.type === "PUSH") {
+        this.settingsReturn = mainDestination(previous.href)
+          ? {
+              key: location.state.__TSR_key,
+              focus:
+                this.settingsTriggerKey === previous.state.__TSR_key
+                  ? "settings-entry"
+                  : "workspace",
+            }
+          : undefined;
+      }
+      if (
+        settings &&
+        wasSettings &&
+        action.type === "REPLACE" &&
+        this.settingsReturn &&
+        this.settingsReturn.key === previous.state.__TSR_key
+      )
+        this.settingsReturn.key = location.state.__TSR_key;
+      if (wasSettings && !settings) {
+        this.returnFocus =
+          this.settingsReturn &&
+          this.settingsReturn.key === previous.state.__TSR_key &&
+          location.state.__TSR_index === previous.state.__TSR_index - 1
+            ? this.settingsReturn.focus
+            : "workspace";
+      }
+      this.settingsTriggerKey = undefined;
+      previous = location;
     });
+  }
+  rememberSettingsTrigger = () => {
+    this.settingsTriggerKey = this.history.location.state.__TSR_key;
+  };
+  returnFromSettings = () => {
+    if (
+      !isSettingsPath(this.history.location.pathname) ||
+      this.returningSettings
+    )
+      return;
+    this.returningSettings = true;
+    if (
+      this.settingsReturn &&
+      this.settingsReturn.key === this.history.location.state.__TSR_key &&
+      this.history.canGoBack()
+    )
+      this.history.back();
+    else this.go({ kind: "home" }, true);
+  };
+  takeReturnFocus() {
+    const focus = this.returnFocus;
+    this.returnFocus = undefined;
+    return focus;
   }
   current = () => mainDestination(this.history.location.href);
   capture = () => this.generation;

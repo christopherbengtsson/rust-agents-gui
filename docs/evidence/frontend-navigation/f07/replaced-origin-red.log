@@ -1,0 +1,30 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/navigation.test.tsx (3 tests | 1 failed) 4ms
+   × a replaced Settings entry cannot reuse an older entry's return authority 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/navigation.test.tsx > a replaced Settings entry cannot reuse an older entry's return authority
+AssertionError: expected '/repository/00000000-0000-4000-8000-0…' to be '/' // Object.is equality
+
+Expected: "/"
+Received: "/repository/00000000-0000-4000-8000-000000000001"
+
+ ❯ src/lib/navigation.test.tsx:39:37
+     37|   history.replace("/settings/general");
+     38|   navigation.returnFromSettings();
+     39|   expect(history.location.pathname).toBe("/");
+       |                                     ^
+     40|   expect(history.location.state.__TSR_index).toBe(2);
+     41|   stop();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  20:51:38
+   Duration  303ms (environment 70%, import 18%, transform 7%, tests 2%, setup 1%, worker 1%)
+

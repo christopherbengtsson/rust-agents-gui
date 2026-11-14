@@ -1,0 +1,12 @@
+{
+  "src/app-runtime.tsx": "dc036d6635153533967776c988e9869832ebca405bdffe0fe43ec6f461346437",
+  "src/components/README.md": "a9382af134e5499def7bdbf36cb9d867c7b28c400a5cd6aef538df3082e5f641",
+  "src/components/blocks/repository-sidebar.tsx": "bb6c21ef82070f7e1ed15daeae05ae76b4bc96d7c5a2dc29346b68aa331333ad",
+  "src/components/blocks/settings-layout.tsx": "4e5501951c3a31ed66b381d0fdc1f685ca8b53c0a961a6874a3af7cab5279119",
+  "src/lib/navigation.test.tsx": "d4ec23c2515ccc3d07b314b088822e770139205c982bae348cbd38a9763d1dbb",
+  "src/lib/navigation.ts": "6cb5a0c5ec8f6e6f30ee6d24558634e2b89d097254d0dc604bd70aa1270f7b69",
+  "src/routes/settings.general.tsx": "12243ad6d0a008a55d09a8e881b91fdda640f96f629212049f549ef2aa96e446",
+  "src/routes/settings.tsx": "2f9527ab9c8a26409b15e817951c259de2a64cf22d9b2f3dd17b9dfda3c0313c",
+  "src/routing.test.tsx": "7a88a531127061db8cc51140226e7f260e52e5da0e3dac07bf8e1fcd75c63514",
+  "src/style.css": "2d4119fe9855f2c3def8d7ab3b3834d01ebe84f9edff8fb54fd7044fac9d095e"
+}

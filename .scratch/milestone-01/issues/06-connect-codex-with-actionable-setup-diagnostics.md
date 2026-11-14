@@ -37,3 +37,11 @@ ticket's direct blocker. Consume the qualified async connection and feature
 observation/actor interfaces without creating a new runtime, queue or cache in
 Tauri/screens. Provider protocol/fixtures still require their own supported-version
 sources and allowance; application protocol 8 does not establish Codex compatibility.
+
+### 2026-11-14 — F07 Settings extension seam
+
+[F07](../../frontend-navigation/issues/07-routed-settings.md) supplies the routed
+Settings layout and General placeholder. Extend that composition with Settings →
+Providers → Codex and link relevant workspace status there when implementing this
+ticket. Keep runtime setup distinct from SupervisorConnection transport diagnostics.
+F08 remains the prerequisite; this pointer implements no provider setup.

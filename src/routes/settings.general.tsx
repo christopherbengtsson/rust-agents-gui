@@ -1,18 +1,21 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { Empty, EmptyHeader, EmptyDescription } from "@/components/ui/empty";
 export const Route = createFileRoute("/settings/general")({
   component: GeneralPlaceholder,
 });
 function GeneralPlaceholder() {
   return (
-    <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
-      <header className="workspace-header">
-        <h1>Settings</h1>
-      </header>
-      <div className="workspace-content">
-        <h2>General</h2>
-        <p>General settings will be available here.</p>
-        <Link to="/">Return home</Link>
-      </div>
-    </main>
+    <div className="workspace-content">
+      <h2 id="settings-general-heading" className="font-medium">
+        General
+      </h2>
+      <Empty>
+        <EmptyHeader>
+          <EmptyDescription>
+            General settings will be available here.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    </div>
   );
 }

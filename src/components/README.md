@@ -330,6 +330,38 @@ history generation. Paging and disclosure do not change the current route.
 
 Route loaders prepare exact feature observations without configuring Query keys or
 native IPC. Missing explicit targets and wrong membership show destination guidance;
-Settings currently has only an F06 route placeholder. The full Settings entry,
-layout and return/focus behavior belong to F07. Route changes release inspection
+Settings's F06 route placeholder is replaced by the F07 composition below. Route changes release inspection
 interest while its app-lifetime owner drains work and retains validated context.
+
+### F07 routed Settings
+
+- **RepositorySidebar** retains the separate supervisor diagnostics and adds the
+  footer gear. `onSettingsOpen: () => void` records focus provenance for ordinary
+  activation; the typed Link owns navigation to `/settings/general`. Base UI Button
+  composes that Link with `nativeButton={false}` and explicit link semantics,
+  producing one interactive target named “Settings.” Modified clicks retain Link
+  behavior without claiming focus return for the current window.
+- **SettingsLayout** (`blocks/settings-layout.tsx`) owns the Settings header,
+  Back control, navigation and main landmark. Use it for routed app settings;
+  use WorkspacePanel for repository/workspace presentation and SupervisorConnection
+  for transport diagnostics. It receives `onBack: () => void` and route content;
+  the General content supplies `settings-general-heading` for the main landmark.
+  General is the only section and uses Empty with honest placeholder text. No
+  account or provider controls are present.
+- The layout focuses its heading on mount. Its window bubble-phase Escape handler
+  follows installed Base UI overlay dismissal; consumed, composing and repeated
+  Escape events do not navigate. Navigation owns ephemeral return provenance keyed
+  to the Settings history entry, including replacement redirects. Back/Escape uses
+  its preceding app entry; when none is usable, replace with home, per the F07 user
+  decision. Remembered destinations do not create Settings return authority.
+  After routing settles, AppRuntime restores the remounted gear for a gear-origin
+  return, otherwise the main landmark. The skip link follows the current layout.
+- Both layouts share the persistent runtime and SidebarProvider. Settings unmounts
+  WorkspaceInspection, releasing its interest without stopping the reader, feed,
+  action owners or Query client. F05's validated file/comparison/scroll/layout
+  context survives; comparison changes reject stale restoration. Existing
+  Sheet/resizing contracts remain. Actual WebView focus/layout and cumulative
+  responsiveness qualification belongs to F08.
+- [Original milestone 06](../../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+  extends this composition with Settings → Providers → Codex and workspace status
+  links. It remains separate from supervisor diagnostics; F07 implements no setup.

@@ -80,9 +80,11 @@ now records retained presentation persistence/integration, passing deterministic
 checks, production packaging and focused private-state desktop restoration.
 [F06 evidence](../../docs/evidence/frontend-navigation/f06.md) records route authority,
 restoration, completion eligibility and generated-route preparation, with passing
-controlled gates, packaging and focused private-state desktop smoke. F07–F08 remain
-separate, unimplemented sessions. F07 requires its own user selection; no successor
-is authorized by the F06 handoff.
+controlled gates, packaging and focused private-state desktop smoke.
+[F07 evidence](../../docs/evidence/frontend-navigation/f07.md) records routed General
+Settings, history/focus return and retained-context checks. The F07 user decision
+below simplifies absent return context to home. F08 and successors remain separate,
+unimplemented sessions; the dependency chain authorizes no successor work.
 
 F04a changes documentation/tickets only: manifests, lockfiles, generated assets,
 product implementation and implementation acceptance stay untouched. Add each
@@ -383,8 +385,10 @@ reads while outstanding IPC drains.
 The footer gear opens full-page Settings directly. It replaces the workspace layout
 and has its own navigation/main landmark. General has honest placeholder content,
 without fake controls or account scope. Back/Escape returns to the preceding app
-destination and restores context; nested overlays handle Escape first. Direct entry
-falls back to the remembered valid main destination, then home. Preserve keyboard,
+destination and restores context; nested overlays handle Escape first. Without a
+usable preceding app destination, replace Settings with home. This follows the
+[F07 user decision](issues/07-routed-settings.md#2026-11-14--return-behavior-agreed-during-f07-planning),
+superseding the original remembered-destination fallback. Preserve keyboard,
 focus, minimum-window usability, and existing inspection presentation.
 
 [Milestone 01 ticket 06 — Connect Codex with actionable setup diagnostics](../milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)

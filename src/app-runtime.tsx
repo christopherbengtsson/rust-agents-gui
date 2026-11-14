@@ -1,14 +1,23 @@
 import { useStore } from "zustand";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { createContext, useContext, useEffect } from "react";
-import { Outlet, useLocation, useRouteContext } from "@tanstack/react-router";
+import {
+  Outlet,
+  useLocation,
+  useRouteContext,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useObservationFeed } from "@/hooks/use-observation-feed";
 import { useSupervisorConnection } from "@/hooks/use-supervisor-connection";
 import { useRepositories } from "@/hooks/use-repositories";
 import { useWorkspaces } from "@/hooks/use-workspaces";
 import { RepositorySidebar } from "@/components/blocks/repository-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { mainDestination, type MainDestination } from "@/lib/navigation";
+import {
+  isSettingsPath,
+  mainDestination,
+  type MainDestination,
+} from "@/lib/navigation";
 import type { AppObservations } from "@/lib/app-observations";
 
 export function targetStatus(
@@ -99,7 +108,15 @@ export function useAppRuntime() {
 export function AppRuntime() {
   const runtime = useRuntime();
   const location = useLocation();
-  const settings = location.pathname.startsWith("/settings");
+  const settings = isSettingsPath(location.pathname);
+  const pending = useRouterState({
+    select: (state) => state.status === "pending",
+  });
+  useEffect(() => {
+    if (settings || pending) return;
+    const focus = runtime.navigation.takeReturnFocus();
+    if (focus) document.getElementById(focus)?.focus({ preventScroll: true });
+  }, [runtime.navigation, location.href, settings, pending]);
   const storageError = useStore(
     runtime.app.presentation,
     (state) => state.storageError,
@@ -107,14 +124,18 @@ export function AppRuntime() {
   return (
     <RuntimeContext value={runtime}>
       <SidebarProvider className="h-dvh min-h-0">
-        <a className="skip-link" href="#workspace">
-          Skip to workspace
+        <a
+          className="skip-link"
+          href={settings ? "#settings-main" : "#workspace"}
+        >
+          {settings ? "Skip to settings" : "Skip to workspace"}
         </a>
         {!settings && (
           <RepositorySidebar
             connection={runtime.connection}
             repositories={runtime.repositories}
             workspaces={runtime.workspaces}
+            onSettingsOpen={runtime.navigation.rememberSettingsTrigger}
           />
         )}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
