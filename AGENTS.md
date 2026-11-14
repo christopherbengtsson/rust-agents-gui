@@ -34,6 +34,8 @@ For Rust module or interface design, consult [design principles](https://rust-un
 
 ### UI engineering
 
+For UX/UI design, user-facing changes, or usability and visual review, use
+[ux-ui](.agents/skills/ux-ui/SKILL.md) to examine the user goal and requested solution.
 Before creating, choosing, styling, moving, updating, or reviewing frontend components, read the [component guide](src/components/README.md). It owns component layers, design tokens, styling contracts, and custom component decisions.
 For React/TypeScript frontend implementation, refactoring, and review, use [react-engineering](.agents/skills/react-engineering/SKILL.md).
 For XState machine or actor design, implementation, and review, use [xstate-v5](.agents/skills/xstate-v5/SKILL.md).
