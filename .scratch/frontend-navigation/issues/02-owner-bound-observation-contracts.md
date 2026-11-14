@@ -49,10 +49,10 @@ remains separate from controlled units.
 
 ## Acceptance
 
-- [ ] Targeted requests/replies are owner-bound across Rust, Tauri and TypeScript.
-- [ ] Snapshot and feature decoders reject malformed or mismatched observations.
-- [ ] Transport outcomes preserve retained action identity and prior uncertainty.
-- [ ] Protocol compatibility and cross-language corpus checks pass without real processes/storage.
+- [x] Targeted requests/replies are owner-bound across Rust, Tauri and TypeScript.
+- [x] Snapshot and feature decoders reject malformed or mismatched observations.
+- [x] Transport outcomes preserve retained action identity and prior uncertainty.
+- [x] Protocol compatibility and cross-language corpus checks pass without real processes/storage.
 
 ## Handoff boundary
 
@@ -68,3 +68,17 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+### 2026-11-14 — F02 implemented and verified
+
+Confirmed F01's checked acceptance/detailed evidence and continued the existing
+feature branch without resetting it. Protocol 6 binds targeted native/Tauri replies
+to caller-observed owner, validates snapshot/desktop/feature observations, and keeps
+attempt delivery evidence separate from retained durable action identity. Pure
+Rust/TypeScript corpus and controlled recovery regressions pass; review findings
+were corrected. See [F02 evidence](../../../docs/evidence/frontend-navigation/f02.md)
+for exact source, commands, measurements, failed attempts, independent Standards/Spec
+review and qualification limits. Final verification passed 115 Rust + 25 tooling +
+89 frontend checks, measured units, and frontend bundling. The concurrent `docs/IDEAS.md` edit is preserved.
+No actual desktop/process/packaging/native-provider qualification is claimed.
+F03 remains separate and unimplemented; stop after this ticket.

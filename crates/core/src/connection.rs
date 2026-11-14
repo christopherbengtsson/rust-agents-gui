@@ -17,7 +17,80 @@ use std::{
 };
 const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 5;
+pub const PROTOCOL_VERSION: u32 = 6;
+
+/// Evidence about this exchange only, never the outcome of an earlier attempt.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Delivery {
+    NotSent,
+    Rejected,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum TransportCode {
+    Busy,
+    NotConnected,
+    OwnerChanged,
+    ReplyUnavailable,
+    Incompatible,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TransportFailure {
+    pub code: TransportCode,
+    pub delivery: Delivery,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum RequestFailure {
+    Transport {
+        error: TransportFailure,
+    },
+    /// Local input rejection, before any transport access.
+    Rejected {
+        error: RepositoryError,
+    },
+}
+impl RequestFailure {
+    pub fn transport(code: TransportCode, delivery: Delivery, message: impl Into<String>) -> Self {
+        Self::Transport {
+            error: transport_failure(code, delivery, message),
+        }
+    }
+}
+fn transport_failure(
+    code: TransportCode,
+    delivery: Delivery,
+    message: impl Into<String>,
+) -> TransportFailure {
+    TransportFailure {
+        code,
+        delivery,
+        message: RepositoryError::new(ErrorCode::Connection, message).message,
+    }
+}
+
+/// Serving identity is returned even when the domain rejected the request.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct OwnedReply<T> {
+    pub owner: String,
+    pub result: Result<T, RepositoryError>,
+}
+
+fn unavailable(message: impl std::fmt::Display) -> RequestFailure {
+    RequestFailure::transport(
+        TransportCode::ReplyUnavailable,
+        Delivery::Unknown,
+        format!(
+            "Supervisor reply unavailable: {message}. Refresh recorded action status; no action has been replayed."
+        ),
+    )
+}
 
 #[derive(Serialize, Deserialize)]
 struct Request {
@@ -25,14 +98,20 @@ struct Request {
     application_version: String,
     after: Option<SnapshotCursor>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    expected_owner: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     repository: Option<RepositoryRequest>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     workspace: Option<crate::workspaces::WorkspaceRequest>,
 }
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
+    Transport {
+        error: TransportFailure,
+    },
     Workspace {
+        owner: String,
         result: Result<crate::workspaces::WorkspaceReply, RepositoryError>,
     },
     Snapshot {
@@ -42,6 +121,7 @@ enum Response {
         message: String,
     },
     Repository {
+        owner: String,
         result: Result<RepositoryReply, RepositoryError>,
     },
 }
@@ -54,30 +134,43 @@ pub struct SupervisorConnection {
     cursor: Option<SnapshotCursor>,
 }
 impl SupervisorConnection {
-    /// Actions use this already discovered owner. Transport failure grants no start/replay authority.
+    /// Caller context binds actions to an observed owner without retargeting or replay.
     pub fn repository_request(
         &self,
+        expected_owner: &str,
         request: RepositoryRequest,
-    ) -> Result<RepositoryReply, RepositoryError> {
-        if !self.initialized {
-            return Err(RepositoryError::new(
-                ErrorCode::Connection,
-                "Connect to the supervisor before submitting repository actions.",
-            ));
-        }
-        SupervisorClient::new(self.state.clone()).repository_request(request)
+    ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
+        self.require_connection(expected_owner)?;
+        SupervisorClient::new(self.state.clone()).repository_request(expected_owner, request)
     }
     pub fn workspace_request(
         &self,
+        expected_owner: &str,
         request: crate::workspaces::WorkspaceRequest,
-    ) -> Result<crate::workspaces::WorkspaceReply, RepositoryError> {
-        if !self.initialized {
-            return Err(RepositoryError::new(
-                ErrorCode::Connection,
-                "Connect to the supervisor before submitting workspace actions.",
+    ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
+        self.require_connection(expected_owner)?;
+        SupervisorClient::new(self.state.clone()).workspace_request(expected_owner, request)
+    }
+    fn require_connection(&self, expected_owner: &str) -> Result<(), RequestFailure> {
+        if !self.initialized || self.cursor.is_none() {
+            return Err(RequestFailure::transport(
+                TransportCode::NotConnected,
+                Delivery::NotSent,
+                "Connect to the supervisor before submitting targeted requests.",
             ));
         }
-        SupervisorClient::new(self.state.clone()).workspace_request(request)
+        if self
+            .cursor
+            .as_ref()
+            .is_some_and(|cursor| cursor.owner != expected_owner)
+        {
+            return Err(RequestFailure::transport(
+                TransportCode::OwnerChanged,
+                Delivery::Rejected,
+                "The observed supervisor owner has changed. Refresh status before continuing.",
+            ));
+        }
+        Ok(())
     }
     pub fn new(state: PathBuf, executable: PathBuf) -> Self {
         Self {
@@ -100,6 +193,7 @@ impl SupervisorConnection {
         let snapshot = effects.snapshot(&self.state, self.cursor.clone())
             .map_err(|e| io::Error::new(e.kind(), format!(
                 "Cannot read supervisor observations: {e}. Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.")))?;
+        validate_snapshot(&snapshot)?;
         self.cursor = Some(snapshot.cursor.clone());
         Ok(snapshot)
     }
@@ -111,78 +205,85 @@ pub struct SupervisorClient {
 impl SupervisorClient {
     pub fn workspace_request(
         &self,
+        expected_owner: &str,
         request: crate::workspaces::WorkspaceRequest,
-    ) -> Result<crate::workspaces::WorkspaceReply, RepositoryError> {
-        let exchange = || -> io::Result<Response> {
-            check_private(&self.state, true)?;
-            let socket = socket_path(&self.state);
-            check_private(&socket, false)?;
-            let mut stream = UnixStream::connect(socket)?;
-            configure(&stream)?;
-            write_frame(
-                &mut stream,
-                &Request {
-                    protocol: PROTOCOL_VERSION,
-                    application_version: env!("CARGO_PKG_VERSION").into(),
-                    after: None,
-                    repository: None,
-                    workspace: Some(request),
-                },
-            )?;
-            read_frame(&mut stream)
-        };
-        match exchange().map_err(|e| RepositoryError::new(ErrorCode::Connection, format!("Workspace reply unavailable: {e}. Refresh its recorded action status; this request has not been replayed.")))? {
-            Response::Workspace { result } => result,
-            Response::Incompatible { message } => Err(RepositoryError::new(ErrorCode::Connection,message)),
-            _ => Err(RepositoryError::new(ErrorCode::Connection,"Unexpected workspace reply. Refresh its recorded action status.")),
+    ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
+        self.workspace_request_with(expected_owner, request, |state, request| {
+            exchange_target(state, request, &mut LocalClient)
+        })
+    }
+    fn workspace_request_with(
+        &self,
+        expected_owner: &str,
+        request: crate::workspaces::WorkspaceRequest,
+        exchange: impl FnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
+    ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
+        let response = exchange(
+            &self.state,
+            &Request {
+                protocol: PROTOCOL_VERSION,
+                application_version: env!("CARGO_PKG_VERSION").into(),
+                after: None,
+                expected_owner: Some(expected_owner.into()),
+                repository: None,
+                workspace: Some(request.clone()),
+            },
+        )?;
+        match response {
+            Response::Workspace { owner, result } => {
+                if result
+                    .as_ref()
+                    .is_ok_and(|reply| !workspace_target(&request, reply))
+                {
+                    return Err(unavailable("Workspace reply has the wrong kind or target"));
+                }
+                owned_reply(expected_owner, owner, result)
+            }
+            other => Err(response_failure(other)),
         }
     }
     pub fn repository_request(
         &self,
+        expected_owner: &str,
         request: RepositoryRequest,
-    ) -> Result<RepositoryReply, RepositoryError> {
-        self.repository_request_with(request, |state, request| {
-            check_private(state, true)?;
-            let socket = socket_path(state);
-            check_private(&socket, false)?;
-            let mut stream = UnixStream::connect(socket)?;
-            configure(&stream)?;
-            write_frame(&mut stream, request)?;
-            read_frame(&mut stream)
+    ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
+        self.repository_request_with(expected_owner, request, |state, request| {
+            exchange_target(state, request, &mut LocalClient)
         })
     }
-
     fn repository_request_with(
         &self,
+        expected_owner: &str,
         request: RepositoryRequest,
-        exchange: impl FnOnce(&Path, &Request) -> io::Result<Response>,
-    ) -> Result<RepositoryReply, RepositoryError> {
+        exchange: impl FnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
+    ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
         if let RepositoryRequest::Register { request } = &request {
-            // A definite local rejection must not become uncertain delivery in the UI.
-            crate::workspaces::check_registration_path_budget(&request.path)?;
+            crate::workspaces::check_registration_path_budget(&request.path)
+                .map_err(|error| RequestFailure::Rejected { error })?;
         }
-        let result = (|| -> io::Result<Result<RepositoryReply, RepositoryError>> {
-            match exchange(
-                &self.state,
-                &Request {
-                    protocol: PROTOCOL_VERSION,
-                    application_version: env!("CARGO_PKG_VERSION").into(),
-                    after: None,
-                    repository: Some(request),
-                    workspace: None,
-                },
-            )? {
-                Response::Repository { result } => Ok(result),
-                Response::Incompatible { message } => {
-                    Err(io::Error::new(io::ErrorKind::InvalidData, message))
+        let response = exchange(
+            &self.state,
+            &Request {
+                protocol: PROTOCOL_VERSION,
+                application_version: env!("CARGO_PKG_VERSION").into(),
+                after: None,
+                expected_owner: Some(expected_owner.into()),
+                repository: Some(request.clone()),
+                workspace: None,
+            },
+        )?;
+        match response {
+            Response::Repository { owner, result } => {
+                if result
+                    .as_ref()
+                    .is_ok_and(|reply| !repository_target(&request, reply))
+                {
+                    return Err(unavailable("Repository reply has the wrong kind or target"));
                 }
-                Response::Workspace { .. } | Response::Snapshot { .. } => Err(io::Error::new(
-                    io::ErrorKind::InvalidData,
-                    "Unexpected status reply to repository request",
-                )),
+                owned_reply(expected_owner, owner, result)
             }
-        })();
-        result.map_err(|e| RepositoryError::new(ErrorCode::Connection, format!("Repository reply unavailable: {e}. Refresh to retrieve the recorded action status; this request has not been replayed.")))?
+            other => Err(response_failure(other)),
+        }
     }
     pub fn new(state: PathBuf) -> Self {
         Self { state }
@@ -227,21 +328,212 @@ impl SupervisorClient {
                 protocol,
                 application_version: application_version.into(),
                 after,
+                expected_owner: None,
                 repository: None,
                 workspace: None,
             },
         )?;
         match read_frame_with_clock(&mut stream, || effects.now())? {
-            Response::Snapshot { snapshot } => Ok(snapshot),
+            Response::Snapshot { snapshot } => {
+                validate_snapshot(&snapshot)?;
+                Ok(snapshot)
+            }
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
-            Response::Workspace { .. } | Response::Repository { .. } => Err(io::Error::new(
+            Response::Transport { .. }
+            | Response::Workspace { .. }
+            | Response::Repository { .. } => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
                 "Unexpected repository reply to status request",
             )),
         }
     }
+}
+
+fn validate_snapshot(snapshot: &SupervisorSnapshot) -> io::Result<()> {
+    if snapshot.status.supervisor_pid == 0
+        || snapshot.status.application_version != env!("CARGO_PKG_VERSION")
+        || snapshot.cursor.owner.is_empty()
+        || snapshot.cursor.owner.len() > 128
+        || snapshot
+            .cursor
+            .owner
+            .chars()
+            .any(|c| c.is_whitespace() || c.is_control())
+        || snapshot.cursor.revision > 9_007_199_254_740_991
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "Invalid supervisor snapshot identity or numeric bounds",
+        ));
+    }
+    Ok(())
+}
+
+fn repository_target(request: &RepositoryRequest, reply: &RepositoryReply) -> bool {
+    match (request, reply) {
+        (
+            RepositoryRequest::Register { request },
+            RepositoryReply::Registration { registration },
+        ) => {
+            registration.action_id == request.action_id
+                && registration.path == request.path
+                && registration.create_initial_workspace == request.create_initial_workspace
+        }
+        (RepositoryRequest::Action { action_id }, RepositoryReply::Action { registration }) => {
+            registration
+                .as_ref()
+                .is_none_or(|registration| registration.action_id == *action_id)
+        }
+        (RepositoryRequest::Get { id, .. }, RepositoryReply::Repository { repository }) => {
+            repository
+                .as_ref()
+                .is_none_or(|repository| repository.id == *id)
+        }
+        (RepositoryRequest::List { .. }, RepositoryReply::Repositories { page }) => {
+            page.repositories.len() <= 32
+        }
+        _ => false,
+    }
+}
+fn workspace_target(
+    request: &crate::workspaces::WorkspaceRequest,
+    reply: &crate::workspaces::WorkspaceReply,
+) -> bool {
+    use crate::workspaces::{WorkspaceAction as A, WorkspaceReply as R, WorkspaceRequest as Q};
+    match (request, reply) {
+        (Q::Get { id }, R::Workspace { workspace }) => {
+            workspace.as_ref().is_none_or(|w| w.id == *id)
+        }
+        (Q::List { repository_id, .. }, R::Workspaces { page }) => {
+            page.workspaces.len() <= 32
+                && page
+                    .workspaces
+                    .iter()
+                    .all(|w| w.repository_id == *repository_id)
+        }
+        (
+            Q::Changes {
+                workspace_id,
+                comparison_id,
+                ..
+            },
+            R::Changes { observation },
+        ) => {
+            observation.workspace_id == *workspace_id
+                && comparison_id.is_none_or(|id| {
+                    observation
+                        .page
+                        .as_ref()
+                        .is_some_and(|page| page.comparison_id == id)
+                })
+        }
+        (Q::ChangePreview { target, .. }, R::ChangePreview { observation }) => {
+            observation.target == *target
+        }
+        (
+            Q::Action { .. },
+            R::Action {
+                action: None,
+                workspace: None,
+            },
+        ) => true,
+        (
+            Q::Action { action_id } | Q::Create { action_id, .. } | Q::Reconcile { action_id, .. },
+            R::Action {
+                action: Some(action),
+                workspace: Some(w),
+            },
+        ) => {
+            let identity = match action {
+                A::Create {
+                    action_id: id,
+                    repository_id,
+                } => {
+                    id == action_id
+                        && *repository_id == w.repository_id
+                        && w.creation_action_id == *id
+                }
+                A::Reconcile {
+                    action_id: id,
+                    workspace_id,
+                } => id == action_id && *workspace_id == w.id,
+            };
+            identity
+                && match (request, action) {
+                    (Q::Action { .. }, _) => true,
+                    (
+                        Q::Create {
+                            repository_id: expected,
+                            ..
+                        },
+                        A::Create { repository_id, .. },
+                    ) => expected == repository_id,
+                    (
+                        Q::Reconcile {
+                            workspace_id: expected,
+                            ..
+                        },
+                        A::Reconcile { workspace_id, .. },
+                    ) => expected == workspace_id,
+                    _ => false,
+                }
+        }
+        _ => false,
+    }
+}
+
+fn owned_reply<T>(
+    expected: &str,
+    owner: String,
+    result: Result<T, RepositoryError>,
+) -> Result<OwnedReply<T>, RequestFailure> {
+    if owner != expected {
+        return Err(unavailable("Reply came from a different supervisor owner"));
+    }
+    Ok(OwnedReply { owner, result })
+}
+fn response_failure(response: Response) -> RequestFailure {
+    match response {
+        Response::Transport { error } => match (error.code, error.delivery) {
+            (TransportCode::OwnerChanged | TransportCode::Incompatible, Delivery::Rejected)
+            | (TransportCode::Busy, Delivery::NotSent) => RequestFailure::Transport { error },
+            _ => unavailable("Invalid transport evidence from supervisor"),
+        },
+        Response::Incompatible { message } => {
+            RequestFailure::transport(TransportCode::Incompatible, Delivery::Rejected, message)
+        }
+        _ => unavailable("Unexpected reply kind"),
+    }
+}
+fn exchange_target(
+    state: &Path,
+    request: &Request,
+    effects: &mut impl ClientEffects,
+) -> Result<Response, RequestFailure> {
+    let frame = encode_frame(request).map_err(|e| RequestFailure::Rejected {
+        error: RepositoryError::new(
+            ErrorCode::Capacity,
+            format!("Invalid targeted request: {e}"),
+        ),
+    })?;
+    let connect = |error: io::Error| {
+        RequestFailure::transport(
+            TransportCode::NotConnected,
+            Delivery::NotSent,
+            format!(
+                "Cannot connect to the observed supervisor: {error}. Refresh status; no action was sent."
+            ),
+        )
+    };
+    effects.check_private(state, true).map_err(connect)?;
+    let socket = socket_path(state);
+    effects.check_private(&socket, false).map_err(connect)?;
+    let mut stream = effects.connect(&socket).map_err(connect)?;
+    configure(&stream).map_err(connect)?;
+    stream.write_all(&frame).map_err(unavailable)?;
+    read_frame_with_clock(&mut stream, || effects.now()).map_err(unavailable)
 }
 
 // Client policy and protocol stay above this seam; adapters supply only local I/O outcomes.
@@ -387,21 +679,44 @@ pub fn serve_connection(core: &Core, mut stream: UnixStream) -> io::Result<()> {
 fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
     configure(stream)?;
     let request: Request = read_frame(stream)?;
+    let response = dispatch_request(request, &core.owner, |request| {
+        if let Some(request) = request.workspace {
+            Response::Workspace {
+                owner: core.owner.clone(),
+                result: core.workspace_request(request),
+            }
+        } else if let Some(request) = request.repository {
+            Response::Repository {
+                owner: core.owner.clone(),
+                result: core.repository_request(request),
+            }
+        } else {
+            Response::Snapshot {
+                snapshot: core.snapshot(request.after),
+            }
+        }
+    })?;
+    write_frame(stream, &response)
+}
+
+// The gate owns authorization; a controlled route records whether domain dispatch occurred.
+fn dispatch_request(
+    request: Request,
+    owner: &str,
+    route: impl FnOnce(Request) -> Response,
+) -> io::Result<Response> {
     if request.protocol != PROTOCOL_VERSION
         || request.application_version != env!("CARGO_PKG_VERSION")
     {
-        return write_frame(
-            stream,
-            &Response::Incompatible {
-                message: format!(
-                    "Incompatible desktop/supervisor versions (client protocol {} / app {}, supervisor protocol {} / app {}). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening.",
-                    request.protocol,
-                    request.application_version,
-                    PROTOCOL_VERSION,
-                    env!("CARGO_PKG_VERSION")
-                ),
-            },
-        );
+        return Ok(Response::Incompatible {
+            message: format!(
+                "Incompatible desktop/supervisor versions (client protocol {} / app {}, supervisor protocol {} / app {}). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening.",
+                request.protocol,
+                request.application_version,
+                PROTOCOL_VERSION,
+                env!("CARGO_PKG_VERSION")
+            ),
+        });
     }
     if request.workspace.is_some() && request.repository.is_some() {
         return Err(io::Error::new(
@@ -409,28 +724,23 @@ fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
             "Only one targeted request is permitted",
         ));
     }
-    if let Some(request) = request.workspace {
-        return write_frame(
-            stream,
-            &Response::Workspace {
-                result: core.workspace_request(request),
-            },
-        );
+    let targeted = request.workspace.is_some() || request.repository.is_some();
+    if (targeted && request.after.is_some()) || (!targeted && request.expected_owner.is_some()) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "Invalid status/target context",
+        ));
     }
-    if let Some(request) = request.repository {
-        return write_frame(
-            stream,
-            &Response::Repository {
-                result: core.repository_request(request),
-            },
-        );
+    if targeted && request.expected_owner.as_deref() != Some(owner) {
+        return Ok(Response::Transport {
+            error: transport_failure(
+                TransportCode::OwnerChanged,
+                Delivery::Rejected,
+                "The supervisor owner differs from the caller observation. Refresh status; this attempt was rejected before domain dispatch.",
+            ),
+        });
     }
-    write_frame(
-        stream,
-        &Response::Snapshot {
-            snapshot: core.snapshot(request.after),
-        },
-    )
+    Ok(route(request))
 }
 
 trait FrameStream: Read + Write {
@@ -530,7 +840,7 @@ fn read_frame_with_clock<T: DeserializeOwned>(
     }
 }
 
-fn write_frame(stream: &mut impl Write, value: &impl Serialize) -> io::Result<()> {
+fn encode_frame(value: &impl Serialize) -> io::Result<Vec<u8>> {
     let mut frame = serde_json::to_vec(value)?;
     frame.push(b'\n');
     if frame.len() > MAX_FRAME_BYTES {
@@ -539,7 +849,11 @@ fn write_frame(stream: &mut impl Write, value: &impl Serialize) -> io::Result<()
             "supervisor frame exceeds limit",
         ));
     }
-    stream.write_all(&frame)
+    Ok(frame)
+}
+
+fn write_frame(stream: &mut impl Write, value: &impl Serialize) -> io::Result<()> {
+    stream.write_all(&encode_frame(value)?)
 }
 
 #[cfg(test)]

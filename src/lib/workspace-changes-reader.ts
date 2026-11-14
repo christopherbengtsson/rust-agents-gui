@@ -153,7 +153,7 @@ export class WorkspaceChangesReader {
     this.update({ loading: true });
     return completeOperation(
       async () => {
-        const result = await workspaceRequest({
+        const result = await workspaceRequest(owner, {
           operation: "changes",
           workspace_id: workspaceId,
           refresh,
@@ -175,7 +175,7 @@ export class WorkspaceChangesReader {
           file_id: selected.id,
         };
         const key = `${target.comparison_id}/${target.file_id}`;
-        const resultPreview = await workspaceRequest({
+        const resultPreview = await workspaceRequest(owner, {
           operation: "change_preview",
           target,
           load: this.loaded !== key,

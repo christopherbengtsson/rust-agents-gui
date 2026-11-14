@@ -2,15 +2,11 @@ import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
-interface SupervisorSnapshot {
-  status: {
-    state: "ready";
-    supervisor_pid: number;
-    application_version: string;
-  };
-  cursor: { owner: string; revision: number };
-  reset: boolean;
-}
+import {
+  decodeDesktopPid,
+  decodeSnapshot,
+  type SupervisorSnapshot,
+} from "@/lib/observation-contracts";
 
 export type Observation = {
   snapshot: SupervisorSnapshot;
@@ -28,8 +24,8 @@ async function readObservation(): Promise<
 > {
   try {
     const [snapshot, desktopPid] = await Promise.all([
-      invoke<SupervisorSnapshot>("supervisor_status"),
-      invoke<number>("desktop_pid"),
+      invoke<unknown>("supervisor_status").then(decodeSnapshot),
+      invoke<unknown>("desktop_pid").then(decodeDesktopPid),
     ]);
     return { ok: true, observation: { snapshot, desktopPid } };
   } catch (error) {

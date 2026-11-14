@@ -1,3 +1,4 @@
+import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { repositoryError, type RepositoryError } from "@/lib/repositories";
@@ -21,7 +22,9 @@ export function useWorkspaces(
 ) {
   const [pages, setPages] = useState<Record<string, WorkspacePage>>({});
   const [selected, setSelected] = useState<Workspace>();
-  const [pending, setPending] = useState(readWorkspacePending);
+  const [restoredPending] = useState(readWorkspacePending);
+  const [pending, setPending] = useState(restoredPending?.request ?? null);
+  const uncertain = useRef(restoredPending?.uncertain ?? false);
   const [observationError, setError] = useState<RepositoryError>();
   const [actionError, setActionError] = useState<RepositoryError>();
   const error = actionError ?? observationError;
@@ -96,7 +99,7 @@ export function useWorkspaces(
         async () => {
           const outstanding = intent.current;
           if (outstanding) {
-            const result = await workspaceRequest({
+            const result = await workspaceRequest(owner, {
               operation: "action",
               action_id: outstanding.action_id,
             });
@@ -154,7 +157,7 @@ export function useWorkspaces(
             Promise.all(
               ids.map(async (id) => {
                 const history = cursors.current[id];
-                const result = await workspaceRequest({
+                const result = await workspaceRequest(owner, {
                   operation: "list",
                   repository_id: id,
                   after: history?.at(-1) ?? null,
@@ -163,7 +166,7 @@ export function useWorkspaces(
               }),
             ),
             wanted
-              ? workspaceRequest({ operation: "get", id: wanted })
+              ? workspaceRequest(owner, { operation: "get", id: wanted })
               : Promise.resolve(null),
           ]);
           if (!active()) return;
@@ -236,8 +239,12 @@ export function useWorkspaces(
       });
       return;
     }
+    const earlierUncertain = intent.current ? uncertain.current : false;
     try {
-      localStorage.setItem(WORKSPACE_PENDING, JSON.stringify(request));
+      localStorage.setItem(
+        WORKSPACE_PENDING,
+        JSON.stringify({ request, uncertain: true }),
+      );
     } catch {
       setActionError({
         code: "storage",
@@ -248,6 +255,7 @@ export function useWorkspaces(
     }
     pendingNavigation.current = navigation.current;
     intent.current = request;
+    uncertain.current = true;
     setPending(request);
     sending.current = true;
     setSubmitting(true);
@@ -256,7 +264,7 @@ export function useWorkspaces(
     const actionGeneration = actionEpoch.current;
     return completeOperation(
       async () => {
-        const result = await workspaceRequest(request);
+        const result = await workspaceRequest(owner, request);
         if (
           !mounted.current ||
           actionEpoch.current !== actionGeneration ||
@@ -274,8 +282,10 @@ export function useWorkspaces(
           intent.current?.action_id === request.action_id
         ) {
           const failure = repositoryError(error);
-          setActionError(failure);
+          setActionError(pendingFailure(earlierUncertain, failure));
+          uncertain.current = uncertainAfter(earlierUncertain, failure);
           if (
+            !uncertain.current &&
             [
               "capacity",
               "not_found",
@@ -292,6 +302,17 @@ export function useWorkspaces(
             } catch {
               setPreferenceError(
                 "The rejected workspace request could not be cleared from desktop preferences.",
+              );
+            }
+          } else {
+            try {
+              localStorage.setItem(
+                WORKSPACE_PENDING,
+                JSON.stringify({ request, uncertain: uncertain.current }),
+              );
+            } catch {
+              setPreferenceError(
+                "The desktop could not update delivery evidence; the retained action remains uncertain.",
               );
             }
           }

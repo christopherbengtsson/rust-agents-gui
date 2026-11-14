@@ -1,13 +1,15 @@
 use std::{path::PathBuf, sync::Mutex};
 use tauri::Manager;
-use workspace_core::workspaces::{ErrorCode, RepositoryError, RepositoryReply, RepositoryRequest};
+use workspace_core::connection::{Delivery, OwnedReply, RequestFailure, TransportCode};
+use workspace_core::workspaces::{RepositoryReply, RepositoryRequest};
 use workspace_core::{SupervisorSnapshot, connection::SupervisorConnection};
 
 #[tauri::command]
 async fn repository_request(
+    expected_owner: String,
     request: RepositoryRequest,
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<RepositoryReply, RepositoryError> {
+) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
     let connection = connection.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         let connection = connection
@@ -16,17 +18,24 @@ async fn repository_request(
         connection
             .as_ref()
             .ok_or_else(|| repository_connection_error("Connect to the supervisor first".into()))?
-            .repository_request(request)
+            .repository_request(&expected_owner, request)
     })
     .await
-    .map_err(|e| repository_connection_error(format!("Repository request task failed: {e}")))?
+    .map_err(|e| {
+        RequestFailure::transport(
+            TransportCode::ReplyUnavailable,
+            Delivery::Unknown,
+            format!("Repository request task failed: {e}. Refresh recorded action status."),
+        )
+    })?
 }
 
 #[tauri::command]
 async fn workspace_request(
+    expected_owner: String,
     request: workspace_core::workspaces::WorkspaceRequest,
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<workspace_core::workspaces::WorkspaceReply, RepositoryError> {
+) -> Result<OwnedReply<workspace_core::workspaces::WorkspaceReply>, RequestFailure> {
     let connection = connection.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         connection
@@ -34,17 +43,20 @@ async fn workspace_request(
             .map_err(|e| repository_connection_error(e.to_string()))?
             .as_ref()
             .ok_or_else(|| repository_connection_error("Connect to the supervisor first".into()))?
-            .workspace_request(request)
+            .workspace_request(&expected_owner, request)
     })
     .await
-    .map_err(|e| repository_connection_error(format!("Workspace request task failed: {e}")))?
+    .map_err(|e| {
+        RequestFailure::transport(
+            TransportCode::ReplyUnavailable,
+            Delivery::Unknown,
+            format!("Workspace request task failed: {e}. Refresh recorded action status."),
+        )
+    })?
 }
 
-fn repository_connection_error(message: String) -> RepositoryError {
-    RepositoryError {
-        code: ErrorCode::Connection,
-        message,
-    }
+fn repository_connection_error(message: String) -> RequestFailure {
+    RequestFailure::transport(TransportCode::NotConnected, Delivery::NotSent, message)
 }
 
 #[tauri::command]

@@ -1,4 +1,10 @@
-import { identity, object, type RepositoryError } from "./repositories";
+import {
+  identity,
+  object,
+  bounded,
+  domainError,
+} from "./observation-contracts";
+import type { RepositoryError } from "./repositories";
 
 export type InspectionPhase =
   | "idle"
@@ -95,11 +101,10 @@ function status(v: Record<string, unknown>) {
     ["idle", "queued", "running", "ready", "failed"].includes(
       String(v.phase),
     ) &&
-    (v.error === null ||
-      (object(v.error) &&
-        typeof v.error.code === "string" &&
-        typeof v.error.message === "string")) &&
-    (v.phase !== "failed" || v.error !== null)
+    (v.error === null || domainError(v.error)) &&
+    (v.phase !== "failed" || v.error !== null) &&
+    // The Rust owner retains the previous error while a retry is queued/running.
+    (!["idle", "ready"].includes(String(v.phase)) || v.error === null)
   );
 }
 function file(v: unknown): v is ChangedFile {
@@ -145,7 +150,7 @@ export function validInspectionReply(
     !object(value) ||
     !object(value.observation) ||
     !status(value.observation) ||
-    new TextEncoder().encode(JSON.stringify(value)).byteLength > 48 * 1024
+    !bounded(value, 48 * 1024)
   )
     return false;
   const v = value.observation;

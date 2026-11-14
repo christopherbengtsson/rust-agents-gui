@@ -1,3 +1,4 @@
+import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -62,6 +63,8 @@ export function useRepositories(owner: string | undefined) {
       !pending ||
       action.action_id !== pending.request.action_id ||
       action.path !== pending.request.path ||
+      (action.create_initial_workspace ?? false) !==
+        (pending.request.create_initial_workspace ?? false) ||
       action.state === "pending"
     )
       return;
@@ -97,7 +100,7 @@ export function useRepositories(owner: string | undefined) {
 
   const readRepositories = useCallback(
     async function read(recheck = true): Promise<void> {
-      if (!mounted.current) return;
+      if (!mounted.current || !owner) return;
       if (reading.current) {
         queued.current = recheck || queued.current === true;
         return;
@@ -110,7 +113,7 @@ export function useRepositories(owner: string | undefined) {
         async () => {
           const pending = currentPending.current;
           if (pending) {
-            const result = await repositoryRequest({
+            const result = await repositoryRequest(owner, {
               operation: "action",
               action_id: pending.request.action_id,
             }).catch((error: unknown) => ({
@@ -122,7 +125,11 @@ export function useRepositories(owner: string | undefined) {
               setActionError(result.error);
             } else if (result.kind === "action") {
               if (result.registration) {
-                if (result.registration.path !== pending.request.path) {
+                if (
+                  result.registration.path !== pending.request.path ||
+                  (result.registration.create_initial_workspace ?? false) !==
+                    (pending.request.create_initial_workspace ?? false)
+                ) {
                   setActionError({
                     code: "conflict",
                     message:
@@ -145,13 +152,13 @@ export function useRepositories(owner: string | undefined) {
           }
           const requestedSelection = selection.current;
           const [list, selected] = await Promise.all([
-            repositoryRequest({
+            repositoryRequest(owner, {
               operation: "list",
               after: pageAfter,
               refresh: recheck,
             }),
             requestedSelection
-              ? repositoryRequest({
+              ? repositoryRequest(owner, {
                   operation: "get",
                   id: requestedSelection,
                   refresh: recheck,
@@ -204,7 +211,7 @@ export function useRepositories(owner: string | undefined) {
         },
       );
     },
-    [finish],
+    [finish, owner],
   );
 
   useEffect(() => {
@@ -260,8 +267,11 @@ export function useRepositories(owner: string | undefined) {
       },
       selection: selection.current,
     };
+    const earlierUncertain = intent.uncertain === true;
+    // Persist before IPC so a desktop crash cannot turn a transmission into "not sent".
+    const transmitted = { ...intent, uncertain: true };
     try {
-      localStorage.setItem(PENDING_KEY, JSON.stringify(intent));
+      localStorage.setItem(PENDING_KEY, JSON.stringify(transmitted));
     } catch {
       setActionError({
         code: "storage",
@@ -270,15 +280,15 @@ export function useRepositories(owner: string | undefined) {
       });
       return false;
     }
-    currentPending.current = intent;
-    setPending(intent);
+    currentPending.current = transmitted;
+    setPending(transmitted);
     setActionError(undefined);
     setSubmitting(true);
     sending.current = true;
     const generation = epoch.current;
     return completeOperation(
       async () => {
-        const result = await repositoryRequest({
+        const result = await repositoryRequest(owner, {
           operation: "register",
           request: intent.request,
         });
@@ -291,10 +301,18 @@ export function useRepositories(owner: string | undefined) {
         return true;
       },
       (error) => {
-        if (mounted.current && epoch.current === generation) {
+        if (
+          mounted.current &&
+          epoch.current === generation &&
+          currentPending.current?.request.action_id === intent.request.action_id
+        ) {
           const failure = repositoryError(error);
-          setActionError(failure);
-          if (failure.code === "invalid_path" || failure.code === "capacity") {
+          setActionError(pendingFailure(earlierUncertain, failure));
+          const uncertain = uncertainAfter(earlierUncertain, failure);
+          if (
+            !uncertain &&
+            (failure.code === "invalid_path" || failure.code === "capacity")
+          ) {
             currentPending.current = null;
             setPending(null);
             try {
@@ -302,6 +320,17 @@ export function useRepositories(owner: string | undefined) {
             } catch {
               setPreferenceError(
                 "A rejected registration could not be removed from desktop preferences.",
+              );
+            }
+          } else {
+            const retained = { ...intent, uncertain };
+            currentPending.current = retained;
+            setPending(retained);
+            try {
+              localStorage.setItem(PENDING_KEY, JSON.stringify(retained));
+            } catch {
+              setPreferenceError(
+                "The desktop could not update delivery evidence; the retained action remains uncertain.",
               );
             }
           }

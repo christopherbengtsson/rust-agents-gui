@@ -1,0 +1,107 @@
+[
+  {
+    "command": ["corepack", "pnpm", "verify"],
+    "exit_status": 1,
+    "wall_seconds": 0.151587,
+    "log": "verify.log",
+    "harness_threads": {
+      "rust": 1,
+      "node": 1,
+      "vitest_max_workers": 1
+    },
+    "target_directory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "dev/test",
+    "cache": "existing worktree target; warm dependencies; no fresh-private-target compilation"
+  },
+  {
+    "command": ["corepack", "pnpm", "verify"],
+    "exit_status": 0,
+    "wall_seconds": 10.87303,
+    "log": "verify-2.log"
+  },
+  {
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "list",
+      "--filesOnly",
+      "--json"
+    ],
+    "exit_status": 0,
+    "wall_seconds": 0.20785,
+    "log": "selected-tests.json"
+  },
+  {
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exit_status": 0,
+    "wall_seconds": 41.719689,
+    "log": "unit-measurement.log",
+    "measurement": "one warm-up plus five warm execution runs for each compiled Rust, Node tooling and mocked-IPC frontend harness"
+  },
+  {
+    "command": ["corepack", "pnpm", "verify"],
+    "exit_status": 0,
+    "wall_seconds": 8.105385,
+    "log": "verify-final.log",
+    "counts": {
+      "rust": 115,
+      "tooling": 25,
+      "frontend": 89
+    },
+    "target_directory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "dev/test",
+    "cache": "existing worktree target and warm dependencies",
+    "harness_threads": {
+      "rust": 1,
+      "node": 1,
+      "vitest_max_workers": 1
+    }
+  },
+  {
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exit_status": 0,
+    "wall_seconds": 41.564868,
+    "log": "unit-measurement-final.log",
+    "counts": {
+      "rust": 115,
+      "tooling": 25,
+      "frontend": 89
+    },
+    "target_directory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "dev/test",
+    "cache": "existing worktree target and warm dependencies",
+    "harness_threads": {
+      "rust": 1,
+      "node": 1,
+      "vitest_max_workers": 1
+    },
+    "warmups_per_harness": 1,
+    "measured_runs_per_harness": 5,
+    "compilation_seconds": 0.078925,
+    "warm_execution_seconds": {
+      "rust": {
+        "median": 0.386493,
+        "min": 0.38422,
+        "max": 0.404726
+      },
+      "tooling": {
+        "median": 0.788307,
+        "min": 0.782767,
+        "max": 0.824441
+      },
+      "frontend": {
+        "median": 5.683169,
+        "min": 5.656518,
+        "max": 5.742573
+      }
+    }
+  },
+  {
+    "command": ["corepack", "pnpm", "exec", "vite", "build"],
+    "exit_status": 0,
+    "wall_seconds": 0.42965,
+    "log": "frontend-build.log"
+  }
+]

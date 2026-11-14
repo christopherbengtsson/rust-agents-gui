@@ -1,3 +1,4 @@
+import { ownerBound } from "./test-support/owner-bound-invoke";
 import { StrictMode } from "react";
 import {
   act,
@@ -38,13 +39,15 @@ function connectionCalls() {
     .mock.calls.filter(([command]) => command !== "repository_request");
 }
 function mockConnection(implementation: (command: string) => Promise<unknown>) {
-  vi.mocked(invoke).mockImplementation((command) =>
-    command === "repository_request"
-      ? Promise.resolve({
-          kind: "repositories",
-          page: { repositories: [], next: null },
-        })
-      : implementation(command),
+  vi.mocked(invoke).mockImplementation(
+    ownerBound((command) =>
+      command === "repository_request"
+        ? Promise.resolve({
+            kind: "repositories",
+            page: { repositories: [], next: null },
+          })
+        : implementation(command),
+    ),
   );
 }
 

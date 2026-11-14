@@ -1,5 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
-import { identity, object, type RepositoryError } from "./repositories";
+import { type RepositoryError } from "./repositories";
+import {
+  identity,
+  object,
+  bounded,
+  domainError,
+  decodeOwnedReply,
+  decodeRequestFailure,
+  replyUnavailable,
+} from "./observation-contracts";
 import {
   validInspectionReply,
   type InspectionRequest,
@@ -60,13 +69,6 @@ export type WorkspaceReply =
       workspace: Workspace | null;
     }
   | { kind: "workspaces"; page: WorkspacePage };
-function error(value: unknown): value is RepositoryError {
-  return (
-    object(value) &&
-    typeof value.code === "string" &&
-    typeof value.message === "string"
-  );
-}
 function action(value: unknown): value is WorkspaceAction {
   return (
     object(value) &&
@@ -95,6 +97,12 @@ function workspace(value: unknown): value is Workspace {
     typeof value.cleanup_unconfirmed !== "boolean" ||
     !object(value.status) ||
     !object(value.artifacts)
+  )
+    return false;
+  if (
+    (value.status.state === "running") !== (value.status.stage !== undefined) ||
+    ["failed", "uncertain"].includes(String(value.status.state)) !==
+      (value.status.error !== undefined)
   )
     return false;
   return (
@@ -130,15 +138,32 @@ function workspace(value: unknown): value is Workspace {
         ].includes(String(value.status.stage))) ||
       ((value.status.state === "failed" ||
         value.status.state === "uncertain") &&
-        error(value.status.error)))
+        domainError(value.status.error)))
   );
 }
 export async function workspaceRequest(
+  expectedOwner: string,
   request: WorkspaceRequest,
 ): Promise<WorkspaceReply> {
-  const value = await invoke<unknown>("workspace_request", { request });
+  let value: unknown;
+  try {
+    value = await invoke<unknown>("workspace_request", {
+      expectedOwner,
+      request,
+    });
+  } catch (error) {
+    throw decodeRequestFailure(error);
+  }
+  return decodeOwnedReply(expectedOwner, value, (reply) =>
+    decodeWorkspaceReply(request, reply),
+  );
+}
+export function decodeWorkspaceReply(
+  request: WorkspaceRequest,
+  value: unknown,
+): WorkspaceReply {
   let valid = false;
-  if (object(value)) {
+  if (object(value) && bounded(value, 48 * 1024)) {
     if (
       request.operation === "changes" ||
       request.operation === "change_preview"
@@ -163,7 +188,9 @@ export async function workspaceRequest(
     else
       valid =
         value.kind === "action" &&
-        ((value.action === null && value.workspace === null) ||
+        ((request.operation === "action" &&
+          value.action === null &&
+          value.workspace === null) ||
           (action(value.action) &&
             workspace(value.workspace) &&
             value.action.action_id === request.action_id &&
@@ -178,7 +205,7 @@ export async function workspaceRequest(
                   : request.workspace_id === value.workspace.id)))));
   }
   if (!valid)
-    throw new Error(
+    throw replyUnavailable(
       "Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/supervisor build.",
     );
   return value as WorkspaceReply; // Runtime contracts and exact targets checked above.
@@ -200,14 +227,17 @@ export function readWorkspaceSelection(): {
   }
   return null;
 }
-export function readWorkspacePending(): WorkspaceAction | null {
+export type PendingWorkspace = { request: WorkspaceAction; uncertain: boolean };
+export function readWorkspacePending(): PendingWorkspace | null {
   try {
     const v: unknown = JSON.parse(
       localStorage.getItem(WORKSPACE_PENDING) ?? "null",
     );
-    if (action(v)) return v;
+    if (object(v) && action(v.request))
+      return { request: v.request, uncertain: v.uncertain !== false };
+    if (action(v)) return { request: v, uncertain: true };
   } catch {
-    /* Reconnect never invents a request. */
+    /* Reconnect never invents a request or removes stored recovery evidence. */
   }
   return null;
 }

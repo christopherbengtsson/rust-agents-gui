@@ -1,3 +1,4 @@
+import { ownerBound } from "./test-support/owner-bound-invoke";
 import {
   act,
   cleanup,
@@ -47,13 +48,15 @@ beforeEach(() => {
       removeListener() {},
     }),
   );
-  vi.mocked(invoke).mockImplementation(async (command) => {
-    if (command === "workspace_request")
-      return { kind: "workspaces", page: { workspaces: [], next: null } };
-    if (command === "desktop_pid") return 42;
-    if (command === "supervisor_status") return snapshot;
-    return { kind: "repositories", page: { repositories: [], next: null } };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (command) => {
+      if (command === "workspace_request")
+        return { kind: "workspaces", page: { workspaces: [], next: null } };
+      if (command === "desktop_pid") return 42;
+      if (command === "supervisor_status") return snapshot;
+      return { kind: "repositories", page: { repositories: [], next: null } };
+    }),
+  );
 });
 afterEach(() => {
   cleanup();
@@ -93,15 +96,17 @@ test("the native picker fills a path and only explicit registration submits it",
 function replies(
   handler: (request: RepositoryRequest) => Promise<RepositoryReply>,
 ) {
-  vi.mocked(invoke).mockImplementation(async (command, args) => {
-    if (command === "workspace_request")
-      return { kind: "workspaces", page: { workspaces: [], next: null } };
-    if (command === "desktop_pid") return 42;
-    if (command === "supervisor_status") return snapshot;
-    return handler(
-      (object(args) ? args.request : undefined) as RepositoryRequest,
-    );
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (command, args) => {
+      if (command === "workspace_request")
+        return { kind: "workspaces", page: { workspaces: [], next: null } };
+      if (command === "desktop_pid") return 42;
+      if (command === "supervisor_status") return snapshot;
+      return handler(
+        (object(args) ? args.request : undefined) as RepositoryRequest,
+      );
+    }),
+  );
 }
 function registrations() {
   return vi
@@ -217,6 +222,7 @@ test("reopening with a retained action retrieves its result without resubmitting
         registration: {
           action_id,
           path: "/projects/one",
+          create_initial_workspace: false,
           state: "completed",
           repository_id: id,
         },
@@ -526,15 +532,17 @@ test("cursor paging retains selection and previous returns to the original page"
 });
 
 test("malformed repository payloads stay visible rather than becoming empty navigation", async () => {
-  vi.mocked(invoke).mockImplementation(async (command) =>
-    command === "desktop_pid"
-      ? 42
-      : command === "supervisor_status"
-        ? snapshot
-        : {
-            kind: "repositories",
-            page: { repositories: [{ id: "bad" }], next: null },
-          },
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (command) =>
+      command === "desktop_pid"
+        ? 42
+        : command === "supervisor_status"
+          ? snapshot
+          : {
+              kind: "repositories",
+              page: { repositories: [{ id: "bad" }], next: null },
+            },
+    ),
   );
   render(
     <StrictMode>
@@ -661,6 +669,7 @@ test("reconnect retrieves a retained registration result without resubmitting", 
         registration: {
           action_id,
           path: repository.path,
+          create_initial_workspace: false,
           state: "completed",
           repository_id: id,
         },

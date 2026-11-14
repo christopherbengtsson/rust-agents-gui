@@ -1,3 +1,4 @@
+import { ownerBound } from "./test-support/owner-bound-invoke";
 import {
   act,
   cleanup,
@@ -114,20 +115,22 @@ beforeEach(() => {
       removeEventListener() {},
     })),
   });
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    return r.operation === "changes"
-      ? changes()
-      : {
-          kind: "change_preview",
-          observation: {
-            target: r.target,
-            phase: "ready",
-            preview,
-            error: null,
-          },
-        };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      return r.operation === "changes"
+        ? changes()
+        : {
+            kind: "change_preview",
+            observation: {
+              target: r.target,
+              phase: "ready",
+              preview,
+              error: null,
+            },
+          };
+    }),
+  );
 });
 afterEach(() => {
   cleanup();
@@ -144,40 +147,56 @@ test("inspection validates exact workspace/comparison/file targets and display b
     comparison_id: null,
     after: null,
   };
-  vi.mocked(invoke).mockResolvedValue({
-    ...changes(),
-    observation: { ...changes().observation, workspace_id: other },
-  });
-  await expect(workspaceRequest(r)).rejects.toThrow(
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async () => ({
+      ...changes(),
+      observation: { ...changes().observation, workspace_id: other },
+    })),
+  );
+  await expect(workspaceRequest("owner", r)).rejects.toThrow(
     "Invalid workspace observation",
   );
-  vi.mocked(invoke).mockResolvedValue(
-    changes("ready", { ...page, files: Array(33).fill(page.files[0]) }),
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async () =>
+      changes("ready", { ...page, files: Array(33).fill(page.files[0]) }),
+    ),
   );
-  await expect(workspaceRequest(r)).rejects.toThrow();
-  vi.mocked(invoke).mockResolvedValue({
-    kind: "change_preview",
-    observation: {
-      target: { ...target, file_id: other },
-      phase: "ready",
-      preview,
-      error: null,
-    },
-  });
+  await expect(workspaceRequest("owner", r)).rejects.toThrow();
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async () => ({
+      kind: "change_preview",
+      observation: {
+        target: { ...target, file_id: other },
+        phase: "ready",
+        preview,
+        error: null,
+      },
+    })),
+  );
   await expect(
-    workspaceRequest({ operation: "change_preview", target, load: true }),
-  ).rejects.toThrow();
-  vi.mocked(invoke).mockResolvedValue({
-    kind: "change_preview",
-    observation: {
+    workspaceRequest("owner", {
+      operation: "change_preview",
       target,
-      phase: "ready",
-      preview: { ...preview, rows: Array(201).fill(preview.rows[0]) },
-      error: null,
-    },
-  });
+      load: true,
+    }),
+  ).rejects.toThrow();
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async () => ({
+      kind: "change_preview",
+      observation: {
+        target,
+        phase: "ready",
+        preview: { ...preview, rows: Array(201).fill(preview.rows[0]) },
+        error: null,
+      },
+    })),
+  );
   await expect(
-    workspaceRequest({ operation: "change_preview", target, load: true }),
+    workspaceRequest("owner", {
+      operation: "change_preview",
+      target,
+      load: true,
+    }),
   ).rejects.toThrow();
 });
 
@@ -185,20 +204,22 @@ test("manual refresh submits once; observation polling does not requeue work", a
   vi.useFakeTimers();
   let submitted = 0;
   let observed = 0;
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation !== "changes") throw new Error("unexpected preview");
-    if (r.refresh) {
-      submitted++;
-      return changes("queued", null);
-    }
-    observed++;
-    return observed === 1
-      ? changes("idle", null)
-      : observed === 2
-        ? changes("running", null)
-        : changes();
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation !== "changes") throw new Error("unexpected preview");
+      if (r.refresh) {
+        submitted++;
+        return changes("queued", null);
+      }
+      observed++;
+      return observed === 1
+        ? changes("idle", null)
+        : observed === 2
+          ? changes("running", null)
+          : changes();
+    }),
+  );
   const { result } = renderHook(() =>
     useWorkspaceChanges("owner", workspace_id, false),
   );
@@ -219,10 +240,12 @@ test("manual refresh submits once; observation polling does not requeue work", a
 test("changed owner discards late observations and reconnect only reads", async () => {
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+    ownerBound(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    ),
   );
   const { result, rerender } = renderHook(
     ({ owner }) => useWorkspaceChanges(owner, workspace_id, false),
@@ -272,16 +295,18 @@ test("failed refresh retains the comparison and preview; tab switching unmounts 
       .getByLabelText("Unified file diff")
       .closest("[data-slot=scroll-area-viewport]")?.scrollTop,
   ).toBe(37);
-  vi.mocked(invoke).mockImplementation(async (_, args) =>
-    request(args).operation === "changes"
-      ? changes("failed", page, {
-          code: "git",
-          message: "Injected Git failure",
-        })
-      : {
-          kind: "change_preview",
-          observation: { target, phase: "ready", preview, error: null },
-        },
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) =>
+      request(args).operation === "changes"
+        ? changes("failed", page, {
+            code: "git",
+            message: "Injected Git failure",
+          })
+        : {
+            kind: "change_preview",
+            observation: { target, phase: "ready", preview, error: null },
+          },
+    ),
   );
   fireEvent.click(screen.getByRole("button", { name: "Refresh changes" }));
   await screen.findByText("Injected Git failure");
@@ -330,19 +355,21 @@ test("a removed selection remains named and an old preview is never replaced by 
   await waitFor(() => expect(result.current.observation?.phase).toBe("ready"));
   await act(async () => result.current.select(page.files[0]));
   await waitFor(() => expect(result.current.preview?.phase).toBe("ready"));
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    if (request(args).operation === "changes")
-      return changes("ready", {
-        ...page,
-        comparison_id: other,
-        files: [],
-        total: 0,
-      });
-    throw {
-      code: "not_found",
-      message: "The selected file no longer appears in this comparison.",
-    };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      if (request(args).operation === "changes")
+        return changes("ready", {
+          ...page,
+          comparison_id: other,
+          files: [],
+          total: 0,
+        });
+      throw {
+        code: "not_found",
+        message: "The selected file no longer appears in this comparison.",
+      };
+    }),
+  );
   await act(async () => {
     await result.current.refresh();
   });
@@ -359,10 +386,12 @@ test("visible summaries refresh every two seconds without overlapping a slow seq
   );
   await act(async () => {});
   vi.mocked(invoke).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+    ownerBound(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    ),
   );
   await act(async () => {
     await vi.advanceTimersByTimeAsync(2000);
@@ -469,31 +498,33 @@ test("document visibility, disconnect and unmount stop timers; reconnect only ob
 test("same-status edits refresh the selected preview only while Changes is active", async () => {
   vi.useFakeTimers();
   let comparison = comparison_id;
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation === "changes") {
-      if (r.refresh) comparison = other;
-      return changes("ready", { ...page, comparison_id: comparison });
-    }
-    return {
-      kind: "change_preview",
-      observation: {
-        target: r.target,
-        phase: "ready",
-        preview: {
-          ...preview,
-          comparison_id: comparison,
-          rows: [
-            {
-              ...preview.rows[0],
-              text: comparison === other ? "further edit" : "new content",
-            },
-          ],
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation === "changes") {
+        if (r.refresh) comparison = other;
+        return changes("ready", { ...page, comparison_id: comparison });
+      }
+      return {
+        kind: "change_preview",
+        observation: {
+          target: r.target,
+          phase: "ready",
+          preview: {
+            ...preview,
+            comparison_id: comparison,
+            rows: [
+              {
+                ...preview.rows[0],
+                text: comparison === other ? "further edit" : "new content",
+              },
+            ],
+          },
+          error: null,
         },
-        error: null,
-      },
-    };
-  });
+      };
+    }),
+  );
   const { result, rerender } = renderHook(
     ({ active }) => useWorkspaceChanges("owner", workspace_id, active),
     { initialProps: { active: true } },
@@ -528,10 +559,12 @@ test("tab changes drain an old read and preserve a queued manual refresh", async
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+    ownerBound(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    ),
   );
   const { result, rerender } = renderHook(
     ({ active }) => useWorkspaceChanges("owner", workspace_id, active),
@@ -560,32 +593,36 @@ test("late selected-file replies cannot replace a new selection, including A to 
     useWorkspaceChanges("owner", workspace_id, true),
   );
   await act(async () => {});
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation === "changes") return changes();
-    return new Promise((resolve) => {
-      finish = resolve;
-    });
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation === "changes") return changes();
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    }),
+  );
   await act(async () => result.current.select(page.files[0]));
   await act(async () => {
     result.current.select({ ...page.files[0], id: other, path: "B.txt" });
     result.current.select(page.files[0]);
   });
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    return r.operation === "changes"
-      ? changes()
-      : {
-          kind: "change_preview",
-          observation: {
-            target: r.target,
-            phase: "ready",
-            preview,
-            error: null,
-          },
-        };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      return r.operation === "changes"
+        ? changes()
+        : {
+            kind: "change_preview",
+            observation: {
+              target: r.target,
+              phase: "ready",
+              preview,
+              error: null,
+            },
+          };
+    }),
+  );
   await act(async () =>
     finish?.({
       kind: "change_preview",
@@ -608,8 +645,10 @@ test("inspection failures retain last-good data, pause timers and recover with m
     useWorkspaceChanges("owner", workspace_id, false),
   );
   await act(async () => {});
-  vi.mocked(invoke).mockResolvedValue(
-    changes("failed", page, { code: "git", message: "Git unavailable" }),
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async () =>
+      changes("failed", page, { code: "git", message: "Git unavailable" }),
+    ),
   );
   await act(async () => {
     await vi.advanceTimersByTimeAsync(2000);
@@ -621,7 +660,7 @@ test("inspection failures retain last-good data, pause timers and recover with m
     await vi.advanceTimersByTimeAsync(10000);
   });
   expect(invoke).toHaveBeenCalledTimes(calls);
-  vi.mocked(invoke).mockResolvedValue(changes());
+  vi.mocked(invoke).mockImplementation(ownerBound(async () => changes()));
   await act(async () => result.current.refresh());
   expect(result.current.observation?.error).toBeNull();
   await act(async () => {
@@ -634,29 +673,31 @@ test("manual Refresh settles a queued comparison after a failed preview", async 
   vi.useFakeTimers();
   let recovering = false;
   let requested = false;
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation === "changes") {
-      if (r.refresh) {
-        recovering = true;
-        requested = true;
-        return changes("queued");
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation === "changes") {
+        if (r.refresh) {
+          recovering = true;
+          requested = true;
+          return changes("queued");
+        }
+        return changes(
+          "ready",
+          recovering ? { ...page, comparison_id: other } : page,
+        );
       }
-      return changes(
-        "ready",
-        recovering ? { ...page, comparison_id: other } : page,
-      );
-    }
-    return {
-      kind: "change_preview",
-      observation: {
-        target: r.target,
-        phase: recovering ? "ready" : "failed",
-        preview: recovering ? { ...preview, comparison_id: other } : preview,
-        error: recovering ? null : { code: "git", message: "Read failed" },
-      },
-    };
-  });
+      return {
+        kind: "change_preview",
+        observation: {
+          target: r.target,
+          phase: recovering ? "ready" : "failed",
+          preview: recovering ? { ...preview, comparison_id: other } : preview,
+          error: recovering ? null : { code: "git", message: "Read failed" },
+        },
+      };
+    }),
+  );
   const { result } = renderHook(() =>
     useWorkspaceChanges("owner", workspace_id, true),
   );
@@ -675,25 +716,27 @@ test("manual Refresh settles a queued comparison after a failed preview", async 
 test("pending previews poll observations without repeated loads or summary refreshes", async () => {
   vi.useFakeTimers();
   let previewReads = 0;
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation === "changes") return changes();
-    previewReads++;
-    return {
-      kind: "change_preview",
-      observation: {
-        target: r.target,
-        phase:
-          previewReads === 1
-            ? "queued"
-            : previewReads === 2
-              ? "running"
-              : "ready",
-        preview: previewReads === 3 ? preview : null,
-        error: null,
-      },
-    };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation === "changes") return changes();
+      previewReads++;
+      return {
+        kind: "change_preview",
+        observation: {
+          target: r.target,
+          phase:
+            previewReads === 1
+              ? "queued"
+              : previewReads === 2
+                ? "running"
+                : "ready",
+          preview: previewReads === 3 ? preview : null,
+          error: null,
+        },
+      };
+    }),
+  );
   const { result } = renderHook(() =>
     useWorkspaceChanges("owner", workspace_id, true),
   );
@@ -718,19 +761,23 @@ test("workspace changes isolate retained data and drain late replies before read
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+    ownerBound(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    ),
   );
   const { result, rerender, unmount } = renderHook(
     ({ workspace }) => useWorkspaceChanges("owner", workspace, true),
     { initialProps: { workspace: workspace_id } },
   );
-  vi.mocked(invoke).mockResolvedValue({
-    ...changes(),
-    observation: { ...changes().observation, workspace_id: other },
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async () => ({
+      ...changes(),
+      observation: { ...changes().observation, workspace_id: other },
+    })),
+  );
   rerender({ workspace: other });
   expect(result.current.observation).toBeUndefined();
   expect(invoke).toHaveBeenCalledTimes(1);
@@ -755,7 +802,9 @@ test("transport failure during a pending job keeps manual Refresh usable", async
     </WorkspaceInspection>,
   );
   await screen.findByText(/Compared with HEAD/);
-  vi.mocked(invoke).mockResolvedValueOnce(changes("queued"));
+  vi.mocked(invoke).mockImplementationOnce(
+    ownerBound(async () => changes("queued")),
+  );
   fireEvent.click(screen.getByRole("button", { name: "Refresh changes" }));
   vi.mocked(invoke).mockRejectedValueOnce(new Error("Connection interrupted"));
   await screen.findByText("Connection interrupted");
@@ -775,33 +824,35 @@ test("maximum preview rendering stays bounded, keeps long paths accessible and r
     id: other,
     path: `src/${"long-directory/".repeat(25)}other.txt`,
   };
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation === "changes")
-      return changes("ready", {
-        ...page,
-        files: [page.files[0], second],
-        total: 2,
-      });
-    return {
-      kind: "change_preview",
-      observation: {
-        target: r.target,
-        phase: "ready",
-        error: null,
-        preview: {
-          ...preview,
-          rows: Array.from({ length: 200 }, (_, i) => ({
-            kind: "added",
-            old_line: null,
-            new_line: i + 1,
-            text: `row ${i + 1}`,
-          })),
-          limited: "Preview limited",
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation === "changes")
+        return changes("ready", {
+          ...page,
+          files: [page.files[0], second],
+          total: 2,
+        });
+      return {
+        kind: "change_preview",
+        observation: {
+          target: r.target,
+          phase: "ready",
+          error: null,
+          preview: {
+            ...preview,
+            rows: Array.from({ length: 200 }, (_, i) => ({
+              kind: "added",
+              old_line: null,
+              new_line: i + 1,
+              text: `row ${i + 1}`,
+            })),
+            limited: "Preview limited",
+          },
         },
-      },
-    };
-  });
+      };
+    }),
+  );
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
@@ -889,10 +940,12 @@ test("unmount while IPC is pending ignores its rejection and schedules no reads"
   vi.useFakeTimers();
   let reject: ((error: Error) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    () =>
-      new Promise((_, fail) => {
-        reject = fail;
-      }),
+    ownerBound(
+      () =>
+        new Promise((_, fail) => {
+          reject = fail;
+        }),
+    ),
   );
   const { unmount } = renderHook(() =>
     useWorkspaceChanges("owner", workspace_id, true),
@@ -946,19 +999,23 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+    ownerBound(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    ),
   );
-  vi.mocked(invoke).mockImplementation(async (_, args) => {
-    const r = request(args);
-    if (r.operation !== "changes") throw new Error("No preview selected");
-    return {
-      ...changes(),
-      observation: { ...changes().observation, workspace_id: r.workspace_id },
-    };
-  });
+  vi.mocked(invoke).mockImplementation(
+    ownerBound(async (_, args) => {
+      const r = request(args);
+      if (r.operation !== "changes") throw new Error("No preview selected");
+      return {
+        ...changes(),
+        observation: { ...changes().observation, workspace_id: r.workspace_id },
+      };
+    }),
+  );
   const idle = () => {};
   const done = async () => {};
   const workspace: Workspace = {

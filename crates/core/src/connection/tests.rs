@@ -411,6 +411,7 @@ fn request(protocol: u32, version: &str, after: Option<SnapshotCursor>) -> Vec<u
         protocol,
         application_version: version.into(),
         after,
+        expected_owner: None,
         repository: None,
         workspace: None,
     })
@@ -442,6 +443,8 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
     assert!(!snapshot.reset);
     for (protocol, version) in [
         (4, env!("CARGO_PKG_VERSION")),
+        (5, env!("CARGO_PKG_VERSION")),
+        (7, env!("CARGO_PKG_VERSION")),
         (999, env!("CARGO_PKG_VERSION")),
         (PROTOCOL_VERSION, "99.0.0"),
     ] {
@@ -468,6 +471,7 @@ fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
+        expected_owner: Some("owner-a".into()),
         repository: None,
         workspace: Some(WorkspaceRequest::Changes {
             workspace_id: WorkspaceId(uuid::Uuid::from_u128(7)),
@@ -480,8 +484,9 @@ fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
     input.push(b'\n');
     let mut stream = TransportScenario::new(input);
     serve_stream(&core, &mut stream).unwrap();
-    let Response::Workspace { result: Err(error) } =
-        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    let Response::Workspace {
+        result: Err(error), ..
+    } = serde_json::from_slice(&stream.trace.borrow().output).unwrap()
     else {
         panic!("inspection must retain workspace routing and typed failure")
     };
@@ -499,6 +504,7 @@ fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navi
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
+        expected_owner: Some("owner-a".into()),
         workspace: None,
         repository: Some(RepositoryRequest::List {
             after: None,
@@ -509,8 +515,9 @@ fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navi
     input.push(b'\n');
     let mut stream = TransportScenario::new(input);
     serve_stream(&core, &mut stream).unwrap();
-    let Response::Repository { result: Err(error) } =
-        serde_json::from_slice(&stream.trace.borrow().output).unwrap()
+    let Response::Repository {
+        result: Err(error), ..
+    } = serde_json::from_slice(&stream.trace.borrow().output).unwrap()
     else {
         panic!("storage failure must be an observation error")
     };
@@ -534,10 +541,13 @@ fn oversized_registration_is_a_definite_capacity_rejection_before_transport() {
             },
         };
         let error = client
-            .repository_request_with(request, |_, _| {
+            .repository_request_with("owner-a", request, |_, _| {
                 panic!("oversized input must not access state, connect, or send")
             })
             .unwrap_err();
+        let RequestFailure::Rejected { error } = error else {
+            panic!("expected local rejection")
+        };
         assert_eq!(error.code, ErrorCode::Capacity);
         assert!(error.message.contains("4096 UTF-8 bytes"));
     }
@@ -565,7 +575,7 @@ fn bounded_registration_uses_transport_and_preserves_uncertain_failures() {
             io::ErrorKind::TimedOut,
         ] {
             let error = client
-                .repository_request_with(request.clone(), |state, envelope| {
+                .repository_request_with("owner-a", request.clone(), |state, envelope| {
                     calls += 1;
                     assert_eq!(state, Path::new("/unused-private-state"));
                     let Some(RepositoryRequest::Register { request: sent }) = &envelope.repository
@@ -579,10 +589,13 @@ fn bounded_registration_uses_transport_and_preserves_uncertain_failures() {
                     let mut frame = Vec::new();
                     write_frame(&mut frame, envelope).unwrap();
                     assert!(frame.len() <= MAX_FRAME_BYTES);
-                    Err(kind.into())
+                    Err(unavailable(io::Error::from(kind)))
                 })
                 .unwrap_err();
-            assert_eq!(error.code, ErrorCode::Connection);
+            let RequestFailure::Transport { error } = error else {
+                panic!("expected transport failure")
+            };
+            assert_eq!(error.code, TransportCode::ReplyUnavailable);
             assert!(error.message.contains("recorded action status"));
         }
         assert_eq!(calls, 3);
@@ -936,5 +949,394 @@ fn client_read_failure_and_deadline_expiry_do_not_repeat_the_exchange() {
         assert_eq!(trace.writes, 1);
         assert_eq!(trace.reads, if slow_reply { 2 } else { 1 });
         assert_eq!(trace.drops, 1);
+    }
+}
+
+#[test]
+fn wrong_owner_rejects_every_target_before_domain_routing() {
+    let core = Core {
+        owner: "owner-b".into(),
+        pid: 43,
+        workspaces: None,
+    };
+    for target in [
+        serde_json::json!({"repository":{"operation":"register","request":{"action_id":"00000000-0000-0000-0000-000000000001","path":"/projects/one"}}}),
+        serde_json::json!({"repository":{"operation":"list","after":null,"refresh":true}}),
+        serde_json::json!({"workspace":{"operation":"create","action_id":"00000000-0000-0000-0000-000000000001","repository_id":"00000000-0000-0000-0000-000000000002"}}),
+        serde_json::json!({"workspace":{"operation":"changes","workspace_id":"00000000-0000-0000-0000-000000000003","refresh":true,"comparison_id":null,"after":null}}),
+    ] {
+        let mut envelope = serde_json::json!({"protocol":PROTOCOL_VERSION,"application_version":env!("CARGO_PKG_VERSION"),"after":null,"expected_owner":"owner-a"});
+        envelope
+            .as_object_mut()
+            .unwrap()
+            .extend(target.as_object().unwrap().clone());
+        dispatch_request(
+            serde_json::from_value(envelope.clone()).unwrap(),
+            "owner-b",
+            |_| panic!("wrong owner must not route, persist intent, probe or queue inspection"),
+        )
+        .unwrap();
+        let mut input = serde_json::to_vec(&envelope).unwrap();
+        input.push(b'\n');
+        let mut stream = TransportScenario::new(input);
+        serve_stream(&core, &mut stream).unwrap();
+        let reply: serde_json::Value =
+            serde_json::from_slice(&stream.trace.borrow().output).unwrap();
+        // Domain routing would return Storage from this unopened core.
+        assert_eq!(reply["kind"], "transport");
+        assert_eq!(reply["error"]["code"], "owner_changed");
+        assert_eq!(reply["error"]["delivery"], "rejected");
+    }
+}
+
+#[test]
+fn targeted_client_rejects_replacement_kind_and_target_without_another_exchange() {
+    let client = SupervisorClient::new("/unused-private-state".into());
+    let id = crate::workspaces::ActionId(uuid::Uuid::from_u128(1));
+    for response in [
+        Response::Repository {
+            owner: "owner-b".into(),
+            result: Ok(RepositoryReply::Action { registration: None }),
+        },
+        Response::Workspace {
+            owner: "owner-a".into(),
+            result: Ok(crate::workspaces::WorkspaceReply::Action {
+                action: None,
+                workspace: None,
+            }),
+        },
+        Response::Repository {
+            owner: "owner-a".into(),
+            result: Ok(RepositoryReply::Action {
+                registration: Some(crate::workspaces::Registration {
+                    action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(2)),
+                    path: "/one".into(),
+                    create_initial_workspace: false,
+                    initial_workspace_id: None,
+                    state: crate::workspaces::RegistrationState::Pending,
+                }),
+            }),
+        },
+    ] {
+        let failure = client
+            .repository_request_with(
+                "owner-a",
+                RepositoryRequest::Action { action_id: id },
+                |_, request| {
+                    assert_eq!(request.expected_owner.as_deref(), Some("owner-a"));
+                    Ok(response)
+                },
+            )
+            .unwrap_err();
+        let RequestFailure::Transport { error } = failure else {
+            panic!("must preserve uncertain delivery")
+        };
+        assert_eq!(error.code, TransportCode::ReplyUnavailable);
+        assert_eq!(error.delivery, Delivery::Unknown);
+    }
+}
+
+#[test]
+fn application_corpus_matches_pure_rust_serialization() {
+    use crate::workspaces::*;
+    use serde_json::{Value, json};
+    let corpus: Value =
+        serde_json::from_str(include_str!("../../../../contracts/observations-v6.json")).unwrap();
+    let owner = "owner-a";
+    let repository_id = RepositoryId(uuid::Uuid::from_u128(1));
+    let action_id = ActionId(uuid::Uuid::from_u128(2));
+    let workspace_id = WorkspaceId(uuid::Uuid::from_u128(3));
+    let comparison_id = ComparisonId(uuid::Uuid::from_u128(4));
+    let file_id = FileId(uuid::Uuid::from_u128(5));
+    let core = Core {
+        owner: owner.into(),
+        pid: 41,
+        workspaces: None,
+    };
+    assert_eq!(corpus["protocol"], PROTOCOL_VERSION);
+    assert_eq!(
+        corpus["snapshot"],
+        serde_json::to_value(core.snapshot(None)).unwrap()
+    );
+    assert_eq!(corpus["desktop_pid"], 42);
+    let repository_case =
+        |request: RepositoryRequest,
+         result: std::result::Result<RepositoryReply, RepositoryError>| {
+            json!({
+                "request": request, "reply": OwnedReply { owner: owner.into(), result }
+            })
+        };
+    let register = RegisterRepository {
+        action_id,
+        path: "/projects/one".into(),
+        create_initial_workspace: false,
+    };
+    let repositories = vec![
+        repository_case(
+            RepositoryRequest::List {
+                after: None,
+                refresh: false,
+            },
+            Ok(RepositoryReply::Repositories {
+                page: RepositoryPage {
+                    repositories: vec![Repository {
+                        id: repository_id,
+                        name: "one".into(),
+                        path: "/projects/one".into(),
+                        availability: Availability::Available,
+                    }],
+                    next: None,
+                },
+            }),
+        ),
+        repository_case(
+            RepositoryRequest::Register {
+                request: register.clone(),
+            },
+            Ok(RepositoryReply::Registration {
+                registration: Registration {
+                    action_id,
+                    path: register.path,
+                    create_initial_workspace: false,
+                    initial_workspace_id: None,
+                    state: RegistrationState::Completed { repository_id },
+                },
+            }),
+        ),
+        repository_case(
+            RepositoryRequest::Action { action_id },
+            Ok(RepositoryReply::Action { registration: None }),
+        ),
+        repository_case(
+            RepositoryRequest::Get {
+                id: repository_id,
+                refresh: false,
+            },
+            Err(RepositoryError::new(
+                ErrorCode::Storage,
+                "Storage unavailable",
+            )),
+        ),
+    ];
+    assert_eq!(corpus["repositories"], json!(repositories));
+    let workspace = Workspace {
+        id: workspace_id,
+        repository_id,
+        creation_action_id: action_id,
+        name: None,
+        branch: None,
+        path: None,
+        legacy: false,
+        provider: "codex".into(),
+        base: None,
+        artifacts: Artifacts {
+            branch: BranchArtifact::Unknown,
+            folder: FolderArtifact::Unknown,
+        },
+        status: CreationStatus::Queued,
+        cleanup_unconfirmed: false,
+    };
+    let workspace_case = |request: WorkspaceRequest, reply: WorkspaceReply| {
+        json!({
+            "request": request, "reply": OwnedReply { owner: owner.into(), result: Ok(reply) }
+        })
+    };
+    let target = PreviewTarget {
+        workspace_id,
+        comparison_id,
+        file_id,
+    };
+    let workspaces = vec![
+        workspace_case(
+            WorkspaceRequest::Create {
+                action_id,
+                repository_id,
+            },
+            WorkspaceReply::Action {
+                action: Some(WorkspaceAction::Create {
+                    action_id,
+                    repository_id,
+                }),
+                workspace: Some(workspace.clone()),
+            },
+        ),
+        workspace_case(
+            WorkspaceRequest::List {
+                repository_id,
+                after: None,
+            },
+            WorkspaceReply::Workspaces {
+                page: WorkspacePage {
+                    workspaces: vec![workspace],
+                    next: None,
+                },
+            },
+        ),
+        workspace_case(
+            WorkspaceRequest::Changes {
+                workspace_id,
+                refresh: false,
+                comparison_id: None,
+                after: None,
+            },
+            WorkspaceReply::Changes {
+                observation: ChangesObservation {
+                    workspace_id,
+                    phase: InspectionPhase::Ready,
+                    error: None,
+                    page: Some(ChangePage {
+                        comparison_id,
+                        head: "a".repeat(40),
+                        files: vec![],
+                        total: 0,
+                        next: None,
+                    }),
+                },
+            },
+        ),
+        workspace_case(
+            WorkspaceRequest::ChangePreview {
+                target: target.clone(),
+                load: true,
+            },
+            WorkspaceReply::ChangePreview {
+                observation: PreviewObservation {
+                    target,
+                    phase: InspectionPhase::Ready,
+                    error: None,
+                    preview: Some(FilePreview {
+                        comparison_id,
+                        head: "a".repeat(40),
+                        rows: vec![DiffRow {
+                            kind: RowKind::Added,
+                            old_line: None,
+                            new_line: Some(1),
+                            text: "hello".into(),
+                        }],
+                        limited: None,
+                        unsupported: None,
+                        note: None,
+                    }),
+                },
+            },
+        ),
+    ];
+    assert_eq!(corpus["workspaces"], json!(workspaces));
+    let mut failures = vec![RequestFailure::Rejected {
+        error: RepositoryError::new(ErrorCode::Capacity, "Local input limit"),
+    }];
+    for (code, delivery, message) in [
+        (TransportCode::Busy, Delivery::NotSent, "Busy"),
+        (
+            TransportCode::NotConnected,
+            Delivery::NotSent,
+            "Not connected",
+        ),
+        (
+            TransportCode::OwnerChanged,
+            Delivery::Rejected,
+            "Owner changed",
+        ),
+        (
+            TransportCode::ReplyUnavailable,
+            Delivery::Unknown,
+            "Reply unavailable",
+        ),
+        (
+            TransportCode::Incompatible,
+            Delivery::Rejected,
+            "Incompatible versions",
+        ),
+    ] {
+        failures.push(RequestFailure::transport(code, delivery, message));
+    }
+    assert_eq!(corpus["failures"], json!(failures));
+}
+
+#[test]
+fn targeted_exchange_reports_delivery_at_the_physical_io_boundary() {
+    let request = Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        expected_owner: Some("owner-a".into()),
+        repository: Some(RepositoryRequest::List {
+            after: None,
+            refresh: false,
+        }),
+        workspace: None,
+    };
+    for (fault, expected) in [
+        (Some(TransportFault::ReadTimeout), Delivery::NotSent),
+        (Some(TransportFault::WriteTimeout), Delivery::NotSent),
+        (Some(TransportFault::WriteAfter(8)), Delivery::Unknown),
+        (Some(TransportFault::Read), Delivery::Unknown),
+        (None, Delivery::Unknown), // EOF after a complete request was sent.
+    ] {
+        let mut scenario = ClientScenario::new(vec![]);
+        scenario.stream.as_mut().unwrap().fault = fault;
+        let error =
+            exchange_target(Path::new("/private/state"), &request, &mut scenario).unwrap_err();
+        let RequestFailure::Transport { error } = error else {
+            panic!("expected transport evidence")
+        };
+        assert_eq!(error.delivery, expected);
+        let trace = scenario.trace.borrow();
+        assert_eq!(trace.drops, 1);
+        if expected == Delivery::NotSent {
+            assert_eq!(trace.writes, 0);
+        } else {
+            assert!(trace.writes > 0);
+        }
+        assert_eq!(scenario.calls.len(), 3); // one connect; no discovery or replay.
+    }
+    let mut scenario = ClientScenario::new(vec![]);
+    scenario.connect_error = Some(io::ErrorKind::ConnectionRefused);
+    let RequestFailure::Transport { error } =
+        exchange_target(Path::new("/private/state"), &request, &mut scenario).unwrap_err()
+    else {
+        panic!("expected transport evidence")
+    };
+    assert_eq!(error.code, TransportCode::NotConnected);
+    assert_eq!(error.delivery, Delivery::NotSent);
+    assert_eq!(scenario.trace.borrow().writes, 0);
+}
+
+#[test]
+fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
+    let first = snapshot();
+    for invalid in [
+        SupervisorSnapshot {
+            cursor: SnapshotCursor {
+                owner: "".into(),
+                revision: 1,
+            },
+            ..first.clone()
+        },
+        SupervisorSnapshot {
+            cursor: SnapshotCursor {
+                owner: "owner-b".into(),
+                revision: u64::MAX,
+            },
+            ..first.clone()
+        },
+        SupervisorSnapshot {
+            status: SupervisorStatus {
+                supervisor_pid: 0,
+                ..first.status.clone()
+            },
+            ..first.clone()
+        },
+    ] {
+        let mut scenario =
+            DiscoveryScenario::new(vec![Ok(first.clone()), Ok(first.clone()), Ok(invalid)]);
+        let mut connection =
+            SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+        connection.snapshot_with(&mut scenario).unwrap();
+        assert_eq!(
+            connection.snapshot_with(&mut scenario).unwrap_err().kind(),
+            io::ErrorKind::InvalidData
+        );
+        assert_eq!(connection.cursor, Some(first.cursor.clone()));
     }
 }

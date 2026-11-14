@@ -1,0 +1,27 @@
+{
+  "base_revision": "002bd850c003ba4d6c5fd1d97868ba8bcabfaa73",
+  "branch": "feature/m01-frontend-navigation",
+  "identity": "F02 final product/corpus/unit source; evidence and unrelated docs/IDEAS.md excluded",
+  "sha256": {
+    "crates/core/src/connection.rs": "0fa0f5370f176c733eeed97421fffc6fb468ca83a9ba6c91acaa442494f8a69e",
+    "crates/core/src/connection/tests.rs": "4c3bf3a86ea8836bc72ee245ba39ddb2ac18227f4debc42688ca2d536eb6feec",
+    "src-tauri/src/main.rs": "c6ad569c771b4d3c89b079485c4a4d99a9ed5f292c5b5cd0dbdfa75a5f7e602a",
+    "contracts/README.md": "56b95666c758d9737eed48856f76d34148d0b3e600f1e6850200efd77e58fde2",
+    "contracts/observations-v6.json": "8d288e8fb94925c9231002128da226ed10630e48c83f6f918397f8c6f7d85cf3",
+    "src/lib/observation-contracts.ts": "162da2a94cea26aa2c959362088a9aefb5cc7760986b701a5c0b2cea667962e5",
+    "src/lib/repositories.ts": "6d9890d712cc75a01bc554f4eb327699ea36f73175247e71f519a875e8b8615a",
+    "src/lib/workspaces.ts": "075ff4a4b0fd091108e22ea8c08f3e21f7ae838cb662d74a7909458bb1b2feb6",
+    "src/lib/changes.ts": "09563bfdc136bbc80e535b6ccc55e8982e691a1a2b6005135e700019a15693af",
+    "src/lib/workspace-changes-reader.ts": "585353cfd3ddc3a8702a95b1a4174af74a86e6fb8487e95489c055644f814256",
+    "src/hooks/use-supervisor-connection.ts": "5a8fe1b89aa4aa50d4d41f30f00494a2b2b913534638429fdbcb615f2513c7b4",
+    "src/hooks/use-repositories.ts": "a773ad9bbcf2762ea30ff0c8941019f26f4ba434364db298610af54fb33c36ee",
+    "src/hooks/use-workspaces.ts": "51080a383dcc5872fa4ac7b12fe825a1e8afc0e0d951601fd870ad6223cd0012",
+    "src/test-support/owner-bound-invoke.ts": "a70873324c7674f61798224c722ef7ef7fac3dab0be0fbcc66f0d9e9ef96daf9",
+    "src/observation-contracts.test.tsx": "c95e6134b01c8e61252b4525e3d2df82ec0350f539c595d068d8eff180af5032",
+    "src/retained-delivery.test.tsx": "cb4275bf81e9e4119f4e86aa2ad063e43ab821f4ff6b155edadcba90020ee297",
+    "src/App.test.tsx": "706d877bf5311a742945f0c337770500f32d655a430e84d5036158214208b832",
+    "src/repositories.test.tsx": "3dfe3629103b8528e7308fee8c44663ba31ecdd414d828c9fe6c4ad818f06592",
+    "src/workspaces.test.tsx": "4ea1c921e977352b801ef61dd39d090acc4a69a95215f72376a2ac45221b54cb",
+    "src/workspace-changes.test.tsx": "ac0d0889950964cf188fcee230e755b11b12280fb12086e52523ec407d55f65e"
+  }
+}
