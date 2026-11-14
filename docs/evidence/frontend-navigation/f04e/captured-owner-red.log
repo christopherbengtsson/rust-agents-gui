@@ -1,0 +1,26 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/retained-delivery.test.tsx (10 tests | 1 failed) 569ms
+   × a callback captured before owner replacement cannot select its old-owner result when invoked later 6ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  16:19:54
+   Duration  1.08s (tests 55%, transform 24%, environment 14%, import 6%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/retained-delivery.test.tsx > a callback captured before owner replacement cannot select its old-owner result when invoked later
+AssertionError: expected null not to be null
+ ❯ src/retained-delivery.test.tsx:265:43
+    263|   expect(submittedOwner).toBe("old");
+    264|   expect(view.result.current.selected).toBeUndefined();
+    265|   expect(view.result.current.pending).not.toBeNull();
+       |                                           ^
+    266| });
+    267|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

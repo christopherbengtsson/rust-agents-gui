@@ -19,7 +19,7 @@ export function useWorkspaceChanges(
   sharedReader?: WorkspaceChangesReader,
 ) {
   const [view, setView] = useState<ChangesView>({ loading: false });
-  // WorkspacePanel supplies a stable lane above keyed presentation resets.
+  // App supplies a stable lane above keyed presentation resets.
   const [reader] = useState(() => sharedReader ?? new WorkspaceChangesReader());
   const shown = useSyncExternalStore(subscribeVisibility, documentVisible);
   useEffect(() => {
@@ -28,7 +28,7 @@ export function useWorkspaceChanges(
       setView,
     );
   }, [reader, owner, workspaceId, active, visible, shown]);
-  useEffect(() => () => reader.dispose(), [reader]);
+  useEffect(() => () => reader.release(), [reader]);
   return {
     ...view,
     select: reader.select,

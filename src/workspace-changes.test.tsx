@@ -1064,8 +1064,10 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
     hasPrevious: () => false,
     retry: done,
   };
+  const changeReader = new WorkspaceChangesReader();
   const panel = (selected: Workspace | undefined) => (
     <WorkspacePanel
+      changeReader={changeReader}
       connection={{
         state: "connected",
         observation: {

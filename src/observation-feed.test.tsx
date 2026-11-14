@@ -1,26 +1,5 @@
 import { expect, test } from "vitest";
-import { DirtyObservations, decodeFeedBatch } from "./lib/observation-feed";
-
-test("repository progress is recorded dirty before acknowledgement and remains bounded", () => {
-  const dirty = new DirtyObservations();
-  const batch = decodeFeedBatch(
-    {
-      subscription_id: "feed-1",
-      batch_id: 1,
-      cursor: { owner: "owner-a", sequence: 2 },
-      sample: {
-        kind: "hints",
-        watermark: 2,
-        targets: [{ kind: "repositories" }],
-      },
-    },
-    "owner-a",
-    "feed-1",
-    0,
-  );
-  dirty.accept(batch);
-  expect(dirty.targets).toEqual([{ kind: "repositories" }]);
-});
+import { decodeFeedBatch } from "./lib/observation-feed";
 
 import { afterEach, vi } from "vitest";
 import { ObservationFeed, type FeedTransport } from "./lib/observation-feed";
@@ -42,7 +21,8 @@ function scenario() {
     acknowledge: vi.fn(async () => {}),
     stop: vi.fn(async () => {}),
   };
-  const feed = new ObservationFeed(transport);
+  const acceptance = { connect: vi.fn(), accept: vi.fn() };
+  const feed = new ObservationFeed(transport, acceptance);
   const send = (
     index: number,
     batch: number,
@@ -64,7 +44,7 @@ function scenario() {
       },
     });
   };
-  return { feed, transport, deliveries, send };
+  return { feed, transport, deliveries, send, acceptance };
 }
 test("acceptance precedes ack, and reconnect uses the feed cursor rather than status", async () => {
   const s = scenario();
@@ -72,7 +52,9 @@ test("acceptance precedes ack, and reconnect uses the feed cursor rather than st
   await flush();
   vi.mocked(s.transport.acknowledge).mockImplementation(async (ack) => {
     expect(s.feed.getSnapshot().accepted).toEqual(ack.cursor);
-    expect(s.feed.getSnapshot().dirty.all).toBe(true);
+    expect(s.acceptance.accept).toHaveBeenCalledWith(
+      expect.objectContaining({ cursor: ack.cursor }),
+    );
   });
   s.send(0, 1, 10);
   await flush();
@@ -154,29 +136,6 @@ test("late setup is stopped and joined before the replacement is subscribed", as
   s.feed.connect(undefined);
   await flush();
 });
-test("dirty target retention collapses to a full marker instead of growing", () => {
-  const dirty = new DirtyObservations();
-  for (let i = 0; i < 257; i++) {
-    dirty.accept({
-      subscription_id: "feed",
-      batch_id: i + 1,
-      cursor: { owner: "owner-a", sequence: i + 1 },
-      sample: {
-        kind: "hints",
-        watermark: i + 1,
-        targets: [
-          {
-            kind: "workspace",
-            workspace_id: `00000000-0000-0000-0000-${i.toString(16).padStart(12, "0")}`,
-          },
-        ],
-      },
-    });
-  }
-  expect(dirty.all).toBe(true);
-  expect(dirty.targets).toEqual([]);
-});
-
 import corpus from "../contracts/observations-v8.json";
 test("the shared protocol corpus passes production feed decoding", () => {
   let previous = 0;

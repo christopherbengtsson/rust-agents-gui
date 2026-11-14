@@ -1,18 +1,20 @@
 import {
-  ObservationCoordinator,
-  type ObservationScope,
-} from "@/lib/observation-coordinator";
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { useStore } from "zustand";
+import type { AppObservations } from "@/lib/app-observations";
 import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
-import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PENDING_KEY,
   SELECTION_KEY,
   readPending,
-  readSelection,
   repositoryError,
   repositoryRequest,
-  readRepository,
   type PendingRegistration,
   type Registration,
   type Repository,
@@ -20,260 +22,198 @@ import {
   type RepositoryPage,
 } from "@/lib/repositories";
 
-type Navigation = {
-  page?: RepositoryPage;
-  selected?: Repository;
-  loading: boolean;
-  error?: RepositoryError;
-};
-
-// App calls this once. Selection and action ownership survive disclosure/dialog changes.
 export function useRepositories(
   owner: string | undefined,
-  coordinator?: ObservationCoordinator,
+  app: AppObservations,
 ) {
-  const [reads] = useState(() => coordinator ?? new ObservationCoordinator());
-  const scope = useRef<ObservationScope | null>(null);
-  function resetReads() {
-    scope.current?.dispose();
-    scope.current = reads.scope();
-    epoch.current++;
-    reading.current = false;
-    queued.current = null;
-  }
+  const feature = app.repositories;
+  useSyncExternalStore(feature.subscribe, feature.getSnapshot);
+  const selectedId = useStore(app.presentation, (state) => state.repository);
+  const [after, setAfter] = useState<string | null>(null);
+  const [previous, setPrevious] = useState<(string | null)[]>([]);
   const [initialWorkspace, setInitialWorkspace] = useState<{
     repository_id: string;
     workspace_id: string;
   } | null>(null);
-  const [navigation, setNavigation] = useState<Navigation>({ loading: true });
   const [pending, setPending] = useState(readPending);
+  const currentPending = useRef(pending);
   const [actionError, setActionError] = useState<RepositoryError>();
   const [submitting, setSubmitting] = useState(false);
   const [preferenceError, setPreferenceError] = useState<string>();
-  const [restoredSelection] = useState(readSelection);
-  const selection = useRef(restoredSelection);
-  const currentPending = useRef(pending);
-  const after = useRef<string | null>(null);
-  const [previous, setPrevious] = useState<(string | null)[]>([]);
-  const epoch = useRef(0);
-  const actionEpoch = useRef(0);
   const mounted = useRef(false);
-  const reading = useRef(false);
-  const queued = useRef<boolean | null>(null);
+  const actionEpoch = useRef(0);
+  const navigation = useRef(0);
+  const pendingNavigation = useRef(0);
   const sending = useRef(false);
-
-  function rememberSelection(id: string | null) {
-    selection.current = id;
-    try {
-      if (id) localStorage.setItem(SELECTION_KEY, id);
-      else localStorage.removeItem(SELECTION_KEY);
-    } catch {
-      setPreferenceError(
-        "The desktop could not remember repository selection. Check its local storage before reopening.",
-      );
-    }
-  }
-
-  // Stable callbacks bind observation subscriptions to their lifecycle owner.
-  const finish = useCallback((action: Registration) => {
-    const pending = currentPending.current;
-    if (
-      !pending ||
-      action.action_id !== pending.request.action_id ||
-      action.path !== pending.request.path ||
-      (action.create_initial_workspace ?? false) !==
-        (pending.request.create_initial_workspace ?? false) ||
-      action.state === "pending"
-    )
-      return;
-    if (
-      action.state === "completed" &&
-      selection.current === pending.selection
-    ) {
-      selection.current = action.repository_id;
-      if (action.initial_workspace_id)
-        setInitialWorkspace({
-          repository_id: action.repository_id,
-          workspace_id: action.initial_workspace_id,
-        });
+  const shownOwner = owner ?? feature.retainedOwner();
+  const list = shownOwner
+    ? feature.peek(shownOwner, { operation: "list", after })
+    : undefined;
+  const detail =
+    shownOwner && selectedId
+      ? feature.peek(shownOwner, { operation: "get", id: selectedId })
+      : undefined;
+  const page =
+    list?.data?.value.kind === "repositories"
+      ? list.data.value.page
+      : undefined;
+  const selected =
+    detail?.data?.value.kind === "repository"
+      ? (detail.data.value.repository ?? undefined)
+      : page?.repositories.find((item) => item.id === selectedId);
+  const observedOwner =
+    (selectedId
+      ? (detail?.data?.owner ?? list?.data?.owner)
+      : list?.data?.owner) ?? owner;
+  const actionId = pending?.request.action_id;
+  const error = list?.error ?? detail?.error;
+  const loading =
+    !list ||
+    list.fetchStatus === "fetching" ||
+    (list.status === "pending" && !list.data);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      actionEpoch.current += 1;
+    };
+  }, [owner]);
+  useEffect(() => {
+    if (!owner) return;
+    return feature.observe(owner, { operation: "list", after });
+  }, [feature, owner, after]);
+  useEffect(() => {
+    if (!owner || !selectedId) return;
+    return feature.observe(owner, { operation: "get", id: selectedId });
+  }, [feature, owner, selectedId]);
+  useEffect(() => {
+    if (!owner || !actionId) return;
+    return feature.observe(owner, { operation: "action", action_id: actionId });
+  }, [feature, owner, actionId]);
+  const rememberSelection = useCallback(
+    (id: string | null) => {
+      app.presentation.setState({ repository: id });
       try {
-        localStorage.setItem(SELECTION_KEY, action.repository_id);
+        if (id) localStorage.setItem(SELECTION_KEY, id);
+        else localStorage.removeItem(SELECTION_KEY);
       } catch {
         setPreferenceError(
-          "The desktop could not remember repository selection.",
+          "The desktop could not remember repository selection. Check its local storage before reopening.",
         );
       }
-    }
-    currentPending.current = null;
-    setPending(null);
-    try {
-      localStorage.removeItem(PENDING_KEY);
-    } catch {
-      setPreferenceError(
-        "The completed registration could not be removed from desktop preferences. Reopening will retrieve its recorded result.",
-      );
-    }
-    setActionError(action.state === "failed" ? action.error : undefined);
-  }, []);
-
-  const readRepositories = useCallback(
-    async function read(recheck = true): Promise<void> {
-      if (!mounted.current || !owner) return;
-      if (reading.current) {
-        queued.current = recheck || queued.current === true;
-        return;
-      }
-      const readScope = scope.current;
-      if (!readScope) return;
-      reading.current = true;
-      const generation = epoch.current;
-      const pageAfter = after.current;
-      const active = () => mounted.current && epoch.current === generation;
-      return completeOperation(
-        async () => {
-          const pending = currentPending.current;
-          if (pending) {
-            const result = await readRepository(readScope, owner, {
-              operation: "action",
-              action_id: pending.request.action_id,
-            }).catch((error: unknown) => ({
-              kind: "error" as const,
-              error: repositoryError(error),
-            }));
-            if (!active()) return;
-            if (result.kind === "error") {
-              setActionError(result.error);
-            } else if (result.kind === "action") {
-              if (result.registration) {
-                if (
-                  result.registration.path !== pending.request.path ||
-                  (result.registration.create_initial_workspace ?? false) !==
-                    (pending.request.create_initial_workspace ?? false)
-                ) {
-                  setActionError({
-                    code: "conflict",
-                    message:
-                      "This action ID records a different path. Preserve its ID and inspect the recorded registration before submitting another request.",
-                  });
-                } else {
-                  setActionError(undefined);
-                  finish(result.registration);
-                }
-              } else
-                setActionError(
-                  (last) =>
-                    last ?? {
-                      code: "not_found",
-                      message:
-                        "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
-                    },
-                );
-            }
-          }
-          const requestedSelection = selection.current;
-          const [list, selected] = await Promise.all([
-            readRepository(readScope, owner, {
-              operation: "list",
-              after: pageAfter,
-              refresh: recheck,
-            }),
-            requestedSelection
-              ? readRepository(readScope, owner, {
-                  operation: "get",
-                  id: requestedSelection,
-                  refresh: recheck,
-                })
-              : Promise.resolve(null),
-          ]);
-          if (
-            !active() ||
-            after.current !== pageAfter ||
-            list.kind !== "repositories"
-          )
-            return;
-          const candidate =
-            selected?.kind === "repository" ? selected.repository : null;
-          const chosen = candidate ?? list.page.repositories[0];
-          if (selection.current === requestedSelection) {
-            selection.current = chosen?.id ?? null;
-            try {
-              if (chosen) localStorage.setItem(SELECTION_KEY, chosen.id);
-              else localStorage.removeItem(SELECTION_KEY);
-            } catch {
-              setPreferenceError(
-                "The desktop could not remember repository selection.",
-              );
-            }
-          }
-          setNavigation((last) => ({
-            page: list.page,
-            selected: selection.current === chosen?.id ? chosen : last.selected,
-            loading: false,
-          }));
-        },
-        (error) => {
-          if (active())
-            setNavigation((last) => ({
-              ...last,
-              loading: false,
-              error: repositoryError(error),
-            }));
-        },
-        () => {
-          if (active()) {
-            reading.current = false;
-            if (queued.current !== null) {
-              const next = queued.current;
-              queued.current = null;
-              void read(next);
-            }
-          }
-        },
-      );
     },
-    [finish, owner],
+    [app],
   );
-
-  useEffect(() => {
-    scope.current = reads.scope();
-    mounted.current = true;
-    if (owner) void readRepositories();
-    return () => {
-      scope.current?.dispose();
-      scope.current = null;
-      mounted.current = false;
-      epoch.current += 1;
-      actionEpoch.current += 1;
-      reading.current = false;
-      queued.current = null;
-    };
-  }, [owner, reads, readRepositories]);
-
-  const checking =
-    navigation.page?.repositories.some(
-      (r) => r.availability.state === "checking",
-    ) || navigation.selected?.availability.state === "checking";
-  useEffect(() => {
-    if (
-      !owner ||
-      navigation.loading ||
-      navigation.error ||
-      ((!pending || actionError) && !checking)
-    )
-      return;
-    const timer = setTimeout(() => void readRepositories(false), 250);
-    return () => clearTimeout(timer);
-  }, [owner, navigation, pending, actionError, checking, readRepositories]);
-
-  // Explicit intents show loading immediately; observation Effects only start reads.
-  function refresh(recheck = true): Promise<void> {
-    if (!mounted.current) return Promise.resolve();
-    setNavigation((last) => ({ ...last, loading: true }));
-    return readRepositories(recheck);
+  useEffect(
+    () =>
+      feature.subscribe(() => {
+        if (!owner || app.presentation.getState().repository !== selectedId)
+          return;
+        const list = feature.peek(owner, { operation: "list", after });
+        const page =
+          list?.data?.value.kind === "repositories"
+            ? list.data.value.page
+            : undefined;
+        const detail = selectedId
+          ? feature.peek(owner, { operation: "get", id: selectedId })
+          : undefined;
+        if (!page || list?.status !== "success") return;
+        if (
+          !selectedId ||
+          (detail?.status === "success" &&
+            detail.data?.value.kind === "repository" &&
+            !detail.data.value.repository)
+        )
+          rememberSelection(page.repositories[0]?.id ?? null);
+      }),
+    [feature, app, owner, after, selectedId, rememberSelection],
+  );
+  const finish = useCallback(
+    (action: Registration) => {
+      const retained = currentPending.current;
+      if (
+        !retained ||
+        action.action_id !== retained.request.action_id ||
+        action.path !== retained.request.path ||
+        action.create_initial_workspace !==
+          (retained.request.create_initial_workspace ?? false) ||
+        action.state === "pending"
+      )
+        return;
+      if (
+        action.state === "completed" &&
+        navigation.current === pendingNavigation.current &&
+        app.presentation.getState().repository === retained.selection
+      ) {
+        rememberSelection(action.repository_id);
+        if (action.initial_workspace_id)
+          setInitialWorkspace({
+            repository_id: action.repository_id,
+            workspace_id: action.initial_workspace_id,
+          });
+      }
+      currentPending.current = null;
+      setPending(null);
+      try {
+        localStorage.removeItem(PENDING_KEY);
+      } catch {
+        setPreferenceError(
+          "The completed registration could not be removed from desktop preferences. Reopening will retrieve its recorded result.",
+        );
+      }
+      setActionError(action.state === "failed" ? action.error : undefined);
+    },
+    [app, rememberSelection],
+  );
+  useEffect(
+    () =>
+      feature.subscribe(() => {
+        if (!owner || !actionId || !currentPending.current) return;
+        const action = feature.peek(owner, {
+          operation: "action",
+          action_id: actionId,
+        });
+        if (!action) return;
+        if (action.error) {
+          setActionError(repositoryError(action.error));
+          return;
+        }
+        const result = action.data?.value;
+        if (result?.kind !== "action") return;
+        if (!result.registration) {
+          if (!sending.current)
+            setActionError(
+              (last) =>
+                last ?? {
+                  code: "not_found",
+                  message:
+                    "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
+                },
+            );
+        } else {
+          const request = currentPending.current.request;
+          if (
+            result.registration.path !== request.path ||
+            result.registration.create_initial_workspace !==
+              (request.create_initial_workspace ?? false)
+          )
+            setActionError({
+              code: "conflict",
+              message:
+                "This action ID records a different path. Preserve its ID and inspect the recorded registration before submitting another request.",
+            });
+          else finish(result.registration);
+        }
+      }),
+    [feature, owner, actionId, finish],
+  );
+  function refresh(recheck = true) {
+    return owner
+      ? feature.refreshSelection(owner, after, selectedId, actionId, recheck)
+      : Promise.resolve();
   }
-
   async function register(path: string): Promise<boolean> {
-    if (!owner || sending.current) return false;
+    if (!owner || !observedOwner || sending.current) return false;
     const old = currentPending.current;
     if (old && old.request.path !== path) {
       setActionError({
@@ -289,7 +229,7 @@ export function useRepositories(
         path,
         create_initial_workspace: true,
       },
-      selection: selection.current,
+      selection: app.presentation.getState().repository,
     };
     const earlierUncertain = intent.uncertain === true;
     // Persist before IPC so a desktop crash cannot turn a transmission into "not sent".
@@ -309,16 +249,18 @@ export function useRepositories(
     setActionError(undefined);
     setSubmitting(true);
     sending.current = true;
+    pendingNavigation.current = navigation.current;
     const generation = actionEpoch.current;
     return completeOperation(
       async () => {
-        const result = await repositoryRequest(owner, {
+        const result = await repositoryRequest(observedOwner, {
           operation: "register",
           request: intent.request,
         });
         if (
           mounted.current &&
           actionEpoch.current === generation &&
+          app.freshness.matches(observedOwner) &&
           result.kind === "registration"
         )
           finish(result.registration);
@@ -328,6 +270,7 @@ export function useRepositories(
         if (
           mounted.current &&
           actionEpoch.current === generation &&
+          app.freshness.matches(observedOwner) &&
           currentPending.current?.request.action_id === intent.request.action_id
         ) {
           const failure = repositoryError(error);
@@ -370,28 +313,27 @@ export function useRepositories(
     );
   }
   function select(repository: Repository) {
-    resetReads();
+    navigation.current++;
     rememberSelection(repository.id);
-    setNavigation((last) => ({ ...last, selected: repository }));
-    void readRepositories(false);
   }
   function next() {
-    if (!navigation.page?.next) return;
-    resetReads();
-    const current = after.current;
-    setPrevious((last) => [...last, current]);
-    after.current = navigation.page.next;
-    void refresh(false);
+    if (!page?.next) return;
+    setPrevious((last) => [...last, after]);
+    setAfter(page.next);
   }
   function back() {
     if (!previous.length) return;
-    resetReads();
-    after.current = previous[previous.length - 1];
+    setAfter(previous.at(-1) ?? null);
     setPrevious((last) => last.slice(0, -1));
-    void refresh(false);
   }
+  const observation: {
+    page?: RepositoryPage;
+    selected?: Repository;
+    error?: RepositoryError;
+  } = { page, selected, error: error ? repositoryError(error) : undefined };
   return {
-    ...navigation,
+    ...observation,
+    loading,
     initialWorkspace,
     pending,
     submitting,

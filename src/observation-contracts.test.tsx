@@ -17,7 +17,7 @@ import {
   workspaceRequest,
   type WorkspaceRequest,
 } from "./lib/workspaces";
-import { useRepositories } from "./hooks/use-repositories";
+import { useRepositories } from "./test-support/feature-hooks";
 import { useSupervisorConnection } from "./hooks/use-supervisor-connection";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));

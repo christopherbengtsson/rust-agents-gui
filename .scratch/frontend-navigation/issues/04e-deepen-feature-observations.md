@@ -67,10 +67,10 @@ Footholds: `App.tsx`, `hooks/use-{repositories,workspaces,supervisor-connection}
 
 ## Acceptance
 
-- [ ] Query and feature modules replace repository/workspace cache/read/freshness machinery; no second observation cache remains.
-- [ ] p-queue replaces manual drain/count/queue mechanics while the small physical registry preserves physical guarantees.
-- [ ] Repository/workspace push equivalence passes and their covered polling is removed; inspection replacement remains F04f.
-- [ ] App-scoped ownership/store foundation and retained actions survive navigation with configured checks/evidence.
+- [x] Query and feature modules replace repository/workspace cache/read/freshness machinery; no second observation cache remains.
+- [x] p-queue replaces manual drain/count/queue mechanics while the small physical registry preserves physical guarantees.
+- [x] Repository/workspace push equivalence passes and their covered polling is removed; inspection replacement remains F04f.
+- [x] App-scoped ownership/store foundation and retained actions survive navigation with configured checks/evidence.
 
 Routing stays pre-F06. F05 finishes allowlisted context persistence/integration;
 F04f replaces feed/inspection lifecycle, then F04g qualifies actual behavior.
@@ -82,3 +82,28 @@ F04f replaces feed/inspection lifecycle, then F04g qualifies actual behavior.
 Published after the user approved library refactors and all four deepening
 opportunities. Acceptance remains unchecked until this ticket's implementation
 and verification produce linked evidence. No provider submissions are authorized.
+
+
+### 2026-11-14 — F04e implementation complete
+
+Confirmed F04d checked acceptance and linked evidence at `851ea98`; continued
+`feature/m01-frontend-navigation` from that tip with a clean working tree/index.
+Preserved predecessor evidence and all successor tickets.
+
+App now owns the Query client, p-queue physical coordinator, presentation identity
+store and existing inspection reader above layouts. Repository/workspace feature
+modules replace Hook-local observation bodies/read orchestration and consume
+synchronous feed invalidations before acknowledgement. Captured generations,
+bounded global resync, retained-action interests and the physical registry preserve
+freshness, exact owner/target identity and active-drain guarantees. Covered 250 ms
+polling is removed. Inspection cache/lifecycle/polling remains F04f.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f04e.md) records source hashes,
+coverage replacement, failures/red-green checks, versions, measurements and limits.
+Final configured verification passed: **158 Rust + 40 tooling + 136 frontend** units.
+Required one-warm-up/five-run measurements and frontend bundling also passed.
+Independent review found and resolved two P2 issues; follow-up **Standards 0 / Spec 0
+outstanding findings**. Actual fixture/native/packaging qualification was not run
+and remains F04g/later. No provider submissions occurred. The containing commit owns
+this ticket's changes and evidence. Stop after F04e; F04f and all successors remain
+open and unimplemented by this session.

@@ -1,3 +1,5 @@
+import type { Target } from "@/generated/contracts/types";
+import type { FeatureFreshness } from "./feature-freshness";
 import {
   ObservationCoordinator,
   type ObservationScope,
@@ -80,13 +82,24 @@ export class WorkspaceChangesReader {
     else this.queued = undefined;
   }
 
-  dispose() {
+  // Until F04f consumes inspection freshness, retain it in the shared bounded
+  // generation budget. No inspection cache or scheduling migration happens here.
+  invalidate(target: Target, freshness: FeatureFreshness) {
+    if (target.kind === "inspection")
+      freshness.mark(`inspection:${target.workspace_id}`);
+  }
+
+  release() {
     this.scope?.dispose();
     this.mounted = false;
     this.publish = undefined;
     this.generation++;
     this.queued = undefined;
     clearTimeout(this.timer);
+  }
+
+  dispose() {
+    this.release();
   }
 
   private observable() {

@@ -15,7 +15,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { App } from "./App";
 import { StrictMode } from "react";
-import { useRepositories } from "./hooks/use-repositories";
+import { useRepositories } from "./test-support/feature-hooks";
 import {
   PENDING_KEY,
   SELECTION_KEY,
@@ -107,6 +107,7 @@ function replies(
 ) {
   vi.mocked(invoke).mockImplementation(
     ownerBound(async (command, args) => {
+      if (command.startsWith("observation_")) return;
       if (command === "workspace_request")
         return { kind: "workspaces", page: { workspaces: [], next: null } };
       if (command === "desktop_pid") return 42;
@@ -653,7 +654,9 @@ test.each(["success", "failure"])(
     rerender({ owner: undefined });
     stage = "old";
     rerender({ owner: "owner-a" });
-    expect(requests.filter((r) => r.operation === "list")).toHaveLength(2);
+    await waitFor(() =>
+      expect(requests.filter((r) => r.operation === "list")).toHaveLength(2),
+    );
     stage = "new";
     rerender({ owner: "owner-b" });
     await waitFor(() => expect(result.current.selected?.name).toBe(fresh.name));
@@ -759,4 +762,51 @@ test("explicit repository refresh reports loading while retaining the last obser
   expect(result.current.loading).toBe(false);
   expect(result.current.selected?.id).toBe(id);
   expect(registrations()).toHaveLength(0);
+});
+
+test("Refresh status retains explicit reprobe through a delayed connection check", async () => {
+  const unavailable: Repository = {
+    ...repository,
+    availability: {
+      state: "unavailable",
+      error: { code: "git", message: "Restore access" },
+    },
+  };
+  let statusReads = 0;
+  let resolveStatus: ((value: unknown) => void) | undefined;
+  const refreshes: boolean[] = [];
+  vi.mocked(invoke).mockImplementation(
+    ownerBound((command, args) => {
+      if (command === "desktop_pid") return 42;
+      if (command === "supervisor_status") {
+        if (++statusReads === 1) return snapshot;
+        return new Promise((resolve) => {
+          resolveStatus = resolve;
+        });
+      }
+      if (command.startsWith("observation_")) return;
+      if (command === "workspace_request")
+        return { kind: "workspaces", page: { workspaces: [], next: null } };
+      if (!object(args) || !object(args.request))
+        throw new Error("Missing repository request");
+      const request = args.request;
+      refreshes.push(request.refresh === true);
+      return request.operation === "get"
+        ? { kind: "repository", repository: unavailable }
+        : {
+            kind: "repositories",
+            page: { repositories: [unavailable], next: null },
+          };
+    }),
+  );
+  render(<App />);
+  await screen.findByRole("heading", { level: 1, name: "one" });
+  expect(refreshes.every((refresh) => !refresh)).toBe(true);
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: "Refresh status" }));
+  await screen.findByRole("button", { name: "Checking…" });
+  await act(async () => {
+    resolveStatus?.(snapshot);
+  });
+  await waitFor(() => expect(refreshes.some(Boolean)).toBe(true));
 });

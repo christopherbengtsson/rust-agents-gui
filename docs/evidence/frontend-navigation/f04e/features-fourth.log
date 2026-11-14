@@ -1,0 +1,29 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspace-changes.test.tsx (22 tests | 1 failed) 663ms
+   × WorkspacePanel navigation keeps one physical read lane across keyed inspection views 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspace-changes.test.tsx > WorkspacePanel navigation keeps one physical read lane across keyed inspection views
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/workspace-changes.test.tsx:1092:18
+    1090|   const { rerender } = render(panel(workspace));
+    1091|   rerender(panel({ ...workspace, id: other, name: "second" }));
+    1092|   expect(invoke).toHaveBeenCalledTimes(1);
+       |                  ^
+    1093|   rerender(panel(undefined));
+    1094|   rerender(panel({ ...workspace, id: other, name: "second" }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 107 passed (108)
+   Start at  16:14:15
+   Duration  6.50s (tests 59%, environment 23%, import 15%, transform 2%)
+
+    Isolate  9 workers spawned · ~206ms startup each (spawn + environment, per file)
+             at least ~1.64s faster with isolate: false — reuses workers across files instead of one per file
+

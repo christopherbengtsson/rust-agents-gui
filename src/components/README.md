@@ -93,7 +93,8 @@ callers together; Git history records their evolution.
 
 ## Observation lifetime status
 
-Current code/evidence through F04 still uses the reader/controllers described below.
+F04e now uses app-scoped Query observations for repositories/workspaces; inspection
+still uses the existing reader described below.
 The [amended foundation](../../.scratch/frontend-navigation/spec.md) and
 [observation guidance](../../docs/agents/observations.md) govern their replacement:
 F04e establishes app-lifetime construction and repository/workspace feature
@@ -141,11 +142,14 @@ This guide does not authorize regenerating or relocating the foundation.
   action/storage errors and availability. Use for workspace content rather than
   navigation. Long repository names truncate in the header/footer while retaining
   their full accessible text and keeping Refresh visible. Ticket 04 adds
-  selected-workspace context. App supplies its shared observation coordinator to
-  the stable inspection reader; standalone consumers may own an isolated reader.
+  selected-workspace context. App supplies the stable inspection reader constructed above layouts, sharing
+  its physical-read coordinator with repository/workspace observations. Standalone
+  consumers must likewise keep the reader above keyed presentation.
   Ticket 05 adds change
   inspection through concrete interfaces in those tickets.
 
+App constructs the Query client, p-queue physical coordinator, feature modules,
+Zustand presentation identity store and inspection reader above layouts.
 App owns the single connection observation Hook and composes the blocks inside
 SidebarProvider with the skip link. Future selection changes must retain that
 owner and bind pending work to its actual domain target. Blocks add no duplicate
@@ -159,9 +163,12 @@ parents control arrangement, while blocks retain internal layout.
   never interprets durability or decides recovery. Native picker results only fill
   the path. Late results from a closed dialog are ignored.
 - **Repository observations:** App calls `useRepositories` once alongside the
-  existing connection Hook. It coordinates bounded pages, selected details and
-  retained action-status lookup. Desktop preferences retain selection/action IDs;
-  SQLite remains authoritative. Mount/reconnect reads status and never resubmits.
+  existing connection Hook. RepositoryObservations hides owner/target/page Query
+  definitions, validation, interests and captured dirty generations. The Hook binds
+  presentation identities and explicit callbacks without retaining observation bodies.
+  Feed baseline acceptance precedes initial reads; hints replace progress polling.
+  Desktop preferences retain selection/action IDs; SQLite remains authoritative.
+  Mount/reconnect reads status and never resubmits.
 - **Registration foundation additions:** Field, Label, Input Group, Textarea,
   Spinner and Collapsible retain official base-nova composition. InputGroupAddon
   has a narrow lint exception for mouse focus assistance; Label's exception
@@ -203,12 +210,15 @@ For primary-source rationale and the article's stack adaptations, consult
   an accessible per-repository +. Existing selection/disclosure remains separate.
   WorkspacePanel composes WorkspaceDetails and retained transport/preference errors.
 - App calls `useWorkspaces` once. It owns bounded pages, workspace selection and
-  pending action status across navigation. Reconnect only reads. Creation and
+  pending action status across navigation through WorkspaceObservations and the
+  app-scoped Query client. Zustand retains selected identities, never workspace
+  records. Reconnect only reads. Creation and
   recovery callbacks retain explicit target IDs; late replies cannot steal changed
   selection. Action settlement uses owner and explicit-navigation generations,
   independent of repository-driven observation resubscription. Admission errors
-  remain visible while unrelated workspace progress continues polling; observation
-  failures pause polling. Stable callbacks own observation subscriptions; the shared
+  remain visible while unrelated workspace progress follows push hints; observation
+  failures retain last-good data and require a new hint or explicit refresh.
+  Stable callbacks own observation interests; the shared
   React-independent async settlement utility preserves cleanup outside compiler lowering.
 - Add repository explains the automatic first workspace and lack of agent launch.
   No additional shadcn component or custom primitive was needed. Existing controls
@@ -238,10 +248,12 @@ retained observations remain readable and marked stale.
   observation-only polling. Hidden documents/surfaces, disconnection and failures
   pause automatic reads; manual Refresh remains available after errors. Reconnect
   first retrieves observations. Generations isolate targets and stale replies;
-  the physical read lane drains before another sequence starts. WorkspacePanel
-  owns the reader's lifetime above the workspace-keyed presentation, so navigation
+  the physical read lane drains before another sequence starts. App
+  owns the reader's lifetime above layouts and the workspace-keyed presentation, so navigation
   also drains old IPC before reading the new target. Supply that stable reader
-  when composing WorkspaceInspection; keyed view resets retain no extra readers.
+  when composing WorkspaceInspection; keyed view resets release interest and retain
+  no extra readers. Inspection caching, sequencing and polling remain unchanged
+  until F04f.
 - **ChangedFiles** is the bounded file-selection block shared by the desktop
   right panel and the below-880-px Sheet. It receives observations and a selection
   callback. Opaque file IDs, never display labels, target previews. It renders one
@@ -280,11 +292,14 @@ when the retained comparison ID has not changed.
 ### F04 observation delivery
 
 `App` owns one acknowledged native feed through `useObservationFeed`, independently
-of feature reads. Its controller validates owner/subscription/batch/cursor and bounded
-typed hints, records bounded dirty state before acknowledgement, and reconnects from
-its accepted feed cursor. Full resync is a retained dirty marker; F04e/F04f will move freshness into feature
-observation modules and consume it before F05.
+of feature reads. Its existing controller validates owner/subscription/batch/cursor
+and typed hints, then calls the synchronous app acceptance sink before advancing
+the accepted cursor and acknowledging. Repository/workspace modules own Query
+freshness and visible/retained-action interests; the controller has no competing
+feature-dirtiness ledger. A shared bounded generation budget retains inspection
+invalidations through the inspection owner until F04f consumes them.
 Feed failures appear in the existing connection status/details and retain last-good
 feature observations. The controller serializes replacement after physical stop/join,
-including late registration and Strict Mode cleanup. No Query migration or polling
-removal is included in F04.
+including late registration and Strict Mode cleanup. F04f will replace feed/inspection
+lifecycle internals and complete inspection Query/polling migration. Historical
+F04 evidence is preserved.

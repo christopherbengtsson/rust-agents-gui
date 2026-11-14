@@ -22,7 +22,10 @@ test("repository and workspace progress traverses the mounted Tauri channel with
   let channel!: { onmessage: (value: unknown) => void };
   let id!: string;
   const acknowledged: number[] = [];
-  const { result } = renderHook(() => useObservationFeed("owner-a"));
+  const acceptance = { connect: vi.fn(), accept: vi.fn() };
+  const { result } = renderHook(() =>
+    useObservationFeed("owner-a", acceptance),
+  );
   vi.mocked(invoke).mockImplementation(async (command, args) => {
     if (command === "observation_subscribe") {
       const subscription = args as {
@@ -52,7 +55,7 @@ test("repository and workspace progress traverses the mounted Tauri channel with
     );
   }
   expect(acknowledged).toEqual([1, 2]);
-  expect(result.current.dirty.all).toBe(true);
+  expect(acceptance.accept).toHaveBeenCalled();
   expect(
     vi
       .mocked(invoke)

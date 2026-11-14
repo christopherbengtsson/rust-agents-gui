@@ -1,11 +1,11 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { useWorkspaces } from "./hooks/use-workspaces";
+import { useWorkspaces } from "./test-support/feature-hooks";
 import { ObservationCoordinator } from "./lib/observation-coordinator";
 import { ownerBound } from "./test-support/owner-bound-invoke";
 import type { WorkspaceRequest } from "./lib/workspaces";
-import { useRepositories } from "./hooks/use-repositories";
+import { useRepositories } from "./test-support/feature-hooks";
 import { useSupervisorConnection } from "./hooks/use-supervisor-connection";
 import { useWorkspaceChanges } from "./hooks/use-workspace-changes";
 import { WorkspaceChangesReader } from "./lib/workspace-changes-reader";

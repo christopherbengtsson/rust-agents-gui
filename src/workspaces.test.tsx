@@ -1,9 +1,10 @@
+import { AppObservations } from "./lib/app-observations";
 import { ownerBound } from "./test-support/owner-bound-invoke";
 import { cleanup, renderHook, act, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { object } from "./lib/repositories";
-import { useWorkspaces } from "./hooks/use-workspaces";
+import { useWorkspaces } from "./test-support/feature-hooks";
 import {
   WORKSPACE_PENDING,
   workspaceRequest,
@@ -425,8 +426,9 @@ test("definite admission rejection retains the error but does not block another 
   expect(result.current.error).toBeUndefined();
 });
 
-test("a rejected action retains its error while unrelated workspace progress keeps polling", async () => {
+test("a rejected action retains its error while unrelated workspace progress follows hints without polling", async () => {
   vi.useFakeTimers();
+  const app = new AppObservations();
   let ready = false;
   const observed = () => ({
     ...w,
@@ -449,7 +451,7 @@ test("a rejected action retains its error while unrelated workspace progress kee
   );
   try {
     const { result } = renderHook(() =>
-      useWorkspaces("owner", repository_id, repository_id, null),
+      useWorkspaces("owner", repository_id, repository_id, null, app),
     );
     await act(async () => {});
     act(() =>
@@ -466,7 +468,23 @@ test("a rejected action retains its error while unrelated workspace progress kee
     expect(result.current.selected?.status.state).toBe("running");
     ready = true;
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(250);
+      await vi.advanceTimersByTimeAsync(1000);
+    });
+    expect(result.current.selected?.status.state).toBe("running");
+    await act(async () => {
+      app.accept({
+        subscription_id: "fixture",
+        batch_id: 2,
+        cursor: { owner: "owner", sequence: 2 },
+        sample: {
+          kind: "hints",
+          watermark: 2,
+          targets: [
+            { kind: "workspace", workspace_id: id },
+            { kind: "workspaces", repository_id },
+          ],
+        },
+      });
     });
     expect(result.current.selected?.status.state).toBe("ready");
     expect(result.current.error?.code).toBe("capacity");

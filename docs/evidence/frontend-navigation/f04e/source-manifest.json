@@ -1,0 +1,66 @@
+{
+  "baseline": "851ea98a1079e99d05c292f8b755badecc9a2822",
+  "branch": "feature/m01-frontend-navigation",
+  "reviewed_product_tree": "80f57138a68cd911db6b81d429f490fb2a146756",
+  "dirty": true,
+  "hardware": {
+    "cpu": "Apple M4 Pro",
+    "logical_cpus": 12,
+    "memory_bytes": 51539607552,
+    "os": "macOS 26.2 (25C56)",
+    "arch": "arm64"
+  },
+  "versions": {
+    "rustc": "1.99.1",
+    "cargo": "1.99.1",
+    "node": "26.13.1",
+    "pnpm": "12.18.0",
+    "p-queue": "10.0.0",
+    "@tanstack/react-query": "5.107.1",
+    "zustand": "5.1.0"
+  },
+  "harness": {
+    "threads": 1,
+    "profile": "test",
+    "target": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "cache": "warm worktree default; no fresh private-target compilation"
+  },
+  "sources": {
+    "package.json": "fd972c55d9652ea7df7aed40e47c77527552a0c16074c4692394bf122bb0ad39",
+    "pnpm-lock.yaml": "4c7c709d5a7fcbc7c63ab1cb59dffd95fea14907b984ec5316dd8c55f73b5074",
+    "src/App.tsx": "144dc507a501a1130010bcaadfd658e4f884cb5a60ea46c8b069e6053d1aabe0",
+    "src/components/README.md": "7751eaeb9e0ba5245766eccac8aff00febe577f29e3af07fcd0808c576a43dbc",
+    "src/components/blocks/workspace-panel.tsx": "33bec087d2c71f2442c9f612cbc78c076bbbcbfd3920c9a1597663436440c10e",
+    "src/frontend-scheduling.test.tsx": "b2926a7121d4e64bdd9092d4e493dbba6dc3695cb3527021986020059c276877",
+    "src/generated/contracts/manifest.json": "d54d1f1222b5e6af3adc24e0e4805c49ef4b0bd06df4aa17c4def6ddfe0239ec",
+    "src/hooks/use-observation-feed.ts": "f1068288811a6a00f5d7f0c134de0c3f011cc3bc6c66cf006ec40c51e64cca0c",
+    "src/hooks/use-repositories.ts": "805ab0b9bc79639ec2046e6b5660be4b735518155d368703d3c7c45bf0845b82",
+    "src/hooks/use-workspace-changes.ts": "0bedd44662433ed64ba70395da5d5d853f8404317ad58fbe6fed7541b960614d",
+    "src/hooks/use-workspaces.ts": "8126b5e6ccc3f9dfc4c84247d0e5ad36c89063684e75d6e68b65c2ff8d2845fc",
+    "src/lib/app-observations.ts": "9f497ccb3f28de96bb230dd28cf9af947a69d5c414b3a36a202b9fd81aabba07",
+    "src/lib/feature-freshness.ts": "1e6716f7aa41606fb2085dd2d6747b4ad9672445fd7e6dd3afbb17734b536374",
+    "src/lib/feature-observations.test.tsx": "0ab9726976fa6abd76d4e47f75d29bf7aae11c02391fc7963e5ae4080f6a23a5",
+    "src/lib/feature-query-cache.ts": "312659899163e9497bbc1f6a96974bb3e2aa8fb2b01949917d7cf582d4c9c302",
+    "src/lib/observation-coordinator.ts": "fc1d335f8073d7092875d23e4dd9bd9a5976b77a20a187c098ada37dbea576ac",
+    "src/lib/observation-feed.ts": "2e301a564dcc3ad9759a58787a584c153f2bb4a401ca1fdac3a2c8314b7e4cca",
+    "src/lib/repositories.ts": "a1f8c279ff2e713183d7b1b0e68fa0e9c69933a4db78f7dd51b7bdfd463d5282",
+    "src/lib/repository-observations.ts": "cda480aa6cc11cba97270393a92957e700131e701d2df584f51a3614b1707ff1",
+    "src/lib/workspace-changes-reader.ts": "45a3b34600b9a2e4f89eaaf35ff6ee19440fa47d3a35bfc6c016db5caa56fff1",
+    "src/lib/workspace-observations.ts": "8b5a3ee644eaab1c1b453d3d85acf8089ed93d8a4ffc7e83d12b63114909001c",
+    "src/observation-contracts.test.tsx": "ee553dcc43d99a3950f109c2c00dfb03732118d28c272a68e783920cc3c7f9af",
+    "src/observation-feed-bridge.test.tsx": "9592ae25a75d718fe44ba1d44ffd2b66b04a3ee2f4e413265d51aad2f97f356d",
+    "src/observation-feed.test.tsx": "3b94cb0c60f4d35df67f5ab0253e5a9466b3ab1fd82fb62d74ff95787029ce69",
+    "src/repositories.test.tsx": "82cccedd88ec251cacddf1446f2b961650b4e894c54d7cc82993e1a071c6abe0",
+    "src/retained-delivery.test.tsx": "e9d668f45e81df40c119da30756f42f02fc9bc8739c76e35135288e15a4bd549",
+    "src/test-support/browser-runtime.ts": "2dfb2527fc1ed1a04c41f0f5f6e77eb2e4e0a568c12453afb738837969519ecb",
+    "src/test-support/feature-hooks.ts": "7a46a6f086800ac0f5de750225b681a82c70fe0f4f149bea828e067e17ce2cd2",
+    "src/test-support/owner-bound-invoke.ts": "b94fe3acfc2ac309262c1eaf38040612888950e2530d9c80d121f0f05f2a032b",
+    "src/workspace-changes.test.tsx": "50e384fc56995a5888859f3d8dc398ba077480473aa5a5a47e86c8358c78facb",
+    "src/workspaces.test.tsx": "190ebae35dc7de6a719568096e4ff5dc75559ec89d7a7169aa93b8bf5bc4bd1a",
+    "vite.config.ts": "fed8bd442645318e00749983e991f482ce0c7329d981412f377e407e6cb80a69"
+  },
+  "rust_unit_executable": {
+    "path": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-b1a480319bfd89d6",
+    "sha256": "9b3fa6ab0e29acdc8cc96edaa92832b955d9b235781eed4be9f5da38e9a9ba6c"
+  }
+}

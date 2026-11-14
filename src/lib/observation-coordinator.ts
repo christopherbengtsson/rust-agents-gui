@@ -1,3 +1,5 @@
+import PQueue from "p-queue";
+
 // Presentation scheduling only: cancellation never interrupts physical IPC.
 export type ObservationScope = {
   read<T>(key: readonly unknown[], run: () => Promise<T>): Promise<T>;
@@ -19,13 +21,12 @@ type Consumer = {
 type Read = {
   key: string;
   state: "queued" | "active" | "done";
-  run(): Promise<unknown>;
+  cancel: AbortController;
   consumers: Set<Consumer>;
 };
 
 export class ObservationCoordinator {
-  private active = 0;
-  private queue: Read[] = [];
+  private queue = new PQueue({ concurrency: 2 });
   private pending = new Map<string, Read>();
 
   scope(): ObservationScope {
@@ -52,8 +53,9 @@ export class ObservationCoordinator {
         : value,
     );
     let entry = this.pending.get(key);
+    const created = !entry;
     if (!entry) {
-      if (this.active >= 2 && this.queue.length >= 64)
+      if (this.queue.size >= 64)
         return Promise.reject({
           code: "busy",
           delivery: "not_sent",
@@ -61,9 +63,13 @@ export class ObservationCoordinator {
           message:
             "Observation queue is full. Wait for pending reads to finish, then refresh.",
         });
-      entry = { key, state: "queued", run, consumers: new Set() };
+      entry = {
+        key,
+        state: "queued",
+        cancel: new AbortController(),
+        consumers: new Set(),
+      };
       this.pending.set(key, entry);
-      this.queue.push(entry);
     }
     const read = entry;
     const result = new Promise<T>((resolve, reject) => {
@@ -81,7 +87,9 @@ export class ObservationCoordinator {
           read.state === "queued" &&
           [...read.consumers].every((consumer) => consumer.obsolete)
         ) {
-          this.queue = this.queue.filter((entry) => entry !== read);
+          // This controller can only abort waiting work. It is never forwarded
+          // once the task starts, so p-queue retains its physical slot.
+          read.cancel.abort(new ObsoleteRead());
           this.settle(read, { ok: false, error: new ObsoleteRead() });
         }
         // Active consumers settle only when physical work does. In particular,
@@ -91,7 +99,24 @@ export class ObservationCoordinator {
       read.consumers.add(consumer);
       signal.addEventListener("abort", dispose, { once: true });
     });
-    this.drain();
+    if (created) {
+      void this.queue
+        .add(
+          async () => {
+            read.state = "active";
+            try {
+              const value = await run();
+              this.settle(read, { ok: true, value });
+            } catch (error) {
+              this.settle(read, { ok: false, error });
+            }
+          },
+          { signal: read.cancel.signal },
+        )
+        .catch((error: unknown) => {
+          if (read.state !== "done") this.settle(read, { ok: false, error });
+        });
+    }
     return result;
   }
 
@@ -112,28 +137,5 @@ export class ObservationCoordinator {
       else consumer.reject(outcome.error);
     }
     read.consumers.clear();
-  }
-
-  private drain() {
-    while (this.active < 2 && this.queue.length) {
-      const read = this.queue.shift()!;
-      read.state = "active";
-      this.active++;
-      let physical: Promise<unknown>;
-      try {
-        physical = read.run();
-      } catch (error) {
-        physical = Promise.reject(error);
-      }
-      void physical
-        .then(
-          (value) => this.settle(read, { ok: true, value }),
-          (error: unknown) => this.settle(read, { ok: false, error }),
-        )
-        .finally(() => {
-          this.active--;
-          this.drain();
-        });
-    }
   }
 }

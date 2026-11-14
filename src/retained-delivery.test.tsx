@@ -1,8 +1,8 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { useRepositories } from "./hooks/use-repositories";
-import { useWorkspaces } from "./hooks/use-workspaces";
+import { useRepositories } from "./test-support/feature-hooks";
+import { useWorkspaces } from "./test-support/feature-hooks";
 import {
   object,
   PENDING_KEY,
@@ -237,4 +237,137 @@ test("a late registration transport failure cannot resurrect an authoritatively 
   expect(result.current.pending).toBeNull();
   expect(result.current.actionError).toBeUndefined();
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
+});
+
+test("a callback captured before owner replacement cannot select its old-owner result when invoked later", async () => {
+  let submittedOwner: unknown;
+  vi.mocked(invoke).mockImplementation(
+    ownerBound((_, args) => {
+      if (!object(args) || !object(args.request))
+        throw new Error("Missing request");
+      const request = args.request;
+      if (request.operation === "create") {
+        submittedOwner = args.expectedOwner;
+        return {
+          kind: "action",
+          action: request,
+          workspace: {
+            id: workspaceId,
+            repository_id: repositoryId,
+            creation_action_id: request.action_id,
+            name: null,
+            branch: null,
+            path: null,
+            legacy: false,
+            provider: "codex",
+            base: null,
+            artifacts: { branch: "unknown", folder: "unknown" },
+            status: { state: "queued" },
+            cleanup_unconfirmed: false,
+          },
+        };
+      }
+      if (request.operation === "action")
+        return { kind: "action", action: null, workspace: null };
+      return { kind: "workspaces", page: { workspaces: [], next: null } };
+    }),
+  );
+  const view = renderHook(
+    ({ owner }) => useWorkspaces(owner, repositoryId, repositoryId, null),
+    { initialProps: { owner: "old" } },
+  );
+  await act(async () => {});
+  const captured = view.result.current.create;
+  view.rerender({ owner: "new" });
+  await act(async () => {
+    await captured(repositoryId);
+  });
+  expect(submittedOwner).toBe("old");
+  expect(view.result.current.selected).toBeUndefined();
+  expect(view.result.current.pending).not.toBeNull();
+});
+
+test("retained repository and workspace lookups reject conflicting payloads without clearing identities or submitting", async () => {
+  const actionId = "00000000-0000-4000-8000-000000000003";
+  const retained = {
+    request: {
+      action_id: actionId,
+      path: "/original",
+      create_initial_workspace: true,
+    },
+    selection: null,
+    uncertain: true,
+  };
+  localStorage.setItem(PENDING_KEY, JSON.stringify(retained));
+  const workspaceRequest = {
+    operation: "create",
+    action_id: actionId,
+    repository_id: repositoryId,
+  };
+  localStorage.setItem(
+    WORKSPACE_PENDING,
+    JSON.stringify({ request: workspaceRequest, uncertain: true }),
+  );
+  vi.mocked(invoke).mockImplementation(
+    ownerBound((command, args) => {
+      if (!object(args) || !object(args.request))
+        throw new Error("Missing request");
+      if (
+        args.request.operation === "action" &&
+        command === "repository_request"
+      )
+        return {
+          kind: "action",
+          registration: {
+            ...retained.request,
+            path: "/different",
+            initial_workspace_id: null,
+            state: "completed",
+            repository_id: repositoryId,
+          },
+        };
+      if (args.request.operation === "action")
+        return {
+          kind: "action",
+          action: { ...workspaceRequest, repository_id: workspaceId },
+          workspace: {
+            id: workspaceId,
+            repository_id: workspaceId,
+            creation_action_id: actionId,
+            name: null,
+            branch: null,
+            path: null,
+            legacy: false,
+            provider: "codex",
+            base: null,
+            artifacts: { branch: "unknown", folder: "unknown" },
+            status: { state: "queued" },
+            cleanup_unconfirmed: false,
+          },
+        };
+      return command === "repository_request"
+        ? { kind: "repositories", page: { repositories: [], next: null } }
+        : { kind: "workspaces", page: { workspaces: [], next: null } };
+    }),
+  );
+  const view = renderHook(() => ({
+    repositories: useRepositories("owner"),
+    workspaces: useWorkspaces("owner", repositoryId, repositoryId, null),
+  }));
+  await waitFor(() => {
+    expect(view.result.current.repositories.actionError?.code).toBe("conflict");
+    expect(view.result.current.workspaces.error?.code).toBe("conflict");
+  });
+  expect(view.result.current.repositories.pending).toEqual(retained);
+  expect(view.result.current.workspaces.pending).toEqual(workspaceRequest);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.every(
+        ([, args]) =>
+          object(args) &&
+          object(args.request) &&
+          ["list", "action"].includes(String(args.request.operation)),
+      ),
+  ).toBe(true);
 });

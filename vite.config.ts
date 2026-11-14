@@ -30,5 +30,9 @@ export default defineConfig({
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
   },
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
-  test: { environment: "jsdom", include: ["src/**/*.test.tsx"] },
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.test.tsx"],
+    setupFiles: ["src/test-support/browser-runtime.ts"],
+  },
 });

@@ -68,36 +68,14 @@ export function decodeFeedBatch(
   throw new Error("Invalid observation delivery sample");
 }
 
-// F05 will consume dirty generations. F04 records acceptance independently of reads.
-export class DirtyObservations {
-  targets: DirtyTarget[] = [];
-  all = false;
-  accept(batch: FeedBatch) {
-    if (batch.sample.kind === "resync_required") {
-      this.all = true;
-      this.targets = [];
-    }
-    if (batch.sample.kind !== "hints" || this.all) return;
-    for (const target of batch.sample.targets) {
-      if (
-        !this.targets.some(
-          (existing) => JSON.stringify(existing) === JSON.stringify(target),
-        )
-      )
-        this.targets.push(target);
-      if (this.targets.length > 256) {
-        this.all = true;
-        this.targets = [];
-        break;
-      }
-    }
-  }
-}
+export type FeedAcceptance = {
+  connect(owner: string | undefined): void;
+  accept(batch: FeedBatch): void;
+};
 export type FeedState = {
   state: "idle" | "starting" | "live" | "stopped";
   message?: string;
   accepted?: FeedCursor;
-  dirty: { all: boolean; targets: readonly DirtyTarget[] };
 };
 export type FeedTransport = {
   subscribe: (
@@ -112,10 +90,8 @@ export type FeedTransport = {
 export class ObservationFeed {
   private snapshot: FeedState = {
     state: "idle",
-    dirty: { all: false, targets: [] },
   };
   private listeners = new Set<() => void>();
-  private dirty = new DirtyObservations();
   private accepted?: FeedCursor;
   private generation = 0;
   private serial = Promise.resolve();
@@ -124,7 +100,10 @@ export class ObservationFeed {
     timer?: ReturnType<typeof setTimeout>;
     stopping?: Promise<unknown>;
   };
-  constructor(private transport: FeedTransport) {}
+  constructor(
+    private transport: FeedTransport,
+    private acceptance?: FeedAcceptance,
+  ) {}
   getSnapshot = () => this.snapshot;
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
@@ -135,11 +114,11 @@ export class ObservationFeed {
       state,
       message,
       accepted: this.accepted,
-      dirty: { all: this.dirty.all, targets: [...this.dirty.targets] },
     };
     this.listeners.forEach((listener) => listener());
   }
   connect(owner: string | undefined) {
+    this.acceptance?.connect(owner);
     const generation = ++this.generation;
     if (this.current?.timer) clearTimeout(this.current.timer);
     if (this.current && !this.current.stopping) {
@@ -163,7 +142,6 @@ export class ObservationFeed {
         }
         if (this.accepted?.owner !== owner) {
           this.accepted = undefined;
-          this.dirty = new DirtyObservations();
         }
         const session: NonNullable<ObservationFeed["current"]> = {
           id: crypto.randomUUID(),
@@ -228,7 +206,7 @@ export class ObservationFeed {
                 previous,
                 this.accepted,
               );
-              this.dirty.accept(batch);
+              this.acceptance?.accept(batch);
               this.accepted = batch.cursor;
               previous = batch.batch_id;
               this.publish("live");

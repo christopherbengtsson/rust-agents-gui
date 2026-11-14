@@ -1,0 +1,24 @@
+{"name":"focused-features","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/lib/observation-coordinator.test.tsx","src/repositories.test.tsx","src/workspaces.test.tsx","src/retained-delivery.test.tsx","src/frontend-scheduling.test.tsx","src/observation-feed.test.tsx","src/observation-feed-bridge.test.tsx","src/App.test.tsx","src/workspace-changes.test.tsx","src/observation-contracts.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":7.309686833}
+{"name":"captured-owner-red","command":"corepack","args":["pnpm","exec","vitest","run","src/retained-delivery.test.tsx","--maxWorkers=1"],"exit":1,"signal":null,"seconds":1.29309575}
+{"name":"captured-owner-green","command":"corepack","args":["pnpm","exec","vitest","run","src/retained-delivery.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":1.0970463750000001}
+{"name":"retained-and-cache","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/retained-delivery.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":1.4249152079999998}
+{"name":"typecheck-final","command":"corepack","args":["pnpm","exec","tsc","--noEmit"],"exit":0,"signal":null,"seconds":0.27629195900000003}
+{"name":"lint-final","command":"corepack","args":["pnpm","lint"],"exit":0,"signal":null,"seconds":0.10384429199999999}
+{"name":"progress-no-poll","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/workspaces.test.tsx","--maxWorkers=1"],"exit":1,"signal":null,"seconds":1.176237416}
+{"name":"progress-no-poll-green","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/workspaces.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":1.1426636250000002}
+{"name":"bundle","command":"corepack","args":["pnpm","exec","vite","build"],"exit":0,"signal":null,"seconds":0.5907469999999999}
+{"name":"verify-final","command":"corepack","args":["pnpm","verify"],"exit":1,"signal":null,"seconds":0.8428452909999999}
+{"name":"generated-write","command":"corepack","args":["pnpm","generated:write"],"exit":0,"signal":null,"seconds":0.5026117920000001}
+{"name":"verify-complete","command":"corepack","args":["pnpm","verify"],"exit":0,"signal":null,"seconds":11.661990832999999}
+{"name":"measure","command":"corepack","args":["pnpm","test:measure"],"exit":0,"signal":null,"seconds":56.434967208}
+{"name":"review-regressions-red","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/repositories.test.tsx","--maxWorkers=1"],"exit":1,"signal":null,"seconds":3.17046875}
+{"name":"review-regressions-green","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/repositories.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":2.216720459}
+{"name":"review-regressions-complete","command":"corepack","args":["pnpm","exec","vitest","run","src/lib/feature-observations.test.tsx","src/repositories.test.tsx","src/retained-delivery.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":3.157406833}
+{"name":"reviewed-workspace","command":"corepack","args":["pnpm","exec","vitest","run","src/workspaces.test.tsx","src/retained-delivery.test.tsx","--maxWorkers=1"],"exit":0,"signal":null,"seconds":1.765215}
+{"name":"verify-reviewed","command":"corepack","args":["pnpm","verify"],"exit":0,"signal":null,"seconds":11.055194292}
+{"name":"measure-reviewed","command":"corepack","args":["pnpm","test:measure"],"exit":0,"signal":null,"seconds":56.49516241600001}
+{"name":"bundle-reviewed","command":"corepack","args":["pnpm","exec","vite","build"],"exit":0,"signal":null,"seconds":0.430103792}
+{"name":"test-selection","command":"corepack","args":["pnpm","exec","vitest","list","--json"],"exit":0,"signal":null,"seconds":0.265044083}
+{"name":"diff-check","command":"git","args":["diff","--check"],"exit":0,"signal":null,"seconds":0.005896666000000002}
+{"name": "evidence-whitespace", "command": "git", "args": ["diff", "--check", "851ea98a1079e99d05c292f8b755badecc9a2822", "HEAD"], "exit": 2, "seconds": 0.01345408393535763}
+{"name": "source-whitespace", "command": "git", "args": ["diff", "--check", "851ea98a1079e99d05c292f8b755badecc9a2822", "HEAD", "--", ".", ":(exclude)docs/evidence/frontend-navigation/f04e/*.log"], "exit": 0, "seconds": 0.009176499908789992}
