@@ -161,3 +161,18 @@ visible. `oxc-transform-react` is pinned to 0.156.0 for plugin-react 6.3.0's pee
 range. Unsupported constructs may remain unoptimized: the observation Hook keeps
 its `finally` cleanup. TypeScript checking remains separate. Compiler output and
 mocked IPC checks do not establish actual desktop behavior; see [migration evidence](docs/evidence/native-oxc-toolchain.md).
+
+Frontend navigation uses file routes in `src/routes`; the URL owns repository,
+workspace and Workspace/Changes view selection. Startup at `/` restores the last
+valid main destination once. Explicit URLs and history take precedence; invalid
+explicit targets stay visible with recovery guidance. Pending action IDs remain
+separate from presentation preferences. Settings has an F06 route placeholder;
+the footer entry and full Settings interaction remain F07.
+
+`corepack pnpm generated:write` explicitly regenerates contracts and the committed
+`src/routeTree.gen.ts`. `generated:check` renders expected route output in an
+isolated mirror and rejects drift without repairing source. Dev, checking,
+frontend build, Tauri and CI share this preparation owner; no prior Vite run is
+needed for standalone TypeScript. CI checks TypeScript before bundling. The Router
+plugin runs before React Compiler and splits optional route components. Generated
+output has no manual formatter owner; route source files remain authoritative.

@@ -78,8 +78,11 @@ Historical F04 evidence retains its original controlled-only limits; the new
 baseline measurements belong to F04g. [F05 evidence](../../docs/evidence/frontend-navigation/f05.md)
 now records retained presentation persistence/integration, passing deterministic
 checks, production packaging and focused private-state desktop restoration.
-F06–F08 remain separate, unimplemented sessions. F06 is the next dependency-chain
-ticket, requiring its own user selection. No successor is authorized by this handoff.
+[F06 evidence](../../docs/evidence/frontend-navigation/f06.md) records route authority,
+restoration, completion eligibility and generated-route preparation, with passing
+controlled gates, packaging and focused private-state desktop smoke. F07–F08 remain
+separate, unimplemented sessions. F07 requires its own user selection; no successor
+is authorized by the F06 handoff.
 
 F04a changes documentation/tickets only: manifests, lockfiles, generated assets,
 product implementation and implementation acceptance stay untouched. Add each
@@ -352,6 +355,8 @@ semantics; they do not belong in this invalidation journal.
 ### Route structure
 
 Use file-based routes and browser history; memory history in deterministic tests.
+Missing view defaults to Workspace. Invalid explicit view values preserve the URL
+and show an error with valid-view links (user selection during F06).
 
 - `/`: landing and one-time startup restoration.
 - `/repository/$repositoryId`.

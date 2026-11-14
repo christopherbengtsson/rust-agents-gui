@@ -1,0 +1,108 @@
+{
+  "assets": {
+    "index-DpE-Crxb.js": {
+      "bytes": 1073066,
+      "gzip": 220952,
+      "brotli": 172449,
+      "sha256": "d6129d73ed1abac30eaa7ba752b980eea2c2cb9e727d9f7bab889af9a425a4f6"
+    },
+    "index-Nt6iarJC.css": {
+      "bytes": 99404,
+      "gzip": 16317,
+      "brotli": 13995,
+      "sha256": "2c47da13a5996c082bda2d6d021c55f87ad1f64c1d9459fcacb19cd6d95ccd64"
+    },
+    "main-CLyG4Ip4.js": {
+      "bytes": 111976,
+      "gzip": 36204,
+      "brotli": 31467,
+      "sha256": "26658505ae05b66dd5b21cf57f0afbac76847e9b1abb4c2c067e9cbc7e395bf9"
+    },
+    "matchContext-C3qem50N.js": {
+      "bytes": 64221,
+      "gzip": 22590,
+      "brotli": 20569,
+      "sha256": "c18ff47f82e57f601e9ba55d2d32b3f2c1d584938c8ce39f4cd292ec5a80a513"
+    },
+    "repository._repositoryId-DK1mY6iY.js": {
+      "bytes": 83,
+      "gzip": 92,
+      "brotli": 75,
+      "sha256": "3a80ca414338daf8961531c6568a77bb615c9ed9261222a7583c8cc5703d3544"
+    },
+    "repository._repositoryId-Dur-8OfL.js": {
+      "bytes": 257,
+      "gzip": 217,
+      "brotli": 189,
+      "sha256": "ca93e5c379cb514fab8fb496e9a26a9c91a0d09bf20732bd5082a8c08bfc31cc"
+    },
+    "repository._repositoryId.index-BPHCkDQb.js": {
+      "bytes": 70,
+      "gzip": 82,
+      "brotli": 74,
+      "sha256": "6e179c7c8e99326a279b591aae0f7a57051858e8b2de1ba8150ec2f83074dbcd"
+    },
+    "repository._repositoryId.workspace._workspaceId-BPHCkDQb.js": {
+      "bytes": 70,
+      "gzip": 82,
+      "brotli": 74,
+      "sha256": "6e179c7c8e99326a279b591aae0f7a57051858e8b2de1ba8150ec2f83074dbcd"
+    },
+    "repository._repositoryId.workspace._workspaceId-rNir5vWV.js": {
+      "bytes": 1372,
+      "gzip": 654,
+      "brotli": 584,
+      "sha256": "8fc69a68cd98be3a390bf132d6ab5df9f15066025a000dea622881ba076c1274"
+    },
+    "routes-BPHCkDQb.js": {
+      "bytes": 70,
+      "gzip": 82,
+      "brotli": 74,
+      "sha256": "6e179c7c8e99326a279b591aae0f7a57051858e8b2de1ba8150ec2f83074dbcd"
+    },
+    "settings-DppxtZQ4.js": {
+      "bytes": 72,
+      "gzip": 86,
+      "brotli": 70,
+      "sha256": "c839e7a0239fc1d89896a6e4e4af76b997358d00dc268977c3e36efac24c733e"
+    },
+    "settings.general-DxBxwCfh.js": {
+      "bytes": 719,
+      "gzip": 395,
+      "brotli": 334,
+      "sha256": "effd62d6754d99aff8c257116aca6d33cbf69ca3615485309733e4a44b09b32e"
+    },
+    "target-error-wg_V3Y5F.js": {
+      "bytes": 1012,
+      "gzip": 579,
+      "brotli": 505,
+      "sha256": "ab10927380d1ba9143725e26990219a3fb93367c3fa2604eb7dd8d8284c01bc9"
+    },
+    "useSelector-BsEH0aCU.js": {
+      "bytes": 1903,
+      "gzip": 836,
+      "brotli": 755,
+      "sha256": "513a520a5d6b59630db2ac5041288c74243205205c35f68b712896e1ea277b16"
+    }
+  },
+  "initial": [
+    "index-DpE-Crxb.js",
+    "matchContext-C3qem50N.js",
+    "useSelector-BsEH0aCU.js"
+  ],
+  "initialJavaScript": {
+    "bytes": 1139190,
+    "gzip": 244378,
+    "brotli": 193773
+  },
+  "allJavaScript": {
+    "bytes": 1254891,
+    "gzip": 282851,
+    "brotli": 227219
+  },
+  "desktopExecutableBytes": 13073008,
+  "optionalMain": ["main-CLyG4Ip4.js"],
+  "optionalSettings": ["settings.general-DxBxwCfh.js"],
+  "sourceShikiImports": "none in src; package installation alone does not establish bundle inclusion",
+  "compression": "Node default gzip/Brotli options"
+}

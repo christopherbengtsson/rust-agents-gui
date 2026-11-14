@@ -1,0 +1,116 @@
+{
+  "new_manual_unsafe_escapes": 0,
+  "notes": "Literal as const narrowing, import aliases, typed Router Register augmentation and comments are not unsafe escapes. Generated Router casts are retained generator output. No checking configuration was weakened.",
+  "matches": [
+    {
+      "file": "src/app-runtime.tsx",
+      "line": "  const repository = { operation: \"get\", id: target.repositoryId } as const;",
+      "classification": "manual review"
+    },
+    {
+      "file": "src/app-runtime.tsx",
+      "line": "  const workspace = { operation: \"get\", id: target.workspaceId } as const;",
+      "classification": "manual review"
+    },
+    {
+      "file": "src/lib/navigation.test.tsx",
+      "line": "const repository = { kind: \"repository\", repositoryId: \"a\" } as const;",
+      "classification": "manual review"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "// You should NOT make any changes in this file as it will be overwritten.",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as rootRouteImport } from \"./routes/__root\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as IndexRouteImport } from \"./routes/index\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as SettingsRouteImport } from \"./routes/settings\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as RepositoryRepositoryIdRouteImport } from \"./routes/repository.$repositoryId\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as SettingsGeneralRouteImport } from \"./routes/settings.general\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as RepositoryRepositoryIdIndexRouteImport } from \"./routes/repository.$repositoryId.index\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "import { Route as RepositoryRepositoryIdWorkspaceWorkspaceIdRouteImport } from \"./routes/repository.$repositoryId.workspace.$workspaceId\";",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "} as any);",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "} as any);",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "} as any);",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "} as any);",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "  } as any);",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "  } as any);",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "line": "declare module \"@tanstack/react-router\" {",
+      "classification": "generated Router output"
+    },
+    {
+      "file": "src/router.tsx",
+      "line": "declare module \"@tanstack/react-router\" {",
+      "classification": "manual review"
+    },
+    {
+      "file": "src/routing.test.tsx",
+      "line": "} as const;",
+      "classification": "manual review"
+    },
+    {
+      "file": "src/test-support/app.tsx",
+      "line": "import { App as Application } from \"../App\";",
+      "classification": "manual review"
+    },
+    {
+      "file": "src/workspace-changes.test.tsx",
+      "line": "import { WorkspaceInspection as ControlledInspection } from \"./components/blocks/workspace-changes\";",
+      "classification": "manual review"
+    }
+  ]
+}

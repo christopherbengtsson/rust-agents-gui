@@ -5,3 +5,4 @@ dist/
 src-tauri/gen/
 docs/evidence/**/*.png
 src/generated/contracts/
+src/routeTree.gen.ts

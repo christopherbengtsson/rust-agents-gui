@@ -1,0 +1,4 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 View, Secondary Actions: Cancel, Pick
+	1 menu Secondary Actions: Cancel
+		2 Toggle Full Screen, ID: toggleFullScreen:

@@ -254,11 +254,11 @@ retained observations remain readable and marked stale.
   also drains old IPC before reading the new target. Supply that stable reader
   when composing WorkspaceInspection; keyed view resets release interest and retain
   no extra readers. useWorkspaceChanges requires that owner. Zustand persists an allowlist of workspace file/comparison, reading position,
-  panel width/collapse and remembered view defaults. Current tab selection stays local
-  until F06 supplies route authority. Workspace or Settings-style interest release
+  panel width/collapse and remembered view defaults. Current view is a controlled `view`/`onViewChange` contract supplied by the route;
+  remembered views supply navigation defaults only. Workspace or Settings-style interest release
   preserves that memory; a changed comparison rejects restored file/scroll context.
   Live preview refreshes retain native-validated file identity and reset scroll when
-  the comparison changes. Storage errors remain visible in WorkspacePanel even when
+  the comparison changes. Storage errors remain visible above routed content even when
   inspection is unmounted; pending action records remain separate.
 - **ChangedFiles** is the bounded file-selection block shared by the desktop
   right panel and the below-880-px Sheet. It receives observations and a selection
@@ -316,3 +316,20 @@ visible while cleanup is pending. Views release interest rather than terminating
 app actors. Historical F04–F04e evidence is preserved; focused actual transport/fixture-desktop
 qualification is recorded in [F04g evidence](../../docs/evidence/frontend-navigation/f04g.md).
 F08 retains cumulative routed/accessibility qualification.
+
+### F06 route composition
+
+`App` constructs one Router and observation composition. Its persistent root runtime
+owns connection/feed and repository/workspace action hooks above child routes.
+Router supplies current repository/workspace IDs and the validated Workspace/Changes
+view; Zustand retains restoration defaults only. Use `WorkspacePanel` for main
+repository/workspace content and supply its controlled view callback. File selection
+requests the Changes route through that callback. The sidebar's callbacks navigate
+once to the complete destination; create/register completions require an unchanged
+history generation. Paging and disclosure do not change the current route.
+
+Route loaders prepare exact feature observations without configuring Query keys or
+native IPC. Missing explicit targets and wrong membership show destination guidance;
+Settings currently has only an F06 route placeholder. The full Settings entry,
+layout and return/focus behavior belong to F07. Route changes release inspection
+interest while its app-lifetime owner drains work and retains validated context.

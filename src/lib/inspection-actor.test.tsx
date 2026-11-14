@@ -316,7 +316,10 @@ test("unrelated presentation and freshness updates do not render inspection cons
   await act(async () => {});
   const before = renders;
   await act(async () => {
-    s.app.presentation.setState({ repository: "another-repository" });
+    s.app.presentation.getState().rememberMain({
+      kind: "repository",
+      repositoryId: "00000000-0000-4000-8000-000000000009",
+    });
     s.app.freshness.mark("repositories");
     s.app.freshness.accept("owner-a");
     await flush();

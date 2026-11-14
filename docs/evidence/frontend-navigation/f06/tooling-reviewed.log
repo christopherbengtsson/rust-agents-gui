@@ -1,0 +1,44 @@
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/prepare-supervisor.mjs debug
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.566084ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.300084ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.079958ms)
+✔ a failed static gate prevents later application units (0.099541ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.2095ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.093417ms)
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.693792ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.227791ms)
+✔ explicit write mode repairs expected files and removes only obsolete managed outputs (0.074708ms)
+✔ clean checkout checking accepts the complete committed artifact set without writes (0.060125ms)
+✔ preparation build failure cannot reconcile or repair committed files (0.10125ms)
+✔ preparation export failure cannot reconcile or repair committed files (0.062625ms)
+✔ preparation render failure cannot reconcile or repair committed files (0.058ms)
+✔ preparation missing failure cannot reconcile or repair committed files (0.043667ms)
+✔ preparation ambiguous failure cannot reconcile or repair committed files (0.0555ms)
+✔ preparation test-artifact failure cannot reconcile or repair committed files (0.08325ms)
+✔ preparation foreign-artifact failure cannot reconcile or repair committed files (0.047666ms)
+✔ route checking rejects stale output without writes and explicit write repairs it (0.156458ms)
+✔ route rendering invokes the pinned CLI only in an isolated source mirror and cleans it (0.737875ms)
+✔ route rendering cleans its isolated mirror after copy failure (0.116542ms)
+✔ route rendering cleans its isolated mirror after process failure (0.31725ms)
+✔ route rendering cleans its isolated mirror after timeout failure (0.100292ms)
+✔ route rendering cleans its isolated mirror after read failure (0.087709ms)
+✔ generated preparation reconciles contracts before routes with one explicit mode (0.056791ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49.997667

@@ -13,12 +13,6 @@ export function check(
     throw new Error("Expected check, verify or ci");
   prepare("--check");
   const commands = [
-    ...(mode === "ci"
-      ? [
-          ["node", ["scripts/prepare-supervisor.mjs", "debug"]],
-          ["corepack", ["pnpm", "exec", "vite", "build"]],
-        ]
-      : []),
     ...(mode !== "check"
       ? [
           ["corepack", ["pnpm", "format:check"]],
@@ -26,6 +20,12 @@ export function check(
         ]
       : []),
     ["corepack", ["pnpm", "exec", "tsc", "--noEmit"]],
+    ...(mode === "ci"
+      ? [
+          ["node", ["scripts/prepare-supervisor.mjs", "debug"]],
+          ["corepack", ["pnpm", "exec", "vite", "build"]],
+        ]
+      : []),
     [
       "node",
       [

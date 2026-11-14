@@ -1,0 +1,40 @@
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/prepare-supervisor.mjs debug
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.606708ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.3575ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.092834ms)
+✔ a failed static gate prevents later application units (0.141ms)
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.682792ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.210208ms)
+✔ explicit write mode repairs expected files and removes only obsolete managed outputs (0.068916ms)
+✔ clean checkout checking accepts the complete committed artifact set without writes (0.049209ms)
+✔ preparation build failure cannot reconcile or repair committed files (0.092375ms)
+✔ preparation export failure cannot reconcile or repair committed files (0.047166ms)
+✔ preparation render failure cannot reconcile or repair committed files (0.051875ms)
+✔ preparation missing failure cannot reconcile or repair committed files (0.052833ms)
+✔ preparation ambiguous failure cannot reconcile or repair committed files (0.054667ms)
+✔ preparation test-artifact failure cannot reconcile or repair committed files (0.075ms)
+✔ preparation foreign-artifact failure cannot reconcile or repair committed files (0.048334ms)
+✔ route checking rejects stale output without writes and explicit write repairs it (0.170208ms)
+✔ route rendering invokes the pinned CLI only in an isolated source mirror and cleans it (0.747333ms)
+✔ route rendering cleans its isolated mirror after copy failure (0.114583ms)
+✔ route rendering cleans its isolated mirror after process failure (0.345ms)
+✔ route rendering cleans its isolated mirror after timeout failure (0.113708ms)
+✔ route rendering cleans its isolated mirror after read failure (0.137667ms)
+✔ generated preparation reconciles contracts before routes with one explicit mode (0.078708ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.361917

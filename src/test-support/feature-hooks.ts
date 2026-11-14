@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { createMemoryHistory } from "@tanstack/react-router";
+import { Navigation, mainDestination } from "../lib/navigation";
+import { readSelection } from "../lib/repositories";
+import { readWorkspaceSelection } from "../lib/workspaces";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { AppObservations } from "../lib/app-observations";
 import type { ObservationCoordinator } from "../lib/observation-coordinator";
 import { useRepositories as useRepositoryFeature } from "../hooks/use-repositories";
@@ -25,11 +29,52 @@ function useFixtureApp(
   }, [app, owner]);
   return app;
 }
+// A controlled history supplies explicit targets to these isolated hook units.
+function useFixtureNavigation(repository: string | null, workspace?: string) {
+  const [history] = useState(() =>
+    createMemoryHistory({
+      initialEntries: [
+        workspace
+          ? `/repository/${repository}/workspace/${workspace}?view=workspace`
+          : repository
+            ? `/repository/${repository}`
+            : "/",
+      ],
+    }),
+  );
+  const [navigation] = useState(
+    () =>
+      new Navigation(history, (target) => {
+        history.push(
+          target.kind === "home"
+            ? "/"
+            : target.kind === "repository"
+              ? `/repository/${target.repositoryId}`
+              : `/repository/${target.repositoryId}/workspace/${target.workspaceId}?view=${target.view}`,
+        );
+      }),
+  );
+  useEffect(() => navigation.start(), [navigation]);
+  const href = useSyncExternalStore(
+    (listener) => history.subscribe(listener),
+    () => history.location.href,
+  );
+  return { navigation, target: mainDestination(href) };
+}
 export function useRepositories(
   owner: string | undefined,
   reads?: ObservationCoordinator | AppObservations,
+  repositoryTarget: string | null = readSelection() ??
+    "00000000-0000-4000-8000-000000000001",
 ) {
-  return useRepositoryFeature(owner, useFixtureApp(owner, reads));
+  const app = useFixtureApp(owner, reads);
+  const { navigation, target } = useFixtureNavigation(repositoryTarget);
+  return useRepositoryFeature(
+    owner,
+    app,
+    target && target.kind !== "home" ? target.repositoryId : null,
+    navigation,
+  );
 }
 export function useWorkspaces(
   owner: string | undefined,
@@ -38,11 +83,18 @@ export function useWorkspaces(
   initial: { repository_id: string; workspace_id: string } | null,
   reads?: ObservationCoordinator | AppObservations,
 ) {
+  const app = useFixtureApp(owner, reads);
+  const saved = readWorkspaceSelection();
+  const { navigation, target } = useFixtureNavigation(
+    repositoryId ?? "fixture",
+    saved?.workspace_id ?? initial?.workspace_id,
+  );
   return useWorkspaceFeature(
     owner,
     repositoryId,
     repositoryIds,
-    initial,
-    useFixtureApp(owner, reads),
+    target?.kind === "workspace" ? target.workspaceId : undefined,
+    app,
+    navigation,
   );
 }

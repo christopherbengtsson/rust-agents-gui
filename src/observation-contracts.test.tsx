@@ -145,11 +145,26 @@ test("owner and result-variant checks happen before feature decoding, including 
 
 test("replacement replies before the next status refresh cannot overwrite an owner's observations", async () => {
   const fixture = corpus.repositories[0];
-  let replacement = false;
-  vi.mocked(invoke).mockImplementation(async () =>
-    replacement ? { ...fixture.reply, owner: "owner-b" } : fixture.reply,
+  const listed = decodeOwnedReply(corpus.owner, fixture.reply, (value) =>
+    decodeRepositoryReply(fixture.request, value),
   );
-  const { result } = renderHook(() => useRepositories(corpus.owner));
+  if (listed.kind !== "repositories" || !listed.page.repositories[0])
+    throw new Error("Missing corpus repository");
+  const selected = listed.page.repositories[0];
+  let replacement = false;
+  vi.mocked(invoke).mockImplementation(async (_, args) => {
+    const reply =
+      object(args) && object(args.request) && args.request.operation === "get"
+        ? {
+            owner: corpus.owner,
+            result: { Ok: { kind: "repository", repository: selected } },
+          }
+        : fixture.reply;
+    return replacement ? { ...reply, owner: "owner-b" } : reply;
+  });
+  const { result } = renderHook(() =>
+    useRepositories(corpus.owner, undefined, selected.id),
+  );
   await waitFor(() => expect(result.current.selected?.name).toBe("one"));
   replacement = true;
   await act(async () => {

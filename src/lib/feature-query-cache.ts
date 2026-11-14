@@ -152,6 +152,40 @@ export class FeatureQueryCache<Q, R> {
         }
       : undefined;
   }
+  isCurrent(owner: string, request: Q) {
+    if (!this.freshness.ready(owner)) return false;
+    const state = this.client.getQueryState<Observed<R>>(
+      this.key(owner, request),
+    );
+    const version = this.freshness.version(this.tags(request));
+    return state?.error instanceof ObservationReadFailure
+      ? state.error.generation >= version
+      : !!state?.data && state.data.generation >= version;
+  }
+  prepare(owner: string, request: Q, signal: AbortSignal): Promise<void> {
+    if (signal.aborted || !this.freshness.matches(owner))
+      return Promise.resolve();
+    const release = this.observe(owner, request);
+    return new Promise((resolve) => {
+      const finish = () => {
+        unsubscribe();
+        signal.removeEventListener("abort", finish);
+        release();
+        resolve();
+      };
+      const check = () => {
+        if (
+          signal.aborted ||
+          !this.freshness.matches(owner) ||
+          this.isCurrent(owner, request)
+        )
+          finish();
+      };
+      const unsubscribe = this.subscribe(check);
+      signal.addEventListener("abort", finish, { once: true });
+      check();
+    });
+  }
   protected record(owner: string, request: Q, value: R) {
     this.client.setQueryData<Observed<R>>(this.key(owner, request), {
       value,

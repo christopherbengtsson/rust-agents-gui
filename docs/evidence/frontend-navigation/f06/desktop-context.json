@@ -1,0 +1,14 @@
+{
+  "root": "/private/tmp/aw-f06-8dbl1nft",
+  "repository": "/private/tmp/aw-f06-8dbl1nft/route-fixture",
+  "state": "/private/tmp/aw-f06-8dbl1nft/state",
+  "original_sha256": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218",
+  "bundle": "/private/tmp/aw-f06-8dbl1nft/F06 Routes.app",
+  "desktop_pid": 88404,
+  "desktop_sha256": "d5bb2f49286d188fba84af7a0b03cf9d8979a3ca81131ea5847324494e9a1ec9",
+  "workspace": "/private/tmp/aw-f06-8dbl1nft/state/workspaces/route-fixture/manuel-akanji/checkout",
+  "repository_id": "ba55f008-23b1-42a4-923c-8e18d3cdbbc9",
+  "workspace_id": "22b4dc38-9561-40c3-9543-eb2bdae4e508",
+  "early_package_desktop_sha256": "6cd39adc952a4a9e4953b41c5632639f1c969e869462447ed90df9f7bce09173",
+  "final_package_captures": ["06-final-package-ax.txt", "06-final-package.png"]
+}

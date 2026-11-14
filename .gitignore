@@ -3,3 +3,4 @@
 /target/
 /src-tauri/gen/
 .DS_Store
+/.tanstack/

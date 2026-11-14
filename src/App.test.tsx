@@ -11,7 +11,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { App } from "./App";
+import { App } from "./test-support/app";
 import { SupervisorConnection } from "./components/blocks/supervisor-connection";
 import { decodeSnapshot } from "./lib/observation-contracts";
 
@@ -181,8 +181,10 @@ test("connection failure stays visible until an explicit status retry; diagnosti
     "Unsafe socket <details>",
   );
   await user.keyboard("{Escape}");
-  expect(document.activeElement).toBe(
-    screen.getByRole("button", { name: "Connection details" }),
+  await waitFor(() =>
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "Connection details" }),
+    ),
   );
   expect(connectionCalls()).toHaveLength(2);
 
@@ -285,7 +287,7 @@ test.each(["success", "failure"])(
         <App />
       </StrictMode>,
     );
-    expect(statusReads).toBe(1); // Cleanup cannot release a physical status exchange.
+    await waitFor(() => expect(statusReads).toBe(1)); // Cleanup cannot release a physical status exchange.
     await act(async () => {
       if (outcome === "success") resolveOld(snapshot);
       else rejectOld("Obsolete setup failed");
@@ -339,7 +341,7 @@ test.each(["success", "failure"])(
         <App />
       </StrictMode>,
     );
-    expect(reads).toBe(1);
+    await waitFor(() => expect(reads).toBe(1));
     await act(async () => {
       if (outcome === "success") resolveOld(snapshot);
       else rejectOld("Obsolete failure");

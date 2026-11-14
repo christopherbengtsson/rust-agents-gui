@@ -1,0 +1,2 @@
+src/routing.test.tsx(498,5): error TS2322: Type '{ kind: "hints"; targets: { kind: "workspace"; workspace_id: string; }[]; }' is not assignable to type 'Sample'.
+  Property 'watermark' is missing in type '{ kind: "hints"; targets: { kind: "workspace"; workspace_id: string; }[]; }' but required in type '{ kind: "hints"; watermark: number; targets: Target[]; }'.

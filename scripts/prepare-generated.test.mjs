@@ -38,6 +38,7 @@ test("preparation claims the target and uses only Cargo's reported exporter befo
     executable: "/private/target/debug/export-contracts",
   };
   prepareGenerated("--check", {
+    routes() {},
     run(command, args) {
       calls.push([command, args]);
       if (args[0] === "metadata")
@@ -142,6 +143,8 @@ for (const failure of [
     assert.throws(() =>
       prepareGenerated("--write", {
         claim() {},
+        routes() {},
+        routes() {},
         run(command, args) {
           if (args[0] === "metadata")
             return JSON.stringify({
@@ -183,3 +186,102 @@ for (const failure of [
     );
   });
 }
+
+test("route checking rejects stale output without writes and explicit write repairs it", async () => {
+  const { prepareRoutes } = await import("./prepare-generated.mjs");
+  const calls = [];
+  const effects = {
+    render: () => ({ "src/routeTree.gen.ts": "current" }),
+    read: () => "stale",
+    write: (...args) => calls.push(args),
+  };
+  assert.throws(() => prepareRoutes("--check", effects), /route drift/);
+  assert.deepEqual(calls, []);
+  prepareRoutes("--write", effects);
+  assert.deepEqual(calls, [["src/routeTree.gen.ts", "current"]]);
+});
+
+test("route rendering invokes the pinned CLI only in an isolated source mirror and cleans it", async () => {
+  const { renderRoutes } = await import("./prepare-generated.mjs");
+  const calls = [];
+  const output = renderRoutes({
+    create: () => "/fixture/isolated",
+    copy: (source, destination) => calls.push(["copy", source, destination]),
+    run(command, args, options) {
+      assert.equal(command, process.execPath);
+      assert.match(args[0], /router-cli.*bin\/tsr.cjs$/);
+      assert.equal(args[1], "generate");
+      assert.equal(options.cwd, "/fixture/isolated");
+      assert.equal(options.timeout, 30000);
+      calls.push(["generate"]);
+      return { status: 0 };
+    },
+    list: () => ["index.tsx"],
+    read: (name) => `generated ${name}`,
+    cleanup: (directory) => calls.push(["cleanup", directory]),
+  });
+  assert.equal(calls[0][0], "copy");
+  assert.equal(calls[1][0], "copy");
+  assert.deepEqual(calls.slice(2), [
+    ["generate"],
+    ["cleanup", "/fixture/isolated"],
+  ]);
+  assert.deepEqual(Object.keys(output), [
+    "src/routeTree.gen.ts",
+    "src/routes/index.tsx",
+  ]);
+});
+for (const failure of ["copy", "process", "timeout", "read"]) {
+  test(`route rendering cleans its isolated mirror after ${failure} failure`, async () => {
+    const { renderRoutes } = await import("./prepare-generated.mjs");
+    const cleaned = [];
+    assert.throws(() =>
+      renderRoutes({
+        create: () => "/fixture/isolated",
+        copy: () => {
+          if (failure === "copy") throw new Error("copy failed");
+        },
+        run: () =>
+          failure === "timeout"
+            ? { error: new Error("timeout") }
+            : { status: failure === "process" ? 1 : 0 },
+        list: () => [],
+        read: () => {
+          throw new Error("read failed");
+        },
+        cleanup: (directory) => cleaned.push(directory),
+      }),
+    );
+    assert.deepEqual(cleaned, ["/fixture/isolated"]);
+  });
+}
+
+test("generated preparation reconciles contracts before routes with one explicit mode", () => {
+  const calls = [];
+  prepareGenerated("--check", {
+    run(command, args) {
+      if (args[0] === "metadata")
+        return JSON.stringify({
+          target_directory: "/fixture/target",
+          packages: [{ name: "workspace-core", id: "core" }],
+        });
+      if (args[0] === "build")
+        return JSON.stringify({
+          reason: "compiler-artifact",
+          package_id: "core",
+          target: { name: "export-contracts", kind: ["bin"] },
+          profile: { test: false },
+          executable: "/fixture/exporter",
+        });
+      return "{}";
+    },
+    claim() {},
+    render: () => ({}),
+    reconcile: (_, mode) => calls.push(["contracts", mode]),
+    routes: (mode) => calls.push(["routes", mode]),
+  });
+  assert.deepEqual(calls, [
+    ["contracts", "--check"],
+    ["routes", "--check"],
+  ]);
+});

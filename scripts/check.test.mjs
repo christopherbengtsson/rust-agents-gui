@@ -33,11 +33,11 @@ test("CI checks preparation once, builds assets separately, then selects every r
   });
   assert.deepEqual(calls, [
     ["prepare", "--check"],
-    ["node", ["scripts/prepare-supervisor.mjs", "debug"]],
-    ["corepack", ["pnpm", "exec", "vite", "build"]],
     ["corepack", ["pnpm", "format:check"]],
     ["corepack", ["pnpm", "lint"]],
     ["corepack", ["pnpm", "exec", "tsc", "--noEmit"]],
+    ["node", ["scripts/prepare-supervisor.mjs", "debug"]],
+    ["corepack", ["pnpm", "exec", "vite", "build"]],
     [
       "node",
       [
@@ -91,4 +91,55 @@ test("a failed static gate prevents later application units", () => {
   );
   assert.equal(calls.length, 3);
   assert.equal(calls.at(-1)[1].includes("tsc"), true);
+});
+
+test("clean-checkout route preparation precedes standalone TypeScript without Vite", async () => {
+  const { prepareRoutes } = await import("./prepare-generated.mjs");
+  const files = new Map([["src/routeTree.gen.ts", "committed tree"]]);
+  const calls = [];
+  check("check", {
+    prepare(mode) {
+      calls.push(["routes", mode]);
+      prepareRoutes(mode, {
+        render: () => ({ "src/routeTree.gen.ts": "committed tree" }),
+        read: (name) => files.get(name),
+        write() {
+          assert.fail("clean check wrote files");
+        },
+      });
+    },
+    run(command, args) {
+      calls.push([command, ...args]);
+      return { status: 0 };
+    },
+  });
+  assert.deepEqual(calls[0], ["routes", "--check"]);
+  assert.equal(calls[1].includes("tsc"), true);
+  assert.equal(calls.filter((call) => call.includes("tsc")).length, 1);
+  assert.equal(
+    calls.some((call) => call.includes("vite")),
+    false,
+  );
+});
+
+test("stale route output fails CI before TypeScript or bundling can repair it", async () => {
+  const { prepareRoutes } = await import("./prepare-generated.mjs");
+  assert.throws(
+    () =>
+      check("ci", {
+        prepare(mode) {
+          prepareRoutes(mode, {
+            render: () => ({ "src/routeTree.gen.ts": "current" }),
+            read: () => "stale",
+            write() {
+              assert.fail("drift check repaired output");
+            },
+          });
+        },
+        run() {
+          assert.fail("consumer ran before drift failure");
+        },
+      }),
+    /route drift/,
+  );
 });

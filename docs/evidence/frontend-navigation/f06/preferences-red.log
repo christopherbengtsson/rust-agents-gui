@@ -1,0 +1,38 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/presentation-store.test.tsx (15 tests | 1 failed) 7ms
+   × legacy selection becomes a restoration default and preserves pending bytes 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/presentation-store.test.tsx > legacy selection becomes a restoration default and preserves pending bytes
+AssertionError: expected undefined to deeply equal { kind: 'workspace', …(3) }
+
+- Expected:
+{
+  "kind": "workspace",
+  "repositoryId": "00000000-0000-4000-8000-000000000003",
+  "view": "workspace",
+  "workspaceId": "00000000-0000-4000-8000-000000000001",
+}
+
++ Received:
+undefined
+
+ ❯ src/lib/presentation-store.test.tsx:280:43
+    278|   storage.setItem("agent-workspace.pending-workspace", "retained bytes…
+    279|   const store = createPresentationStore(() => storage);
+    280|   expect(store.getState().rememberedMain).toEqual({ kind: "workspace",…
+       |                                           ^
+    281|   store.getState().rememberMain({ kind: "repository", repositoryId: fi…
+    282|   expect(createPresentationStore(() => storage).getState().rememberedM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  20:00:04
+   Duration  260ms (environment 73%, transform 11%, import 11%, tests 3%, setup 1%, worker 1%)
+

@@ -6,7 +6,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { useStore } from "zustand";
+import type { Navigation } from "@/lib/navigation";
 import type { AppObservations } from "@/lib/app-observations";
 import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
@@ -14,7 +14,6 @@ import { repositoryError, type RepositoryError } from "@/lib/repositories";
 import {
   readWorkspacePending,
   WORKSPACE_PENDING,
-  WORKSPACE_SELECTION,
   workspaceRequest,
   type Workspace,
   type WorkspaceAction,
@@ -25,15 +24,12 @@ export function useWorkspaces(
   owner: string | undefined,
   repositoryId: string | undefined,
   repositoryIds: string,
-  initial: { repository_id: string; workspace_id: string } | null,
+  workspaceId: string | undefined,
   app: AppObservations,
+  navigation: Navigation,
 ) {
   const feature = app.workspaces;
   useSyncExternalStore(feature.subscribe, feature.getSnapshot);
-  const selectedIdentity = useStore(
-    app.presentation,
-    (state) => state.workspace,
-  );
   const [restoredPending] = useState(readWorkspacePending);
   const [pending, setPending] = useState(restoredPending?.request ?? null);
   const uncertain = useRef(restoredPending?.uncertain ?? false);
@@ -43,11 +39,9 @@ export function useWorkspaces(
   const [preferenceError, setPreferenceError] = useState<string>();
   const mounted = useRef(false);
   const actionEpoch = useRef(0);
-  const navigation = useRef(0);
-  const pendingNavigation = useRef(0);
+  const pendingNavigation = useRef<number | undefined>(undefined);
   const sending = useRef(false);
   const [cursors, setCursors] = useState<Record<string, (string | null)[]>>({});
-  const [handledInitial, setHandledInitial] = useState<string>();
   const shownOwner = owner ?? feature.retainedOwner();
   const targets = useMemo(
     () =>
@@ -63,13 +57,7 @@ export function useWorkspaces(
       })),
     [repositoryIds, repositoryId, cursors],
   );
-  const wanted =
-    selectedIdentity && selectedIdentity.repository_id === repositoryId
-      ? selectedIdentity.workspace_id
-      : initial?.repository_id === repositoryId &&
-          handledInitial !== initial?.workspace_id
-        ? initial?.workspace_id
-        : undefined;
+  const wanted = workspaceId;
   const lists = shownOwner
     ? targets.map((target) => feature.peek(shownOwner, target))
     : [];
@@ -102,6 +90,7 @@ export function useWorkspaces(
     return () => {
       mounted.current = false;
       actionEpoch.current += 1;
+      pendingNavigation.current = undefined;
     };
   }, [owner]);
   useEffect(() => {
@@ -117,52 +106,21 @@ export function useWorkspaces(
     if (!owner || !actionId) return;
     return feature.observe(owner, { operation: "action", action_id: actionId });
   }, [feature, owner, actionId]);
-  const remember = useCallback(
-    (workspace: Workspace | null) => {
-      const identity = workspace
-        ? { repository_id: workspace.repository_id, workspace_id: workspace.id }
-        : null;
-      app.presentation.setState({ workspace: identity });
-      try {
-        if (identity)
-          localStorage.setItem(WORKSPACE_SELECTION, JSON.stringify(identity));
-        else localStorage.removeItem(WORKSPACE_SELECTION);
-      } catch {
-        setPreferenceError(
-          "The desktop could not remember workspace selection.",
-        );
-      }
-    },
-    [app],
-  );
-  useEffect(
-    () =>
-      feature.subscribe(() => {
-        if (
-          !owner ||
-          !wanted ||
-          !initial ||
-          wanted !== initial.workspace_id ||
-          handledInitial === initial.workspace_id
-        )
-          return;
-        const identity = app.presentation.getState().workspace;
-        if (identity && identity.workspace_id !== wanted) return;
-        const detail = feature.peek(owner, { operation: "get", id: wanted });
-        if (
-          detail?.data?.value.kind === "workspace" &&
-          detail.data.value.workspace
-        ) {
-          setHandledInitial(initial.workspace_id);
-          remember(detail.data.value.workspace);
-        }
-      }),
-    [feature, app, owner, wanted, initial, handledInitial, remember],
-  );
   const settleAction = useCallback(
     (request: WorkspaceAction, workspace: Workspace) => {
       if (intent.current?.action_id !== request.action_id) return;
-      if (navigation.current === pendingNavigation.current) remember(workspace);
+      const target = navigation.current();
+      if (
+        target &&
+        target.kind !== "home" &&
+        target.repositoryId === workspace.repository_id
+      )
+        navigation.complete(pendingNavigation.current, {
+          kind: "workspace",
+          repositoryId: workspace.repository_id,
+          workspaceId: workspace.id,
+          view: "workspace",
+        });
       setActionError(undefined);
       intent.current = null;
       setPending(null);
@@ -174,7 +132,7 @@ export function useWorkspaces(
         );
       }
     },
-    [remember],
+    [navigation],
   );
   useEffect(
     () =>
@@ -251,7 +209,7 @@ export function useWorkspaces(
       });
       return;
     }
-    pendingNavigation.current = navigation.current;
+    pendingNavigation.current = navigation.capture();
     intent.current = request;
     uncertain.current = true;
     setPending(request);
@@ -329,15 +287,17 @@ export function useWorkspaces(
     );
   }
   function select(workspace: Workspace) {
-    setHandledInitial(initial?.workspace_id);
-    navigation.current++;
     if (shownOwner) feature.recordWorkspace(shownOwner, workspace);
-    remember(workspace);
+    navigation.go({
+      kind: "workspace",
+      repositoryId: workspace.repository_id,
+      workspaceId: workspace.id,
+      view:
+        app.presentation.getState().contexts[workspace.id]?.view ?? "workspace",
+    });
   }
   function selectRepository() {
-    setHandledInitial(initial?.workspace_id);
-    navigation.current++;
-    remember(null);
+    if (repositoryId) navigation.go({ kind: "repository", repositoryId });
   }
   function create(repository_id: string) {
     return submit({

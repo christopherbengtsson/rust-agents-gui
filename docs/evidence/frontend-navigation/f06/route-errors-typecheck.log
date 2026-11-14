@@ -1,0 +1,1 @@
+src/screens/target-error.tsx(5,198): error TS18046: 'error' is of type 'unknown'.

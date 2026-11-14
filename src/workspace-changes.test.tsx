@@ -12,17 +12,32 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { workspaceRequest } from "./lib/workspaces";
 import { useWorkspaceChanges as useInspection } from "./hooks/use-workspace-changes";
-import { useState } from "react";
+import { useState, type ComponentProps } from "react";
 import { FeatureFreshness } from "./lib/feature-freshness";
 import { createObservationQueryClient } from "./lib/feature-query-cache";
 import { ObservationCoordinator } from "./lib/observation-coordinator";
-import { WorkspaceInspection } from "./components/blocks/workspace-changes";
+import { WorkspaceInspection as ControlledInspection } from "./components/blocks/workspace-changes";
 import { WorkspacePanel } from "./components/blocks/workspace-panel";
 import { WorkspaceChangesReader as InspectionReader } from "./lib/workspace-changes-reader";
 import type { Repositories } from "./hooks/use-repositories";
 import type { Workspaces } from "./hooks/use-workspaces";
 import type { Workspace } from "./lib/workspaces";
 import type { ChangePage, FilePreview, InspectionRequest } from "./lib/changes";
+
+// This fixture is the route owner for existing isolated inspection presentation cases.
+function WorkspaceInspection(
+  props: Omit<
+    ComponentProps<typeof ControlledInspection>,
+    "view" | "onViewChange"
+  >,
+) {
+  const [view, setView] = useState(
+    () =>
+      props.reader.presentation.getState().contexts[props.workspaceId]?.view ??
+      "workspace",
+  );
+  return <ControlledInspection {...props} view={view} onViewChange={setView} />;
+}
 
 // Presentation scenarios start with an accepted synthetic baseline. Push/ack
 // ordering is exercised independently through AppObservations and the real feed.
@@ -1114,7 +1129,6 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
   };
   const repositories: Repositories = {
     loading: false,
-    initialWorkspace: null,
     pending: null,
     submitting: false,
     actionError: undefined,
@@ -1147,6 +1161,8 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
   const changeReader = new WorkspaceChangesReader();
   const panel = (selected: Workspace | undefined) => (
     <WorkspacePanel
+      view="workspace"
+      onViewChange={() => {}}
       changeReader={changeReader}
       connection={{
         state: "connected",

@@ -1,7 +1,8 @@
 import { createStore, type StateCreator } from "zustand/vanilla";
 import { persist, type PersistStorage } from "zustand/middleware";
-import { readSelection } from "./repositories";
-import { readWorkspaceSelection } from "./workspaces";
+import { SELECTION_KEY } from "./repositories";
+import { WORKSPACE_SELECTION } from "./workspaces";
+import { savedDestination, type MainDestination } from "./navigation";
 import { identity, object } from "./observation-contracts";
 import type { ChangedFile } from "./changes";
 
@@ -22,13 +23,12 @@ export const defaultWorkspacePresentation: WorkspacePresentation = {
   collapsed: false,
 };
 type Preferences = {
+  rememberedMain?: MainDestination;
   inspection: Record<string, InspectionSelection | undefined>;
   contexts: Record<string, WorkspacePresentation | undefined>;
 };
 type Presentation = Preferences & {
-  // Pre-route selection compatibility. F06 removes current-target ownership here.
-  repository: string | null;
-  workspace: ReturnType<typeof readWorkspaceSelection>;
+  rememberMain: (destination: MainDestination) => void;
   storageError?: string;
   rememberFile: (
     workspace: string,
@@ -112,7 +112,14 @@ function preferences(value: unknown): Preferences {
       collapsed: saved.collapsed,
     };
   }
-  return { inspection, contexts };
+  const rememberedMain = savedDestination(value.rememberedMain);
+  if (value.rememberedMain !== undefined && !rememberedMain)
+    throw new Error("Invalid remembered destination");
+  return {
+    inspection,
+    contexts,
+    ...(rememberedMain ? { rememberedMain } : {}),
+  };
 }
 
 export function createPresentationStore(
@@ -124,7 +131,39 @@ export function createPresentationStore(
   const storage: PersistStorage<Preferences> = {
     getItem: (key) => {
       const raw = getStorage().getItem(key);
-      if (raw === null) return null;
+      const legacy = () => {
+        const repositoryId = getStorage().getItem(SELECTION_KEY);
+        if (!identity(repositoryId)) return;
+        const rawWorkspace = getStorage().getItem(WORKSPACE_SELECTION);
+        let workspace: unknown;
+        try {
+          workspace = rawWorkspace ? JSON.parse(rawWorkspace) : null;
+        } catch {
+          /* Discardable legacy selection. */
+        }
+        const view = "workspace";
+        return object(workspace) &&
+          workspace.repository_id === repositoryId &&
+          identity(workspace.workspace_id)
+          ? savedDestination({
+              kind: "workspace",
+              repositoryId,
+              workspaceId: workspace.workspace_id,
+              view,
+            })
+          : savedDestination({ kind: "repository", repositoryId });
+      };
+      if (raw === null) {
+        const rememberedMain = legacy();
+        return {
+          version: rememberedMain ? 1 : 2,
+          state: {
+            inspection: {},
+            contexts: {},
+            ...(rememberedMain ? { rememberedMain } : {}),
+          },
+        };
+      }
       const envelope: unknown = JSON.parse(raw);
       if (
         !object(envelope) ||
@@ -133,7 +172,15 @@ export function createPresentationStore(
         !object(envelope.state)
       )
         throw new Error("Invalid presentation record");
-      return { version: envelope.version, state: preferences(envelope.state) };
+      const decoded = preferences(envelope.state);
+      if (envelope.version < 2 && !decoded.rememberedMain) {
+        const target = legacy();
+        if (target?.kind === "workspace")
+          target.view =
+            decoded.contexts[target.workspaceId]?.view ?? "workspace";
+        decoded.rememberedMain = target;
+      }
+      return { version: envelope.version, state: decoded };
     },
     setItem: (key, value) => {
       if (!writable) return;
@@ -158,8 +205,14 @@ export function createPresentationStore(
   };
   const persisted = persist<Presentation, [], [], Preferences>(
     (set, get) => ({
-      repository: readSelection(),
-      workspace: readWorkspaceSelection(),
+      rememberMain: (destination) => {
+        const saved = savedDestination(destination);
+        if (
+          saved &&
+          JSON.stringify(saved) !== JSON.stringify(get().rememberedMain)
+        )
+          set({ rememberedMain: saved });
+      },
       inspection: {},
       contexts: {},
       rememberFile: (workspace, file) => {
@@ -232,7 +285,7 @@ export function createPresentationStore(
     }),
     {
       name: PRESENTATION_KEY,
-      version: 1,
+      version: 2,
       storage,
       skipHydration: true,
       partialize: (state) =>
@@ -243,11 +296,14 @@ export function createPresentationStore(
             ),
           ),
           contexts: state.contexts,
+          ...(state.rememberedMain
+            ? { rememberedMain: state.rememberedMain }
+            : {}),
         }),
       // Version 0 accepts the prior lightweight selection shape, defaulting new
       // fields. This is a synthetic compatibility contract, never a shipped key.
       migrate: (state, version) => {
-        if (version !== 0)
+        if (version !== 0 && version !== 1)
           throw new Error("Unsupported presentation preference version");
         return preferences(state);
       },

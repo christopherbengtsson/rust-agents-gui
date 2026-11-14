@@ -105,7 +105,6 @@ export function RepositorySidebar({
                               : undefined
                           }
                           onClick={() => {
-                            workspaces.selectRepository();
                             repositories.select(repository);
                           }}
                           title={repository.path}
@@ -178,7 +177,6 @@ export function RepositorySidebar({
                                       }
                                       title={workspaceStatus(workspace.status)}
                                       onClick={() => {
-                                        repositories.select(repository);
                                         workspaces.select(workspace);
                                       }}
                                     >

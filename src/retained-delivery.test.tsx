@@ -351,7 +351,7 @@ test("retained repository and workspace lookups reject conflicting payloads with
     }),
   );
   const view = renderHook(() => ({
-    repositories: useRepositories("owner"),
+    repositories: useRepositories("owner", undefined, null),
     workspaces: useWorkspaces("owner", repositoryId, repositoryId, null),
   }));
   await waitFor(() => {

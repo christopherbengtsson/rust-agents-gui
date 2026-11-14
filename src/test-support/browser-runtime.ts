@@ -6,5 +6,10 @@ import { beforeEach, vi } from "vitest";
 vi.spyOn(process, "getBuiltinModule").mockReturnValue(undefined);
 
 beforeEach(() => {
+  vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+  Object.defineProperty(Element.prototype, "getAnimations", {
+    configurable: true,
+    value: () => [],
+  });
   vi.spyOn(process, "getBuiltinModule").mockReturnValue(undefined);
 });

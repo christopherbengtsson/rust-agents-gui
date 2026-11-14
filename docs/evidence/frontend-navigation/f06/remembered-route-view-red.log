@@ -1,0 +1,30 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/routing.test.tsx (22 tests | 1 failed | 21 skipped) 155ms
+   × explicit route views update remembered defaults for later workspace selection 154ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/routing.test.tsx > explicit route views update remembered defaults for later workspace selection
+AssertionError: expected '?view=workspace' to be '?view=changes' // Object.is equality
+
+Expected: "?view=changes"
+Received: "?view=workspace"
+
+ ❯ src/routing.test.tsx:520:35
+    518|   await user.click(screen.getByRole("button", { name: "exact workspace…
+    519|   await screen.findByRole("heading", { name: "exact workspace", level:…
+    520|   expect(history.location.search).toBe("?view=changes");
+       |                                   ^
+    521| });
+    522|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 skipped (22)
+   Start at  20:24:26
+   Duration  685ms (import 40%, environment 26%, tests 24%, transform 10%, setup 1%)
+

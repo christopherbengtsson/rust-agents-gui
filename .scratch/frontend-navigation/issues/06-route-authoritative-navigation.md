@@ -58,10 +58,10 @@ remains separate from controlled units.
 
 ## Acceptance
 
-- [ ] URL target/view is authoritative and no old independent selection owner competes with it.
-- [ ] Typed routes, restoration, membership and generation-safe action completion pass.
-- [ ] All frontend preparation paths use deterministic generated inputs in the documented order.
-- [ ] Existing workspace/inspection UI still works; route changes preserve app-lifetime resources.
+- [x] URL target/view is authoritative and no old independent selection owner competes with it.
+- [x] Typed routes, restoration, membership and generation-safe action completion pass.
+- [x] All frontend preparation paths use deterministic generated inputs in the documented order.
+- [x] Existing workspace/inspection UI still works; route changes preserve app-lifetime resources.
 
 ## Handoff boundary
 
@@ -82,3 +82,30 @@ scenarios from the agreed plan. No implementation or acceptance is claimed.
 
 Updated predecessor consumption for the library refactor; implementation and
 qualification acceptance remain unchecked. Original dated comments are retained.
+
+
+### 2026-11-14 — F06 implemented and verified
+
+Confirmed F05 checked acceptance and dated evidence at initial `3fd878a`; the
+external F05 amendment to `98cbbc9` added only `docs/IDEAS.md` and was preserved.
+Continued the current feature branch without resetting existing history or edits.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f06.md) records typed file
+routes and URL authority, exact off-page membership checks, once-only restoration,
+validated preference migration, generation-safe completion, shared resource
+lifetimes and deterministic contract/route preparation. Invalid explicit views
+preserve the URL and show valid-view guidance; missing views default to Workspace,
+as selected by the user. Legacy action IDs and uncertainty remain independent.
+
+Final configured verification passed **158 Rust + 49 tooling + 199 frontend units**;
+release packaging, warm-up/five-run measurements and focused final-package private
+fixture desktop smoke passed. Failed attempts, source/artifact hashes, exact
+commands, timing, launcher limitations and cleanup are retained. Actual WebView
+registration/first-workspace navigation, Changes URL/diff and retained workspace
+context were observed. Native providers were not exercised. F08 retains cumulative
+history/reload, accessibility and responsiveness qualification.
+
+Independent Standards and Spec review, including the final explicit-view/default
+regression fix, ended with **0 / 0 outstanding**. The containing commit owns F06.
+F07 supplies the gear and full Settings interaction; F07 and all successors remain
+unimplemented. Stop after F06.

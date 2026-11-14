@@ -115,7 +115,7 @@ test("explicit creation sends once with a retained action identity", async () =>
 });
 
 test.each(["create-first", "lookup-first", "lookup-before-admission"])(
-  "creation in an unselected repository retains selection: %s",
+  "creation in an unselected repository cannot redirect another target: %s",
   async (schedule) => {
     const other = "00000000-0000-4000-8000-000000000009";
     const created = { ...w, repository_id: other };
@@ -199,8 +199,7 @@ test.each(["create-first", "lookup-first", "lookup-before-admission"])(
     }
     expect(creates).toBe(1);
     expect(result.current.pending).toBeNull();
-    expect(result.current.selected?.id).toBe(id);
-    expect(result.current.selected?.repository_id).toBe(other);
+    expect(result.current.selected).toBeUndefined();
   },
 );
 

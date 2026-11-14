@@ -1,0 +1,45 @@
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.708583ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.277583ms)
+✔ explicit write mode repairs expected files and removes only obsolete managed outputs (0.073625ms)
+✔ clean checkout checking accepts the complete committed artifact set without writes (0.053542ms)
+✔ preparation build failure cannot reconcile or repair committed files (0.104042ms)
+✔ preparation export failure cannot reconcile or repair committed files (0.052875ms)
+✔ preparation render failure cannot reconcile or repair committed files (0.047833ms)
+✔ preparation missing failure cannot reconcile or repair committed files (0.036459ms)
+✔ preparation ambiguous failure cannot reconcile or repair committed files (0.05175ms)
+✔ preparation test-artifact failure cannot reconcile or repair committed files (0.073708ms)
+✔ preparation foreign-artifact failure cannot reconcile or repair committed files (0.047459ms)
+✖ route checking rejects stale output without writes and explicit write repairs it (0.340125ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64.421333
+
+✖ failing tests:
+
+test at scripts/prepare-generated.test.mjs:187:1
+✖ route checking rejects stale output without writes and explicit write repairs it (0.340125ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /route drift/. Input:
+  
+  'TypeError: prepareRoutes is not a function'
+  
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.test.mjs:195:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: prepareRoutes is not a function
+        at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.test.mjs:195:23
+        at getActual (node:assert:580:5)
+        at strict.throws (node:assert:728:24)
+        at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.test.mjs:195:10)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: /route drift/,
+    operator: 'throws',
+    diff: 'simple'
+  }

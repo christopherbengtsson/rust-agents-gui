@@ -34,10 +34,6 @@ test("reopening restores only allowlisted workspace presentation context", () =>
     .getState()
     .rememberLayout(workspace, { filesWidth: 41, collapsed: true });
   store.getState().rememberView(workspace, "changes");
-  store.setState({
-    repository: file,
-    workspace: { repository_id: file, workspace_id: workspace },
-  });
   const reopened = createPresentationStore(() => storage);
   expect(reopened.getState().inspection[workspace]).toEqual({
     id: file,
@@ -54,7 +50,7 @@ test("reopening restores only allowlisted workspace presentation context", () =>
     storage.getItem(PRESENTATION_KEY) ?? "null",
   );
   expect(written).toEqual({
-    version: 1,
+    version: 2,
     state: {
       inspection: {
         [workspace]: {
@@ -102,10 +98,11 @@ test("version-zero presentation migrates without touching pending identities or 
   for (const [key, value] of before)
     if (key !== PRESENTATION_KEY) expect(storage.getItem(key)).toBe(value);
   expect(JSON.parse(storage.getItem(PRESENTATION_KEY) ?? "null")).toEqual({
-    version: 1,
+    version: 2,
     state: {
       inspection: { [workspace]: { id: file, path: "a.ts", comparison } },
       contexts: {},
+      rememberedMain: { kind: "repository", repositoryId: file },
     },
   });
 });
@@ -115,13 +112,13 @@ test.each([
   JSON.stringify({ version: 9, state: { inspection: {}, contexts: {} } }),
   JSON.stringify({ state: { inspection: {} } }),
   JSON.stringify({
-    version: 1,
+    version: 2,
     state: {
       inspection: { [workspace]: { id: "bad", path: "a", comparison } },
     },
   }),
   JSON.stringify({
-    version: 1,
+    version: 2,
     state: {
       inspection: {
         [workspace]: {
@@ -134,7 +131,7 @@ test.each([
     },
   }),
   JSON.stringify({
-    version: 1,
+    version: 2,
     state: {
       inspection: {},
       contexts: {
@@ -143,7 +140,7 @@ test.each([
     },
   }),
   JSON.stringify({
-    version: 1,
+    version: 2,
     state: {
       inspection: {},
       contexts: {
@@ -270,3 +267,27 @@ test.each([0, 9])(
     localStorage.clear();
   },
 );
+
+test("legacy selection becomes a restoration default and preserves pending bytes", () => {
+  const storage = memory();
+  storage.setItem("agent-workspace.selected-repository", file);
+  storage.setItem(
+    "agent-workspace.selected-workspace",
+    JSON.stringify({ repository_id: file, workspace_id: workspace }),
+  );
+  storage.setItem("agent-workspace.pending-workspace", "retained bytes");
+  const store = createPresentationStore(() => storage);
+  expect(store.getState().rememberedMain).toEqual({
+    kind: "workspace",
+    repositoryId: file,
+    workspaceId: workspace,
+    view: "workspace",
+  });
+  store.getState().rememberMain({ kind: "repository", repositoryId: file });
+  expect(
+    createPresentationStore(() => storage).getState().rememberedMain,
+  ).toEqual({ kind: "repository", repositoryId: file });
+  expect(storage.getItem("agent-workspace.pending-workspace")).toBe(
+    "retained bytes",
+  );
+});

@@ -1,6 +1,8 @@
 // Sole owner of managed generated assets. Check mode never repairs source files.
 import {
   mkdirSync,
+  mkdtempSync,
+  cpSync,
   readFileSync,
   readdirSync,
   rmSync,
@@ -8,6 +10,9 @@ import {
 } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
+import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
@@ -127,6 +132,84 @@ export function renderArtifacts(exported) {
   return expected;
 }
 
+// The CLI and bundler consume the same source configuration. Generate in a
+// mirror: even generator normalization must never repair checked-in source in check mode.
+export function renderRoutes({
+  create = () => mkdtempSync(path.join(tmpdir(), "agent-workspace-routes-")),
+  copy = (source, destination) =>
+    cpSync(source, destination, { recursive: true }),
+  run = spawnSync,
+  read = (name) => readFileSync(name, "utf8"),
+  list = (name) =>
+    readdirSync(name, { recursive: true }).filter((file) =>
+      /\.tsx?$/.test(file),
+    ),
+  cleanup = (name) => rmSync(name, { recursive: true, force: true }),
+} = {}) {
+  const temporary = create();
+  try {
+    copy(path.join(root, "src/routes"), path.join(temporary, "src/routes"));
+    copy(
+      path.join(root, "tsr.config.json"),
+      path.join(temporary, "tsr.config.json"),
+    );
+    const require = createRequire(import.meta.url);
+    const cli = path.join(
+      path.dirname(require.resolve("@tanstack/router-cli/package.json")),
+      "bin/tsr.cjs",
+    );
+    const result = run(process.execPath, [cli, "generate"], {
+      cwd: temporary,
+      encoding: "utf8",
+      timeout: 30000,
+    });
+    if (result.error) throw result.error;
+    if (result.status !== 0)
+      throw new Error(
+        `Route generation failed: ${result.stderr || result.stdout}`,
+      );
+    const names = [
+      "src/routeTree.gen.ts",
+      ...list(path.join(temporary, "src/routes"))
+        .sort()
+        .map((file) => `src/routes/${file}`),
+    ];
+    return Object.fromEntries(
+      names.map((name) => [name, read(path.join(temporary, name))]),
+    );
+  } finally {
+    cleanup(temporary);
+  }
+}
+export function prepareRoutes(
+  mode,
+  {
+    render = renderRoutes,
+    read = (name) => {
+      try {
+        return readFileSync(path.join(root, name), "utf8");
+      } catch (error) {
+        if (error.code === "ENOENT") return;
+        throw error;
+      }
+    },
+    write = (name, content) => writeFileSync(path.join(root, name), content),
+  } = {},
+) {
+  if (!["--check", "--write"].includes(mode))
+    throw new Error("Expected --write or --check");
+  const expected = render();
+  const differences = Object.entries(expected).filter(
+    ([name, content]) => read(name) !== content,
+  );
+  if (mode === "--check" && differences.length)
+    throw new Error(
+      `Generated route drift; run corepack pnpm generated:write:\n${differences.map(([name]) => name).join("\n")}`,
+    );
+  if (mode === "--write")
+    for (const [name, content] of differences) write(name, content);
+}
+
 export function prepareGenerated(
   mode,
   {
@@ -134,6 +217,7 @@ export function prepareGenerated(
     claim = claimTarget,
     render = renderArtifacts,
     reconcile = reconcileArtifacts,
+    routes = prepareRoutes,
   } = {},
 ) {
   if (!["--write", "--check"].includes(mode))
@@ -172,6 +256,7 @@ export function prepareGenerated(
     );
   const exported = JSON.parse(run(artifacts[0].executable, []));
   reconcile(render(exported), mode);
+  routes(mode);
 }
 
 if (
@@ -181,7 +266,7 @@ if (
   prepareGenerated(process.argv[2]);
   console.log(
     process.argv[2] === "--check"
-      ? "Generated contracts match source"
-      : "Generated contracts written",
+      ? "Generated contracts and routes match source"
+      : "Generated contracts and routes written",
   );
 }

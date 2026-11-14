@@ -5,13 +5,12 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { useStore } from "zustand";
+import type { Navigation } from "@/lib/navigation";
 import type { AppObservations } from "@/lib/app-observations";
 import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
 import {
   PENDING_KEY,
-  SELECTION_KEY,
   readPending,
   repositoryError,
   repositoryRequest,
@@ -25,16 +24,13 @@ import {
 export function useRepositories(
   owner: string | undefined,
   app: AppObservations,
+  selectedId: string | null,
+  navigation: Navigation,
 ) {
   const feature = app.repositories;
   useSyncExternalStore(feature.subscribe, feature.getSnapshot);
-  const selectedId = useStore(app.presentation, (state) => state.repository);
   const [after, setAfter] = useState<string | null>(null);
   const [previous, setPrevious] = useState<(string | null)[]>([]);
-  const [initialWorkspace, setInitialWorkspace] = useState<{
-    repository_id: string;
-    workspace_id: string;
-  } | null>(null);
   const [pending, setPending] = useState(readPending);
   const currentPending = useRef(pending);
   const [actionError, setActionError] = useState<RepositoryError>();
@@ -42,8 +38,7 @@ export function useRepositories(
   const [preferenceError, setPreferenceError] = useState<string>();
   const mounted = useRef(false);
   const actionEpoch = useRef(0);
-  const navigation = useRef(0);
-  const pendingNavigation = useRef(0);
+  const pendingNavigation = useRef<number | undefined>(undefined);
   const sending = useRef(false);
   const shownOwner = owner ?? feature.retainedOwner();
   const list = shownOwner
@@ -76,6 +71,7 @@ export function useRepositories(
     return () => {
       mounted.current = false;
       actionEpoch.current += 1;
+      pendingNavigation.current = undefined;
     };
   }, [owner]);
   useEffect(() => {
@@ -90,44 +86,6 @@ export function useRepositories(
     if (!owner || !actionId) return;
     return feature.observe(owner, { operation: "action", action_id: actionId });
   }, [feature, owner, actionId]);
-  const rememberSelection = useCallback(
-    (id: string | null) => {
-      app.presentation.setState({ repository: id });
-      try {
-        if (id) localStorage.setItem(SELECTION_KEY, id);
-        else localStorage.removeItem(SELECTION_KEY);
-      } catch {
-        setPreferenceError(
-          "The desktop could not remember repository selection. Check its local storage before reopening.",
-        );
-      }
-    },
-    [app],
-  );
-  useEffect(
-    () =>
-      feature.subscribe(() => {
-        if (!owner || app.presentation.getState().repository !== selectedId)
-          return;
-        const list = feature.peek(owner, { operation: "list", after });
-        const page =
-          list?.data?.value.kind === "repositories"
-            ? list.data.value.page
-            : undefined;
-        const detail = selectedId
-          ? feature.peek(owner, { operation: "get", id: selectedId })
-          : undefined;
-        if (!page || list?.status !== "success") return;
-        if (
-          !selectedId ||
-          (detail?.status === "success" &&
-            detail.data?.value.kind === "repository" &&
-            !detail.data.value.repository)
-        )
-          rememberSelection(page.repositories[0]?.id ?? null);
-      }),
-    [feature, app, owner, after, selectedId, rememberSelection],
-  );
   const finish = useCallback(
     (action: Registration) => {
       const retained = currentPending.current;
@@ -140,17 +98,18 @@ export function useRepositories(
         action.state === "pending"
       )
         return;
-      if (
-        action.state === "completed" &&
-        navigation.current === pendingNavigation.current &&
-        app.presentation.getState().repository === retained.selection
-      ) {
-        rememberSelection(action.repository_id);
-        if (action.initial_workspace_id)
-          setInitialWorkspace({
-            repository_id: action.repository_id,
-            workspace_id: action.initial_workspace_id,
-          });
+      if (action.state === "completed") {
+        navigation.complete(
+          pendingNavigation.current,
+          action.initial_workspace_id
+            ? {
+                kind: "workspace",
+                repositoryId: action.repository_id,
+                workspaceId: action.initial_workspace_id,
+                view: "workspace",
+              }
+            : { kind: "repository", repositoryId: action.repository_id },
+        );
       }
       currentPending.current = null;
       setPending(null);
@@ -163,7 +122,7 @@ export function useRepositories(
       }
       setActionError(action.state === "failed" ? action.error : undefined);
     },
-    [app, rememberSelection],
+    [navigation],
   );
   useEffect(
     () =>
@@ -223,13 +182,14 @@ export function useRepositories(
       });
       return false;
     }
+    const target = navigation.current();
     const intent: PendingRegistration = old ?? {
       request: {
         action_id: crypto.randomUUID(),
         path,
         create_initial_workspace: true,
       },
-      selection: app.presentation.getState().repository,
+      selection: target && target.kind !== "home" ? target.repositoryId : null,
     };
     const earlierUncertain = intent.uncertain === true;
     // Persist before IPC so a desktop crash cannot turn a transmission into "not sent".
@@ -249,7 +209,7 @@ export function useRepositories(
     setActionError(undefined);
     setSubmitting(true);
     sending.current = true;
-    pendingNavigation.current = navigation.current;
+    pendingNavigation.current = navigation.capture();
     const generation = actionEpoch.current;
     return completeOperation(
       async () => {
@@ -313,8 +273,7 @@ export function useRepositories(
     );
   }
   function select(repository: Repository) {
-    navigation.current++;
-    rememberSelection(repository.id);
+    navigation.go({ kind: "repository", repositoryId: repository.id });
   }
   function next() {
     if (!page?.next) return;
@@ -334,7 +293,6 @@ export function useRepositories(
   return {
     ...observation,
     loading,
-    initialWorkspace,
     pending,
     submitting,
     actionError,

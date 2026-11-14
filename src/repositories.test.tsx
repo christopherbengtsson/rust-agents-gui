@@ -13,7 +13,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import { App } from "./App";
+import { App } from "./test-support/app";
 import { StrictMode } from "react";
 import { useRepositories } from "./test-support/feature-hooks";
 import {
@@ -176,7 +176,10 @@ test("restored selection remains selected while its details are collapsed", asyn
     ).getByText("/projects/one"),
   ).toBeDefined();
   expect(selected.getAttribute("aria-current")).toBe("true");
-  expect(localStorage.getItem(SELECTION_KEY)).toBe(id);
+  expect(
+    JSON.parse(localStorage.getItem("agent-workspace.presentation") ?? "null")
+      .state.rememberedMain,
+  ).toEqual({ kind: "repository", repositoryId: id });
   expect(registrations()).toHaveLength(0);
 });
 
@@ -213,7 +216,10 @@ test("registration selects the durable result and never submits twice", async ()
   await user.click(screen.getByRole("button", { name: /^Register$/ }));
   await screen.findByRole("heading", { level: 1, name: "one" });
   expect(registrations()).toHaveLength(1);
-  expect(localStorage.getItem(SELECTION_KEY)).toBe(id);
+  expect(
+    JSON.parse(localStorage.getItem("agent-workspace.presentation") ?? "null")
+      .state.rememberedMain,
+  ).toEqual({ kind: "repository", repositoryId: id });
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
 });
 
@@ -246,12 +252,16 @@ test("reopening with a retained action retrieves its result without resubmitting
     };
   });
   render(<App />);
-  await screen.findByRole("heading", { level: 1, name: "one" });
+  await waitFor(() => expect(localStorage.getItem(PENDING_KEY)).toBeNull());
+  expect(
+    screen.getByRole("heading", { level: 1, name: "Workspace" }),
+  ).toBeDefined();
   expect(registrations()).toHaveLength(0);
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
 });
 
 test("unavailable repositories stay selected and storage failures retain the last observation", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const user = userEvent.setup();
   const missing: Repository = {
     ...repository,
@@ -467,6 +477,7 @@ test.each([false, true])(
 );
 
 test("selection during registration is not retargeted by its late completion", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const user = userEvent.setup();
   const two: Repository = {
     ...repository,
@@ -529,6 +540,7 @@ test("selection during registration is not retargeted by its late completion", a
 });
 
 test("cursor paging retains selection and previous returns to the original page", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const user = userEvent.setup();
   const two: Repository = {
     ...repository,
@@ -765,6 +777,7 @@ test("explicit repository refresh reports loading while retaining the last obser
 });
 
 test("Refresh status retains explicit reprobe through a delayed connection check", async () => {
+  localStorage.setItem(SELECTION_KEY, id);
   const unavailable: Repository = {
     ...repository,
     availability: {

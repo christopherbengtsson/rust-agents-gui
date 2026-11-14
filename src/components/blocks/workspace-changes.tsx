@@ -1,3 +1,4 @@
+import type { WorkspaceView } from "@/lib/navigation";
 import {
   useCallback,
   useRef,
@@ -57,11 +58,15 @@ function subscribeNarrow(changed: () => void) {
 const readNarrow = () => window.matchMedia(narrowQuery).matches;
 
 export function WorkspaceInspection({
+  view: tab,
+  onViewChange,
   owner,
   workspaceId,
   reader,
   children,
 }: {
+  view: WorkspaceView;
+  onViewChange: (view: WorkspaceView) => void;
   owner: string | undefined;
   workspaceId: string;
   reader: WorkspaceChangesReader;
@@ -71,8 +76,6 @@ export function WorkspaceInspection({
     reader.presentation,
     (state) => state.contexts[workspaceId] ?? defaultWorkspacePresentation,
   );
-  // Remembered view initializes this mount. F06 will supply current route/view.
-  const [tab, setTab] = useState(remembered.view);
   const [collapsed, setCollapsed] = useState(remembered.collapsed);
   const [sheet, setSheet] = useState(false);
   const narrow = useSyncExternalStore(subscribeNarrow, readNarrow);
@@ -99,7 +102,7 @@ export function WorkspaceInspection({
   };
   const select = (file: ChangedFile) => {
     changes.select(file);
-    setTab("changes");
+    onViewChange("changes");
     reader.presentation.getState().rememberView(workspaceId, "changes");
     setSheet(false);
   };
@@ -176,7 +179,7 @@ export function WorkspaceInspection({
               value={tab}
               onValueChange={(value) => {
                 if (value !== "workspace" && value !== "changes") return;
-                setTab(value);
+                onViewChange(value);
                 reader.presentation.getState().rememberView(workspaceId, value);
               }}
               className="inspection-tabs"
