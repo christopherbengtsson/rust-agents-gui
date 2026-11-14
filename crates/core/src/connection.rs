@@ -6,30 +6,31 @@ use crate::{
 };
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{
-    io::{self, BufRead, BufReader, Read, Write},
-    os::{
-        fd::AsRawFd,
-        unix::{net::UnixStream, process::CommandExt},
-    },
+    future::Future,
+    io,
+    os::unix::process::CommandExt,
     path::{Path, PathBuf},
     process::{Command, Stdio},
     sync::{Arc, Mutex},
-    time::{Duration, Instant},
+    time::Duration,
 };
 mod admission;
-// F04c builds the kernel; F04d migrates both production callers together.
-#[cfg_attr(
-    not(test),
-    expect(dead_code, reason = "F04d adopts the framed-exchange kernel")
-)]
 mod framed_exchange;
 mod subscription;
+mod tasks;
 pub use admission::{Admitted, ConnectionSlots};
+use framed_exchange::FramedExchange;
 pub use subscription::{FeedAck, FeedBatch, FeedEvent};
+use tasks::Tasks;
+use tokio::{
+    io::{AsyncRead, AsyncWrite},
+    net::UnixStream,
+    time::Instant,
+};
+use tokio_util::sync::CancellationToken;
 
-const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 7;
+pub const PROTOCOL_VERSION: u32 = 8;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -159,7 +160,9 @@ pub struct SupervisorConnection {
     status: ConnectionSlots,
     // F04 owns the subscription resource; its budget cannot borrow observation slots.
     subscription: ConnectionSlots,
-    feed: Arc<Mutex<Option<subscription::NativeSubscription>>>,
+    feed: Arc<subscription::FeedOwner>,
+    tasks: Arc<Tasks>,
+    blocking: ConnectionSlots,
 }
 #[derive(Default)]
 struct ConnectionState {
@@ -176,38 +179,24 @@ impl SupervisorConnection {
             intents: ConnectionSlots::new(1),
             status: ConnectionSlots::new(1),
             subscription: ConnectionSlots::new(1),
-            feed: Arc::new(Mutex::new(None)),
+            feed: Arc::new(subscription::FeedOwner::default()),
+            tasks: Arc::new(Tasks::default()),
+            blocking: ConnectionSlots::new(5),
         }
     }
-
-    /// Admission happens on the calling thread, before blocking work is spawned.
+    fn client(&self) -> SupervisorClient {
+        SupervisorClient {
+            state: self.state.clone(),
+            tasks: self.tasks.clone(),
+            blocking: self.blocking.clone(),
+        }
+    }
+    /// Nonwaiting admission occurs before task creation; run transfers to the completion owner.
     pub fn prepare_repository_request(
         &self,
         expected_owner: String,
         request: RepositoryRequest,
-    ) -> Result<
-        Admitted<
-            impl FnOnce() -> Result<OwnedReply<RepositoryReply>, RequestFailure> + Send + 'static,
-        >,
-        RequestFailure,
-    > {
-        self.prepare_repository_request_with(expected_owner, request, |state, request| {
-            exchange_target(state, request, &mut LocalClient)
-        })
-    }
-
-    fn prepare_repository_request_with<F>(
-        &self,
-        expected_owner: String,
-        request: RepositoryRequest,
-        exchange: F,
-    ) -> Result<
-        Admitted<impl FnOnce() -> Result<OwnedReply<RepositoryReply>, RequestFailure> + use<F>>,
-        RequestFailure,
-    >
-    where
-        F: FnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
-    {
+    ) -> Result<Admitted<OwnedReply<RepositoryReply>>, RequestFailure> {
         let lane = if matches!(request, RepositoryRequest::Register { .. }) {
             &self.intents
         } else {
@@ -215,25 +204,16 @@ impl SupervisorConnection {
         };
         let permit = Self::admit(lane)?;
         self.require_connection(&expected_owner)?;
-        let client = SupervisorClient::new(self.state.clone());
-        Ok(Admitted {
-            permit,
-            work: move || client.repository_request_with(&expected_owner, request, exchange),
-        })
+        let client = self.client();
+        Ok(Admitted::new(permit, self.tasks.clone(), async move {
+            client.repository_request(&expected_owner, request).await
+        }))
     }
-
     pub fn prepare_workspace_request(
         &self,
         expected_owner: String,
         request: crate::workspaces::WorkspaceRequest,
-    ) -> Result<
-        Admitted<
-            impl FnOnce() -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure>
-            + Send
-            + 'static,
-        >,
-        RequestFailure,
-    > {
+    ) -> Result<Admitted<OwnedReply<crate::workspaces::WorkspaceReply>>, RequestFailure> {
         use crate::workspaces::WorkspaceRequest;
         let lane = if matches!(
             request,
@@ -245,27 +225,35 @@ impl SupervisorConnection {
         };
         let permit = Self::admit(lane)?;
         self.require_connection(&expected_owner)?;
-        let client = SupervisorClient::new(self.state.clone());
-        Ok(Admitted {
-            permit,
-            work: move || client.workspace_request(&expected_owner, request),
-        })
+        let client = self.client();
+        Ok(Admitted::new(permit, self.tasks.clone(), async move {
+            client.workspace_request(&expected_owner, request).await
+        }))
     }
-
-    pub fn prepare_snapshot(
-        &self,
-    ) -> Result<
-        Admitted<impl FnOnce() -> io::Result<SupervisorSnapshot> + Send + 'static>,
-        RequestFailure,
-    > {
+    pub fn prepare_snapshot(&self) -> Result<Admitted<SupervisorSnapshot>, RequestFailure> {
         let permit = Self::admit(&self.status)?;
         let connection = self.clone();
-        Ok(Admitted {
-            permit,
-            work: move || connection.snapshot_admitted_with(&mut LocalDiscovery::new()),
-        })
+        Ok(Admitted::new(permit, self.tasks.clone(), async move {
+            let mut effects = LocalDiscovery::new(connection.client());
+            connection
+                .snapshot_admitted_with(&mut effects)
+                .await
+                .map_err(|e| {
+                    RequestFailure::transport(
+                        TransportCode::NotConnected,
+                        Delivery::NotSent,
+                        e.to_string(),
+                    )
+                })
+        }))
     }
-
+    /// Only desktop-owned resources are stopped; supervisor-owned domain work continues.
+    pub async fn stop_observations(&self) -> Result<(), RequestFailure> {
+        self.tasks.cancel.cancel();
+        let feed = self.feed.stop_all().await;
+        let requests = self.tasks.close_and_wait().await.map_err(unavailable);
+        feed.and(requests)
+    }
     fn admit(lane: &ConnectionSlots) -> Result<admission::ConnectionPermit, RequestFailure> {
         lane.try_acquire().ok_or_else(|| RequestFailure::transport(
             TransportCode::Busy, Delivery::NotSent,
@@ -273,23 +261,24 @@ impl SupervisorConnection {
         ))
     }
 
-    pub fn repository_request(
+    pub async fn repository_request(
         &self,
         expected_owner: &str,
         request: RepositoryRequest,
     ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
         self.prepare_repository_request(expected_owner.into(), request)?
             .run()
+            .await
     }
-    pub fn workspace_request(
+    pub async fn workspace_request(
         &self,
         expected_owner: &str,
         request: crate::workspaces::WorkspaceRequest,
     ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
         self.prepare_workspace_request(expected_owner.into(), request)?
             .run()
+            .await
     }
-
     fn require_connection(&self, expected_owner: &str) -> Result<(), RequestFailure> {
         let observed = self.observed.lock().map_err(|e| {
             RequestFailure::transport(
@@ -319,17 +308,18 @@ impl SupervisorConnection {
         Ok(())
     }
 
-    pub fn snapshot(&self) -> io::Result<SupervisorSnapshot> {
-        self.snapshot_with(&mut LocalDiscovery::new())
+    pub async fn snapshot(&self) -> Result<SupervisorSnapshot, RequestFailure> {
+        self.prepare_snapshot()?.run().await
     }
-    fn snapshot_with(&self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
+    #[cfg(test)]
+    async fn snapshot_with(&self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
         let _permit = self
             .status
             .try_acquire()
             .ok_or_else(|| io::Error::new(io::ErrorKind::WouldBlock, "Status lane is busy"))?;
-        self.snapshot_admitted_with(effects)
+        self.snapshot_admitted_with(effects).await
     }
-    fn snapshot_admitted_with(
+    async fn snapshot_admitted_with(
         &self,
         effects: &mut impl Discovery,
     ) -> io::Result<SupervisorSnapshot> {
@@ -341,14 +331,14 @@ impl SupervisorConnection {
             (observed.initialized, observed.cursor.clone())
         };
         if !initialized {
-            discover(&self.state, &self.executable, effects)?;
+            discover(&self.state, &self.executable, effects).await?;
             // Retain discovery success even if the subsequent status exchange fails.
             self.observed
                 .lock()
                 .map_err(|e| io::Error::other(e.to_string()))?
                 .initialized = true;
         }
-        let snapshot = effects.snapshot(&self.state, cursor)
+        let snapshot = effects.snapshot(&self.state, cursor).await
             .map_err(|e| io::Error::new(e.kind(), format!(
                 "Cannot read supervisor observations: {e}. Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.")))?;
         validate_snapshot(&snapshot)?;
@@ -362,22 +352,25 @@ impl SupervisorConnection {
 
 pub struct SupervisorClient {
     state: PathBuf,
+    tasks: Arc<Tasks>,
+    blocking: ConnectionSlots,
 }
 impl SupervisorClient {
-    pub fn workspace_request(
+    pub async fn workspace_request(
         &self,
         expected_owner: &str,
         request: crate::workspaces::WorkspaceRequest,
     ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
-        self.workspace_request_with(expected_owner, request, |state, request| {
-            exchange_target(state, request, &mut LocalClient)
+        self.workspace_request_with(expected_owner, request, async |state, request| {
+            exchange_target(state, request, &mut self.effects()).await
         })
+        .await
     }
-    fn workspace_request_with(
+    async fn workspace_request_with(
         &self,
         expected_owner: &str,
         request: crate::workspaces::WorkspaceRequest,
-        exchange: impl FnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
+        exchange: impl AsyncFnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
     ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
         let response = exchange(
             &self.state,
@@ -390,7 +383,8 @@ impl SupervisorClient {
                 workspace: Some(request.clone()),
                 subscribe: None,
             },
-        )?;
+        )
+        .await?;
         match response {
             Response::Workspace { owner, result } => {
                 if result
@@ -404,20 +398,21 @@ impl SupervisorClient {
             other => Err(response_failure(other)),
         }
     }
-    pub fn repository_request(
+    pub async fn repository_request(
         &self,
         expected_owner: &str,
         request: RepositoryRequest,
     ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
-        self.repository_request_with(expected_owner, request, |state, request| {
-            exchange_target(state, request, &mut LocalClient)
+        self.repository_request_with(expected_owner, request, async |state, request| {
+            exchange_target(state, request, &mut self.effects()).await
         })
+        .await
     }
-    fn repository_request_with(
+    async fn repository_request_with(
         &self,
         expected_owner: &str,
         request: RepositoryRequest,
-        exchange: impl FnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
+        exchange: impl AsyncFnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
     ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
         if let RepositoryRequest::Register { request } = &request {
             crate::workspaces::check_registration_path_budget(&request.path)
@@ -434,7 +429,8 @@ impl SupervisorClient {
                 workspace: None,
                 subscribe: None,
             },
-        )?;
+        )
+        .await?;
         match response {
             Response::Repository { owner, result } => {
                 if result
@@ -449,55 +445,72 @@ impl SupervisorClient {
         }
     }
     pub fn new(state: PathBuf) -> Self {
-        Self { state }
+        Self {
+            state,
+            tasks: Arc::new(Tasks::default()),
+            blocking: ConnectionSlots::new(5),
+        }
     }
 
     /// Opening the desktop may start an absent owner. Subsequent observations never start one.
-    pub fn connect_or_start(state: PathBuf, executable: &Path) -> io::Result<Self> {
-        discover(&state, executable, &mut LocalDiscovery::new())?;
-        Ok(Self::new(state))
+    pub async fn connect_or_start(state: PathBuf, executable: &Path) -> io::Result<Self> {
+        let client = Self::new(state);
+        discover(
+            &client.state,
+            executable,
+            &mut LocalDiscovery::new(Self::new(client.state.clone())),
+        )
+        .await?;
+        Ok(client)
+    }
+    fn effects(&self) -> LocalClient {
+        LocalClient {
+            tasks: self.tasks.clone(),
+            blocking: self.blocking.clone(),
+        }
     }
 
-    pub fn status(&self) -> io::Result<SupervisorStatus> {
-        Ok(self.snapshot(None)?.status)
+    pub async fn status(&self) -> io::Result<SupervisorStatus> {
+        Ok(self.snapshot(None).await?.status)
     }
-    pub fn snapshot(&self, after: Option<SnapshotCursor>) -> io::Result<SupervisorSnapshot> {
+    pub async fn snapshot(&self, after: Option<SnapshotCursor>) -> io::Result<SupervisorSnapshot> {
         self.snapshot_with_version(after, PROTOCOL_VERSION, env!("CARGO_PKG_VERSION"))
+            .await
     }
-    pub fn snapshot_with_version(
+    pub async fn snapshot_with_version(
         &self,
         after: Option<SnapshotCursor>,
         protocol: u32,
         application_version: &str,
     ) -> io::Result<SupervisorSnapshot> {
-        self.snapshot_with(after, protocol, application_version, &mut LocalClient)
+        self.snapshot_with(after, protocol, application_version, &mut self.effects())
+            .await
     }
 
-    fn snapshot_with(
+    async fn snapshot_with(
         &self,
         after: Option<SnapshotCursor>,
         protocol: u32,
         application_version: &str,
         effects: &mut impl ClientEffects,
     ) -> io::Result<SupervisorSnapshot> {
-        effects.check_private(&self.state, true)?;
-        let socket = socket_path(&self.state);
-        effects.check_private(&socket, false)?;
-        let mut stream = effects.connect(&socket)?;
-        configure(&stream)?;
-        write_frame(
-            &mut stream,
-            &Request {
-                protocol,
-                subscribe: None,
-                application_version: application_version.into(),
-                after,
-                expected_owner: None,
-                repository: None,
-                workspace: None,
-            },
-        )?;
-        match read_frame_with_clock(&mut stream, || effects.now())? {
+        let cancel = self.tasks.cancel.clone();
+        let request = Request {
+            protocol,
+            subscribe: None,
+            application_version: application_version.into(),
+            after,
+            expected_owner: None,
+            repository: None,
+            workspace: None,
+        };
+        let payload = encode_payload(&request)?;
+        let stream = open_stream(&self.state, effects, &cancel).await?;
+        let mut exchange = FramedExchange::new(stream);
+        exchange
+            .write_frame(payload, Instant::now() + IO_TIMEOUT, &cancel)
+            .await?;
+        match read_json(&mut exchange, Instant::now() + IO_TIMEOUT, &cancel).await? {
             Response::Snapshot { snapshot } => {
                 validate_snapshot(&snapshot)?;
                 Ok(snapshot)
@@ -505,12 +518,9 @@ impl SupervisorClient {
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
-            Response::Feed { .. }
-            | Response::Transport { .. }
-            | Response::Workspace { .. }
-            | Response::Repository { .. } => Err(io::Error::new(
+            _ => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
-                "Unexpected repository reply to status request",
+                "Unexpected reply to status request",
             )),
         }
     }
@@ -672,112 +682,141 @@ fn response_failure(response: Response) -> RequestFailure {
         _ => unavailable("Unexpected reply kind"),
     }
 }
-fn exchange_target(
+async fn exchange_target(
     state: &Path,
     request: &Request,
     effects: &mut impl ClientEffects,
 ) -> Result<Response, RequestFailure> {
-    let frame = encode_frame(request).map_err(|e| RequestFailure::Rejected {
+    let payload = encode_payload(request).map_err(|e| RequestFailure::Rejected {
         error: RepositoryError::new(
             ErrorCode::Capacity,
             format!("Invalid targeted request: {e}"),
         ),
     })?;
-    let connect = |error: io::Error| {
-        RequestFailure::transport(
-            TransportCode::NotConnected,
-            Delivery::NotSent,
-            format!(
-                "Cannot connect to the observed supervisor: {error}. Refresh status; no action was sent."
-            ),
-        )
-    };
-    effects.check_private(state, true).map_err(connect)?;
-    let socket = socket_path(state);
-    effects.check_private(&socket, false).map_err(connect)?;
-    let mut stream = effects.connect(&socket).map_err(connect)?;
-    configure(&stream).map_err(connect)?;
-    stream.write_all(&frame).map_err(unavailable)?;
-    read_frame_with_clock(&mut stream, || effects.now()).map_err(unavailable)
+    let cancel = effects.cancellation();
+    let stream = open_stream(state, effects, &cancel).await.map_err(|error| RequestFailure::transport(
+        TransportCode::NotConnected, Delivery::NotSent, format!("Cannot connect to the observed supervisor: {error}. Refresh status; no action was sent.")))?;
+    let mut exchange = FramedExchange::new(stream);
+    // Once write starts, partial transmission is uncertain, including timeout/cancellation.
+    exchange
+        .write_frame(payload, Instant::now() + IO_TIMEOUT, &cancel)
+        .await
+        .map_err(unavailable)?;
+    read_json(&mut exchange, Instant::now() + IO_TIMEOUT, &cancel)
+        .await
+        .map_err(unavailable)
 }
-
-// Client policy and protocol stay above this seam; adapters supply only local I/O outcomes.
 trait ClientEffects {
-    type Stream: FrameStream;
-    fn check_private(&mut self, path: &Path, directory: bool) -> io::Result<()>;
-    fn connect(&mut self, socket: &Path) -> io::Result<Self::Stream>;
-    fn now(&mut self) -> Instant;
+    type Stream: AsyncRead + AsyncWrite + Unpin + 'static;
+    async fn check_private(&mut self, path: &Path, directory: bool) -> io::Result<()>;
+    async fn connect(&mut self, socket: &Path) -> io::Result<Self::Stream>;
+    fn cancellation(&self) -> CancellationToken;
 }
-
-struct LocalClient;
+struct LocalClient {
+    tasks: Arc<Tasks>,
+    blocking: ConnectionSlots,
+}
 impl ClientEffects for LocalClient {
     type Stream = UnixStream;
-    fn check_private(&mut self, path: &Path, directory: bool) -> io::Result<()> {
-        check_private(path, directory)
+    async fn check_private(&mut self, path: &Path, directory: bool) -> io::Result<()> {
+        let path = path.to_owned();
+        self.tasks
+            .blocking(&self.blocking, move || check_private(&path, directory))
+            .await
     }
-    fn connect(&mut self, socket: &Path) -> io::Result<Self::Stream> {
-        UnixStream::connect(socket)
+    async fn connect(&mut self, socket: &Path) -> io::Result<Self::Stream> {
+        tokio::time::timeout(IO_TIMEOUT, UnixStream::connect(socket))
+            .await
+            .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))?
     }
-    fn now(&mut self) -> Instant {
-        Instant::now()
+    fn cancellation(&self) -> CancellationToken {
+        self.tasks.cancel.clone()
     }
+}
+async fn open_stream(
+    state: &Path,
+    effects: &mut impl ClientEffects,
+    cancel: &CancellationToken,
+) -> io::Result<impl AsyncRead + AsyncWrite + Unpin + 'static> {
+    // Blocking checks always finish under their owner, even during cancellation.
+    effects.check_private(state, true).await?;
+    let socket = socket_path(state);
+    effects.check_private(&socket, false).await?;
+    cancel
+        .run_until_cancelled(effects.connect(&socket))
+        .await
+        .ok_or_else(|| io::Error::from(io::ErrorKind::Interrupted))?
 }
 
 // Discovery policy remains here; the local implementation supplies OS outcomes.
 trait Discovery {
-    fn prepare(&mut self, state: &Path) -> io::Result<()>;
-    fn snapshot(
+    async fn prepare(&mut self, state: &Path) -> io::Result<()>;
+    async fn snapshot(
         &mut self,
         state: &Path,
         after: Option<SnapshotCursor>,
     ) -> io::Result<SupervisorSnapshot>;
-    fn owner_present(&mut self, state: &Path) -> io::Result<bool>;
-    fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()>;
+    async fn owner_present(&mut self, state: &Path) -> io::Result<bool>;
+    async fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()>;
     fn elapsed(&self) -> Duration;
-    fn wait(&mut self, duration: Duration);
+    async fn wait(&mut self, duration: Duration);
 }
 
-struct LocalDiscovery(Instant);
+struct LocalDiscovery {
+    started: Instant,
+    client: SupervisorClient,
+}
 impl LocalDiscovery {
-    fn new() -> Self {
-        Self(Instant::now())
+    fn new(client: SupervisorClient) -> Self {
+        Self {
+            started: Instant::now(),
+            client,
+        }
     }
 }
 impl Discovery for LocalDiscovery {
-    fn prepare(&mut self, state: &Path) -> io::Result<()> {
-        prepare_state(state)
+    async fn prepare(&mut self, state: &Path) -> io::Result<()> {
+        let state = state.to_owned();
+        self.client
+            .tasks
+            .blocking(&self.client.blocking, move || prepare_state(&state))
+            .await
     }
-    fn snapshot(
+    async fn snapshot(
         &mut self,
         state: &Path,
         after: Option<SnapshotCursor>,
     ) -> io::Result<SupervisorSnapshot> {
-        SupervisorClient::new(state.to_owned()).snapshot(after)
+        debug_assert_eq!(state, self.client.state);
+        self.client.snapshot(after).await
     }
-    fn owner_present(&mut self, state: &Path) -> io::Result<bool> {
-        owner_present(state)
+    async fn owner_present(&mut self, state: &Path) -> io::Result<bool> {
+        let state = state.to_owned();
+        self.client
+            .tasks
+            .blocking(&self.client.blocking, move || owner_present(&state))
+            .await
     }
-    fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()> {
-        let mut child = supervisor_command(executable, state).spawn().map_err(|e| {
-            io::Error::new(
-                e.kind(),
-                format!(
-                    "Cannot start supervisor {}: {e}. Rebuild or reinstall the application.",
-                    executable.display()
-                ),
-            )
-        })?;
-        // Reap on every exit path without tying the supervisor lifetime to this client.
-        std::thread::spawn(move || {
-            let _ = child.wait();
-        });
-        Ok(())
+    async fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()> {
+        let executable = executable.to_owned();
+        let state = state.to_owned();
+        self.client.tasks.blocking(&self.client.blocking, move || {
+            let mut child = supervisor_command(&executable, &state).spawn().map_err(|e| io::Error::new(e.kind(), format!("Cannot start supervisor {}: {e}. Rebuild or reinstall the application.", executable.display())))?;
+            // Intentional process reaper: this independent supervisor outlives the desktop.
+            std::thread::spawn(move || { let _ = child.wait(); });
+            Ok(())
+        }).await
     }
     fn elapsed(&self) -> Duration {
-        self.0.elapsed()
+        self.started.elapsed()
     }
-    fn wait(&mut self, duration: Duration) {
-        std::thread::sleep(duration);
+    async fn wait(&mut self, duration: Duration) {
+        let _ = self
+            .client
+            .tasks
+            .cancel
+            .run_until_cancelled(tokio::time::sleep(duration))
+            .await;
     }
 }
 
@@ -792,9 +831,9 @@ fn supervisor_command(executable: &Path, state: &Path) -> Command {
     command
 }
 
-fn discover(state: &Path, executable: &Path, effects: &mut impl Discovery) -> io::Result<()> {
-    effects.prepare(state)?;
-    match effects.snapshot(state, None) {
+async fn discover(state: &Path, executable: &Path, effects: &mut impl Discovery) -> io::Result<()> {
+    effects.prepare(state).await?;
+    match effects.snapshot(state, None).await {
         Ok(_) => return Ok(()),
         Err(e)
             if !matches!(
@@ -806,12 +845,12 @@ fn discover(state: &Path, executable: &Path, effects: &mut impl Discovery) -> io
         }
         Err(_) => {}
     }
-    if !effects.owner_present(state)? {
-        effects.start(executable, state)?;
+    if !effects.owner_present(state).await? {
+        effects.start(executable, state).await?;
     }
     let deadline = effects.elapsed() + Duration::from_secs(5);
     loop {
-        match effects.snapshot(state, None) {
+        match effects.snapshot(state, None).await {
             Ok(_) => {
                 return Ok(());
             }
@@ -833,61 +872,99 @@ fn discover(state: &Path, executable: &Path, effects: &mut impl Discovery) -> io
                 "Supervisor did not become available. An owner may still hold this state; check the installed supervisor and state permissions, then reopen. Do not remove the owner lock.",
             ));
         }
-        effects.wait(Duration::from_millis(25));
+        effects.wait(Duration::from_millis(25)).await;
     }
 }
 
-pub fn serve_connection(core: &Core, mut stream: UnixStream) -> io::Result<()> {
-    serve_stream(core, &mut stream)
+/// Per-server completion owner and bounded blocking dispatch, independent of Tauri.
+pub struct ConnectionServer {
+    core: Arc<Core>,
+    tasks: Arc<Tasks>,
+    blocking: ConnectionSlots,
 }
-
-fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
-    configure(stream)?;
-    let mut reader = BufReader::new(stream);
-    let request: Request = read_buffered_frame(&mut reader, IO_TIMEOUT)?;
-    if request.subscribe.is_some() {
-        let mut accepted = None;
-        let response = dispatch_request(request, &core.owner, |mut request| {
-            accepted = request.subscribe.take();
-            Response::Snapshot {
-                snapshot: core.snapshot(None),
-            }
-        })?;
-        if let Some(subscribe) = accepted {
-            return subscription::serve(core, subscribe, &mut reader);
+impl ConnectionServer {
+    pub fn new(core: Arc<Core>) -> Self {
+        Self {
+            core,
+            tasks: Arc::new(Tasks::default()),
+            blocking: ConnectionSlots::new(8),
         }
-        return write_timed_frame(reader.get_mut(), &response);
     }
-    let response = dispatch_request(request, &core.owner, |request| {
-        if let Some(request) = request.workspace {
-            Response::Workspace {
-                owner: core.owner.clone(),
-                result: core.workspace_request(request),
-            }
-        } else if let Some(request) = request.repository {
-            Response::Repository {
-                owner: core.owner.clone(),
-                result: core.repository_request(request),
-            }
-        } else {
-            Response::Snapshot {
-                snapshot: core.snapshot(request.after),
-            }
+    pub async fn serve(&self, stream: UnixStream, cancel: &CancellationToken) -> io::Result<()> {
+        let core = self.core.clone();
+        serve_stream(
+            stream,
+            &core.owner.clone(),
+            core.journal.clone(),
+            cancel,
+            async |request| {
+                self.tasks
+                    .blocking(&self.blocking, move || Ok(route_request(&core, request)))
+                    .await
+            },
+        )
+        .await
+    }
+    pub async fn finish(&self) -> io::Result<()> {
+        self.tasks.close_and_wait().await
+    }
+}
+fn route_request(core: &Core, request: Request) -> Response {
+    if let Some(request) = request.workspace {
+        Response::Workspace {
+            owner: core.owner.clone(),
+            result: core.workspace_request(request),
         }
-    })?;
-    write_timed_frame(reader.get_mut(), &response)
+    } else if let Some(request) = request.repository {
+        Response::Repository {
+            owner: core.owner.clone(),
+            result: core.repository_request(request),
+        }
+    } else {
+        Response::Snapshot {
+            snapshot: core.snapshot(request.after),
+        }
+    }
+}
+async fn serve_stream<S: AsyncRead + AsyncWrite + Unpin + 'static>(
+    stream: S,
+    owner: &str,
+    journal: Arc<crate::observations::Journal>,
+    cancel: &CancellationToken,
+    route: impl AsyncFnOnce(Request) -> io::Result<Response>,
+) -> io::Result<()> {
+    let mut exchange = FramedExchange::new(stream);
+    let request: Request = read_json(&mut exchange, Instant::now() + IO_TIMEOUT, cancel).await?;
+    if let Some(rejection) = reject_request(&request, owner)? {
+        return write_json(
+            &mut exchange,
+            &rejection,
+            Instant::now() + IO_TIMEOUT,
+            cancel,
+        )
+        .await;
+    }
+    let mut request = request;
+    if let Some(subscribe) = request.subscribe.take() {
+        return subscription::serve(owner, &journal, subscribe, &mut exchange, cancel).await;
+    }
+    // No cancellation race drops a started blocking dispatch; its owner joins it.
+    let response = route(request).await?;
+    write_json(
+        &mut exchange,
+        &response,
+        Instant::now() + IO_TIMEOUT,
+        cancel,
+    )
+    .await
 }
 
 // The gate owns authorization; a controlled route records whether domain dispatch occurred.
-fn dispatch_request(
-    request: Request,
-    owner: &str,
-    route: impl FnOnce(Request) -> Response,
-) -> io::Result<Response> {
+fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>> {
     if request.protocol != PROTOCOL_VERSION
         || request.application_version != env!("CARGO_PKG_VERSION")
     {
-        return Ok(Response::Incompatible {
+        return Ok(Some(Response::Incompatible {
             message: format!(
                 "Incompatible desktop/supervisor versions (client protocol {} / app {}, supervisor protocol {} / app {}). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening.",
                 request.protocol,
@@ -895,7 +972,7 @@ fn dispatch_request(
                 PROTOCOL_VERSION,
                 env!("CARGO_PKG_VERSION")
             ),
-        });
+        }));
     }
     if usize::from(request.workspace.is_some())
         + usize::from(request.repository.is_some())
@@ -916,182 +993,53 @@ fn dispatch_request(
         ));
     }
     if targeted && request.expected_owner.as_deref() != Some(owner) {
-        return Ok(Response::Transport {
+        return Ok(Some(Response::Transport {
             error: transport_failure(
                 TransportCode::OwnerChanged,
                 Delivery::Rejected,
                 "The supervisor owner differs from the caller observation. Refresh status; this attempt was rejected before domain dispatch.",
             ),
-        });
+        }));
     }
-    Ok(route(request))
+    Ok(None)
 }
 
-trait FrameStream: Read + Write {
-    fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()>;
-    fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()>;
-    fn wait_readable(&self, timeout: Duration) -> io::Result<()>;
-}
-impl FrameStream for UnixStream {
-    fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
-        UnixStream::set_read_timeout(self, timeout)
-    }
-    fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
-        UnixStream::set_write_timeout(self, timeout)
-    }
-    fn wait_readable(&self, timeout: Duration) -> io::Result<()> {
-        // Changing SO_RCVTIMEO after peer close fails on macOS even while a
-        // complete reply remains buffered. Poll preserves the frame deadline
-        // without changing socket options between fragments.
-        let milliseconds = i32::try_from(
-            timeout.as_millis() + u128::from(!timeout.subsec_nanos().is_multiple_of(1_000_000)),
-        )
-        .map_err(|_| {
-            io::Error::new(
-                io::ErrorKind::InvalidInput,
-                "Frame timeout exceeds poll budget",
-            )
-        })?;
-        let mut descriptor = libc::pollfd {
-            fd: self.as_raw_fd(),
-            events: libc::POLLIN,
-            revents: 0,
-        };
-        // SAFETY: descriptor is initialized, points to one live pollfd, and
-        // the borrowed UnixStream owns its fd throughout this bounded call.
-        match unsafe { libc::poll(&mut descriptor, 1, milliseconds) } {
-            -1 => Err(io::Error::last_os_error()),
-            0 => Err(io::Error::new(
-                io::ErrorKind::TimedOut,
-                "Supervisor frame deadline exceeded",
-            )),
-            _ => Ok(()), // Read buffered bytes or obtain the socket's EOF/error.
-        }
-    }
-}
-
-fn configure(stream: &impl FrameStream) -> io::Result<()> {
-    stream.set_read_timeout(Some(IO_TIMEOUT))?;
-    stream.set_write_timeout(Some(IO_TIMEOUT))
-}
-
-fn read_frame_with_clock<T: DeserializeOwned>(
-    stream: &mut impl FrameStream,
-    mut now: impl FnMut() -> Instant,
-) -> io::Result<T> {
-    let mut reader = BufReader::new(stream);
-    read_buffered_frame_with_clock(&mut reader, IO_TIMEOUT, &mut now)
-}
-
-fn read_buffered_frame<T: DeserializeOwned, S: FrameStream>(
-    reader: &mut BufReader<S>,
-    idle: Duration,
-) -> io::Result<T> {
-    read_buffered_frame_with_clock(reader, idle, &mut Instant::now)
-}
-fn read_buffered_frame_with_clock<T: DeserializeOwned, S: FrameStream>(
-    reader: &mut BufReader<S>,
-    idle: Duration,
-    now: &mut impl FnMut() -> Instant,
-) -> io::Result<T> {
-    let mut deadline = now() + idle;
-    let mut started = idle == IO_TIMEOUT;
-    let mut frame = Vec::new();
-    loop {
-        let remaining = deadline
-            .checked_duration_since(now())
-            .filter(|remaining| !remaining.is_zero())
-            .ok_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::TimedOut,
-                    "Supervisor frame deadline exceeded",
-                )
-            })?;
-        if reader.buffer().is_empty() {
-            reader.get_ref().wait_readable(remaining)?;
-        }
-        let available = reader.fill_buf()?;
-        if available.is_empty() {
-            return Err(io::Error::new(
-                io::ErrorKind::UnexpectedEof,
-                "incomplete supervisor frame",
-            ));
-        }
-        if !started {
-            deadline = deadline.min(now() + IO_TIMEOUT);
-            started = true;
-        }
-        let length = available
-            .iter()
-            .position(|byte| *byte == b'\n')
-            .map_or(available.len(), |end| end + 1);
-        if frame.len() + length > MAX_FRAME_BYTES {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                "supervisor frame exceeds limit",
-            ));
-        }
-        let complete = available[length - 1] == b'\n';
-        frame.extend_from_slice(&available[..length]);
-        reader.consume(length);
-        if complete {
-            return serde_json::from_slice(&frame).map_err(io::Error::other);
-        }
-    }
-}
-// Borrowed streams preserve one reader across the subscription handshake and frames.
-impl<T: FrameStream> FrameStream for &mut T {
-    fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
-        (**self).set_read_timeout(timeout)
-    }
-    fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
-        (**self).set_write_timeout(timeout)
-    }
-    fn wait_readable(&self, timeout: Duration) -> io::Result<()> {
-        (**self).wait_readable(timeout)
-    }
-}
-fn write_timed_frame(stream: &mut impl FrameStream, value: &impl Serialize) -> io::Result<()> {
-    let frame = encode_frame(value)?;
-    let deadline = Instant::now() + IO_TIMEOUT;
-    let mut remaining = frame.as_slice();
-    while !remaining.is_empty() {
-        let budget = deadline
-            .checked_duration_since(Instant::now())
-            .filter(|budget| !budget.is_zero())
-            .ok_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::TimedOut,
-                    "Supervisor write deadline exceeded",
-                )
-            })?;
-        stream.set_write_timeout(Some(budget))?;
-        let written = stream.write(remaining)?;
-        if written == 0 {
-            return Err(io::Error::new(
-                io::ErrorKind::WriteZero,
-                "Supervisor frame write stopped",
-            ));
-        }
-        remaining = &remaining[written..];
-    }
-    Ok(())
-}
-
-fn encode_frame(value: &impl Serialize) -> io::Result<Vec<u8>> {
-    let mut frame = serde_json::to_vec(value)?;
-    frame.push(b'\n');
-    if frame.len() > MAX_FRAME_BYTES {
+fn encode_payload(value: &impl Serialize) -> io::Result<bytes::Bytes> {
+    let payload = serde_json::to_vec(value)?;
+    if payload.len() > framed_exchange::MAX_PAYLOAD {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
             "supervisor frame exceeds limit",
         ));
     }
-    Ok(frame)
+    Ok(payload.into())
 }
-
-fn write_frame(stream: &mut impl Write, value: &impl Serialize) -> io::Result<()> {
-    stream.write_all(&encode_frame(value)?)
+async fn read_json<T: DeserializeOwned, S: AsyncRead + AsyncWrite + Unpin + 'static>(
+    exchange: &mut FramedExchange<S>,
+    deadline: Instant,
+    cancel: &CancellationToken,
+) -> io::Result<T> {
+    let payload = exchange
+        .read_frame(deadline, cancel)
+        .await.map_err(|error| {
+            if error.kind() == io::ErrorKind::InvalidData {
+                io::Error::new(error.kind(), format!("Incompatible or malformed supervisor framing: {error}. Install matching desktop and supervisor builds."))
+            } else { error }
+        })?
+        .ok_or_else(|| {
+            io::Error::new(io::ErrorKind::UnexpectedEof, "Supervisor connection closed")
+        })?;
+    serde_json::from_slice(&payload).map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))
+}
+async fn write_json<S: AsyncRead + AsyncWrite + Unpin + 'static>(
+    exchange: &mut FramedExchange<S>,
+    value: &impl Serialize,
+    deadline: Instant,
+    cancel: &CancellationToken,
+) -> io::Result<()> {
+    exchange
+        .write_frame(encode_payload(value)?, deadline, cancel)
+        .await
 }
 
 #[cfg(test)]

@@ -1,0 +1,8 @@
+{
+  "path": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-b1a480319bfd89d6",
+  "sha256": "9b3fa6ab0e29acdc8cc96edaa92832b955d9b235781eed4be9f5da38e9a9ba6c",
+  "profile": "test unoptimized + debuginfo",
+  "features": ["codegen"],
+  "source": "source-manifest.json",
+  "staged_sidecar_required": false
+}

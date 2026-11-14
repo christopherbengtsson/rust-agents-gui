@@ -1,0 +1,5 @@
+PASS: reviewed/measured product hashes match working tree and index; retained v6/v7, F04c evidence and generated artifacts unchanged.
+PASS: measured Rust executable hash unchanged; obsolete synchronous mechanisms absent; four F04d acceptance items verified.
+PASS: staged scope is F04d product/ticket/evidence only; unrelated docs/IDEAS.md remains unstaged; no successor changes staged.
+PASS: whitespace audit excludes raw diagnostic logs; existing .githooks unchanged.
+Staged files: 60

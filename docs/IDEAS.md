@@ -1,6 +1,15 @@
 <!-- LLM's: Ignore this file unless told otherwise -->
 
-# feat
+# MVP scope ideas
+
+- Auto discovered local repos when user explicitly adding new repo
+- Auto discovered remote repos when user explicitly adding new repo (auto clone)
+
+# Improvements
+
+- tsconfig build: exclude stuff like test-support
+
+# Big future ideas
 
 - Possible to view feature branch as PR before publishing to Github for self review.
   - Basically, copy GitHub into our app. Then full PR workflow could be within our app
@@ -14,7 +23,3 @@ Large vision:
 - Complete GitHub review drafting and publication.
 - Consistent manual and agent controls for the same operations.
 - Automation that connects these stages and exposes failures or decisions requiring attention.
-
-# Improvements
-
-- tsconfig build: exclude stuff like test-support

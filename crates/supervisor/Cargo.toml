@@ -7,6 +7,9 @@ license.workspace = true
 
 [dependencies]
 workspace-core.workspace = true
+tokio = { version = "=1.54.1", default-features = false, features = ["rt", "net", "time"] }
+tokio-util = { version = "=0.7.20", default-features = false, features = ["rt"] }
+futures-util = { version = "0.3.34", default-features = false, features = ["std"] }
 
 [dev-dependencies]
 tempfile = "3.27.0"

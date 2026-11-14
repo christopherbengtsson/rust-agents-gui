@@ -11,15 +11,7 @@ async fn repository_request(
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
 ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
     let admitted = connected(&connection)?.prepare_repository_request(expected_owner, request)?;
-    tauri::async_runtime::spawn_blocking(move || admitted.run())
-        .await
-        .map_err(|e| {
-            RequestFailure::transport(
-                TransportCode::ReplyUnavailable,
-                Delivery::Unknown,
-                format!("Repository request task failed: {e}. Refresh recorded action status."),
-            )
-        })?
+    admitted.run().await
 }
 
 #[tauri::command]
@@ -29,15 +21,7 @@ async fn workspace_request(
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
 ) -> Result<OwnedReply<workspace_core::workspaces::WorkspaceReply>, RequestFailure> {
     let admitted = connected(&connection)?.prepare_workspace_request(expected_owner, request)?;
-    tauri::async_runtime::spawn_blocking(move || admitted.run())
-        .await
-        .map_err(|e| {
-            RequestFailure::transport(
-                TransportCode::ReplyUnavailable,
-                Delivery::Unknown,
-                format!("Workspace request task failed: {e}. Refresh recorded action status."),
-            )
-        })?
+    admitted.run().await
 }
 
 fn connected(
@@ -81,23 +65,11 @@ async fn supervisor_status(
             .clone()
     };
     let admitted = client.prepare_snapshot()?;
-    tauri::async_runtime::spawn_blocking(move || {
-        admitted
-            .run()
-            .map_err(|e| repository_connection_error(e.to_string()))
-    })
-    .await
-    .map_err(|e| {
-        RequestFailure::transport(
-            TransportCode::ReplyUnavailable,
-            Delivery::Unknown,
-            format!("Status task failed: {e}"),
-        )
-    })?
+    admitted.run().await
 }
 
 #[tauri::command]
-fn observation_subscribe(
+async fn observation_subscribe(
     expected_owner: String,
     subscription_id: String,
     after: Option<workspace_core::observations::FeedCursor>,
@@ -130,9 +102,7 @@ async fn observation_stop(
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
 ) -> Result<(), RequestFailure> {
     let client = connected(&connection)?;
-    tauri::async_runtime::spawn_blocking(move || client.stop_subscription(&subscription_id))
-        .await
-        .map_err(|error| repository_connection_error(error.to_string()))?
+    client.stop_subscription(&subscription_id).await
 }
 
 #[tauri::command]
@@ -158,6 +128,6 @@ fn main() {
         .expect("failed to run desktop");
     // The event loop has finished; shutdown/join never blocks rendering.
     if let Ok(client) = connected(&connection) {
-        let _ = client.stop_observations();
+        let _ = tauri::async_runtime::block_on(client.stop_observations());
     }
 }

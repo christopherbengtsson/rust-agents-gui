@@ -1,0 +1,21 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0599]: no method named `wait_async` found for struct `observations::Journal` in the current scope
+   --> crates/core/src/observations.rs:278:38
+    |
+ 72 | pub struct Journal {
+    | ------------------ method `wait_async` not found for this struct
+...
+278 |             assert!(matches!(journal.wait_async(Some(1), Duration::from_secs(5), &cancel).await.unwrap(), Sample::Hints { watermark...
+    |                                      ^^^^^^^^^^ method not found in `observations::Journal`
+
+error[E0599]: no method named `wait_async` found for struct `observations::Journal` in the current scope
+   --> crates/core/src/observations.rs:280:32
+    |
+ 72 | pub struct Journal {
+    | ------------------ method `wait_async` not found for this struct
+...
+280 |             assert_eq!(journal.wait_async(Some(2), Duration::from_secs(5), &cancel).await.unwrap_err().kind(), io::ErrorKind::Inter...
+    |                                ^^^^^^^^^^ method not found in `observations::Journal`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `workspace-core` (lib test) due to 2 previous errors

@@ -177,7 +177,7 @@ test("dirty target retention collapses to a full marker instead of growing", () 
   expect(dirty.targets).toEqual([]);
 });
 
-import corpus from "../contracts/observations-v7.json";
+import corpus from "../contracts/observations-v8.json";
 test("the shared protocol corpus passes production feed decoding", () => {
   let previous = 0;
   for (const value of corpus.feed) {

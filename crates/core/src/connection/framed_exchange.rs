@@ -1,4 +1,4 @@
-//! Private length-prefixed kernel. Production remains protocol 7 until F04d.
+//! Shared private protocol-8 framing for requests and subscriptions.
 use bytes::{Bytes, BytesMut};
 use futures_core::Stream;
 use futures_sink::Sink;
@@ -16,7 +16,7 @@ use tokio::{
 use tokio_util::codec::{Decoder, Encoder, LengthDelimitedCodec};
 use tokio_util::{codec::Framed, sync::CancellationToken};
 
-const MAX_PAYLOAD: usize = 65_532;
+pub(super) const MAX_PAYLOAD: usize = 65_532;
 
 struct StrictCodec {
     inner: LengthDelimitedCodec,

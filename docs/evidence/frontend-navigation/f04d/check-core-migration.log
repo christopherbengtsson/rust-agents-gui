@@ -1,0 +1,23 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: method `snapshot_with` is never used
+   --> crates/core/src/connection.rs:260:14
+    |
+170 | impl SupervisorConnection {
+    | ------------------------- method in this implementation
+...
+260 |     async fn snapshot_with(&self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
+    |              ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `wait` is never used
+   --> crates/core/src/observations.rs:184:19
+    |
+ 89 | impl Journal {
+    | ------------ method in this implementation
+...
+184 |     pub(crate) fn wait(&self, after: Option<u64>, timeout: Duration) -> io::Result<Sample> {
+    |                   ^^^^
+
+warning: `workspace-core` (lib) generated 2 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.91s

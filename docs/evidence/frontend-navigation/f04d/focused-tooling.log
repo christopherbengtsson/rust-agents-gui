@@ -1,0 +1,16 @@
+✔ dev state is persistent, canonical-worktree and compatibility specific (1.08325ms)
+✔ an explicit state override is honored exactly and stale supervisor overrides are replaced (0.157416ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.299834ms)
+✔ debug staging records the dev profile and a clean source tree (0.121417ms)
+✔ rejects missing executable without touching staged resources (0.211208ms)
+✔ rejects test executable without touching staged resources (0.462166ms)
+✔ rejects ambiguous executables without touching staged resources (0.066125ms)
+✔ a failed build cannot stage a previously available executable (0.05775ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.860167

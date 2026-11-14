@@ -1,0 +1,39 @@
+{
+  "baseline": "2b9f12879b57e06d82bd3da075540ca9ca0ae0a5",
+  "files": {
+    "Cargo.lock": "d68cc47a6c9e060d12176149ee1a1bb41b77cd0a9230edaa26e5ed430caa8f2a",
+    "contracts/README.md": "0636f7c2fc097ac2cedaaf6682a17efb0e0fa3c17f3eec522e2db6072a94fb69",
+    "contracts/observations-v8.json": "c18a0c77da87822d9b94652d92c7cc00e2d5ea1ef9ee970e4f938e6aa2e0bd6d",
+    "crates/core/Cargo.toml": "06664b568dc68dd8cb65245834cda39cc16e3eda68b5848d6311c2c456ec4a4f",
+    "crates/core/src/connection.rs": "71a44cd617f83fd51308e5ac183f853ed50864d27e0cf0eeff9bcafa45d875b6",
+    "crates/core/src/connection/admission.rs": "8601765f6dad7233364e189f226b2a1b69127768d54ab3a2c5bd6de7df322707",
+    "crates/core/src/connection/framed_exchange.rs": "423e19109d82af6bf08a66aa3b84c14d8b2222e4ab08d9bade1a07e8cf719404",
+    "crates/core/src/connection/subscription.rs": "7ba151ba53777cc27d76e44c04433aedfec1f92b3b1ff4037c82bd39d87861a0",
+    "crates/core/src/connection/subscription/tests.rs": "f0e5728be26a88a2a3bff0f372ab374b799c0e3a386727f27b2506b923e74373",
+    "crates/core/src/connection/tasks.rs": "6bc1739f3a18cb65738da6bad1c85a14e199316f347f311e76fa6517ee1e1275",
+    "crates/core/src/connection/tests.rs": "caf45603f2ce1987a57a76f07dd70079ed7d03ac0ab436df576dc4fb22f251aa",
+    "crates/core/src/connection/tests/support.rs": "e4e0959f1a9b21209b9391f740b8b793439b4ce2e15d9f32fcd90f17bcf14f3c",
+    "crates/core/src/observations.rs": "1a70c40c5602f7bb6e3db15c82d4022431a8223f0b602a4292e42835cbb3638a",
+    "crates/supervisor/Cargo.toml": "278c635eb1155f80c76b3ebb734371dc30d44209b00205344cd023e94b527b73",
+    "crates/supervisor/src/main.rs": "dc0baa43b37a61410e1603fd93b056cd35d5488e1b675b8a05eae45c132ab473",
+    "crates/supervisor/tests/discovery.rs": "60752b0669502a4578275a7cf8fbb68511335041d6b5d91517cb3cf02bec95b3",
+    "crates/supervisor/tests/startup.rs": "d7ff085841fc5f4805c5eaa7747aa7cd0154b5c3ade3f6b3c5a6ecb7c608404f",
+    "scripts/development-state.test.mjs": "d2f782caaa768c45f560d71d60292c85782de89190e622f754daacca16e4a234",
+    "src-tauri/src/main.rs": "106ff4a13c04c875ea684b4c2e696ac76aecf1723ff2e44fcd65436150626440",
+    "src/generated-contracts.test.tsx": "67310354ce1f8c13840ee7f611b5ff424b52a516444e1ee9bc0313a3f233d263",
+    "src/generated/contracts/manifest.json": "9daf0bd84050469114eef2f00d3a9c0a54544aa3357b1f76e0fad30f7adb0679",
+    "src/observation-contracts.test.tsx": "8f8d0b27854dcf6dda69010f0235e865597e33c65475d8f4e55bdfdf254d8fcf",
+    "src/observation-feed-bridge.test.tsx": "e4342aa2a7a0cd0dd16f442e0de244a6dc3c2c6b9586621078c0394849a89d8d",
+    "src/observation-feed.test.tsx": "3f93d7f6254c01f9adeba761ce15499679f1994f2bffdc2fd526abe1789fdb1a"
+  },
+  "retained": {
+    "contracts/observations-v6.json": "8d288e8fb94925c9231002128da226ed10630e48c83f6f918397f8c6f7d85cf3",
+    "contracts/observations-v7.json": "af6f197f24a78c0938b7b80235f8487a15d751a7348bcf8c5a53b3b00006d9e2"
+  },
+  "unchanged_generated_artifacts": {
+    "src/generated/contracts/schemas.json": "7d3612154ecbb522a94c1402bab3c4315ed6adce8d8c504b4cfc06b5f923f0bd",
+    "src/generated/contracts/types.ts": "d86dcdc4f99002f72d0509dd9745054156d5864a051f542b4e931f04d7fca611",
+    "src/generated/contracts/validators.d.ts": "4ab1d6f020db28995641be77613925a09dbfdb1002d8b1509ffe2ac92342ab34",
+    "src/generated/contracts/validators.js": "ec400f091c5d783b8f9e1c7080b6d0b07d583d45c16c0d151e32819627eeceb4"
+  }
+}

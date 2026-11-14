@@ -60,10 +60,10 @@ predecessor's new module rather than duplicating framing in client and feed.
 
 ## Acceptance
 
-- [ ] Both peers and feed use the shared protocol-8 module; obsolete synchronous transport mechanics are removed.
-- [ ] Explicit runtime/task ownership and bounded blocking dispatch preserve owner/delivery/publication guarantees.
-- [ ] Relevant configured static/unit/corpus/tooling gates and measurements pass with replacement coverage mapped.
-- [ ] Evidence separates controlled results from actual qualification still required in F04g.
+- [x] Both peers and feed use the shared protocol-8 module; obsolete synchronous transport mechanics are removed.
+- [x] Explicit runtime/task ownership and bounded blocking dispatch preserve owner/delivery/publication guarantees.
+- [x] Relevant configured static/unit/corpus/tooling gates and measurements pass with replacement coverage mapped.
+- [x] Evidence separates controlled results from actual qualification still required in F04g.
 
 Frontend contracts stay compatible with F04b; no provider or storage migration.
 Full owned Quit remains later milestone work.
@@ -75,3 +75,32 @@ Full owned Quit remains later milestone work.
 Published after the user approved library refactors and all four deepening
 opportunities. Acceptance remains unchecked until this ticket's implementation
 and verification produce linked evidence. No provider submissions are authorized.
+
+
+### 2026-11-14 — F04d implementation complete
+
+Confirmed F04c checked acceptance and linked evidence at `2b9f128`; continued
+`feature/m01-frontend-navigation` from its current tip with an initially clean
+working tree/index. Preserved prior evidence and v6/v7 corpora. An unrelated
+`docs/IDEAS.md` edit appeared during the session and remains unstaged and preserved.
+
+Migrated client/status/discovery, server handlers and feed together to protocol 8
+through F04c's shared framing kernel. Supervisor continuously drives one
+current-thread Tokio runtime; Tauri uses its existing runtime. Nonwaiting lanes,
+owned async/blocking task completion, cancellable/awaited exact-ID feed cleanup
+and async journal notification preserve physical admission, owner/delivery and
+publication/resync guarantees. Removed obsolete synchronous transport mechanics.
+Frontend generated wire shapes remain compatible with F04b.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f04d.md) records source
+hashes, versions/features, replacement coverage, red/green regressions, failures,
+review and qualification limits. Final `corepack pnpm verify` passed: preparation/
+static checks and **158 Rust + 40 tooling + 126 frontend** units. Required warm
+measurements passed. Independent review: **Standards 0 / Spec 0 findings**.
+Only generated manifest provenance changed; declarations/schemas/validators remain
+byte-identical. The containing commit owns this ticket's changes and evidence.
+
+Actual sockets/process, fixture desktop, packaging, hosted CI and native-provider
+qualification were not run; these remain F04g/later qualification. No provider
+submissions occurred. F04e and all successors, the foundation and whole milestone
+remain open. Stop after F04d.

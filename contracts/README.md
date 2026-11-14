@@ -74,3 +74,19 @@ Protocol remains **7**. No native framing/admission/controller, provider adapter
 storage or routing migration is part of F04b. The v6/v7 corpus provenance above
 remains unchanged; generated-validator success does not qualify actual desktop,
 socket or native-provider behavior.
+
+## F04d protocol 8
+
+`observations-v8.json` is the synthetic application corpus for application version
+0.1.0 and the F04d protocol-8 schema/source in the containing commit. It retains
+the F04b frontend wire shapes. Current serializer/validator/decoder checks select
+v8; v6 and v7 remain unchanged as historical evidence. No corpus is captured
+provider traffic.
+
+Native protocol 8 uses the shared length-delimited codec: a four-byte big-endian
+u32 length and at most 65,532 payload bytes (65,536 including the prefix).
+Controlled stream tests qualify the framing separately from these JSON literals.
+Version/owner checks precede domain dispatch; malformed/legacy framing closes
+without dispatch or format fallback. Desktop failures stay visible and cannot
+authorize replacement of an established supervisor or replay of an action.
+Actual socket/process/desktop qualification remains F04g.

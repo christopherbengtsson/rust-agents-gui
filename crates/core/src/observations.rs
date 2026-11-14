@@ -1,12 +1,7 @@
 //! Bounded invalidation hints, independent of separately read feature records.
 use crate::workspaces::{ActionId, RepositoryId, WorkspaceId};
 use serde::{Deserialize, Serialize};
-use std::{
-    collections::VecDeque,
-    io,
-    sync::{Condvar, Mutex},
-    time::Duration,
-};
+use std::{collections::VecDeque, io, sync::Mutex, time::Duration};
 
 pub const JOURNAL_ENTRIES: usize = 256;
 pub const ENTRY_TAGS: usize = 8;
@@ -71,7 +66,7 @@ struct State {
 }
 pub struct Journal {
     state: Mutex<State>,
-    changed: Condvar,
+    async_changed: tokio::sync::Notify,
 }
 impl Default for Journal {
     fn default() -> Self {
@@ -80,7 +75,7 @@ impl Default for Journal {
                 sequence: 1,
                 entries: VecDeque::new(),
             }),
-            changed: Condvar::new(),
+            async_changed: tokio::sync::Notify::new(),
         }
     }
 }
@@ -107,7 +102,7 @@ impl Journal {
         state.entries.push_back(Entry { sequence, targets });
     }
     pub(crate) fn wake(&self) {
-        self.changed.notify_all();
+        self.async_changed.notify_waiters();
     }
     pub fn sample(&self, after: Option<u64>) -> Sample {
         Self::sample_state(&self.state.lock().expect("journal lock poisoned"), after)
@@ -150,24 +145,44 @@ impl Journal {
             sample
         }
     }
-    /// Predicate and wait share one mutex: publication between sample and wait is observed.
-    pub(crate) fn wait(&self, after: Option<u64>, timeout: Duration) -> io::Result<Sample> {
-        let state = self
-            .state
-            .lock()
-            .map_err(|e| io::Error::other(e.to_string()))?;
-        let (state, _) = self
-            .changed
-            .wait_timeout_while(state, timeout, |state| {
-                after == Some(state.sequence) && state.sequence != MAX_SEQUENCE
-            })
-            .map_err(|e| io::Error::other(e.to_string()))?;
-        if state.sequence == MAX_SEQUENCE {
-            return Err(io::Error::other(
-                "Observation sequence exhausted; reconnect to a new supervisor owner",
-            ));
+    pub(crate) async fn wait_async(
+        &self,
+        after: Option<u64>,
+        timeout: Duration,
+        cancel: &tokio_util::sync::CancellationToken,
+    ) -> io::Result<Sample> {
+        let deadline = tokio::time::Instant::now() + timeout;
+        loop {
+            // Register before inspecting the predicate, including resync/exhaustion.
+            let notified = self.async_changed.notified();
+            tokio::pin!(notified);
+            notified.as_mut().enable();
+            if cancel.is_cancelled() {
+                return Err(io::ErrorKind::Interrupted.into());
+            }
+            {
+                let state = self
+                    .state
+                    .lock()
+                    .map_err(|e| io::Error::other(e.to_string()))?;
+                if state.sequence == MAX_SEQUENCE {
+                    return Err(io::Error::other(
+                        "Observation sequence exhausted; reconnect to a new supervisor owner",
+                    ));
+                }
+                if after != Some(state.sequence) || tokio::time::Instant::now() >= deadline {
+                    return Ok(Self::sample_state(&state, after));
+                }
+            }
+            match cancel
+                .run_until_cancelled(tokio::time::timeout_at(deadline, notified))
+                .await
+            {
+                None => return Err(io::ErrorKind::Interrupted.into()),
+                Some(Ok(())) => {}
+                Some(Err(_)) => continue,
+            }
         }
-        Ok(Self::sample_state(&state, after))
     }
 }
 
@@ -256,17 +271,59 @@ mod bounds_tests {
     }
     #[test]
     fn publication_before_wait_cannot_be_lost_and_idle_does_not_advance_cursor() {
-        let journal = Journal::default();
-        assert_eq!(
-            journal.wait(Some(1), Duration::ZERO).unwrap(),
-            Sample::Heartbeat { watermark: 1 }
-        );
-        journal.publish(vec![Target::Repositories]);
-        journal.wake();
-        assert!(matches!(
-            journal.wait(Some(1), Duration::ZERO).unwrap(),
-            Sample::Hints { watermark: 2, .. }
-        ));
+        tokio::runtime::Builder::new_current_thread()
+            .enable_time()
+            .build()
+            .unwrap()
+            .block_on(async {
+                let cancel = tokio_util::sync::CancellationToken::new();
+                let journal = Journal::default();
+                assert_eq!(
+                    journal
+                        .wait_async(Some(1), Duration::ZERO, &cancel)
+                        .await
+                        .unwrap(),
+                    Sample::Heartbeat { watermark: 1 }
+                );
+                journal.publish(vec![Target::Repositories]);
+                journal.wake();
+                assert!(matches!(
+                    journal
+                        .wait_async(Some(1), Duration::ZERO, &cancel)
+                        .await
+                        .unwrap(),
+                    Sample::Hints { watermark: 2, .. }
+                ));
+            });
+    }
+    #[test]
+    fn async_wait_observes_publication_before_wait_and_cancels_idle() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_time()
+            .build()
+            .unwrap()
+            .block_on(async {
+                let journal = Journal::default();
+                let cancel = tokio_util::sync::CancellationToken::new();
+                journal.publish(vec![Target::Repositories]);
+                journal.wake();
+                assert!(matches!(
+                    journal
+                        .wait_async(Some(1), Duration::from_secs(5), &cancel)
+                        .await
+                        .unwrap(),
+                    Sample::Hints { watermark: 2, .. }
+                ));
+                cancel.cancel();
+                assert_eq!(
+                    journal
+                        .wait_async(Some(2), Duration::from_secs(5), &cancel)
+                        .await
+                        .unwrap_err()
+                        .kind(),
+                    io::ErrorKind::Interrupted
+                );
+            });
     }
     #[test]
     fn exhausted_sequence_never_aliases_an_accepted_cursor() {

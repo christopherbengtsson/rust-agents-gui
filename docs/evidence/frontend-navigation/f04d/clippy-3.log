@@ -1,0 +1,70 @@
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Checking workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Checking tauri-plugin-dialog v2.8.4
+error: expected one of `->`, `where`, or `{`, found `.`
+  --> crates/supervisor/tests/discovery.rs:30:74
+   |
+30 | fn concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot().await { run(async { 
+   |                                                                          ^ expected one of `->`, `where`, or `{`
+
+error: could not compile `workspace-supervisor` (test "discovery") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
