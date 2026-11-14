@@ -265,6 +265,7 @@ fn state(store: Store) -> Mutex<OwnerState> {
         probes: VecDeque::new(),
         fault: None,
         revision: 1,
+        journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
         workspace_faults: BTreeMap::new(),
     })
@@ -300,6 +301,7 @@ fn inspection_requests_admit_only_the_exact_ready_workspace_without_writes() {
             .code,
         ErrorCode::NotFound
     );
+    let before = service.journal().watermark();
     let WorkspaceReply::Changes { observation } =
         service.workspace_request(request(workspace.id)).unwrap()
     else {
@@ -307,6 +309,15 @@ fn inspection_requests_admit_only_the_exact_ready_workspace_without_writes() {
     };
     assert_eq!(observation.workspace_id, workspace.id);
     assert_eq!(observation.phase, InspectionPhase::Queued);
+    assert_eq!(
+        service.journal().sample(Some(before)),
+        crate::observations::Sample::Hints {
+            watermark: before + 1,
+            targets: vec![crate::observations::Target::Inspection {
+                workspace_id: workspace.id
+            }]
+        }
+    );
     assert!(observation.page.is_none());
     assert_eq!(
         service
@@ -1092,9 +1103,17 @@ fn creation_keeps_pending_observations_readable_during_every_effect() {
     struct Reading<'a> {
         service: &'a Workspaces,
         artifacts: Artifacts,
+        last_cursor: std::cell::Cell<u64>,
     }
     impl Reading<'_> {
         fn status(&self, w: &Workspace, stage: CreationStage) {
+            let journal = self.service.journal();
+            let cursor = journal.watermark();
+            assert!(
+                cursor > self.last_cursor.get(),
+                "each effect stage must publish before the effect"
+            );
+            self.last_cursor.set(cursor);
             let WorkspaceReply::Workspace {
                 workspace: Some(observed),
             } = self
@@ -1148,6 +1167,7 @@ fn creation_keeps_pending_observations_readable_during_every_effect() {
     }
     let mut effects = Reading {
         service: &service,
+        last_cursor: std::cell::Cell::new(service.journal().watermark()),
         artifacts: Artifacts {
             branch: BranchArtifact::Absent,
             folder: FolderArtifact::Absent,
@@ -1305,4 +1325,143 @@ fn eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission() 
     )
     .unwrap();
     assert_eq!(recovered.status, CreationStatus::Queued);
+}
+
+#[test]
+fn admissions_and_ambiguous_failures_publish_without_claiming_action_success() {
+    use crate::observations::{Sample, Target};
+    let req = request();
+    let service = Workspaces {
+        shared: Arc::new(state(Store {
+            fail_intent: true,
+            ..Store::default()
+        })),
+        wake: None,
+        worker: None,
+    };
+    let journal = service.journal();
+    let before = journal.watermark();
+    assert!(service.register(req.clone()).is_err());
+    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
+        panic!()
+    };
+    assert!(targets.contains(&Target::Registration {
+        action_id: req.action_id
+    }));
+    assert!(targets.contains(&Target::Repositories));
+    let before = journal.watermark();
+    assert!(
+        service
+            .workspace_request(WorkspaceRequest::Create {
+                action_id: req.action_id,
+                repository_id: RepositoryId(Uuid::nil())
+            })
+            .is_err()
+    );
+    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
+        panic!()
+    };
+    assert!(targets.contains(&Target::WorkspaceAction {
+        action_id: req.action_id
+    }));
+    assert!(targets.contains(&Target::Workspaces {
+        repository_id: Some(RepositoryId(Uuid::nil()))
+    }));
+}
+#[test]
+fn registration_completion_and_availability_publish_targeted_hints_after_owner_unlock() {
+    use crate::observations::{Sample, Target};
+    let mut store = Store::default();
+    let req = request();
+    admit(&mut store, &req).unwrap();
+    let service = Workspaces {
+        shared: Arc::new(state(store)),
+        wake: None,
+        worker: None,
+    };
+    let journal = service.journal();
+    let before = journal.watermark();
+    assert!(process_one(&service.shared, |_| {
+        assert!(service.shared.try_lock().is_ok());
+        validation("/repo", "/repo/.git")
+    }));
+    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
+        panic!()
+    };
+    assert!(targets.contains(&Target::Registration {
+        action_id: req.action_id
+    }));
+    let id = targets
+        .iter()
+        .find_map(|target| match target {
+            Target::Repository { repository_id } => Some(*repository_id),
+            _ => None,
+        })
+        .unwrap();
+    let before = journal.watermark();
+    service.repository(id, false).unwrap();
+    assert!(matches!(journal.sample(Some(before)), Sample::Hints { .. }));
+    let before = journal.watermark();
+    assert!(process_one(&service.shared, |_| Err(
+        RepositoryError::storage("controlled probe failure")
+    )));
+    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
+        panic!()
+    };
+    assert!(targets.contains(&Target::Repository { repository_id: id }));
+}
+#[test]
+fn failed_creation_publishes_active_admission_write_attempt_and_fault_overlay() {
+    use crate::observations::{Sample, Target};
+    let repository = RepositoryRecord {
+        id: RepositoryId(Uuid::from_u128(1)),
+        name: "repo".into(),
+        path: "/repo".into(),
+        common_dir: "/repo/.git".into(),
+    };
+    let mut store = Store::default();
+    store.repositories.insert(repository.id, repository.clone());
+    let workspace = admit_workspace(
+        &mut store,
+        Path::new("/state"),
+        &WorkspaceAction::Create {
+            action_id: ActionId(Uuid::from_u128(2)),
+            repository_id: repository.id,
+        },
+        None,
+    )
+    .unwrap();
+    store.fail_workspace_stage_once = Some((workspace.id, CreationStage::AllocatingName));
+    let service = Workspaces {
+        shared: Arc::new(state(store)),
+        wake: None,
+        worker: None,
+    };
+    let journal = service.journal();
+    let before = journal.watermark();
+    assert!(!process_creation(
+        &service.shared,
+        &mut CreationProbe::default()
+    ));
+    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
+        panic!()
+    };
+    assert!(targets.contains(&Target::Workspace {
+        workspace_id: workspace.id
+    }));
+    assert!(targets.contains(&Target::Workspaces {
+        repository_id: Some(repository.id)
+    }));
+    assert!(
+        service
+            .shared
+            .lock()
+            .unwrap()
+            .workspace_faults
+            .contains_key(&workspace.id)
+    );
+    assert!(
+        journal.watermark() >= before + 3,
+        "active admission, write attempt and fault overlay each publish"
+    );
 }

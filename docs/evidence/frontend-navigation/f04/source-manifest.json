@@ -1,0 +1,109 @@
+{
+  "base_revision": "b7c9b8907f8f06e7cd43a17a9328c15e0f7ba61b",
+  "branch": "feature/m01-frontend-navigation",
+  "final_source": "Containing F04 commit; source hashes are independent of evidence and commit identity.",
+  "source": [
+    {
+      "path": "contracts/README.md",
+      "sha256": "bcd99e8c488b0f3a0a1268a49546c9becfc2e1a4549a2322dc618a0d822a5bb0"
+    },
+    {
+      "path": "contracts/observations-v7.json",
+      "sha256": "af6f197f24a78c0938b7b80235f8487a15d751a7348bcf8c5a53b3b00006d9e2"
+    },
+    {
+      "path": "crates/core/src/connection.rs",
+      "sha256": "7d4c7b144d9aac9027b76a58cfa9ffe21b436db0b6ca945a16f3dea6da092d8a"
+    },
+    {
+      "path": "crates/core/src/connection/subscription.rs",
+      "sha256": "74ec7720bc05bece5bf3fa9cf423e4b56b1908f7781d31654e3506311cb86c8e"
+    },
+    {
+      "path": "crates/core/src/connection/tests.rs",
+      "sha256": "caad8678938c7d8b95e442cd6931b5a1bcb79e7e641d69527c20c3fac719e239"
+    },
+    {
+      "path": "crates/core/src/lib.rs",
+      "sha256": "7f4e08ba4b9dea17f26959f0dbe9973b89bd085859e8132e858ab5db9fe7a32e"
+    },
+    {
+      "path": "crates/core/src/observations.rs",
+      "sha256": "fbb0175f9bd8ab713e91809e65311e49a7380be48d228a182c06dac9f21a5774"
+    },
+    {
+      "path": "crates/core/src/workspaces.rs",
+      "sha256": "1ed9e2985aa9f6e6ac551d0ff596265960cc54b43b9c6f0930c2e8789c02afea"
+    },
+    {
+      "path": "crates/core/src/workspaces/creation.rs",
+      "sha256": "b722ef8717f48932eda61427a943de7d936f5a3fc381c2f239ab4f3c603a3c1d"
+    },
+    {
+      "path": "crates/core/src/workspaces/inspection.rs",
+      "sha256": "0aaa52abec6a81e13389e28a9003b4cd90f7c0096f2eb9c015c24296651975c9"
+    },
+    {
+      "path": "crates/core/src/workspaces/inspection/tests.rs",
+      "sha256": "83d315d89c1f052808c75fd95fefe49542ea5c17e1b1b5f59b015c93bae07cf7"
+    },
+    {
+      "path": "crates/core/src/workspaces/tests.rs",
+      "sha256": "8441658b6bba23f641c4531837bea765f5d73ef5c0d980f83aad06c67a8d6ef5"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "e0d7d02046bada4750c831d4ed43f01a14bc12b6bc9ed43027b5b05ef2bdfb5b"
+    },
+    {
+      "path": "src/App.test.tsx",
+      "sha256": "627aabd5861a34084b95d4cca3359c57d116e29b71e191356e0e2ad031100f5e"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "ace9bd7b3d5134091fb064d6d6ad8726f87747f84d14e7cae092147edcfebe18"
+    },
+    {
+      "path": "src/components/README.md",
+      "sha256": "658bc775c8a8c55cf5ba5814e240d8ff3bd2ac64072495c3953bd4969f76ba24"
+    },
+    {
+      "path": "src/components/blocks/supervisor-connection.tsx",
+      "sha256": "5ecbdf08a6930c4bbbdb38e09a948f37e0ed69cfac3eea9087851a959d765f9f"
+    },
+    {
+      "path": "src/hooks/use-observation-feed.ts",
+      "sha256": "a48a89c8438f4e8e725b9bcb77a7c62cbafa614a0fd584d94eadc3f10bb1104a"
+    },
+    {
+      "path": "src/hooks/use-supervisor-connection.ts",
+      "sha256": "21f40a37bde9836cd433de668fda9b8763da6f42c43dcd375a2c67f70f4f5431"
+    },
+    {
+      "path": "src/lib/observation-feed.ts",
+      "sha256": "e8290bd7b766cb17c0b04f7e060e49a81eacfb001c544fb2076a8696a70c48a4"
+    },
+    {
+      "path": "src/observation-contracts.test.tsx",
+      "sha256": "3dcdd5e0e6c62a02032d506042a5a2c94c8b9d5ec26ce03e7705f8d40fc54d4c"
+    },
+    {
+      "path": "src/observation-feed-bridge.test.tsx",
+      "sha256": "bc95756f706e863d077fba538de2b7993974bced2e24e43a8d455785b440d95d"
+    },
+    {
+      "path": "src/observation-feed.test.tsx",
+      "sha256": "8836c4857d1770fc2ed606a3dd7243a90f741be0e4735323a4af18ebbfb53bf3"
+    },
+    {
+      "path": "src/repositories.test.tsx",
+      "sha256": "2c50115ec1b50cdb31da7dce132974dfc4eb79c9f43b07571dd6c66eeef5ab10"
+    }
+  ],
+  "preserved_excluded": ["docs/IDEAS.md"],
+  "verification": {
+    "complete_gate": "corepack pnpm verify",
+    "unit_measurements": "corepack pnpm test:measure",
+    "bundle": "corepack pnpm exec vite build"
+  }
+}

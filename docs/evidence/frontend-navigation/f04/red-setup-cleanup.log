@@ -1,0 +1,25 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-feed.test.tsx (17 tests | 1 failed) 15ms
+   × failed registration requests cleanup of its possibly attached native subscription 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-feed.test.tsx > failed registration requests cleanup of its possibly attached native subscription
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/observation-feed.test.tsx:245:28
+    243|   s.feed.connect("owner-a"); await flush();
+    244|   expect(s.feed.getSnapshot().state).toBe("stopped");
+    245|   expect(s.transport.stop).toHaveBeenCalledTimes(1);
+       |                            ^
+    246|   s.feed.connect(undefined); await flush();
+    247| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  11:17:23
+   Duration  249ms (environment 81%, transform 8%, tests 7%, import 3%, worker 1%)

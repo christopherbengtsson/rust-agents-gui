@@ -1,0 +1,16 @@
+{
+  "node": "v26.13.1",
+  "pnpm": "12.18.0",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+  "hardware": "Apple M4 Pro\n12\n51539607552",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "base_revision": "b7c9b8907f8f06e7cd43a17a9328c15e0f7ba61b",
+  "target_dir": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+  "profile": "test / debug, warm worktree target; no private/fresh compilation claimed",
+  "rust_threads": 1,
+  "node_test_concurrency": 1,
+  "vitest_max_workers": 1
+}

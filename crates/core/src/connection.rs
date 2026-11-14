@@ -17,11 +17,13 @@ use std::{
     time::{Duration, Instant},
 };
 mod admission;
+mod subscription;
 pub use admission::{Admitted, ConnectionSlots};
+pub use subscription::{FeedAck, FeedBatch, FeedEvent};
 
 const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 6;
+pub const PROTOCOL_VERSION: u32 = 7;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -107,10 +109,15 @@ struct Request {
     repository: Option<RepositoryRequest>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     workspace: Option<crate::workspaces::WorkspaceRequest>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    subscribe: Option<subscription::Subscribe>,
 }
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
+    Feed {
+        batch: FeedBatch,
+    },
     Transport {
         error: TransportFailure,
     },
@@ -140,7 +147,8 @@ pub struct SupervisorConnection {
     intents: ConnectionSlots,
     status: ConnectionSlots,
     // F04 owns the subscription resource; its budget cannot borrow observation slots.
-    _subscription: ConnectionSlots,
+    subscription: ConnectionSlots,
+    feed: Arc<Mutex<Option<subscription::NativeSubscription>>>,
 }
 #[derive(Default)]
 struct ConnectionState {
@@ -156,7 +164,8 @@ impl SupervisorConnection {
             observations: ConnectionSlots::new(2),
             intents: ConnectionSlots::new(1),
             status: ConnectionSlots::new(1),
-            _subscription: ConnectionSlots::new(1),
+            subscription: ConnectionSlots::new(1),
+            feed: Arc::new(Mutex::new(None)),
         }
     }
 
@@ -368,6 +377,7 @@ impl SupervisorClient {
                 expected_owner: Some(expected_owner.into()),
                 repository: None,
                 workspace: Some(request.clone()),
+                subscribe: None,
             },
         )?;
         match response {
@@ -411,6 +421,7 @@ impl SupervisorClient {
                 expected_owner: Some(expected_owner.into()),
                 repository: Some(request.clone()),
                 workspace: None,
+                subscribe: None,
             },
         )?;
         match response {
@@ -467,6 +478,7 @@ impl SupervisorClient {
             &mut stream,
             &Request {
                 protocol,
+                subscribe: None,
                 application_version: application_version.into(),
                 after,
                 expected_owner: None,
@@ -482,7 +494,8 @@ impl SupervisorClient {
             Response::Incompatible { message } => {
                 Err(io::Error::new(io::ErrorKind::InvalidData, message))
             }
-            Response::Transport { .. }
+            Response::Feed { .. }
+            | Response::Transport { .. }
             | Response::Workspace { .. }
             | Response::Repository { .. } => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
@@ -819,7 +832,21 @@ pub fn serve_connection(core: &Core, mut stream: UnixStream) -> io::Result<()> {
 
 fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
     configure(stream)?;
-    let request: Request = read_frame(stream)?;
+    let mut reader = BufReader::new(stream);
+    let request: Request = read_buffered_frame(&mut reader, IO_TIMEOUT)?;
+    if request.subscribe.is_some() {
+        let mut accepted = None;
+        let response = dispatch_request(request, &core.owner, |mut request| {
+            accepted = request.subscribe.take();
+            Response::Snapshot {
+                snapshot: core.snapshot(None),
+            }
+        })?;
+        if let Some(subscribe) = accepted {
+            return subscription::serve(core, subscribe, &mut reader);
+        }
+        return write_timed_frame(reader.get_mut(), &response);
+    }
     let response = dispatch_request(request, &core.owner, |request| {
         if let Some(request) = request.workspace {
             Response::Workspace {
@@ -837,7 +864,7 @@ fn serve_stream(core: &Core, stream: &mut impl FrameStream) -> io::Result<()> {
             }
         }
     })?;
-    write_frame(stream, &response)
+    write_timed_frame(reader.get_mut(), &response)
 }
 
 // The gate owns authorization; a controlled route records whether domain dispatch occurred.
@@ -859,13 +886,18 @@ fn dispatch_request(
             ),
         });
     }
-    if request.workspace.is_some() && request.repository.is_some() {
+    if usize::from(request.workspace.is_some())
+        + usize::from(request.repository.is_some())
+        + usize::from(request.subscribe.is_some())
+        > 1
+    {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
             "Only one targeted request is permitted",
         ));
     }
-    let targeted = request.workspace.is_some() || request.repository.is_some();
+    let targeted =
+        request.workspace.is_some() || request.repository.is_some() || request.subscribe.is_some();
     if (targeted && request.after.is_some()) || (!targeted && request.expected_owner.is_some()) {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
@@ -932,18 +964,28 @@ fn configure(stream: &impl FrameStream) -> io::Result<()> {
     stream.set_write_timeout(Some(IO_TIMEOUT))
 }
 
-fn read_frame<T: DeserializeOwned>(stream: &mut impl FrameStream) -> io::Result<T> {
-    read_frame_with_clock(stream, Instant::now)
-}
-
 fn read_frame_with_clock<T: DeserializeOwned>(
     stream: &mut impl FrameStream,
     mut now: impl FnMut() -> Instant,
 ) -> io::Result<T> {
-    let deadline = now() + IO_TIMEOUT;
     let mut reader = BufReader::new(stream);
+    read_buffered_frame_with_clock(&mut reader, IO_TIMEOUT, &mut now)
+}
+
+fn read_buffered_frame<T: DeserializeOwned, S: FrameStream>(
+    reader: &mut BufReader<S>,
+    idle: Duration,
+) -> io::Result<T> {
+    read_buffered_frame_with_clock(reader, idle, &mut Instant::now)
+}
+fn read_buffered_frame_with_clock<T: DeserializeOwned, S: FrameStream>(
+    reader: &mut BufReader<S>,
+    idle: Duration,
+    now: &mut impl FnMut() -> Instant,
+) -> io::Result<T> {
+    let mut deadline = now() + idle;
+    let mut started = idle == IO_TIMEOUT;
     let mut frame = Vec::new();
-    // read_until alone would allow an unbounded peer-controlled allocation.
     loop {
         let remaining = deadline
             .checked_duration_since(now())
@@ -954,13 +996,19 @@ fn read_frame_with_clock<T: DeserializeOwned>(
                     "Supervisor frame deadline exceeded",
                 )
             })?;
-        reader.get_ref().wait_readable(remaining)?;
+        if reader.buffer().is_empty() {
+            reader.get_ref().wait_readable(remaining)?;
+        }
         let available = reader.fill_buf()?;
         if available.is_empty() {
             return Err(io::Error::new(
                 io::ErrorKind::UnexpectedEof,
                 "incomplete supervisor frame",
             ));
+        }
+        if !started {
+            deadline = deadline.min(now() + IO_TIMEOUT);
+            started = true;
         }
         let length = available
             .iter()
@@ -979,6 +1027,44 @@ fn read_frame_with_clock<T: DeserializeOwned>(
             return serde_json::from_slice(&frame).map_err(io::Error::other);
         }
     }
+}
+// Borrowed streams preserve one reader across the subscription handshake and frames.
+impl<T: FrameStream> FrameStream for &mut T {
+    fn set_read_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
+        (**self).set_read_timeout(timeout)
+    }
+    fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
+        (**self).set_write_timeout(timeout)
+    }
+    fn wait_readable(&self, timeout: Duration) -> io::Result<()> {
+        (**self).wait_readable(timeout)
+    }
+}
+fn write_timed_frame(stream: &mut impl FrameStream, value: &impl Serialize) -> io::Result<()> {
+    let frame = encode_frame(value)?;
+    let deadline = Instant::now() + IO_TIMEOUT;
+    let mut remaining = frame.as_slice();
+    while !remaining.is_empty() {
+        let budget = deadline
+            .checked_duration_since(Instant::now())
+            .filter(|budget| !budget.is_zero())
+            .ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "Supervisor write deadline exceeded",
+                )
+            })?;
+        stream.set_write_timeout(Some(budget))?;
+        let written = stream.write(remaining)?;
+        if written == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::WriteZero,
+                "Supervisor frame write stopped",
+            ));
+        }
+        remaining = &remaining[written..];
+    }
+    Ok(())
 }
 
 fn encode_frame(value: &impl Serialize) -> io::Result<Vec<u8>> {

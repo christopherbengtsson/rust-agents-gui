@@ -1,3 +1,4 @@
+import { useObservationFeed } from "@/hooks/use-observation-feed";
 import { useState } from "react";
 import { ObservationCoordinator } from "@/lib/observation-coordinator";
 import { RepositorySidebar } from "@/components/blocks/repository-sidebar";
@@ -10,6 +11,12 @@ import { useRepositories } from "@/hooks/use-repositories";
 export function App() {
   const [reads] = useState(() => new ObservationCoordinator());
   const { connection, refreshStatus } = useSupervisorConnection();
+  const feed = useObservationFeed(
+    connection.state === "connected"
+      ? connection.observation.snapshot.cursor.owner
+      : undefined,
+  );
+  const observedConnection = { ...connection, feed };
   const repositories = useRepositories(
     connection.state === "connected"
       ? connection.observation.snapshot.cursor.owner
@@ -31,13 +38,13 @@ export function App() {
         Skip to workspace
       </a>
       <RepositorySidebar
-        connection={connection}
+        connection={observedConnection}
         repositories={repositories}
         workspaces={workspaces}
       />
       <WorkspacePanel
         reads={reads}
-        connection={connection}
+        connection={observedConnection}
         workspaces={workspaces}
         repositories={repositories}
         onRefreshStatus={async () => {

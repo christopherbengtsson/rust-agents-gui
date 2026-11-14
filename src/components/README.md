@@ -244,3 +244,14 @@ is read-only. A refreshed comparison resets list paging to First; expired
 continuations are explicit errors, and a removed selection stays named until the
 user selects another file. Preview failures label retained content as stale even
 when the retained comparison ID has not changed.
+
+### F04 observation delivery
+
+`App` owns one acknowledged native feed through `useObservationFeed`, independently
+of feature reads. Its controller validates owner/subscription/batch/cursor and bounded
+typed hints, records bounded dirty state before acknowledgement, and reconnects from
+its accepted feed cursor. Full resync is a retained dirty marker for F05 to consume.
+Feed failures appear in the existing connection status/details and retain last-good
+feature observations. The controller serializes replacement after physical stop/join,
+including late registration and Strict Mode cleanup. No Query migration or polling
+removal is included in F04.

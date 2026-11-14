@@ -358,6 +358,7 @@ fn snapshot() -> SupervisorSnapshot {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     }
     .snapshot(None)
 }
@@ -626,6 +627,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
         owner: "owner-b".into(),
         pid: 43,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     }
     .snapshot(Some(before.cursor.clone()));
     let mut scenario = DiscoveryScenario::new(vec![
@@ -654,14 +656,14 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
     );
 }
 
-struct TransportScenario {
+pub(super) struct TransportScenario {
     input: Cursor<Vec<u8>>,
     chunk_size: usize,
     timeouts: RefCell<Vec<Duration>>,
     read_waits: RefCell<Vec<Duration>>,
     write_chunk_size: usize,
     fault: Option<TransportFault>,
-    trace: Rc<RefCell<TransportTrace>>,
+    pub(super) trace: Rc<RefCell<TransportTrace>>,
 }
 
 #[derive(Clone, Copy)]
@@ -675,15 +677,15 @@ enum TransportFault {
 }
 
 #[derive(Default)]
-struct TransportTrace {
-    output: Vec<u8>,
+pub(super) struct TransportTrace {
+    pub(super) output: Vec<u8>,
     reads: usize,
     writes: usize,
     drops: usize,
 }
 
 impl TransportScenario {
-    fn new(input: Vec<u8>) -> Self {
+    pub(super) fn new(input: Vec<u8>) -> Self {
         Self {
             input: Cursor::new(input),
             chunk_size: usize::MAX,
@@ -745,7 +747,7 @@ impl FrameStream for TransportScenario {
         Ok(())
     }
     fn set_write_timeout(&self, timeout: Option<Duration>) -> io::Result<()> {
-        assert_eq!(timeout, Some(IO_TIMEOUT));
+        assert!(timeout.is_some_and(|timeout| !timeout.is_zero() && timeout <= IO_TIMEOUT));
         if matches!(self.fault, Some(TransportFault::WriteTimeout)) {
             return Err(io::ErrorKind::Unsupported.into());
         }
@@ -760,6 +762,7 @@ impl Drop for TransportScenario {
 fn request(protocol: u32, version: &str, after: Option<SnapshotCursor>) -> Vec<u8> {
     let mut bytes = serde_json::to_vec(&Request {
         protocol,
+        subscribe: None,
         application_version: version.into(),
         after,
         expected_owner: None,
@@ -777,6 +780,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     };
     let mut stream = TransportScenario::new(request(
         PROTOCOL_VERSION,
@@ -795,7 +799,8 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers() {
     for (protocol, version) in [
         (4, env!("CARGO_PKG_VERSION")),
         (5, env!("CARGO_PKG_VERSION")),
-        (7, env!("CARGO_PKG_VERSION")),
+        (6, env!("CARGO_PKG_VERSION")),
+        (PROTOCOL_VERSION + 1, env!("CARGO_PKG_VERSION")),
         (999, env!("CARGO_PKG_VERSION")),
         (PROTOCOL_VERSION, "99.0.0"),
     ] {
@@ -817,6 +822,7 @@ fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     };
     let mut input = serde_json::to_vec(&Request {
         protocol: PROTOCOL_VERSION,
@@ -830,6 +836,7 @@ fn inspection_uses_the_existing_workspace_protocol_and_reports_owner_failure() {
             comparison_id: None,
             after: None,
         }),
+        subscribe: None,
     })
     .unwrap();
     input.push(b'\n');
@@ -850,6 +857,7 @@ fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navi
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     };
     let mut input = serde_json::to_vec(&Request {
         protocol: PROTOCOL_VERSION,
@@ -861,6 +869,7 @@ fn repository_protocol_returns_typed_storage_failure_without_claiming_empty_navi
             after: None,
             refresh: false,
         }),
+        subscribe: None,
     })
     .unwrap();
     input.push(b'\n');
@@ -959,6 +968,7 @@ fn oversized_incomplete_and_malformed_frames_are_rejected_without_output() {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     };
     for input in [
         vec![b'x'; MAX_FRAME_BYTES + 1],
@@ -1035,14 +1045,14 @@ struct ClientScenario {
     checks: VecDeque<io::Result<()>>,
     connect_error: Option<io::ErrorKind>,
     stream: Option<TransportScenario>,
-    trace: Rc<RefCell<TransportTrace>>,
+    pub(super) trace: Rc<RefCell<TransportTrace>>,
     calls: Vec<ClientCall>,
     time: Instant,
     times: VecDeque<Instant>,
 }
 
 impl ClientScenario {
-    fn new(input: Vec<u8>) -> Self {
+    pub(super) fn new(input: Vec<u8>) -> Self {
         let stream = TransportScenario::new(input);
         Self {
             checks: VecDeque::from([Ok(()), Ok(())]),
@@ -1309,6 +1319,7 @@ fn wrong_owner_rejects_every_target_before_domain_routing() {
         owner: "owner-b".into(),
         pid: 43,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     };
     for target in [
         serde_json::json!({"repository":{"operation":"register","request":{"action_id":"00000000-0000-0000-0000-000000000001","path":"/projects/one"}}}),
@@ -1392,7 +1403,7 @@ fn application_corpus_matches_pure_rust_serialization() {
     use crate::workspaces::*;
     use serde_json::{Value, json};
     let corpus: Value =
-        serde_json::from_str(include_str!("../../../../contracts/observations-v6.json")).unwrap();
+        serde_json::from_str(include_str!("../../../../contracts/observations-v7.json")).unwrap();
     let owner = "owner-a";
     let repository_id = RepositoryId(uuid::Uuid::from_u128(1));
     let action_id = ActionId(uuid::Uuid::from_u128(2));
@@ -1403,6 +1414,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         owner: owner.into(),
         pid: 41,
         workspaces: None,
+        journal: Arc::new(crate::observations::Journal::default()),
     };
     assert_eq!(corpus["protocol"], PROTOCOL_VERSION);
     assert_eq!(
@@ -1616,6 +1628,7 @@ fn targeted_exchange_reports_delivery_at_the_physical_io_boundary() {
             refresh: false,
         }),
         workspace: None,
+        subscribe: None,
     };
     for (fault, expected) in [
         (Some(TransportFault::ReadTimeout), Delivery::NotSent),
@@ -1693,4 +1706,81 @@ fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
             Some(first.cursor.clone())
         );
     }
+}
+
+#[test]
+fn subscription_owner_gate_and_target_exclusivity_precede_domain_dispatch() {
+    let targeted = |owner: &str| Request {
+        protocol: PROTOCOL_VERSION,
+        application_version: env!("CARGO_PKG_VERSION").into(),
+        after: None,
+        expected_owner: Some(owner.into()),
+        repository: None,
+        workspace: None,
+        subscribe: Some(subscription::Subscribe {
+            subscription_id: "feed-1".into(),
+            after: None,
+        }),
+    };
+    let response = dispatch_request(targeted("old-owner"), "owner-a", |_| {
+        panic!("wrong owner must not dispatch")
+    })
+    .unwrap();
+    assert!(matches!(
+        response,
+        Response::Transport {
+            error: TransportFailure {
+                code: TransportCode::OwnerChanged,
+                ..
+            }
+        }
+    ));
+    let mut mixed = targeted("owner-a");
+    mixed.repository = Some(RepositoryRequest::List {
+        after: None,
+        refresh: false,
+    });
+    assert!(
+        dispatch_request(mixed, "owner-a", |_| panic!(
+            "mixed request must not dispatch"
+        ))
+        .is_err()
+    );
+}
+#[test]
+fn persistent_framing_preserves_buffered_frames_and_separates_idle_from_transfer_deadlines() {
+    let stream = TransportScenario::new(b"1\n2\n".to_vec());
+    let trace = stream.trace.clone();
+    let mut reader = BufReader::new(stream);
+    assert_eq!(
+        read_buffered_frame::<u64, _>(&mut reader, Duration::from_secs(5)).unwrap(),
+        1
+    );
+    assert_eq!(
+        read_buffered_frame::<u64, _>(&mut reader, Duration::from_secs(5)).unwrap(),
+        2
+    );
+    assert_eq!(trace.borrow().reads, 1);
+    let mut stream = TransportScenario::new(b"{}\n".to_vec());
+    stream.chunk_size = 1;
+    let mut reader = BufReader::new(stream);
+    let start = Instant::now();
+    let mut times = VecDeque::from([
+        start,
+        start,
+        start + Duration::from_secs(4),
+        start + Duration::from_secs(5),
+        start + Duration::from_secs(7),
+    ]);
+    let error = read_buffered_frame_with_clock::<serde_json::Value, _>(
+        &mut reader,
+        Duration::from_secs(15),
+        &mut || times.pop_front().unwrap(),
+    )
+    .unwrap_err();
+    assert_eq!(error.kind(), io::ErrorKind::TimedOut);
+    assert_eq!(
+        *reader.get_ref().read_waits.borrow(),
+        [Duration::from_secs(15), Duration::from_secs(1)]
+    );
 }

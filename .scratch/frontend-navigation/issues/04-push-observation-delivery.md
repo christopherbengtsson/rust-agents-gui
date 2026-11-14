@@ -49,10 +49,10 @@ remains separate from controlled units.
 
 ## Acceptance
 
-- [ ] The journal and delivery enforce every parent-plan count/byte/time bound.
-- [ ] Repository/workspace progress is the first exercised workload through the native/Tauri subscription seam.
-- [ ] Snapshot/catch-up and stalled-consumer behavior preserve bounded work and visible uncertainty.
-- [ ] Controlled lifecycle/protocol/publication checks pass; new desktop qualification remains explicitly pending.
+- [x] The journal and delivery enforce every parent-plan count/byte/time bound.
+- [x] Repository/workspace progress is the first exercised workload through the native/Tauri subscription seam.
+- [x] Snapshot/catch-up and stalled-consumer behavior preserve bounded work and visible uncertainty.
+- [x] Controlled lifecycle/protocol/publication checks pass; new desktop qualification remains explicitly pending.
 
 ## Handoff boundary
 
@@ -70,3 +70,29 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+
+### 2026-11-14 — F04 implemented, reviewed and verified
+
+Confirmed F03's checked acceptance and dated evidence at
+`b7c9b8907f8f06e7cd43a17a9328c15e0f7ba61b`, continuing the existing feature branch.
+The supervisor now publishes typed invalidation hints to the bounded in-memory journal;
+protocol 7 supplies owner-bound catch-up, sampled resync, exact acknowledgements,
+persistent framing, independent deadlines and owned cancellation/cleanup. Tauri admits
+one native subscription and one frontend batch. The app records dirty state before
+acknowledgement and reconnects from its accepted feed cursor, independently of status.
+
+The user selected dirty-state acceptance as this ticket's frontend boundary. Existing
+feature reads and polling remain for F05. No Query/Zustand/routing migration or provider
+work is included. The unrelated `docs/IDEAS.md` edit remains preserved/excluded.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f04.md) records source identity,
+publication coverage, shared corpus/selected tests, failed attempts, independent
+Standards/Spec review and corrected cleanup findings. The complete gate passed
+140 Rust + 25 tooling + 119 frontend checks. Required measured runs and separate
+frontend bundling passed. Repository/workspace progress traversed the controlled
+subscription and mounted mocked-Tauri channel seam; no actual desktop result is claimed.
+
+Actual socket/process/fixture-desktop/accessibility/latency, packaging and native-provider
+qualification remain unperformed and separate. No provider submissions. Prior milestone
+evidence is preserved. F05 is next and remains unimplemented; stop after F04.

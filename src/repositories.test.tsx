@@ -25,7 +25,15 @@ import {
   type RepositoryReply,
 } from "./lib/repositories";
 
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(),
+  Channel: class {
+    onmessage: (value: unknown) => void;
+    constructor(receive: (value: unknown) => void) {
+      this.onmessage = receive;
+    }
+  },
+}));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: vi.fn() }));
 const id = "00000000-0000-4000-8000-000000000001";
 const repository: Repository = {

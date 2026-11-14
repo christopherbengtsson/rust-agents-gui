@@ -2,6 +2,7 @@
 
 pub mod connection;
 mod git;
+pub mod observations;
 mod storage;
 pub mod supervisor;
 pub mod workspaces;
@@ -39,6 +40,7 @@ pub struct Core {
     owner: String,
     pid: u32,
     workspaces: Option<workspaces::Workspaces>,
+    journal: std::sync::Arc<observations::Journal>,
 }
 
 impl Default for Core {
@@ -60,13 +62,16 @@ impl Core {
             ),
             pid: std::process::id(),
             workspaces: None,
+            journal: std::sync::Arc::new(observations::Journal::default()),
         }
     }
 
     /// Called only by the admitted supervisor owner, never by presentation clients.
     pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
+        let workspaces = workspaces::Workspaces::open(directory)?;
         Ok(Self {
-            workspaces: Some(workspaces::Workspaces::open(directory)?),
+            journal: workspaces.journal(),
+            workspaces: Some(workspaces),
             ..Self::new()
         })
     }
@@ -131,6 +136,7 @@ mod tests {
             owner: "test-owner".into(),
             pid: 42,
             workspaces: None,
+            journal: std::sync::Arc::new(observations::Journal::default()),
         }
     }
 

@@ -19,8 +19,11 @@ export function SupervisorConnection({
 }: {
   connection: Connection;
 }) {
-  const label =
-    connection.state === "connected"
+  const feedStopped =
+    connection.state === "connected" && connection.feed?.state === "stopped";
+  const label = feedStopped
+    ? "Observation delivery stopped"
+    : connection.state === "connected"
       ? "Connected"
       : connection.state === "checking"
         ? "Checking connection…"
@@ -31,7 +34,7 @@ export function SupervisorConnection({
         role="status"
         aria-live="polite"
         className="connection-state"
-        data-state={connection.state}
+        data-state={feedStopped ? "error" : connection.state}
       >
         <span className="status-dot" aria-hidden="true" />
         {label}
@@ -57,12 +60,21 @@ export function SupervisorConnection({
             </DialogDescription>
           </DialogHeader>
           <Badge
-            variant={connection.state === "error" ? "destructive" : "secondary"}
+            variant={
+              connection.state === "error" || feedStopped
+                ? "destructive"
+                : "secondary"
+            }
           >
             {label}
           </Badge>
           {connection.state === "error" && (
             <p className="error-detail">{connection.error}</p>
+          )}
+          {connection.feed?.state === "stopped" && (
+            <p className="error-detail" role="alert">
+              {connection.feed.message}
+            </p>
           )}
           {connection.observation ? (
             <ConnectionDetails

@@ -987,6 +987,12 @@ impl OwnerState {
 }
 impl Workspaces {
     pub fn workspace_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
+        let result = self.workspace_request_inner(request);
+        // A failed write may have committed. The owner wakes even on ambiguous admission.
+        self.notify();
+        result
+    }
+    fn workspace_request_inner(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
         if matches!(
             request,
             WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. }
@@ -994,6 +1000,38 @@ impl Workspaces {
             return self.inspection_request(request);
         }
         let mut state = self.state()?;
+        let invalidation = match &request {
+            WorkspaceRequest::Create {
+                action_id,
+                repository_id,
+            } => Some(vec![
+                crate::observations::Target::WorkspaceAction {
+                    action_id: *action_id,
+                },
+                crate::observations::Target::Workspaces {
+                    repository_id: Some(*repository_id),
+                },
+            ]),
+            WorkspaceRequest::Reconcile {
+                action_id,
+                workspace_id,
+            } => Some(vec![
+                crate::observations::Target::WorkspaceAction {
+                    action_id: *action_id,
+                },
+                crate::observations::Target::Workspace {
+                    workspace_id: *workspace_id,
+                },
+                crate::observations::Target::Workspaces {
+                    repository_id: None,
+                },
+            ]),
+            _ => None,
+        };
+        // Publish even if an admission/store call returns an ambiguous failure.
+        if let Some(targets) = invalidation {
+            state.publish(targets);
+        }
         let reply = match request {
             WorkspaceRequest::Create {
                 action_id,
@@ -1098,7 +1136,6 @@ impl Workspaces {
             }
         };
         drop(state);
-        self.notify();
         Ok(reply)
     }
 }
@@ -1108,7 +1145,7 @@ pub(super) fn process_creation(
     effects: &mut impl CreationEffects,
 ) -> bool {
     let work = (|| -> Result<Option<(Workspace, RepositoryRecord)>> {
-        let mut state = shared.lock().map_err(RepositoryError::storage)?;
+        let mut state = lock_state(shared)?;
         let mut after = None;
         let workspace = loop {
             let Some(workspace) = state.store()?.workspace_pending(after)? else {
@@ -1124,6 +1161,7 @@ pub(super) fn process_creation(
             .repository(workspace.repository_id)?
             .ok_or_else(|| RepositoryError::storage("Saved workspace repository is missing"))?;
         state.active_workspace = Some(workspace.id);
+        state.workspace_changed(workspace.id, workspace.repository_id);
         Ok(Some((workspace, repository)))
     })();
     let (workspace, repository) = match work {
@@ -1133,7 +1171,7 @@ pub(super) fn process_creation(
     let id = workspace.id;
     let result = (|| {
         let (directory, naming) = {
-            let mut state = shared.lock().map_err(RepositoryError::storage)?;
+            let mut state = lock_state(shared)?;
             let directory = state.directory.clone();
             (directory, state.store()?.naming(repository.id)?)
         };
@@ -1144,7 +1182,8 @@ pub(super) fn process_creation(
             naming,
             effects,
             |workspace, folder| {
-                let mut state = shared.lock().map_err(RepositoryError::storage)?;
+                let mut state = lock_state(shared)?;
+                state.workspace_changed(workspace.id, workspace.repository_id);
                 let store = state.store()?;
                 let saved = if let Some(folder) = folder {
                     store.reserve_name(workspace, folder)
@@ -1163,7 +1202,8 @@ pub(super) fn process_creation(
             return Ok(workspace);
         }
         drive(workspace, &repository, effects, |workspace| {
-            let mut state = shared.lock().map_err(RepositoryError::storage)?;
+            let mut state = lock_state(shared)?;
+            state.workspace_changed(workspace.id, workspace.repository_id);
             let store = state.store()?;
             if let Err(error) = store.save_workspace(workspace, None)
                 && store.workspace(workspace.id)?.as_ref() != Some(workspace)
@@ -1173,8 +1213,9 @@ pub(super) fn process_creation(
             state.change()
         })
     })();
-    if let Ok(mut state) = shared.lock() {
+    if let Ok(mut state) = lock_state(shared) {
         state.active_workspace = None;
+        state.workspace_changed(id, repository.id);
         if let Err(error) = result {
             state.workspace_faults.insert(id, error);
         } else {

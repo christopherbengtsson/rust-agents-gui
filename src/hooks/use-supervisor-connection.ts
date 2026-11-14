@@ -14,10 +14,14 @@ export type Observation = {
   desktopPid: number;
 };
 
-export type Connection =
+type ConnectionStatus =
   | { state: "checking"; observation?: Observation }
   | { state: "connected"; observation: Observation }
   | { state: "error"; error: string; observation?: Observation };
+
+export type Connection = ConnectionStatus & {
+  feed?: import("@/lib/observation-feed").FeedState;
+};
 
 // Convert IPC failures into outcomes before the Hook commits presentation state.
 async function readObservation(): Promise<

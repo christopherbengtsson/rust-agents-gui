@@ -97,22 +97,67 @@ async fn supervisor_status(
 }
 
 #[tauri::command]
+fn observation_subscribe(
+    expected_owner: String,
+    subscription_id: String,
+    after: Option<workspace_core::observations::FeedCursor>,
+    on_event: tauri::ipc::Channel<workspace_core::connection::FeedEvent>,
+    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+) -> Result<(), RequestFailure> {
+    connected(&connection)?.start_subscription(
+        expected_owner,
+        subscription_id,
+        after,
+        move |event| {
+            on_event
+                .send(event)
+                .map_err(|error| std::io::Error::other(error.to_string()))
+        },
+    )
+}
+
+#[tauri::command]
+fn observation_acknowledge(
+    acknowledgement: workspace_core::connection::FeedAck,
+    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+) -> Result<(), RequestFailure> {
+    connected(&connection)?.acknowledge_subscription(acknowledgement)
+}
+
+#[tauri::command]
+async fn observation_stop(
+    subscription_id: String,
+    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+) -> Result<(), RequestFailure> {
+    let client = connected(&connection)?;
+    tauri::async_runtime::spawn_blocking(move || client.stop_subscription(&subscription_id))
+        .await
+        .map_err(|error| repository_connection_error(error.to_string()))?
+}
+
+#[tauri::command]
 fn desktop_pid() -> u32 {
     std::process::id()
 }
 
 fn main() {
+    let connection = std::sync::Arc::new(Mutex::new(None::<SupervisorConnection>));
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .manage(std::sync::Arc::new(Mutex::new(
-            None::<SupervisorConnection>,
-        )))
+        .manage(connection.clone())
         .invoke_handler(tauri::generate_handler![
             supervisor_status,
             desktop_pid,
             repository_request,
-            workspace_request
+            workspace_request,
+            observation_subscribe,
+            observation_acknowledge,
+            observation_stop
         ])
         .run(tauri::generate_context!())
         .expect("failed to run desktop");
+    // The event loop has finished; shutdown/join never blocks rendering.
+    if let Ok(client) = connected(&connection) {
+        let _ = client.stop_observations();
+    }
 }

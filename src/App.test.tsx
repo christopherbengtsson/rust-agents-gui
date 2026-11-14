@@ -13,7 +13,15 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { App } from "./App";
 
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(),
+  Channel: class {
+    onmessage: (value: unknown) => void;
+    constructor(receive: (value: unknown) => void) {
+      this.onmessage = receive;
+    }
+  },
+}));
 beforeEach(() => {
   localStorage.clear();
   vi.stubGlobal("matchMedia", (media: string): MediaQueryList =>
@@ -36,17 +44,22 @@ afterEach(() => {
 function connectionCalls() {
   return vi
     .mocked(invoke)
-    .mock.calls.filter(([command]) => command !== "repository_request");
+    .mock.calls.filter(
+      ([command]) =>
+        command === "supervisor_status" || command === "desktop_pid",
+    );
 }
 function mockConnection(implementation: (command: string) => Promise<unknown>) {
   vi.mocked(invoke).mockImplementation(
     ownerBound((command) =>
-      command === "repository_request"
-        ? Promise.resolve({
-            kind: "repositories",
-            page: { repositories: [], next: null },
-          })
-        : implementation(command),
+      command === "observation_stop" || command === "observation_acknowledge"
+        ? Promise.resolve(undefined)
+        : command === "repository_request"
+          ? Promise.resolve({
+              kind: "repositories",
+              page: { repositories: [], next: null },
+            })
+          : implementation(command),
     ),
   );
 }
@@ -374,4 +387,34 @@ test("connection failure replaces initial repository skeletons with unavailable 
   expect(
     view.container.querySelector('[data-slot="sidebar-menu-skeleton"]'),
   ).toBeNull();
+});
+
+test("the app mounts one feed and exposes native delivery failure without replaying actions", async () => {
+  mockConnection(async (command) => {
+    if (command === "desktop_pid") return 42;
+    if (command === "observation_subscribe")
+      throw new Error("Controlled subscription failure");
+    return snapshot;
+  });
+  render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+  await screen.findByText("Observation delivery stopped");
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "observation_subscribe"),
+  ).toHaveLength(1);
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: "Connection details" }));
+  expect(screen.getByRole("alert").textContent).toContain(
+    "Controlled subscription failure",
+  );
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.some(([command]) => command === "workspace_request"),
+  ).toBe(false);
 });

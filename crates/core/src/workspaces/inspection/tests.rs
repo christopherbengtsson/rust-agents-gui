@@ -28,6 +28,7 @@ fn shared() -> Mutex<OwnerState> {
         probes: VecDeque::new(),
         fault: None,
         revision: 1,
+        journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
         workspace_faults: BTreeMap::new(),
     })
@@ -81,6 +82,10 @@ impl InspectionEffects for Effects<'_> {
             .try_lock()
             .expect("effects must not hold the observation/storage lock");
         assert!(state.inspections.active.is_some());
+        assert!(matches!(
+            state.journal.sample(Some(1)),
+            crate::observations::Sample::Hints { .. }
+        ));
         Ok(())
     }
     fn head(&mut self, _: &Path) -> Result<String> {
