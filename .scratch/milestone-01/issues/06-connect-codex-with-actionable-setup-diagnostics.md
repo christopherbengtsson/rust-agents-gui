@@ -29,3 +29,11 @@
 ### 2026-11-14 — frontend foundation prerequisite
 
 Follow the [agreed foundation](../../frontend-navigation/spec.md). Runtime setup belongs at Settings → Providers → Codex, with relevant workspace status linking there. Keep SupervisorConnection transport diagnostics separate. This does not authorize provider sessions.
+
+### 2026-11-14 — library refactor handoff
+
+The amended foundation adds F04b–F04g before revised F05–F08; F08 remains this
+ticket's direct blocker. Consume the qualified async connection and feature
+observation/actor interfaces without creating a new runtime, queue or cache in
+Tauri/screens. Provider protocol/fixtures still require their own supported-version
+sources and allowance; application protocol 8 does not establish Codex compatibility.

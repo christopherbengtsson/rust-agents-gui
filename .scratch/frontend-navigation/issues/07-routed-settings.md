@@ -12,6 +12,12 @@ This ticket is the session scope; successors remain separate.
 
 ## Context and implementation
 
+Settings removes inspection interest from the app-lifetime actor while physical
+work drains; it never disposes the actor, feed or Query client. Restore context
+through F05's validated presentation store. Consume feature interfaces without
+queue/ack bookkeeping; verify native physical cleanup with the established seam.
+The current UI guide distinguishes the F04 baseline reader from this target.
+
 Implement the agreed footer gear and full-page Settings layout. Conductor 0.93.0
 opens routed Settings from a top account menu; our footer placement and lack of
 account scope are deliberate. General is the only section and contains honest
@@ -66,3 +72,8 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+### 2026-11-14 — F04a handoff amendment
+
+Updated predecessor consumption for the library refactor; implementation and
+qualification acceptance remain unchecked. Original dated comments are retained.

@@ -5,6 +5,7 @@
 - Possible to view feature branch as PR before publishing to Github for self review.
   - Basically, copy GitHub into our app. Then full PR workflow could be within our app
 - When others requested your review on a PR our application notices and starts a review agent in background. Before submitting review, user gets a summarize and actions on how to proceed
+- A feature where users can setup agent workflows for autonomous feature implementations, e.g. when one session is complete with implementation and review on it's ticket it starts a new session by itself with configured prompt and so on. Have a service storing context in a db table to be shared etc, maybe one or many coordinators.
 
 Large vision:
 
@@ -16,8 +17,4 @@ Large vision:
 
 # Improvements
 
-Conductor’s frontend accesses SQLite through Tauri’s SQL plugin, backed by SQLx. Our project uses rusqlite inside the Rust core, keeping persistence behind Rust-owned operations
-
-- app.db for application data, including repositories, workspaces, sessions, settings and attachments.
-- cache.db for cached data.
-- Both are configured to use WAL mode.
+- tsconfig build: exclude stuff like test-support

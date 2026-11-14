@@ -12,6 +12,14 @@ This ticket is the session scope; successors remain separate.
 
 ## Context and implementation
 
+Consume F04e/F04f feature interfaces and app-lifetime actors plus F05's validated
+presentation store. Route loaders express observation interest through those
+interfaces; they do not construct Query keys, decode IPC or stop actors. Extend
+F04b's generated-input preparation owner for routes rather than creating a second
+pipeline. Keep drift-before-repair and disable competing loader/preload freshness
+(defaultPreloadStaleTime: 0 when Query is the external cache). Existing source
+footholds are historical; follow predecessor definitions.
+
 Use the exact route destinations and restoration rules in the parent plan. Router
 becomes the only current-target owner; retaining old selection state and synchronizing
 it bidirectionally would create competing authorities. Remembered UI context supplies
@@ -69,3 +77,8 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+### 2026-11-14 — F04a handoff amendment
+
+Updated predecessor consumption for the library refactor; implementation and
+qualification acceptance remain unchecked. Original dated comments are retained.

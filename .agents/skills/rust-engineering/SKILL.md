@@ -8,22 +8,28 @@ license: MIT
 
 Read [testing and verification](../../../docs/agents/verification.md) before
 applying this skill. For behavior, architecture, or execution ownership, also read
-[MVP.md](../../../docs/MVP.md). These policies govern the work; the Rust guidance
+[MVP.md](../../../docs/MVP.md). Apply these policies under
+[repository precedence](../../../AGENTS.md#instruction-precedence); the Rust guidance
 here supports their implementation.
+
+For native IPC, generated contracts, feature observations or observation resource
+lifetimes, read [observation engineering](../../../docs/agents/observations.md).
 
 ## Choose references by task
 
 Read each reference whose branch the change touches; leave unrelated references
 unloaded.
 
-| Task | Reference |
-| --- | --- |
-| Identities, state transitions, input boundaries, or recovery errors | [Types and errors](references/types-and-errors.md) |
-| Numeric conversions, lengths, offsets, budgets, or cursor arithmetic | [Numeric boundaries](references/numeric-boundaries.md) |
-| Storage writes, transcript/attachment files, archive/restore, or durable shutdown | [Durable I/O](references/durable-io.md) |
-| Resource guards, standard threads/processes, or destruction order | [Synchronous resources](references/synchronous-resources.md) |
-| Async I/O, queues, task ownership, or shutdown | [Async lifecycle](references/async-lifecycle.md) |
-| Unsafe operations or diagnostic instrumentation | [Unsafe code and diagnostics](references/unsafe-and-diagnostics.md) |
+| Task                                                                              | Reference                                                           |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Identities, state transitions, input boundaries, or recovery errors               | [Types and errors](references/types-and-errors.md)                  |
+| Serde wire representations, compatibility, or generated declarations/schemas      | [Serde wire contracts](references/serde-wire-contracts.md)          |
+| Numeric conversions, lengths, offsets, budgets, or cursor arithmetic              | [Numeric boundaries](references/numeric-boundaries.md)              |
+| Storage writes, transcript/attachment files, archive/restore, or durable shutdown | [Durable I/O](references/durable-io.md)                             |
+| Resource guards, standard threads/processes, or destruction order                 | [Synchronous resources](references/synchronous-resources.md)        |
+| Async I/O, queues, task ownership, or shutdown                                    | [Async lifecycle](references/async-lifecycle.md)                    |
+| tokio-util codecs, framed streams/sinks, buffering, or frame deadlines            | [Framed I/O](references/framed-io.md)                               |
+| Unsafe operations or diagnostic instrumentation                                   | [Unsafe code and diagnostics](references/unsafe-and-diagnostics.md) |
 
 ## Ownership and interfaces
 

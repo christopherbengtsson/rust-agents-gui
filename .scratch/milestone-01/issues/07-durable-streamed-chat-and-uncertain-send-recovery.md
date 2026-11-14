@@ -24,3 +24,13 @@
 - [ ] Unit-test send/routing/recovery decisions for delayed or lost replies, duplicate/late events, storage failures and reconnect observations. Distinguish non-delivery from admitted work with an unavailable reply; verify intent-before-send and catch-up without resubmission. Separately demonstrate active-work desktop disconnect/reconnect through the production supervisor path and retain unit/desktop evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.
+
+### 2026-11-14 — library refactor handoff
+
+Consume the foundation's qualified async transport, generated-contract preparation,
+feature observations and app-lifetime coordination. Extend owning modules for
+conversation observations rather than duplicating a scheduler/cache/lifecycle.
+Durable conversation events require their own retention, paging and accepted cursor;
+the in-memory invalidation journal and its feed cursor cannot substitute for them.
+Rust conversation policy owns durable sends/reconciliation; XState remains presentation
+coordination and no frontend library retries uncertain actions automatically.

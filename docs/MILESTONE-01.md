@@ -1,6 +1,6 @@
 # Milestone 01 — one usable Codex desktop workflow
 
-Status: In progress — tickets 01–04, including 02a, are complete. Repository registration/navigation has unit and actual-desktop evidence. Product behavior in tickets 05–13, the complete workflow and native-provider qualification remain incomplete.
+Status: In progress — tickets 01–05, including 02a, are complete for their recorded fixture scope. Frontend F01–F04 have implementation/controlled evidence; F04a publishes the library refactor plan only. F04b–F04g and F05–F08, milestone 06–13, the complete workflow and native-provider qualification remain open.
 
 ## Outcome and authority
 
@@ -67,7 +67,14 @@ Ticket 01 established the TypeScript/pnpm + Rust/Tauri baseline, a separate supe
 Tickets 01–02 predate the testing policy. Repository alignment brought forward ticket 03's unit-only verification gate while retaining the earlier process/desktop evidence. See [policy-alignment evidence](evidence/milestone-01-verification-policy-alignment.md) for the coverage mapping, separate process qualification and measurements. Repository registration was unimplemented at that checkpoint.
 
 Ticket 03 now implements A1 repository registration, shared Git identity, durable action status, restored selection and per-repository availability/details. Its 89 unit checks, six retained process scenarios, production packaging and actual Tauri workflow passed on 2026-11-13. See [registration evidence](evidence/milestone-01-repositories.md) for commands, failed attempts, measurements, screenshots and limits. No live-provider submissions were performed. Ticket 04 implements isolated workspace creation and recovery, with unit, actual
-desktop, migration and real-process lease evidence. See [workspace evidence](evidence/milestone-01-workspaces.md). No live-provider work was submitted. Ticket 05's uncommitted-change fixture slice is complete; see [qualification evidence](evidence/milestone-01-change-inspection-qualification.md). Tickets 06–13 and whole-milestone qualification remain open. The [frontend foundation](../.scratch/frontend-navigation/spec.md) precedes 06; F01 prepares its documentation/dependencies without implementing F02–F08.
+desktop, migration and real-process lease evidence. See [workspace evidence](evidence/milestone-01-workspaces.md). No live-provider work was submitted. Ticket 05's uncommitted-change fixture slice is complete; see [qualification evidence](evidence/milestone-01-change-inspection-qualification.md). Tickets 06–13 and whole-milestone qualification remain open. The [frontend foundation](../.scratch/frontend-navigation/spec.md) precedes 06.
+F01–F04 are implemented with controlled evidence; F04's actual transport/desktop
+qualification remains outstanding. F04a publishes the amended architecture and
+session tickets only. F04b–F04f implement shared library mechanisms and complete
+feature observation slices; F04g qualifies actual sockets/fixture desktop before
+F05 completes presentation context, followed by routing/Settings and cumulative F08
+qualification. Preserve all earlier results as historical evidence. This adds no
+provider allowance and does not change Rust execution/storage authority.
 
 During qualification, record:
 

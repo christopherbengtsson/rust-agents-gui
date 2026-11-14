@@ -19,20 +19,33 @@ type Status = { state: "ready"; owner: string };
 const status = await invoke<Status>("example_status");
 ```
 
-**Correct (illustrative command and minimal schema are explicitly checked):**
+**Correct (illustrative generated shape check precedes contextual assertions):**
 
 ```ts
+// Stand-ins for a generated declaration/validator and a local contextual assertion.
+declare const validateStatus: (value: unknown) => value is Status;
+declare const assertStatusContext: (
+  value: Status,
+  expectedOwner: string,
+) => void;
+
 const value = await invoke<unknown>("example_status");
-if (typeof value !== "object" || value === null ||
-    !("state" in value) || value.state !== "ready" ||
-    !("owner" in value) || typeof value.owner !== "string") {
+if (!validateStatus(value)) {
   throw new Error("Invalid status observation");
 }
+assertStatusContext(value, expectedOwner);
+// Only now may the feature observation module publish/cache value.
 ```
 
-`example_status` is an illustrative command, not a new application API. Real
-adapters validate the actual schema and domain identities, preserving structured
-errors needed by consumers. Toolkit components receive data/callbacks rather than
+`example_status`, `Status` and the helper names illustrate a validation boundary;
+they are not product APIs or manually maintained wire shapes.
+Rust-generated declarations/standalone validators establish structure. Local
+assertions establish exact owner/target, state and delivery semantics before Query
+accepts a result. Preserve structured errors rather than adopting this sketch's
+generic error message. See [contract preparation](../../../../docs/agents/observations.md#contract-preparation)
+for generator settings, CSP and numeric/byte pitfalls.
+
+Toolkit components receive data/callbacks rather than
 importing Tauri directly or through application Hooks; see the
 [component guide](../../../../src/components/README.md).
 

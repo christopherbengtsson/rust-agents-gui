@@ -12,6 +12,12 @@ This ticket is the session scope; successors remain separate.
 
 ## Context and implementation
 
+Read F04g's focused actual transport/fixture-desktop gate and F05–F07 changes.
+F04g is a prerequisite, not cumulative route/Settings qualification. Cross-check
+F01–F04, F04a–F04g and F05–F07 requirements against the final build. Requalify shared
+feed/inspection ownership, generated-validator CSP, physical bounds and recovery
+under routed layouts; do not infer current results from earlier binary provenance.
+
 Qualify the complete foundation against every agreed requirement, preserving earlier
 milestone evidence as historical. Unit checks establish application decisions;
 actual Tauri/supervisor behavior and responsiveness require separate evidence.
@@ -25,7 +31,7 @@ foundation. Keep each failed attempt and unperformed check visible.
 - Qualify desktop disconnect/reconnect, owner replacement, overflow/resync, frontend acknowledgement stall, socket/thread limits, subscription cleanup and no duplicate actions.
 - Qualify nested-route reload with assets and IPC, direct missing/off-page destinations, Settings keyboard/focus/return and retained context at minimum and ordinary sizes. Preserve existing narrow Sheet/resizable inspection behavior.
 - Compare initial/lazy/total raw/gzip/Brotli JS, packaged size, startup/navigation, IPC counts/outstanding work/hidden activity and retention after navigation/expiry against equivalent baseline conditions.
-- Cross-check F01–F07 acceptance and whole-plan requirements. Keep parent acceptance open where actual qualification fails or remains unperformed.
+- Cross-check F01–F04, F04a–F04g and F05–F07 acceptance and whole-plan requirements. Keep parent acceptance open where actual qualification fails or remains unperformed.
 
 Baseline source footholds:
 
@@ -66,3 +72,8 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+### 2026-11-14 — F04a handoff amendment
+
+Updated predecessor consumption for the library refactor; implementation and
+qualification acceptance remain unchecked. Original dated comments are retained.

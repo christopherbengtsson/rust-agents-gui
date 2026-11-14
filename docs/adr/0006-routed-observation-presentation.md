@@ -20,3 +20,12 @@ deep links are deferred. Storage research follows milestone ticket 06 and preced
 [complete agreed plan](../../.scratch/frontend-navigation/spec.md) and
 [research](../research/conductor-frontend-architecture.md). F01 prepares documentation
 and dependencies only; F02–F08 implement/qualify the decision.
+
+## Amendment — 2026-11-14
+
+[ADR 0007](0007-library-backed-observation-modules.md) amends transport and observation
+implementation choices after F04: async library mechanisms, generated contracts,
+feature-local freshness and scoped XState coordination. The original product and
+ownership rationale remains. F04a publishes the amendment; F04b–F04g implement and
+qualify it before revised F05. Earlier completion statements describe their recorded
+checkpoint, not current dependency or implementation state.

@@ -7,6 +7,25 @@ ownership and the [shadcn skill](../../.agents/skills/shadcn/SKILL.md) for toolk
 APIs, composition rules, and CLI documentation lookup. Product responsibilities
 remain governed by [MVP.md](../../docs/MVP.md).
 
+## Upstream shadcn guidance
+
+Keep the shadcn skill upstream-owned; maintain project conventions here under
+[repository precedence](../../AGENTS.md#instruction-precedence). Use its relevant
+toolkit workflow for the requested component work. Project scope and component
+layers govern which additions or customizations are needed.
+
+When the skill's project context contains a shell placeholder rather than actual
+JSON, obtain it with `corepack pnpm dlx shadcn@latest info --json` from the repository
+root. Use `components.json`, installed component source and dependency versions to
+check its output. If lookup fails, report the missing information and inspect
+those local sources before selecting an API or adding a component. Fetch the
+relevant official documentation and check installed-version compatibility as
+described below.
+
+Review upstream skill updates against these conventions and the current stack.
+Keep an unavoidable local skill patch small and record its source revision and
+reason; prefer contributing a general correction upstream.
+
 ## Ownership and selection
 
 | Layer         | Responsibility                                                  | Selection rule                                                                                                                   |
@@ -71,6 +90,19 @@ upstream change against local deviations and consumers, preserve intentional
 customizations, and verify affected primitives and blocks. Treat Base UI dependency
 updates separately from generated-source updates. Review internal API changes and
 callers together; Git history records their evolution.
+
+## Observation lifetime status
+
+Current code/evidence through F04 still uses the reader/controllers described below.
+The [amended foundation](../../.scratch/frontend-navigation/spec.md) and
+[observation guidance](../../docs/agents/observations.md) govern their replacement:
+F04e establishes app-lifetime construction and repository/workspace feature
+observations; F04f replaces feed/inspection lifecycle internals with XState and
+completes inspection Query/freshness/polling replacement. Screens receive
+feature-specific observations/callbacks; Query owns records, actors own coordination,
+and Zustand owns presentation memory. Settings releases inspection interest while
+physical work drains. Product source has not changed in F04a; update each entry with
+actual interfaces in its implementation ticket, retaining completed UI evidence.
 
 ## Component decisions
 
@@ -250,7 +282,8 @@ when the retained comparison ID has not changed.
 `App` owns one acknowledged native feed through `useObservationFeed`, independently
 of feature reads. Its controller validates owner/subscription/batch/cursor and bounded
 typed hints, records bounded dirty state before acknowledgement, and reconnects from
-its accepted feed cursor. Full resync is a retained dirty marker for F05 to consume.
+its accepted feed cursor. Full resync is a retained dirty marker; F04e/F04f will move freshness into feature
+observation modules and consume it before F05.
 Feed failures appear in the existing connection status/details and retain last-good
 feature observations. The controller serializes replacement after physical stop/join,
 including late registration and Strict Mode cleanup. No Query migration or polling

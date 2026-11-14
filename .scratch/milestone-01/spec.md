@@ -2,8 +2,7 @@
 
 Status: ready-for-agent
 
-Implementation baseline: tickets 01–02 and 02a are complete. Tickets 03–04 implement repository registration/navigation and isolated workspace
-creation/recovery. Product behavior in tickets 05–13 remains unimplemented.
+Implementation baseline: tickets 01–05, including 02a, are complete for their recorded fixture scope. Tickets 06–13 and whole-milestone qualification remain incomplete. The [frontend foundation spec](../frontend-navigation/spec.md) defines the prerequisite implementation and qualification sequence.
 
 ## Problem Statement
 
@@ -179,3 +178,15 @@ The approved [readable-workspaces plan](readable-workspaces-plan.md) refines tic
 use the curated footballer catalog with permanent reservations and numeric tiers.
 This does not expand creation into a composer, base picker or provider launch.
 See [evidence](../../docs/evidence/readable-workspaces.md) for qualification and limits.
+
+### 2026-11-14 — frontend library refactor handoff
+
+The [amended frontend foundation](../frontend-navigation/spec.md) inserts F04a–F04g
+before F05: this session publishes documentation only; separate sessions introduce
+generated contracts, async owned transport and complete feature observation/actor
+modules. F04g actual qualification precedes F05 retained context/integration, then
+F06–F08 routes/Settings/cumulative qualification. Milestone 06 still waits for F08.
+Original completed ticket results remain unchanged. Later Codex/chat work consumes
+the resulting interfaces and does not assume a synchronous transport or recreate
+frontend observation owners. Durable conversation delivery stays separate from the
+invalidation journal and its accepted cursor; storage research sequencing is unchanged.

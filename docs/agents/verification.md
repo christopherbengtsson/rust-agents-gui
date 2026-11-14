@@ -30,6 +30,31 @@ application dependencies. Neither `--lib` nor a move into `src` removes effects.
 Replace expensive checks only after their useful assertions have passing unit
 replacements; record the old-to-new coverage mapping and any lost qualification.
 
+### Async mechanisms
+
+An in-process Tokio test runtime is a unit mechanism, distinct from a supervisor
+or provider runtime process. Use controlled in-memory byte streams, dependency
+outcomes and paused/controlled time for async framing, scheduling and cleanup
+decisions. A current-thread test runtime is sufficient unless the scenario needs
+parallel execution; it alone does not make scheduling deterministic. Drive explicit
+events and await owned task completion. Real sockets, filesystem/storage effects
+and processes belong to separate qualification, not application units.
+
+Tokio's test macro defaults to a current-thread runtime; paused time needs its
+`test-util` feature. Verify the selected version's available features rather than
+copying upstream runtime examples. See [Tokio test configuration](https://docs.rs/tokio/1.54.1/tokio/attr.test.html).
+
+### Generated contracts and preparation
+
+Pure serializers, in-memory exports, corpus comparisons and generated-validator
+execution can be unit checks without writing generated files. Tooling units
+substitute generator/process/filesystem effects while testing command construction,
+ordering and failure decisions. Actual exporter/generator invocation, deterministic
+generation and read-only drift execution are separate preparation/static gates.
+Keep those gates identifiable alongside application units, compilation, bundling
+and packaging. [Observation guidance](observations.md#contract-preparation) owns
+the preparation interfaces and contract-specific pitfalls.
+
 ## Tooling configuration checks
 
 The native Oxc migration explicitly permits bounded real Oxlint CLI checks in the

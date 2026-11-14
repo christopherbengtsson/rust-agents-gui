@@ -1,64 +1,61 @@
-# 05: Establish feature observations and UI context
+# 05: Complete retained presentation context and integration
 
 Status: ready-for-agent
 
-Blocked by: [F04](04-push-observation-delivery.md)
+Blocked by: [F04g](04g-qualify-library-refactor.md)
 
 ## Start here
 
-Follow [fresh-session instructions](../spec.md#starting-a-fresh-session), then read
-the [owning plan section](../spec.md#query-freshness) and the predecessor’s dated evidence.
-This ticket is the session scope; successors remain separate.
+Follow [fresh-session instructions](../spec.md#starting-a-fresh-session), read
+[Zustand context requirements](../spec.md#zustand-presentation-context), predecessor
+actual qualification and [observation guidance](../../../docs/agents/observations.md).
+F04e/F04f now own complete feature observation/cache/freshness/polling migration;
+consume their actual interfaces and evidence instead of repeating it.
 
 ## Context and implementation
 
-Existing repository/workspace Hooks mix bounded reads with selection and retained
-action observations. Migrate list/detail read/cache responsibility to Query without
-moving action reconciliation out of Rust. Feature modules hide decoding, query keys
-and freshness from screens. Current navigation remains working until F06 makes it
-route-authoritative.
+Finish the lightweight app-scoped presentation store introduced by F04e. Persist a
+validated/migratable allowlist for workspace-selected file/comparison context,
+reading position, panel layout and selected remembered navigation defaults. Report
+storage failures visibly. Query owns observation bodies, actors own coordination,
+and Rust owns execution/persistence/reconciliation authority.
 
-Create app-scoped instances above future layouts. The stable physical inspection
-reader must survive both route replacement and workspace presentation resets.
-Zustand retains lightweight reading context, while Query owns fetched observations.
+- Retain context across workspace switches and Settings-style interest removal;
+  revalidate comparison-specific file/reading context before restoration.
+- Preserve pending action records and sticky uncertainty independently of preference
+  migration. Stored navigation is a restoration default, not a second current-target
+  authority. F06 owns route selection and the old selection-preference-to-route migration.
+- Confirm one app-lifetime Query/physical-read/feed/inspection owner and narrow feature
+  subscriptions. Resolve integration defects without reintroducing polling or caches.
+- Reconcile predecessor evidence against original F05 observation requirements;
+  link them as implemented by F04e/F04f/F04g, with unperformed checks still open.
 
-- Use reviewed installed Router/Query composition and official Query references under repository policy. Apply the parent-plan local-IPC cache defaults and owner/target keys.
-- Translate typed hints into feature-local affected keys; mark stale without refetch fan-out. Refresh only visible/current or retained-action interests through F03.
-- Attach and process a baseline before initial reads; keep per-target dirty generations so in-flight reads cannot consume later invalidations. Bound dirty state; overflow becomes one active-interest resync.
-- Remove covered 250 ms availability/action/progress and inspection-pending polls only after replacement scenarios pass. Retain visible external-Git capture cadence and explicit refresh distinction.
-- Retain last-good/error observations and pending action identities across Settings/selection changes. Hint-driven repository reads never request explicit re-probing.
-- Keep pure shared guards independent of Tauri/preferences; keep feature modules cohesive and shared toolkit layers independent of transport.
-
-Baseline source footholds:
-
-- [src/App.tsx](../../../src/App.tsx) — single current observation owners/composition.
-- [src/hooks/use-repositories.ts](../../../src/hooks/use-repositories.ts) — repository reads, registration settlement and pending polling.
-- [src/hooks/use-workspaces.ts](../../../src/hooks/use-workspaces.ts) — workspace reads/actions and progress polling.
-- [src/components/blocks/workspace-panel.tsx](../../../src/components/blocks/workspace-panel.tsx) — current physical-reader lifetime.
-- [src/lib/workspace-changes-reader.ts](../../../src/lib/workspace-changes-reader.ts) — drain, visibility/error pause and selected-preview sequencing.
+Source footholds: follow F04e–F04g's new app composition, feature observation modules,
+actor modules and Zustand store; baseline `App.tsx`, inspection blocks and old Hook
+preference helpers identify existing behavior, not required final file organization.
 
 ## Required scenarios
 
-- A hint before baseline, during the initial read and during a follow-up is eventually observed; acknowledge before refetch settlement.
-- Hint storms coalesce; unrelated targets do not read; owner change cannot reuse earlier-owner data as current.
-- Hidden details pause reads; pending actions and reader physical drain survive navigation/disposal.
-- Removed polling no longer runs; visible external-edit refresh and error/last-good behavior still pass.
-- Restored per-workspace file/comparison/scroll context remains validated and preference errors remain visible.
-
-Use [repository verification policy](../../../docs/agents/verification.md) and
-the existing gate. Preserve prior useful assertions; actual desktop/process evidence
-remains separate from controlled units.
+- Validated/migrated preferences restore allowed context and report read/write failure.
+- Workspace/settings-style switches retain context, while changed comparisons reject
+  stale file/scroll restoration and hidden views start no reads.
+- Heavy previews/transcripts, authoritative snapshots, credentials and execution
+  authority never enter the presentation store; pending identities survive migration.
+- Existing observation freshness and physical drain remain covered by current
+  predecessor tests; new contextual integration scenarios are selected by the gate.
 
 ## Acceptance
 
-- [ ] Query replaces list/detail cache/read state without duplicating authoritative snapshots in Zustand.
-- [ ] One app-lifetime subscription and physical inspection reader serve narrowly subscribed views.
-- [ ] Push-driven freshness, queue bounds and failure/visibility behavior have passing controlled coverage.
-- [ ] Presentation context persists only the agreed preference allowlist; no provider/storage policy moves to JavaScript.
+- [ ] Allowlisted presentation context persists/migrates with visible storage errors and validated comparison restoration.
+- [ ] Pending action identity/uncertainty remains independent of presentation migrations.
+- [ ] Shared app-lifetime owners and feature interfaces integrate without duplicate caches, lifecycle state or covered polling.
+- [ ] Original observation requirements have linked passing predecessor evidence plus relevant current integration checks.
 
 ## Handoff boundary
 
-F06 owns final route selection authority and preference-to-route migration. F07 owns Settings UI. Keep heavy diffs/transcripts out of Zustand and leave full desktop qualification to F08.
+F06 supplies route authority and final navigation preference migration; F07 supplies
+actual Settings. F08 retains full routed desktop/accessibility/packaging/performance
+qualification. This ticket creates no new observation framework or provider behavior.
 
 ## Comments
 
@@ -70,3 +67,10 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+### 2026-11-14 — F04a rescope
+
+The user selected complete feature slices: Query/freshness/covered polling replacement
+now finishes in F04e/F04f, followed by F04g actual qualification. This ticket retains
+presentation persistence and integration. Historical comments describe the former
+scope; acceptance above is current and remains unchecked.

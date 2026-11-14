@@ -14,8 +14,21 @@ Read [verification policy](../../../docs/agents/verification.md) before applying
 this skill. Read [the MVP](../../../docs/MVP.md) for behavior, architecture, or
 execution ownership, and the relevant milestone for its acceptance criteria.
 Before component work, read [the component guide](../../../src/components/README.md)
-and use [shadcn](../shadcn/SKILL.md) for toolkit APIs and conventions. These owners
-remain authoritative; rule examples support their implementation.
+and use [shadcn](../shadcn/SKILL.md) for toolkit APIs and conventions. Apply these
+documents under [repository precedence](../../../AGENTS.md#instruction-precedence);
+rule examples support their implementation.
+
+For routing, query/cache work or TanStack dependency updates, read
+[TanStack guidance](../../../docs/agents/tanstack.md) for installed skill selection
+and application constraints.
+
+For XState machine or actor design, implementation, and review, use
+[xstate-v5](../xstate-v5/SKILL.md) for machine modeling and library APIs.
+
+For native IPC, generated contracts, feature observations or observation resource
+lifetimes, read [observation engineering](../../../docs/agents/observations.md).
+It supplies repository ownership and physical-cleanup constraints; these rules
+explain their React integration.
 
 ## How to use
 
@@ -29,6 +42,29 @@ be omitted; illustrative adapters/components are identified rather than presente
 as existing product APIs. Use current installed-version docs when implementing.
 For a complete reference or broad review, [AGENTS.md](AGENTS.md) expands all rules.
 Individual rules are the editable source; the full guide is generated.
+
+## TypeScript policy
+
+Apply to production code, tests, and TypeScript configuration.
+
+- Preserve strictness and checked inputs when fixing diagnostics. Keep existing
+  checks effective rather than relaxing flags, narrowing config membership, or
+  adding `skipLibCheck` for convenience. Preserve runtime behavior; report and
+  verify any real bug fix separately through repository policy.
+- Model types precisely, retain generic relationships, and narrow `unknown`
+  input. Do not silence diagnostics with new `any`, double assertions
+  (`as unknown as T`), or suppression comments. Use type assertions and non-null
+  assertions only for evidenced invariants that inference or narrowing cannot
+  express; document the invariant. Dedicated negative type tests may use
+  `@ts-expect-error` with a reason for the expected rejection.
+- Inspect installed upstream declarations and supported type entry points before
+  adding a local declaration shim. A necessary shim must preserve argument,
+  result, and generic relationships; cite its contract source and verify both
+  valid usage and rejection of invalid usage.
+- Before completion, audit changed and newly added code for `any`, assertions,
+  suppressions, declaration shims, and weakened checking coverage. Distinguish
+  existing patterns from new escapes; report each new escape's invariant or
+  limitation and what would remove it. Keep unrelated cleanup outside the task.
 
 ## Rule index
 
@@ -119,10 +155,10 @@ qualification, and justified convention exceptions separately.
 ## Provenance and maintenance
 
 Adapted selectively from [Vercel at 1a2c79d](https://github.com/vercel-labs/agent-skills/tree/1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62/skills/react-best-practices)
-and primary stack documentation, checked 2026-11-13. The
-[coverage research](../../../docs/research/vercel-react-best-practices-fit.md)
-records every upstream disposition, dependency coverage, and source corrections.
-Rules own maintained recommendations; research records the rationale.
+and primary stack documentation. Rule sources identify the relevant API contracts;
+local examples and applicability are curated rather than copied wholesale.
+The TypeScript policy also draws on Microsoft's
+[typescript-strict skill](https://github.com/microsoft/typescript-skills/blob/main/plugins/typescript/skills/typescript-strict/SKILL.md).
 
 Edit the index/rules, then run `node .agents/skills/react-engineering/scripts/build-guide.mjs`
 from the repository root. Use `--check` to validate without writing. Review source

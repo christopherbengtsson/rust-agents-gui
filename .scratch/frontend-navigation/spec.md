@@ -2,12 +2,13 @@
 
 Status: ready-for-agent
 
-Agreed 2026-11-14. Saved before implementation. Branch:
+Agreed 2026-11-14; amended by the F04a documentation publication below. Branch:
 `feature/m01-frontend-navigation`; baseline `99adb6366ef7eed1cc72d310f75b6fbec361d436`.
 
-Authority: [MVP](../../docs/MVP.md), [Milestone 01](../../docs/MILESTONE-01.md),
+Authority follows the [repository precedence rule](../../AGENTS.md#instruction-precedence).
+Read the [MVP](../../docs/MVP.md), [Milestone 01](../../docs/MILESTONE-01.md),
 [verification policy](../../docs/agents/verification.md), and
-[component guide](../../src/components/README.md). Those owners remain authoritative.
+[component guide](../../src/components/README.md) for their respective policy and context.
 
 ## 1. Purpose, scope, and publication
 
@@ -17,6 +18,8 @@ Milestone 01 ticket 6:
 - TanStack Router for typed navigation and future deep-link destinations.
 - TanStack Query for shared asynchronous observations and cache freshness.
 - Zustand for retained presentation context.
+- XState for app-lifetime feed and inspection coordination.
+- Generated Rust-owned contracts and structural validators.
 - Reliable, owner-bound IPC contracts.
 - Bounded native request scheduling.
 - Push-driven repository/workspace progress with snapshot recovery.
@@ -51,8 +54,13 @@ checks, and a dated evidence comment. Preserve completed ticket-5 evidence.
    documents above and applicable repository-local engineering skills. For the
    rationale or a Conductor comparison, consult
    [research](../../docs/research/conductor-frontend-architecture.md) and
-   [ADR 0006](../../docs/adr/0006-routed-observation-presentation.md). F01's actual
-   dependency/verification state is in [its evidence](../../docs/evidence/frontend-navigation/f01.md).
+   [ADR 0006](../../docs/adr/0006-routed-observation-presentation.md). Current refactor
+   rationale is in
+   [library research](../../docs/research/frontend-navigation-library-refactor.md)
+   and [ADR 0007](../../docs/adr/0007-library-backed-observation-modules.md).
+   [F04a evidence](../../docs/evidence/frontend-navigation/f04a.md) records this
+   documentation-only handoff. Read the selected predecessor's evidence for actual
+   implementation state; a dependency decision does not mean it is installed.
 4. Use each ticket's source pointers as baseline footholds; follow definitions moved
    by predecessors. Read current scripts/configuration to select checks. Prove new
    tests are selected by the gate; choosing a new filename alone does not do that.
@@ -61,35 +69,101 @@ checks, and a dated evidence comment. Preserve completed ticket-5 evidence.
    only verified acceptance. Keep successor tickets and foundation acceptance open
    until their own gates pass; report the next ticket without starting it.
 
-F01 prepared dependencies and guidance only. At that handoff, selection Hooks,
-native protocol, request mutex, progress polling, and inspection ownership were
-still the baseline implementation. Inspect predecessor changes before treating
-those baseline footholds as the current implementation. New tickets must replace their stated responsibilities
-while preserving existing regression scenarios. No transcript of this chat is
-required: this spec owns decisions; tickets own their completion criteria; research
-owns evidence and rationale. Update those owners when implementation reveals a
-necessary refinement instead of silently relying on chat context.
+Current product checkpoint: F01–F04 are implemented at `7dc4eac`, including
+protocol-7 owner binding, physical admission and acknowledged push delivery.
+[F04 evidence](../../docs/evidence/frontend-navigation/f04.md) reports controlled
+checks; actual F04 socket/desktop qualification remains outstanding. F04a publishes
+the amended plan only. F04b–F04g and F05–F08 remain separate, unimplemented sessions.
+The historical branch baseline and completed results are retained, not reset.
+
+F04a changes documentation/tickets only: manifests, lockfiles, generated assets,
+product implementation and implementation acceptance stay untouched. Add each
+approved dependency in the implementation ticket that first uses it. Implement
+only the ticket selected by the user; the dependency chain grants no authorization
+to continue. Each ticket must leave a working increment, identify superseded code,
+and replace useful coverage before removing it. The spec owns requirements, ADRs
+own rationale, research owns sources/limits, and tickets own completion evidence.
+A fresh session must not depend on this chat.
 
 ## 2. Ownership and module structure
 
-| Module | Responsibility |
-| --- | --- |
-| Rust domain modules | Durable state, execution, admission, reconciliation, recovery |
-| Rust connection module | Discovery, owner binding, bounded exchanges, transport outcomes, subscription lifecycle |
-| Feature observation modules | Runtime decoding, Query definitions, target-specific freshness, observation interests |
-| Router | Current destination, repository/workspace identity, active navigable view, history |
-| Zustand | Lightweight remembered reading context and selected presentation preferences |
-| Shared UI foundation | Controls and primitives independent of feature transport |
+| Module                   | Responsibility                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| Rust domain modules      | Durable state, execution, admission, reconciliation, recovery                              |
+| Rust connection          | Discovery, owner binding, physical admission, delivery evidence, subscription ownership    |
+| Internal framed exchange | Shared bounded framing, persistent buffers, deadlines, cancellation mechanics              |
+| Physical reads           | One app-scoped queue, pending admission, unsettled physical identity, coalescing, draining |
+| Feature observations     | Validated Query definitions, exact targets, interests, dirty generations, freshness        |
+| Feed acceptance          | Subscription lifecycle, accepted cursor, exact acknowledgements, stalls and replacement    |
+| Inspection coordination  | Summary/preview sequencing, visibility, refresh priority, comparison context and draining  |
+| Router                   | Current destination, repository/workspace identity, active navigable view, history         |
+| Zustand                  | Lightweight reading context and allowed presentation preferences                           |
+| Shared UI foundation     | Controls and primitives independent of feature transport                                   |
 
-Keep repository, workspace, and inspection observation modules cohesive. Their
-interfaces hide decoding, target validation, cache keys, and freshness rules from
-screens. Preserve existing component layers. Shared pure guards import neither
-Tauri, preferences, nor feature hooks. Avoid broad re-export barrels and
-per-command forwarding modules that add interfaces without useful depth.
+Share mechanisms once; keep feature decisions local. Repository, workspace and
+inspection observation modules hide keys, decoding, semantic assertions, freshness
+and interests behind feature-specific interfaces. Screens supply domain identity
+and visibility and receive observations/targeted callbacks; they do not configure
+queues, drive actor states or acknowledge hints. Avoid a public observation
+framework, broad re-export barrels and per-command forwarding modules. A deep
+module earns its interface when removing it would redistribute decisions among
+callers. An existing useful module can keep its interface while libraries replace
+its implementation; depth is not a line-count ratio.
 
-Create app-scoped Query, Zustand, connection-observation, and inspection-reader
-instances above routed layouts. Their lifetimes survive navigation; individual
-views subscribe narrowly.
+Create one app-scoped Query client, physical-read module, presentation store,
+connection observation owner and feed/inspection actors above routed layouts.
+Composition owns construction and dependency adapters, not feature policy. Views
+subscribe narrowly and release interests; they never terminate app-lifetime actors.
+Query owns observation bodies/last-good data; XState owns coordination and IDs;
+Zustand owns presentation memory. Actor snapshots are not mirrored into Zustand,
+and actor context holds no duplicate summary/preview cache. Owner-bound intent
+callbacks capture the observation's owner/target rather than silently adopting a
+new global owner at submission.
+
+Keep controlled I/O/time and application dependency seams inside owning modules.
+The repository verification policy permits private interfaces as test surfaces and
+requires substituted storage/Git/process outcomes even with one production adapter.
+Pure decisions need no invented adapter. Preserve useful tests until replacement
+assertions pass and record the old-to-new coverage mapping.
+
+### Approved libraries and generated contracts
+
+Use stable maintained libraries; record release, adoption, maintenance and fit
+sources in [research](../../docs/research/frontend-navigation-library-refactor.md).
+The agreed versions are ts-rs 12.0.1, Schemars 1.2.3, Ajv 8.20.0, ajv-formats
+3.0.1, Tokio 1.54.1, tokio-util 0.7.20, p-queue 10.0.0, XState 5.33.4 and
+@xstate/react 6.1.0. Retain existing Query 5.107.1 and Zustand 5.1.0. Land manifest
+and lockfile changes with first use; recheck compatibility on any necessary version
+change and record the reason. Maintenance/robustness and deletion of custom
+coordination can justify adoption without a measured performance bottleneck.
+
+Rust Serde wire types remain authoritative. F04b adds an optional application-owned
+`codegen` feature and explicit exporter, not generated file-writing tests. Produce
+committed declarations, schemas and standalone ESM validators under
+`src/generated/contracts/`. Export all frontend wire roots and their dependencies,
+not native resource internals. Keep private types private through owning-module
+export helpers. Use deterministic explicit configuration, including safe JSON
+large-integer representation and supported Serde/UUID handling.
+
+Reply/observation schemas use Schemars draft 2020-12 serialization settings;
+Ajv2020 compiles them ahead of time. Register UUID formats with ajv-formats.
+Request-deserialization schemas, if exported, are separately named; defaults do
+not make serialized response fields optional. Retain current CSP, generated runtime
+helpers as needed, and visible unsupported-Serde diagnostics. Check both generators
+against actual Rust serialization and the shared synthetic application corpus.
+
+Generated structural checks precede named semantic assertions: owner, exact target,
+request/reply kind, cursor/watermark/batch relationships, state combinations, safe
+integers, UTF-8 byte budgets and normalized-path/custom-deserializer rules. Preserve
+variant-specific exclusions without imposing blanket closed-object rules that
+break flattened Serde shapes. Preference migrations remain explicit local contracts.
+
+One preparation owner provides explicit write and read-only drift modes, shared by
+dev/check/build/Tauri/CI; check drift before any generation can repair it. F06 adds
+route generation to that owner. Generation is tooling, separate from application
+units, typechecking, bundling and packaging. Preserve Cargo target ownership and
+sidecar provenance. Frontend libraries remain implementation details of the owning
+module; follow [observation engineering guidance](../../docs/agents/observations.md).
 
 ### IPC contracts and supervisor ownership
 
@@ -104,33 +178,68 @@ views subscribe narrowly.
 - Bump the local protocol and update compatibility evidence.
 - Check a small shared contract corpus through pure Rust serializer and TypeScript decoder tests.
 
-Retain semantic guards if generated declarations arrive later. Do not stamp feature
+Keep semantic assertions after generated structural validation. Do not stamp feature
 results with a separately sampled global revision suggesting an atomic snapshot.
 
 ### Native request scheduling
 
-Retain synchronous socket exchanges. Acquire native admission before spawning
-blocking work.
+F04c–F04d replace synchronous exchanges with Tokio. Semaphore acquisition is
+nonwaiting and precedes task creation or blocking submission; owned permits stay
+with physical work. The supervisor runs a continuously driven current-thread
+runtime with I/O/time enabled; Tauri uses its existing runtime. The core library
+constructs no runtime. Bound synchronous filesystem/Git/SQLite/domain dispatch
+through blocking execution; async sockets do not make those operations nonblocking.
 
-| Lane | Maximum active |
-| --- | ---: |
-| Observation exchanges | 2 |
-| Intent/control exchanges | 1 |
-| Status/discovery | 1 |
-| Dedicated subscription | 1 |
+| Lane                     | Maximum active |
+| ------------------------ | -------------: |
+| Observation exchanges    |              2 |
+| Intent/control exchanges |              1 |
+| Status/discovery         |              1 |
+| Dedicated subscription   |              1 |
 
 Five desktop connections fit below the current eight-client supervisor ceiling.
-Use short connection-state locks; perform socket I/O outside them. Keep permits
-until physical completion, including after presentation disposal. Use owned guards
-for server admission cleanup.
+Use short state locks; perform socket I/O outside them. Serialize resource cleanup
+inside its owning module and observe task completion. Logical waiter cancellation
+cannot release physical admission. Server handlers have owned task completion,
+including on cancellation; started blocking work retains its own permit until it
+finishes. Discovery remains Rust-owned, exclusively admitted and effect-substitutable.
 
-The frontend observation coordinator allows two active reads, coalesces identical
-pending targets, bounds queued targets to 64, discards obsolete queued work after
-navigation/owner changes, and drains active reads while rejecting obsolete results.
+The shared frontend physical-read module uses p-queue with two active reads and
+at most 64 distinct queued targets. It coalesces complete physical request identity,
+including owner, operation, cursor and effectful refresh/load flags. An unsettled
+promise registry keeps active work discoverable after logical cancellation; it is
+not an observation cache. Cancel obsolete queued interests only, detaching their
+abort forwarding once execution starts. Running abort/queue timeouts cannot release
+slots while IPC continues. Preserve rejection of the newest distinct read when all
+64 queued targets remain relevant; equivalent interests still attach.
 Intent submissions remain explicit. Discovery stays Rust-owned; established
 connection loss grants no authority to start another supervisor or replay actions.
 
-## 3. Push observations, Query, and Zustand
+### Shared framed exchange
+
+F04c introduces one internal framed-exchange module; F04d switches request and
+subscription callers together to protocol 8. Tokio-util's length-delimited codec
+uses a four-byte big-endian u32 payload length, default offset/adjustment/skip, and
+a 65,532-byte payload maximum: prefix plus payload stays within 65,536 bytes.
+The codec owns buffering and ordinary length validation. A small adapter preserves
+strict EOF (including complete header with no body), first-byte observation and
+absolute deadlines; it does not implement a second frame buffer.
+
+Retain the two-second transfer budget, capped by the operation/ack deadline after
+first data. Buffered data starts the transfer phase immediately. Idle feed waiting
+permits the heartbeat budget; a timeout per fragment must not extend the absolute
+budget. Outbound partial writes have one absolute budget too. Timeout/cancellation
+closes the affected connection and awaits owned cleanup; it never restarts a
+partially transmitted action. Connection policy classifies delivery evidence;
+framing knows neither domain reconciliation nor Query targets.
+
+Keep persistent framing state across handshake, frames and cancelled polling.
+Reject incompatible framing/version visibly before domain effects, preserve
+application-version matching and retain v6/v7 corpus evidence. Protocol-8 development
+state/provenance follows the existing version isolation; communication failure
+cannot justify replacing an existing supervisor or falling back/replaying actions.
+
+## 3. Push observations, Query, Zustand and XState
 
 ### Rust invalidation journal
 
@@ -167,13 +276,23 @@ bounds; Tauri channels supply ordering.
 Keep status and frontend-accepted feed cursors separate. Reconnect from the accepted
 feed cursor. Missing, expired, future, or incompatible cursors require bounded
 resync of active observations and retained pending actions. A stalled frontend stops
-delivery visibly instead of accumulating channels/messages. Cancellation shuts down
-the socket, wakes waits, and joins owned work off rendering. Route changes preserve
-the subscription. Desktop loss does not stop supervisor-owned work.
+delivery visibly instead of accumulating channels/messages. Rust owns subscription
+task cancellation and awaited cleanup. The frontend feed actor transitions through
+idle/starting/live/stopping/stopped, retaining visible failures. Replacement waits
+for outstanding setup and native stop/join, including late registration; uncertain
+cleanup fences replacement. Stopping an actor alone is not physical cleanup.
+Route changes preserve the subscription. Desktop loss does not stop supervisor-owned work.
 
 ### Query freshness
 
-Migrate repository/workspace list and detail reads, removing replaced cache/read state.
+F04e completes repository/workspace observation migration, freshness and covered
+polling replacement together; F04f does the same for inspection. Feature modules
+own hint mapping, dirty generations and visible/retained-action interests. Feed
+acceptance synchronously records invalidations there before advancing the accepted
+cursor and acknowledging; it never owns a second feature freshness ledger. A small
+composition sink fans typed hints to concrete feature modules, not a public plugin
+registry. The existing feed controller can receive that sink in F04e until F04f
+replaces its lifecycle implementation. Query is the sole observation cache.
 Defaults: owner/target-scoped keys; networkMode always; automatic retries, focus and
 network-reconnect refetches disabled; five-minute inactive retention; bounded pages.
 
@@ -183,14 +302,33 @@ a hint during a read remains pending and causes a follow-up. Older results canno
 discard newer invalidations. Attach and process the baseline before initial reads.
 
 Hint-triggered repository reads use refresh=false. Explicit re-probing is separate,
-avoiding a Checking/refetch feedback loop. Remove covered 250 ms progress polling
-only after push equivalence passes. Retain the visible inspection's two-second
-external-Git refresh. Hidden views retain bounded dirty state; pending action
-interests survive navigation. Errors remain visible with last-good observations.
+avoiding a Checking/refetch feedback loop. Remove each feature's covered 250 ms
+progress polling in its F04e/F04f slice only after controlled push equivalence
+passes. Retain the visible inspection's two-second external-Git refresh. Hidden views retain bounded dirty state; pending action
+interests survive navigation. Bound retained dirty identities to 256 across feature
+modules; overflow becomes a sampled global resync generation. Reads satisfy only
+captured generations, including the global generation, so one refreshed interest
+cannot clear other hidden targets' obligations. Owner replacement resets acceptance
+and current-owner interests while preserving retained action identity/uncertainty.
+Errors remain visible with last-good observations.
 Query request status never substitutes for domain delivery/execution/completion.
+
+### Inspection coordination
+
+F04f replaces the existing useful reader implementation with one app-lifetime
+XState actor, using feature Query observations and the shared physical-read module.
+Keep summary-before-preview, exact comparison/file identities, paging and queued
+explicit-refresh priority inside the inspection module. Actor context retains
+coordination IDs/handles, not duplicated observation bodies. Target/visibility
+changes drain the current physical sequence, then start only the latest eligible
+interest. Preserve error pause, last-good data and the visible two-second external
+Git refresh; hidden views and Settings pause reads without freeing active capacity.
+View cleanup releases interest instead of stopping the actor. App-owned feed/reader
+cleanup is distinct from the later full owned-Quit/provider milestone requirement.
 
 ### Zustand presentation context
 
+F04e establishes the store; F05 completes allowlisted persistence and integration.
 Use an app-scoped store for per-workspace selected-file/comparison context, reading
 position, panel layout, and selected remembered navigation preferences. Router owns
 current destination/view; remembered values only provide restoration defaults.
@@ -257,18 +395,22 @@ dependency updates.
 
 ## 5. Delivery sequence and qualification
 
-| Ticket | Deliverable | Blocked by |
-| --- | --- | --- |
-| F01 | Publish full plan, research, architecture decision, baseline, dependencies and Intent | Completed 05 |
-| F02 | Owner-bound contracts, snapshot validation, transport outcomes, sticky uncertainty, corpus | F01 |
-| F03 | Bounded native/frontend scheduling, short locks, physical completion/cleanup | F02 |
-| F04 | Push publication, journal, subscription, acknowledgements, resync, bridge | F03 |
-| F05 | Query migration, freshness, covered polling removal, reader lifetime, Zustand, feature imports | F04 |
-| F06 | Typed file routes, generation, restoration, membership/history/generation checks | F05 |
-| F07 | Footer Settings, General, focus/return/context, ticket-6 seam | F06 |
-| F08 | Regression, desktop/process/accessibility/packaging/performance/size evidence and fixes | F07 |
+| Ticket                                                  | Deliverable                                                                                                                    | Blocked by             |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------- |
+| F01–F04                                                 | Completed documentation, owner-bound contracts, admission and protocol-7 push implementation; retain original evidence         | Completed milestone 05 |
+| [F04a](issues/04a-publish-library-refactor-plan.md)     | This documentation-only publication, ADR, research, guidance and session handoffs                                              | F04                    |
+| [F04b](issues/04b-generate-contracts-and-validators.md) | Rust-owned declarations/schemas/validators and deterministic preparation/drift tooling                                         | F04a                   |
+| [F04c](issues/04c-admission-and-framed-exchange.md)     | Semaphore and one controlled/tested internal async framed-exchange module                                                      | F04b                   |
+| [F04d](issues/04d-migrate-native-transport.md)          | Protocol-8 async client/server/feed, runtime/task ownership, removal of synchronous mechanics                                  | F04c                   |
+| [F04e](issues/04e-deepen-feature-observations.md)       | Physical-read module and complete repository/workspace Query, freshness and polling replacement; presentation store foundation | F04d                   |
+| [F04f](issues/04f-actor-feed-and-inspection.md)         | App-lifetime feed/inspection actors, inspection Query/freshness/polling replacement, removal of old controllers                | F04e                   |
+| [F04g](issues/04g-qualify-library-refactor.md)          | Focused actual socket/process/fixture-desktop and packaging qualification                                                      | F04f                   |
+| [F05](issues/05-feature-observations-and-ui-context.md) | Retained presentation context, persistence/migration and final observation integration                                         | F04g                   |
+| F06                                                     | Typed file routes, shared generation owner, restoration/membership/history checks                                              | F05                    |
+| F07                                                     | Footer Settings, General, focus/return/context, ticket-6 seam                                                                  | F06                    |
+| F08                                                     | Cumulative routed desktop/accessibility/packaging/performance/size evidence and fixes                                          | F07                    |
 
-All eight precede existing Milestone 01 ticket 6. Update its blockers and settings
+All foundation implementation and F08 qualification precede Milestone 01 ticket 6. Update its blockers and settings
 requirement; correct stale milestone summaries without rewriting completed evidence.
 
 ### Storage research checkpoint
@@ -304,10 +446,14 @@ navigation against 100 ms, IPC/duplicate/outstanding/hidden-view activity, cache
 queue retention/memory after navigation/expiry. Follow repository measurement policy;
 record source/versions/commands/timings/failures/unperformed checks.
 
-Qualify actual progress without 250 ms polling, desktop disconnect/reconnect,
-overflow, stalled delivery, owner replacement, nested-route reload, and Settings
-accessibility. No live-provider submissions. Full owned Quit, streamed-chat/history
-performance, and native-provider qualification remain their milestone tickets.
+F04g qualifies actual progress without covered polling, socket/frame bounds,
+subscription/handler cleanup, stalled delivery, disconnect/reconnect, owner replacement,
+private access, packaging and native/frontend physical limits before F05 resumes.
+Use disposable repositories/private state; this allowance contains no provider work.
+F08 retains cumulative qualification after route/Settings/context changes, including
+nested-route reload and Settings accessibility; F04g does not complete it.
+No live-provider submissions. Full owned Quit, streamed-chat/history performance,
+and native-provider qualification remain their milestone tickets.
 
 ## Comments
 
@@ -329,3 +475,15 @@ composition and official Query guidance are configured explicitly.
 [Evidence](../../docs/evidence/frontend-navigation/f01.md) records published research/ADR,
 pinned preparation, reviewed Intent guidance, passing deterministic/static checks
 and unchanged assets. F02–F08 and whole-foundation acceptance remain open.
+
+### 2026-11-14 — F04a library refactor publication
+
+The user approved refactoring completed mechanisms for robustness, locality and
+reduced maintenance, including private protocols. Publish F04a only in this session;
+implement F04b–F04g separately. Feature-specific interfaces share internal mechanisms
+without duplicating cache/lifecycle authority. Complete each feature's freshness
+and polling replacement in F04e/F04f; F05 now finishes presentation context and
+integration. [ADR 0007](../../docs/adr/0007-library-backed-observation-modules.md),
+[research](../../docs/research/frontend-navigation-library-refactor.md) and
+[F04a evidence](../../docs/evidence/frontend-navigation/f04a.md) record the decision.
+F01–F04 results remain historical; no new product or native qualification is claimed.
