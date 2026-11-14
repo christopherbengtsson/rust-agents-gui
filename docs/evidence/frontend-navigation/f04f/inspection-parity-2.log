@@ -1,0 +1,313 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+4:51:44 PM [vite] (client) warning: Found extra memoization dependencies
+
+  x react-compiler(MemoDependencies): Found extra memoization dependencies
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspace-changes.ts:24:57]
+ 23 |   // Query is mutable external state: this projection follows its notification revision.
+ 24 |   const view = useMemo(() => reader.getView(), [reader, revision]);
+    :                                                         ^^^^|^^^
+    :                                                             `-- Unnecessary dependency `revision`
+ 25 |   const shown = useSyncExternalStore(subscribeVisibility, documentVisible);
+    `----
+  help: Extra dependencies can cause a value to update more often than it
+        should, resulting in performance problems such as excessive renders
+        or effects firing too often
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-workspace-changes.ts
+ ❯ src/workspace-changes.test.tsx (22 tests | 6 failed) 1458ms
+   × changed owner discards late observations and reconnect only reads 3ms
+   × tab changes drain an old read and preserve a queued manual refresh 3ms
+   × workspace changes isolate retained data and drain late replies before reading the new target 1ms
+   × transport failure during a pending job keeps manual Refresh usable 1016ms
+   × unmount while IPC is pending ignores its rejection and schedules no reads 1ms
+   × WorkspacePanel navigation keeps one physical read lane across keyed inspection views 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspace-changes.test.tsx > changed owner discards late observations and reconnect only reads
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/workspace-changes.test.tsx:293:18
+    291|   );
+    292|   rerender({ owner: "new" });
+    293|   expect(invoke).toHaveBeenCalledTimes(1); // The obsolete physical re…
+       |                  ^
+    294|   await act(async () => finish?.(changes("idle", null)));
+    295|   await waitFor(() => expect(result.current.observation?.phase).toBe("…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/workspace-changes.test.tsx > tab changes drain an old read and preserve a queued manual refresh
+AssertionError: expected { operation: 'changes', …(4) } to match object { refresh: true }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "refresh": true,
++   "refresh": false,
+  }
+
+ ❯ src/workspace-changes.test.tsx:622:55
+    620|   expect(result.current.error).toBeUndefined();
+    621|   expect(result.current.observation?.phase).toBe("ready");
+    622|   expect(request(vi.mocked(invoke).mock.calls[1][1])).toMatchObject({
+       |                                                       ^
+    623|     refresh: true,
+    624|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/workspace-changes.test.tsx > workspace changes isolate retained data and drain late replies before reading the new target
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/workspace-changes.test.tsx:827:18
+    825|   rerender({ workspace: other });
+    826|   expect(result.current.observation).toBeUndefined();
+    827|   expect(invoke).toHaveBeenCalledTimes(1);
+       |                  ^
+    828|   await act(async () => finish?.(changes()));
+    829|   expect(result.current.observation?.workspace_id).toBe(other);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/workspace-changes.test.tsx > transport failure during a pending job keeps manual Refresh usable
+TestingLibraryElementError: Unable to find an element with the text: Connection interrupted. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"workspace-inspection"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"changes-toolbar"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mUncommitted changes[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5"[39m
+          [33mdata-disabled[39m=[32m""[39m
+          [33mdata-slot[39m=[32m"button"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtabindex[39m=[32m"0"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRefreshing…[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-expanded[39m=[32m"true"[39m
+          [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5"[39m
+          [33mdata-slot[39m=[32m"button"[39m
+          [33mtabindex[39m=[32m"0"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mHide changed files[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"inspection-status"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"repository-path"[39m
+        [36m>[39m
+          [0mCompared with HEAD [0m
+          [36m<code>[39m
+            [0maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[0m
+          [36m</code>[39m
+          [0m · [0m
+          [0m1[0m
+          [0m [0m
+          [0mchanged files[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [0mRefreshing the retained comparison…[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex h-full w-full aria-[orientation=vertical]:flex-col inspection-panels"[39m
+        [33mdata-group[39m=[32m"true"[39m
+        [33mdata-slot[39m=[32m"resizable-panel-group"[39m
+        [33mid[39m=[32m"_r_11_"[39m
+        [33mstyle[39m=[32m"height: 100%; width: 100%; overflow: hidden; display: flex; flex-flow: row; touch-action: pan-y;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-panel[39m=[32m"true"[39m
+          [33mdata-slot[39m=[32m"resizable-panel"[39m
+          [33mdata-testid[39m=[32m"inspection-main"[39m
+          [33mid[39m=[32m"inspection-main"[39m
+          [33mstyle[39m=[32m"min-size: 0px; max-size: 100%; height: auto; width: auto; border: 0px; padding: 0px; margin: 0px; display: flex; flex: 50 1 0px; overflow: visible;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mstyle[39m=[32m"max-size: 100%; flex-grow: 1; overflow: auto; touch-action: pan-y;"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/tabs flex gap-2 data-[orientation=horizontal]:flex-col inspection-tabs"[39m
+              [33mdata-activation-direction[39m=[32m"none"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-slot[39m=[32m"tabs"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Workspace views"[39m
+                [33mclass[39m=[32m"group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none bg-muted"[39m
+                [33mdata-activation-direction[39m=[32m"none"[39m
+                [33mdata-orientation[39m=[32m"horizontal"[39m
+                [33mdata-slot[39m=[32m"tabs-list"[39m
+                [33mdata-variant[39m=[32m"default"[39m
+                [33mrole[39m=[32m"tablist"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-controls[39m=[32m"base-ui-_r_15_"[39m
+                  [33maria-disabled[39m=[32m"false"[39m
+                  [33maria-selected[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[var...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"workspace-inspection"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"changes-toolbar"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mUncommitted changes[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5"[39m
+          [33mdata-disabled[39m=[32m""[39m
+          [33mdata-slot[39m=[32m"button"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtabindex[39m=[32m"0"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRefreshing…[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-expanded[39m=[32m"true"[39m
+          [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5"[39m
+          [33mdata-slot[39m=[32m"button"[39m
+          [33mtabindex[39m=[32m"0"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mHide changed files[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"inspection-status"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"repository-path"[39m
+        [36m>[39m
+          [0mCompared with HEAD [0m
+          [36m<code>[39m
+            [0maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[0m
+          [36m</code>[39m
+          [0m · [0m
+          [0m1[0m
+          [0m [0m
+          [0mchanged files[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [0mRefreshing the retained comparison…[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex h-full w-full aria-[orientation=vertical]:flex-col inspection-panels"[39m
+        [33mdata-group[39m=[32m"true"[39m
+        [33mdata-slot[39m=[32m"resizable-panel-group"[39m
+        [33mid[39m=[32m"_r_11_"[39m
+        [33mstyle[39m=[32m"height: 100%; width: 100%; overflow: hidden; display: flex; flex-flow: row; touch-action: pan-y;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-panel[39m=[32m"true"[39m
+          [33mdata-slot[39m=[32m"resizable-panel"[39m
+          [33mdata-testid[39m=[32m"inspection-main"[39m
+          [33mid[39m=[32m"inspection-main"[39m
+          [33mstyle[39m=[32m"min-size: 0px; max-size: 100%; height: auto; width: auto; border: 0px; padding: 0px; margin: 0px; display: flex; flex: 50 1 0px; overflow: visible;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mstyle[39m=[32m"max-size: 100%; flex-grow: 1; overflow: auto; touch-action: pan-y;"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/tabs flex gap-2 data-[orientation=horizontal]:flex-col inspection-tabs"[39m
+              [33mdata-activation-direction[39m=[32m"none"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-slot[39m=[32m"tabs"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Workspace views"[39m
+                [33mclass[39m=[32m"group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none bg-muted"[39m
+                [33mdata-activation-direction[39m=[32m"none"[39m
+                [33mdata-orientation[39m=[32m"horizontal"[39m
+                [33mdata-slot[39m=[32m"tabs-list"[39m
+                [33mdata-variant[39m=[32m"default"[39m
+                [33mrole[39m=[32m"tablist"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-controls[39m=[32m"base-ui-_r_15_"[39m
+                  [33maria-disabled[39m=[32m"false"[39m
+                  [33maria-selected[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[var...
+ ❯ waitForWrapper node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/workspace-changes.test.tsx:854:16
+    852|   fireEvent.click(screen.getByRole("button", { name: "Refresh changes"…
+    853|   vi.mocked(invoke).mockRejectedValueOnce(new Error("Connection interr…
+    854|   await screen.findByText("Connection interrupted");
+       |                ^
+    855|   expect(
+    856|     (
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/workspace-changes.test.tsx > unmount while IPC is pending ignores its rejection and schedules no reads
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/workspace-changes.test.tsx:999:30
+    997|   unmount();
+    998|   await act(async () => reject?.(new Error("Late failure")));
+    999|   expect(vi.getTimerCount()).toBe(0);
+       |                              ^
+    1000|   expect(invoke).toHaveBeenCalledTimes(1);
+    1001| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/workspace-changes.test.tsx > WorkspacePanel navigation keeps one physical read lane across keyed inspection views
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/workspace-changes.test.tsx:1137:18
+    1135|   const { rerender } = render(panel(workspace));
+    1136|   rerender(panel({ ...workspace, id: other, name: "second" }));
+    1137|   expect(invoke).toHaveBeenCalledTimes(1);
+       |                  ^
+    1138|   rerender(panel(undefined));
+    1139|   rerender(panel({ ...workspace, id: other, name: "second" }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  6 failed | 17 passed (23)
+   Start at  16:51:43
+   Duration  2.17s (tests 71%, environment 15%, import 11%, transform 3%)
+

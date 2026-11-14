@@ -1,0 +1,43 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/inspection-actor.test.tsx (1 test | 1 failed) 11ms
+   × inspection waits for accepted baseline and follows push progress without pending polling 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/inspection-actor.test.tsx > inspection waits for accepted baseline and follows push progress without pending polling
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "workspace_request",
+      Object {
+        "expectedOwner": "owner-a",
+        "request": Object {
+          "after": null,
+          "comparison_id": null,
+          "operation": "changes",
+          "refresh": false,
+          "workspace_id": "00000000-0000-4000-8000-000000000001",
+        },
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/lib/inspection-actor.test.tsx:16:22
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:48:28
+   Duration  337ms (environment 61%, transform 19%, import 14%, tests 4%, setup 1%, worker 1%)
+

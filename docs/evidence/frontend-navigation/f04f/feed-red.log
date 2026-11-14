@@ -1,0 +1,30 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-feed.test.tsx (17 tests | 1 failed) 10ms
+   × configuration changes during stopping retain only the latest desired owner 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-feed.test.tsx > configuration changes during stopping retain only the latest desired owner
+AssertionError: expected 'starting' to be 'stopping' // Object.is equality
+
+Expected: "stopping"
+Received: "starting"
+
+ ❯ src/observation-feed.test.tsx:245:38
+    243|   s.feed.connect("owner-b");
+    244|   await flush();
+    245|   expect(s.feed.getSnapshot().state).toBe("stopping");
+       |                                      ^
+    246|   s.feed.connect("owner-c");
+    247|   s.feed.connect("owner-d");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  16:44:43
+   Duration  482ms (transform 52%, environment 39%, import 5%, tests 2%, setup 1%, worker 1%)
+

@@ -1,0 +1,30 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/App.test.tsx (15 tests | 1 failed) 338ms
+   × feed failures stay visible while native cleanup is still pending 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > feed failures stay visible while native cleanup is still pending
+AssertionError: expected 'Connected' to contain 'Observation delivery stopped'
+
+Expected: "Observation delivery stopped"
+Received: "Connected"
+
+ ❯ src/App.test.tsx:428:50
+    426|     feed: { state: "stopping", message: "Observation delivery stalled.…
+    427|   }} />);
+    428|   expect(screen.getByRole("status").textContent).toContain("Observatio…
+       |                                                  ^
+    429|   await userEvent.setup().click(screen.getByRole("button", { name: "Co…
+    430|   expect(screen.getByRole("alert").textContent).toContain("Native clea…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  16:57:42
+   Duration  825ms (tests 44%, import 29%, environment 19%, transform 7%)
+

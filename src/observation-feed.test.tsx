@@ -105,6 +105,8 @@ test("stalls and malformed deliveries stop visibly without advancing the accepte
   s.feed.connect("owner-a");
   await flush();
   s.deliveries[1].receive({ kind: "batch", batch: {} });
+  expect(s.feed.getSnapshot().state).toBe("stopping");
+  await flush();
   expect(s.feed.getSnapshot().state).toBe("stopped");
   expect(s.feed.getSnapshot().accepted?.sequence).toBe(7);
   s.feed.connect(undefined);
@@ -211,7 +213,85 @@ test("failed registration requests cleanup of its possibly attached native subsc
   s.feed.connect("owner-a");
   await flush();
   expect(s.feed.getSnapshot().state).toBe("stopped");
-  expect(s.transport.stop).toHaveBeenCalledTimes(1);
+  expect(s.transport.stop).toHaveBeenCalledTimes(2);
+  expect(s.transport.stop).toHaveBeenLastCalledWith(expect.any(String));
+  s.feed.connect(undefined);
+  await flush();
+});
+
+test("cleanup failure stays visible and fenced until explicit native reconciliation", async () => {
+  const s = scenario();
+  s.feed.connect("owner-a");
+  await flush();
+  vi.mocked(s.transport.stop).mockRejectedValue(
+    new Error("Native cleanup unconfirmed"),
+  );
+  s.feed.connect("owner-b");
+  await flush();
+  expect(s.feed.getSnapshot().state).toBe("stopped");
+  expect(s.feed.getSnapshot().message).toMatch(/cleanup unconfirmed/);
+  expect(s.deliveries).toHaveLength(1);
+  vi.mocked(s.transport.stop).mockResolvedValue(undefined);
+  s.feed.connect("owner-c");
+  await flush();
+  expect(s.deliveries.map((d) => d.owner)).toEqual(["owner-a", "owner-c"]);
+  s.feed.connect(undefined);
+  await flush();
+});
+
+test("configuration changes during stopping retain only the latest desired owner", async () => {
+  const s = scenario();
+  s.feed.connect("owner-a");
+  await flush();
+  let join: () => void = () => {
+    throw new Error("Cleanup not started");
+  };
+  vi.mocked(s.transport.stop).mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        join = resolve;
+      }),
+  );
+  s.feed.connect("owner-b");
+  await flush();
+  expect(s.feed.getSnapshot().state).toBe("stopping");
+  s.feed.connect("owner-c");
+  s.feed.connect("owner-d");
+  await flush();
+  expect(s.deliveries).toHaveLength(1);
+  join();
+  await flush();
+  expect(s.deliveries.map((d) => d.owner)).toEqual(["owner-a", "owner-d"]);
+  s.feed.connect(undefined);
+  await flush();
+});
+
+test("owner changes preserve the delivery failure while exact native cleanup is pending", async () => {
+  const s = scenario();
+  s.feed.connect("owner-a");
+  await flush();
+  let join: () => void = () => {
+    throw new Error("Cleanup not started");
+  };
+  vi.mocked(s.transport.stop).mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        join = resolve;
+      }),
+  );
+  s.deliveries[0].receive({
+    kind: "stopped",
+    subscription_id: s.deliveries[0].id,
+    message: "Delivery failed; native cleanup pending",
+  });
+  s.feed.connect("owner-b");
+  expect(s.feed.getSnapshot().state).toBe("stopping");
+  expect(s.feed.getSnapshot().message).toContain("Delivery failed");
+  expect(s.deliveries).toHaveLength(1);
+  join();
+  await flush();
+  expect(s.deliveries.at(-1)?.owner).toBe("owner-b");
+  expect(s.feed.getSnapshot().message).toBeUndefined();
   s.feed.connect(undefined);
   await flush();
 });

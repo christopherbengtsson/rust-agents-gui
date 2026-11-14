@@ -1,4 +1,5 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useSelector } from "@xstate/react";
+import { useEffect, useState } from "react";
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { ObservationFeed, type FeedAcceptance } from "@/lib/observation-feed";
 
@@ -33,7 +34,15 @@ export function useObservationFeed(
         acceptance,
       ),
   );
-  const state = useSyncExternalStore(feed.subscribe, feed.getSnapshot);
+  const state = useSelector(
+    feed.actor,
+    feed.getSnapshot,
+    (a, b) =>
+      a.state === b.state &&
+      a.message === b.message &&
+      a.accepted?.owner === b.accepted?.owner &&
+      a.accepted?.sequence === b.accepted?.sequence,
+  );
   useEffect(() => {
     feed.connect(owner);
     return () => feed.connect(undefined);

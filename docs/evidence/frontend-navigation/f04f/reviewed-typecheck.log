@@ -1,0 +1,4 @@
+src/observation-feed.test.tsx(252,9): error TS2322: Type '(value: void | PromiseLike<void>) => void' is not assignable to type '() => never'.
+  Type 'void' is not assignable to type 'never'.
+src/observation-feed.test.tsx(279,9): error TS2322: Type '(value: void | PromiseLike<void>) => void' is not assignable to type '() => never'.
+  Type 'void' is not assignable to type 'never'.

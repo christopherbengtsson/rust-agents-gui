@@ -62,10 +62,10 @@ inspection blocks and F04e's app composition, feature modules and physical gate.
 
 ## Acceptance
 
-- [ ] XState replaces both lifecycle implementations with one app-lifetime owner each and narrow feature interfaces.
-- [ ] Inspection Query/freshness replacement passes and covered progress polling is removed; external-Git cadence remains.
-- [ ] Old controller machinery/duplicate caches are removed with passing mapped replacement scenarios.
-- [ ] Static/unit gates, actor selection/render behavior and evidence pass; actual native qualification remains F04g.
+- [x] XState replaces both lifecycle implementations with one app-lifetime owner each and narrow feature interfaces.
+- [x] Inspection Query/freshness replacement passes and covered progress polling is removed; external-Git cadence remains.
+- [x] Old controller machinery/duplicate caches are removed with passing mapped replacement scenarios.
+- [x] Static/unit gates, actor selection/render behavior and evidence pass; actual native qualification remains F04g.
 
 No routed Settings implementation, durable conversation delivery or full owned-Quit
 qualification is included. F05 later completes presentation persistence.
@@ -77,3 +77,31 @@ qualification is included. F05 later completes presentation persistence.
 Published after the user approved library refactors and all four deepening
 opportunities. Acceptance remains unchecked until this ticket's implementation
 and verification produce linked evidence. No provider submissions are authorized.
+
+
+### 2026-11-14 — F04f implementation complete
+
+Confirmed F04e checked acceptance and linked evidence at `1fc3d936`; continued
+`feature/m01-frontend-navigation` from that tip with a clean tree/index. Preserved
+predecessor evidence and all successor tickets.
+
+XState 5.33.4 and @xstate/react 6.1.0 now coordinate one app-lifetime feed owner and
+one inspection owner. Feed acceptance records invalidations before cursor/ack;
+replacement awaits setup and exact native stop/join, with visible fenced cleanup
+failure. Inspection Query/freshness, baseline gating, single-sequence physical
+draining and Zustand selected-file context replace the old lifecycle/cache loop.
+Covered pending polling is removed; visible two-second external-Git cadence,
+explicit-refresh priority, paging and last-good/error handling remain.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f04f.md) records source hashes,
+coverage replacement, failures/red-green checks, exact commands, versions,
+measurements and limits. Final configured verification passed **158 Rust + 40
+tooling + 151 frontend** units. One-warm-up/five-run measurements and separate
+frontend bundling passed. Independent review resolved one Standards P2 and two
+Spec P2s; focused follow-up reports **Standards 0 / Spec 0 outstanding findings**.
+
+Actual sockets/process, fixture desktop/WebView, packaging and native-provider
+qualification were not run and remain F04g/later. No provider submissions occurred.
+Durable reading-context persistence remains F05. The containing commit owns this
+ticket's changes and evidence. Stop after F04f; F04g and all successors remain open
+and were not implemented in this session.

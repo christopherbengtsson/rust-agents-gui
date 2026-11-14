@@ -1,0 +1,33 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/inspection-actor.test.tsx (8 tests | 1 failed) 30ms
+   × hiding during the first physical read does not convert disposal into a paused application failure 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/inspection-actor.test.tsx > hiding during the first physical read does not convert disposal into a paused application failure
+AssertionError: expected 'Observation interest is obsolete' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"Observation interest is obsolete"
+
+ ❯ src/lib/inspection-actor.test.tsx:178:44
+    176|   s.app.inspection.release();
+    177|   outstanding.resolve(summary()); await flush();
+    178|   expect(s.app.inspection.getView().error).toBeUndefined();
+       |                                            ^
+    179|   s.configure(); await flush();
+    180|   expect(invoke).toHaveBeenCalledTimes(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  16:58:48
+   Duration  336ms (environment 53%, import 23%, transform 12%, tests 10%, setup 1%, worker 1%)
+

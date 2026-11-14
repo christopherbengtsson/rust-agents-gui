@@ -1,0 +1,37 @@
+{"name": "feed-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.754295}
+{"name": "feed-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "src/observation-feed-bridge.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.781989}
+{"name": "feed-green-2", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "src/observation-feed-bridge.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 0.80214}
+{"name": "inspection-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.589646}
+{"name": "inspection-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 7.244985}
+{"name": "inspection-parity-2", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 2.381822}
+{"name": "inspection-parity-3", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 1.328768}
+{"name": "inspection-parity-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 1.365423}
+{"name": "app-regressions", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/App.test.tsx", "src/lib/feature-observations.test.tsx", "src/observation-feed.test.tsx", "src/observation-feed-bridge.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 1.925241}
+{"name": "inspection-scenarios-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.563697}
+{"name": "inspection-scenarios-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 1.393041}
+{"name": "generated-drift-before", "command": ["corepack", "pnpm", "generated:check"], "exit": 1, "seconds": 0.719759}
+{"name": "feed-render-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed-bridge.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.559838}
+{"name": "cleanup-visibility-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/App.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 1.03371}
+{"name": "typecheck", "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"], "exit": 0, "seconds": 0.332122}
+{"name": "focused-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "src/observation-feed-bridge.test.tsx", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "src/frontend-scheduling.test.tsx", "src/App.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 3.209552}
+{"name": "generated-write", "command": ["corepack", "pnpm", "generated:write"], "exit": 0, "seconds": 0.612513}
+{"name": "obsolete-interest-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.540913}
+{"name": "obsolete-interest-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 1.324973}
+{"name": "static-before-review", "command": ["corepack", "pnpm", "check"], "exit": 0, "seconds": 1.549661}
+{"name": "test-selection", "command": ["corepack", "pnpm", "exec", "vitest", "list", "--maxWorkers=1"], "exit": 0, "seconds": 0.367776}
+{"name": "lint-before-review", "command": ["corepack", "pnpm", "lint"], "exit": 0, "seconds": 0.099469}
+{"name": "review-feed-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.4749}
+{"name": "review-feed-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 0.466526}
+{"name": "review-priority-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.550699}
+{"name": "review-priority-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 0.528577}
+{"name": "review-cadence-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 1, "seconds": 0.533887}
+{"name": "review-cadence-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "src/workspace-changes.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 1.33326}
+{"name": "reviewed-typecheck", "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"], "exit": 1, "seconds": 0.329795}
+{"name": "reviewed-typecheck-2", "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"], "exit": 0, "seconds": 0.327412}
+{"name": "review-regressions", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/observation-feed.test.tsx", "src/observation-feed-bridge.test.tsx", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "exit": 0, "seconds": 1.120043}
+{"name": "verify", "command": ["corepack", "pnpm", "verify"], "exit": 0, "seconds": 11.288704}
+{"name": "measure", "command": ["corepack", "pnpm", "test:measure"], "exit": 0, "seconds": 55.76036}
+{"name": "bundle", "command": ["corepack", "pnpm", "exec", "vite", "build"], "exit": 0, "seconds": 0.40597}
+{"name": "final-test-selection", "command": ["corepack", "pnpm", "exec", "vitest", "list", "--maxWorkers=1"], "exit": 0, "seconds": 0.252386}
+{"name": "final-format", "command": ["corepack", "pnpm", "format:check"], "exit": 0, "seconds": 0.231042}
+{"name": "final-lint", "command": ["corepack", "pnpm", "lint"], "exit": 0, "seconds": 0.100908}

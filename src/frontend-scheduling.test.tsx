@@ -8,7 +8,7 @@ import type { WorkspaceRequest } from "./lib/workspaces";
 import { useRepositories } from "./test-support/feature-hooks";
 import { useSupervisorConnection } from "./hooks/use-supervisor-connection";
 import { useWorkspaceChanges } from "./hooks/use-workspace-changes";
-import { WorkspaceChangesReader } from "./lib/workspace-changes-reader";
+import { AppObservations } from "./lib/app-observations";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 afterEach(() => {
@@ -63,7 +63,8 @@ test("workspace list fan-out waits behind two physical reads while explicit crea
 
 test("repository, workspace and inspection share a budget while status remains independent", async () => {
   const reads = new ObservationCoordinator();
-  const reader = new WorkspaceChangesReader(reads);
+  const app = new AppObservations(reads);
+  const reader = app.inspection;
   const id = "00000000-0000-4000-8000-000000000001";
   const releases: (() => void)[] = [];
   const requests: string[] = [];
@@ -100,8 +101,8 @@ test("repository, workspace and inspection share a budget while status remains i
   );
   const view = renderHook(() => {
     const connection = useSupervisorConnection();
-    useRepositories("owner-a", reads);
-    useWorkspaces("owner-a", id, id, null, reads);
+    useRepositories("owner-a", app);
+    useWorkspaces("owner-a", id, id, null, app);
     useWorkspaceChanges("owner-a", id, false, true, reader);
     return connection;
   });
@@ -109,11 +110,19 @@ test("repository, workspace and inspection share a budget while status remains i
     expect(view.result.current.connection.state).toBe("connected"),
   );
   expect(requests).toHaveLength(2);
+  expect(
+    app.client
+      .getQueryCache()
+      .findAll({ queryKey: ["inspection"] })
+      .some((query) => query.state.fetchStatus === "fetching"),
+  ).toBe(true);
   view.unmount();
   await act(async () => {
     for (const release of releases) release();
   });
   expect(requests).toHaveLength(2);
+  await reader.dispose();
+  app.client.clear();
 });
 
 test("navigation drops queued old targets while physically stalled reads drain", async () => {

@@ -11,14 +11,66 @@ import {
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { workspaceRequest } from "./lib/workspaces";
-import { useWorkspaceChanges } from "./hooks/use-workspace-changes";
+import { useWorkspaceChanges as useInspection } from "./hooks/use-workspace-changes";
+import { useState } from "react";
+import { FeatureFreshness } from "./lib/feature-freshness";
+import { createObservationQueryClient } from "./lib/feature-query-cache";
+import { ObservationCoordinator } from "./lib/observation-coordinator";
 import { WorkspaceInspection } from "./components/blocks/workspace-changes";
 import { WorkspacePanel } from "./components/blocks/workspace-panel";
-import { WorkspaceChangesReader } from "./lib/workspace-changes-reader";
+import { WorkspaceChangesReader as InspectionReader } from "./lib/workspace-changes-reader";
 import type { Repositories } from "./hooks/use-repositories";
 import type { Workspaces } from "./hooks/use-workspaces";
 import type { Workspace } from "./lib/workspaces";
 import type { ChangePage, FilePreview, InspectionRequest } from "./lib/changes";
+
+// Presentation scenarios start with an accepted synthetic baseline. Push/ack
+// ordering is exercised independently through AppObservations and the real feed.
+const fixtureReaders = new Set<WorkspaceChangesReader>();
+class WorkspaceChangesReader extends InspectionReader {
+  readonly fixtureFreshness: FeatureFreshness;
+  constructor() {
+    const freshness = new FeatureFreshness();
+    super(
+      new ObservationCoordinator(),
+      createObservationQueryClient(),
+      freshness,
+    );
+    this.fixtureFreshness = freshness;
+    fixtureReaders.add(this);
+  }
+  override configure(context: Parameters<InspectionReader["configure"]>[0]) {
+    if (context.owner && !this.fixtureFreshness.ready(context.owner)) {
+      this.fixtureFreshness.connect(context.owner);
+      this.fixtureFreshness.accept(context.owner);
+    }
+    super.configure(context);
+  }
+}
+function useWorkspaceChanges(
+  owner: string | undefined,
+  workspaceId: string,
+  active: boolean,
+  visible = true,
+  sharedReader?: InspectionReader,
+) {
+  const [reader] = useState(() => new WorkspaceChangesReader());
+  return useInspection(
+    owner,
+    workspaceId,
+    active,
+    visible,
+    sharedReader ?? reader,
+  );
+}
+function inspectionHint() {
+  for (const reader of fixtureReaders) {
+    reader.fixtureFreshness.mark(`inspection:${workspace_id}`);
+    reader.fixtureFreshness.accept(
+      reader.fixtureFreshness.currentOwner() ?? "owner",
+    );
+  }
+}
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const resizeCallbacks = new Map<Element, (width: number) => void>();
@@ -134,6 +186,8 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  for (const reader of fixtureReaders) void reader.dispose();
+  fixtureReaders.clear();
   vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.resetAllMocks();
@@ -147,6 +201,7 @@ test("inspection validates exact workspace/comparison/file targets and display b
     comparison_id: null,
     after: null,
   };
+  await act(async () => {});
   vi.mocked(invoke).mockImplementation(
     ownerBound(async () => ({
       ...changes(),
@@ -200,7 +255,7 @@ test("inspection validates exact workspace/comparison/file targets and display b
   ).rejects.toThrow();
 });
 
-test("manual refresh submits once; observation polling does not requeue work", async () => {
+test("manual refresh submits once; push progress does not requeue work", async () => {
   vi.useFakeTimers();
   let submitted = 0;
   let observed = 0;
@@ -228,10 +283,12 @@ test("manual refresh submits once; observation polling does not requeue work", a
     await result.current.refresh();
   });
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(250);
+    inspectionHint();
+    await Promise.resolve();
   });
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(250);
+    inspectionHint();
+    await Promise.resolve();
   });
   expect(submitted).toBe(1);
   expect(result.current.observation?.phase).toBe("ready");
@@ -251,6 +308,7 @@ test("changed owner discards late observations and reconnect only reads", async 
     ({ owner }) => useWorkspaceChanges(owner, workspace_id, false),
     { initialProps: { owner: "old" } },
   );
+  await act(async () => {});
   rerender({ owner: "new" });
   expect(invoke).toHaveBeenCalledTimes(1); // The obsolete physical read still owns the lane.
   await act(async () => finish?.(changes("idle", null)));
@@ -570,6 +628,7 @@ test("tab changes drain an old read and preserve a queued manual refresh", async
     ({ active }) => useWorkspaceChanges("owner", workspace_id, active),
     { initialProps: { active: false } },
   );
+  await act(async () => {});
   rerender({ active: true });
   await act(async () => result.current.refresh());
   rerender({ active: false });
@@ -707,13 +766,14 @@ test("manual Refresh settles a queued comparison after a failed preview", async 
   await act(async () => result.current.refresh());
   expect(requested).toBe(true);
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(250);
+    inspectionHint();
+    await Promise.resolve();
   });
   expect(result.current.preview?.phase).toBe("ready");
   expect(result.current.preview?.error).toBeNull();
 });
 
-test("pending previews poll observations without repeated loads or summary refreshes", async () => {
+test("pending previews follow push observations without repeated loads or summary refreshes", async () => {
   vi.useFakeTimers();
   let previewReads = 0;
   vi.mocked(invoke).mockImplementation(
@@ -743,7 +803,12 @@ test("pending previews poll observations without repeated loads or summary refre
   await act(async () => {});
   await act(async () => result.current.select(page.files[0]));
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(500);
+    inspectionHint();
+    await Promise.resolve();
+  });
+  await act(async () => {
+    inspectionHint();
+    await Promise.resolve();
   });
   expect(result.current.preview?.phase).toBe("ready");
   const requests = vi
@@ -772,6 +837,7 @@ test("workspace changes isolate retained data and drain late replies before read
     ({ workspace }) => useWorkspaceChanges("owner", workspace, true),
     { initialProps: { workspace: workspace_id } },
   );
+  await act(async () => {});
   vi.mocked(invoke).mockImplementation(
     ownerBound(async () => ({
       ...changes(),
@@ -788,7 +854,12 @@ test("workspace changes isolate retained data and drain late replies before read
     refresh: false,
   });
   unmount();
-  expect(vi.getTimerCount()).toBe(0);
+  // Inactive Query entries retain their five-minute GC timer.
+  const reads = vi.mocked(invoke).mock.calls.length;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(10000);
+  });
+  expect(invoke).toHaveBeenCalledTimes(reads);
 });
 
 test("transport failure during a pending job keeps manual Refresh usable", async () => {
@@ -806,7 +877,9 @@ test("transport failure during a pending job keeps manual Refresh usable", async
     ownerBound(async () => changes("queued")),
   );
   fireEvent.click(screen.getByRole("button", { name: "Refresh changes" }));
+  await act(async () => {});
   vi.mocked(invoke).mockRejectedValueOnce(new Error("Connection interrupted"));
+  await act(async () => inspectionHint());
   await screen.findByText("Connection interrupted");
   expect(
     (
@@ -950,9 +1023,15 @@ test("unmount while IPC is pending ignores its rejection and schedules no reads"
   const { unmount } = renderHook(() =>
     useWorkspaceChanges("owner", workspace_id, true),
   );
+  await act(async () => {});
   unmount();
   await act(async () => reject?.(new Error("Late failure")));
-  expect(vi.getTimerCount()).toBe(0);
+  // Inactive Query entries retain their five-minute GC timer.
+  const reads = vi.mocked(invoke).mock.calls.length;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(10000);
+  });
+  expect(invoke).toHaveBeenCalledTimes(reads);
   expect(invoke).toHaveBeenCalledTimes(1);
 });
 
@@ -1089,6 +1168,7 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
     />
   );
   const { rerender } = render(panel(workspace));
+  await act(async () => {});
   rerender(panel({ ...workspace, id: other, name: "second" }));
   expect(invoke).toHaveBeenCalledTimes(1);
   rerender(panel(undefined));

@@ -1,18 +1,32 @@
+import { skipToken, useQuery } from "@tanstack/react-query";
+import { useSelector, shallowEqual } from "@xstate/react";
+import { useStore } from "zustand";
+import {
+  assign,
+  createActor,
+  fromPromise,
+  setup,
+  type ActorOptions,
+} from "xstate";
 import type { Target } from "@/generated/contracts/types";
-import type { FeatureFreshness } from "./feature-freshness";
+import { FeatureFreshness } from "./feature-freshness";
+import { createObservationQueryClient } from "./feature-query-cache";
 import {
   ObservationCoordinator,
+  ObsoleteRead,
   type ObservationScope,
 } from "./observation-coordinator";
-import { readWorkspace } from "./workspaces";
+import { workspaceRequest } from "./workspaces";
 import {
   pendingInspection,
   type ChangedFile,
   type ChangesObservation,
   type PreviewObservation,
+  type InspectionRequest,
+  type InspectionReply,
 } from "./changes";
-import { completeOperation } from "./complete-operation";
 import { repositoryError } from "./repositories";
+import { createPresentationStore } from "./presentation-store";
 
 export type ChangesView = {
   observation?: ChangesObservation;
@@ -21,216 +35,586 @@ export type ChangesView = {
   error?: string;
   loading: boolean;
 };
-
 type Context = {
   owner: string | undefined;
   workspaceId: string;
   active: boolean;
   visible: boolean;
 };
-
-// Presentation reads only. Rust owns comparison capture, admission and recovery.
-// The lane survives view reconfiguration: invalidating a reply does not cancel IPC.
-export class WorkspaceChangesReader {
-  constructor(private readonly reads = new ObservationCoordinator()) {}
-  private scope?: ObservationScope;
-  private invalidateReads() {
-    this.scope?.dispose();
-    this.scope = this.reads.scope();
-    this.generation++;
+type Page = { comparison_id: string | null; after: string | null };
+type Key = readonly [
+  "inspection",
+  string,
+  (
+    | Omit<Extract<InspectionRequest, { operation: "changes" }>, "refresh">
+    | Omit<Extract<InspectionRequest, { operation: "change_preview" }>, "load">
+  ),
+];
+type Cached = { reply: InspectionReply; generation: number };
+class InspectionFailure extends Error {
+  constructor(
+    readonly generation: number,
+    cause: unknown,
+  ) {
+    super(repositoryError(cause).message, { cause });
   }
-  private context?: Context;
-  private mounted = false;
-  private generation = 0;
-  private reading = false;
-  private queued?: "observe" | "refresh";
-  private timer?: ReturnType<typeof setTimeout>;
-  private loaded?: string;
-  private page: { comparison_id: string | null; after: string | null } = {
-    comparison_id: null,
-    after: null,
+}
+type CachedState = { data?: Cached; error?: Error | null };
+function visibleError(error?: Error | null) {
+  return error instanceof InspectionFailure &&
+    error.cause instanceof ObsoleteRead
+    ? undefined
+    : error;
+}
+function projectView(
+  summary: CachedState | undefined,
+  preview: CachedState | undefined,
+  previous: CachedState | undefined,
+  selected: ChangesView["selected"],
+  loading: boolean,
+): ChangesView {
+  const observation =
+    summary?.data?.reply.kind === "changes"
+      ? summary.data.reply.observation
+      : undefined;
+  const retained =
+    previous?.data?.reply.kind === "change_preview"
+      ? previous.data.reply.observation
+      : undefined;
+  const latest =
+    preview?.data?.reply.kind === "change_preview"
+      ? preview.data.reply.observation
+      : undefined;
+  return {
+    observation,
+    selected,
+    loading,
+    preview: latest
+      ? { ...latest, preview: latest.preview ?? retained?.preview ?? null }
+      : retained,
+    error:
+      visibleError(summary?.error)?.message ??
+      visibleError(preview?.error)?.message,
   };
-  private view: ChangesView = { loading: false };
+}
+type Flight = {
+  token: object;
+  scope: ObservationScope;
+  promise: Promise<void>;
+};
+type Coordination = {
+  desired?: Context;
+  page: Page;
+  queued?: "observe" | "refresh";
+  flight?: Flight;
+  summary?: Key;
+  preview?: Key;
+  previousPreview?: Key;
+};
+type Event =
+  | { type: "configure"; context: Context }
+  | { type: "release" }
+  | { type: "select" }
+  | { type: "request"; refresh: boolean }
+  | { type: "page"; page: Page }
+  | { type: "hint" }
+  | { type: "summary" | "preview"; token: object; key: Key };
+const firstPage = (): Page => ({ comparison_id: null, after: null });
+const eligible = (context: Coordination, freshness: FeatureFreshness) =>
+  !!context.desired?.visible &&
+  !!context.desired.owner &&
+  freshness.ready(context.desired.owner);
+const keyFor = (owner: string, request: InspectionRequest): Key =>
+  request.operation === "changes"
+    ? [
+        "inspection",
+        owner,
+        {
+          operation: "changes",
+          workspace_id: request.workspace_id,
+          comparison_id: request.comparison_id,
+          after: request.after,
+        },
+      ]
+    : [
+        "inspection",
+        owner,
+        { operation: "change_preview", target: request.target },
+      ];
 
-  private publish?: (view: ChangesView) => void;
+function inspectionMachine(
+  reader: WorkspaceChangesReader,
+  freshness: FeatureFreshness,
+) {
+  return setup({
+    types: { context: {} as Coordination, events: {} as Event },
+    actors: {
+      settle: fromPromise(async ({ input }: { input: Flight | undefined }) => {
+        await input?.promise;
+      }),
+    },
+    guards: {
+      dirty: ({ context }) => reader.dirty(context),
+      unavailable: ({ context }) => !eligible(context, freshness),
+      requested: ({ context }) =>
+        eligible(context, freshness) && !!context.queued,
+      cadence: ({ context }) =>
+        eligible(context, freshness) && !reader.paused(context),
+      current: ({ context, event }) =>
+        (event.type === "summary" || event.type === "preview") &&
+        context.flight?.token === event.token,
+    },
+    actions: {
+      configure: assign(({ context, event }) => {
+        if (event.type !== "configure") return {};
+        const previous = context.desired;
+        const changed =
+          previous?.workspaceId !== event.context.workspaceId ||
+          (!!event.context.owner && previous.owner !== event.context.owner);
+        return {
+          desired: event.context,
+          queued: event.context.visible
+            ? changed
+              ? "observe"
+              : (context.queued ??
+                (reader.failed(context) &&
+                !reader.dirty({ ...context, desired: event.context })
+                  ? undefined
+                  : "observe"))
+            : undefined,
+          ...(changed
+            ? {
+                page: firstPage(),
+                summary: undefined,
+                preview: undefined,
+                previousPreview: undefined,
+              }
+            : {}),
+        };
+      }),
+      release: assign(({ context }) => ({
+        desired: context.desired
+          ? { ...context.desired, visible: false }
+          : undefined,
+        queued: undefined,
+      })),
+      request: assign(({ context, event }) => ({
+        queued:
+          event.type === "request" && event.refresh
+            ? "refresh"
+            : (context.queued ?? "observe"),
+      })),
+      page: assign(({ context, event }) =>
+        event.type === "page"
+          ? { page: event.page, queued: context.queued ?? "observe" }
+          : {},
+      ),
+      select: assign(({ context }) => ({
+        preview: undefined,
+        previousPreview: undefined,
+        queued: context.queued ?? "observe",
+      })),
+      invalidate: ({ context }) => context.flight?.scope.dispose(),
+      hint: assign(({ context }) =>
+        reader.dirty(context) ? { queued: context.queued ?? "observe" } : {},
+      ),
+      refresh: assign({ queued: "refresh" }),
+      begin: assign(({ context, self }) => {
+        const refresh = context.queued === "refresh";
+        const page = refresh ? firstPage() : context.page;
+        const scope = reader.reads.scope();
+        const token = {};
+        const current = () =>
+          self.getSnapshot().matches("reading") &&
+          self.getSnapshot().context.flight?.token === token;
+        const promise = Promise.resolve().then(() =>
+          reader.sequence(
+            { ...context, page },
+            scope,
+            refresh,
+            current,
+            (type, key) => self.send({ type, token, key }),
+          ),
+        );
+        return { page, queued: undefined, flight: { token, scope, promise } };
+      }),
+      settled: assign(({ context }) => {
+        context.flight?.scope.dispose();
+        return {
+          flight: undefined,
+          queued:
+            context.queued ?? (reader.dirty(context) ? "observe" : undefined),
+        };
+      }),
+      summary: assign(({ event }) =>
+        event.type === "summary" ? { summary: event.key } : {},
+      ),
+      preview: assign(({ context, event }) =>
+        event.type === "preview"
+          ? {
+              preview: event.key,
+              previousPreview: context.preview ?? context.previousPreview,
+            }
+          : {},
+      ),
+    },
+  }).createMachine({
+    initial: "idle",
+    context: { page: firstPage() },
+    states: {
+      idle: {
+        always: [
+          { guard: "requested", target: "reading" },
+          { guard: "cadence", target: "waiting" },
+        ],
+        on: {
+          configure: { target: "idle", reenter: true, actions: "configure" },
+          request: { target: "idle", reenter: true, actions: "request" },
+          select: { target: "idle", reenter: true, actions: "select" },
+          page: { target: "idle", reenter: true, actions: "page" },
+          hint: { target: "idle", reenter: true, actions: "hint" },
+          release: { actions: "release" },
+        },
+      },
+      waiting: {
+        after: {
+          2000: [
+            { guard: "unavailable", target: "idle" },
+            { target: "reading", actions: "refresh" },
+          ],
+        },
+        on: {
+          configure: { target: "idle", actions: "configure" },
+          request: { target: "idle", actions: "request" },
+          select: { target: "idle", actions: "select" },
+          page: { target: "idle", actions: "page" },
+          hint: [
+            { guard: "unavailable", target: "idle" },
+            { guard: "dirty", target: "idle", actions: "hint" },
+          ],
+          release: { target: "idle", actions: "release" },
+        },
+      },
+      reading: {
+        entry: "begin",
+        invoke: {
+          src: "settle",
+          input: ({ context }) => context.flight,
+          onDone: { target: "idle", actions: "settled" },
+        },
+        on: {
+          configure: {
+            target: "draining",
+            actions: ["invalidate", "configure"],
+          },
+          request: { target: "draining", actions: ["invalidate", "request"] },
+          select: { target: "draining", actions: ["invalidate", "select"] },
+          page: { target: "draining", actions: ["invalidate", "page"] },
+          release: { target: "draining", actions: ["invalidate", "release"] },
+          summary: { guard: "current", actions: "summary" },
+          preview: { guard: "current", actions: "preview" },
+        },
+      },
+      draining: {
+        invoke: {
+          src: "settle",
+          input: ({ context }) => context.flight,
+          onDone: { target: "idle", actions: "settled" },
+        },
+        on: {
+          configure: { actions: "configure" },
+          request: { actions: "request" },
+          select: { actions: "select" },
+          page: { actions: "page" },
+          release: { actions: "release" },
+        },
+      },
+    },
+  });
+}
+export const inspectionTransitions = {
+  idle: ["reading", "waiting", "idle"],
+  waiting: ["reading", "idle"],
+  reading: ["draining", "idle"],
+  draining: ["idle"],
+} satisfies Record<
+  ReturnType<ReturnType<typeof inspectionMachine>["resolveState"]>["value"] &
+    string,
+  readonly (ReturnType<
+    ReturnType<typeof inspectionMachine>["resolveState"]
+  >["value"] &
+    string)[]
+>;
 
-  private update(value: Partial<ChangesView>) {
-    this.view = { ...this.view, ...value };
-    if (this.mounted) this.publish?.(this.view);
+// One feature owner: actor coordinates; Query owns bodies; Zustand owns selection.
+export class WorkspaceChangesReader {
+  readonly actor;
+  private readonly unsubscribeFreshness;
+  constructor(
+    readonly reads = new ObservationCoordinator(),
+    readonly client = createObservationQueryClient(),
+    private freshness = new FeatureFreshness(),
+    readonly presentation = createPresentationStore(),
+    options?: Pick<ActorOptions<ReturnType<typeof inspectionMachine>>, "clock">,
+  ) {
+    this.actor = createActor(
+      inspectionMachine(this, freshness),
+      options,
+    ).start();
+    this.unsubscribeFreshness = freshness.subscribe(() => {
+      // Invalidations are recorded synchronously; scheduling follows feed ack.
+      queueMicrotask(() => this.actor.send({ type: "hint" }));
+    });
   }
-
-  configure(context: Context, publish: (view: ChangesView) => void) {
-    this.publish = publish;
-    const previous = this.context;
-    this.context = context;
-    this.mounted = true;
-    this.invalidateReads();
-    clearTimeout(this.timer);
-    if (previous?.workspaceId !== context.workspaceId) {
-      this.view = { loading: false };
-      this.publish?.(this.view);
-    }
-    if (
-      previous?.workspaceId !== context.workspaceId ||
-      previous.owner !== context.owner
-    ) {
-      this.page = { comparison_id: null, after: null };
-      this.loaded = undefined;
-      this.queued = undefined;
-    }
-    if (this.observable()) void this.request(false);
-    else this.queued = undefined;
+  private cached(key?: Key) {
+    return key ? this.client.getQueryState<Cached>(key) : undefined;
   }
+  private selected(context: Coordination) {
+    return context.desired
+      ? this.presentation.getState().inspection[context.desired.workspaceId]
+      : undefined;
+  }
+  getView = (): ChangesView => {
+    const snapshot = this.actor.getSnapshot();
+    const context = snapshot.context;
+    const summary = this.cached(context.summary);
+    const preview = this.cached(context.preview);
+    const previous = this.cached(context.previousPreview);
+    return projectView(
+      summary,
+      preview,
+      previous,
+      this.selected(context),
+      snapshot.matches("reading") || snapshot.matches("draining"),
+    );
+  };
 
-  // Until F04f consumes inspection freshness, retain it in the shared bounded
-  // generation budget. No inspection cache or scheduling migration happens here.
-  invalidate(target: Target, freshness: FeatureFreshness) {
+  configure(context: Context) {
+    this.actor.send({ type: "configure", context });
+  }
+  invalidate(target: Target) {
     if (target.kind === "inspection")
-      freshness.mark(`inspection:${target.workspace_id}`);
+      this.freshness.mark(`inspection:${target.workspace_id}`);
   }
-
   release() {
-    this.scope?.dispose();
-    this.mounted = false;
-    this.publish = undefined;
-    this.generation++;
-    this.queued = undefined;
-    clearTimeout(this.timer);
+    this.actor.send({ type: "release" });
   }
-
-  dispose() {
+  async dispose() {
     this.release();
+    await this.actor.getSnapshot().context.flight?.promise;
+    this.unsubscribeFreshness();
+    this.actor.stop();
   }
-
-  private observable() {
-    return this.mounted && this.context?.owner && this.context.visible;
+  select = (file: ChangedFile) => {
+    const context = this.actor.getSnapshot().context;
+    const workspace = context.desired?.workspaceId;
+    if (!workspace) return;
+    const summary = this.cached(context.summary)?.data?.reply;
+    const comparison =
+      summary?.kind === "changes"
+        ? summary.observation.page?.comparison_id
+        : undefined;
+    this.presentation.setState((state) => ({
+      inspection: {
+        ...state.inspection,
+        [workspace]: { id: file.id, path: file.path, comparison },
+      },
+    }));
+    this.actor.send({ type: "select" });
+  };
+  refresh = () => {
+    this.actor.send({ type: "request", refresh: true });
+    return Promise.resolve();
+  };
+  first = () => {
+    this.actor.send({ type: "page", page: firstPage() });
+    return Promise.resolve();
+  };
+  next = () => {
+    const page = this.getView().observation?.page;
+    if (page?.next)
+      this.actor.send({
+        type: "page",
+        page: { comparison_id: page.comparison_id, after: page.next },
+      });
+    return Promise.resolve();
+  };
+  private version(context: Coordination) {
+    return this.freshness.version([
+      `inspection:${context.desired?.workspaceId}`,
+    ]);
   }
-
-  private failed() {
+  dirty(context: Coordination) {
+    if (!eligible(context, this.freshness)) return false;
+    const version = this.version(context);
+    const dirtyKey = (key?: Key) => {
+      const state = this.cached(key);
+      const captured =
+        state?.error instanceof InspectionFailure
+          ? state.error.generation
+          : state?.data?.generation;
+      return captured === undefined || captured < version;
+    };
     return (
-      this.view.error ||
-      this.view.observation?.phase === "failed" ||
-      (this.view.observation?.phase === "ready" &&
-        this.view.preview?.phase === "failed" &&
-        this.view.preview.target.comparison_id ===
-          this.view.observation.page?.comparison_id)
+      dirtyKey(context.summary) ||
+      (!!context.desired?.active &&
+        !!this.selected(context) &&
+        !!context.preview &&
+        dirtyKey(context.preview))
     );
   }
-
-  select = (file: ChangedFile) => {
-    if (this.view.selected?.id !== file.id) {
-      this.invalidateReads();
-      this.loaded = undefined;
-      this.update({
-        selected: { id: file.id, path: file.path },
-        preview: undefined,
-      });
-    }
-    void this.request(false);
-  };
-
-  refresh = () => {
-    this.invalidateReads();
-    return this.request(true);
-  };
-
-  first = () => {
-    this.invalidateReads();
-    this.page = { comparison_id: null, after: null };
-    return this.request(false);
-  };
-
-  next = () => {
-    const page = this.view.observation?.page;
-    if (!page?.next) return;
-    this.invalidateReads();
-    this.page = { comparison_id: page.comparison_id, after: page.next };
-    return this.request(false);
-  };
-
-  private request(refresh: boolean): Promise<void> {
-    if (!this.mounted || !this.context?.owner) return Promise.resolve();
-    clearTimeout(this.timer);
-    // A view observation must not erase a queued explicit refresh.
-    if (refresh || !this.queued) this.queued = refresh ? "refresh" : "observe";
-    return this.drain();
+  failed(context: Coordination) {
+    const summary = this.cached(context.summary);
+    const preview = this.cached(context.preview);
+    const observation =
+      summary?.data?.reply.kind === "changes"
+        ? summary.data.reply.observation
+        : undefined;
+    const selectedPreview =
+      preview?.data?.reply.kind === "change_preview"
+        ? preview.data.reply.observation
+        : undefined;
+    return (
+      !!visibleError(summary?.error) ||
+      observation?.phase === "failed" ||
+      (!!context.desired?.active &&
+        (selectedPreview?.phase === "failed" || !!visibleError(preview?.error)))
+    );
   }
-
-  private drain(): Promise<void> {
-    if (this.reading || !this.queued || !this.mounted || !this.context?.owner)
-      return Promise.resolve();
-    const scope = this.scope;
-    if (!scope) return Promise.resolve();
-    const refresh = this.queued === "refresh";
-    this.queued = undefined;
-    this.reading = true;
-    const { workspaceId, owner, active } = this.context;
-    const generation = this.generation;
-    const current = () =>
-      this.mounted &&
-      this.generation === generation &&
-      this.context?.owner === owner &&
-      this.context.workspaceId === workspaceId;
-    if (refresh) {
-      this.page = { comparison_id: null, after: null };
-      this.loaded = undefined;
-    }
-    const page = { ...this.page };
-    const selected = this.view.selected;
-    this.update({ loading: true });
-    return completeOperation(
-      async () => {
-        const result = await readWorkspace(scope, owner, {
-          operation: "changes",
-          workspace_id: workspaceId,
-          refresh,
-          ...page,
-        });
-        if (!current() || result.kind !== "changes") return;
-        const observation = result.observation;
-        this.update({ observation, error: undefined });
-        if (
-          !active ||
-          !selected ||
-          !observation.page ||
-          observation.phase !== "ready"
-        )
-          return;
-        const target = {
-          workspace_id: workspaceId,
-          comparison_id: observation.page.comparison_id,
-          file_id: selected.id,
-        };
-        const key = `${target.comparison_id}/${target.file_id}`;
-        const resultPreview = await readWorkspace(scope, owner, {
-          operation: "change_preview",
-          target,
-          load: this.loaded !== key,
-        });
-        if (!current() || resultPreview.kind !== "change_preview") return;
-        this.loaded = key;
-        this.update({ preview: resultPreview.observation });
-      },
-      (failure) => {
-        if (current()) this.update({ error: repositoryError(failure).message });
-      },
-      () => {
-        // Release the actual lane even if its view generation became obsolete.
-        this.reading = false;
-        if (!this.mounted) return;
-        this.update({ loading: false });
-        if (this.queued) void this.drain();
-        else if (this.observable() && !this.failed()) {
-          const pending =
-            pendingInspection(this.view.observation?.phase) ||
-            (this.context?.active &&
-              pendingInspection(this.view.preview?.phase));
-          this.timer = setTimeout(
-            () => void this.request(!pending),
-            pending ? 250 : 2000,
-          );
+  paused(context: Coordination) {
+    const summary = this.cached(context.summary)?.data?.reply;
+    const preview = this.cached(context.preview)?.data?.reply;
+    return (
+      this.failed(context) ||
+      (summary?.kind === "changes" &&
+        pendingInspection(summary.observation.phase)) ||
+      (!!context.desired?.active &&
+        preview?.kind === "change_preview" &&
+        pendingInspection(preview.observation.phase))
+    );
+  }
+  private async read(
+    owner: string,
+    request: InspectionRequest,
+    scope: ObservationScope,
+    context: Coordination,
+  ) {
+    const key = keyFor(owner, request);
+    const rejectedGeneration = this.version(context);
+    return this.client.query<Cached>({
+      queryKey: key,
+      staleTime: 0,
+      queryFn: async () => {
+        try {
+          return await scope.read(["workspace", owner, request], async () => {
+            const generation = this.version(context);
+            try {
+              const reply = await workspaceRequest(owner, request);
+              if (reply.kind !== "changes" && reply.kind !== "change_preview")
+                throw new Error("Unexpected inspection reply");
+              return { reply, generation };
+            } catch (error) {
+              throw new InspectionFailure(generation, error);
+            }
+          });
+        } catch (error) {
+          throw error instanceof InspectionFailure
+            ? error
+            : new InspectionFailure(rejectedGeneration, error);
         }
       },
-    );
+    });
   }
+  async sequence(
+    context: Coordination,
+    scope: ObservationScope,
+    refresh: boolean,
+    current: () => boolean,
+    publish: (type: "summary" | "preview", key: Key) => void,
+  ) {
+    const desired = context.desired;
+    if (!desired?.owner || !current() || !this.freshness.ready(desired.owner))
+      return;
+    const { owner, workspaceId, active } = desired;
+    const selected = this.selected(context);
+    const request: InspectionRequest = {
+      operation: "changes",
+      workspace_id: workspaceId,
+      refresh,
+      ...context.page,
+    };
+    const summaryKey = keyFor(owner, request);
+    publish("summary", summaryKey);
+    try {
+      const result = await this.read(owner, request, scope, context);
+      if (!current() || result.reply.kind !== "changes") return;
+      const summary = result.reply.observation;
+      if (!active || !selected || summary.phase !== "ready" || !summary.page)
+        return;
+      // Always resolve restored opaque file identity against the current comparison.
+      const target = {
+        workspace_id: workspaceId,
+        comparison_id: summary.page.comparison_id,
+        file_id: selected.id,
+      };
+      const previewRequest: InspectionRequest = {
+        operation: "change_preview",
+        target,
+        load:
+          refresh ||
+          !this.cached(
+            keyFor(owner, { operation: "change_preview", target, load: false }),
+          )?.data,
+      };
+      const previewKey = keyFor(owner, previewRequest);
+      publish("preview", previewKey);
+      await this.read(owner, previewRequest, scope, context);
+    } catch {
+      // Query retains exact-target failures and last-good data; the actor pauses.
+    }
+  }
+}
+
+// Feature Hook owns library bindings and Query definitions; screens receive only
+// the ChangesView and targeted feature callbacks from useWorkspaceChanges.
+export function useInspectionView(reader: WorkspaceChangesReader): ChangesView {
+  const reading = useSelector(
+    reader.actor,
+    (snapshot) => ({
+      workspace: snapshot.context.desired?.workspaceId,
+      summary: snapshot.context.summary,
+      preview: snapshot.context.preview,
+      previous: snapshot.context.previousPreview,
+      loading: snapshot.matches("reading") || snapshot.matches("draining"),
+    }),
+    shallowEqual,
+  );
+  const selected = useStore(reader.presentation, (state) =>
+    reading.workspace ? state.inspection[reading.workspace] : undefined,
+  );
+  const summary = useQuery<Cached>(
+    {
+      queryKey: reading.summary ?? ["inspection", "inactive", "summary"],
+      enabled: false,
+      queryFn: skipToken,
+    },
+    reader.client,
+  );
+  const preview = useQuery<Cached>(
+    {
+      queryKey: reading.preview ?? ["inspection", "inactive", "preview"],
+      enabled: false,
+      queryFn: skipToken,
+    },
+    reader.client,
+  );
+  const previous = useQuery<Cached>(
+    {
+      queryKey: reading.previous ?? ["inspection", "inactive", "previous"],
+      enabled: false,
+      queryFn: skipToken,
+    },
+    reader.client,
+  );
+  return projectView(summary, preview, previous, selected, reading.loading);
 }

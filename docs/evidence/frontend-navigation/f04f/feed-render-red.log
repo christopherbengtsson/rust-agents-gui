@@ -1,0 +1,33 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-feed-bridge.test.tsx (2 tests | 1 failed) 72ms
+   × heartbeat acceptance does not render an unchanged feed selection 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-feed-bridge.test.tsx > heartbeat acceptance does not render an unchanged feed selection
+AssertionError: expected 4 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 4
+
+ ❯ src/observation-feed-bridge.test.tsx:91:19
+     89|   act(() => send(2, "heartbeat"));
+     90|   expect(acceptance.accept).toHaveBeenCalledTimes(2);
+     91|   expect(renders).toBe(before);
+       |                   ^
+     92| });
+     93|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  16:57:27
+   Duration  354ms (environment 50%, tests 23%, import 18%, transform 8%, setup 1%)
+

@@ -20,7 +20,8 @@ export function SupervisorConnection({
   connection: Connection;
 }) {
   const feedStopped =
-    connection.state === "connected" && connection.feed?.state === "stopped";
+    connection.state === "connected" &&
+    (connection.feed?.state === "stopped" || !!connection.feed?.message);
   const label = feedStopped
     ? "Observation delivery stopped"
     : connection.state === "connected"
@@ -71,7 +72,7 @@ export function SupervisorConnection({
           {connection.state === "error" && (
             <p className="error-detail">{connection.error}</p>
           )}
-          {connection.feed?.state === "stopped" && (
+          {connection.feed?.message && (
             <p className="error-detail" role="alert">
               {connection.feed.message}
             </p>

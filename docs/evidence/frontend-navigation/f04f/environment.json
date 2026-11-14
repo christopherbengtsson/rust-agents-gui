@@ -1,0 +1,26 @@
+{
+  "baseline": "1fc3d936bd1670f9451d21387975bc116204bb65",
+  "branch": "feature/m01-frontend-navigation",
+  "dirty": true,
+  "hardware": {
+    "cpu": "Apple M4 Pro",
+    "logical_cpus": 12,
+    "memory_bytes": 51539607552,
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+    "arch": "arm64"
+  },
+  "versions": {
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "node": "v26.13.1",
+    "pnpm": "12.18.0",
+    "xstate": "5.33.4",
+    "@xstate/react": "6.1.0"
+  },
+  "harness": {
+    "threads": 1,
+    "profile": "test",
+    "target": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "cache": "warm worktree default; no fresh private-target compilation"
+  }
+}

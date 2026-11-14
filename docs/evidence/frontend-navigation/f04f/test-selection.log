@@ -1,0 +1,126 @@
+src/App.test.tsx > the fixed shell preserves landmarks and empty navigation at width %i without global collapse or cookies
+src/App.test.tsx > diagnostics opens from the keyboard and Escape returns focus without reading status again
+src/App.test.tsx > connection failure stays visible until an explicit status retry; diagnostics never replay work
+src/App.test.tsx > refresh exposes pending feedback, blocks duplicate reads, and labels retained diagnostics as stale after failure
+src/App.test.tsx > remounting retrieves observations and never submits execution actions
+src/App.test.tsx > a connection failure with no error text still exposes the alert and retry
+src/App.test.tsx > Strict Mode ignores a late %s from the cleaned-up observation request
+src/App.test.tsx > a drained obsolete %s cannot replace the subsequent current observation
+src/App.test.tsx > a failed desktop identity read releases the pending guard for explicit retry
+src/App.test.tsx > connection failure replaces initial repository skeletons with unavailable guidance
+src/App.test.tsx > the app mounts one feed and exposes native delivery failure without replaying actions
+src/App.test.tsx > feed failures stay visible while native cleanup is still pending
+src/frontend-scheduling.test.tsx > workspace list fan-out waits behind two physical reads while explicit creation bypasses the queue
+src/frontend-scheduling.test.tsx > repository, workspace and inspection share a budget while status remains independent
+src/frontend-scheduling.test.tsx > navigation drops queued old targets while physically stalled reads drain
+src/frontend-scheduling.test.tsx > a failed desktop identity read cannot release a still-running status request
+src/frontend-scheduling.test.tsx > typed status admission errors retain readable transport feedback
+src/generated-contracts.test.tsx > generated serialization contracts require output defaults and allow flattened variants
+src/generated-contracts.test.tsx > structurally valid workspace paths still require normalized absolute locations
+src/generated-contracts.test.tsx > schema-valid numeric and multibyte payloads still require contextual budgets
+src/generated-contracts.test.tsx > every current synthetic corpus root passes its generated serialization validator
+src/generated-contracts.test.tsx > flattened schemas allow additional properties while contextual assertions reject contradictory states
+src/generated-contracts.test.tsx > structurally valid owner, delivery, target and feed relationships still fail contextual assertions
+src/generated-contracts.test.tsx > malformed fields, variants, results and noncanonical UUIDs fail generated structure
+src/observation-contracts.test.tsx > connection observations are decoded before they become presentation truth
+src/observation-contracts.test.tsx > the shared application corpus passes production TypeScript decoders
+src/observation-contracts.test.tsx > owner and result-variant checks happen before feature decoding, including domain errors
+src/observation-contracts.test.tsx > replacement replies before the next status refresh cannot overwrite an owner's observations
+src/observation-contracts.test.tsx > feature decoders reject wrong kind, full payload mismatch and impossible variants
+src/observation-contracts.test.tsx > malformed %s observations leave connection failure visible and preserve the last good snapshot
+src/observation-contracts.test.tsx > inspection retries may retain earlier failure evidence while %s
+src/observation-feed-bridge.test.tsx > repository and workspace progress traverses the mounted Tauri channel with exact acknowledgements
+src/observation-feed-bridge.test.tsx > heartbeat acceptance does not render an unchanged feed selection
+src/observation-feed.test.tsx > acceptance precedes ack, and reconnect uses the feed cursor rather than status
+src/observation-feed.test.tsx > a next batch may arrive before the preceding IPC acknowledgement promise settles
+src/observation-feed.test.tsx > stalls and malformed deliveries stop visibly without advancing the accepted cursor
+src/observation-feed.test.tsx > late setup is stopped and joined before the replacement is subscribed
+src/observation-feed.test.tsx > the shared protocol corpus passes production feed decoding
+src/observation-feed.test.tsx > malformed batch cannot advance acceptance: %j
+src/observation-feed.test.tsx > a failed stop attempt does not permanently block later explicit reconnect
+src/observation-feed.test.tsx > failed registration requests cleanup of its possibly attached native subscription
+src/observation-feed.test.tsx > cleanup failure stays visible and fenced until explicit native reconciliation
+src/observation-feed.test.tsx > configuration changes during stopping retain only the latest desired owner
+src/repositories.test.tsx > the native picker fills a path and only explicit registration submits it
+src/repositories.test.tsx > picker cancellation preserves the draft and picker failure allows manual entry
+src/repositories.test.tsx > restored selection remains selected while its details are collapsed
+src/repositories.test.tsx > registration selects the durable result and never submits twice
+src/repositories.test.tsx > reopening with a retained action retrieves its result without resubmitting
+src/repositories.test.tsx > unavailable repositories stay selected and storage failures retain the last observation
+src/repositories.test.tsx > a late folder-picker response cannot overwrite a reopened dialog
+src/repositories.test.tsx > invalid registration permits correction and preserves an actionable error
+src/repositories.test.tsx > lost registration reply reconciles the retained action without another submit
+src/repositories.test.tsx > capacity rejection allows correction of an oversized registration (restored: %s)
+src/repositories.test.tsx > selection during registration is not retargeted by its late completion
+src/repositories.test.tsx > cursor paging retains selection and previous returns to the original page
+src/repositories.test.tsx > malformed repository payloads stay visible rather than becoming empty navigation
+src/repositories.test.tsx > a missing action lookup preserves the storage failure that blocked intent
+src/repositories.test.tsx > reconnect ignores the previous owner's late observation without repeating actions (%s)
+src/repositories.test.tsx > reconnect retrieves a retained registration result without resubmitting
+src/repositories.test.tsx > explicit repository refresh reports loading while retaining the last observation
+src/repositories.test.tsx > Refresh status retains explicit reprobe through a delayed connection check
+src/retained-delivery.test.tsx > registration retains earlier uncertainty after $error.code until matching status
+src/retained-delivery.test.tsx > workspace retains earlier uncertainty after $error.code until matching status
+src/retained-delivery.test.tsx > a late registration transport failure cannot resurrect an authoritatively settled action
+src/retained-delivery.test.tsx > a callback captured before owner replacement cannot select its old-owner result when invoked later
+src/retained-delivery.test.tsx > retained repository and workspace lookups reject conflicting payloads without clearing identities or submitting
+src/workspace-changes.test.tsx > inspection validates exact workspace/comparison/file targets and display bounds
+src/workspace-changes.test.tsx > manual refresh submits once; push progress does not requeue work
+src/workspace-changes.test.tsx > changed owner discards late observations and reconnect only reads
+src/workspace-changes.test.tsx > failed refresh retains the comparison and preview; tab switching unmounts diff and preserves selection
+src/workspace-changes.test.tsx > narrow-window Sheet selects the single Changes tab and returns focus
+src/workspace-changes.test.tsx > a removed selection remains named and an old preview is never replaced by another file
+src/workspace-changes.test.tsx > visible summaries refresh every two seconds without overlapping a slow sequence
+src/workspace-changes.test.tsx > collapsed changes surfaces pause automatic reads until shown again
+src/workspace-changes.test.tsx > document visibility, disconnect and unmount stop timers; reconnect only observes
+src/workspace-changes.test.tsx > same-status edits refresh the selected preview only while Changes is active
+src/workspace-changes.test.tsx > tab changes drain an old read and preserve a queued manual refresh
+src/workspace-changes.test.tsx > late selected-file replies cannot replace a new selection, including A to B to A
+src/workspace-changes.test.tsx > inspection failures retain last-good data, pause timers and recover with manual Refresh
+src/workspace-changes.test.tsx > manual Refresh settles a queued comparison after a failed preview
+src/workspace-changes.test.tsx > pending previews follow push observations without repeated loads or summary refreshes
+src/workspace-changes.test.tsx > workspace changes isolate retained data and drain late replies before reading the new target
+src/workspace-changes.test.tsx > transport failure during a pending job keeps manual Refresh usable
+src/workspace-changes.test.tsx > maximum preview rendering stays bounded, keeps long paths accessible and resets position for a different file
+src/workspace-changes.test.tsx > keyboard tab activation and Sheet dismissal preserve selection and restore focus
+src/workspace-changes.test.tsx > unmount while IPC is pending ignores its rejection and schedules no reads
+src/workspace-changes.test.tsx > the resize separator remains keyboard reachable and changes the panel allocation
+src/workspace-changes.test.tsx > WorkspacePanel navigation keeps one physical read lane across keyed inspection views
+src/workspace-details.test.tsx > legacy UUID locations appear only after explicit disclosure
+src/workspace-details.test.tsx > pending allocation reports missing location without inventing a path or showing IDs
+src/workspaces.test.tsx > a restored uncertain action is read without replaying creation
+src/workspaces.test.tsx > explicit creation sends once with a retained action identity
+src/workspaces.test.tsx > creation in an unselected repository retains selection: %s
+src/workspaces.test.tsx > an old owner's creation reply cannot select a workspace after reconnect
+src/workspaces.test.tsx > a lost creation reply retrieves the same action and selects its failed workspace
+src/workspaces.test.tsx > switching selection prevents a late creation reply from stealing context
+src/workspaces.test.tsx > registration's recorded initial workspace is observed without a create request
+src/workspaces.test.tsx > a delayed initial-workspace lookup cannot override explicit repository selection
+src/workspaces.test.tsx > definite admission rejection retains the error but does not block another workspace's recovery
+src/workspaces.test.tsx > a rejected action retains its error while unrelated workspace progress follows hints without polling
+src/workspaces.test.tsx > definite rejection follows its pending action across repository navigation
+src/workspaces.test.tsx > pending name allocation is a valid observation, but partial and ready-without-location replies are rejected
+src/lib/complete-operation.test.tsx > preserves results and always settles, including a throwing error handler
+src/lib/feature-observations.test.tsx > baseline precedes repository reads, and hints during initial and follow-up reads stay pending
+src/lib/feature-observations.test.tsx > Query cancellation and remount retain physical identity and the original captured generation
+src/lib/feature-observations.test.tsx > hidden details do not fan out; overflow and resync remain owed separately by hidden targets
+src/lib/feature-observations.test.tsx > errors retain last-good data without retries and a new hint permits recovery
+src/lib/feature-observations.test.tsx > feed records feature dirtiness before ack and starts reads only after synchronous acceptance
+src/lib/feature-observations.test.tsx > hint-driven reads observe availability; explicit reprobe has a distinct physical flag and no Checking loop
+src/lib/feature-observations.test.tsx > local observations ignore browser offline/focus events and inactive Query data expires after five minutes
+src/lib/feature-observations.test.tsx > a failed detail stays paused across hide/remount until a new hint or explicit refresh
+src/lib/feature-observations.test.tsx > a hint while queued is captured by the eventual failed physical read and cannot trigger an extra retry
+src/lib/inspection-actor.test.tsx > inspection waits for accepted baseline and follows push progress without pending polling
+src/lib/inspection-actor.test.tsx > hints before baseline and during summary reads remain owed after each captured generation
+src/lib/inspection-actor.test.tsx > hidden and released interests drain physical summary work without starting a preview or competitor
+src/lib/inspection-actor.test.tsx > failed inspection stays paused across hide/remount and recovers on a newer hint
+src/lib/inspection-actor.test.tsx > restored file context targets the newly observed comparison after workspace and Settings-style release
+src/lib/inspection-actor.test.tsx > paging pins comparison identity and explicit refresh returns to First
+src/lib/inspection-actor.test.tsx > unrelated presentation and freshness updates do not render inspection consumers
+src/lib/inspection-actor.test.tsx > hiding during the first physical read does not convert disposal into a paused application failure
+src/lib/observation-coordinator.test.tsx > two physical reads run; identical queued and active targets coalesce
+src/lib/observation-coordinator.test.tsx > disposal drops queued work and drains active work without admitting a replacement early
+src/lib/observation-coordinator.test.tsx > 64 queued targets retain admission and reject only the newest distinct target
+src/lib/observation-coordinator.test.tsx > owner, page and behavior flags distinguish reads; equivalent object keys coalesce
+src/lib/observation-coordinator.test.tsx > one consumer can leave a coalesced read; failures and synchronous throws release capacity without retry
+src/lib/observation-coordinator.test.tsx > a new interest coalesces with a physically draining identical read while the disposed interest stays obsolete

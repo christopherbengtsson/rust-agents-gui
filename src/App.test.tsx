@@ -12,6 +12,8 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { App } from "./App";
+import { SupervisorConnection } from "./components/blocks/supervisor-connection";
+import { decodeSnapshot } from "./lib/observation-contracts";
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
@@ -417,4 +419,28 @@ test("the app mounts one feed and exposes native delivery failure without replay
       .mocked(invoke)
       .mock.calls.some(([command]) => command === "workspace_request"),
   ).toBe(false);
+});
+
+test("feed failures stay visible while native cleanup is still pending", async () => {
+  render(
+    <SupervisorConnection
+      connection={{
+        state: "connected",
+        observation: { snapshot: decodeSnapshot(snapshot), desktopPid: 42 },
+        feed: {
+          state: "stopping",
+          message: "Observation delivery stalled. Native cleanup pending.",
+        },
+      }}
+    />,
+  );
+  expect(screen.getByRole("status").textContent).toContain(
+    "Observation delivery stopped",
+  );
+  await userEvent
+    .setup()
+    .click(screen.getByRole("button", { name: "Connection details" }));
+  expect(screen.getByRole("alert").textContent).toContain(
+    "Native cleanup pending",
+  );
 });

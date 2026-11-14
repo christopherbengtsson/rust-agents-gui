@@ -93,8 +93,8 @@ callers together; Git history records their evolution.
 
 ## Observation lifetime status
 
-F04e now uses app-scoped Query observations for repositories/workspaces; inspection
-still uses the existing reader described below.
+F04f now uses app-scoped Query observations for repository, workspace and inspection
+bodies, with one XState feed actor and one inspection actor above layouts.
 The [amended foundation](../../.scratch/frontend-navigation/spec.md) and
 [observation guidance](../../docs/agents/observations.md) govern their replacement:
 F04e establishes app-lifetime construction and repository/workspace feature
@@ -242,18 +242,20 @@ retained observations remain readable and marked stale.
   workspace's Workspace/Changes tabs and one `useWorkspaceChanges` owner above
   their content. Use it for workspace-wide uncommitted inspection; existing
   WorkspaceDetails retains creation/recovery presentation. It receives an exact
-  workspace ID and connected supervisor owner. One reader coordinates summary
+  workspace ID and connected supervisor owner. One app-lifetime XState reader coordinates summary
   refresh every two seconds while Changes, the expanded file panel or the open
-  Sheet is visible; selected previews load only in Changes. Pending jobs use
-  observation-only polling. Hidden documents/surfaces, disconnection and failures
+  Sheet is visible; selected previews load only in Changes. Pending jobs follow accepted feed invalidations with
+  observation-only reads; covered 250 ms progress polling is removed. Hidden documents/surfaces, disconnection and failures
   pause automatic reads; manual Refresh remains available after errors. Reconnect
-  first retrieves observations. Generations isolate targets and stale replies;
-  the physical read lane drains before another sequence starts. App
+  first retrieves observations. Query retains validated observations and last-good data; bounded dirty generations
+  preserve hints during reads. Actor request identities isolate stale replies;
+  the physical sequence drains before another sequence starts. App
   owns the reader's lifetime above layouts and the workspace-keyed presentation, so navigation
   also drains old IPC before reading the new target. Supply that stable reader
   when composing WorkspaceInspection; keyed view resets release interest and retain
-  no extra readers. Inspection caching, sequencing and polling remain unchanged
-  until F04f.
+  no extra readers. useWorkspaceChanges requires that owner. Zustand keeps selected
+  file/comparison context in memory and the reader revalidates it through the current
+  comparison before previewing. Durable reading-context persistence remains F05.
 - **ChangedFiles** is the bounded file-selection block shared by the desktop
   right panel and the below-880-px Sheet. It receives observations and a selection
   callback. Opaque file IDs, never display labels, target previews. It renders one
@@ -292,14 +294,17 @@ when the retained comparison ID has not changed.
 ### F04 observation delivery
 
 `App` owns one acknowledged native feed through `useObservationFeed`, independently
-of feature reads. Its existing controller validates owner/subscription/batch/cursor
+of feature reads. Its XState owner validates owner/subscription/batch/cursor
 and typed hints, then calls the synchronous app acceptance sink before advancing
 the accepted cursor and acknowledging. Repository/workspace modules own Query
-freshness and visible/retained-action interests; the controller has no competing
-feature-dirtiness ledger. A shared bounded generation budget retains inspection
-invalidations through the inspection owner until F04f consumes them.
+freshness and visible/retained-action interests; the feed has no competing
+feature-dirtiness ledger. A shared bounded generation budget also retains hidden
+inspection invalidations until that feature becomes interested.
 Feed failures appear in the existing connection status/details and retain last-good
-feature observations. The controller serializes replacement after physical stop/join,
-including late registration and Strict Mode cleanup. F04f will replace feed/inspection
-lifecycle internals and complete inspection Query/polling migration. Historical
-F04 evidence is preserved.
+feature observations. The actor serializes replacement after physical stop/join,
+including late registration and Strict Mode cleanup. Configuration changes during
+cleanup update the latest desired owner; failed cleanup stays visible and fences
+replacement until exact native stop/join reconciliation succeeds. Failure remains
+visible while cleanup is pending. Views release interest rather than terminating
+app actors. Historical F04–F04e evidence is preserved; actual native qualification
+remains F04g.
