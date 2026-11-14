@@ -1,0 +1,35 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/observation-coordinator.test.tsx (6 tests | 1 failed) 11ms
+   × a new interest coalesces with a physically draining identical read while the disposed interest stays obsolete 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/observation-coordinator.test.tsx > a new interest coalesces with a physically draining identical read while the disposed interest stays obsolete
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/lib/observation-coordinator.test.tsx:140:27
+    138|   const replacement = vi.fn(() => Promise.resolve(99));
+    139|   const read = current.read(["same-target"], replacement);
+    140|   expect(replacement).not.toHaveBeenCalled();
+       |                           ^
+    141|   held.resolve(1);
+    142|   expect(await read).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  03:05:50
+   Duration  243ms (environment 83%, transform 8%, tests 6%, import 2%, worker 1%)

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { ObservationCoordinator } from "@/lib/observation-coordinator";
 import { RepositorySidebar } from "@/components/blocks/repository-sidebar";
 import { WorkspacePanel } from "@/components/blocks/workspace-panel";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -6,11 +8,13 @@ import { useWorkspaces } from "@/hooks/use-workspaces";
 import { useRepositories } from "@/hooks/use-repositories";
 
 export function App() {
+  const [reads] = useState(() => new ObservationCoordinator());
   const { connection, refreshStatus } = useSupervisorConnection();
   const repositories = useRepositories(
     connection.state === "connected"
       ? connection.observation.snapshot.cursor.owner
       : undefined,
+    reads,
   );
   const workspaces = useWorkspaces(
     connection.state === "connected"
@@ -19,6 +23,7 @@ export function App() {
     repositories.selected?.id,
     repositories.page?.repositories.map((r) => r.id).join(",") ?? "",
     repositories.initialWorkspace,
+    reads,
   );
   return (
     <SidebarProvider className="h-dvh min-h-0">
@@ -31,6 +36,7 @@ export function App() {
         workspaces={workspaces}
       />
       <WorkspacePanel
+        reads={reads}
         connection={connection}
         workspaces={workspaces}
         repositories={repositories}

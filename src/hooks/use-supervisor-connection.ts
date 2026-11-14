@@ -4,6 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 
 import {
   decodeDesktopPid,
+  decodeRequestFailure,
   decodeSnapshot,
   type SupervisorSnapshot,
 } from "@/lib/observation-contracts";
@@ -23,13 +24,22 @@ async function readObservation(): Promise<
   { ok: true; observation: Observation } | { ok: false; error: string }
 > {
   try {
-    const [snapshot, desktopPid] = await Promise.all([
+    const [snapshot, desktopPid] = await Promise.allSettled([
       invoke<unknown>("supervisor_status").then(decodeSnapshot),
       invoke<unknown>("desktop_pid").then(decodeDesktopPid),
     ]);
-    return { ok: true, observation: { snapshot, desktopPid } };
+    if (snapshot.status === "rejected") throw snapshot.reason;
+    if (desktopPid.status === "rejected") throw desktopPid.reason;
+    return {
+      ok: true,
+      observation: { snapshot: snapshot.value, desktopPid: desktopPid.value },
+    };
   } catch (error) {
-    return { ok: false, error: String(error) };
+    return {
+      ok: false,
+      error:
+        typeof error === "string" ? error : decodeRequestFailure(error).message,
+    };
   }
 }
 
@@ -41,17 +51,29 @@ export function useSupervisorConnection() {
   });
   const mounted = useRef(false);
   const pending = useRef<symbol | null>(null);
+  const generation = useRef(0);
+  const queued = useRef(false);
 
   // Mount reads observations without an extra synchronous checking update.
   // Request identity and cleanup remain shared with explicit refresh.
-  const readStatus = useCallback(async () => {
-    if (!mounted.current || pending.current !== null) return;
+  const readStatus = useCallback(async function read() {
+    if (!mounted.current) return;
+    if (pending.current !== null) {
+      queued.current = true;
+      return;
+    }
+    const epoch = generation.current;
     const request = Symbol();
     pending.current = request;
     return completeOperation(
       async () => {
         await readObservation().then((outcome) => {
-          if (!mounted.current || pending.current !== request) return;
+          if (
+            !mounted.current ||
+            generation.current !== epoch ||
+            pending.current !== request
+          )
+            return;
           if (outcome.ok)
             setConnection({
               state: "connected",
@@ -68,6 +90,10 @@ export function useSupervisorConnection() {
       undefined,
       () => {
         if (pending.current === request) pending.current = null;
+        if (mounted.current && queued.current) {
+          queued.current = false;
+          void read();
+        }
       },
     );
   }, []);
@@ -86,9 +112,9 @@ export function useSupervisorConnection() {
     void readStatus();
     return () => {
       mounted.current = false;
-      // Ignore this setup's late replies, including after Strict Mode re-setup.
-      // This invalidates presentation ownership; it does not cancel Rust work.
-      pending.current = null;
+      // Invalidate presentation, retaining the physical request until settlement.
+      generation.current += 1;
+      queued.current = false;
     };
   }, [readStatus]);
 

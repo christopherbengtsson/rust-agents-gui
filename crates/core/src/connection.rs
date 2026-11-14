@@ -13,8 +13,12 @@ use std::{
     },
     path::{Path, PathBuf},
     process::{Command, Stdio},
+    sync::{Arc, Mutex},
     time::{Duration, Instant},
 };
+mod admission;
+pub use admission::{Admitted, ConnectionSlots};
+
 const MAX_FRAME_BYTES: usize = 64 * 1024;
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
 pub const PROTOCOL_VERSION: u32 = 6;
@@ -126,40 +130,162 @@ enum Response {
     },
 }
 
-/// Desktop connection state lives in Rust core: initialize once, then only retrieve observations.
+/// Immutable exchange configuration is independent of short observation-state locks.
+#[derive(Clone)]
 pub struct SupervisorConnection {
     state: PathBuf,
     executable: PathBuf,
+    observed: Arc<Mutex<ConnectionState>>,
+    observations: ConnectionSlots,
+    intents: ConnectionSlots,
+    status: ConnectionSlots,
+    // F04 owns the subscription resource; its budget cannot borrow observation slots.
+    _subscription: ConnectionSlots,
+}
+#[derive(Default)]
+struct ConnectionState {
     initialized: bool,
     cursor: Option<SnapshotCursor>,
 }
 impl SupervisorConnection {
-    /// Caller context binds actions to an observed owner without retargeting or replay.
+    pub fn new(state: PathBuf, executable: PathBuf) -> Self {
+        Self {
+            state,
+            executable,
+            observed: Arc::new(Mutex::new(ConnectionState::default())),
+            observations: ConnectionSlots::new(2),
+            intents: ConnectionSlots::new(1),
+            status: ConnectionSlots::new(1),
+            _subscription: ConnectionSlots::new(1),
+        }
+    }
+
+    /// Admission happens on the calling thread, before blocking work is spawned.
+    pub fn prepare_repository_request(
+        &self,
+        expected_owner: String,
+        request: RepositoryRequest,
+    ) -> Result<
+        Admitted<
+            impl FnOnce() -> Result<OwnedReply<RepositoryReply>, RequestFailure> + Send + 'static,
+        >,
+        RequestFailure,
+    > {
+        self.prepare_repository_request_with(expected_owner, request, |state, request| {
+            exchange_target(state, request, &mut LocalClient)
+        })
+    }
+
+    fn prepare_repository_request_with<F>(
+        &self,
+        expected_owner: String,
+        request: RepositoryRequest,
+        exchange: F,
+    ) -> Result<
+        Admitted<impl FnOnce() -> Result<OwnedReply<RepositoryReply>, RequestFailure> + use<F>>,
+        RequestFailure,
+    >
+    where
+        F: FnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
+    {
+        let lane = if matches!(request, RepositoryRequest::Register { .. }) {
+            &self.intents
+        } else {
+            &self.observations
+        };
+        let permit = Self::admit(lane)?;
+        self.require_connection(&expected_owner)?;
+        let client = SupervisorClient::new(self.state.clone());
+        Ok(Admitted {
+            permit,
+            work: move || client.repository_request_with(&expected_owner, request, exchange),
+        })
+    }
+
+    pub fn prepare_workspace_request(
+        &self,
+        expected_owner: String,
+        request: crate::workspaces::WorkspaceRequest,
+    ) -> Result<
+        Admitted<
+            impl FnOnce() -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure>
+            + Send
+            + 'static,
+        >,
+        RequestFailure,
+    > {
+        use crate::workspaces::WorkspaceRequest;
+        let lane = if matches!(
+            request,
+            WorkspaceRequest::Create { .. } | WorkspaceRequest::Reconcile { .. }
+        ) {
+            &self.intents
+        } else {
+            &self.observations
+        };
+        let permit = Self::admit(lane)?;
+        self.require_connection(&expected_owner)?;
+        let client = SupervisorClient::new(self.state.clone());
+        Ok(Admitted {
+            permit,
+            work: move || client.workspace_request(&expected_owner, request),
+        })
+    }
+
+    pub fn prepare_snapshot(
+        &self,
+    ) -> Result<
+        Admitted<impl FnOnce() -> io::Result<SupervisorSnapshot> + Send + 'static>,
+        RequestFailure,
+    > {
+        let permit = Self::admit(&self.status)?;
+        let connection = self.clone();
+        Ok(Admitted {
+            permit,
+            work: move || connection.snapshot_admitted_with(&mut LocalDiscovery::new()),
+        })
+    }
+
+    fn admit(lane: &ConnectionSlots) -> Result<admission::ConnectionPermit, RequestFailure> {
+        lane.try_acquire().ok_or_else(|| RequestFailure::transport(
+            TransportCode::Busy, Delivery::NotSent,
+            "Desktop connection lane is busy. Wait for physical requests to finish before retrying explicitly.",
+        ))
+    }
+
     pub fn repository_request(
         &self,
         expected_owner: &str,
         request: RepositoryRequest,
     ) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
-        self.require_connection(expected_owner)?;
-        SupervisorClient::new(self.state.clone()).repository_request(expected_owner, request)
+        self.prepare_repository_request(expected_owner.into(), request)?
+            .run()
     }
     pub fn workspace_request(
         &self,
         expected_owner: &str,
         request: crate::workspaces::WorkspaceRequest,
     ) -> Result<OwnedReply<crate::workspaces::WorkspaceReply>, RequestFailure> {
-        self.require_connection(expected_owner)?;
-        SupervisorClient::new(self.state.clone()).workspace_request(expected_owner, request)
+        self.prepare_workspace_request(expected_owner.into(), request)?
+            .run()
     }
+
     fn require_connection(&self, expected_owner: &str) -> Result<(), RequestFailure> {
-        if !self.initialized || self.cursor.is_none() {
+        let observed = self.observed.lock().map_err(|e| {
+            RequestFailure::transport(
+                TransportCode::NotConnected,
+                Delivery::NotSent,
+                e.to_string(),
+            )
+        })?;
+        if !observed.initialized || observed.cursor.is_none() {
             return Err(RequestFailure::transport(
                 TransportCode::NotConnected,
                 Delivery::NotSent,
                 "Connect to the supervisor before submitting targeted requests.",
             ));
         }
-        if self
+        if observed
             .cursor
             .as_ref()
             .is_some_and(|cursor| cursor.owner != expected_owner)
@@ -172,29 +298,44 @@ impl SupervisorConnection {
         }
         Ok(())
     }
-    pub fn new(state: PathBuf, executable: PathBuf) -> Self {
-        Self {
-            state,
-            executable,
-            initialized: false,
-            cursor: None,
-        }
-    }
 
-    pub fn snapshot(&mut self) -> io::Result<SupervisorSnapshot> {
+    pub fn snapshot(&self) -> io::Result<SupervisorSnapshot> {
         self.snapshot_with(&mut LocalDiscovery::new())
     }
-
-    fn snapshot_with(&mut self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
-        if !self.initialized {
+    fn snapshot_with(&self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
+        let _permit = self
+            .status
+            .try_acquire()
+            .ok_or_else(|| io::Error::new(io::ErrorKind::WouldBlock, "Status lane is busy"))?;
+        self.snapshot_admitted_with(effects)
+    }
+    fn snapshot_admitted_with(
+        &self,
+        effects: &mut impl Discovery,
+    ) -> io::Result<SupervisorSnapshot> {
+        let (initialized, cursor) = {
+            let observed = self
+                .observed
+                .lock()
+                .map_err(|e| io::Error::other(e.to_string()))?;
+            (observed.initialized, observed.cursor.clone())
+        };
+        if !initialized {
             discover(&self.state, &self.executable, effects)?;
-            self.initialized = true;
+            // Retain discovery success even if the subsequent status exchange fails.
+            self.observed
+                .lock()
+                .map_err(|e| io::Error::other(e.to_string()))?
+                .initialized = true;
         }
-        let snapshot = effects.snapshot(&self.state, self.cursor.clone())
+        let snapshot = effects.snapshot(&self.state, cursor)
             .map_err(|e| io::Error::new(e.kind(), format!(
                 "Cannot read supervisor observations: {e}. Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.")))?;
         validate_snapshot(&snapshot)?;
-        self.cursor = Some(snapshot.cursor.clone());
+        self.observed
+            .lock()
+            .map_err(|e| io::Error::other(e.to_string()))?
+            .cursor = Some(snapshot.cursor.clone());
         Ok(snapshot)
     }
 }

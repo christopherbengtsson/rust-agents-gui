@@ -1,3 +1,4 @@
+import type { ObservationScope } from "./observation-coordinator";
 import { invoke } from "@tauri-apps/api/core";
 import { type RepositoryError } from "./repositories";
 import {
@@ -141,6 +142,16 @@ function workspace(value: unknown): value is Workspace {
         domainError(value.status.error)))
   );
 }
+export function readWorkspace(
+  scope: ObservationScope,
+  expectedOwner: string,
+  request: Exclude<WorkspaceRequest, WorkspaceAction>,
+) {
+  return scope.read(["workspace", expectedOwner, request], () =>
+    workspaceRequest(expectedOwner, request),
+  );
+}
+
 export async function workspaceRequest(
   expectedOwner: string,
   request: WorkspaceRequest,

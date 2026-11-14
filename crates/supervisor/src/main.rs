@@ -2,12 +2,13 @@ use std::{
     env,
     io::{self, Write},
     path::PathBuf,
-    sync::{
-        Arc,
-        atomic::{AtomicUsize, Ordering},
-    },
+    sync::Arc,
 };
-use workspace_core::{Core, connection::serve_connection, supervisor::SupervisorOwner};
+use workspace_core::{
+    Core,
+    connection::{ConnectionSlots, serve_connection},
+    supervisor::SupervisorOwner,
+};
 
 fn main() -> io::Result<()> {
     let mut arguments = env::args_os().skip(1);
@@ -29,20 +30,19 @@ fn main() -> io::Result<()> {
     workspace_core::supervisor::restrict_creation_permissions();
     let owner = SupervisorOwner::bind(&state)?;
     let core = Arc::new(Core::with_state(&state).map_err(io::Error::other)?);
-    let active = Arc::new(AtomicUsize::new(0));
+    let slots = ConnectionSlots::new(8);
     println!("ready");
     io::stdout().flush()?;
     for stream in owner.listener.incoming() {
         let stream = stream?;
-        if active.load(Ordering::SeqCst) >= 8 {
+        let Some(permit) = slots.try_acquire() else {
             continue;
-        }
-        active.fetch_add(1, Ordering::SeqCst);
-        let (core, active) = (core.clone(), active.clone());
+        };
+        let core = core.clone();
         std::thread::spawn(move || {
+            let _permit = permit;
             // Invalid/abandoned clients are isolated; no peer-controlled output is logged.
             let _ = serve_connection(&core, stream);
-            active.fetch_sub(1, Ordering::SeqCst);
         });
     }
     Ok(())

@@ -49,10 +49,10 @@ remains separate from controlled units.
 
 ## Acceptance
 
-- [ ] Socket I/O holds no shared connection-state lock.
-- [ ] Admission is bounded before blocking tasks start, with no native waiting queue.
-- [ ] Frontend reads are bounded/coalesced and preserve the one physical inspection lane.
-- [ ] Controlled scheduling/cleanup/discovery regressions pass; no new async runtime migration is introduced.
+- [x] Socket I/O holds no shared connection-state lock.
+- [x] Admission is bounded before blocking tasks start, with no native waiting queue.
+- [x] Frontend reads are bounded/coalesced and preserve the one physical inspection lane.
+- [x] Controlled scheduling/cleanup/discovery regressions pass; no new async runtime migration is introduced.
 
 ## Handoff boundary
 
@@ -68,3 +68,27 @@ Acceptance remains open until linked implementation and qualification evidence e
 
 Expanded source pointers, implementation boundaries and observable completion
 scenarios from the agreed plan. No implementation or acceptance is claimed.
+
+
+### 2026-11-14 — F03 implemented, reviewed and verified
+
+Confirmed F02's checked acceptance and dated evidence at
+`7fdd217e6e1c920ec6036256713a6a16d1befd62`, continuing the existing feature branch.
+Rust admits bounded observation/intent/status work before blocking spawn, owns
+physical-completion permits and server cleanup guards, and holds no connection-state
+lock during discovery or socket exchange. One app-owned coordinator bounds and
+coalesces feature reads while retaining inspection's physical sequence. Explicit
+submissions and sticky uncertainty remain outside automatic read scheduling.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f03.md) records source identity,
+controlled coverage, failed attempts, independent Standards/Spec review and its
+corrected coalescing finding. The final gate passed 121 Rust + 25 tooling + 100
+frontend checks, followed by the required measured runs and separate frontend
+bundling. The existing concurrent `docs/IDEAS.md` edits remain preserved/excluded.
+
+Handoff decision: after obsolete queued interests are removed, an additional distinct
+read beyond 64 still-relevant queued targets is visibly rejected; admitted reads and
+coalesced interests are preserved. The evidence records the rationale and regression.
+Actual desktop/process/socket/latency, packaging and native-provider qualification
+were not performed or claimed. No provider submissions. F04 is next, remains
+separate/unimplemented, and was not started; stop after this ticket.

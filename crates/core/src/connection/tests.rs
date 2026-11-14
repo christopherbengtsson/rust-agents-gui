@@ -1,6 +1,358 @@
 use super::*;
 use std::{cell::RefCell, collections::VecDeque, io::Cursor, rc::Rc};
 
+#[test]
+fn desktop_admission_leaves_status_and_intent_independent_of_stalled_observations() {
+    let connection = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    connection
+        .snapshot_with(&mut DiscoveryScenario::new(vec![
+            Ok(snapshot()),
+            Ok(snapshot()),
+        ]))
+        .unwrap();
+    let read = || RepositoryRequest::List {
+        after: None,
+        refresh: false,
+    };
+    let first = connection
+        .prepare_repository_request("owner-a".into(), read())
+        .unwrap();
+    let second = connection
+        .prepare_repository_request("owner-a".into(), read())
+        .unwrap();
+    let Err(RequestFailure::Transport { error }) =
+        connection.prepare_repository_request("owner-a".into(), read())
+    else {
+        panic!("third observation must fail before spawn")
+    };
+    assert_eq!(error.code, TransportCode::Busy);
+    assert_eq!(error.delivery, Delivery::NotSent);
+    let status = connection.prepare_snapshot().unwrap();
+    let intent = connection
+        .prepare_repository_request(
+            "owner-a".into(),
+            RepositoryRequest::Register {
+                request: crate::workspaces::RegisterRepository {
+                    action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
+                    path: "/repo".into(),
+                    create_initial_workspace: false,
+                },
+            },
+        )
+        .unwrap();
+    assert!(connection.prepare_snapshot().is_err());
+    drop((status, intent, first));
+    assert!(
+        connection
+            .prepare_repository_request("owner-a".into(), read())
+            .is_ok()
+    );
+    drop(second);
+}
+
+#[test]
+fn abandoned_waiter_keeps_physical_admission_until_exchange_completes() {
+    use std::sync::mpsc;
+    let connection = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    connection
+        .snapshot_with(&mut DiscoveryScenario::new(vec![
+            Ok(snapshot()),
+            Ok(snapshot()),
+        ]))
+        .unwrap();
+    let read = || RepositoryRequest::List {
+        after: None,
+        refresh: false,
+    };
+    let (started, entered) = mpsc::channel();
+    let (finish, release) = mpsc::channel();
+    let (reply, waiter) = mpsc::channel();
+    let checking = connection.clone();
+    let admitted = connection
+        .prepare_repository_request_with("owner-a".into(), read(), move |_, _| {
+            // Acquiring admission/state while physically exchanging must never block on a state lock.
+            assert!(checking.observed.try_lock().is_ok());
+            started.send(()).unwrap();
+            release.recv().unwrap();
+            Err(unavailable("controlled lost reply"))
+        })
+        .unwrap();
+    let worker = std::thread::spawn(move || {
+        let _ = reply.send(admitted.run());
+    });
+    entered.recv().unwrap();
+    drop(waiter);
+    let second = connection
+        .prepare_repository_request("owner-a".into(), read())
+        .unwrap();
+    assert!(
+        connection
+            .prepare_repository_request("owner-a".into(), read())
+            .is_err()
+    );
+    assert!(connection.prepare_snapshot().is_ok());
+    finish.send(()).unwrap();
+    worker.join().unwrap();
+    assert!(
+        connection
+            .prepare_repository_request("owner-a".into(), read())
+            .is_ok()
+    );
+    drop(second);
+}
+
+#[test]
+fn admitted_failure_unwind_and_unstarted_drop_release_their_slots() {
+    let slots = ConnectionSlots::new(1);
+    let failed = Admitted {
+        permit: slots.try_acquire().unwrap(),
+        work: || Err::<(), _>("failure"),
+    };
+    assert!(failed.run().is_err());
+    let unwinds = Admitted {
+        permit: slots.try_acquire().unwrap(),
+        work: || panic!("controlled worker unwind"),
+    };
+    assert!(std::panic::catch_unwind(|| unwinds.run()).is_err());
+    drop(Admitted {
+        permit: slots.try_acquire().unwrap(),
+        work: || (),
+    });
+    assert!(slots.try_acquire().is_some());
+    let server = ConnectionSlots::new(8);
+    let peers: Vec<_> = (0..8).map(|_| server.try_acquire().unwrap()).collect();
+    assert!(server.try_acquire().is_none());
+    drop(peers);
+    assert!(server.try_acquire().is_some());
+}
+
+#[test]
+fn only_one_discovery_is_admitted_and_status_does_not_lock_across_effects() {
+    struct InspectDiscovery<'a> {
+        connection: &'a SupervisorConnection,
+        effects: DiscoveryScenario,
+    }
+    impl Discovery for InspectDiscovery<'_> {
+        fn prepare(&mut self, path: &Path) -> io::Result<()> {
+            assert!(self.connection.observed.try_lock().is_ok());
+            let Err(RequestFailure::Transport { error }) = self.connection.prepare_snapshot()
+            else {
+                panic!("concurrent discovery admitted")
+            };
+            assert_eq!(error.code, TransportCode::Busy);
+            self.effects.prepare(path)
+        }
+        fn snapshot(
+            &mut self,
+            state: &Path,
+            after: Option<SnapshotCursor>,
+        ) -> io::Result<SupervisorSnapshot> {
+            assert!(self.connection.observed.try_lock().is_ok());
+            self.effects.snapshot(state, after)
+        }
+        fn owner_present(&mut self, path: &Path) -> io::Result<bool> {
+            self.effects.owner_present(path)
+        }
+        fn start(&mut self, executable: &Path, path: &Path) -> io::Result<()> {
+            self.effects.start(executable, path)
+        }
+        fn elapsed(&self) -> Duration {
+            self.effects.elapsed()
+        }
+        fn wait(&mut self, duration: Duration) {
+            self.effects.wait(duration);
+        }
+    }
+    let connection = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    let mut effects = InspectDiscovery {
+        connection: &connection,
+        effects: DiscoveryScenario::new(vec![
+            failure(io::ErrorKind::NotFound),
+            Ok(snapshot()),
+            failure(io::ErrorKind::UnexpectedEof),
+            Ok(snapshot()),
+        ]),
+    };
+    assert!(connection.snapshot_with(&mut effects).is_err());
+    assert!(connection.snapshot_with(&mut effects).is_ok());
+    assert_eq!(
+        effects
+            .effects
+            .calls
+            .iter()
+            .filter(|&&call| call == "start")
+            .count(),
+        1
+    );
+    assert_eq!(
+        effects
+            .effects
+            .calls
+            .iter()
+            .filter(|&&call| call == "prepare")
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn two_physical_exchanges_allow_status_and_control_effects_before_either_finishes() {
+    let connection = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    connection
+        .snapshot_with(&mut DiscoveryScenario::new(vec![
+            Ok(snapshot()),
+            Ok(snapshot()),
+        ]))
+        .unwrap();
+    let read = || RepositoryRequest::List {
+        after: None,
+        refresh: false,
+    };
+    connection
+        .prepare_repository_request_with("owner-a".into(), read(), |_, _| {
+            connection
+                .prepare_repository_request_with("owner-a".into(), read(), |_, _| {
+                    assert!(
+                        connection
+                            .prepare_repository_request("owner-a".into(), read())
+                            .is_err()
+                    );
+                    assert!(
+                        connection
+                            .snapshot_with(&mut DiscoveryScenario::new(vec![Ok(snapshot())]))
+                            .is_ok()
+                    );
+                    let register = RepositoryRequest::Register {
+                        request: crate::workspaces::RegisterRepository {
+                            action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
+                            path: "/repo".into(),
+                            create_initial_workspace: false,
+                        },
+                    };
+                    connection
+                        .prepare_repository_request_with(
+                            "owner-a".into(),
+                            register,
+                            |_, request| {
+                                assert!(matches!(
+                                    request.repository,
+                                    Some(RepositoryRequest::Register { .. })
+                                ));
+                                assert!(connection.observed.try_lock().is_ok());
+                                Ok(Response::Repository {
+                                    owner: "owner-a".into(),
+                                    result: Err(RepositoryError::storage(
+                                        "controlled storage outcome",
+                                    )),
+                                })
+                            },
+                        )
+                        .unwrap()
+                        .run()
+                        .unwrap();
+                    Err(unavailable("second exchange finishes later"))
+                })
+                .unwrap()
+                .run()
+                .unwrap_err();
+            Err(unavailable("first exchange finishes last"))
+        })
+        .unwrap()
+        .run()
+        .unwrap_err();
+}
+
+#[test]
+fn workspace_variants_share_observation_and_intent_budgets_with_repository_requests() {
+    use serde_json::json;
+    let connection = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    connection
+        .snapshot_with(&mut DiscoveryScenario::new(vec![
+            Ok(snapshot()),
+            Ok(snapshot()),
+        ]))
+        .unwrap();
+    let id = "00000000-0000-4000-8000-000000000001";
+    let observations = [
+        json!({"operation":"list","repository_id":id,"after":null}),
+        json!({"operation":"get","id":id}),
+        json!({"operation":"action","action_id":id}),
+        json!({"operation":"changes","workspace_id":id,"refresh":true,"comparison_id":null,"after":null}),
+        json!({"operation":"change_preview","target":{"workspace_id":id,"comparison_id":id,"file_id":id},"load":true}),
+    ];
+    for value in observations {
+        let request = serde_json::from_value(value).unwrap();
+        let first = connection
+            .prepare_workspace_request("owner-a".into(), request)
+            .unwrap();
+        let second = connection
+            .prepare_repository_request(
+                "owner-a".into(),
+                RepositoryRequest::Action {
+                    action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
+                },
+            )
+            .unwrap();
+        assert!(
+            connection
+                .prepare_workspace_request(
+                    "owner-a".into(),
+                    crate::workspaces::WorkspaceRequest::Get {
+                        id: crate::workspaces::WorkspaceId(uuid::Uuid::nil())
+                    }
+                )
+                .is_err()
+        );
+        drop((first, second));
+    }
+    for value in [
+        json!({"operation":"create","action_id":id,"repository_id":id}),
+        json!({"operation":"reconcile","action_id":id,"workspace_id":id}),
+    ] {
+        let request = serde_json::from_value(value).unwrap();
+        let first = connection
+            .prepare_workspace_request("owner-a".into(), request)
+            .unwrap();
+        assert!(
+            connection
+                .prepare_workspace_request(
+                    "owner-a".into(),
+                    crate::workspaces::WorkspaceRequest::Create {
+                        action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
+                        repository_id: crate::workspaces::RepositoryId(uuid::Uuid::nil())
+                    }
+                )
+                .is_err()
+        );
+        assert!(
+            connection
+                .prepare_repository_request(
+                    "owner-a".into(),
+                    RepositoryRequest::List {
+                        after: None,
+                        refresh: true
+                    }
+                )
+                .is_ok()
+        );
+        drop(first);
+    }
+    let uninitialized =
+        SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    for _ in 0..4 {
+        let Err(RequestFailure::Transport { error }) = uninitialized.prepare_repository_request(
+            "owner-a".into(),
+            RepositoryRequest::List {
+                after: None,
+                refresh: false,
+            },
+        ) else {
+            panic!("uninitialized requests cannot send")
+        };
+        assert_eq!(error.code, TransportCode::NotConnected); // Rejected preparation never leaks its acquired permit.
+    }
+}
+
 fn snapshot() -> SupervisorSnapshot {
     Core {
         owner: "owner-a".into(),
@@ -210,8 +562,7 @@ fn refresh_after_disconnect_retrieves_cursor_without_restart_or_replay() {
         failure(io::ErrorKind::ConnectionRefused),
         Ok(recovered),
     ]);
-    let mut connection =
-        SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    let connection = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
     connection.snapshot_with(&mut scenario).unwrap();
     let error = connection.snapshot_with(&mut scenario).unwrap_err();
     assert!(error.to_string().contains("no actions have been replayed"));
@@ -251,11 +602,11 @@ fn dropping_desktop_and_reopening_observes_the_same_owner_without_starting() {
         Ok(before.clone()),
         Ok(before.clone()),
     ]);
-    let mut desktop = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    let desktop = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
     desktop.snapshot_with(&mut scenario).unwrap();
     drop(desktop);
     assert_eq!(scenario.calls, ["prepare", "snapshot", "snapshot"]);
-    let mut reopened = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    let reopened = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
     assert_eq!(
         reopened.snapshot_with(&mut scenario).unwrap().cursor,
         before.cursor
@@ -285,11 +636,11 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
         Ok(after.clone()),
         Ok(after.clone()),
     ]);
-    let mut desktop = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    let desktop = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
     desktop.snapshot_with(&mut scenario).unwrap();
     assert!(desktop.snapshot_with(&mut scenario).is_err());
     assert!(!scenario.calls.contains(&"start"));
-    let mut reopened = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
+    let reopened = SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
     let observed = reopened.snapshot_with(&mut scenario).unwrap();
     assert!(observed.reset);
     assert_eq!(observed.cursor, after.cursor);
@@ -1330,13 +1681,16 @@ fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
     ] {
         let mut scenario =
             DiscoveryScenario::new(vec![Ok(first.clone()), Ok(first.clone()), Ok(invalid)]);
-        let mut connection =
+        let connection =
             SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
         connection.snapshot_with(&mut scenario).unwrap();
         assert_eq!(
             connection.snapshot_with(&mut scenario).unwrap_err().kind(),
             io::ErrorKind::InvalidData
         );
-        assert_eq!(connection.cursor, Some(first.cursor.clone()));
+        assert_eq!(
+            connection.observed.lock().unwrap().cursor,
+            Some(first.cursor.clone())
+        );
     }
 }

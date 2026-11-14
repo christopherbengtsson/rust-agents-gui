@@ -168,7 +168,7 @@ fn lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status() 
     use workspace_core::connection::SupervisorConnection;
     let state = tempfile::tempdir_in("/tmp").unwrap();
     std::fs::set_permissions(state.path(), std::fs::Permissions::from_mode(0o700)).unwrap();
-    let mut desktop = SupervisorConnection::new(state.path().to_owned(), executable().to_owned());
+    let desktop = SupervisorConnection::new(state.path().to_owned(), executable().to_owned());
     let before = desktop.snapshot().unwrap();
     let owner = Owner(before.status.supervisor_pid);
     drop(owner);

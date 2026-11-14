@@ -270,6 +270,7 @@ test.each(["success", "failure"])(
         <App />
       </StrictMode>,
     );
+    expect(statusReads).toBe(1); // Cleanup cannot release a physical status exchange.
     await act(async () => {
       if (outcome === "success") resolveOld(snapshot);
       else rejectOld("Obsolete setup failed");
@@ -300,7 +301,7 @@ test.each(["success", "failure"])(
 );
 
 test.each(["success", "failure"])(
-  "an obsolete %s cannot overwrite a completed current observation",
+  "a drained obsolete %s cannot replace the subsequent current observation",
   async (outcome) => {
     let resolveOld!: (value: typeof snapshot) => void;
     let rejectOld!: (error: string) => void;
@@ -323,11 +324,12 @@ test.each(["success", "failure"])(
         <App />
       </StrictMode>,
     );
-    await screen.findByRole("button", { name: "Refresh status" });
+    expect(reads).toBe(1);
     await act(async () => {
       if (outcome === "success") resolveOld(snapshot);
       else rejectOld("Obsolete failure");
     });
+    await screen.findByRole("button", { name: "Refresh status" });
     expect(screen.queryByRole("alert")).toBeNull();
     const user = userEvent.setup();
     await user.click(

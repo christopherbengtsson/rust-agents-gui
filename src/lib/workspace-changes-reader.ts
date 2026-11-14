@@ -1,4 +1,8 @@
-import { workspaceRequest } from "./workspaces";
+import {
+  ObservationCoordinator,
+  type ObservationScope,
+} from "./observation-coordinator";
+import { readWorkspace } from "./workspaces";
 import {
   pendingInspection,
   type ChangedFile,
@@ -26,6 +30,13 @@ type Context = {
 // Presentation reads only. Rust owns comparison capture, admission and recovery.
 // The lane survives view reconfiguration: invalidating a reply does not cancel IPC.
 export class WorkspaceChangesReader {
+  constructor(private readonly reads = new ObservationCoordinator()) {}
+  private scope?: ObservationScope;
+  private invalidateReads() {
+    this.scope?.dispose();
+    this.scope = this.reads.scope();
+    this.generation++;
+  }
   private context?: Context;
   private mounted = false;
   private generation = 0;
@@ -51,7 +62,7 @@ export class WorkspaceChangesReader {
     const previous = this.context;
     this.context = context;
     this.mounted = true;
-    this.generation++;
+    this.invalidateReads();
     clearTimeout(this.timer);
     if (previous?.workspaceId !== context.workspaceId) {
       this.view = { loading: false };
@@ -70,6 +81,7 @@ export class WorkspaceChangesReader {
   }
 
   dispose() {
+    this.scope?.dispose();
     this.mounted = false;
     this.publish = undefined;
     this.generation++;
@@ -94,7 +106,7 @@ export class WorkspaceChangesReader {
 
   select = (file: ChangedFile) => {
     if (this.view.selected?.id !== file.id) {
-      this.generation++;
+      this.invalidateReads();
       this.loaded = undefined;
       this.update({
         selected: { id: file.id, path: file.path },
@@ -105,12 +117,12 @@ export class WorkspaceChangesReader {
   };
 
   refresh = () => {
-    this.generation++;
+    this.invalidateReads();
     return this.request(true);
   };
 
   first = () => {
-    this.generation++;
+    this.invalidateReads();
     this.page = { comparison_id: null, after: null };
     return this.request(false);
   };
@@ -118,7 +130,7 @@ export class WorkspaceChangesReader {
   next = () => {
     const page = this.view.observation?.page;
     if (!page?.next) return;
-    this.generation++;
+    this.invalidateReads();
     this.page = { comparison_id: page.comparison_id, after: page.next };
     return this.request(false);
   };
@@ -134,6 +146,8 @@ export class WorkspaceChangesReader {
   private drain(): Promise<void> {
     if (this.reading || !this.queued || !this.mounted || !this.context?.owner)
       return Promise.resolve();
+    const scope = this.scope;
+    if (!scope) return Promise.resolve();
     const refresh = this.queued === "refresh";
     this.queued = undefined;
     this.reading = true;
@@ -153,7 +167,7 @@ export class WorkspaceChangesReader {
     this.update({ loading: true });
     return completeOperation(
       async () => {
-        const result = await workspaceRequest(owner, {
+        const result = await readWorkspace(scope, owner, {
           operation: "changes",
           workspace_id: workspaceId,
           refresh,
@@ -175,7 +189,7 @@ export class WorkspaceChangesReader {
           file_id: selected.id,
         };
         const key = `${target.comparison_id}/${target.file_id}`;
-        const resultPreview = await workspaceRequest(owner, {
+        const resultPreview = await readWorkspace(scope, owner, {
           operation: "change_preview",
           target,
           load: this.loaded !== key,

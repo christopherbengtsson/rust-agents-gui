@@ -109,7 +109,9 @@ This guide does not authorize regenerating or relocating the foundation.
   action/storage errors and availability. Use for workspace content rather than
   navigation. Long repository names truncate in the header/footer while retaining
   their full accessible text and keeping Refresh visible. Ticket 04 adds
-  selected-workspace context; ticket 05 adds change
+  selected-workspace context. App supplies its shared observation coordinator to
+  the stable inspection reader; standalone consumers may own an isolated reader.
+  Ticket 05 adds change
   inspection through concrete interfaces in those tickets.
 
 App owns the single connection observation Hook and composes the blocks inside

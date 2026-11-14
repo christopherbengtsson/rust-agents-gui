@@ -1,3 +1,7 @@
+import {
+  ObservationCoordinator,
+  type ObservationScope,
+} from "@/lib/observation-coordinator";
 import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -8,6 +12,7 @@ import {
   WORKSPACE_PENDING,
   WORKSPACE_SELECTION,
   workspaceRequest,
+  readWorkspace,
   type Workspace,
   type WorkspaceAction,
   type WorkspacePage,
@@ -19,7 +24,17 @@ export function useWorkspaces(
   repositoryId: string | undefined,
   repositoryIds: string,
   initial: { repository_id: string; workspace_id: string } | null,
+  coordinator?: ObservationCoordinator,
 ) {
+  const [reads] = useState(() => coordinator ?? new ObservationCoordinator());
+  const scope = useRef<ObservationScope | null>(null);
+  function resetReads() {
+    scope.current?.dispose();
+    scope.current = reads.scope();
+    epoch.current++;
+    reading.current = false;
+    queued.current = false;
+  }
   const [pages, setPages] = useState<Record<string, WorkspacePage>>({});
   const [selected, setSelected] = useState<Workspace>();
   const [restoredPending] = useState(readWorkspacePending);
@@ -91,6 +106,8 @@ export function useWorkspaces(
         queued.current = true;
         return;
       }
+      const readScope = scope.current;
+      if (!readScope) return;
       reading.current = true;
       const generation = epoch.current;
       const navigationGeneration = navigation.current;
@@ -99,7 +116,7 @@ export function useWorkspaces(
         async () => {
           const outstanding = intent.current;
           if (outstanding) {
-            const result = await workspaceRequest(owner, {
+            const result = await readWorkspace(readScope, owner, {
               operation: "action",
               action_id: outstanding.action_id,
             });
@@ -157,7 +174,7 @@ export function useWorkspaces(
             Promise.all(
               ids.map(async (id) => {
                 const history = cursors.current[id];
-                const result = await workspaceRequest(owner, {
+                const result = await readWorkspace(readScope, owner, {
                   operation: "list",
                   repository_id: id,
                   after: history?.at(-1) ?? null,
@@ -166,7 +183,10 @@ export function useWorkspaces(
               }),
             ),
             wanted
-              ? workspaceRequest(owner, { operation: "get", id: wanted })
+              ? readWorkspace(readScope, owner, {
+                  operation: "get",
+                  id: wanted,
+                })
               : Promise.resolve(null),
           ]);
           if (!active()) return;
@@ -204,15 +224,18 @@ export function useWorkspaces(
     [owner, repositoryId, repositoryIds, initial, remember, settleAction],
   );
   useEffect(() => {
+    scope.current = reads.scope();
     mounted.current = true;
     void Promise.resolve().then(read);
     return () => {
+      scope.current?.dispose();
+      scope.current = null;
       mounted.current = false;
       epoch.current += 1;
       reading.current = false;
       queued.current = false;
     };
-  }, [read]);
+  }, [read, reads]);
   const busy =
     Object.values(pages).some((p) =>
       p.workspaces.some(
@@ -328,11 +351,14 @@ export function useWorkspaces(
     );
   }
   function select(workspace: Workspace) {
+    resetReads();
     handledInitial.current = initial?.workspace_id;
     navigation.current++;
     remember(workspace);
+    void read();
   }
   function selectRepository() {
+    resetReads();
     handledInitial.current = initial?.workspace_id;
     navigation.current++;
     remember(null);
@@ -358,12 +384,14 @@ export function useWorkspaces(
   function next(id: string) {
     const cursor = pages[id]?.next;
     if (!cursor) return;
+    resetReads();
     const history = cursors.current[id] ?? [null];
     history.push(cursor);
     cursors.current[id] = history;
     void refresh();
   }
   function back(id: string) {
+    resetReads();
     cursors.current[id]?.pop();
     void refresh();
   }

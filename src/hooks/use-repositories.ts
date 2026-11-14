@@ -1,3 +1,7 @@
+import {
+  ObservationCoordinator,
+  type ObservationScope,
+} from "@/lib/observation-coordinator";
 import { pendingFailure, uncertainAfter } from "@/lib/observation-contracts";
 import { completeOperation } from "@/lib/complete-operation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -8,6 +12,7 @@ import {
   readSelection,
   repositoryError,
   repositoryRequest,
+  readRepository,
   type PendingRegistration,
   type Registration,
   type Repository,
@@ -23,7 +28,19 @@ type Navigation = {
 };
 
 // App calls this once. Selection and action ownership survive disclosure/dialog changes.
-export function useRepositories(owner: string | undefined) {
+export function useRepositories(
+  owner: string | undefined,
+  coordinator?: ObservationCoordinator,
+) {
+  const [reads] = useState(() => coordinator ?? new ObservationCoordinator());
+  const scope = useRef<ObservationScope | null>(null);
+  function resetReads() {
+    scope.current?.dispose();
+    scope.current = reads.scope();
+    epoch.current++;
+    reading.current = false;
+    queued.current = null;
+  }
   const [initialWorkspace, setInitialWorkspace] = useState<{
     repository_id: string;
     workspace_id: string;
@@ -39,6 +56,7 @@ export function useRepositories(owner: string | undefined) {
   const after = useRef<string | null>(null);
   const [previous, setPrevious] = useState<(string | null)[]>([]);
   const epoch = useRef(0);
+  const actionEpoch = useRef(0);
   const mounted = useRef(false);
   const reading = useRef(false);
   const queued = useRef<boolean | null>(null);
@@ -105,6 +123,8 @@ export function useRepositories(owner: string | undefined) {
         queued.current = recheck || queued.current === true;
         return;
       }
+      const readScope = scope.current;
+      if (!readScope) return;
       reading.current = true;
       const generation = epoch.current;
       const pageAfter = after.current;
@@ -113,7 +133,7 @@ export function useRepositories(owner: string | undefined) {
         async () => {
           const pending = currentPending.current;
           if (pending) {
-            const result = await repositoryRequest(owner, {
+            const result = await readRepository(readScope, owner, {
               operation: "action",
               action_id: pending.request.action_id,
             }).catch((error: unknown) => ({
@@ -152,13 +172,13 @@ export function useRepositories(owner: string | undefined) {
           }
           const requestedSelection = selection.current;
           const [list, selected] = await Promise.all([
-            repositoryRequest(owner, {
+            readRepository(readScope, owner, {
               operation: "list",
               after: pageAfter,
               refresh: recheck,
             }),
             requestedSelection
-              ? repositoryRequest(owner, {
+              ? readRepository(readScope, owner, {
                   operation: "get",
                   id: requestedSelection,
                   refresh: recheck,
@@ -215,15 +235,19 @@ export function useRepositories(owner: string | undefined) {
   );
 
   useEffect(() => {
+    scope.current = reads.scope();
     mounted.current = true;
     if (owner) void readRepositories();
     return () => {
+      scope.current?.dispose();
+      scope.current = null;
       mounted.current = false;
       epoch.current += 1;
+      actionEpoch.current += 1;
       reading.current = false;
       queued.current = null;
     };
-  }, [owner, readRepositories]);
+  }, [owner, reads, readRepositories]);
 
   const checking =
     navigation.page?.repositories.some(
@@ -285,7 +309,7 @@ export function useRepositories(owner: string | undefined) {
     setActionError(undefined);
     setSubmitting(true);
     sending.current = true;
-    const generation = epoch.current;
+    const generation = actionEpoch.current;
     return completeOperation(
       async () => {
         const result = await repositoryRequest(owner, {
@@ -294,7 +318,7 @@ export function useRepositories(owner: string | undefined) {
         });
         if (
           mounted.current &&
-          epoch.current === generation &&
+          actionEpoch.current === generation &&
           result.kind === "registration"
         )
           finish(result.registration);
@@ -303,7 +327,7 @@ export function useRepositories(owner: string | undefined) {
       (error) => {
         if (
           mounted.current &&
-          epoch.current === generation &&
+          actionEpoch.current === generation &&
           currentPending.current?.request.action_id === intent.request.action_id
         ) {
           const failure = repositoryError(error);
@@ -340,17 +364,20 @@ export function useRepositories(owner: string | undefined) {
       () => {
         sending.current = false;
         if (mounted.current) setSubmitting(false);
-        if (mounted.current && epoch.current === generation)
+        if (mounted.current && actionEpoch.current === generation)
           void refresh(false);
       },
     );
   }
   function select(repository: Repository) {
+    resetReads();
     rememberSelection(repository.id);
     setNavigation((last) => ({ ...last, selected: repository }));
+    void readRepositories(false);
   }
   function next() {
     if (!navigation.page?.next) return;
+    resetReads();
     const current = after.current;
     setPrevious((last) => [...last, current]);
     after.current = navigation.page.next;
@@ -358,6 +385,7 @@ export function useRepositories(owner: string | undefined) {
   }
   function back() {
     if (!previous.length) return;
+    resetReads();
     after.current = previous[previous.length - 1];
     setPrevious((last) => last.slice(0, -1));
     void refresh(false);

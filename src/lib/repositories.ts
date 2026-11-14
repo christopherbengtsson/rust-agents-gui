@@ -1,3 +1,4 @@
+import type { ObservationScope } from "./observation-coordinator";
 import { invoke } from "@tauri-apps/api/core";
 
 import {
@@ -115,6 +116,17 @@ function reply(value: unknown): value is RepositoryReply {
       return false;
   }
 }
+// Automatic observation entry point; durable submissions cannot enter this queue.
+export function readRepository(
+  scope: ObservationScope,
+  expectedOwner: string,
+  request: Exclude<RepositoryRequest, { operation: "register" }>,
+) {
+  return scope.read(["repository", expectedOwner, request], () =>
+    repositoryRequest(expectedOwner, request),
+  );
+}
+
 export async function repositoryRequest(
   expectedOwner: string,
   request: RepositoryRequest,
