@@ -1,0 +1,92 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 text Console cleared at 5:52:57 PM
+			35 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			36 container
+	37 scroll area
+		38 HTML content Description: Agent Workspace, URL: tauri://localhost
+			39 link Skip to workspace, Value: tauri://localhost#workspace
+			40 container Repository sidebar
+				41 text Agent Workspace
+				42 container Repositories
+					43 heading Repositories, Value: 2
+						44 text Repositories
+					45 content list
+						46 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							47 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							48 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							49 button Create workspace in Beta
+							50 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							51 text Available
+							52 content list
+								53 button thiago-silva, Help: Workspace ready
+						54 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							55 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							56 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							57 button Create workspace in Alpha
+							58 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							59 text Available
+							60 content list
+								61 button vincent-aboubakar, Help: Workspace ready
+				62 pop up button Add repository
+				63 text Connected
+				64 pop up button Connection details
+			65 container
+				66 container
+					67 heading Beta, Value: 1
+						68 text Beta
+					69 button Refresh status
+				70 container Selected repository
+					71 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					72 text Repository available
+				73 heading Repository registered, Value: 2
+					74 text Repository registered
+				75 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				76 button Create workspace
+				77 container
+					78 text Local workspace Beta
+		79 scroll bar (settable, float) 0
+	80 close button
+	81 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	82 minimize button
+	83 text Agent Workspace
+84 menu bar
+	85 F04g inspect current
+	86 File
+	87 Edit
+	88 View
+	89 Window
+	90 Help

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "0b6a981c-8d9f-4a76-8ef1-d3eb29e0f652",
+    "repository_id": "8757f695-da04-4a9a-ac35-ee91480d1d20",
+    "queued": 0,
+    "record": "{\"id\":\"0b6a981c-8d9f-4a76-8ef1-d3eb29e0f652\",\"repository_id\":\"8757f695-da04-4a9a-ac35-ee91480d1d20\",\"creation_action_id\":\"16664dcc-14d9-468c-aecc-1774314ff427\",\"name\":\"vincent-aboubakar\",\"branch\":\"workspace/vincent-aboubakar\",\"path\":\"/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/alpha/vincent-aboubakar/checkout\",\"legacy\":false,\"provider\":\"codex\",\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"83f047d5f61edacd2fc87605778e6522e8b750b0\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+    "name": "vincent-aboubakar",
+    "branch": "workspace/vincent-aboubakar",
+    "path": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/alpha/vincent-aboubakar/checkout"
+  },
+  {
+    "id": "6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3",
+    "repository_id": "80a14ed5-323c-46d9-a56e-717c5b9a7470",
+    "queued": 0,
+    "record": "{\"id\":\"6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3\",\"repository_id\":\"80a14ed5-323c-46d9-a56e-717c5b9a7470\",\"creation_action_id\":\"5ad052e7-a1bf-49bf-a5ae-20b0acd5d05f\",\"name\":\"thiago-silva\",\"branch\":\"workspace/thiago-silva\",\"path\":\"/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/beta/thiago-silva/checkout\",\"legacy\":false,\"provider\":\"codex\",\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"83f047d5f61edacd2fc87605778e6522e8b750b0\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+    "name": "thiago-silva",
+    "branch": "workspace/thiago-silva",
+    "path": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-current/workspaces/beta/thiago-silva/checkout"
+  }
+]

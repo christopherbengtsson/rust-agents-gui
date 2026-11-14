@@ -69,12 +69,15 @@ checks, and a dated evidence comment. Preserve completed ticket-5 evidence.
    only verified acceptance. Keep successor tickets and foundation acceptance open
    until their own gates pass; report the next ticket without starting it.
 
-Current product checkpoint: F01–F04 are implemented at `7dc4eac`, including
-protocol-7 owner binding, physical admission and acknowledged push delivery.
-[F04 evidence](../../docs/evidence/frontend-navigation/f04.md) reports controlled
-checks; actual F04 socket/desktop qualification remains outstanding. F04a publishes
-the amended plan only. F04b–F04g and F05–F08 remain separate, unimplemented sessions.
-The historical branch baseline and completed results are retained, not reset.
+Current product checkpoint: F01–F04 at `7dc4eac` remain the historical protocol-7
+baseline. F04b–F04f implemented generated contracts, protocol-8 async transport,
+physical scheduling, Query observations and XState coordination. F04g records the
+focused actual socket/process/fixture-desktop, packaging and matched-baseline
+qualification in [its evidence](../../docs/evidence/frontend-navigation/f04g.md).
+Historical F04 evidence retains its original controlled-only limits; the new
+baseline measurements belong to F04g. F05–F08 remain separate, unimplemented
+sessions. The next selected ticket is F05 presentation context/integration, not
+another observation/cache migration. No successor is authorized by this handoff.
 
 F04a changes documentation/tickets only: manifests, lockfiles, generated assets,
 product implementation and implementation acceptance stay untouched. Add each

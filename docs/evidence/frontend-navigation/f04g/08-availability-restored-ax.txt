@@ -1,0 +1,60 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							11 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button Create workspace in Beta
+							14 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							15 text Available
+							16 content list
+								17 button thiago-silva, Help: Workspace ready
+						18 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							23 text Available
+							24 content list
+								25 button vincent-aboubakar, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading Beta, Value: 1
+					31 text Beta
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					35 text Repository available
+				36 heading Repository registered, Value: 2
+					37 text Repository registered
+				38 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				39 button Create workspace
+				40 text Local workspace
+				41 text Beta
+	42 close button
+	43 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	44 minimize button
+	45 text Agent Workspace
+46 menu bar
+	47 F04g Fixed Inspection
+	48 File
+	49 Edit
+	50 View
+	51 Window
+	52 Help
+
+Selected text: ```
+Beta
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

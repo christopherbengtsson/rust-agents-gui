@@ -1,0 +1,9 @@
+{
+  "pid": 45689,
+  "exited": true,
+  "endpoint_restored": true,
+  "workers_joined": {
+    "time": 1794677619.668194,
+    "event": "stopped-and-joined"
+  }
+}

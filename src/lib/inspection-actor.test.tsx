@@ -411,3 +411,58 @@ test("unrelated accepted batches cannot postpone the visible two-second external
     },
   ]);
 });
+
+test.each(["pending", "rejected"])(
+  "%s summary pauses with a retained selected preview",
+  async (outcome) => {
+    vi.useFakeTimers();
+    const s = scenario();
+    s.hint();
+    s.configure(workspaceId, true, true);
+    await flush();
+    s.app.inspection.select({
+      id: fileId,
+      path: "src/a.txt",
+      index_status: ".",
+      worktree_status: "M",
+      unsupported: null,
+    });
+    await flush();
+    const original = vi.mocked(invoke).getMockImplementation();
+    if (!original) throw new Error("Scenario IPC double is missing");
+    const before = vi.mocked(invoke).mock.calls.length;
+    vi.mocked(invoke).mockImplementation(
+      ownerBound(async () => {
+        if (outcome === "rejected") throw new Error("Summary read unavailable");
+        return {
+          kind: "changes",
+          observation: {
+            workspace_id: workspaceId,
+            phase: "running",
+            page: null,
+            error: null,
+          },
+        };
+      }),
+    );
+    s.hint();
+    await flush();
+    expect(vi.mocked(invoke).mock.calls.length - before).toBe(1);
+    expect(s.app.inspection.getView().preview?.phase).toBe("ready");
+    expect(s.app.inspection.getView().observation?.phase).toBe(
+      outcome === "rejected" ? "ready" : "running",
+    );
+    if (outcome === "rejected")
+      expect(s.app.inspection.getView().error).toContain(
+        "Summary read unavailable",
+      );
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(vi.mocked(invoke).mock.calls.length - before).toBe(1);
+    vi.mocked(invoke).mockImplementation(original);
+    s.hint();
+    await flush();
+    expect(s.app.inspection.getView().observation?.phase).toBe("ready");
+    expect(s.app.inspection.getView().preview?.phase).toBe("ready");
+    s.app.inspection.release();
+  },
+);

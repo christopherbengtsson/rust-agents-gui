@@ -1,0 +1,41 @@
+{
+  "unit": "KiB RSS of native desktop process only; excludes WebContent/inspector processes",
+  "pids": {
+    "current": 46662,
+    "baseline": 21014
+  },
+  "warmup": {
+    "current": 194592,
+    "baseline": 167552
+  },
+  "runs": [
+    {
+      "current": 194592,
+      "baseline": 167552
+    },
+    {
+      "current": 194608,
+      "baseline": 167552
+    },
+    {
+      "current": 194592,
+      "baseline": 167552
+    },
+    {
+      "current": 194592,
+      "baseline": 167552
+    },
+    {
+      "current": 194592,
+      "baseline": 167552
+    }
+  ],
+  "medians": {
+    "current": 194592,
+    "baseline": 167552
+  },
+  "ranges": {
+    "current": [194592, 194608],
+    "baseline": [167552, 167552]
+  }
+}

@@ -1,0 +1,1088 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 button Click to show 1 error in the Console
+			10 tab group (selectable)
+				11 tab (selected) Elements
+				12 tab (selectable) Console
+				13 tab (selectable) Sources
+				14 tab (selectable) Network
+				15 tab (selectable) Timelines
+				16 tab (selectable) Storage
+				17 tab (selectable) Graphics
+				18 tab (selectable) Show hidden tabs…
+				19 tab (selectable) Search (⇧⌘F)
+				20 tab (selectable) Settings (⌘,)
+			21 container Elements
+				22 container html.dark
+					23 image
+					24 text html.dark
+					25 pop up button 
+
+				26 container body
+div#root
+div.group\/sidebar-wrapper.flex.w-full.has-data-\[variant\=inset\]\:bg-sidebar.h-dvh.min-h-0
+main#workspace.workspace-region.flex-1
+header.workspace-header
+					27 text …
+				28 container h1.min-w-0.truncate
+					29 image
+					30 text h1.min-w-0.truncate
+					31 pop up button 
+
+				32 toggle button Show rulers, Value: off
+				33 toggle button Force print media styles, Value: off
+				34 toggle button Override user preferences, Value: off
+				35 toggle button Show compositing borders, Value: off
+				36 toggle button Enable paint flashing, Value: off
+				37 toggle button Hide the details sidebar (⌥⌘0), Value: on
+				38 outline (selectable)
+					39 row (selectable) Description: <!DOCTYPE html>, Value: <!DOCTYPE html>
+<!DOCTYPE html
+>
+					40 row (selectable, expanded) Description: <html lang=​"en" class=​"dark">​Scroll, Secondary Actions: Collapse, Value: <html lang=​"en" class=​"dark">​Scroll
+<
+html
+lang
+=​"
+en
+"
+class
+=​"
+dark
+"
+>
+Scroll
+					41 row (selectable) Description: <head>​…​</head>, Value: <head>​…​</head>
+<
+head
+>
+…
+<
+/head
+>
+					42 row (selectable, expanded) Description: <body>, Secondary Actions: Collapse, Value: <body>
+<
+body
+>
+					43 row (selectable) Description: <div id=​"root">​Event, Value: <div id=​"root">​Event
+<
+div
+id
+=​"
+root
+"
+>
+Event
+					44 row (selectable) Description: <div data-slot=​"sidebar-wrapper"class=​"group/​sidebar-wrapper flex w-full has-data-[variant=inset]​:​bg-sidebar h-dvh min-h-0" style=​"--sidebar-width:​ 16rem;​ --sidebar-width-icon:​ 3rem;​">​flex, Value: <div data-slot=​"sidebar-wrapper"class=​"group/​sidebar-wrapper flex w-full has-data-[variant=inset]​:​bg-sidebar h-dvh min-h-0" style=​"--sidebar-width:​ 16rem;​ --sidebar-width-icon:​ 3rem;​">​flex
+<
+div
+data-slot
+=​"
+sidebar-wrapper
+"
+class
+=​"
+group/​sidebar-wrapper flex w-full has-data-[variant=inset]​:​bg-sidebar h-dvh min-h-0
+"
+style
+=​"
+--sidebar-width:​ 16rem;​ --sidebar-width-icon:​ 3rem;
+"
+>
+flex
+					45 row (selectable) #workspace, Description: <a class=​"skip-link" href=​"#workspace">​Skip to workspace​</a>, Value: <a class=​"skip-link" href=​"">​Skip to workspace​</a>
+<
+a
+class
+=​"
+skip-link
+"
+href
+=​"
+#workspace
+"
+>
+Skip to workspace
+<
+/a
+>
+					46 row (selectable) Description: <div data-slot=​"sidebar"class=​"flex h-full w-(--sidebar-width)​ flex-col bg-sidebar text-sidebar-foreground repository-sidebar min-w-0 shrink-0 border-r" role=​"complementary" aria-label=​"Repository sidebar">​…​</div>​flex, Value: <div data-slot=​"sidebar"class=​"flex h-full w-(--sidebar-width)​ flex-col bg-sidebar text-sidebar-foreground repository-sidebar min-w-0 shrink-0 border-r" role=​"complementary" aria-label=​"Repository sidebar">​…​</div>​flex
+<
+div
+data-slot
+=​"
+sidebar
+"
+class
+=​"
+flex h-full w-(--sidebar-width)​ flex-col bg-sidebar text-sidebar-foreground repository-sidebar min-w-0 shrink-0 border-r
+"
+role
+=​"
+complementary
+"
+aria-label
+=​"
+Repository sidebar
+"
+>
+…
+<
+/div
+>
+flex
+					47 row (selectable) Description: <main id=​"workspace" tabindex=​"-1" class=​"workspace-region flex-1">​flex, Value: <main id=​"workspace" tabindex=​"-1" class=​"workspace-region flex-1">​flex
+<
+main
+id
+=​"
+workspace
+"
+tabindex
+=​"
+-1
+"
+class
+=​"
+workspace-region flex-1
+"
+>
+flex
+					48 row (selectable) Description: <header class=​"workspace-header">​flex, Value: <header class=​"workspace-header">​flex
+<
+header
+class
+=​"
+workspace-header
+"
+>
+flex
+					49 row (selected) Description: <h1 class=​"min-w-0 truncate">​thiago-silva​</h1>​ = $0, Value: <h1 class=​"min-w-0 truncate">​thiago-silva​</h1>​ = $0
+<
+h1
+class
+=​"
+min-w-0 truncate
+"
+>
+thiago-silva
+<
+/h1
+>
+=
+$
+0
+					50 row (selectable) Description: <button type=​"button"tabindex=​"0" data-slot=​"button" class=​"group/​button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:​border-ring focus-visible:​ring-3 focus-visible:​ring-ring/​50 active:​not-aria-[haspopup]​:​translate-y-px disabled:​pointer-events-none disabled:​opacity-50 aria-invalid:​border-destructive aria-invalid:​ring-3 aria-invalid:​ring-destructive/​20 dark:​aria-invalid:​border-de, Value: <button type=​"button"tabindex=​"0" data-slot=​"button" class=​"group/​button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:​border-ring focus-visible:​ring-3 focus-visible:​ring-ring/​50 active:​not-aria-[haspopup]​:​translate-y-px disabled:​pointer-events-none disabled:​opacity-50 aria-invalid:​border-destructive aria-invalid:​ring-3 aria-invalid:​ring-destructive/​20 dark:​aria-invalid:​border-de
+<
+button
+type
+=​"
+button
+"
+tabindex
+=​"
+0
+"
+data-slot
+=​"
+button
+"
+class
+=​"
+group/​button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:​border-ring focus-visible:​ring-3 focus-visible:​ring-ring/​50 active:​not-aria-[haspopup]​:​translate-y-px disabled:​pointer-events-none disabled:​opacity-50 aria-invalid:​border-destructive aria-invalid:​ring-3 aria-invalid:​ring-destructive/​20 dark:​aria-invalid:​border-destructive/​50 dark:​aria-invalid:​ring-destructive/​40 [&​_svg]
+"
+>
+…
+<
+/button
+>
+flex
+Event
+					51 row (selectable) Description: </header>, Value: </header>
+<
+/header
+>
+					52 row (selectable) Description: <div class=​"workspace-content">​…​</div>​Scrollflex, Value: <div class=​"workspace-content">​…​</div>​Scrollflex
+<
+div
+class
+=​"
+workspace-content
+"
+>
+…
+<
+/div
+>
+Scroll
+flex
+					53 row (selectable) Description: <footer class=​"workspace-footer">​…​</footer>​flex, Value: <footer class=​"workspace-footer">​…​</footer>​flex
+<
+footer
+class
+=​"
+workspace-footer
+"
+>
+…
+<
+/footer
+>
+flex
+					54 row (selectable) Description: </main>, Value: </main>
+<
+/main
+>
+					55 row (selectable) Description: </div>, Value: </div>
+<
+/div
+>
+					56 row (selectable) Description: </div>, Value: </div>
+<
+/div
+>
+					57 row (selectable) Description: </body>, Value: </body>
+<
+/body
+>
+					58 row (selectable) Description: </html>, Value: </html>
+<
+/html
+>
+				59 link ?, Help: https://webkit.org/web-inspector/elements-tab/#dom-tree, Value: webkit.org/web-inspector/elements-tab/#dom-tree
+				60 container Details
+					61 container Details
+						62 tab group (selectable)
+							63 tab (selected) Computed
+							64 tab (selectable) Layout
+							65 tab (selectable) Font
+							66 tab (selectable) Changes
+							67 tab (selectable) Node
+							68 tab (selectable) Layers
+						69 container Computed (showing 0-100 of 146 items)
+							70 text Box Model
+							71 container
+								72 text position ‒ ‒
+								73 text margin
+								74 text ‒
+								75 text ‒
+								76 container
+									77 text border ‒ ‒ ‒ ‒
+									78 text padding
+									79 text ‒
+									80 text ‒
+									81 container
+										82 text ~68.06  ×  18
+									83 text ‒
+									84 text ‒
+									85 text ‒ ‒ ‒ ‒
+								86 text ‒
+								87 text ‒
+								88 text ‒ ‒
+							89 container
+								90 image
+								91 text Properties
+							92 container
+								93 button (collapsed) Secondary Actions: Expand
+								94 text border-bottom-color :  rgb ( 56 , 56 , 62 ) ;
+							95 container
+								96 button (collapsed) Secondary Actions: Expand
+								97 text border-bottom-style :  solid ;
+							98 container
+								99 button (collapsed) Secondary Actions: Expand
+								100 text border-bottom-width :  0px ;
+							101 container
+								102 button (collapsed) Secondary Actions: Expand
+								103 text border-image-outset :  0 ;
+							104 container
+								105 button (collapsed) Secondary Actions: Expand
+								106 text border-image-repeat :  stretch ;
+							107 container
+								108 button (collapsed) Secondary Actions: Expand
+								109 text border-image-slice :  100% ;
+							110 container
+								111 button (collapsed) Secondary Actions: Expand
+								112 text border-image-source :  none ;
+							113 container
+								114 button (collapsed) Secondary Actions: Expand
+								115 text border-image-width :  1 ;
+							116 container
+								117 button (collapsed) Secondary Actions: Expand
+								118 text border-left-color :  rgb ( 56 , 56 , 62 ) ;
+							119 container
+								120 button (collapsed) Secondary Actions: Expand
+								121 text border-left-style :  solid ;
+							122 container
+								123 button (collapsed) Secondary Actions: Expand
+								124 text border-left-width :  0px ;
+							125 container
+								126 button (collapsed) Secondary Actions: Expand
+								127 text border-right-color :  rgb ( 56 , 56 , 62 ) ;
+							128 container
+								129 button (collapsed) Secondary Actions: Expand
+								130 text border-right-style :  solid ;
+							131 container
+								132 button (collapsed) Secondary Actions: Expand
+								133 text border-right-width :  0px ;
+							134 container
+								135 button (collapsed) Secondary Actions: Expand
+								136 text border-top-color :  rgb ( 56 , 56 , 62 ) ;
+							137 container
+								138 button (collapsed) Secondary Actions: Expand
+								139 text border-top-style :  solid ;
+							140 container
+								141 button (collapsed) Secondary Actions: Expand
+								142 text border-top-width :  0px ;
+							143 container
+								144 button (collapsed) Secondary Actions: Expand
+								145 text box-sizing :  border-box ;
+							146 container
+								147 button (collapsed) Secondary Actions: Expand
+								148 text color :  rgb ( 237 , 237 , 240 ) ;
+							149 container
+								150 button (collapsed) Secondary Actions: Expand
+								151 text color-scheme :  dark ;
+							152 container
+								153 button (collapsed) Secondary Actions: Expand
+								154 text display :  block ;
+							155 container
+								156 button (collapsed) Secondary Actions: Expand
+								157 text font-family :  -apple- system , BlinkMacSystemFont , "Segoe UI" , sans-serif ;
+							158 container
+								159 button (collapsed) Secondary Actions: Expand
+								160 text font-feature-settings :  normal ;
+							161 container
+								162 button (collapsed) Secondary Actions: Expand
+								163 text font-size :  12px ;
+							164 container
+								165 button (collapsed) Secondary Actions: Expand
+								166 text font-synthesis-small-caps :  none ;
+							167 container
+								168 button (collapsed) Secondary Actions: Expand
+								169 text font-synthesis-style :  none ;
+							170 container
+								171 button (collapsed) Secondary Actions: Expand
+								172 text font-synthesis-weight :  none ;
+							173 container
+								174 button (collapsed) Secondary Actions: Expand
+								175 text font-variation-settings :  normal ;
+							176 container
+								177 button (collapsed) Secondary Actions: Expand
+								178 text font-weight :  500 ;
+							179 container
+								180 text height :  18px ;
+							181 container
+								182 button (collapsed) Secondary Actions: Expand
+								183 text line-height :  18px ;
+							184 container
+								185 button (collapsed) Secondary Actions: Expand
+								186 text margin-block-end :  0px ;
+							187 container
+								188 button (collapsed) Secondary Actions: Expand
+								189 text margin-block-start :  0px ;
+							190 container
+								191 button (collapsed) Secondary Actions: Expand
+								192 text margin-bottom :  0px ;
+							193 container
+								194 button (collapsed) Secondary Actions: Expand
+								195 text margin-inline-end :  0px ;
+							196 container
+								197 button (collapsed) Secondary Actions: Expand
+								198 text margin-inline-start :  0px ;
+							199 container
+								200 button (collapsed) Secondary Actions: Expand
+								201 text margin-left :  0px ;
+							202 container
+								203 button (collapsed) Secondary Actions: Expand
+								204 text margin-right :  0px ;
+							205 container
+								206 button (collapsed) Secondary Actions: Expand
+								207 text margin-top :  0px ;
+							208 container
+								209 button (collapsed) Secondary Actions: Expand
+								210 text min-width :  0px ;
+							211 container
+								212 button (collapsed) Secondary Actions: Expand
+								213 text overflow-x :  hidden ;
+							214 container
+								215 button (collapsed) Secondary Actions: Expand
+								216 text overflow-y :  hidden ;
+							217 container
+								218 button (collapsed) Secondary Actions: Expand
+								219 text padding-bottom :  0px ;
+							220 container
+								221 button (collapsed) Secondary Actions: Expand
+								222 text padding-left :  0px ;
+							223 container
+								224 button (collapsed) Secondary Actions: Expand
+								225 text padding-right :  0px ;
+							226 container
+								227 button (collapsed) Secondary Actions: Expand
+								228 text padding-top :  0px ;
+							229 container
+								230 button (collapsed) Secondary Actions: Expand
+								231 text tab-size :  4 ;
+							232 container
+								233 button (collapsed) Secondary Actions: Expand
+								234 text text-overflow :  ellipsis ;
+							235 container
+								236 button (collapsed) Secondary Actions: Expand
+								237 text text-wrap-mode :  nowrap ;
+							238 container
+								239 button (collapsed) Secondary Actions: Expand
+								240 text white-space-collapse :  collapse ;
+							241 container
+								242 text width :  68.0625px ;
+							243 container
+								244 container
+									245 text Ungrouped
+									246 pop up button Ungrouped
+									247 image
+								248 text Variables
+							249 container
+								250 text --accent :  #2a2a2f ;
+							251 container
+								252 text --accent-foreground :  #ededf0 ;
+							253 container
+								254 text --animate-pulse :  pulse 2s cubic-bezier ( .4 , 0 , .6 , 1 ) infinite ;
+							255 container
+								256 text --animate-spin :  spin 1s linear infinite ;
+							257 container
+								258 text --background :  #1b1b1e ;
+							259 container
+								260 text --blur-xs :  4px ;
+							261 container
+								262 text --border :  #38383e ;
+							263 container
+								264 text --card :  #222225 ;
+							265 container
+								266 text --card-foreground :  #ededf0 ;
+							267 container
+								268 text --color-black :  #000 ;
+							269 container
+								270 text --color-blue-100 :  oklch ( 93.2% .032 255.585 ) ;
+							271 container
+								272 text --color-blue-500 :  oklch ( 62.3% .214 259.815 ) ;
+							273 container
+								274 text --color-blue-900 :  oklch ( 37.9% .146 265.522 ) ;
+							275 container
+								276 text --color-emerald-500 :  oklch ( 69.6% .17 162.48 ) ;
+							277 container
+								278 text --color-emerald-600 :  oklch ( 59.6% .145 163.225 ) ;
+							279 container
+								280 text --color-gray-600 :  oklch ( 44.6% .03 256.802 ) ;
+							281 container
+								282 text --color-gray-950 :  oklch ( 13% .028 261.692 ) ;
+							283 container
+								284 text --color-green-100 :  oklch ( 96.2% .044 156.743 ) ;
+							285 container
+								286 text --color-green-500 :  oklch ( 72.3% .219 149.579 ) ;
+							287 container
+								288 text --color-red-500 :  oklch ( 63.7% .237 25.331 ) ;
+							289 container
+								290 text --color-red-600 :  oklch ( 57.7% .245 27.325 ) ;
+							291 container
+								292 text --color-white :  #fff ;
+							293 container
+								294 text --container-md :  28rem ;
+							295 container
+								296 text --container-sm :  24rem ;
+							297 container
+								298 text --container-xs :  20rem ;
+							299 container
+								300 text --default-font-family :  -apple- system , BlinkMacSystemFont , "Segoe UI" , sans-serif ;
+							301 container
+								302 text --default-mono-font-family :  ui-monospace , SFMono-Regular , Menlo , Monaco , Consolas , "Liberation Mono" , "Courier New" , monospace ;
+							303 container
+								304 text --default-transition-duration :  .15s ;
+							305 container
+								306 text --default-transition-timing-function :  cubic-bezier ( .4 , 0 , .2 , 1 ) ;
+							307 container
+								308 text --destructive :  #ffb0a5 ;
+							309 container
+								310 text --ease-in-out :  cubic-bezier ( .4 , 0 , .2 , 1 ) ;
+							311 container
+								312 text --font-mono :  ui-monospace , SFMono-Regular , Menlo , Monaco , Consolas , "Liberation Mono" , "Courier New" , monospace ;
+							313 container
+								314 text --font-sans :  -apple- system , BlinkMacSystemFont , "Segoe UI" , sans-serif ;
+							315 container
+								316 text --font-serif :  ui-serif , Georgia , Cambria , "Times New Roman" , Times , serif ;
+							317 container
+								318 text --font-weight-bold :  700 ;
+							319 container
+								320 text --font-weight-medium :  500 ;
+							321 container
+								322 text --font-weight-normal :  400 ;
+							323 container
+								324 text --foreground :  #ededf0 ;
+							325 container
+								326 text --input :  #38383e ;
+							327 container
+								328 text --leading-normal :  1.5 ;
+							329 container
+								330 text --leading-relaxed :  1.625 ;
+							331 container
+								332 text --leading-snug :  1.375 ;
+							333 container
+								334 text --muted :  #2a2a2f ;
+							335 container
+								336 text --muted-foreground :  #a6a6b0 ;
+							337 container
+								338 text --popover :  #252529 ;
+					339 container Styles
+						340 container Styles (showing 0-100 of 106 items)
+							341 container
+								342 image
+								343 text Style Attribute  {
+							344 text }
+							345 container
+								346 text index-DO04BlgL.css:4285
+								347 image
+								348 text .workspace-header h1 {
+							349 container
+								350 text font-weight
+								351 text : 
+								352 text 500
+								353 text ;
+							354 container
+								355 text font-size
+								356 text : 
+								357 image
+								358 text var
+								359 text (
+								360 text --shell-text-label
+								361 text )
+								362 text ;
+							363 text }
+							364 container
+								365 text @layer  utilities
+							366 container
+								367 text index-DO04BlgL.css:1105
+								368 image
+								369 text .truncate  {
+							370 container
+								371 text text-overflow
+								372 text : 
+								373 text ellipsis
+								374 text ;
+							375 container
+								376 text white-space
+								377 text : 
+								378 text nowrap
+								379 text ;
+							380 container
+								381 text overflow
+								382 text : 
+								383 text hidden
+								384 text ;
+							385 text }
+							386 container
+								387 text @layer  utilities
+							388 container
+								389 text index-DO04BlgL.css:898
+								390 image
+								391 text .min-w-0  {
+							392 container
+								393 text min-width
+								394 text : 
+								395 text 0
+								396 text ;
+							397 text }
+							398 container
+								399 text @layer  base
+							400 container
+								401 text index-DO04BlgL.css:191
+								402 image
+								403 text h1 ,  h2 ,  h3 ,  h4 ,  h5 ,  h6 {
+							404 container
+								405 text font-size
+								406 text : 
+								407 text inherit
+								408 text ;
+							409 container
+								410 text font-weight
+								411 text : 
+								412 text inherit
+								413 text ;
+							414 text }
+							415 container
+								416 text @layer  base
+							417 container
+								418 text index-DO04BlgL.css:401
+								419 image
+								420 text *  {
+							421 container
+								422 text border-color
+								423 text : 
+								424 text var
+								425 text (
+								426 text --border
+								427 text )
+								428 text ;
+							429 text }
+							430 container
+								431 text @layer  base
+							432 container
+								433 text index-DO04BlgL.css:156
+								434 image
+								435 text * ,  :after ,  :before , ::backdrop  {
+							436 container
+								437 text box-sizing
+								438 text : 
+								439 text border-box
+								440 text ;
+							441 container
+								442 text border
+								443 text : 
+								444 text 0
+								445 text solid
+								446 text ;
+							447 container
+								448 text margin
+								449 text : 
+								450 text 0
+								451 text ;
+							452 container
+								453 text padding
+								454 text : 
+								455 text 0
+								456 text ;
+							457 text }
+							458 container
+								459 text User Agent Style Sheet
+								460 image
+								461 image
+								462 text h1  {
+							463 container
+								464 text display
+								465 text : 
+								466 text block
+								467 text ;
+							468 container
+								469 text font-size
+								470 text : 
+								471 text 2em
+								472 text ;
+							473 container
+								474 text margin-block-start
+								475 text : 
+								476 text 0.67em
+								477 text ;
+							478 container
+								479 text margin-block-end
+								480 text : 
+								481 text 0.67em
+								482 text ;
+							483 container
+								484 text margin-inline-start
+								485 text : 
+								486 text 0px
+								487 text ;
+							488 container
+								489 text font-weight
+								490 text : 
+								491 text bold
+								492 text ;
+							493 text }
+							494 heading Pseudo-Element ::before, Value: 2
+								495 text Pseudo-Element ::before
+							496 container
+								497 text @layer  base
+							498 container
+								499 text index-DO04BlgL.css:156
+								500 image
+								501 text * ,  :after ,  :before , ::backdrop  {
+							502 container
+								503 text box-sizing
+								504 text : 
+								505 text border-box
+								506 text ;
+							507 container
+								508 text border
+								509 text : 
+								510 text 0
+								511 text solid
+								512 text ;
+							513 container
+								514 text margin
+								515 text : 
+								516 text 0
+								517 text ;
+							518 container
+								519 text padding
+								520 text : 
+								521 text 0
+								522 text ;
+							523 text }
+							524 heading Pseudo-Element ::after, Value: 2
+								525 text Pseudo-Element ::after
+							526 container
+								527 text @layer  base
+							528 container
+								529 text index-DO04BlgL.css:156
+								530 image
+								531 text * ,  :after ,  :before , ::backdrop  {
+							532 container
+								533 text box-sizing
+								534 text : 
+								535 text border-box
+								536 text ;
+							537 container
+								538 text border
+								539 text : 
+								540 text 0
+								541 text solid
+								542 text ;
+							543 container
+								544 text margin
+								545 text : 
+								546 text 0
+								547 text ;
+							548 container
+								549 text padding
+								550 text : 
+								551 text 0
+								552 text ;
+							553 text }
+							554 heading Value: 2, Inherited From div.group\/sidebar-wrapper.flex.w-full.has-data-\[variant\=inset\]\:bg-sidebar.h-dvh.min-h-0
+								555 text Inherited From
+								556 link div.group\/sidebar-wrapper.flex.w-full.has-data-\[variant\=inset\]\:bg-sidebar.h-dvh.min-h-0
+									557 text div.group\/sidebar-wrapper.flex.w-full.has-data-\[variant\=inset\]\:bg-sidebar.h-dvh.min-h-0
+							558 container
+								559 image
+								560 text Style Attribute  {
+							561 button Show 2 unused CSS variables, Help: Option-click to show unused CSS variables from all rules
+							562 text }
+							563 heading Inherited From body, Value: 2
+								564 text Inherited From
+								565 link body
+									566 text body
+							567 container
+								568 text @layer  base
+							569 container
+								570 text index-DO04BlgL.css:405
+								571 image
+								572 text body  {
+							573 container
+								574 text color
+								575 text : 
+								576 text var
+								577 text (
+								578 text --foreground
+								579 text )
+								580 text ;
+							581 container
+								582 text font-size
+								583 text : 
+								584 text var
+								585 text (
+								586 text --shell-text-body
+								587 text )
+								588 text ;
+							589 text }
+							590 heading Inherited From html.dark, Value: 2
+								591 text Inherited From
+								592 link html.dark
+									593 text html.dark
+							594 container
+								595 text index-DO04BlgL.css:4126
+								596 image
+								597 text :root  {
+							598 container
+								599 text color-scheme
+								600 text : 
+								601 text dark
+								602 text ;
+							603 container
+								604 text font-synthesis
+								605 text : 
+								606 text none
+								607 text ;
+							608 container
+								609 text --foreground
+								610 text : 
+								611 text #ededf0
+								612 text ;
+							613 container
+								614 text --border
+								615 text : 
+								616 text #38383e
+								617 text ;
+							618 container
+								619 text --shell-text-body
+								620 text : 
+								621 text 13px
+								622 text ;
+							623 container
+								624 text --shell-text-label
+								625 text : 
+								626 text 12px
+								627 text ;
+							628 container
+								629 text font-family
+								630 text : 
+								631 text -apple-
+								632 text system
+								633 text ,
+								634 text BlinkMacSystemFont
+								635 text ,
+								636 text Segoe
+								637 text UI
+								638 text ,
+								639 text sans-serif
+								640 text ;
+							641 button Show 31 unused CSS variables, Help: Option-click to show unused CSS variables from all rules
+							642 text }
+							643 container
+								644 text @layer  base
+							645 container
+								646 text index-DO04BlgL.css:170
+								647 image
+								648 text html ,  :host  {
+							649 container Unsupported property name
+								650 text -webkit-text-size-adjust
+								651 text : 
+								652 text 100%
+								653 text ;
+							654 container
+								655 text tab-size
+								656 text : 
+								657 text 4
+								658 text ;
+							659 container
+								660 text line-height
+								661 text : 
+								662 text 1.5
+								663 text ;
+							664 container
+								665 text font-family
+								666 text : 
+								667 text var
+								668 text (
+								669 text --default-font-family
+								670 text ,
+								671 text -apple-
+								672 text system
+								673 text ,
+								674 text BlinkMacSystemFont
+								675 text ,
+								676 text "Segoe UI"
+								677 text ,
+								678 text Roboto
+								679 text ,
+								680 text "Helvetica Neue"
+								681 text ,
+								682 text "Noto Sans"
+								683 text ,
+								684 text Arial
+								685 text ,
+								686 text sans-serif
+								687 text ,
+								688 text "Apple Color Emoji"
+								689 text ,
+								690 text "Segoe UI Emoji"
+								691 text ,
+								692 text "Segoe UI Symbol"
+								693 text ,
+								694 text "Noto Color Emoji"
+								695 text )
+								696 text ;
+							697 container
+								698 text font-feature-settings
+								699 text : 
+								700 image
+								701 text var
+								702 text (
+								703 text --default-font-feature-settings
+								704 text ,
+								705 text normal
+								706 text )
+								707 text ;
+							708 container
+								709 text font-variation-settings
+								710 text : 
+								711 image
+								712 text var
+								713 text (
+								714 text --default-font-variation-settings
+								715 text ,
+								716 text normal
+								717 text )
+								718 text ;
+							719 text }
+							720 container
+								721 text @layer  theme
+							722 container
+								723 text index-DO04BlgL.css:97
+								724 image
+								725 text :root ,  :host  {
+							726 container
+								727 text --default-font-family
+								728 text : 
+								729 text -apple-
+								730 text system
+								731 text ,
+								732 text BlinkMacSystemFont
+								733 text ,
+								734 text "Segoe UI"
+								735 text ,
+								736 text sans-serif
+								737 text ;
+							738 button Show 52 unused CSS variables, Help: Option-click to show unused CSS variables from all rules
+							739 text }
+							740 container
+								741 text User Agent Style Sheet
+								742 image
+								743 image
+								744 text html  {
+							745 container
+								746 text color
+								747 text : 
+								748 text canvastext
+								749 text ;
+							750 text }
+							751 container
+								752 checkbox :active, Value: 0
+								753 text :active
+							754 container
+								755 checkbox :focus, Value: 0
+								756 text :focus
+							757 container
+								758 checkbox :focus-visible, Value: 0
+								759 text :focus-visible
+							760 container
+								761 checkbox :focus-within, Value: 0
+								762 text :focus-within
+							763 container
+								764 checkbox :hover, Value: 0
+								765 text :hover
+			766 button Hide Console (⎋)
+			767 search text field (settable)  
+			768 button (disabled) Find Previous (⇧⌘G)
+			769 button (disabled) Find Next (⌘G)
+			770 text All
+			771 text Evaluations
+			772 text Errors
+			773 text Warnings
+			774 text Logs
+			775 button Other filter options…
+			776 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+			777 button Run Console Snippet…
+			778 button Collect garbage
+			779 button Clear log (⌘K or ⌃L)
+			780 button Show Console tab
+			781 container
+				782 text Console opened at 5:41:52 PM
+				783 image
+				784 text Unhandled Promise Rejection: webview.internal_toggle_devtools not allowed. Permissions associated with this command: core:webview:allow-internal-toggle-devtools, core:webview:default
+				785 image
+				786 text Selected Element
+				787 image
+				788 outline (selectable)
+					789 row (selectable) Description: <h1 class=​"min-w-0 truncate">​thiago-silva​</h1>, Value: <h1 class=​"min-w-0 truncate">​thiago-silva​</h1>
+<
+h1
+class
+=​"
+min-w-0 truncate
+"
+>
+thiago-silva
+<
+/h1
+>
+				790 text  = $1
+				791 image
+				792 text JSON.stringify({snapshot:f04g.snapshot(),navigation:f04g.navigation,log:f04g.log})
+				793 image
+				794 text "
+				795 text {\"snapshot\":{\"time\":182077,\"visibility\":\"visible\",\"active\":0,\"maxActive\":0,\"duplicates\":0,\"queryCount\":29,\"queue\":0,\"pending\":0,\"physicalActive\":0,\"freshness\":143,\"logCount\":0,\"commands\":{},\"assets\":[\"
+				796 link tauri://localhost/assets/index-fu3K_RS5.js\, Value: tauri://localhost/assets/index-fu3K_RS5.js%5C
+				797 text "],\"userAgent\":\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)\",\"width\":900,\"height\":148},\"navigation\":[{\"label\":\"thiago-silva\\n\",\"start\":103958,\"trusted\":true,\"feedback\":42,\"heading\":\"thiago-silva\",\"tab\":\"Workspace\"},{\"label\":\"large.txt\\n.M\\n\",\"start\":123078,\"trusted\":true,\"feedback\":22.000000000014552,\"heading\":\"thiago-silva\",\"tab\":\"Changes\"},{\"label\":\"Workspace\",\"start\":144569.00000000003,\"trusted\":true,\"f
+				798 text "
+				799 text  = $2
+			800 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			801 container
+	802 scroll area
+		803 HTML content Description: Agent Workspace, URL: tauri://localhost
+			804 link Skip to workspace, Value: tauri://localhost#workspace
+			805 container Repository sidebar
+				806 text Agent Workspace
+				807 container Repositories
+					808 heading Repositories, Value: 2
+						809 text Repositories
+					810 content list
+						811 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							812 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							813 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							814 button Create workspace in Beta
+							815 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							816 text Available
+							817 content list
+								818 button thiago-silva, Help: Workspace ready
+						819 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							820 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							821 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							822 button Create workspace in Alpha
+							823 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							824 text Available
+							825 content list
+								826 button vincent-aboubakar, Help: Workspace ready
+				827 pop up button Add repository
+				828 text Connected
+				829 pop up button Connection details
+			830 container
+				831 container
+					832 heading thiago-silva, Value: 1
+						833 text thiago-silva
+					834 button Refresh status
+				835 container Selected repository
+					836 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					837 text Repository available
+				838 text Uncommitted changes
+				839 button Refresh changes
+				840 button (expanded) Hide changed files, Secondary Actions: Collapse
+				841 container
+					842 text Compared with HEAD  83f047d5f61edacd2fc87605778e6522e8b750b0  ·  2 changed files
+				843 tab group (selectable) Workspace views
+					844 tab (selectable) Workspace
+					845 tab (selected) Changes
+				846 container Changes
+					847 container Selected file changes
+						848 heading large.txt, Value: 2
+							849 text large.txt
+						850 text Preview limited by the 200-row or 48 KiB response budget.
+						851 container Unified file diff
+				852 splitter Resize changed files, Value: 68
+				853 container Changed files
+					854 heading Changed files, Value: 2
+						855 text Changed files
+					856 container
+						857 toggle button large.txt .M, Help: large.txt, Value: on
+						858 toggle button text.txt .M, Help: text.txt, Value: off
+					859 button First page
+					860 button (disabled) Next files
+				861 container
+					862 text Local workspace Beta
+		863 scroll bar (settable, float) 0
+	864 close button
+	865 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	866 minimize button
+	867 text Agent Workspace
+868 menu bar
+	869 F04g inspect current
+	870 File
+	871 Edit
+	872 View
+	873 Window
+	874 Help
+
+The focused UI element is 800 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

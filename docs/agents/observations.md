@@ -8,10 +8,11 @@ qualification. This guidance supports those owners rather than duplicating them.
 
 ## Current versus planned
 
-The F04 product at `7dc4eac` uses protocol 7, synchronous transport, manual read/feed
-controllers and baseline polling. F04a publishes documentation only. F04b–F04g
-introduce the selected libraries and qualify the new implementation in separate
-sessions. Check predecessor evidence and actual files before assuming a library,
+The historical F04 product at `7dc4eac` used protocol 7, synchronous transport,
+manual read/feed controllers and baseline polling. F04a published documentation.
+F04b–F04f implemented the selected libraries; [F04g evidence](../evidence/frontend-navigation/f04g.md)
+records focused actual transport/fixture-desktop qualification. F05 remains
+presentation context/integration and F08 retains cumulative routed qualification. Check predecessor evidence and actual files before assuming a library,
 command, generated artifact or actor exists. Land dependencies with first use;
 recheck installed Intent guidance and supported-version sources on upgrades.
 

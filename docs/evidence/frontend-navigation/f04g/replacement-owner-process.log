@@ -1,0 +1,11 @@
+   Compiling rusqlite v0.42.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.87s
+     Running tests/discovery.rs (target/debug/deps/discovery-2174909665c3c691)
+
+running 1 test
+test replacement_owner_rejects_a_retained_desktop_target_before_status_refresh ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.48s
+

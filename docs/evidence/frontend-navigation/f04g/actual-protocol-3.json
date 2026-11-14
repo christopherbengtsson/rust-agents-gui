@@ -1,0 +1,191 @@
+{
+  "root": "/private/tmp/aw-f04g-ok9ornde",
+  "pid": 12882,
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor",
+  "sha256": "49961db50c0705479c56ec4f5b7eca49d275eb185bff99465a0c4691bb9fd555",
+  "checks": [
+    {
+      "name": "private_directory_and_endpoint",
+      "status": "pass",
+      "seconds": 6.0582999140024185e-5,
+      "detail": {
+        "directory": "0700",
+        "endpoint": "0600"
+      }
+    },
+    {
+      "name": "fragmented_header_and_body",
+      "status": "pass",
+      "seconds": 0.10027754202019423,
+      "detail": null
+    },
+    {
+      "name": "exact_payload_limit_and_oversized_header",
+      "status": "pass",
+      "seconds": 0.0007393750129267573,
+      "detail": null
+    },
+    {
+      "name": "partial_header",
+      "status": "pass",
+      "seconds": 3.8707978092134e-5,
+      "detail": null
+    },
+    {
+      "name": "header_without_body",
+      "status": "pass",
+      "seconds": 3.754091449081898e-5,
+      "detail": null
+    },
+    {
+      "name": "partial_body",
+      "status": "pass",
+      "seconds": 3.050011582672596e-5,
+      "detail": null
+    },
+    {
+      "name": "empty_json",
+      "status": "pass",
+      "seconds": 2.62079993262887e-5,
+      "detail": null
+    },
+    {
+      "name": "legacy_v6_v7_newline",
+      "status": "pass",
+      "seconds": 2.2458028979599476e-5,
+      "detail": null
+    },
+    {
+      "name": "incompatible_versions_and_owner_before_dispatch",
+      "status": "pass",
+      "seconds": 0.00024179206229746342,
+      "detail": null
+    },
+    {
+      "name": "absolute_transfer_deadline_not_renewed_by_fragments",
+      "status": "pass",
+      "seconds": 2.001359457965009,
+      "detail": 2.001339167007245
+    },
+    {
+      "name": "eight_server_clients_then_handler_recovery",
+      "status": "pass",
+      "seconds": 0.0003468339564278722,
+      "detail": null
+    },
+    {
+      "name": "baseline_exact_ack_and_five_second_heartbeat",
+      "status": "pass",
+      "seconds": 5.001929624937475,
+      "detail": {
+        "seconds": 5.001784415915608,
+        "cursor": {
+          "owner": "12882-1794674075767546000",
+          "sequence": 1
+        }
+      }
+    },
+    {
+      "name": "mismatched_ack_closes_subscription",
+      "status": "pass",
+      "seconds": 0.0002785839606076479,
+      "detail": null
+    },
+    {
+      "name": "repository_workspace_push_progress_and_accepted_cursor_reconnect",
+      "status": "pass",
+      "seconds": 0.0790876669343561,
+      "detail": {
+        "admission": {
+          "kind": "registration",
+          "registration": {
+            "create_initial_workspace": true,
+            "initial_workspace_id": null,
+            "action_id": "ad9400af-2d08-4c11-892f-1d6aae216fb5",
+            "path": "/private/tmp/aw-f04g-ok9ornde/repository",
+            "state": "pending"
+          }
+        },
+        "batches": [
+          {
+            "subscription_id": "67b2ad2d-a01c-43fc-9b40-d12c22e51b45",
+            "batch_id": 2,
+            "cursor": {
+              "owner": "12882-1794674075767546000",
+              "sequence": 2
+            },
+            "sample": {
+              "kind": "hints",
+              "watermark": 2,
+              "targets": [
+                {
+                  "kind": "registration",
+                  "action_id": "ad9400af-2d08-4c11-892f-1d6aae216fb5"
+                },
+                {
+                  "kind": "repositories"
+                }
+              ]
+            }
+          },
+          {
+            "subscription_id": "67b2ad2d-a01c-43fc-9b40-d12c22e51b45",
+            "batch_id": 3,
+            "cursor": {
+              "owner": "12882-1794674075767546000",
+              "sequence": 4
+            },
+            "sample": {
+              "kind": "hints",
+              "watermark": 4,
+              "targets": [
+                {
+                  "kind": "registration",
+                  "action_id": "ad9400af-2d08-4c11-892f-1d6aae216fb5"
+                },
+                {
+                  "kind": "repositories"
+                },
+                {
+                  "kind": "workspaces",
+                  "repository_id": null
+                },
+                {
+                  "kind": "repository",
+                  "repository_id": "4478e90e-ae1e-45ee-8771-f05726477ebd"
+                },
+                {
+                  "kind": "workspace",
+                  "workspace_id": "ab59bf84-3da7-4706-8ba5-31ff1f2a76c8"
+                }
+              ]
+            }
+          }
+        ],
+        "accepted_reconnect": {
+          "owner": "12882-1794674075767546000",
+          "sequence": 1
+        }
+      }
+    },
+    {
+      "name": "one_inflight_and_256_entry_overflow_resync",
+      "status": "fail",
+      "seconds": 0.2723968749633059,
+      "error": "AssertionError({'subscription_id': '59eb9047-f6c9-4e10-bf64-ee01caf0753f', 'batch_id': 2, 'cursor': {'owner': '12882-1794674075767546000', 'sequence': 14}, 'sample': {'kind': 'hints', 'watermark': 14, 'targets': [{'kind': 'repositories'}, {'kind': 'repository', 'repository_id': '4478e90e-ae1e-45ee-8771-f05726477ebd'}, {'kind': 'workspace', 'workspace_id': 'ab59bf84-3da7-4706-8ba5-31ff1f2a76c8'}, {'kind': 'workspaces', 'repository_id': '4478e90e-ae1e-45ee-8771-f05726477ebd'}]}})"
+    }
+  ],
+  "owner": "12882-1794674075767546000",
+  "registration": {
+    "create_initial_workspace": true,
+    "initial_workspace_id": "ab59bf84-3da7-4706-8ba5-31ff1f2a76c8",
+    "action_id": "ad9400af-2d08-4c11-892f-1d6aae216fb5",
+    "path": "/private/tmp/aw-f04g-ok9ornde/repository",
+    "state": "completed",
+    "repository_id": "4478e90e-ae1e-45ee-8771-f05726477ebd"
+  },
+  "cleanup": {
+    "child_joined": true,
+    "returncode": -15
+  }
+}

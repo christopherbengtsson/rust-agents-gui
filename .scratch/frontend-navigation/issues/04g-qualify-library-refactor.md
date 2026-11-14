@@ -54,11 +54,11 @@ add no integration-test framework. Report unsupported/unperformed checks honestl
 
 ## Acceptance
 
-- [ ] Requirement-to-evidence and removed-to-replacement coverage matrices are complete; temporary migration mechanisms are gone.
-- [ ] Relevant deterministic/static gates and separate production packaging pass with source/sidecar provenance.
-- [ ] Focused actual socket/process/fixture-desktop recovery, bounds, access and cleanup checks pass before F05.
-- [ ] Costs/benefits, failures, commands and qualification limits are recorded; material regressions are fixed or returned for decision.
-- [ ] Future handoffs match actual definitions and F05 remains limited to presentation context/integration.
+- [x] Requirement-to-evidence and removed-to-replacement coverage matrices are complete; temporary migration mechanisms are gone.
+- [x] Relevant deterministic/static gates and separate production packaging pass with source/sidecar provenance.
+- [x] Focused actual socket/process/fixture-desktop recovery, bounds, access and cleanup checks pass before F05.
+- [x] Costs/benefits, failures, commands and qualification limits are recorded; material regressions are fixed or returned for decision.
+- [x] Future handoffs match actual definitions and F05 remains limited to presentation context/integration.
 
 This does not complete F08's later route/Settings/accessibility/cumulative performance
 qualification, milestone native-provider work or full owned Quit. A failed required
@@ -71,3 +71,32 @@ actual check leaves this gate incomplete; F05 cannot start until it passes.
 Published after the user approved library refactors and all four deepening
 opportunities. Acceptance remains unchecked until this ticket's implementation
 and verification produce linked evidence. No provider submissions are authorized.
+
+### 2026-11-14 — F04g implemented and qualified
+
+Confirmed F04f checked acceptance and evidence at
+`5140ecee8a938c996cd4759917c8355eebc3ac2e`; continued the current feature branch
+with a clean tree/index. Preserved historical evidence and successor tickets.
+
+[Evidence](../../../docs/evidence/frontend-navigation/f04g.md) records the
+requirement/removal matrices, source/artifact hashes, versions, commands, timings,
+failed attempts, limits and independent review. Actual WebView qualification found
+and fixed pending/error-summary retry storms with retained selected previews;
+new actor regressions failed before their fixes and pass in the configured gate.
+
+Final `corepack pnpm verify` passed **158 Rust + 40 tooling + 153 frontend units**;
+separate production packaging, **19 actual socket scenarios**, and **9 actual
+process scenarios** passed. Warm-up/five-run measurements are separate from
+compilation. Matched baseline `7dc4eac` used an isolated checkout/private target.
+Actual rendered navigation feedback medians were **32 / 45 ms**; queue bounds,
+physical draining, hidden pause, cache expiry, explicit reprobe, last-good errors,
+accepted-cursor reconnect, real lost admitted reply and desktop-only crash recovery
+passed. One retained creation/action/worktree effect was observed with no replay.
+All fixture apps/owners exited, faults/endpoints were restored, and original
+checkout files were unchanged.
+
+Standards and Spec review resolved all findings; final signoff is **0 / 0
+outstanding**. The containing commit owns this ticket's changes/evidence. F05 is
+limited to presentation context/integration; it and all successors remain open.
+No provider submissions, F08 cumulative qualification or full owned-Quit claim is
+included. Stop after F04g.

@@ -1,0 +1,60 @@
+{
+  "snapshot": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 21028,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "21028-1794674451767299000",
+      "revision": 1
+    },
+    "reset": true
+  },
+  "workspaces": [
+    {
+      "id": "f9cf43aa-0113-4112-ad00-6d40f079654a",
+      "repository_id": "57a97e87-d23e-4be3-8b0b-4f68123a4764",
+      "creation_action_id": "9275a26c-9362-4a21-99e7-78e28f969cc4",
+      "name": "paolo-maldini",
+      "branch": "workspace/paolo-maldini",
+      "path": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-baseline/workspaces/alpha/paolo-maldini/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "83f047d5f61edacd2fc87605778e6522e8b750b0"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    {
+      "id": "5b4e9bd3-d63b-4fb6-aedd-751d6e6eba98",
+      "repository_id": "f026e1c7-b0d2-4bde-be13-660b465e1cc1",
+      "creation_action_id": "e416edbe-e098-4d21-a6b6-0396867ba6f7",
+      "name": "dries-mertens",
+      "branch": "workspace/dries-mertens",
+      "path": "/private/tmp/aw-f04g-desktop-tq4w5p9r/state-baseline/workspaces/beta/dries-mertens/checkout",
+      "legacy": false,
+      "provider": "codex",
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "83f047d5f61edacd2fc87605778e6522e8b750b0"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    }
+  ]
+}

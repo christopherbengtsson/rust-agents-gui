@@ -1,0 +1,66 @@
+Window: "Agent Workspace", App: F04g Final Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							11 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button Create workspace in Beta
+							14 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							15 text Available
+							16 content list
+								17 button thiago-silva, Help: Workspace ready
+						18 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							23 text Available
+							24 content list
+								25 button vincent-aboubakar, Help: Workspace ready
+				26 pop up button Add repository
+				27 text Connected
+				28 pop up button Connection details
+			29 container
+				30 heading New workspace, Value: 1
+					31 text New workspace
+				32 button Refresh status
+				33 container Selected repository
+					34 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					35 text Repository available
+				36 container Selected workspace
+					37 text Waiting to create workspace… Codex
+					38 heading Preparing your workspace, Value: 2
+						39 text Preparing your workspace
+					40 text New workspace
+					41 description list
+						42 text Local base
+						43 text Waiting for an identifiable local default branch
+						44 text Branch artifact
+						45 text Not yet confirmed
+						46 text Folder artifact
+						47 text Not yet confirmed
+					48 text A name and folder have not been reserved yet.
+					49 text Waiting to create workspace…
+				50 text Local workspace
+				51 text Beta
+	52 close button
+	53 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	54 minimize button
+	55 text Agent Workspace
+56 menu bar
+	57 F04g Final Inspection
+	58 File
+	59 Edit
+	60 View
+	61 Window
+	62 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost

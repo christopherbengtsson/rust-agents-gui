@@ -1,0 +1,179 @@
+Window: "Agent Workspace", App: F04g Final Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 6:37:16 PM
+					36 image
+					37 text Array.from({length:30},(_,j)=>j*300).filter(i=>i<f04g.exportString.length).forEach(i=>console.log("F04G:"+i+":"+f04g.exportString.slice(i,i+300)))
+					38 image
+					39 text F04G:0:{"snapshot":{"time":617083,"visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":81,"queue":0,"pending":0,"physicalActive":0,"freshness":717,"logCount":1322,"commands":{"workspace_request":781,"observation_acknowledge":528,"repository_request":8,"observation_stop":2,"supervisor
+					40 image
+					41 text F04G:300:_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148},"navigation":[{"label":"large.txt\n.M\n","start":157313.000000
+					42 image
+					43 text F04G:600:00003,"trusted":true,"feedback":53.999999999970896,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":158138,"trusted":true,"feedback":23,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":158946,"trusted":true,"feedback":45,"heading":"thiago-silva","tab":"Cha
+					44 image
+					45 text F04G:900:nges"},{"label":"Workspace","start":159762,"trusted":true,"feedback":25,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":160564,"trusted":true,"feedback":45,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":161397,"trusted":true,"feedback":33,"heading":"thi
+					46 image
+					47 text F04G:1200:ago-silva","tab":"Workspace"},{"label":"Changes","start":162213,"trusted":true,"feedback":44,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":163029,"trusted":true,"feedback":23,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":163838,"trusted":true,"feedba
+					48 image
+					49 text F04G:1500:ck":44,"heading":"thiago-silva","tab":"Changes"},{"label":"Workspace","start":164664.00000000003,"trusted":true,"feedback":31.999999999970896,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":165464,"trusted":true,"feedback":50,"heading":"thiago-silva","tab":"Changes"},{"label":
+					50 image
+					51 text F04G:1800:"Workspace","start":166279,"trusted":true,"feedback":34.000000000029104,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":167072,"trusted":true,"feedback":45,"heading":"thiago-silva","tab":"Changes"},{"label":"Refresh changes","start":188705,"trusted":true,"feedback":24,"heading
+					52 image
+					53 text F04G:2100:":"thiago-silva","tab":"Changes"},{"label":"vincent-aboubakar\n","start":189539.00000000003,"trusted":true,"feedback":40.999999999970896,"heading":"vincent-aboubakar","tab":"Workspace"},{"label":"thiago-silva\n","start":190339,"trusted":true,"feedback":24,"heading":"thiago-silva","tab":"Workspace"},
+					54 image
+					55 text F04G:2400:{"label":"Refresh changes","start":224505,"trusted":true,"feedback":16.000000000029104,"heading":"thiago-silva","tab":"Workspace"},{"label":"Changes","start":290988,"trusted":true,"feedback":25.000000000058208,"heading":"thiago-silva","tab":"Changes"},{"label":"Refresh changes","start":310514,"trust
+					56 image
+					57 text F04G:2700:ed":true,"feedback":31,"heading":"thiago-silva","tab":"Changes"},{"label":"Refresh status","start":405163,"trusted":true,"feedback":51,"heading":"thiago-silva","tab":"Changes"}],"windows":[{"label":"visible","start":{"time":155984,"visibility":"visible","active":0,"maxActive":0,"duplicates":0,"query
+					58 image
+					59 text F04G:3000:Count":11,"queue":0,"pending":0,"physicalActive":0,"freshness":206,"logCount":0,"commands":{},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148},"end":{"time":161985,"
+					60 image
+					61 text F04G:3300:visibility":"visible","active":0,"maxActive":1,"duplicates":0,"queryCount":12,"queue":0,"pending":0,"physicalActive":0,"freshness":209,"logCount":16,"commands":{"workspace_request":13,"observation_acknowledge":3},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macint
+					62 image
+					63 text F04G:3600:osh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648}},{"start":{"time":562419,"visibility":"hidden","active":0,"maxActive":2,"duplicates":0,"queryCount":79,"queue":0,"pending":0,"physicalActive":0,"freshness":693,"logCount":1260,"commands":{"workspace_requ
+					64 image
+					65 text F04G:3900:est":747,"observation_acknowledge":500,"repository_request":8,"observation_stop":2,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Ge
+					66 image
+					67 text F04G:4200:cko)","width":900,"height":648},"end":{"time":566519,"visibility":"hidden","active":0,"maxActive":2,"duplicates":0,"queryCount":79,"queue":0,"pending":0,"physicalActive":0,"freshness":694,"logCount":1261,"commands":{"workspace_request":747,"observation_acknowledge":501,"repository_request":8,"observ
+					68 image
+					69 text F04G:4500:ation_stop":2,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648}},{"start":{"time":583798,"visibility"
+					70 image
+					71 text F04G:4800::"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":79,"queue":0,"pending":0,"physicalActive":0,"freshness":694,"logCount":1265,"commands":{"workspace_request":747,"observation_acknowledge":505,"repository_request":8,"observation_stop":2,"supervisor_status":1,"desktop_pid":1,"observation
+					72 image
+					73 text F04G:5100:_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648},"end":{"time":587799,"visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":79,"
+					74 image
+					75 text F04G:5400:queue":0,"pending":0,"physicalActive":0,"freshness":696,"logCount":1271,"commands":{"workspace_request":751,"observation_acknowledge":507,"repository_request":8,"observation_stop":2,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"
+					76 image
+					77 text F04G:5700:],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648}}],"steady":{"start":{"time":468022,"visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":78,"queue":0,"pending":0,"physicalActive":0,"freshness":62
+					78 image
+					79 text F04G:6000:8,"logCount":1098,"commands":{"workspace_request":650,"observation_acknowledge":435,"repository_request":8,"observation_stop":2,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 
+					80 image
+					81 text F04G:6300:10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":648},"end":{"time":474023,"visibility":"visible","active":0,"maxActive":2,"duplicates":0,"queryCount":77,"queue":0,"pending":0,"physicalActive":0,"freshness":633,"logCount":1110,"commands":{"workspace_request":657,"observation_a
+					82 image
+					83 text F04G:6600:cknowledge":440,"repository_request":8,"observation_stop":2,"supervisor_status":1,"desktop_pid":1,"observation_subscribe":1},"assets":["tauri__localhost/assets/index-CqZgu0My.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"heig
+					84 image
+					85 text F04G:6900:ht":648}},"log":[{"command":"workspace_request","args":{"expectedOwner":"17819-1794674213130326000","request":{"operation":"changes","workspace_id":"6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3","refresh":false,"comparison_id":null,"after":null}},"start":589122,"end":589125},{"command":"workspace_request","
+					86 image
+					87 text F04G:7200:args":{"expectedOwner":"17819-1794674213130326000","request":{"operation":"change_preview","target":{"workspace_id":"6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3","comparison_id":"581c2af6-701d-4380-bb72-1d80e401295b","file_id":"b059f019-608f-478c-ae9e-04167bb5f318"},"load":true}},"start":589125,"end":58913
+					88 image
+					89 text F04G:7500:0},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"b793a90b-91eb-487c-8999-e20049be2a6d","batch_id":212,"cursor":{"owner":"17819-1794674213130326000","sequence":1600}}},"start":589127.0000000001,"end":589130},{"command":"observation_acknowledge","args":{"acknowledg
+					90 image
+					91 text F04G:7800:ement":{"subscription_id":"b793a90b-91eb-487c-8999-e20049be2a6d","batch_id":213,"cursor":{"owner":"17819-1794674213130326000","sequence":1601}}},"start":589129,"end":589132.0000000001},{"command":"workspace_request","args":{"expectedOwner":"17819-1794674213130326000","request":{"operation":"changes"
+					92 image
+					93 text F04G:8100:,"workspace_id":"6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3","refresh":false,"comparison_id":null,"after":null}},"start":589131,"end":589133},{"command":"workspace_request","args":{"expectedOwner":"17819-1794674213130326000","request":{"operation":"change_preview","target":{"workspace_id":"6cf32f9a-2bb2-4
+					94 image
+					95 text F04G:8400:868-bf1f-016a8ecfeed3","comparison_id":"581c2af6-701d-4380-bb72-1d80e401295b","file_id":"b059f019-608f-478c-ae9e-04167bb5f318"},"load":false}},"start":589133,"end":589136},{"command":"observation_acknowledge","args":{"acknowledgement":{"subscription_id":"b793a90b-91eb-487c-8999-e20049be2a6d","batch_
+					96 image
+					97 text F04G:8700:id":214,"cursor":{"owner":"17819-1794674213130326000","sequence":1602}}},"start":592407,"end":592430.0000000001},{"command":"workspace_request","args":{"expectedOwner":"17819-1794674213130326000","request":{"operation":"changes","workspace_id":"6cf32f9a-2bb2-4868-bf1f-016a8ecfeed3","refresh":false,"
+					98 image
+					99 text undefined
+			100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			101 container
+	102 scroll area
+		103 HTML content Description: Agent Workspace, URL: tauri://localhost
+			104 link Skip to workspace, Value: tauri://localhost#workspace
+			105 container Repository sidebar
+				106 text Agent Workspace
+				107 container Repositories
+					108 heading Repositories, Value: 2
+						109 text Repositories
+					110 content list
+						111 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							112 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							113 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							114 button Create workspace in Beta
+							115 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							116 text Available
+							117 content list
+								118 button franco-armani, Help: Workspace ready
+								119 button thiago-silva, Help: Workspace ready
+						120 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							121 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							122 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							123 button Create workspace in Alpha
+							124 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							125 text Available
+							126 content list
+								127 button vincent-aboubakar, Help: Workspace ready
+				128 pop up button Add repository
+				129 text Connected
+				130 pop up button Connection details
+			131 container
+				132 container
+					133 heading thiago-silva, Value: 1
+						134 text thiago-silva
+					135 button Refresh status
+				136 container Selected repository
+					137 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					138 text Repository available
+				139 text Uncommitted changes
+				140 button Refresh changes
+				141 button (expanded) Hide changed files, Secondary Actions: Collapse
+				142 container
+					143 text Compared with HEAD  83f047d5f61edacd2fc87605778e6522e8b750b0  ·  2 changed files
+				144 tab group (selectable) Workspace views
+					145 tab (selectable) Workspace
+					146 tab (selected) Changes
+				147 container Changes
+					148 container Selected file changes
+						149 heading large.txt, Value: 2
+							150 text large.txt
+						151 text Preview limited by the 200-row or 48 KiB response budget.
+						152 container Unified file diff
+				153 splitter Resize changed files, Value: 68
+				154 container Changed files
+					155 heading Changed files, Value: 2
+						156 text Changed files
+					157 container
+						158 toggle button large.txt .M, Help: large.txt, Value: on
+						159 toggle button text.txt .M, Help: text.txt, Value: off
+					160 button First page
+					161 button (disabled) Next files
+				162 container
+					163 text Local workspace Beta
+		164 scroll bar (settable, float) 0
+	165 close button
+	166 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	167 minimize button
+	168 text Agent Workspace
+169 menu bar
+	170 F04g Final Inspection
+	171 File
+	172 Edit
+	173 View
+	174 Window
+	175 Help
+
+The focused UI element is 100 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

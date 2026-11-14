@@ -1,0 +1,39 @@
+{"name": "initial-static", "command": ["corepack", "pnpm", "check"], "status": 0, "elapsed_seconds": 3.965143666951917}
+{"name": "retained-process", "command": ["corepack", "pnpm", "qualify:process"], "status": 0, "elapsed_seconds": 1.008584166993387}
+{"name": "actual-protocol", "command": ["python3", "scripts/qualify-observations.py", "target/debug/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/actual-protocol.json"], "status": 1, "elapsed_seconds": 2.2343799580121413}
+{"name": "baseline-install", "command": ["python3", "-"], "status": 0, "elapsed_seconds": 0.9128893750021234}
+{"name": "actual-protocol-2", "command": ["python3", "scripts/qualify-observations.py", "target/debug/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/actual-protocol-2.json"], "status": 1, "elapsed_seconds": 7.292501458083279}
+{"name": "actual-protocol-3", "command": ["python3", "scripts/qualify-observations.py", "target/debug/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/actual-protocol-3.json"], "status": 1, "elapsed_seconds": 7.616736417054199}
+{"name": "baseline-packaging", "command": ["python3", "-"], "status": 0, "elapsed_seconds": 69.10845850000624}
+{"name": "current-packaging", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 56.94551724998746}
+{"name": "actual-protocol-4", "command": ["python3", "scripts/qualify-observations.py", "target/debug/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/actual-protocol-4.json"], "status": 0, "elapsed_seconds": 26.308382458984852}
+{"name": "expanded-process", "command": ["corepack", "pnpm", "qualify:process"], "status": 0, "elapsed_seconds": 7.5945517919026315}
+{"name": "current-inspectable-build", "command": ["corepack", "pnpm", "tauri", "build", "--debug", "--bundles", "app", "--", "--locked"], "status": 0, "elapsed_seconds": 26.251316291978583}
+{"name": "baseline-inspectable-build", "command": ["python3", "-"], "status": 0, "elapsed_seconds": 31.941645291051827}
+{"name": "actual-release-protocol", "command": ["python3", "scripts/qualify-observations.py", "target/release/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/actual-release-protocol.json"], "status": 0, "elapsed_seconds": 29.14966754091438}
+{"name": "pending-preview-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "-t", "pending summary waits", "--maxWorkers=1"], "status": 143, "elapsed_seconds": 31.16409258299973}
+{"name": "pending-preview-red-bounded", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "-t", "pending summary waits", "--maxWorkers=1"], "status": 1, "elapsed_seconds": 0.805971666937694}
+{"name": "pending-preview-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "status": 0, "elapsed_seconds": 0.6209322500508279}
+{"name": "inspection-focused-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "status": 0, "elapsed_seconds": 0.609407958923839}
+{"name": "regression-typecheck", "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"], "status": 0, "elapsed_seconds": 0.4261253329459578}
+{"name": "baseline-release-assets", "command": ["python3", "-"], "status": 0, "elapsed_seconds": 1.012614667066373}
+{"name": "fixed-packaging", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 52.38326250005048}
+{"name": "final-actual-release-protocol", "command": ["python3", "scripts/qualify-observations.py", "target/release/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/final-actual-release-protocol.json"], "status": 1, "elapsed_seconds": 9.246042917016894}
+{"name": "fixed-inspectable-build", "command": ["corepack", "pnpm", "tauri", "build", "--debug", "--bundles", "app", "--", "--locked"], "status": 0, "elapsed_seconds": 7.033383917063475}
+{"name": "final-actual-release-protocol-2", "command": ["python3", "scripts/qualify-observations.py", "target/release/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/final-actual-release-protocol-2.json"], "status": 0, "elapsed_seconds": 28.89534070796799}
+{"name": "final-expanded-process", "command": ["corepack", "pnpm", "qualify:process"], "status": 0, "elapsed_seconds": 11.071125290938653}
+{"name": "process-measurements", "command": ["python3", "/tmp/f04g-measure-process.py"], "status": 0, "elapsed_seconds": 34.373527957941405}
+{"name": "unit-measurements", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 65.584005416953}
+{"name": "review-retained-error-red", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "-t", "summary pauses with a retained", "--maxWorkers=1"], "status": 1, "elapsed_seconds": 0.6037049159640446}
+{"name": "review-inspection-green", "command": ["corepack", "pnpm", "exec", "vitest", "run", "src/lib/inspection-actor.test.tsx", "--maxWorkers=1"], "status": 0, "elapsed_seconds": 0.632829042035155}
+{"name": "review-typecheck", "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"], "status": 0, "elapsed_seconds": 0.3763305420288816}
+{"name": "partial-readiness-negative", "command": ["python3", "scripts/qualify-observations.py", "/tmp/f04g-partial-ready", "docs/evidence/frontend-navigation/f04g/partial-readiness-negative.json"], "status": 1, "elapsed_seconds": 8.082417458994314}
+{"name": "reviewed-actual-release-protocol", "command": ["python3", "scripts/qualify-observations.py", "target/release/workspace-supervisor", "docs/evidence/frontend-navigation/f04g/reviewed-actual-release-protocol.json"], "status": 0, "elapsed_seconds": 28.803494750056416}
+{"name": "final-reviewed-packaging", "command": ["corepack", "pnpm", "build"], "status": 0, "elapsed_seconds": 46.67291258298792}
+{"name": "final-inspectable-build", "command": ["corepack", "pnpm", "tauri", "build", "--debug", "--bundles", "app", "--", "--locked"], "status": 0, "elapsed_seconds": 6.778836625046097}
+{"name": "reviewed-unit-measurements", "command": ["corepack", "pnpm", "test:measure"], "status": 0, "elapsed_seconds": 65.18408874992747}
+{"name": "replacement-owner-process", "command": ["node", "scripts/cargo.mjs", "test", "--locked", "-p", "workspace-supervisor", "--features", "process-qualification", "--test", "discovery", "replacement_owner_rejects_a_retained_desktop_target_before_status_refresh", "--", "--test-threads=1"], "status": 0, "elapsed_seconds": 2.997564624994993}
+{"name": "final-process-measurements", "command": ["python3", "/tmp/f04g-measure-process.py"], "status": 0, "elapsed_seconds": 35.38103241706267}
+{"name": "final-verify", "command": ["corepack", "pnpm", "verify"], "status": 0, "elapsed_seconds": 22.108750040992163}
+{"name": "raw-evidence-whitespace-audit", "command": ["git", "diff", "--cached", "--check"], "status": 2, "elapsed_seconds": 0.015049500041641295}
+{"name": "scoped-diff", "command": ["git", "diff", "--cached", "--check", "--", ".scratch/frontend-navigation/issues/04g-qualify-library-refactor.md", ".scratch/frontend-navigation/spec.md", "docs/MILESTONE-01.md", "docs/agents/observations.md", "src/components/README.md", "docs/evidence/frontend-navigation/f04g.md", "crates/supervisor/tests/discovery.rs", "src/lib/inspection-actor.test.tsx", "src/lib/workspace-changes-reader.ts", "scripts/qualify-observations.py"], "status": 0, "elapsed_seconds": 0.008034750004298985}

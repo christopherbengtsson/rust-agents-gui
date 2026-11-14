@@ -1,0 +1,124 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 text Console cleared at 5:54:13 PM
+			35 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+				36 text (settable) Array.from({length:30},(_,j)=>0+j*300).filter(i=>i<f04g.expo
+			37 container
+				38 text Array
+				39 text .
+				40 text from
+				41 text ({
+				42 text length
+				43 text :
+				44 text 30
+				45 text },(
+				46 text _
+				47 text ,
+				48 text j
+				49 text )
+				50 text =>
+				51 text 0
+				52 text +
+				53 text j
+				54 text *
+				55 text 300
+				56 text ).
+				57 text filter
+				58 text (
+				59 text i
+				60 text =>
+				61 text i
+				62 text <
+				63 text f04g
+				64 text .
+				65 text expo
+				66 text rt
+			67 text export
+			68 text exportString
+	69 scroll area
+		70 HTML content Description: Agent Workspace, URL: tauri://localhost
+			71 link Skip to workspace, Value: tauri://localhost#workspace
+			72 container Repository sidebar
+				73 text Agent Workspace
+				74 container Repositories
+					75 heading Repositories, Value: 2
+						76 text Repositories
+					77 content list
+						78 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							79 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							80 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							81 button Create workspace in Beta
+							82 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							83 text Available
+							84 content list
+								85 button thiago-silva, Help: Workspace ready
+						86 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							87 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							88 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							89 button Create workspace in Alpha
+							90 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							91 text Available
+							92 content list
+								93 button vincent-aboubakar, Help: Workspace ready
+				94 pop up button Add repository
+				95 text Connected
+				96 pop up button Connection details
+			97 container
+				98 container
+					99 heading Beta, Value: 1
+						100 text Beta
+					101 button Refresh status
+				102 container Selected repository
+					103 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					104 text Repository available
+				105 heading Repository registered, Value: 2
+					106 text Repository registered
+				107 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				108 button Create workspace
+				109 container
+					110 text Local workspace Beta
+		111 scroll bar (settable, float) 0
+	112 close button
+	113 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	114 minimize button
+	115 text Agent Workspace
+116 menu bar
+	117 F04g inspect current
+	118 File
+	119 Edit
+	120 View
+	121 Window
+	122 Help

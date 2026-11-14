@@ -1,0 +1,63 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container Create workspace in Beta /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Unavailable Cannot open /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta: No such file or directory (os error 2). Restore access or choose an existing repository folder.
+							11 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							12 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							13 button (disabled) Create workspace in Beta
+							14 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							15 text Unavailable
+							16 text Cannot open /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta: No such file or directory (os error 2). Restore access or choose an existing repository folder.
+							17 content list
+								18 button thiago-silva, Help: Workspace ready
+						19 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							20 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							21 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							22 button Create workspace in Alpha
+							23 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							24 text Available
+							25 content list
+								26 button vincent-aboubakar, Help: Workspace ready
+				27 pop up button Add repository
+				28 text Connected
+				29 pop up button Connection details
+			30 container
+				31 heading Beta, Value: 1
+					32 text Beta
+				33 button Refresh status
+				34 container Selected repository
+					35 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					36 text Repository unavailable
+					37 container
+						38 text Restore access to this repository Cannot open /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta: No such file or directory (os error 2). Restore access or choose an existing repository folder.
+				39 heading Repository registered, Value: 2
+					40 text Repository registered
+				41 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				42 button (disabled) Create workspace
+				43 text Local workspace
+				44 text Beta
+	45 close button
+	46 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	47 minimize button
+	48 text Agent Workspace
+49 menu bar
+	50 F04g Fixed Inspection
+	51 File
+	52 Edit
+	53 View
+	54 Window
+	55 Help
+
+Selected text: ```
+Beta
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

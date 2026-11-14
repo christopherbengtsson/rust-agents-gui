@@ -1,0 +1,48 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost
+			3 link Skip to workspace, Value: tauri://localhost#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							15 text Available
+							16 content list
+								17 button vincent-aboubakar, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+			21 container
+				22 heading Alpha, Value: 1
+					23 text Alpha
+				24 button Refresh status
+				25 container Selected repository
+					26 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+					27 text Repository available
+				28 heading Repository registered, Value: 2
+					29 text Repository registered
+				30 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				31 button Create workspace
+				32 text Local workspace
+				33 text Alpha
+	34 close button
+	35 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	36 minimize button
+	37 text Agent Workspace
+38 menu bar
+	39 F04g current
+	40 File
+	41 Edit
+	42 View
+	43 Window
+	44 Help
+
+The focused UI element is 18 pop up button Add repository

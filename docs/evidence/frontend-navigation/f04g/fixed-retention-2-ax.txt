@@ -1,0 +1,99 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console cleared at 6:18:02 PM
+					36 image
+					37 text Array.from({length:30},(_,j)=>18000+j*300).filter(i=>i<f04g.exportString.length).forEach(i=>console.log("F04G:"+i+":"+f04g.exportString.slice(i,i+300)))
+					38 image
+					39 text undefined
+			40 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			41 container
+	42 scroll area
+		43 HTML content Description: Agent Workspace, URL: tauri://localhost
+			44 link Skip to workspace, Value: tauri://localhost#workspace
+			45 container Repository sidebar
+				46 text Agent Workspace
+				47 container Repositories
+					48 heading Repositories, Value: 2
+						49 text Repositories
+					50 content list
+						51 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							52 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							53 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							54 button Create workspace in Beta
+							55 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							56 text Available
+							57 content list
+								58 button thiago-silva, Help: Workspace ready
+						59 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							60 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							61 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							62 button Create workspace in Alpha
+							63 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							64 text Available
+							65 content list
+								66 button vincent-aboubakar, Help: Workspace ready
+				67 pop up button Add repository
+				68 text Connected
+				69 pop up button Connection details
+			70 container
+				71 container
+					72 heading Beta, Value: 1
+						73 text Beta
+					74 button Refresh status
+				75 container Selected repository
+					76 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					77 text Repository available
+				78 heading Repository registered, Value: 2
+					79 text Repository registered
+				80 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				81 button Create workspace
+				82 container
+					83 text Local workspace Beta
+		84 scroll bar (settable, float) 0
+	85 close button
+	86 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	87 minimize button
+	88 text Agent Workspace
+89 menu bar
+	90 F04g Fixed Inspection
+	91 File
+	92 Edit
+	93 View
+	94 Window
+	95 Help
+
+The focused UI element is 40 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]

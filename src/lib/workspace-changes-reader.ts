@@ -455,9 +455,19 @@ export class WorkspaceChangesReader {
           : state?.data?.generation;
       return captured === undefined || captured < version;
     };
+    const summaryState = this.cached(context.summary);
+    const summary = summaryState?.data?.reply;
+    // A pending/failed summary cannot supply a current preview target. Its
+    // retained preview may still be dirty; wait for summary progress hints
+    // rather than immediately repeating the same pending summary read.
+    const previewEligible =
+      !summaryState?.error &&
+      summary?.kind === "changes" &&
+      summary.observation.phase === "ready";
     return (
       dirtyKey(context.summary) ||
-      (!!context.desired?.active &&
+      (previewEligible &&
+        !!context.desired?.active &&
         !!this.selected(context) &&
         !!context.preview &&
         dirtyKey(context.preview))

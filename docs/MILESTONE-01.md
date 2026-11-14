@@ -68,11 +68,13 @@ Tickets 01–02 predate the testing policy. Repository alignment brought forward
 
 Ticket 03 now implements A1 repository registration, shared Git identity, durable action status, restored selection and per-repository availability/details. Its 89 unit checks, six retained process scenarios, production packaging and actual Tauri workflow passed on 2026-11-13. See [registration evidence](evidence/milestone-01-repositories.md) for commands, failed attempts, measurements, screenshots and limits. No live-provider submissions were performed. Ticket 04 implements isolated workspace creation and recovery, with unit, actual
 desktop, migration and real-process lease evidence. See [workspace evidence](evidence/milestone-01-workspaces.md). No live-provider work was submitted. Ticket 05's uncommitted-change fixture slice is complete; see [qualification evidence](evidence/milestone-01-change-inspection-qualification.md). Tickets 06–13 and whole-milestone qualification remain open. The [frontend foundation](../.scratch/frontend-navigation/spec.md) precedes 06.
-F01–F04 are implemented with controlled evidence; F04's actual transport/desktop
-qualification remains outstanding. F04a publishes the amended architecture and
-session tickets only. F04b–F04f implement shared library mechanisms and complete
-feature observation slices; F04g qualifies actual sockets/fixture desktop before
-F05 completes presentation context, followed by routing/Settings and cumulative F08
+F01–F04 were implemented with controlled evidence; their original F04 report
+left actual transport/desktop qualification outstanding. F04a published the amended
+architecture and session tickets only. F04b–F04f implemented shared library mechanisms and complete
+feature observation slices. [F04g evidence](evidence/frontend-navigation/f04g.md)
+records focused actual sockets/process/fixture desktop, packaging and matched
+baseline qualification, including inspection retry-loop fixes. F05 remains
+presentation context/integration, followed by routing/Settings and cumulative F08
 qualification. Preserve all earlier results as historical evidence. This adds no
 provider allowance and does not change Rust execution/storage authority.
 

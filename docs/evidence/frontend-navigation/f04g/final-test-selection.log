@@ -1,0 +1,11 @@
+src/lib/inspection-actor.test.tsx > inspection waits for accepted baseline and follows push progress without pending polling
+src/lib/inspection-actor.test.tsx > hints before baseline and during summary reads remain owed after each captured generation
+src/lib/inspection-actor.test.tsx > hidden and released interests drain physical summary work without starting a preview or competitor
+src/lib/inspection-actor.test.tsx > failed inspection stays paused across hide/remount and recovers on a newer hint
+src/lib/inspection-actor.test.tsx > restored file context targets the newly observed comparison after workspace and Settings-style release
+src/lib/inspection-actor.test.tsx > paging pins comparison identity and explicit refresh returns to First
+src/lib/inspection-actor.test.tsx > unrelated presentation and freshness updates do not render inspection consumers
+src/lib/inspection-actor.test.tsx > hiding during the first physical read does not convert disposal into a paused application failure
+src/lib/inspection-actor.test.tsx > paging during drain cannot downgrade a queued explicit refresh
+src/lib/inspection-actor.test.tsx > unrelated accepted batches cannot postpone the visible two-second external Git cadence
+src/lib/inspection-actor.test.tsx > %s summary pauses with a retained selected preview

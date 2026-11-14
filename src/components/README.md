@@ -306,5 +306,6 @@ including late registration and Strict Mode cleanup. Configuration changes durin
 cleanup update the latest desired owner; failed cleanup stays visible and fences
 replacement until exact native stop/join reconciliation succeeds. Failure remains
 visible while cleanup is pending. Views release interest rather than terminating
-app actors. Historical F04–F04e evidence is preserved; actual native qualification
-remains F04g.
+app actors. Historical F04–F04e evidence is preserved; focused actual transport/fixture-desktop
+qualification is recorded in [F04g evidence](../../docs/evidence/frontend-navigation/f04g.md).
+F08 retains cumulative routed/accessibility qualification.

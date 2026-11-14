@@ -1,0 +1,168 @@
+Window: "Agent Workspace", App: F04g Fixed Inspection.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content inspector-resource:///Main.html
+			3 button Close
+			4 button Dock to left of window
+			5 button Dock to right of window
+			6 button Detach into separate window
+			7 toggle button Start element selection (⇧⌘C), Value: off
+			8 button Device Settings
+			9 tab group (selectable)
+				10 tab (selectable) Elements
+				11 tab (selected) Console
+				12 tab (selectable) Sources
+				13 tab (selectable) Network
+				14 tab (selectable) Timelines
+				15 tab (selectable) Storage
+				16 tab (selectable) Graphics
+				17 tab (selectable) Show hidden tabs…
+				18 tab (selectable) Search (⇧⌘F)
+				19 tab (selectable) Settings (⌘,)
+			20 container Console
+				21 search text field (settable)  
+				22 button (disabled) Find Previous (⇧⌘G)
+				23 button (disabled) Find Next (⌘G)
+				24 text All
+				25 text Evaluations
+				26 text Errors
+				27 text Warnings
+				28 text Logs
+				29 button Other filter options…
+				30 checkbox (settable, integer) Emulate User Gesture, Help: Run console commands as if inside a user gesture, Value: 0
+				31 button Run Console Snippet…
+				32 button Collect garbage
+				33 button Clear log (⌘K or ⌃L)
+				34 container
+					35 text Console opened at 6:07:13 PM
+					36 image
+					37 text Selected Element
+					38 image
+					39 outline (selectable)
+						40 row (selectable) Description: <h1 class=​"min-w-0 truncate">​Beta​</h1>, Value: <h1 class=​"min-w-0 truncate">​Beta​</h1>
+<
+h1
+class
+=​"
+min-w-0 truncate
+"
+>
+Beta
+<
+/h1
+>
+					41 text  = $1
+					42 image
+					43 text f04g.gc={before:f04g.snapshot()};setTimeout(()=>{f04g.gc.after=f04g.snapshot()},310000)
+					44 image
+					45 text 1408
+					46 text  = $2
+					47 image
+					48 text (()=>{const q=f04g,app=q.findObservations(),owner=app.freshness.currentOwner();q.bounds={scopes:[],keys:[],results:[],duplicateRuns:0};for(let i=0;i<67;i++){const scope=app.reads.scope(),request={operation:'get',id:'00000000-0000-4000-8000-00000000'+String(i).padStart(4,'0')},key=['native-qualification',owner,request];q.bounds.scopes.push(scope);q.bounds.keys.push(key);scope.read(key,()=>window.__TAURI_INTERNALS__.invoke('repository_request',{expectedOwner:owner,request})).then(()=>q.bounds.results.push('ok
+					49 image
+					50 text "
+					51 text {\"time\":336503,\"visibility\":\"visible\",\"active\":2,\"maxActive\":2,\"duplicates\":0,\"queryCount\":50,\"queue\":64,\"pending\":66,\"physicalActive\":2,\"freshness\":305,\"logCount\":669,\"commands\":{\"workspace_request\":386,\"observation_acknowledge\":281,\"repository_request\":2},\"assets\":[\"
+					52 link tauri://localhost/assets/index-DWHwtLtg.js\, Value: tauri://localhost/assets/index-DWHwtLtg.js%5C
+					53 text "],\"userAgent\":\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)\",\"width\":900,\"height\":148,\"actor\":\"idle\",\"cacheBodyBytes\":1178724}
+					54 text "
+					55 text  = $3
+					56 image
+					57 text f04g.queueExport=JSON.stringify({full:f04g.bounds.full,draining:f04g.bounds.draining,duplicateRuns:f04g.bounds.duplicateRuns,results:f04g.bounds.results})
+					58 image
+					59 text "
+					60 text {\"full\":{\"time\":336503,\"visibility\":\"visible\",\"active\":2,\"maxActive\":2,\"duplicates\":0,\"queryCount\":50,\"queue\":64,\"pending\":66,\"physicalActive\":2,\"freshness\":305,\"logCount\":669,\"commands\":{\"workspace_request\":386,\"observation_acknowledge\":281,\"repository_request\":2},\"assets\":[\"
+					61 link tauri://localhost/assets/index-DWHwtLtg.js\, Value: tauri://localhost/assets/index-DWHwtLtg.js%5C
+					62 text "],\"userAgent\":\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)\",\"width\":900,\"height\":148,\"actor\":\"idle\",\"cacheBodyBytes\":1178724},\"draining\":{\"time\":336557,\"visibility\":\"visible\",\"active\":2,\"maxActive\":2,\"duplicates\":0,\"queryCount\":50,\"queue\":0,\"pending\":2,\"physicalActive\":2,\"freshness\":305,\"logCount\":669,\"commands\":{\"workspace_request\":386,\"observation_acknowledge\":281,\"repository_request\":2},\"assets\":[\"
+					63 link tauri://localhost/assets/index-DWHwtLtg.js\, Value: tauri://localhost/assets/index-DWHwtLtg.js%5C
+					64 text "],\"userAgent\":\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)\",\"width\":900,\"height\":148,\"actor\":\"idle\",\"cacheBodyBytes\":1178724},\"duplicateRuns\":0,\"results\":[\"busy\",\"Observation interest is obsolete\",\"Observation interest is obsolete\",\"Observation interest is obsolete\",\"Observation interest is obsolete\",\"Observation interest is obsolete\",\"Observation interest is obsolete\",\"Observation interest is obsolete\",\"Observation interest is
+					65 text "
+					66 text  = $4
+					67 image
+					68 text f04g.queueExport.match(/.{1,300}/g).forEach((x,i)=>console.log("QUEUE:"+(i*300)+":"+x))
+					69 image
+					70 text QUEUE:0:{"full":{"time":336503,"visibility":"visible","active":2,"maxActive":2,"duplicates":0,"queryCount":50,"queue":64,"pending":66,"physicalActive":2,"freshness":305,"logCount":669,"commands":{"workspace_request":386,"observation_acknowledge":281,"repository_request":2},"assets":["
+					71 link tauri://localhost/asset
+					72 image
+					73 text QUEUE:300:s/index-DWHwtLtg.js"],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)","width":900,"height":148,"actor":"idle","cacheBodyBytes":1178724},"draining":{"time":336557,"visibility":"visible","active":2,"maxActive":2,"duplicates":0,"queryCount":50,"que
+					74 image
+					75 text QUEUE:600:ue":0,"pending":2,"physicalActive":2,"freshness":305,"logCount":669,"commands":{"workspace_request":386,"observation_acknowledge":281,"repository_request":2},"assets":["
+					76 link tauri://localhost/assets/index-DWHwtLtg.js
+					77 text "],"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHT
+					78 image
+					79 text QUEUE:900:ML, like Gecko)","width":900,"height":148,"actor":"idle","cacheBodyBytes":1178724},"duplicateRuns":0,"results":["busy","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Obser
+					80 image
+					81 text QUEUE:1200:vation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is o
+					82 image
+					83 text QUEUE:1500:bsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observatio
+					84 image
+					85 text QUEUE:1800:n interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsole
+					86 image
+					87 text QUEUE:2100:te","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation int
+					88 image
+					89 text QUEUE:2400:erest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","
+					90 image
+					91 text QUEUE:2700:Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest
+					92 image
+					93 text QUEUE:3000: is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Observation interest is obsolete","Obser
+					94 image
+					95 text QUEUE:3300:vation interest is obsolete"]}
+					96 image
+					97 text undefined
+			98 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
+			99 container
+	100 scroll area
+		101 HTML content Description: Agent Workspace, URL: tauri://localhost
+			102 link Skip to workspace, Value: tauri://localhost#workspace
+			103 container Repository sidebar
+				104 text Agent Workspace
+				105 container Repositories
+					106 heading Repositories, Value: 2
+						107 text Repositories
+					108 content list
+						109 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta Available
+							110 button Beta, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							111 button (expanded) Toggle details for Beta, Secondary Actions: Collapse
+							112 button Create workspace in Beta
+							113 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+							114 text Available
+							115 content list
+								116 button thiago-silva, Help: Workspace ready
+						117 container /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha Available
+							118 button Alpha, Help: /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							119 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							120 button Create workspace in Alpha
+							121 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Alpha
+							122 text Available
+							123 content list
+								124 button vincent-aboubakar, Help: Workspace ready
+				125 pop up button Add repository
+				126 text Observation delivery stopped
+				127 pop up button Connection details
+			128 container
+				129 container
+					130 heading Beta, Value: 1
+						131 text Beta
+					132 button Refresh status
+				133 container Selected repository
+					134 text /private/tmp/aw-f04g-desktop-tq4w5p9r/Beta
+					135 text Repository available
+				136 heading Repository registered, Value: 2
+					137 text Repository registered
+				138 text Create an isolated workspace from the local default branch. Your original checkout stays untouched.
+				139 button Create workspace
+				140 container
+					141 text Local workspace Beta
+		142 scroll bar (settable, float) 0
+	143 close button
+	144 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	145 minimize button
+	146 text Agent Workspace
+147 menu bar
+	148 F04g Fixed Inspection
+	149 File
+	150 Edit
+	151 View
+	152 Window
+	153 Help
+
+The focused UI element is 98 text entry area (settable) Console prompt, Value: [text entry area: Console prompt]
