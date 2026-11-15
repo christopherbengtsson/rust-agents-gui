@@ -41,7 +41,7 @@ if browser:
         def log_message(self, *_): pass
     landing = ThreadingHTTPServer(("127.0.0.1", 0), Landing)
     threading.Thread(target=landing.serve_forever, daemon=True).start()
-    control.write_text(json.dumps({"scenario": "browser_pending", "browser_url": f"http://127.0.0.1:{landing.server_port}/fixture-sign-in"}))
+    control.write_text(json.dumps({"scenario": "browser_pending", "browser_url": "aw-invalid:headless-fixture" if "--headless" in sys.argv else f"http://127.0.0.1:{landing.server_port}/fixture-sign-in"}))
 supervisor_path = Path(sys.argv[1]).resolve(strict=True)
 protocol = int(subprocess.check_output([str(supervisor_path), "--protocol-version"], text=True))
 runtime = Path(__file__).with_name("runtime.py").resolve(strict=True)
@@ -108,6 +108,7 @@ def events():
 
 
 report = {"protocol": protocol, "root": str(root), "owner": owner, "supervisor_pid": supervisor.pid, "supervisor": str(supervisor_path), "supervisor_sha256": hashlib.sha256(supervisor_path.read_bytes()).hexdigest(), "target": target, "checks": [], "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process."}
+report["headless_browser"] = "--headless" in sys.argv
 output = Path(sys.argv[2])
 assert not output.exists(), "Choose a new evidence destination; preserve prior attempts"
 desktop = None

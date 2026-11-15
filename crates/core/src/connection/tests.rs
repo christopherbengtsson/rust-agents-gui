@@ -21,6 +21,54 @@ fn snapshot() -> SupervisorSnapshot {
     .snapshot(None)
 }
 
+#[test]
+fn quit_before_first_snapshot_reconciles_existing_owner_or_proves_absence_without_starting() {
+    run(async {
+        for present in [false, true] {
+            let connection =
+                SupervisorConnection::new("/private/state".into(), "/missing/supervisor".into());
+            let mut effects = DiscoveryScenario::new(vec![Err(io::ErrorKind::NotFound.into())]);
+            effects.owner = Ok(present);
+            let result = connection.quit_target_with(&mut effects).await;
+            if present {
+                assert!(result.is_err());
+            } else {
+                assert_eq!(result.unwrap(), None);
+            }
+            assert_eq!(effects.calls, ["snapshot", "owner"]);
+            assert!(connection.prepare_snapshot().is_err());
+        }
+        let connection =
+            SupervisorConnection::new("/private/state".into(), "/missing/supervisor".into());
+        let mut effects = DiscoveryScenario::new(vec![Ok(snapshot())]);
+        assert_eq!(
+            connection.quit_target_with(&mut effects).await.unwrap(),
+            Some("owner-a".into())
+        );
+        assert_eq!(effects.calls, ["snapshot"]);
+        assert!(connection.require_connection("owner-a").is_ok());
+    });
+}
+
+#[test]
+fn quit_does_not_prove_absence_before_admitted_startup_physically_settles() {
+    run(async {
+        let connection =
+            SupervisorConnection::new("/private/state".into(), "/missing/supervisor".into());
+        let startup = connection.status.try_acquire().unwrap();
+        let mut effects = DiscoveryScenario::new(vec![Err(io::ErrorKind::NotFound.into())]);
+        let mut quit = std::pin::pin!(connection.quit_target_with(&mut effects));
+        std::future::poll_fn(|cx| {
+            assert!(quit.as_mut().poll(cx).is_pending());
+            std::task::Poll::Ready(())
+        })
+        .await;
+        drop(startup);
+        assert_eq!(quit.await.unwrap(), None);
+        assert!(connection.prepare_snapshot().is_err());
+    });
+}
+
 struct DiscoveryScenario {
     observations: VecDeque<io::Result<SupervisorSnapshot>>,
     prepared: io::Result<()>,

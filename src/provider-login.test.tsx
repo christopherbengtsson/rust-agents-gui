@@ -25,6 +25,7 @@ vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 afterEach(() => {
   cleanup();
   vi.resetAllMocks();
+  vi.useRealTimers();
 });
 const id = "00000000-0000-4000-8000-000000000001";
 const attempt = "00000000-0000-4000-8000-000000000002";
@@ -92,7 +93,10 @@ test("lost start replies reconcile once and app progress retains interest after 
     operation: "observe",
     target_id: id,
   });
-  const root = renderHook(() => useProviderProgress(app, "owner"));
+  const initialProps: { owner: string | undefined } = { owner: "owner" };
+  const root = renderHook(({ owner }) => useProviderProgress(app, owner), {
+    initialProps,
+  });
   await waitFor(() =>
     expect(root.result.current.observation?.revision).toBe(2),
   );
@@ -109,8 +113,30 @@ test("lost start replies reconcile once and app progress retains interest after 
   expect(
     requests.filter((request) => request.operation === "reconcile_login"),
   ).toHaveLength(1);
+  vi.useFakeTimers();
   releaseView();
   releaseTarget();
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(5 * 60 * 1000 + 1);
+  });
+  root.rerender({ owner: "owner" });
+  expect(root.result.current.active).toBe(true);
+  expect(root.result.current.observation?.login?.phase).toBe("pending");
+  await act(async () => {
+    app.connect(undefined);
+  });
+  root.rerender({ owner: undefined });
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(5 * 60 * 1000 + 1);
+  });
+  root.rerender({ owner: undefined });
+  expect(root.result.current.active).toBe(true);
+  expect(root.result.current.stale).toBe(true);
+  await act(async () => {
+    app.connect("owner");
+    app.freshness.accept("owner");
+  });
+  root.rerender({ owner: "owner" });
   current = {
     ...current,
     revision: 4,
@@ -125,12 +151,13 @@ test("lost start replies reconcile once and app progress retains interest after 
   await act(async () => {
     app.providers.invalidate({ kind: "provider", target_id: id });
     app.freshness.accept("owner");
+    await vi.advanceTimersByTimeAsync(0);
   });
-  await waitFor(() =>
-    expect(root.result.current.observation?.login?.phase).toBe("completed"),
-  );
+  expect(root.result.current.observation?.login?.phase).toBe("completed");
   expect(root.result.current.active).toBe(false);
   root.unmount();
+  app.client.clear();
+  vi.useRealTimers();
 });
 
 test("unknown start delivery stays fenced until explicit reconciliation and reconnect never repeats start", async () => {

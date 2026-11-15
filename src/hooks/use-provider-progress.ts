@@ -42,13 +42,17 @@ export function useProviderProgress(
     state?.data?.value.kind === "observation"
       ? state.data.value.observation
       : undefined;
-  const retain = recover || loginActive(observation);
+  const retain =
+    recover ||
+    loginActive(observation) ||
+    action?.state === "pending" ||
+    action?.state === "uncertain";
   useEffect(
     () =>
-      owner && recover
-        ? feature.observe(owner, { operation: "target" })
+      shownOwner && retain
+        ? feature.observe(shownOwner, { operation: "target" })
         : undefined,
-    [feature, owner, recover],
+    [feature, shownOwner, retain],
   );
   useEffect(
     () =>

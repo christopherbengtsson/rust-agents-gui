@@ -335,11 +335,14 @@ impl ProviderConnections {
             .clone();
         if records.values().any(|entry| {
             entry.scope == scope
-                && entry
+                && (matches!(
+                    entry.snapshot.phase,
+                    SetupPhase::Checking | SetupPhase::CleanupUncertain
+                ) || entry
                     .snapshot
                     .login
                     .as_ref()
-                    .is_some_and(|login| login.phase.active())
+                    .is_some_and(|login| login.phase.active()))
         }) {
             return records
                 .get(&id)
@@ -577,6 +580,35 @@ mod tests {
                 .unwrap();
             assert!(owner.admit_login(b, uuid::Uuid::new_v4(), 0).is_ok());
             assert_eq!(owner.read(a).unwrap(), first);
+        });
+    }
+
+    #[test]
+    fn same_scope_readiness_cleanup_fences_other_checks_but_unrelated_targets_progress() {
+        run(async {
+            let owner = Arc::new(ProviderConnections::test_owner());
+            let a = owner.test_target("codex");
+            let b = owner.test_target("same-scope");
+            let c = owner.test_target("unrelated");
+            let scope = owner.records.lock().unwrap().get(&a).unwrap().scope.clone();
+            owner.records.lock().unwrap().get_mut(&b).unwrap().scope = scope;
+            let (send, receive) = tokio::sync::oneshot::channel();
+            let observation = owner
+                .observe_with(a, true, || async { receive.await.unwrap() })
+                .unwrap();
+            owner.cleanup_uncertain(a, observation.revision);
+            let value = owner
+                .observe_with(b, true, || async {
+                    panic!("same-scope cleanup must exclude this check")
+                })
+                .unwrap();
+            assert_eq!(value.phase, SetupPhase::Unknown);
+            owner
+                .observe_with(c, true, || async { Ok(test_evidence()) })
+                .unwrap();
+            send.send(Ok(test_evidence())).unwrap();
+            owner.join().await.unwrap();
+            assert_eq!(owner.read(c).unwrap().phase, SetupPhase::Observed);
         });
     }
 

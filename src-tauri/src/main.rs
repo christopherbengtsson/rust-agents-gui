@@ -4,6 +4,8 @@ use workspace_core::connection::{Delivery, OwnedReply, RequestFailure, Transport
 use workspace_core::workspaces::{RepositoryReply, RepositoryRequest};
 use workspace_core::{SupervisorSnapshot, connection::SupervisorConnection};
 
+struct QuitFence(std::sync::Arc<std::sync::atomic::AtomicBool>);
+
 #[tauri::command]
 async fn provider_request(
     expected_owner: String,
@@ -54,6 +56,7 @@ fn repository_connection_error(message: String) -> RequestFailure {
 async fn supervisor_status(
     app: tauri::AppHandle,
     connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+    quit: tauri::State<'_, QuitFence>,
 ) -> Result<SupervisorSnapshot, RequestFailure> {
     let state = std::env::var_os("AGENT_WORKSPACE_STATE_DIR")
         .map(PathBuf::from)
@@ -72,6 +75,13 @@ async fn supervisor_status(
         let mut connection = connection
             .lock()
             .map_err(|e| repository_connection_error(e.to_string()))?;
+        if quit.0.load(std::sync::atomic::Ordering::SeqCst) {
+            return Err(RequestFailure::transport(
+                TransportCode::Busy,
+                Delivery::NotSent,
+                "Owned Quit is reconciling startup; no new supervisor will be started.",
+            ));
+        }
         connection
             .get_or_insert_with(|| SupervisorConnection::new(state, executable))
             .clone()
@@ -123,6 +133,7 @@ fn main() {
     let connection = std::sync::Arc::new(Mutex::new(None::<SupervisorConnection>));
     let quit_running = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
     let quit_complete = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let quit_requested = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
     tauri::Builder::default()
         .menu(|app| {
             let menu = tauri::menu::Menu::default(app)?;
@@ -156,6 +167,7 @@ fn main() {
             }
         })
         .manage(connection.clone())
+        .manage(QuitFence(quit_requested.clone()))
         .invoke_handler(tauri::generate_handler![
             supervisor_status,
             desktop_pid,
@@ -171,12 +183,14 @@ fn main() {
         .run({
             let connection = connection.clone();
             move |app, event| {
-                if let tauri::RunEvent::Reopen { has_visible_windows: false, .. } = event {
-                    if let Some(window) = app.get_webview_window("main") { let _ = window.show(); let _ = window.set_focus(); }
+                if let tauri::RunEvent::Reopen { has_visible_windows: false, .. } = event
+                    && let Some(window) = app.get_webview_window("main") {
+                    let _ = window.show(); let _ = window.set_focus();
                 }
                 if let tauri::RunEvent::ExitRequested { api, .. } = event {
                     if quit_complete.load(std::sync::atomic::Ordering::SeqCst) { return; }
                     api.prevent_exit();
+                    quit_requested.store(true, std::sync::atomic::Ordering::SeqCst);
                     if quit_running.swap(true, std::sync::atomic::Ordering::SeqCst) { return; }
                     let client = connection.lock().ok().and_then(|connection| connection.clone());
                     let app = app.clone();

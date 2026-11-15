@@ -11,8 +11,8 @@ Official `openai/codex` tag `rust-v0.169.0`, source commit
 https://github.com/openai/codex/tree/d32063f96c2dff1dc96af839b3952abb6acfeda4/codex-rs/app-server-protocol
 
 Protocol inputs in Rust units and `runtime.py` are **synthetic**, derived from
-these schemas; none are captured account/credential payloads. The fixture child
-implements only `--version`, initialize/initialized, account/read and config/read.
+these schemas; none are captured account/credential payloads. The readiness
+operations are `--version`, initialize/initialized, account/read and config/read.
 It rejects thread/turn/approval methods. Synthetic faults establish application
 recovery, not native compatibility. Selected `account/read` sends
 `refreshToken: false`; config reads use `includeLayers: false`. No auth-status
@@ -40,6 +40,9 @@ its Complete/Fail links change synthetic evidence only. `scenario <name>`,
 commands. They do not run real authentication or agent work. HTTPS URLs are
 accepted in production; HTTP loopback URLs are permitted only in captured fixture
 launches. Reopening uses the original Rust-held URL.
+Add `--headless` to process qualification to use an intentionally invalid browser
+URL and exercise process/reconciliation/cleanup without opening or focusing the
+user's browser. This mode does not qualify actual browser handoff.
 
 Official transport source `codex-rs/app-server-transport/src/transport/stdio.rs`
 uses one JSON message per line and EOF cleanup. Provider framing is distinct from

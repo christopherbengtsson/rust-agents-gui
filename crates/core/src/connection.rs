@@ -169,6 +169,7 @@ pub struct SupervisorConnection {
     feed: Arc<subscription::FeedOwner>,
     tasks: Arc<Tasks>,
     blocking: ConnectionSlots,
+    quitting: Arc<std::sync::atomic::AtomicBool>,
 }
 #[derive(Default)]
 struct ConnectionState {
@@ -188,6 +189,7 @@ impl SupervisorConnection {
             feed: Arc::new(subscription::FeedOwner::default()),
             tasks: Arc::new(Tasks::default()),
             blocking: ConnectionSlots::new(5),
+            quitting: Arc::new(std::sync::atomic::AtomicBool::new(false)),
         }
     }
     fn client(&self) -> SupervisorClient {
@@ -260,6 +262,13 @@ impl SupervisorConnection {
     }
     pub fn prepare_snapshot(&self) -> Result<Admitted<SupervisorSnapshot>, RequestFailure> {
         let permit = Self::admit(&self.status)?;
+        if self.quitting.load(std::sync::atomic::Ordering::SeqCst) {
+            return Err(RequestFailure::transport(
+                TransportCode::Busy,
+                Delivery::NotSent,
+                "Owned Quit is reconciling startup; no replacement supervisor will be started.",
+            ));
+        }
         let connection = self.clone();
         Ok(Admitted::new(permit, self.tasks.clone(), async move {
             let mut effects = LocalDiscovery::new(connection.client());
@@ -286,14 +295,14 @@ impl SupervisorConnection {
     /// Explicit Quit never invokes discovery or starts a replacement supervisor.
     pub async fn quit_owned(&self) -> Result<(), RequestFailure> {
         use crate::runtimes::{ProviderReply, ProviderRequest};
-        let owner = self
-            .observed
-            .lock()
-            .map_err(|_| unavailable("Connection state unavailable"))?
-            .cursor
-            .as_ref()
-            .map(|cursor| cursor.owner.clone())
-            .ok_or_else(|| unavailable("No observed supervisor owner for Quit"))?;
+        let mut effects = LocalDiscovery::new(self.client());
+        let Some(owner) = self
+            .quit_target_with(&mut effects)
+            .await
+            .map_err(unavailable)?
+        else {
+            return self.stop_observations().await;
+        };
         let first = self
             .prepare_provider_request(owner.clone(), ProviderRequest::BeginShutdown)?
             .run()
@@ -348,6 +357,58 @@ impl SupervisorConnection {
             tokio::time::sleep(Duration::from_millis(50)).await;
         }
         self.stop_observations().await
+    }
+    async fn quit_target_with(&self, effects: &mut impl Discovery) -> io::Result<Option<String>> {
+        self.quitting
+            .store(true, std::sync::atomic::Ordering::SeqCst);
+        let observed_owner = || {
+            self.observed
+                .lock()
+                .map(|state| state.cursor.as_ref().map(|cursor| cursor.owner.clone()))
+                .map_err(|_| io::Error::other("Connection state unavailable"))
+        };
+        if let Some(owner) = observed_owner()? {
+            return Ok(Some(owner));
+        }
+        // No new startup can be admitted. An already admitted discovery must
+        // physically settle before absence can establish safe desktop exit.
+        let deadline = Instant::now() + Duration::from_secs(10);
+        let _status = loop {
+            if let Some(permit) = self.status.try_acquire() {
+                break permit;
+            }
+            if Instant::now() >= deadline {
+                return Err(io::Error::other(
+                    "Supervisor startup has not physically settled; Quit remains pending",
+                ));
+            }
+            tokio::time::sleep(Duration::from_millis(20)).await;
+        };
+        if let Some(owner) = observed_owner()? {
+            return Ok(Some(owner));
+        }
+        match effects.snapshot(&self.state, None).await {
+            Ok(snapshot) => {
+                validate_snapshot(&snapshot)?;
+                let owner = snapshot.cursor.owner.clone();
+                let mut state = self
+                    .observed
+                    .lock()
+                    .map_err(|_| io::Error::other("Connection state unavailable"))?;
+                state.initialized = true;
+                state.cursor = Some(snapshot.cursor);
+                Ok(Some(owner))
+            }
+            Err(error) => match effects.owner_present(&self.state).await {
+                Ok(false) => Ok(None),
+                Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(None),
+                Ok(true) => Err(io::Error::new(
+                    error.kind(),
+                    "An existing supervisor could not be observed. Quit cannot establish cleanup; reconcile again.",
+                )),
+                Err(error) => Err(error),
+            },
+        }
     }
     fn admit(lane: &ConnectionSlots) -> Result<admission::ConnectionPermit, RequestFailure> {
         lane.try_acquire().ok_or_else(|| RequestFailure::transport(

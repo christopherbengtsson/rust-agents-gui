@@ -1,0 +1,35 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-login.test.tsx (4 tests | 1 failed) 179ms
+   × lost start replies reconcile once and app progress retains interest after the settings view releases it 71ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+TypeError: Cannot destructure property 'owner' of 'undefined' as it is undefined.
+ ❯ renderHook.initialProps.initialProps src/provider-login.test.tsx:97:30
+     95|   });
+     96|   const initialProps: { owner: string | undefined } = { owner: "owner"…
+     97|   const root = renderHook(({ owner }) => useProviderProgress(app, owne…
+       |                              ^
+     98|   await waitFor(() =>
+     99|     expect(root.result.current.observation?.revision).toBe(2),
+ ❯ TestComponent node_modules/.pnpm/@testing-library+react@16.3.3_@testing-library+dom@10.4.2_@types+react-dom@19.3.0_@type_caf0c89dcd807677af52e2a43e70eff8/node_modules/@testing-library/react/dist/pure.js:339:27
+ ❯ Object.react_stack_bottom_frame node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20
+ ❯ renderWithHooks node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22
+ ❯ updateFunctionComponent node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19
+ ❯ beginWork node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18
+ ❯ runWithFiberInDEV node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13
+ ❯ performUnitOfWork node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22
+ ❯ workLoopSync node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41
+ ❯ renderRootSync node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  14:47:50
+   Duration  666ms (import 31%, environment 30%, tests 29%, transform 9%, setup 1%)
+

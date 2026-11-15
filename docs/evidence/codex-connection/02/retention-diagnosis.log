@@ -1,0 +1,19 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+stdout | src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+RETENTION fake-start
+
+stdout | src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+RETENTION detach-start
+
+stdout | src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+RETENTION detached-rerender
+
+stdout | src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+RETENTION detached-rerender
+RETENTION reconnect-start
+
+stdout | src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+RETENTION real-timers
+

@@ -307,10 +307,19 @@ impl ProviderConnections {
                 codex::LoginEvent::CleanupUncertain => { login.phase = LoginPhase::CleanupUncertain; login.diagnostic = Some("Owned login cleanup is unconfirmed; this credential scope remains blocked.".into()); },
             });
         });
-        let result = effects.authenticate(cancel, reopen, notice.clone()).await;
+        let result = effects
+            .authenticate(cancel.clone(), reopen, notice.clone())
+            .await;
         let (outcome, failure) = match result {
             Ok(outcome) => (outcome, None),
-            Err(failure) => (LoginOutcome::Failed, Some(failure)),
+            Err(failure) => (
+                if cancel.is_cancelled() {
+                    LoginOutcome::Cancelled
+                } else {
+                    LoginOutcome::Failed
+                },
+                Some(failure),
+            ),
         };
         self.update_login(target, attempt, |login| {
             login.phase = LoginPhase::Verifying;
@@ -536,7 +545,10 @@ mod tests {
             notice(codex::LoginEvent::Pending);
             if self.cancelled {
                 assert!(cancel.is_cancelled());
-                Ok(LoginOutcome::Cancelled)
+                Err(SetupFailure::at(
+                    SetupProblem::StatusReadFailed,
+                    "Version setup interrupted by cancellation",
+                ))
             } else {
                 Ok(LoginOutcome::Completed)
             }

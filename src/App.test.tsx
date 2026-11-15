@@ -11,6 +11,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { App } from "./test-support/app";
 import { SupervisorConnection } from "./components/blocks/supervisor-connection";
 import { decodeSnapshot } from "./lib/observation-contracts";
@@ -23,6 +24,9 @@ vi.mock("@tauri-apps/api/core", () => ({
       this.onmessage = receive;
     }
   },
+}));
+vi.mock("@tauri-apps/api/event", () => ({
+  listen: vi.fn(async () => () => {}),
 }));
 beforeEach(() => {
   localStorage.clear();
@@ -71,6 +75,40 @@ const snapshot = {
   cursor: { owner: "owner-41", revision: 1 },
   reset: false,
 };
+
+test("late shutdown-listener setup is physically released after the root unmounts", async () => {
+  let finish: ((stop: () => void) => void) | undefined;
+  vi.mocked(listen).mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    }),
+  );
+  mockConnection(async (command) =>
+    command === "desktop_pid" ? 42 : snapshot,
+  );
+  const mounted = render(<App />);
+  await waitFor(() => expect(listen).toHaveBeenCalledTimes(1));
+  mounted.unmount();
+  const stop = vi.fn();
+  await act(async () => {
+    finish?.(stop);
+  });
+  expect(stop).toHaveBeenCalledTimes(1);
+});
+
+test("a failed shutdown-listener registration remains visible independently of supervisor status", async () => {
+  vi.mocked(listen).mockRejectedValueOnce(
+    new Error("controlled registration failure"),
+  );
+  mockConnection(async (command) =>
+    command === "desktop_pid" ? 42 : snapshot,
+  );
+  render(<App />);
+  expect(await screen.findByText("Owned shutdown")).toBeTruthy();
+  expect(
+    screen.getByText(/Desktop shutdown updates are unavailable/),
+  ).toBeTruthy();
+});
 
 test.each([600, 900])(
   "the fixed shell preserves landmarks and empty navigation at width %i without global collapse or cookies",

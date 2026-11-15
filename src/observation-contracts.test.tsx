@@ -72,7 +72,7 @@ test("connection observations are decoded before they become presentation truth"
 });
 
 test("the shared application corpus passes production TypeScript decoders", () => {
-  expect(corpus.protocol).toBe(11);
+  expect(corpus.protocol).toBe(12);
   expect(decodeSnapshot(corpus.snapshot).cursor.owner).toBe(corpus.owner);
   expect(decodeDesktopPid(corpus.desktop_pid)).toBe(42);
   for (const { request, reply } of corpus.repositories) {
