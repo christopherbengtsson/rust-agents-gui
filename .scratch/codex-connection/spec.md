@@ -45,6 +45,11 @@ tickets own session deliverables and completion evidence. The
 
 ## Session sequence
 
+The approved [02a — Runtime compatibility policy](issues/02a-runtime-compatibility-policy.md)
+prerequisite follows 02 and blocks 03. It replaces exact Codex version admission
+with a minimum stable baseline and required per-connection capability checks.
+Historical 01/02 qualification cohorts remain unchanged.
+
 First complete [provider-independent workspaces 01](../provider-independent-workspaces/issues/01-retire-workspace-provider.md),
 which removes workspace-level provider ownership through current-format records,
 generated contracts and desktop observations. It is a bounded prefactor, not a
@@ -122,6 +127,12 @@ the exercised interface; browser and CLI slices extend it.
   unrelated provider's status or attempt must not be overwritten or fenced by
   another's result or failed cleanup, except where an actual shared resource
   requires it. App-wide resource budgets remain valid.
+- **Runtime compatibility:** follow the MVP provider policy. Codex initially accepts
+  stable releases >= 0.169.0 (including build metadata), rejects prereleases, and
+  requires successful initialize/initialized plus account/gatewayOAuth/read on each
+  connection before subsequent authenticated requests. Accept additive fields and
+  bounded informational notifications; keep required fields and exact targeting
+  strict. A probe proves support, not authentication or native qualification.
 - **Concrete adapters:** Codex protocol/version interpretation, correlation,
   authentication evidence and diagnostic meaning stay inside its adapter. The
   deterministic fixture adapter substitutes runtime evidence at the same execution

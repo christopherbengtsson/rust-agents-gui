@@ -17,12 +17,12 @@ const guidance: Record<SetupProblem, { title: string; message: string }> = {
   missing_executable: {
     title: "Install the supported Codex runtime",
     message:
-      "Install Codex 0.169.0 using the official installation instructions, then choose Check again. If PATH changed, restart the owning supervisor with the updated environment, then reopen the app.",
+      "Install a stable Codex release meeting the minimum in Technical details using the official installation instructions, then choose Check again. If PATH changed, restart the owning supervisor with the updated environment, then reopen the app.",
   },
   incompatible_protocol: {
-    title: "Use the supported Codex version",
+    title: "Use a compatible Codex runtime",
     message:
-      "This setup reader supports Codex 0.169.0. Check the executable in Technical details, install that version, then choose Check again. If the selected executable path changed, restart the owning supervisor and reopen the app. A malformed or unexpected runtime reply also requires rechecking the installed runtime.",
+      "Use a stable Codex release meeting the minimum in Technical details. Newer stable releases are accepted when required protocol checks pass; prereleases are unsupported. Check the selected executable and choose Check again. If the selected executable path changed, restart the owning supervisor and reopen the app. A malformed or unexpected runtime reply also requires rechecking the installed runtime.",
   },
   authentication_unavailable: {
     title: "Sign in with the official Codex runtime",
@@ -253,8 +253,8 @@ export function ProviderSetup({
                 <dd>{target.codex_home}</dd>
                 <dt>Setup directory</dt>
                 <dd>{target.working_directory}</dd>
-                <dt>Supported runtime</dt>
-                <dd>{target.supported_version}</dd>
+                <dt>Minimum runtime</dt>
+                <dd>{target.minimum_supported_version}</dd>
                 <dt>Observed runtime</dt>
                 <dd>{evidence?.version ?? "Unknown"}</dd>
                 <dt>Diagnostic</dt>

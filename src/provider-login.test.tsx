@@ -36,7 +36,7 @@ const initial: ProviderObservation = {
     executable: "/fixture/codex",
     codex_home: "/fixture/home",
     working_directory: "/fixture/neutral",
-    supported_version: "0.169.0",
+    minimum_supported_version: "0.169.0",
   },
   revision: 2,
   phase: "observed",

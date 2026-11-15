@@ -49,3 +49,23 @@ uses one JSON message per line and EOF cleanup. Provider framing is distinct fro
 the application's supervisor codec. Future approval/chat work must inspect its
 exact supported schemas and retained evidence; this fixture authorizes no approval
 matching assumptions. No archived RAT files were inspected or changed.
+
+## Runtime compatibility prerequisite — 2026-11-15
+
+The minimum stable release is 0.169.0, with newer stable versions admitted only
+when the required protocol checks succeed. `GatewayOAuthReadResponse.json` is an
+unmodified official schema from the same pinned revision above. The request has
+no params; its definition is in `src/protocol/common.rs` (`GatewayOAuthRead`).
+The pinned app-server README's Gateway OAuth sign-in section requires successful
+`account/gatewayOAuth/read` on each connection after initialize/initialized when
+using `explicitGatewayOauth`. Initialization alone can silently ignore that flag.
+A successful probe confirms support even with `required:false` or `notReady`;
+it does not prove authentication. No gateway login/export flow was added.
+
+Version strings (including synthetic 0.170.0), additional fields/notifications and
+unsupported/malformed/failed/delayed probe scenarios remain **synthetic**. They
+exercise admission and recovery, not native compatibility with those releases.
+`runtime_version` in private fixture control selects the reported stable version.
+Use `qualify.py <supervisor> <new-report.json> --browser --headless --compatibility`
+for the focused compatibility process cohort. The desktop mode also accepts
+`version <semver>` to select synthetic version evidence without using user credentials.

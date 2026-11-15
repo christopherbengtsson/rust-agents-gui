@@ -1866,10 +1866,10 @@
             "format": "uuid",
             "type": "string"
           },
-          "provider": {
+          "minimum_supported_version": {
             "type": "string"
           },
-          "supported_version": {
+          "provider": {
             "type": "string"
           },
           "working_directory": {
@@ -1882,7 +1882,7 @@
           "executable",
           "codex_home",
           "working_directory",
-          "supported_version"
+          "minimum_supported_version"
         ],
         "type": "object"
       },
@@ -3477,10 +3477,10 @@
             "format": "uuid",
             "type": "string"
           },
-          "provider": {
+          "minimum_supported_version": {
             "type": "string"
           },
-          "supported_version": {
+          "provider": {
             "type": "string"
           },
           "working_directory": {
@@ -3493,7 +3493,7 @@
           "executable",
           "codex_home",
           "working_directory",
-          "supported_version"
+          "minimum_supported_version"
         ],
         "type": "object"
       },
@@ -3778,10 +3778,10 @@
             "format": "uuid",
             "type": "string"
           },
-          "provider": {
+          "minimum_supported_version": {
             "type": "string"
           },
-          "supported_version": {
+          "provider": {
             "type": "string"
           },
           "working_directory": {
@@ -3794,7 +3794,7 @@
           "executable",
           "codex_home",
           "working_directory",
-          "supported_version"
+          "minimum_supported_version"
         ],
         "type": "object"
       },
@@ -4107,10 +4107,10 @@
         "format": "uuid",
         "type": "string"
       },
-      "provider": {
+      "minimum_supported_version": {
         "type": "string"
       },
-      "supported_version": {
+      "provider": {
         "type": "string"
       },
       "working_directory": {
@@ -4123,7 +4123,7 @@
       "executable",
       "codex_home",
       "working_directory",
-      "supported_version"
+      "minimum_supported_version"
     ],
     "title": "ProviderTarget",
     "type": "object"

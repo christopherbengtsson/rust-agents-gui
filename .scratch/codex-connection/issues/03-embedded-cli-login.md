@@ -4,7 +4,7 @@
 terminal available after navigating away and back, and finish or cancel with an
 authoritative authentication result and observed process cleanup.
 
-**Blocked by:** [02 — Official browser sign-in](02-official-browser-sign-in.md)
+**Blocked by:** [02a — Provider runtime compatibility policy](02a-runtime-compatibility-policy.md) (after 02)
 
 **Status:** ready-for-agent
 

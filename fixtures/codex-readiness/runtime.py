@@ -26,7 +26,8 @@ if sys.argv[1:] == ["--version"]:
         time.sleep(60)
     if scenario == "version_exit":
         sys.exit(7)
-    print("codex-cli 0.167.1" if scenario == "incompatible" else "codex-cli 0.169.0")
+    reported_version = "0.167.1" if scenario == "incompatible" else "0.170.0-alpha.1" if scenario == "prerelease" else settings.get("runtime_version", "0.169.0")
+    print("codex-cli " + reported_version)
     sys.exit(0)
 if sys.argv[1:] != ["app-server"]:
     record("forbidden_command")
@@ -69,6 +70,19 @@ try:
         identifier = request["id"]
         if method == "initialize":
             send({"id": identifier, "result": {"userAgent": "fixture/0.169.0"}})
+        elif method == "account/gatewayOAuth/read":
+            assert "params" not in request
+            if scenario == "gateway_unsupported":
+                send({"id": identifier, "error": {"code": -32600, "message": "synthetic unsupported gateway read"}})
+            elif scenario == "gateway_failure":
+                send({"id": identifier, "error": {"code": -32603, "message": "synthetic gateway status failure"}})
+            elif scenario == "gateway_malformed":
+                send({"id": identifier, "result": {"required": False}})
+            elif scenario == "gateway_delay":
+                time.sleep(60)
+            else:
+                send({"method": "fixture/information", "params": {"synthetic": True}})
+                send({"id": identifier, "result": {"providerId": "openai", "providerName": "OpenAI", "required": False, "status": None, "futureField": True}})
         elif method == "account/read":
             assert request["params"] == {"refreshToken": False}
             if scenario == "malformed":

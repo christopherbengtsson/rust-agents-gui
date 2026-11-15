@@ -83,7 +83,7 @@ impl Launch {
                 home.to_string_lossy().into_owned()
             },
             working_directory: directory.to_string_lossy().into_owned(),
-            supported_version: protocol::VERSION.into(),
+            minimum_supported_version: protocol::MINIMUM_VERSION.to_string(),
         };
         (
             Self {
@@ -213,7 +213,7 @@ pub(in crate::runtimes) async fn probe(
         )
     })?
     .map_err(|error| SetupFailure::io("private setup directory", error))?;
-    version(&launch, cancel, &uncertain).await?;
+    let observed_version = version(&launch, cancel, &uncertain).await?;
     if cancel.is_cancelled() {
         return Err(SetupFailure::at(
             SetupProblem::StatusReadFailed,
@@ -236,6 +236,7 @@ pub(in crate::runtimes) async fn probe(
             stdout,
             stdin,
             Instant::now() + Duration::from_secs(15),
+            &observed_version,
         ))
         .await
         .unwrap_or_else(|| {
@@ -346,7 +347,7 @@ async fn version(
     launch: &Launch,
     cancel: &CancellationToken,
     uncertain: &impl Fn(),
-) -> Result<(), SetupFailure> {
+) -> Result<String, SetupFailure> {
     let mut child = spawn(launch, "--version")?;
     drop(child.stdin.take());
     let stderr = child.stderr.take().expect("piped stderr");
@@ -390,8 +391,9 @@ async fn version(
         SetupFailure::at(
             problem,
             format!(
-                "Version command exit {:?}; expected codex-cli 0.169.0",
-                status.code()
+                "Version command exit {:?}; requires stable codex-cli >= {} with valid SemVer",
+                status.code(),
+                protocol::MINIMUM_VERSION
             ),
         )
     })

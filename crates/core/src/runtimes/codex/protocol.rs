@@ -3,7 +3,7 @@ use serde_json::{Value, json};
 use tokio::io::{AsyncBufReadExt, AsyncRead, AsyncWrite, AsyncWriteExt, BufReader};
 use tokio::time::{Instant, timeout_at};
 
-pub(super) const VERSION: &str = "0.169.0";
+pub(super) const MINIMUM_VERSION: semver::Version = semver::Version::new(0, 169, 0);
 pub(super) const MAX_FRAME: usize = 256 * 1024;
 
 pub(in crate::runtimes) enum LoginEvent {
@@ -127,12 +127,7 @@ pub(super) async fn login<
     use crate::runtimes::LoginOutcome;
     let mut frames = Frames::new(read);
     let start = async {
-        send(&mut write, json!({"id":1,"method":"initialize","params":{"clientInfo":{"name":"agent_workspace","version":env!("CARGO_PKG_VERSION")},"capabilities":{"explicitGatewayOauth":true}}})).await?;
-        let initialized = reply(frames.next().await?, 1).map_err(SetupFailure::from)?;
-        if !initialized.is_object() {
-            return Err(SetupProblem::IncompatibleProtocol.into());
-        }
-        send(&mut write, json!({"method":"initialized","params":{}})).await?;
+        initialize(&mut frames, &mut write).await?;
         send(
             &mut write,
             json!({"id":2,"method":"account/login/start","params":{"type":"chatgpt"}}),
@@ -289,15 +284,24 @@ pub(super) async fn login<
     }
 }
 
-pub(super) fn version(bytes: &[u8], successful_exit: bool) -> Result<(), SetupProblem> {
+pub(super) fn version(bytes: &[u8], successful_exit: bool) -> Result<String, SetupProblem> {
     if !successful_exit {
         return Err(SetupProblem::StatusReadFailed);
     }
-    if bytes == b"codex-cli 0.169.0\n" || bytes == b"codex-cli 0.169.0\r\n" {
-        Ok(())
-    } else {
-        Err(SetupProblem::IncompatibleProtocol)
+    let text = std::str::from_utf8(bytes).map_err(|_| SetupProblem::IncompatibleProtocol)?;
+    let text = text
+        .strip_suffix("\r\n")
+        .or_else(|| text.strip_suffix('\n'))
+        .ok_or(SetupProblem::IncompatibleProtocol)?;
+    let detected = text
+        .strip_prefix("codex-cli ")
+        .filter(|value| value.len() <= 128)
+        .and_then(|value| semver::Version::parse(value).ok())
+        .ok_or(SetupProblem::IncompatibleProtocol)?;
+    if detected < MINIMUM_VERSION || !detected.pre.is_empty() {
+        return Err(SetupProblem::IncompatibleProtocol);
     }
+    Ok(detected.to_string())
 }
 
 fn reply(value: Value, id: u32) -> Result<Value, SetupProblem> {
@@ -332,7 +336,11 @@ fn optional_text(value: &Value, key: &str) -> Result<Option<String>, SetupProble
     }
 }
 
-fn setup(account: &Value, config: &Value) -> Result<SetupEvidence, SetupProblem> {
+fn setup(
+    account: &Value,
+    config: &Value,
+    observed_version: &str,
+) -> Result<SetupEvidence, SetupProblem> {
     let requires = account
         .get("requiresOpenaiAuth")
         .and_then(Value::as_bool)
@@ -380,7 +388,7 @@ fn setup(account: &Value, config: &Value) -> Result<SetupEvidence, SetupProblem>
         billing = BillingRoute::Unknown;
     }
     Ok(SetupEvidence {
-        version: VERSION.into(),
+        version: observed_version.into(),
         authentication,
         billing,
         account: email,
@@ -430,23 +438,74 @@ async fn receive<S: AsyncRead + Unpin>(
         return reply(value,id).map_err(|problem|SetupFailure::at(problem,format!("Setup response {id} rejected; RPC code {rpc_code:?}; expected exact response ID and no server request")));
     }
 }
+// Shared by readiness and browser login on each connection. Keep one Frames
+// owner so coalesced replies and notifications survive the handshake.
+async fn initialize<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
+    read: &mut Frames<R>,
+    write: &mut W,
+) -> Result<(), SetupFailure> {
+    send(write, json!({"id":1,"method":"initialize","params":{"clientInfo":{"name":"agent_workspace","version":env!("CARGO_PKG_VERSION")},"capabilities":{"explicitGatewayOauth":true}}})).await?;
+    if !receive(read, 1).await?.is_object() {
+        return Err(SetupFailure::at(
+            SetupProblem::IncompatibleProtocol,
+            "initialize result must be an object",
+        ));
+    }
+    send(write, json!({"method":"initialized","params":{}})).await?;
+    // ID 4 is reserved for this probe; readiness and login use IDs 2/3.
+    // Older servers may ignore the capability, so initialize alone is insufficient.
+    send(write, json!({"id":4,"method":"account/gatewayOAuth/read"})).await?;
+    let probe = receive(read, 4).await?;
+    if ["providerId", "providerName"]
+        .iter()
+        .any(|key| !matches!(optional_text(&probe, key), Ok(Some(_))))
+        || probe.get("required").and_then(Value::as_bool).is_none()
+    {
+        return Err(SetupFailure::at(
+            SetupProblem::IncompatibleProtocol,
+            "Required gateway capability response fields are invalid",
+        ));
+    }
+    // Successful read proves support even when gateway credentials are not ready.
+    // Authentication still comes from authoritative account/configuration reads.
+    Ok(())
+}
+
 pub(super) async fn inspect<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     read: R,
     mut write: W,
     deadline: Instant,
+    observed_version: &str,
 ) -> Result<SetupEvidence, SetupFailure> {
-    timeout_at(deadline,async {
-        let mut read=Frames::new(read);
-        send(&mut write,json!({"id":1,"method":"initialize","params":{"clientInfo":{"name":"agent_workspace","version":env!("CARGO_PKG_VERSION")},"capabilities":{"explicitGatewayOauth":true}}})).await?;
-        let initialized=receive(&mut read,1).await?;
-        if !initialized.is_object() {return Err(SetupFailure::at(SetupProblem::IncompatibleProtocol,"initialize result must be an object"));}
-        send(&mut write,json!({"method":"initialized","params":{}})).await?;
-        send(&mut write,json!({"id":2,"method":"account/read","params":{"refreshToken":false}})).await?;
-        let account=receive(&mut read,2).await?;
-        send(&mut write,json!({"id":3,"method":"config/read","params":{"includeLayers":false}})).await?;
-        let config=receive(&mut read,3).await?;
-        setup(&account,&config).map_err(|problem|SetupFailure::at(problem,"Invalid or unsupported account/configuration fields"))
-    }).await.map_err(|_|SetupFailure::at(SetupProblem::StatusReadFailed,"Readiness protocol exceeded its absolute 15-second deadline"))?
+    timeout_at(deadline, async {
+        let mut read = Frames::new(read);
+        initialize(&mut read, &mut write).await?;
+        send(
+            &mut write,
+            json!({"id":2,"method":"account/read","params":{"refreshToken":false}}),
+        )
+        .await?;
+        let account = receive(&mut read, 2).await?;
+        send(
+            &mut write,
+            json!({"id":3,"method":"config/read","params":{"includeLayers":false}}),
+        )
+        .await?;
+        let config = receive(&mut read, 3).await?;
+        setup(&account, &config, observed_version).map_err(|problem| {
+            SetupFailure::at(
+                problem,
+                "Invalid or unsupported account/configuration fields",
+            )
+        })
+    })
+    .await
+    .map_err(|_| {
+        SetupFailure::at(
+            SetupProblem::StatusReadFailed,
+            "Readiness protocol exceeded its absolute 15-second deadline",
+        )
+    })?
 }
 
 #[cfg(test)]
@@ -458,7 +517,7 @@ mod tests {
     #[test]
     fn browser_login_matches_exact_completion_and_never_exports_provider_errors() {
         run(async {
-            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize?state=synthetic\"}}\n{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"other\",\"success\":false}}\n{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"native-1\",\"success\":true}}\n";
+            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize?state=synthetic\"}}\n{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"other\",\"success\":false}}\n{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"native-1\",\"success\":true}}\n";
             let mut commands = Vec::new();
             let (_send, receive) = tokio::sync::mpsc::channel(1);
             let opens = std::cell::Cell::new(0);
@@ -486,16 +545,21 @@ mod tests {
                 sent.iter()
                     .filter_map(|value| value["method"].as_str())
                     .collect::<Vec<_>>(),
-                ["initialize", "initialized", "account/login/start"]
+                [
+                    "initialize",
+                    "initialized",
+                    "account/gatewayOAuth/read",
+                    "account/login/start"
+                ]
             );
-            assert_eq!(sent[2]["params"], json!({"type":"chatgpt"}));
+            assert_eq!(sent[3]["params"], json!({"type":"chatgpt"}));
         });
     }
 
     #[test]
     fn browser_open_failure_reopens_the_same_url_without_another_login() {
         run(async {
-            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize?state=synthetic\"}}\n{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"native-1\",\"success\":false,\"error\":\"secret-do-not-export\"}}\n";
+            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize?state=synthetic\"}}\n{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"native-1\",\"success\":false,\"error\":\"secret-do-not-export\"}}\n";
             let mut commands = Vec::new();
             let (send_reopen, receive) = tokio::sync::mpsc::channel(1);
             let opens = std::cell::RefCell::new(Vec::new());
@@ -546,7 +610,7 @@ mod tests {
             );
             assert!(commands.is_empty());
             let cancel = tokio_util::sync::CancellationToken::new();
-            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n{\"id\":3,\"result\":{\"status\":\"canceled\"}}\n";
+            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n{\"id\":3,\"result\":{\"status\":\"canceled\"}}\n";
             let (_send, receive) = tokio::sync::mpsc::channel(1);
             assert_eq!(
                 login(
@@ -581,7 +645,7 @@ mod tests {
     fn browser_timeout_uses_controlled_time_and_urls_reject_non_browser_schemes() {
         run(async {
             let (mut send_frames, read) = tokio::io::duplex(2048);
-            send_frames.write_all(b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n").await.unwrap();
+            send_frames.write_all(b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n").await.unwrap();
             let (_send, receive) = tokio::sync::mpsc::channel(1);
             let start = Instant::now();
             let failure = login(
@@ -618,7 +682,7 @@ mod tests {
     fn early_completion_and_success_racing_cancel_preserve_exact_outcome() {
         run(async {
             for early in [true, false] {
-                let initialized = "{\"id\":1,\"result\":{}}\n";
+                let initialized = "{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n";
                 let started = "{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n";
                 let completed = "{\"method\":\"account/login/completed\",\"params\":{\"loginId\":\"native-1\",\"success\":true}}\n";
                 let frames = if early {
@@ -675,7 +739,7 @@ mod tests {
     fn repeated_reopen_cannot_starve_the_absolute_login_deadline() {
         run(async {
             let (mut writer, read) = tokio::io::duplex(2048);
-            writer.write_all(b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n").await.unwrap();
+            writer.write_all(b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n").await.unwrap();
             let (send, receive) = tokio::sync::mpsc::channel(1);
             let opens = std::cell::Cell::new(0);
             let failure = login(
@@ -740,18 +804,19 @@ mod tests {
     }
 
     #[test]
-    fn setup_commands_are_read_only_and_deadline_is_absolute() {
+    fn readiness_proves_gateway_capability_before_reading_authentication() {
         run(async {
-            let frames=b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"account\":null,\"requiresOpenaiAuth\":true}}\n{\"id\":3,\"result\":{\"config\":{}}}\n";
+            let frames = b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"error\":{\"code\":-32601,\"message\":\"private provider error\"}}\n";
             let mut sent = Vec::new();
-            let evidence = inspect(
+            let failure = inspect(
                 frames.as_slice(),
                 &mut sent,
                 Instant::now() + std::time::Duration::from_secs(15),
+                "0.170.0",
             )
             .await
-            .unwrap();
-            assert_eq!(evidence.authentication, Authentication::Unavailable);
+            .unwrap_err();
+            assert_eq!(failure.problem, SetupProblem::IncompatibleProtocol);
             let commands: Vec<Value> = String::from_utf8(sent)
                 .unwrap()
                 .lines()
@@ -762,15 +827,52 @@ mod tests {
                     .iter()
                     .map(|v| v["method"].as_str().unwrap())
                     .collect::<Vec<_>>(),
-                ["initialize", "initialized", "account/read", "config/read"]
+                ["initialize", "initialized", "account/gatewayOAuth/read"]
             );
-            assert_eq!(commands[2]["params"], json!({"refreshToken":false}));
-            assert_eq!(commands[3]["params"], json!({"includeLayers":false}));
+            assert!(!failure.diagnostic.contains("private provider error"));
+        });
+    }
+
+    #[test]
+    fn setup_commands_are_read_only_and_deadline_is_absolute() {
+        run(async {
+            let frames=b"{\"id\":1,\"result\":{}}\n{\"id\":4,\"result\":{\"providerId\":\"openai\",\"providerName\":\"OpenAI\",\"required\":false}}\n{\"id\":2,\"result\":{\"account\":null,\"requiresOpenaiAuth\":true}}\n{\"id\":3,\"result\":{\"config\":{}}}\n";
+            let mut sent = Vec::new();
+            let evidence = inspect(
+                frames.as_slice(),
+                &mut sent,
+                Instant::now() + std::time::Duration::from_secs(15),
+                "0.170.0",
+            )
+            .await
+            .unwrap();
+            assert_eq!(evidence.authentication, Authentication::Unavailable);
+            assert_eq!(evidence.version, "0.170.0");
+            let commands: Vec<Value> = String::from_utf8(sent)
+                .unwrap()
+                .lines()
+                .map(|line| serde_json::from_str(line).unwrap())
+                .collect();
+            assert_eq!(
+                commands
+                    .iter()
+                    .map(|v| v["method"].as_str().unwrap())
+                    .collect::<Vec<_>>(),
+                [
+                    "initialize",
+                    "initialized",
+                    "account/gatewayOAuth/read",
+                    "account/read",
+                    "config/read"
+                ]
+            );
+            assert_eq!(commands[3]["params"], json!({"refreshToken":false}));
+            assert_eq!(commands[4]["params"], json!({"includeLayers":false}));
             let (_writer, read) = tokio::io::duplex(32);
             let mut sent = Vec::new();
             let deadline = Instant::now() + std::time::Duration::from_secs(15);
             assert_eq!(
-                inspect(read, &mut sent, deadline)
+                inspect(read, &mut sent, deadline, "0.169.0")
                     .await
                     .unwrap_err()
                     .problem,
@@ -778,6 +880,238 @@ mod tests {
             );
             assert_eq!(Instant::now(), deadline);
         });
+    }
+
+    #[test]
+    fn required_probe_failures_block_both_readiness_and_browser_effects() {
+        run(async {
+            for (response, expected) in [
+                (
+                    json!({"id":4,"error":{"code":-32600,"message":"secret"}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":4,"error":{"code":-32601,"message":"secret"}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":4,"error":{"code":-32603,"message":"secret"}}),
+                    SetupProblem::StatusReadFailed,
+                ),
+                (
+                    json!({"id":4,"result":{}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":4,"result":{"providerId":"openai","providerName":"OpenAI","required":"false"}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":4,"result":{"providerId":null,"providerName":"OpenAI","required":false}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":4,"result":{"providerId":"openai","providerName":[],"required":false}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":99,"result":{"providerId":"openai","providerName":"OpenAI","required":false}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+                (
+                    json!({"id":4,"method":"item/commandExecution/requestApproval","params":{}}),
+                    SetupProblem::IncompatibleProtocol,
+                ),
+            ] {
+                let frames = format!("{{\"id\":1,\"result\":{{}}}}\n{response}\n");
+                for browser in [false, true] {
+                    let mut sent = Vec::new();
+                    let opens = std::cell::Cell::new(0);
+                    let failure = if browser {
+                        let (_send, receive) = tokio::sync::mpsc::channel(1);
+                        login(
+                            frames.as_bytes(),
+                            &mut sent,
+                            &tokio_util::sync::CancellationToken::new(),
+                            receive,
+                            &|_| {},
+                            |_| {
+                                opens.set(opens.get() + 1);
+                                std::future::ready(true)
+                            },
+                        )
+                        .await
+                        .unwrap_err()
+                    } else {
+                        inspect(
+                            frames.as_bytes(),
+                            &mut sent,
+                            Instant::now() + std::time::Duration::from_secs(15),
+                            "0.170.0",
+                        )
+                        .await
+                        .unwrap_err()
+                    };
+                    assert_eq!(failure.problem, expected);
+                    assert!(!failure.diagnostic.contains("secret"));
+                    assert_eq!(opens.get(), 0);
+                    let commands: Vec<Value> = String::from_utf8(sent)
+                        .unwrap()
+                        .lines()
+                        .map(|line| serde_json::from_str(line).unwrap())
+                        .collect();
+                    assert_eq!(
+                        commands
+                            .iter()
+                            .map(|v| v["method"].as_str().unwrap())
+                            .collect::<Vec<_>>(),
+                        ["initialize", "initialized", "account/gatewayOAuth/read"]
+                    );
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn probe_accepts_additive_fields_without_treating_support_as_authentication() {
+        run(async {
+            let frames = concat!(
+                "{\"id\":1,\"result\":{\"futureField\":42}}\n",
+                "{\"method\":\"future/information\",\"params\":{}}\n",
+                "{\"id\":4,\"result\":{\"providerId\":\"custom\",\"providerName\":\"Gateway\",\"required\":true,\"status\":\"notReady\",\"futureField\":true}}\n",
+                "{\"id\":2,\"result\":{\"account\":null,\"requiresOpenaiAuth\":true,\"futureField\":true}}\n",
+                "{\"id\":3,\"result\":{\"config\":{},\"futureField\":true}}\n"
+            );
+            let mut sent = Vec::new();
+            let evidence = inspect(
+                frames.as_bytes(),
+                &mut sent,
+                Instant::now() + std::time::Duration::from_secs(15),
+                "1.0.0+build.7",
+            )
+            .await
+            .unwrap();
+            assert_eq!(evidence.version, "1.0.0+build.7");
+            assert_eq!(evidence.authentication, Authentication::Unavailable);
+            assert_eq!(evidence.billing, BillingRoute::Unknown);
+            let initialize: Value =
+                serde_json::from_str(String::from_utf8(sent).unwrap().lines().next().unwrap())
+                    .unwrap();
+            assert_eq!(
+                initialize["params"]["capabilities"],
+                json!({"explicitGatewayOauth":true})
+            );
+        });
+    }
+
+    #[test]
+    fn capability_probe_keeps_absolute_deadlines_and_cancelled_login_has_no_effect() {
+        run(async {
+            for browser in [false, true] {
+                let (mut writer, reader) = tokio::io::duplex(128);
+                writer
+                    .write_all(b"{\"id\":1,\"result\":{}}\n")
+                    .await
+                    .unwrap();
+                let mut sent = Vec::new();
+                let start = Instant::now();
+                let failure = if browser {
+                    let (_send, receive) = tokio::sync::mpsc::channel(1);
+                    login(
+                        reader,
+                        &mut sent,
+                        &tokio_util::sync::CancellationToken::new(),
+                        receive,
+                        &|_| {},
+                        |_| async { panic!("probe timeout cannot open a browser") },
+                    )
+                    .await
+                    .unwrap_err()
+                } else {
+                    inspect(
+                        reader,
+                        &mut sent,
+                        start + std::time::Duration::from_secs(15),
+                        "0.170.0",
+                    )
+                    .await
+                    .unwrap_err()
+                };
+                assert_eq!(failure.problem, SetupProblem::StatusReadFailed);
+                assert_eq!(Instant::now() - start, std::time::Duration::from_secs(15));
+                let sent = String::from_utf8(sent).unwrap();
+                assert!(sent.contains("account/gatewayOAuth/read"));
+                assert!(!sent.contains("account/read"));
+                assert!(!sent.contains("account/login/start"));
+                drop(writer);
+            }
+            let (mut writer, reader) = tokio::io::duplex(128);
+            writer
+                .write_all(b"{\"id\":1,\"result\":{}}\n")
+                .await
+                .unwrap();
+            let cancel = tokio_util::sync::CancellationToken::new();
+            let (_send, receive) = tokio::sync::mpsc::channel(1);
+            let mut sent = Vec::new();
+            let mut attempt = Box::pin(login(
+                reader,
+                &mut sent,
+                &cancel,
+                receive,
+                &|_| {},
+                |_| async { panic!("cancelled probe cannot open a browser") },
+            ));
+            std::future::poll_fn(|cx| {
+                assert!(std::future::Future::poll(attempt.as_mut(), cx).is_pending());
+                std::task::Poll::Ready(())
+            })
+            .await;
+            cancel.cancel();
+            assert_eq!(
+                attempt.await.unwrap(),
+                crate::runtimes::LoginOutcome::Cancelled
+            );
+            let sent = String::from_utf8(sent).unwrap();
+            assert!(sent.contains("account/gatewayOAuth/read"));
+            assert!(!sent.contains("account/login/start"));
+        });
+    }
+
+    #[test]
+    fn unsupported_versions_and_malformed_output_are_rejected() {
+        for bytes in [
+            b"codex-cli 0.168.9\n".as_slice(),
+            b"codex-cli 0.170.0-alpha.1\n",
+            b"codex-cli 1.0.0-nightly+build.7\n",
+            b"codex-cli 0.169\n",
+            b"codex-cli 00.169.0\n",
+            b"codex-cli 0.170.0\nextra\n",
+            b"codex-cli 0.170.0 \n",
+            b"codex-cli 0.170.0",
+            b"codex-cli 0.170.0\0\n",
+            b"codex-cli \xff\n",
+        ] {
+            assert_eq!(
+                version(bytes, true),
+                Err(SetupProblem::IncompatibleProtocol)
+            );
+        }
+        assert_eq!(
+            version(b"codex-cli 0.170.0+build.7\r\n", true).unwrap(),
+            "0.170.0+build.7"
+        );
+    }
+
+    #[test]
+    fn stable_releases_after_the_baseline_do_not_need_an_allowlist() {
+        for bytes in [
+            b"codex-cli 0.169.0\n".as_slice(),
+            b"codex-cli 0.170.0\r\n",
+            b"codex-cli 1.0.0\n",
+            b"codex-cli 0.169.0+build.7\n",
+        ] {
+            assert!(version(bytes, true).is_ok(), "{bytes:?}");
+        }
     }
 
     #[test]
@@ -794,11 +1128,23 @@ mod tests {
             );
         }
         let signed_out = json!({"account":null,"requiresOpenaiAuth":false});
-        let evidence = setup(&signed_out, &json!({"config":{"model_provider":"custom"}})).unwrap();
+        let evidence = setup(
+            &signed_out,
+            &json!({"config":{"model_provider":"custom"}}),
+            "0.169.0",
+        )
+        .unwrap();
         assert_eq!(evidence.authentication, Authentication::NotRequired);
         assert_eq!(evidence.billing, BillingRoute::Unknown);
-        assert!(setup(&json!({"account":{"type":"apiKey"}}), &json!({"config":{}})).is_err());
-        assert!(setup(&signed_out, &json!({})).is_err());
+        assert!(
+            setup(
+                &json!({"account":{"type":"apiKey"}}),
+                &json!({"config":{}}),
+                "0.169.0"
+            )
+            .is_err()
+        );
+        assert!(setup(&signed_out, &json!({}), "0.169.0").is_err());
     }
 
     #[test]
@@ -818,12 +1164,13 @@ mod tests {
     #[test]
     fn existing_authentication_is_evidence_not_a_login_or_billing_choice() {
         let config = json!({"config":{"model_provider":"openai","model":"gpt-5"},"origins":{},"layers":null});
-        let evidence = setup(&json!({"account":{"type":"chatgpt","email":"fixture@example.test","planType":"pro","workspaceName":null},"userId":null,"requiresOpenaiAuth":true}), &config).unwrap();
+        let evidence = setup(&json!({"account":{"type":"chatgpt","email":"fixture@example.test","planType":"pro","workspaceName":null},"userId":null,"requiresOpenaiAuth":true}), &config, "0.169.0").unwrap();
         assert_eq!(evidence.authentication, Authentication::Chatgpt);
         assert_eq!(evidence.billing, BillingRoute::Chatgpt);
         let api = setup(
             &json!({"account":{"type":"apiKey"},"userId":null,"requiresOpenaiAuth":true}),
             &config,
+            "0.169.0",
         )
         .unwrap();
         assert_eq!(api.authentication, Authentication::ApiKey);

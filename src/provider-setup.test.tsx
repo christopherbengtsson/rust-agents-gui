@@ -25,7 +25,7 @@ const observed: ProviderObservation = {
     executable: "/fixture/codex",
     codex_home: "/fixture/home",
     working_directory: "/fixture/neutral",
-    supported_version: "0.169.0",
+    minimum_supported_version: "0.169.0",
   },
   revision: 2,
   phase: "observed",
@@ -84,6 +84,29 @@ test("healthy setup is compact, has a decorative status light, and discloses hel
   expect(
     screen.queryByRole("button", { name: /refresh|check again/i }),
   ).toBeNull();
+});
+
+test("technical details distinguish the minimum runtime from the newer observed release", async () => {
+  const user = userEvent.setup();
+  render(
+    <ProviderSetup
+      setup={view({
+        observation: {
+          ...observed,
+          evidence: { ...evidence, version: "0.170.0" },
+        },
+      })}
+      onOpenHelp={vi.fn()}
+    />,
+  );
+  expect(screen.getByRole("status").textContent).toBe("Connected");
+  await user.click(screen.getByRole("button", { name: "Technical details" }));
+  expect(
+    screen.getByText("Minimum runtime").nextElementSibling?.textContent,
+  ).toBe("0.169.0");
+  expect(
+    screen.getByText("Observed runtime").nextElementSibling?.textContent,
+  ).toBe("0.170.0");
 });
 
 test.each([

@@ -22,7 +22,7 @@ pub struct ProviderTarget {
     pub executable: String,
     pub codex_home: String,
     pub working_directory: String,
-    pub supported_version: String,
+    pub minimum_supported_version: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -514,7 +514,7 @@ impl ProviderConnections {
             executable: "fixture".into(),
             codex_home: "/fixture/home".into(),
             working_directory: "/fixture/neutral".into(),
-            supported_version: "0.169.0".into(),
+            minimum_supported_version: "0.169.0".into(),
         };
         self.records.lock().unwrap().insert(
             id,

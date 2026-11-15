@@ -107,6 +107,26 @@ def events():
     return [json.loads(line) for line in file.read_text().splitlines()] if file.exists() else []
 
 
+def login_settled(phase):
+    deadline = time.monotonic()+25
+    while time.monotonic() < deadline:
+        value = observe()
+        if value.get("login", {}).get("phase") == phase: return value
+        time.sleep(.02)
+    raise TimeoutError(f"login did not reach {phase}: {value}")
+
+def start_login(lost=False):
+    current = observe()
+    request = {"operation": "start_browser_login", "target_id": target["id"], "attempt_id": str(uuid.uuid4()), "expected_revision": current["revision"]}
+    if lost:
+        payload = json.dumps({"protocol": protocol, "application_version": "0.1.0", "after": None, "expected_owner": owner, "provider": request}).encode()
+        with socket.socket(socket.AF_UNIX) as peer:
+            peer.connect(str(state/"supervisor.sock")); peer.sendall(struct.pack(">I",len(payload))+payload)
+    else: provider(request)
+    return request
+
+
+
 report = {"protocol": protocol, "root": str(root), "owner": owner, "supervisor_pid": supervisor.pid, "supervisor": str(supervisor_path), "supervisor_sha256": hashlib.sha256(supervisor_path.read_bytes()).hexdigest(), "target": target, "checks": [], "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process."}
 report["headless_browser"] = "--headless" in sys.argv
 output = Path(sys.argv[2])
@@ -149,6 +169,10 @@ try:
                 break
             if command.startswith("scenario "):
                 scenario(command.split(" ", 1)[1])
+            elif command.startswith("version "):
+                settings = json.loads(control.read_text())
+                settings["runtime_version"] = command.split(" ", 1)[1]
+                control.write_text(json.dumps(settings))
             elif command == "snapshot":
                 print(json.dumps({"observation": observe(), "events": events()}), flush=True)
             elif command == "restart-desktop":
@@ -160,25 +184,73 @@ try:
             elif command == "processes":
                 print(json.dumps({"supervisor_alive": supervisor.poll() is None, "desktop_alive": desktop.poll() is None, "events": events()}), flush=True)
             save()
-    elif browser:
-        def login_settled(phase):
-            deadline = time.monotonic()+25
+    elif "--compatibility" in sys.argv:
+        def set_version(value):
+            settings = json.loads(control.read_text())
+            settings["runtime_version"] = value
+            control.write_text(json.dumps(settings))
+
+        def newer_ready():
+            set_version("0.170.0")
+            scenario("ready")
+            observe(True)
+            value = settled()
+            assert value["problem"] is None, value
+            assert value["evidence"]["version"] == "0.170.0", value
+            assert value["target"]["minimum_supported_version"] == "0.169.0", value
+            return value
+        check("newer stable readiness reports actual version", newer_ready)
+
+        for selected, expected in [("gateway_unsupported", "incompatible_protocol"), ("gateway_malformed", "incompatible_protocol"), ("gateway_failure", "status_read_failed"), ("prerelease", "incompatible_protocol")]:
+            def rejected(selected=selected, expected=expected):
+                scenario(selected)
+                before = len(events())
+                observe(True)
+                value = settled()
+                assert value["problem"] == expected, value
+                assert value["evidence"]["version"] == "0.170.0", value
+                assert not any(e.get("method") in ("account/read", "config/read", "account/login/start") for e in events()[before:])
+                return value
+            check(selected + " blocks dependent requests and retains stale evidence", rejected)
+
+        def rejected_login():
+            scenario("gateway_unsupported")
+            before = len(events())
+            start_login()
+            value = login_settled("failed")
+            assert value["problem"] == "incompatible_protocol", value
+            assert not any(e.get("method") == "account/login/start" for e in events()[before:])
+            return value
+        check("unsupported capability prevents browser login start", rejected_login)
+
+        def completed_login():
+            scenario("browser_pending")
+            start_login()
+            login_settled("pending")
+            scenario("browser_complete")
+            value = login_settled("completed")
+            assert value["problem"] is None, value
+            assert value["evidence"]["version"] == "0.170.0", value
+            requests = [e["method"] for e in events() if e.get("method")]
+            assert requests.count("account/login/start") == 1, requests
+            return value
+        check("newer browser completion rechecks actual version", completed_login)
+
+        def cancelled_probe():
+            scenario("gateway_delay")
+            before = len(events())
+            request = start_login()
+            deadline = time.monotonic() + 5
             while time.monotonic() < deadline:
-                value = observe()
-                if value.get("login", {}).get("phase") == phase: return value
+                if any(e.get("method") == "account/gatewayOAuth/read" for e in events()[before:]): break
                 time.sleep(.02)
-            raise TimeoutError(f"login did not reach {phase}: {value}")
-
-        def start_login(lost=False):
-            current = observe()
-            request = {"operation": "start_browser_login", "target_id": target["id"], "attempt_id": str(uuid.uuid4()), "expected_revision": current["revision"]}
-            if lost:
-                payload = json.dumps({"protocol": protocol, "application_version": "0.1.0", "after": None, "expected_owner": owner, "provider": request}).encode()
-                with socket.socket(socket.AF_UNIX) as peer:
-                    peer.connect(str(state/"supervisor.sock")); peer.sendall(struct.pack(">I",len(payload))+payload)
-            else: provider(request)
-            return request
-
+            else: raise TimeoutError("gateway probe did not start")
+            provider({"operation":"cancel_login", "target_id":target["id"], "attempt_id":request["attempt_id"]})
+            value = login_settled("cancelled")
+            assert not any(e.get("method") == "account/login/start" for e in events()[before:])
+            return value
+        check("cancel during capability probe completes owned cleanup", cancelled_probe)
+    elif browser:
         def pending_case():
             assert events() == []
             assert observe()["phase"] == "unknown"

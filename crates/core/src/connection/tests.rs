@@ -539,7 +539,7 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
                 executable: "/fixture/codex".into(),
                 codex_home: "/fixture/home".into(),
                 working_directory: "/fixture/neutral".into(),
-                supported_version: "0.169.0".into(),
+                minimum_supported_version: "0.169.0".into(),
             };
             let mut calls = 0;
             let result = client

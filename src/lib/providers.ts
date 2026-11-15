@@ -24,7 +24,7 @@ function targetSemantics(target: ProviderTarget) {
         value.length > 0 &&
         !/[\u0000-\u001f\u007f]/.test(value),
     ) &&
-    text(target.supported_version, 128)
+    text(target.minimum_supported_version, 128)
   );
 }
 export function decodeProviderReply(
