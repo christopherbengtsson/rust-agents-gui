@@ -458,7 +458,7 @@ async fn initialize<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     let probe = receive(read, 4).await?;
     if ["providerId", "providerName"]
         .iter()
-        .any(|key| !matches!(optional_text(&probe, key), Ok(Some(_))))
+        .any(|key| probe.get(key).and_then(Value::as_str).is_none())
         || probe.get("required").and_then(Value::as_bool).is_none()
     {
         return Err(SetupFailure::at(
@@ -975,13 +975,13 @@ mod tests {
     #[test]
     fn probe_accepts_additive_fields_without_treating_support_as_authentication() {
         run(async {
-            let frames = concat!(
-                "{\"id\":1,\"result\":{\"futureField\":42}}\n",
-                "{\"method\":\"future/information\",\"params\":{}}\n",
-                "{\"id\":4,\"result\":{\"providerId\":\"custom\",\"providerName\":\"Gateway\",\"required\":true,\"status\":\"notReady\",\"futureField\":true}}\n",
-                "{\"id\":2,\"result\":{\"account\":null,\"requiresOpenaiAuth\":true,\"futureField\":true}}\n",
-                "{\"id\":3,\"result\":{\"config\":{},\"futureField\":true}}\n"
-            );
+            let frames = [
+                json!({"id":1,"result":{"futureField":42}}),
+                json!({"method":"future/information","params":{}}),
+                json!({"id":4,"result":{"providerId":"x".repeat(513),"providerName":"Gateway\nDisplay","required":true,"status":"notReady","futureField":true}}),
+                json!({"id":2,"result":{"account":null,"requiresOpenaiAuth":true,"futureField":true}}),
+                json!({"id":3,"result":{"config":{},"futureField":true}}),
+            ].iter().map(Value::to_string).collect::<Vec<_>>().join("\n") + "\n";
             let mut sent = Vec::new();
             let evidence = inspect(
                 frames.as_bytes(),

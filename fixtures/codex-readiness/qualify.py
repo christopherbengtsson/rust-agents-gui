@@ -245,6 +245,7 @@ try:
                 if any(e.get("method") == "account/gatewayOAuth/read" for e in events()[before:]): break
                 time.sleep(.02)
             else: raise TimeoutError("gateway probe did not start")
+            scenario("browser_pending")
             provider({"operation":"cancel_login", "target_id":target["id"], "attempt_id":request["attempt_id"]})
             value = login_settled("cancelled")
             assert not any(e.get("method") == "account/login/start" for e in events()[before:])
