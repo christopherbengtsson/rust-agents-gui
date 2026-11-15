@@ -45,6 +45,18 @@
     "title": "Artifacts",
     "type": "object"
   },
+  "Authentication": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "chatgpt",
+      "api_key",
+      "not_required",
+      "unavailable",
+      "unknown"
+    ],
+    "title": "Authentication",
+    "type": "string"
+  },
   "Availability": {
     "$defs": {
       "ErrorCode": {
@@ -121,6 +133,16 @@
       }
     ],
     "title": "Availability"
+  },
+  "BillingRoute": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "chatgpt",
+      "api_key",
+      "unknown"
+    ],
+    "title": "BillingRoute",
+    "type": "string"
   },
   "BranchArtifact": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -830,6 +852,23 @@
           {
             "properties": {
               "kind": {
+                "const": "provider",
+                "type": "string"
+              },
+              "target_id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "target_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
                 "const": "repositories",
                 "type": "string"
               }
@@ -1116,6 +1155,23 @@
       },
       "Target": {
         "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "provider",
+                "type": "string"
+              },
+              "target_id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "target_id"
+            ],
+            "type": "object"
+          },
           {
             "properties": {
               "kind": {
@@ -1488,6 +1544,276 @@
       },
       "result": {
         "$ref": "#/$defs/Result_of_AnyValue_or_RepositoryError"
+      }
+    },
+    "required": [
+      "owner",
+      "result"
+    ],
+    "title": "OwnedReply",
+    "type": "object"
+  },
+  "OwnedProviderReply": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "ProviderObservation": {
+        "properties": {
+          "evidence": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/SetupPhase"
+          },
+          "problem": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupProblem"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "target": {
+            "$ref": "#/$defs/ProviderTarget"
+          }
+        },
+        "required": [
+          "target",
+          "revision",
+          "phase",
+          "evidence",
+          "problem"
+        ],
+        "type": "object"
+      },
+      "ProviderReply": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "target",
+                "type": "string"
+              },
+              "target": {
+                "$ref": "#/$defs/ProviderTarget"
+              }
+            },
+            "required": [
+              "kind",
+              "target"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "observation",
+                "type": "string"
+              },
+              "observation": {
+                "$ref": "#/$defs/ProviderObservation"
+              }
+            },
+            "required": [
+              "kind",
+              "observation"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ProviderTarget": {
+        "properties": {
+          "codex_home": {
+            "type": "string"
+          },
+          "executable": {
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "supported_version": {
+            "type": "string"
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "executable",
+          "codex_home",
+          "working_directory",
+          "supported_version"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "Result_of_ProviderReply_or_RepositoryError": {
+        "oneOf": [
+          {
+            "properties": {
+              "Ok": {
+                "$ref": "#/$defs/ProviderReply"
+              }
+            },
+            "required": [
+              "Ok"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "Err": {
+                "$ref": "#/$defs/RepositoryError"
+              }
+            },
+            "required": [
+              "Err"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SetupEvidence": {
+        "properties": {
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "$ref": "#/$defs/Authentication"
+          },
+          "billing": {
+            "$ref": "#/$defs/BillingRoute"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "authentication",
+          "billing",
+          "account",
+          "plan",
+          "model_provider",
+          "model"
+        ],
+        "type": "object"
+      },
+      "SetupPhase": {
+        "enum": [
+          "unknown",
+          "checking",
+          "observed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "SetupProblem": {
+        "enum": [
+          "missing_executable",
+          "incompatible_protocol",
+          "authentication_unavailable",
+          "status_read_failed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Serving identity is returned even when the domain rejected the request.",
+    "properties": {
+      "owner": {
+        "type": "string"
+      },
+      "result": {
+        "$ref": "#/$defs/Result_of_ProviderReply_or_RepositoryError"
       }
     },
     "required": [
@@ -2872,6 +3198,441 @@
     "title": "PreviewTarget",
     "type": "object"
   },
+  "ProviderObservation": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ProviderTarget": {
+        "properties": {
+          "codex_home": {
+            "type": "string"
+          },
+          "executable": {
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "supported_version": {
+            "type": "string"
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "executable",
+          "codex_home",
+          "working_directory",
+          "supported_version"
+        ],
+        "type": "object"
+      },
+      "SetupEvidence": {
+        "properties": {
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "$ref": "#/$defs/Authentication"
+          },
+          "billing": {
+            "$ref": "#/$defs/BillingRoute"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "authentication",
+          "billing",
+          "account",
+          "plan",
+          "model_provider",
+          "model"
+        ],
+        "type": "object"
+      },
+      "SetupPhase": {
+        "enum": [
+          "unknown",
+          "checking",
+          "observed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "SetupProblem": {
+        "enum": [
+          "missing_executable",
+          "incompatible_protocol",
+          "authentication_unavailable",
+          "status_read_failed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "evidence": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SetupEvidence"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phase": {
+        "$ref": "#/$defs/SetupPhase"
+      },
+      "problem": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SetupProblem"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "revision": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "target": {
+        "$ref": "#/$defs/ProviderTarget"
+      }
+    },
+    "required": [
+      "target",
+      "revision",
+      "phase",
+      "evidence",
+      "problem"
+    ],
+    "title": "ProviderObservation",
+    "type": "object"
+  },
+  "ProviderReply": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ProviderObservation": {
+        "properties": {
+          "evidence": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/SetupPhase"
+          },
+          "problem": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupProblem"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "target": {
+            "$ref": "#/$defs/ProviderTarget"
+          }
+        },
+        "required": [
+          "target",
+          "revision",
+          "phase",
+          "evidence",
+          "problem"
+        ],
+        "type": "object"
+      },
+      "ProviderTarget": {
+        "properties": {
+          "codex_home": {
+            "type": "string"
+          },
+          "executable": {
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "supported_version": {
+            "type": "string"
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "executable",
+          "codex_home",
+          "working_directory",
+          "supported_version"
+        ],
+        "type": "object"
+      },
+      "SetupEvidence": {
+        "properties": {
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "$ref": "#/$defs/Authentication"
+          },
+          "billing": {
+            "$ref": "#/$defs/BillingRoute"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "authentication",
+          "billing",
+          "account",
+          "plan",
+          "model_provider",
+          "model"
+        ],
+        "type": "object"
+      },
+      "SetupPhase": {
+        "enum": [
+          "unknown",
+          "checking",
+          "observed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "SetupProblem": {
+        "enum": [
+          "missing_executable",
+          "incompatible_protocol",
+          "authentication_unavailable",
+          "status_read_failed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "target",
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/$defs/ProviderTarget"
+          }
+        },
+        "required": [
+          "kind",
+          "target"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "observation",
+            "type": "string"
+          },
+          "observation": {
+            "$ref": "#/$defs/ProviderObservation"
+          }
+        },
+        "required": [
+          "kind",
+          "observation"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "ProviderReply"
+  },
+  "ProviderRequest": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "operation": {
+            "const": "target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "operation": {
+            "const": "observe",
+            "type": "string"
+          },
+          "refresh": {
+            "type": "boolean"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "refresh"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "ProviderRequest"
+  },
+  "ProviderTarget": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "codex_home": {
+        "type": "string"
+      },
+      "executable": {
+        "type": "string"
+      },
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "provider": {
+        "type": "string"
+      },
+      "supported_version": {
+        "type": "string"
+      },
+      "working_directory": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "provider",
+      "executable",
+      "codex_home",
+      "working_directory",
+      "supported_version"
+    ],
+    "title": "ProviderTarget",
+    "type": "object"
+  },
   "RegisterRepository": {
     "$defs": {
       "ActionId": {
@@ -3944,6 +4705,23 @@
           {
             "properties": {
               "kind": {
+                "const": "provider",
+                "type": "string"
+              },
+              "target_id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "target_id"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
                 "const": "repositories",
                 "type": "string"
               }
@@ -4130,6 +4908,98 @@
     ],
     "title": "Sample"
   },
+  "SetupEvidence": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "account": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "authentication": {
+        "$ref": "#/$defs/Authentication"
+      },
+      "billing": {
+        "$ref": "#/$defs/BillingRoute"
+      },
+      "model": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "model_provider": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "plan": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "authentication",
+      "billing",
+      "account",
+      "plan",
+      "model_provider",
+      "model"
+    ],
+    "title": "SetupEvidence",
+    "type": "object"
+  },
+  "SetupPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "unknown",
+      "checking",
+      "observed",
+      "cleanup_uncertain"
+    ],
+    "title": "SetupPhase",
+    "type": "string"
+  },
+  "SetupProblem": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "missing_executable",
+      "incompatible_protocol",
+      "authentication_unavailable",
+      "status_read_failed",
+      "cleanup_uncertain"
+    ],
+    "title": "SetupProblem",
+    "type": "string"
+  },
   "SnapshotCursor": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -4276,6 +5146,23 @@
     },
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "provider",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "target_id"
+        ],
+        "type": "object"
+      },
       {
         "properties": {
           "kind": {

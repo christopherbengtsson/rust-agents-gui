@@ -30,7 +30,7 @@ use tokio::{
 use tokio_util::sync::CancellationToken;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 9;
+pub const PROTOCOL_VERSION: u32 = 10;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -120,6 +120,8 @@ struct Request {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     repository: Option<RepositoryRequest>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    provider: Option<crate::runtimes::ProviderRequest>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     workspace: Option<crate::workspaces::WorkspaceRequest>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     subscribe: Option<subscription::Subscribe>,
@@ -127,6 +129,10 @@ struct Request {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
+    Provider {
+        owner: String,
+        result: Result<crate::runtimes::ProviderReply, RepositoryError>,
+    },
     Feed {
         batch: FeedBatch,
     },
@@ -207,6 +213,18 @@ impl SupervisorConnection {
         let client = self.client();
         Ok(Admitted::new(permit, self.tasks.clone(), async move {
             client.repository_request(&expected_owner, request).await
+        }))
+    }
+    pub fn prepare_provider_request(
+        &self,
+        expected_owner: String,
+        request: crate::runtimes::ProviderRequest,
+    ) -> Result<Admitted<OwnedReply<crate::runtimes::ProviderReply>>, RequestFailure> {
+        let permit = Self::admit(&self.observations)?;
+        self.require_connection(&expected_owner)?;
+        let client = self.client();
+        Ok(Admitted::new(permit, self.tasks.clone(), async move {
+            client.provider_request(&expected_owner, request).await
         }))
     }
     pub fn prepare_workspace_request(
@@ -356,6 +374,51 @@ pub struct SupervisorClient {
     blocking: ConnectionSlots,
 }
 impl SupervisorClient {
+    pub async fn provider_request(
+        &self,
+        expected_owner: &str,
+        request: crate::runtimes::ProviderRequest,
+    ) -> Result<OwnedReply<crate::runtimes::ProviderReply>, RequestFailure> {
+        self.provider_request_with(expected_owner, request, async |state, request| {
+            exchange_target(state, request, &mut self.effects()).await
+        })
+        .await
+    }
+    async fn provider_request_with(
+        &self,
+        expected_owner: &str,
+        request: crate::runtimes::ProviderRequest,
+        exchange: impl AsyncFnOnce(&Path, &Request) -> Result<Response, RequestFailure>,
+    ) -> Result<OwnedReply<crate::runtimes::ProviderReply>, RequestFailure> {
+        let response = exchange(
+            &self.state,
+            &Request {
+                protocol: PROTOCOL_VERSION,
+                application_version: env!("CARGO_PKG_VERSION").into(),
+                after: None,
+                expected_owner: Some(expected_owner.into()),
+                repository: None,
+                workspace: None,
+                subscribe: None,
+                provider: Some(request.clone()),
+            },
+        )
+        .await?;
+        match response {
+            Response::Provider { owner, result } => {
+                if result
+                    .as_ref()
+                    .is_ok_and(|reply| !provider_target(&request, reply))
+                {
+                    return Err(unavailable(
+                        "Provider reply has the wrong kind or configuration target",
+                    ));
+                }
+                owned_reply(expected_owner, owner, result)
+            }
+            other => Err(response_failure(other)),
+        }
+    }
     pub async fn workspace_request(
         &self,
         expected_owner: &str,
@@ -375,6 +438,7 @@ impl SupervisorClient {
         let response = exchange(
             &self.state,
             &Request {
+                provider: None,
                 protocol: PROTOCOL_VERSION,
                 application_version: env!("CARGO_PKG_VERSION").into(),
                 after: None,
@@ -421,6 +485,7 @@ impl SupervisorClient {
         let response = exchange(
             &self.state,
             &Request {
+                provider: None,
                 protocol: PROTOCOL_VERSION,
                 application_version: env!("CARGO_PKG_VERSION").into(),
                 after: None,
@@ -496,6 +561,7 @@ impl SupervisorClient {
     ) -> io::Result<SupervisorSnapshot> {
         let cancel = self.tasks.cancel.clone();
         let request = Request {
+            provider: None,
             protocol,
             subscribe: None,
             application_version: application_version.into(),
@@ -568,6 +634,19 @@ fn repository_target(request: &RepositoryRequest, reply: &RepositoryReply) -> bo
         }
         (RepositoryRequest::List { .. }, RepositoryReply::Repositories { page }) => {
             page.repositories.len() <= 32
+        }
+        _ => false,
+    }
+}
+fn provider_target(
+    request: &crate::runtimes::ProviderRequest,
+    reply: &crate::runtimes::ProviderReply,
+) -> bool {
+    use crate::runtimes::{ProviderReply as R, ProviderRequest as Q};
+    match (request, reply) {
+        (Q::Target, R::Target { target }) => target.provider == "codex",
+        (Q::Observe { target_id, .. }, R::Observation { observation }) => {
+            *target_id == observation.target.id && observation.target.provider == "codex"
         }
         _ => false,
     }
@@ -898,6 +977,9 @@ impl ConnectionServer {
             core.journal.clone(),
             cancel,
             async |request| {
+                if request.provider.is_some() {
+                    return Ok(route_request(&core, request));
+                }
                 self.tasks
                     .blocking(&self.blocking, move || Ok(route_request(&core, request)))
                     .await
@@ -906,11 +988,29 @@ impl ConnectionServer {
         .await
     }
     pub async fn finish(&self) -> io::Result<()> {
-        self.tasks.close_and_wait().await
+        self.tasks.close_and_wait().await?;
+        if let Some(providers) = &self.core.providers {
+            providers.finish().await?;
+        }
+        Ok(())
     }
 }
 fn route_request(core: &Core, request: Request) -> Response {
-    if let Some(request) = request.workspace {
+    if let Some(request) = request.provider {
+        Response::Provider {
+            owner: core.owner.clone(),
+            result: core
+                .providers
+                .as_ref()
+                .ok_or_else(|| {
+                    RepositoryError::new(
+                        ErrorCode::Connection,
+                        "Provider setup has not been opened by the supervisor",
+                    )
+                })
+                .and_then(|providers| providers.request(request)),
+        }
+    } else if let Some(request) = request.workspace {
         Response::Workspace {
             owner: core.owner.clone(),
             result: core.workspace_request(request),
@@ -977,6 +1077,7 @@ fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>
     if usize::from(request.workspace.is_some())
         + usize::from(request.repository.is_some())
         + usize::from(request.subscribe.is_some())
+        + usize::from(request.provider.is_some())
         > 1
     {
         return Err(io::Error::new(
@@ -984,8 +1085,10 @@ fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>
             "Only one targeted request is permitted",
         ));
     }
-    let targeted =
-        request.workspace.is_some() || request.repository.is_some() || request.subscribe.is_some();
+    let targeted = request.workspace.is_some()
+        || request.repository.is_some()
+        || request.subscribe.is_some()
+        || request.provider.is_some();
     if (targeted && request.after.is_some()) || (!targeted && request.expected_owner.is_some()) {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,

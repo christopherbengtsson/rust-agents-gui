@@ -1,8 +1,10 @@
 // Generated. Do not edit.
-import type { ActionId, Artifacts, Availability, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, OwnedObservation, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
+import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
 export declare function validateActionId(value: unknown): value is ActionId;
 export declare function validateArtifacts(value: unknown): value is Artifacts;
+export declare function validateAuthentication(value: unknown): value is Authentication;
 export declare function validateAvailability(value: unknown): value is Availability;
+export declare function validateBillingRoute(value: unknown): value is BillingRoute;
 export declare function validateBranchArtifact(value: unknown): value is BranchArtifact;
 export declare function validateChangePage(value: unknown): value is ChangePage;
 export declare function validateChangedFile(value: unknown): value is ChangedFile;
@@ -23,11 +25,16 @@ export declare function validateFilePreview(value: unknown): value is FilePrevie
 export declare function validateFolderArtifact(value: unknown): value is FolderArtifact;
 export declare function validateInspectionPhase(value: unknown): value is InspectionPhase;
 export declare function validateOwnedObservation(value: unknown): value is OwnedObservation;
+export declare function validateOwnedProviderReply(value: unknown): value is OwnedProviderReply;
 export declare function validateOwnedRepositoryReply(value: unknown): value is OwnedRepositoryReply;
 export declare function validateOwnedWorkspaceReply(value: unknown): value is OwnedWorkspaceReply;
 export declare function validatePinnedBase(value: unknown): value is PinnedBase;
 export declare function validatePreviewObservation(value: unknown): value is PreviewObservation;
 export declare function validatePreviewTarget(value: unknown): value is PreviewTarget;
+export declare function validateProviderObservation(value: unknown): value is ProviderObservation;
+export declare function validateProviderReply(value: unknown): value is ProviderReply;
+export declare function validateProviderRequest(value: unknown): value is ProviderRequest;
+export declare function validateProviderTarget(value: unknown): value is ProviderTarget;
 export declare function validateRegisterRepository(value: unknown): value is RegisterRepository;
 export declare function validateRegistration(value: unknown): value is Registration;
 export declare function validateRegistrationState(value: unknown): value is RegistrationState;
@@ -40,6 +47,9 @@ export declare function validateRepositoryRequest(value: unknown): value is Repo
 export declare function validateRequestFailure(value: unknown): value is RequestFailure;
 export declare function validateRowKind(value: unknown): value is RowKind;
 export declare function validateSample(value: unknown): value is Sample;
+export declare function validateSetupEvidence(value: unknown): value is SetupEvidence;
+export declare function validateSetupPhase(value: unknown): value is SetupPhase;
+export declare function validateSetupProblem(value: unknown): value is SetupProblem;
 export declare function validateSnapshotCursor(value: unknown): value is SnapshotCursor;
 export declare function validateSupervisorSnapshot(value: unknown): value is SupervisorSnapshot;
 export declare function validateSupervisorState(value: unknown): value is SupervisorState;

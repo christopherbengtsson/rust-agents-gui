@@ -1,6 +1,7 @@
 import {
   validateRepositoryRequest,
   validateWorkspaceRequest,
+  validateProviderRequest,
 } from "./generated/contracts/validators";
 import {
   act,
@@ -30,6 +31,10 @@ import type {
   WorkspaceRequest,
   Workspace,
 } from "./lib/workspaces";
+import type {
+  ProviderReply,
+  ProviderRequest,
+} from "./generated/contracts/types";
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
@@ -66,6 +71,24 @@ const workspacePath = `${repositoryPath}/workspace/${workspaceId}`;
 let repositoryRead: (request: RepositoryRequest) => Promise<RepositoryReply>;
 let workspaceRead: (request: WorkspaceRequest) => Promise<WorkspaceReply>;
 let connected: boolean;
+let providerRead: (request: ProviderRequest) => Promise<ProviderReply>;
+const providerTarget = {
+  id: otherId,
+  provider: "codex",
+  executable: "/fixture/codex",
+  codex_home: "/fixture/home",
+  working_directory: "/fixture/neutral",
+  supported_version: "0.169.0",
+};
+const providerEvidence = {
+  version: "0.169.0",
+  authentication: "api_key",
+  billing: "api_key",
+  account: null,
+  plan: null,
+  model_provider: "openai",
+  model: null,
+} as const;
 beforeEach(() => {
   localStorage.clear();
   vi.stubGlobal(
@@ -77,6 +100,19 @@ beforeEach(() => {
     },
   );
   connected = true;
+  providerRead = async (request) =>
+    request.operation === "target"
+      ? { kind: "target", target: providerTarget }
+      : {
+          kind: "observation",
+          observation: {
+            target: providerTarget,
+            revision: 2,
+            phase: "observed",
+            evidence: providerEvidence,
+            problem: null,
+          },
+        };
   vi.stubGlobal("matchMedia", (media: string) =>
     Object.assign(new EventTarget(), {
       media,
@@ -122,6 +158,11 @@ beforeEach(() => {
         validateRepositoryRequest(args.request)
       )
         return repositoryRead(args.request);
+      if (
+        command === "provider_request" &&
+        validateProviderRequest(args.request)
+      )
+        return providerRead(args.request);
       if (
         command === "workspace_request" &&
         validateWorkspaceRequest(args.request)
@@ -391,6 +432,113 @@ test("activating General keeps one Settings history entry and its return destina
   await user.click(screen.getByRole("button", { name: "Back" }));
   await screen.findByRole("heading", { name: "exact repository", level: 1 });
   expect(history.location.pathname).toBe(repositoryPath);
+});
+
+test("Providers and Claude inspection retain one Settings return entry and cause no provider effects", async () => {
+  const user = userEvent.setup();
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  // Enter Claude directly so inspecting it cannot create even Codex interest.
+  await act(async () => history.replace("/settings/providers?provider=claude"));
+  await screen.findByRole("heading", {
+    name: "Claude connection isn't implemented yet",
+  });
+  expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
+  expect(
+    screen
+      .getByRole("button", { name: "Sign in through browser" })
+      .hasAttribute("disabled"),
+  ).toBe(true);
+  expect(
+    screen
+      .getByRole("button", { name: "Run Claude login" })
+      .hasAttribute("disabled"),
+  ).toBe(true);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(0);
+  await user.click(screen.getByRole("link", { name: "General" }));
+  await screen.findByRole("heading", { name: "General", level: 2 });
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(history.location.pathname).toBe(repositoryPath));
+  await waitFor(() =>
+    expect(document.activeElement).toBe(
+      screen.getByRole("link", { name: "Settings" }),
+    ),
+  );
+});
+
+test("Codex defaults to existing API-key evidence, retains stale details on failed refresh and returns after tab changes", async () => {
+  const user = userEvent.setup();
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(0);
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  await user.click(screen.getByRole("link", { name: "Providers" }));
+  await screen.findByRole("region", { name: "Codex setup" });
+  await waitFor(() =>
+    expect(
+      screen.getAllByText("Existing API-key configuration").length,
+    ).toBeGreaterThan(0),
+  );
+  expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "Run codex login" })).toBeNull();
+  providerRead = async (request) =>
+    request.operation === "target"
+      ? { kind: "target", target: providerTarget }
+      : {
+          kind: "observation",
+          observation: {
+            target: providerTarget,
+            revision: 4,
+            phase: "observed",
+            evidence: providerEvidence,
+            problem: "status_read_failed",
+          },
+        };
+  await user.click(screen.getByRole("button", { name: /^Refresh$/ }));
+  await screen.findByText("Codex setup could not be checked");
+  expect(screen.getByText("Stale · readiness unknown")).toBeTruthy();
+  const before = vi
+    .mocked(invoke)
+    .mock.calls.filter(([name]) => name === "provider_request").length;
+  await user.click(screen.getByRole("tab", { name: "Claude Code" }));
+  await screen.findByRole("heading", {
+    name: "Claude connection isn't implemented yet",
+  });
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(before);
+  await user.click(screen.getByRole("link", { name: "General" }));
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(history.location.pathname).toBe(repositoryPath));
+  const requests = vi
+    .mocked(invoke)
+    .mock.calls.filter(([name]) => name === "provider_request")
+    .map(([, args]) => (object(args) ? args.request : undefined));
+  expect(requests).toContainEqual({
+    operation: "observe",
+    target_id: otherId,
+    refresh: true,
+  });
+  expect(
+    requests.every(
+      (request) =>
+        object(request) &&
+        (request.operation === "target" || request.operation === "observe"),
+    ),
+  ).toBe(true);
 });
 
 test("Settings ignores prevented, composing and repeated Escape events", async () => {

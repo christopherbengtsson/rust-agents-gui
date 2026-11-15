@@ -15,6 +15,7 @@ fn snapshot() -> SupervisorSnapshot {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        providers: None,
         journal: Arc::new(crate::observations::Journal::default()),
     }
     .snapshot(None)
@@ -314,6 +315,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
             owner: "owner-b".into(),
             pid: 43,
             workspaces: None,
+            providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         }
         .snapshot(Some(before.cursor.clone()));
@@ -477,6 +479,67 @@ fn targeted_client_rejects_replacement_kind_and_target_without_another_exchange(
 }
 
 #[test]
+fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_before_dispatch() {
+    run(async {
+        use crate::runtimes::*;
+        let client = SupervisorClient::new("/unused-private-state".into());
+        let id = uuid::Uuid::from_u128(1);
+        for (owner, target_id) in [("owner-b", id), ("owner-a", uuid::Uuid::from_u128(2))] {
+            let target = ProviderTarget {
+                id: target_id,
+                provider: "codex".into(),
+                executable: "/fixture/codex".into(),
+                codex_home: "/fixture/home".into(),
+                working_directory: "/fixture/neutral".into(),
+                supported_version: "0.169.0".into(),
+            };
+            let mut calls = 0;
+            let result = client
+                .provider_request_with(
+                    "owner-a",
+                    ProviderRequest::Observe {
+                        target_id: id,
+                        refresh: false,
+                    },
+                    async |_, request| {
+                        calls += 1;
+                        assert!(request.repository.is_none() && request.workspace.is_none());
+                        Ok(Response::Provider {
+                            owner: owner.into(),
+                            result: Ok(ProviderReply::Observation {
+                                observation: ProviderObservation {
+                                    target,
+                                    revision: 2,
+                                    phase: SetupPhase::Observed,
+                                    evidence: None,
+                                    problem: Some(SetupProblem::MissingExecutable),
+                                },
+                            }),
+                        })
+                    },
+                )
+                .await;
+            assert!(result.is_err());
+            assert_eq!(calls, 1);
+        }
+        let mut request = envelope();
+        request.provider = Some(ProviderRequest::Target);
+        request.expected_owner = Some("old-owner".into());
+        assert!(matches!(
+            reject_request(&request, "owner-a").unwrap(),
+            Some(Response::Transport { .. })
+        ));
+        request.expected_owner = Some("owner-a".into());
+        assert!(reject_request(&request, "owner-a").unwrap().is_none());
+        request.repository = Some(RepositoryRequest::List {
+            after: None,
+            refresh: false,
+        });
+        assert!(reject_request(&request, "owner-a").is_err());
+    });
+}
+
+#[test]
 fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
     run(async {
         let first = snapshot();
@@ -530,7 +593,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         use crate::workspaces::*;
         use serde_json::{Value, json};
         let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v9.json"))
+            serde_json::from_str(include_str!("../../../../contracts/observations-v10.json"))
                 .unwrap();
         let owner = "owner-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));
@@ -542,6 +605,7 @@ fn application_corpus_matches_pure_rust_serialization() {
             owner: owner.into(),
             pid: 41,
             workspaces: None,
+            providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         };
         assert_eq!(corpus["protocol"], PROTOCOL_VERSION);
@@ -876,6 +940,7 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
 
 fn envelope() -> Request {
     Request {
+        provider: None,
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
@@ -949,6 +1014,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers_without_domai
             (9, "99.0.0"),
         ] {
             let request = Request {
+                provider: None,
                 protocol,
                 application_version: version.into(),
                 ..envelope()
@@ -1138,6 +1204,7 @@ fn client_private_access_and_connect_failure_precede_io_and_never_retry() {
 fn targeted_exchange_reports_delivery_at_physical_boundary_without_replay() {
     run(async {
         let request = Request {
+            provider: None,
             expected_owner: Some("owner-a".into()),
             repository: Some(RepositoryRequest::List {
                 after: None,
@@ -1437,6 +1504,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
             owner: "owner-a".into(),
             pid: 42,
             workspaces: None,
+            providers: None,
             journal: Arc::default(),
         };
         for workspace in [false, true] {
@@ -1504,6 +1572,7 @@ fn cancellation_closes_pending_request_and_server_handlers_without_effects() {
         assert_eq!(future.await.unwrap_err().kind(), io::ErrorKind::Interrupted);
         assert_eq!(trace.0.lock().unwrap().drops, 1);
         let request = Request {
+            provider: None,
             expected_owner: Some("owner-a".into()),
             repository: Some(RepositoryRequest::List {
                 after: None,

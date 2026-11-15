@@ -26,7 +26,11 @@ export function ownerBound(
       }
       return result;
     }
-    if (command !== "repository_request" && command !== "workspace_request")
+    if (
+      command !== "repository_request" &&
+      command !== "workspace_request" &&
+      command !== "provider_request"
+    )
       return handler(command, args);
     if (!object(args) || typeof args.expectedOwner !== "string")
       throw new Error("Missing caller-owner context in fixture");

@@ -22,7 +22,7 @@ serde_json.workspace = true
 uuid = { version = "1.29.2", features = ["v4", "serde"] }
 ts-rs = { version = "=12.0.1", features = ["uuid-impl"], optional = true }
 schemars = { version = "=1.2.3", features = ["uuid1"], optional = true }
-tokio = { version = "=1.54.1", default-features = false, features = ["io-util", "sync", "time", "net", "rt"] }
+tokio = { version = "=1.54.1", default-features = false, features = ["io-util", "sync", "time", "net", "rt", "process"] }
 tokio-util = { version = "=0.7.20", default-features = false, features = ["codec", "rt"] }
 bytes = { version = "1.12.1", default-features = false }
 futures-core = { version = "0.3.34", default-features = false }

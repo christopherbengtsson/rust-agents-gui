@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { WorkspaceView } from "@/lib/navigation";
 import type { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { CircleAlert, FolderGit2, RefreshCw } from "lucide-react";
@@ -24,6 +25,7 @@ export function WorkspacePanel({
   onRefreshStatus,
   repositories,
   workspaces,
+  setupLink,
 }: {
   view: WorkspaceView;
   onViewChange: (view: WorkspaceView) => void;
@@ -32,15 +34,19 @@ export function WorkspacePanel({
   onRefreshStatus: () => Promise<void>;
   repositories: Repositories;
   workspaces: Workspaces;
+  setupLink?: ReactNode;
 }) {
   const details = workspaces.selected ? (
-    <WorkspaceDetails
-      workspace={workspaces.selected}
-      connected={connection.state === "connected"}
-      stale={connection.state !== "connected" || !!workspaces.error}
-      pending={workspaces.submitting || !!workspaces.pending}
-      onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
-    />
+    <>
+      <WorkspaceDetails
+        workspace={workspaces.selected}
+        connected={connection.state === "connected"}
+        stale={connection.state !== "connected" || !!workspaces.error}
+        pending={workspaces.submitting || !!workspaces.pending}
+        onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
+      />
+      {workspaces.selected.status.state === "ready" && setupLink}
+    </>
   ) : null;
   return (
     <main id="workspace" tabIndex={-1} className="workspace-region flex-1">

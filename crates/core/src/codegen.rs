@@ -62,6 +62,11 @@ impl Exports {
             &OwnedReply::<WorkspaceReply>::name(&self.config),
         );
         self.schema::<OwnedReply<WorkspaceReply>>("OwnedWorkspaceReply");
+        self.alias(
+            "OwnedProviderReply",
+            &OwnedReply::<crate::runtimes::ProviderReply>::name(&self.config),
+        );
+        self.schema::<OwnedReply<crate::runtimes::ProviderReply>>("OwnedProviderReply");
     }
     pub(crate) fn alias(&mut self, name: &str, ty: &str) {
         assert!(
@@ -82,6 +87,7 @@ pub fn render() -> ContractExport {
         declarations: BTreeMap::new(),
         schemas: BTreeMap::new(),
     };
+    crate::runtimes::export_contracts(&mut exports);
     exports.add::<crate::SupervisorState>();
     exports.add::<crate::SupervisorStatus>();
     exports.add::<crate::SnapshotCursor>();

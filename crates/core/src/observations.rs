@@ -15,6 +15,7 @@ pub const MAX_SEQUENCE: u64 = 9_007_199_254_740_991;
 // Collection hints invalidate all related details and retained pending-action interests too.
 // Narrow identity tags permit consumers to avoid unrelated work when identities are known.
 pub enum Target {
+    Provider { target_id: uuid::Uuid },
     Repositories,
     Repository { repository_id: RepositoryId },
     Registration { action_id: ActionId },

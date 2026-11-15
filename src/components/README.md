@@ -382,3 +382,31 @@ interest while its app-lifetime owner drains work and retains validated context.
   setup links explicitly target a provider. All setup/progress consumers use the
   [shared provider observation module](../../.scratch/codex-connection/spec.md#architecture-and-extension-constraints)
   planned on the existing foundation; blocks do not own login attempts or another cache.
+
+### Provider readiness (connection 01)
+
+- **ProviderSetup** (`blocks/provider-setup.tsx`) presents one exact Codex/user
+  configuration's retained evidence, Refresh, recovery guidance and secondary
+  technical details. Use it for provider setup; SupervisorConnection remains
+  transport diagnostics and WorkspaceDetails remains workspace identity/recovery.
+  It receives the cohesive `useProviderSetup` view and callback, owns no IPC,
+  cache, retry or process policy, and renders runtime strings as bounded text.
+  Existing Tabs, Badge, Alert, Button, Spinner and Collapsible retain their Base UI
+  contracts. No toolkit component was added or regenerated. Official instructions
+  are selectable text URLs; this slice adds no external navigation handler.
+- **ClaudeSetup** is an informational section with genuinely disabled connection
+  controls. Its route mounts no provider hook and sends no Claude request.
+- **SettingsLayout** accepts the current `general | providers` section for its
+  landmark label. Section and provider-tab changes replace the current Settings
+  history entry, retaining the initial return/focus provenance. Tab selection
+  lives in Router search; Query owns setup evidence. The workspace's “Check Codex
+  setup” link explicitly targets the Codex user setup without a workspace provider
+  field or automatic provider read on workspace mount.
+- **ProviderObservations** is constructed once by AppObservations and uses its
+  shared Query client, feature freshness, accepted feed and physical scheduler.
+  `useProviderSetup` acquires/releases presentation interests; route preload reads
+  only the default target descriptor. Rust owns initial probe admission, explicit
+  refresh, last-good evidence and cleanup fencing. Returning or reconnecting reads
+  that owner instead of replaying probes. User setup runs from a private neutral
+  directory, with captured executable/environment/Codex home; project overrides
+  and account/profile management are outside this slice.

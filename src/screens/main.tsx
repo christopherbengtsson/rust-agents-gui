@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { WorkspacePanel } from "@/components/blocks/workspace-panel";
 import { useAppRuntime } from "@/app-runtime";
@@ -42,6 +43,18 @@ export function MainScreen() {
     );
   return (
     <WorkspacePanel
+      setupLink={
+        <p className="pt-4 text-sm text-muted-foreground">
+          Ready to set up coding?{" "}
+          <Link
+            to="/settings/providers"
+            search={{ provider: "codex" }}
+            className="underline underline-offset-4"
+          >
+            Check Codex setup
+          </Link>
+        </p>
+      }
       changeReader={app.inspection}
       connection={connection}
       workspaces={workspaces}

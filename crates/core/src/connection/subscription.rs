@@ -337,6 +337,7 @@ fn validate_subscription_id(id: &str) -> io::Result<()> {
 }
 fn request(owner: String, subscription_id: String, after: Option<FeedCursor>) -> Request {
     Request {
+        provider: None,
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,

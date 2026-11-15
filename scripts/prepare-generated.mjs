@@ -101,6 +101,7 @@ export function renderArtifacts(exported) {
     "crates/core/src/connection/subscription.rs",
     "crates/core/src/observations.rs",
     "crates/core/src/workspaces.rs",
+    "crates/core/src/runtimes/provider_connection.rs",
     "crates/core/src/workspaces/creation.rs",
     "crates/core/src/workspaces/inspection.rs",
     "package.json",

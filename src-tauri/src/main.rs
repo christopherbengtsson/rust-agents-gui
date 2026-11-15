@@ -5,6 +5,18 @@ use workspace_core::workspaces::{RepositoryReply, RepositoryRequest};
 use workspace_core::{SupervisorSnapshot, connection::SupervisorConnection};
 
 #[tauri::command]
+async fn provider_request(
+    expected_owner: String,
+    request: workspace_core::runtimes::ProviderRequest,
+    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
+) -> Result<OwnedReply<workspace_core::runtimes::ProviderReply>, RequestFailure> {
+    connected(&connection)?
+        .prepare_provider_request(expected_owner, request)?
+        .run()
+        .await
+}
+
+#[tauri::command]
 async fn repository_request(
     expected_owner: String,
     request: RepositoryRequest,
@@ -116,6 +128,7 @@ fn main() {
             supervisor_status,
             desktop_pid,
             repository_request,
+            provider_request,
             workspace_request,
             observation_subscribe,
             observation_acknowledge,

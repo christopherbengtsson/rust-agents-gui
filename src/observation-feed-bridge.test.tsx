@@ -2,7 +2,7 @@ import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
 import { afterEach, expect, test, vi } from "vitest";
 import { useObservationFeed } from "./hooks/use-observation-feed";
-import corpus from "../contracts/observations-v9.json";
+import corpus from "../contracts/observations-v10.json";
 import { object } from "./lib/observation-contracts";
 
 vi.mock("@tauri-apps/api/core", () => ({

@@ -1,7 +1,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import corpusText from "../contracts/observations-v9.json?raw";
+import corpusText from "../contracts/observations-v10.json?raw";
 import {
   decodeOwnedReply,
   decodeRequestFailure,
@@ -72,7 +72,7 @@ test("connection observations are decoded before they become presentation truth"
 });
 
 test("the shared application corpus passes production TypeScript decoders", () => {
-  expect(corpus.protocol).toBe(9);
+  expect(corpus.protocol).toBe(10);
   expect(decodeSnapshot(corpus.snapshot).cursor.owner).toBe(corpus.owner);
   expect(decodeDesktopPid(corpus.desktop_pid)).toBe(42);
   for (const { request, reply } of corpus.repositories) {

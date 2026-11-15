@@ -139,9 +139,7 @@ export class FeatureQueryCache<Q, R> {
     };
   }
   peek(owner: string, request: Q) {
-    const state = this.client.getQueryState<Observed<R>>(
-      this.key(owner, request),
-    );
+    const state = this.snapshot(owner, request);
     return state
       ? {
           ...state,
@@ -151,6 +149,12 @@ export class FeatureQueryCache<Q, R> {
               : state.error,
         }
       : undefined;
+  }
+  // Query supplies immutable, reference-stable states for React subscriptions.
+  // A discarded revision followed by separate mutable reads is not a reactive
+  // dependency under React Compiler. Keep Query as the sole body owner.
+  snapshot(owner: string, request: Q) {
+    return this.client.getQueryState<Observed<R>>(this.key(owner, request));
   }
   isCurrent(owner: string, request: Q) {
     if (!this.freshness.ready(owner)) return false;

@@ -5,6 +5,7 @@ pub mod codegen;
 pub mod connection;
 mod git;
 pub mod observations;
+pub mod runtimes;
 mod storage;
 pub mod supervisor;
 pub mod workspaces;
@@ -48,6 +49,7 @@ pub struct SupervisorSnapshot {
 pub struct Core {
     owner: String,
     pid: u32,
+    providers: Option<std::sync::Arc<runtimes::ProviderConnections>>,
     workspaces: Option<workspaces::Workspaces>,
     journal: std::sync::Arc<observations::Journal>,
 }
@@ -70,6 +72,7 @@ impl Core {
                     .as_nanos()
             ),
             pid: std::process::id(),
+            providers: None,
             workspaces: None,
             journal: std::sync::Arc::new(observations::Journal::default()),
         }
@@ -78,8 +81,11 @@ impl Core {
     /// Called only by the admitted supervisor owner, never by presentation clients.
     pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
         let workspaces = workspaces::Workspaces::open(directory)?;
+        let journal = workspaces.journal();
+        let providers = runtimes::ProviderConnections::open(journal.clone());
         Ok(Self {
-            journal: workspaces.journal(),
+            providers: Some(std::sync::Arc::new(providers)),
+            journal,
             workspaces: Some(workspaces),
             ..Self::new()
         })
@@ -145,6 +151,7 @@ mod tests {
             owner: "test-owner".into(),
             pid: 42,
             workspaces: None,
+            providers: None,
             journal: std::sync::Arc::new(observations::Journal::default()),
         }
     }
