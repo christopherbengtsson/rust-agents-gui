@@ -66,6 +66,51 @@ pub enum SetupProblem {
     CleanupUncertain,
 }
 
+#[derive(Debug)]
+pub(crate) struct SetupFailure {
+    pub problem: SetupProblem,
+    pub diagnostic: String,
+    source: Option<io::Error>,
+}
+impl SetupFailure {
+    pub(crate) fn at(problem: SetupProblem, detail: impl Into<String>) -> Self {
+        Self {
+            problem,
+            diagnostic: detail.into().chars().take(512).collect(),
+            source: None,
+        }
+    }
+    pub(crate) fn io(stage: &str, error: io::Error) -> Self {
+        let diagnostic = format!(
+            "{stage}: {:?}; OS error {:?}",
+            error.kind(),
+            error.raw_os_error()
+        );
+        Self {
+            problem: SetupProblem::StatusReadFailed,
+            diagnostic,
+            source: Some(error),
+        }
+    }
+}
+impl From<SetupProblem> for SetupFailure {
+    fn from(problem: SetupProblem) -> Self {
+        Self::at(problem, "Setup evidence could not be interpreted")
+    }
+}
+impl std::fmt::Display for SetupFailure {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.diagnostic)
+    }
+}
+impl std::error::Error for SetupFailure {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.source
+            .as_ref()
+            .map(|source| source as &dyn std::error::Error)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
@@ -84,6 +129,7 @@ pub struct ProviderObservation {
     pub phase: SetupPhase,
     pub evidence: Option<SetupEvidence>,
     pub problem: Option<SetupProblem>,
+    pub diagnostic: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -128,6 +174,7 @@ impl ProviderConnections {
                         phase: SetupPhase::Unknown,
                         evidence: None,
                         problem: None,
+                        diagnostic: None,
                     },
                 },
             )])),
@@ -186,7 +233,7 @@ impl ProviderConnections {
                 )
             })
     }
-    fn observe_with<F: Future<Output = Result<SetupEvidence, SetupProblem>> + Send + 'static>(
+    fn observe_with<F: Future<Output = Result<SetupEvidence, SetupFailure>> + Send + 'static>(
         self: &Arc<Self>,
         id: uuid::Uuid,
         refresh: bool,
@@ -242,7 +289,7 @@ impl ProviderConnections {
         &self,
         id: uuid::Uuid,
         revision: u32,
-        outcome: Result<SetupEvidence, SetupProblem>,
+        outcome: Result<SetupEvidence, SetupFailure>,
     ) {
         let mut records = self.records.lock().expect("provider records poisoned");
         let Some(entry) = records
@@ -253,6 +300,7 @@ impl ProviderConnections {
         };
         match outcome {
             Ok(evidence) => {
+                entry.snapshot.diagnostic = None;
                 entry.snapshot.problem = if evidence.authentication == Authentication::Unavailable {
                     Some(SetupProblem::AuthenticationUnavailable)
                 } else {
@@ -260,7 +308,10 @@ impl ProviderConnections {
                 };
                 entry.snapshot.evidence = Some(evidence);
             }
-            Err(problem) => entry.snapshot.problem = Some(problem),
+            Err(failure) => {
+                entry.snapshot.problem = Some(failure.problem);
+                entry.snapshot.diagnostic = Some(failure.diagnostic);
+            }
         }
         entry.snapshot.phase = SetupPhase::Observed;
         entry.snapshot.revision += 1; // start reserves this final revision.
@@ -279,6 +330,7 @@ impl ProviderConnections {
         };
         entry.snapshot.phase = SetupPhase::CleanupUncertain;
         entry.snapshot.problem = Some(SetupProblem::CleanupUncertain);
+        entry.snapshot.diagnostic=Some("Complete owned process-group/pipe cleanup was not verified within EOF/TERM/KILL deadlines; the group leader remains retained".into());
         self.journal
             .publish(vec![Target::Provider { target_id: id }]);
         drop(records);
@@ -340,6 +392,7 @@ impl ProviderConnections {
                     phase: SetupPhase::Unknown,
                     evidence: None,
                     problem: None,
+                    diagnostic: None,
                 },
             },
         );
@@ -369,6 +422,18 @@ mod tests {
     use std::sync::Arc;
 
     #[test]
+    fn diagnostics_retain_source_without_exporting_its_untrusted_message() {
+        let failure = SetupFailure::io(
+            "app-server spawn",
+            io::Error::new(io::ErrorKind::PermissionDenied, "do-not-export-secret"),
+        );
+        assert!(failure.diagnostic.contains("PermissionDenied"));
+        assert!(failure.diagnostic.contains("app-server spawn"));
+        assert!(!failure.diagnostic.contains("do-not-export-secret"));
+        assert!(std::error::Error::source(&failure).is_some());
+    }
+
+    #[test]
     fn independent_targets_coalesce_reads_and_reject_late_or_cross_target_evidence() {
         run(async {
             let owner = Arc::new(ProviderConnections::test_owner());
@@ -384,7 +449,8 @@ mod tests {
                 .unwrap();
             assert_eq!(owner.read(b).unwrap().phase, SetupPhase::Unknown);
             assert!(owner.read(uuid::Uuid::from_u128(99)).is_err());
-            send.send(Err(SetupProblem::MissingExecutable)).unwrap();
+            send.send(Err(SetupProblem::MissingExecutable.into()))
+                .unwrap();
             owner.join().await.unwrap();
             assert_eq!(
                 owner.read(a).unwrap().problem,
@@ -419,7 +485,9 @@ mod tests {
                 .unwrap();
             owner.join().await.unwrap();
             owner
-                .observe_with(a, true, || async { Err(SetupProblem::StatusReadFailed) })
+                .observe_with(a, true, || async {
+                    Err(SetupProblem::StatusReadFailed.into())
+                })
                 .unwrap();
             owner.join().await.unwrap();
             assert!(owner.read(a).unwrap().evidence.is_some());
@@ -438,7 +506,8 @@ mod tests {
                 })
                 .unwrap();
             assert_eq!(owner.read(a).unwrap().phase, SetupPhase::CleanupUncertain);
-            send.send(Err(SetupProblem::StatusReadFailed)).unwrap();
+            send.send(Err(SetupProblem::StatusReadFailed.into()))
+                .unwrap();
             owner.join().await.unwrap();
             assert_eq!(owner.read(a).unwrap().phase, SetupPhase::Observed);
         });

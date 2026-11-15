@@ -20,6 +20,7 @@ state.mkdir(mode=0o700)
 control = root / "control.json"
 control.write_text(json.dumps({"scenario": "ready"}))
 supervisor_path = Path(sys.argv[1]).resolve(strict=True)
+protocol = int(subprocess.check_output([str(supervisor_path), "--protocol-version"], text=True))
 runtime = Path(__file__).with_name("runtime.py").resolve(strict=True)
 missing = "--missing" in sys.argv
 if missing:
@@ -32,7 +33,7 @@ assert supervisor.stdout.readline() == b"ready\n"
 
 
 def exchange(**fields):
-    payload = json.dumps({"protocol": 10, "application_version": "0.1.0", "after": None, **fields}).encode()
+    payload = json.dumps({"protocol": protocol, "application_version": "0.1.0", "after": None, **fields}).encode()
     with socket.socket(socket.AF_UNIX) as peer:
         peer.settimeout(3)
         peer.connect(str(state / "supervisor.sock"))
@@ -83,7 +84,7 @@ def events():
     return [json.loads(line) for line in file.read_text().splitlines()] if file.exists() else []
 
 
-report = {"root": str(root), "owner": owner, "supervisor_pid": supervisor.pid, "supervisor": str(supervisor_path), "supervisor_sha256": hashlib.sha256(supervisor_path.read_bytes()).hexdigest(), "target": target, "checks": [], "limits": "Synthetic runtime; no native authentication, login, thread, turn or Claude process."}
+report = {"protocol": protocol, "root": str(root), "owner": owner, "supervisor_pid": supervisor.pid, "supervisor": str(supervisor_path), "supervisor_sha256": hashlib.sha256(supervisor_path.read_bytes()).hexdigest(), "target": target, "checks": [], "limits": "Synthetic runtime; no native authentication, login, thread, turn or Claude process."}
 output = Path(sys.argv[2])
 assert not output.exists(), "Choose a new evidence destination; preserve prior attempts"
 desktop = None
@@ -160,7 +161,7 @@ try:
             ("malformed", "incompatible_protocol", "chatgpt"), ("oversized", "incompatible_protocol", "chatgpt"),
             ("unrelated_id", "incompatible_protocol", "chatgpt"), ("unexpected_request", "incompatible_protocol", "chatgpt"),
             ("eof", "status_read_failed", "chatgpt"), ("deadline", "status_read_failed", "chatgpt"),
-            ("cleanup_delay", "status_read_failed", "chatgpt"), ("ready", None, "chatgpt"),
+            ("cleanup_delay", "status_read_failed", "chatgpt"), ("fork_descendant", None, "chatgpt"), ("ready", None, "chatgpt"),
         ]:
             def run_case(scenario=scenario, problem=problem, auth=auth):
                 control.write_text(json.dumps({"scenario": scenario}))
@@ -168,6 +169,12 @@ try:
                 result = settled()
                 assert result["problem"] == problem, result
                 assert result["evidence"]["authentication"] == auth, result
+                if protocol >= 11 and problem and problem != "authentication_unavailable":
+                    assert result["diagnostic"], result
+                if protocol >= 11 and scenario == "version_exit":
+                    assert "Some(7)" in result["diagnostic"], result
+                if protocol >= 11 and scenario == "config_failure":
+                    assert "-32603" in result["diagnostic"], result
                 return result
             check(scenario, run_case)
 

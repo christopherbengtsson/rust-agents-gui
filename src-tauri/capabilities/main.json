@@ -3,5 +3,18 @@
   "identifier": "main",
   "description": "The main window may choose a repository directory using the native open dialog.",
   "windows": ["main"],
-  "permissions": ["dialog:allow-open"]
+  "permissions": [
+    "dialog:allow-open",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        {
+          "url": "https://developers.openai.com/codex/cli"
+        },
+        {
+          "url": "https://developers.openai.com/codex/auth"
+        }
+      ]
+    }
+  ]
 }

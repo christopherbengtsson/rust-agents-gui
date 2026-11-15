@@ -1,4 +1,4 @@
-use crate::runtimes::{Authentication, BillingRoute, SetupEvidence, SetupProblem};
+use crate::runtimes::{Authentication, BillingRoute, SetupEvidence, SetupFailure, SetupProblem};
 use serde_json::{Value, json};
 use tokio::io::{AsyncBufReadExt, AsyncRead, AsyncWrite, AsyncWriteExt, BufReader};
 use tokio::time::{Instant, timeout_at};
@@ -107,48 +107,60 @@ fn setup(account: &Value, config: &Value) -> Result<SetupEvidence, SetupProblem>
     })
 }
 
-async fn send<S: AsyncWrite + Unpin>(stream: &mut S, value: Value) -> Result<(), SetupProblem> {
-    let mut bytes = serde_json::to_vec(&value).map_err(|_| SetupProblem::StatusReadFailed)?;
+async fn send<S: AsyncWrite + Unpin>(stream: &mut S, value: Value) -> Result<(), SetupFailure> {
+    let mut bytes = serde_json::to_vec(&value).expect("JSON Value serialization is infallible");
     bytes.push(b'\n');
     stream
         .write_all(&bytes)
         .await
-        .map_err(|_| SetupProblem::StatusReadFailed)?;
+        .map_err(|error| SetupFailure::io("provider stdin write", error))?;
     stream
         .flush()
         .await
-        .map_err(|_| SetupProblem::StatusReadFailed)
+        .map_err(|error| SetupFailure::io("provider stdin flush", error))
 }
-
 async fn receive<S: AsyncRead + Unpin>(
     stream: &mut BufReader<S>,
     id: u32,
-) -> Result<Value, SetupProblem> {
-    // fill_buf/consume retain buffering across messages and enforce a byte bound
-    // before allocation. EOF without a line terminator is a truncated frame.
+) -> Result<Value, SetupFailure> {
     let mut bytes = Vec::new();
     let mut notifications = 0;
     loop {
         let available = stream
             .fill_buf()
             .await
-            .map_err(|_| SetupProblem::StatusReadFailed)?;
+            .map_err(|error| SetupFailure::io("provider stdout read", error))?;
         if available.is_empty() {
-            return Err(SetupProblem::StatusReadFailed);
+            return Err(SetupFailure::at(
+                SetupProblem::StatusReadFailed,
+                format!("EOF before complete response {id}"),
+            ));
         }
         let count = available
             .iter()
-            .position(|b| *b == b'\n')
+            .position(|byte| *byte == b'\n')
             .map(|n| n + 1)
             .unwrap_or(available.len());
         if bytes.len() + count > MAX_FRAME {
-            return Err(SetupProblem::IncompatibleProtocol);
+            return Err(SetupFailure::at(
+                SetupProblem::IncompatibleProtocol,
+                "Provider frame exceeded 262144 bytes",
+            ));
         }
         bytes.extend_from_slice(&available[..count]);
         stream.consume(count);
         if bytes.last() == Some(&b'\n') {
-            let value: Value =
-                serde_json::from_slice(&bytes).map_err(|_| SetupProblem::IncompatibleProtocol)?;
+            let value: Value = serde_json::from_slice(&bytes).map_err(|error| {
+                SetupFailure::at(
+                    SetupProblem::IncompatibleProtocol,
+                    format!(
+                        "Provider JSON {:?} error at line {}, column {}",
+                        error.classify(),
+                        error.line(),
+                        error.column()
+                    ),
+                )
+            })?;
             if value.get("id").is_none()
                 && value.get("method").and_then(Value::as_str).is_some()
                 && value.get("result").is_none()
@@ -156,33 +168,39 @@ async fn receive<S: AsyncRead + Unpin>(
             {
                 notifications += 1;
                 if notifications > 64 {
-                    return Err(SetupProblem::IncompatibleProtocol);
+                    return Err(SetupFailure::at(
+                        SetupProblem::IncompatibleProtocol,
+                        "Notification budget exceeded while awaiting setup response",
+                    ));
                 }
                 bytes.clear();
                 continue;
             }
-            return reply(value, id);
+            let rpc_code = value
+                .get("error")
+                .and_then(|error| error.get("code"))
+                .and_then(Value::as_i64);
+            return reply(value,id).map_err(|problem|SetupFailure::at(problem,format!("Setup response {id} rejected; RPC code {rpc_code:?}; expected exact response ID and no server request")));
         }
     }
 }
-
 pub(super) async fn inspect<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     read: R,
     mut write: W,
     deadline: Instant,
-) -> Result<SetupEvidence, SetupProblem> {
-    timeout_at(deadline, async {
-        let mut read = BufReader::new(read);
+) -> Result<SetupEvidence, SetupFailure> {
+    timeout_at(deadline,async {
+        let mut read=BufReader::new(read);
         send(&mut write,json!({"id":1,"method":"initialize","params":{"clientInfo":{"name":"agent_workspace","version":env!("CARGO_PKG_VERSION")},"capabilities":{"explicitGatewayOauth":true}}})).await?;
-        let initialized = receive(&mut read,1).await?;
-        if !initialized.is_object() { return Err(SetupProblem::IncompatibleProtocol); }
+        let initialized=receive(&mut read,1).await?;
+        if !initialized.is_object() {return Err(SetupFailure::at(SetupProblem::IncompatibleProtocol,"initialize result must be an object"));}
         send(&mut write,json!({"method":"initialized","params":{}})).await?;
         send(&mut write,json!({"id":2,"method":"account/read","params":{"refreshToken":false}})).await?;
-        let account = receive(&mut read,2).await?;
+        let account=receive(&mut read,2).await?;
         send(&mut write,json!({"id":3,"method":"config/read","params":{"includeLayers":false}})).await?;
-        let config = receive(&mut read,3).await?;
-        setup(&account,&config)
-    }).await.map_err(|_| SetupProblem::StatusReadFailed)?
+        let config=receive(&mut read,3).await?;
+        setup(&account,&config).map_err(|problem|SetupFailure::at(problem,"Invalid or unsupported account/configuration fields"))
+    }).await.map_err(|_|SetupFailure::at(SetupProblem::StatusReadFailed,"Readiness protocol exceeded its absolute 15-second deadline"))?
 }
 
 #[cfg(test)]
@@ -257,8 +275,11 @@ mod tests {
             let mut sent = Vec::new();
             let deadline = Instant::now() + std::time::Duration::from_secs(15);
             assert_eq!(
-                inspect(read, &mut sent, deadline).await,
-                Err(SetupProblem::StatusReadFailed)
+                inspect(read, &mut sent, deadline)
+                    .await
+                    .unwrap_err()
+                    .problem,
+                SetupProblem::StatusReadFailed
             );
             assert_eq!(Instant::now(), deadline);
         });
@@ -283,6 +304,20 @@ mod tests {
         assert_eq!(evidence.billing, BillingRoute::Unknown);
         assert!(setup(&json!({"account":{"type":"apiKey"}}), &json!({"config":{}})).is_err());
         assert!(setup(&signed_out, &json!({})).is_err());
+    }
+
+    #[test]
+    fn rpc_failure_diagnostics_keep_codes_and_discard_provider_messages() {
+        run(async {
+            let bytes =
+                b"{\"id\":3,\"error\":{\"code\":-32603,\"message\":\"do-not-export-secret\"}}\n";
+            let failure = receive(&mut BufReader::new(bytes.as_slice()), 3)
+                .await
+                .unwrap_err();
+            assert_eq!(failure.problem, SetupProblem::StatusReadFailed);
+            assert!(failure.diagnostic.contains("-32603"));
+            assert!(!failure.diagnostic.contains("do-not-export-secret"));
+        });
     }
 
     #[test]

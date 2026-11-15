@@ -22,6 +22,7 @@ const observation = (id = a) => ({
     phase: "observed",
     evidence: null,
     problem: "missing_executable",
+    diagnostic: "synthetic missing executable",
   },
 });
 const flush = async () => {

@@ -30,7 +30,7 @@ use tokio::{
 use tokio_util::sync::CancellationToken;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 10;
+pub const PROTOCOL_VERSION: u32 = 11;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

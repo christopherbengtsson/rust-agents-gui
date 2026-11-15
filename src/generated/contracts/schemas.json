@@ -1589,6 +1589,12 @@
       },
       "ProviderObservation": {
         "properties": {
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "evidence": {
             "anyOf": [
               {
@@ -1626,7 +1632,8 @@
           "revision",
           "phase",
           "evidence",
-          "problem"
+          "problem",
+          "diagnostic"
         ],
         "type": "object"
       },
@@ -3319,6 +3326,12 @@
     },
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
+      "diagnostic": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
       "evidence": {
         "anyOf": [
           {
@@ -3356,7 +3369,8 @@
       "revision",
       "phase",
       "evidence",
-      "problem"
+      "problem",
+      "diagnostic"
     ],
     "title": "ProviderObservation",
     "type": "object"
@@ -3383,6 +3397,12 @@
       },
       "ProviderObservation": {
         "properties": {
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "evidence": {
             "anyOf": [
               {
@@ -3420,7 +3440,8 @@
           "revision",
           "phase",
           "evidence",
-          "problem"
+          "problem",
+          "diagnostic"
         ],
         "type": "object"
       },

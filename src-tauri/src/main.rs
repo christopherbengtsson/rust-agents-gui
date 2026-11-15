@@ -122,6 +122,11 @@ fn desktop_pid() -> workspace_core::DesktopPid {
 fn main() {
     let connection = std::sync::Arc::new(Mutex::new(None::<SupervisorConnection>));
     tauri::Builder::default()
+        .plugin(
+            tauri_plugin_opener::Builder::new()
+                .open_js_links_on_click(false)
+                .build(),
+        )
         .plugin(tauri_plugin_dialog::init())
         .manage(connection.clone())
         .invoke_handler(tauri::generate_handler![

@@ -29,6 +29,15 @@ if sys.argv[1:] != ["app-server"]:
     sys.exit(9)
 if scenario == "cleanup_delay":
     signal.signal(signal.SIGTERM, signal.SIG_IGN)
+if scenario == "fork_descendant":
+    child = os.fork()
+    if child == 0:
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        record("descendant_start")
+        # Keep inherited pipes open after the parent exits. Only the owned group
+        # cleanup can stop this synthetic descendant; it is never native proof.
+        while True:
+            time.sleep(1)
 
 
 def send(value):

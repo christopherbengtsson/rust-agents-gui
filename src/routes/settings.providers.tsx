@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { openProviderHelp, type ProviderHelpTopic } from "@/lib/provider-help";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAppRuntime } from "@/app-runtime";
 import { ProviderSetup, ClaudeSetup } from "@/components/blocks/provider-setup";
@@ -29,13 +31,24 @@ export const Route = createFileRoute("/settings/providers")({
   component: ProvidersScreen,
 });
 function CodexSetup() {
+  const [helpError, setHelpError] = useState<string>();
   const { app, connection } = useAppRuntime();
   const owner =
     connection.state === "connected"
       ? connection.observation.snapshot.cursor.owner
       : undefined;
   const setup = useProviderSetup(app, owner);
-  return <ProviderSetup setup={setup} />;
+  const openHelp = (topic: ProviderHelpTopic) => {
+    setHelpError(undefined);
+    void openProviderHelp(topic).catch(() =>
+      setHelpError(
+        "The documentation could not be opened. Use developers.openai.com/codex in your browser.",
+      ),
+    );
+  };
+  return (
+    <ProviderSetup setup={setup} onOpenHelp={openHelp} helpError={helpError} />
+  );
 }
 function ProvidersScreen() {
   const { provider } = Route.useSearch();

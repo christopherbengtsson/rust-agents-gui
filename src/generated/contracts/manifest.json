@@ -9,26 +9,26 @@
   "contract": "draft2020-12 serialization; JSON numbers; UUID formats",
   "sources": {
     "Cargo.toml": "b2aca405e934a2f711af3c32f355f7aac7ebca45f5aba052e018b01d0bd9159a",
-    "Cargo.lock": "44aed05f02f1f0b5fa36e77f8f8d88737f2e08d4a786196e70254a5ec156bffd",
+    "Cargo.lock": "3b7eb7779b2198ac3f92e5af13ea217f0b6d30ee39ce68e2796b714c8fed0678",
     "crates/core/Cargo.toml": "b48d8c06b007236a92aebc222d6936b14ed2a17a4dacbbb0cea169332a4a0b1d",
     "crates/core/src/lib.rs": "b4470cfefd1f376ae0eb339802697023f564364a1ee5d4c8ca0c71f30c8d6798",
     "crates/core/src/codegen.rs": "8942d299dde04dffab052d0f810d3f39c595e8b3b84a1d7ab55220967f00286a",
     "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
-    "crates/core/src/connection.rs": "28908a19dc47a7dba84adfe6f8a8164b39a036c95c342ecb493f0c2f74b1537b",
+    "crates/core/src/connection.rs": "e58f979d2e3a090c5086e4d1154b7d0aac7c029a62243fcb729630b8e19f7de2",
     "crates/core/src/connection/subscription.rs": "ea356c7b7976f8b6173e3dd8e72477553dcce9ec947c6668cbde3e4e8099e395",
     "crates/core/src/observations.rs": "a3c41684ce06dd447d3493d9794bef6da4fcc1adabb99bfab67709da756968ee",
     "crates/core/src/workspaces.rs": "856ed97f564a2baa6936c6bd3703f102f8002fd50f9b99be651598f746e38209",
-    "crates/core/src/runtimes/provider_connection.rs": "274f3290a0c362cc15e4bb47f88e97d762fd742d05ec108e9f28b50e3c2783e1",
+    "crates/core/src/runtimes/provider_connection.rs": "fda9512c6010831f7198dc701915be0de0b60a62cd1da98c8000d7c7ca08f39b",
     "crates/core/src/workspaces/creation.rs": "a7daf40887919ba412f71977469ce04342071189217e58ff983bb024a77bcdb5",
     "crates/core/src/workspaces/inspection.rs": "afb4127ad4bad14f1930b7dc04fc1cd4a0d10d40045f5e537cfac2d52ead5453",
-    "package.json": "7339708a61e0360038f88ecb099373cb58daee1556066cddc86b8ffbe421267d",
-    "pnpm-lock.yaml": "1205860fa858b2143db1667c0f8dd9ef7337279d1755bce7240b94e07aa4e6ea",
+    "package.json": "7b23413da273463c4f6fabd1a5acd7dc206d2c6bb5086d7edb5bd833568ec705",
+    "pnpm-lock.yaml": "4e9e8b73ebb988a1f67d329a55dd93638089ebbb9cee03bf8599af0ce2f5b44c",
     "scripts/prepare-generated.mjs": "59d01036a330dc25e3b61162ad490ad31fd8931452dbb726c46fb425f74eaf92"
   },
   "artifacts": {
-    "types.ts": "17e813d80099ac44bf532a386d39d444b459e27cbe4e41aeff61cb99855f21b4",
-    "schemas.json": "76dd70d1655bcc3e96bcd0d8a1edba2e13a4276ed0aefec1a22add920edf07d6",
-    "validators.js": "5bfc4dd3d80298b7524f7ee005a984882be1006483065c9d4d3f4c0a6812bff9",
+    "types.ts": "7bd6df8abb0cc6787a6b1ce1b5eb81328e6853c2421ccd58ab2c2101e6f41105",
+    "schemas.json": "5efa01544631117732250dd564ac94d70ec04fa023ca8ca05acfa866ecc4bb6f",
+    "validators.js": "dee6455ddcd718a55082c66883f9e803b0b6e27b01a78d8c807fa8630f6f43cd",
     "validators.d.ts": "f447c4420d2f5b44bab10de1ef78c76e9c12863ef92f55dd831a5ed786e5e903"
   }
 }

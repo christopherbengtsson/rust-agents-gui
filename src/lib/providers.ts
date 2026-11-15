@@ -50,6 +50,9 @@ export function decodeProviderReply(
       Number.isSafeInteger(observation.revision) &&
       observation.revision >= 0 &&
       observation.revision <= 0xffff_ffff &&
+      (observation.diagnostic === null ||
+        (text(observation.diagnostic, 512) &&
+          !/[\u0000-\u001f\u007f]/.test(observation.diagnostic))) &&
       (!evidence ||
         [
           evidence.version,

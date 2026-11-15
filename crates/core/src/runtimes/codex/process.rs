@@ -1,6 +1,6 @@
 //! Private process/stdio mechanics. No authentication or readiness policy here.
 use super::protocol;
-use crate::runtimes::{ProviderTarget, SetupEvidence, SetupProblem};
+use crate::runtimes::{ProviderTarget, SetupEvidence, SetupFailure, SetupProblem};
 use std::{
     ffi::OsString, io, os::unix::fs::DirBuilderExt, path::PathBuf, process::Stdio, time::Duration,
 };
@@ -109,19 +109,20 @@ impl Launch {
     }
 }
 
-fn spawn(launch: &Launch, argument: &str) -> Result<Child, SetupProblem> {
+fn spawn(launch: &Launch, argument: &str) -> Result<Child, SetupFailure> {
     launch.command(argument).spawn().map_err(|error| {
-        if error.kind() == io::ErrorKind::NotFound {
-            SetupProblem::MissingExecutable
-        } else {
-            SetupProblem::StatusReadFailed
+        let missing = error.kind() == io::ErrorKind::NotFound;
+        let mut failure = SetupFailure::io(argument, error);
+        if missing {
+            failure.problem = SetupProblem::MissingExecutable;
         }
+        failure
     })
 }
 
 trait Cleanup {
     fn signal(&mut self, signal: i32) -> io::Result<()>;
-    async fn wait(&mut self, budget: Duration) -> io::Result<bool>;
+    async fn quiescent(&mut self, budget: Duration) -> io::Result<bool>;
 }
 impl Cleanup for Child {
     fn signal(&mut self, signal: i32) -> io::Result<()> {
@@ -142,30 +143,52 @@ impl Cleanup for Child {
             }
         }
     }
-    async fn wait(&mut self, budget: Duration) -> io::Result<bool> {
-        timeout(budget, Child::wait(self))
-            .await
-            .map(|result| result.map(|_| true))
-            .unwrap_or(Ok(false))
+    async fn quiescent(&mut self, budget: Duration) -> io::Result<bool> {
+        let pid = self
+            .id()
+            .and_then(|pid| i32::try_from(pid).ok())
+            .ok_or_else(|| io::Error::other("owned group leader unavailable"))?;
+        let deadline = Instant::now() + budget;
+        loop {
+            if group_quiescent(pid)? {
+                return Ok(true);
+            }
+            if Instant::now() >= deadline {
+                return Ok(false);
+            }
+            tokio::time::sleep_until((Instant::now() + Duration::from_millis(20)).min(deadline))
+                .await;
+        }
     }
 }
 async fn cleanup(child: &mut impl Cleanup) -> bool {
-    if child.wait(Duration::from_secs(2)).await.unwrap_or(false) {
-        return true;
-    }
-    if child.signal(libc::SIGTERM).is_ok()
-        && child.wait(Duration::from_secs(2)).await.unwrap_or(false)
+    if child
+        .quiescent(Duration::from_secs(2))
+        .await
+        .unwrap_or(false)
     {
         return true;
     }
-    child.signal(libc::SIGKILL).is_ok() && child.wait(Duration::from_secs(2)).await.unwrap_or(false)
+    if child.signal(libc::SIGTERM).is_ok()
+        && child
+            .quiescent(Duration::from_secs(2))
+            .await
+            .unwrap_or(false)
+    {
+        return true;
+    }
+    child.signal(libc::SIGKILL).is_ok()
+        && child
+            .quiescent(Duration::from_secs(2))
+            .await
+            .unwrap_or(false)
 }
 
 pub(in crate::runtimes) async fn probe(
     launch: Launch,
     cancel: &CancellationToken,
     uncertain: impl Fn(),
-) -> Result<SetupEvidence, SetupProblem> {
+) -> Result<SetupEvidence, SetupFailure> {
     let directory = launch.directory.clone();
     tokio::task::spawn_blocking(move || {
         match std::fs::DirBuilder::new().mode(0o700).create(&directory) {
@@ -176,11 +199,19 @@ pub(in crate::runtimes) async fn probe(
         crate::supervisor::check_private(&directory, true)
     })
     .await
-    .map_err(|_| SetupProblem::StatusReadFailed)?
-    .map_err(|_| SetupProblem::StatusReadFailed)?;
+    .map_err(|_| {
+        SetupFailure::at(
+            SetupProblem::StatusReadFailed,
+            "Setup-directory worker failed",
+        )
+    })?
+    .map_err(|error| SetupFailure::io("private setup directory", error))?;
     version(&launch, cancel, &uncertain).await?;
     if cancel.is_cancelled() {
-        return Err(SetupProblem::StatusReadFailed);
+        return Err(SetupFailure::at(
+            SetupProblem::StatusReadFailed,
+            "Setup cancelled during supervisor shutdown",
+        ));
     }
     let mut child = spawn(&launch, "app-server")?;
     let stderr = child.stderr.take().expect("piped stderr");
@@ -200,15 +231,22 @@ pub(in crate::runtimes) async fn probe(
             Instant::now() + Duration::from_secs(15),
         ))
         .await
-        .unwrap_or(Err(SetupProblem::StatusReadFailed));
-    finish(&mut child, drain, &uncertain).await;
+        .unwrap_or_else(|| {
+            Err(SetupFailure::at(
+                SetupProblem::StatusReadFailed,
+                "Setup cancelled during supervisor shutdown",
+            ))
+        });
+    finish(&mut child, drain, &uncertain)
+        .await
+        .map_err(|error| SetupFailure::io("owned process cleanup", error))?;
     result
 }
 async fn version(
     launch: &Launch,
     cancel: &CancellationToken,
     uncertain: &impl Fn(),
-) -> Result<(), SetupProblem> {
+) -> Result<(), SetupFailure> {
     let mut child = spawn(launch, "--version")?;
     drop(child.stdin.take());
     let stderr = child.stderr.take().expect("piped stderr");
@@ -226,43 +264,162 @@ async fn version(
             stdout
                 .read_to_end(&mut bytes)
                 .await
-                .map_err(|_| SetupProblem::StatusReadFailed)?;
+                .map_err(|error| SetupFailure::io("version stdout", error))?;
             if bytes.len() > 1024 {
-                return Err(SetupProblem::IncompatibleProtocol);
+                return Err(SetupFailure::at(
+                    SetupProblem::IncompatibleProtocol,
+                    "Version output exceeded 1024 bytes",
+                ));
             }
-            let status = child
-                .wait()
-                .await
-                .map_err(|_| SetupProblem::StatusReadFailed)?;
-            protocol::version(&bytes, status.success())
+            Ok(())
         }))
         .await
     {
         Some(Ok(result)) => result,
-        _ => Err(SetupProblem::StatusReadFailed),
+        _ => Err(SetupFailure::at(
+            SetupProblem::StatusReadFailed,
+            "Version read exceeded its five-second deadline or was cancelled",
+        )),
     };
     drop(stdout);
-    finish(&mut child, drain, uncertain).await;
-    result
+    let status = finish(&mut child, drain, uncertain)
+        .await
+        .map_err(|error| SetupFailure::io("version cleanup", error))?;
+    result?;
+    protocol::version(&bytes, status.success()).map_err(|problem| {
+        SetupFailure::at(
+            problem,
+            format!(
+                "Version command exit {:?}; expected codex-cli 0.169.0",
+                status.code()
+            ),
+        )
+    })
 }
 async fn finish(
     child: &mut Child,
     drain: tokio::task::JoinHandle<io::Result<u64>>,
     uncertain: &impl Fn(),
-) {
+) -> io::Result<std::process::ExitStatus> {
     if !cleanup(child).await {
         uncertain();
-        // Keep the owned handle and worker alive. Logical timeout never grants
-        // replacement authority; a later real exit is still observed/reaped.
-        if child.wait().await.is_err() {
-            std::future::pending::<()>().await;
+        // Never reap the group leader while a live member or an unknown group
+        // remains. Its unreaped PID prevents process-group identity reuse.
+        while !child
+            .quiescent(Duration::from_millis(100))
+            .await
+            .unwrap_or(false)
+        {
+            tokio::time::sleep(Duration::from_millis(100)).await;
         }
     }
     let mut drain = drain;
-    if timeout(Duration::from_secs(2), &mut drain).await.is_err() {
-        drain.abort();
-        let _ = drain.await; // Join the stopped pipe reader before releasing work.
+    let drained = match timeout(Duration::from_secs(2), &mut drain).await {
+        Ok(result) => result,
+        Err(_) => {
+            uncertain();
+            drain.await
+        }
+    };
+    // A pipe that outlives the quiescent group may belong to escaped work.
+    // Keep ownership/fencing until its physical reader actually completes.
+    if !matches!(drained, Ok(Ok(_))) {
+        uncertain();
+        std::future::pending::<()>().await;
     }
+    child.wait().await
+}
+
+#[cfg(target_os = "macos")]
+fn group_quiescent(group: i32) -> io::Result<bool> {
+    let group_id = u32::try_from(group).map_err(io::Error::other)?;
+    let mut status = std::mem::MaybeUninit::<libc::siginfo_t>::zeroed();
+    // SAFETY: correctly aligned initialized storage; P_PID targets the retained
+    // direct child only. WNOWAIT observes exit without relinquishing its identity.
+    if unsafe {
+        libc::waitid(
+            libc::P_PID,
+            group_id,
+            status.as_mut_ptr(),
+            libc::WEXITED | libc::WNOHANG | libc::WNOWAIT,
+        )
+    } != 0
+    {
+        return Err(io::Error::last_os_error());
+    }
+    // SAFETY: successful waitid initialized this record; si_pid is its PID field.
+    let exited = unsafe { status.assume_init().si_pid() } == group;
+    if !exited {
+        return Ok(false);
+    }
+    let mut pids = [0i32; 512];
+    let capacity = i32::try_from(std::mem::size_of_val(&pids)).expect("bounded PID array");
+    // SAFETY: initialized writable array with the exact supplied byte capacity.
+    // PROC_PGRP_ONLY=2 comes from the selected macOS SDK sys/proc_info.h.
+    let bytes = unsafe {
+        libc::proc_listpids(
+            2,
+            u32::try_from(group).map_err(io::Error::other)?,
+            pids.as_mut_ptr().cast(),
+            capacity,
+        )
+    };
+    if bytes <= 0 || bytes >= capacity || bytes % 4 != 0 {
+        return Err(io::Error::other("owned group enumeration incomplete"));
+    }
+    let count = usize::try_from(bytes / 4).map_err(io::Error::other)?;
+    let mut leader_seen = false;
+    for pid in &pids[..count] {
+        if *pid == group {
+            leader_seen = true;
+            continue;
+        }
+        let mut info = std::mem::MaybeUninit::<libc::proc_bsdinfo>::uninit();
+        let size =
+            i32::try_from(std::mem::size_of::<libc::proc_bsdinfo>()).expect("fixed OS record");
+        // SAFETY: aligned storage of exactly the structure size required by this
+        // SDK flavor. Initialized fields are read only after exact byte success.
+        let read = unsafe {
+            libc::proc_pidinfo(
+                *pid,
+                libc::PROC_PIDTBSDINFO,
+                0,
+                info.as_mut_ptr().cast(),
+                size,
+            )
+        };
+        if read != size {
+            let error = io::Error::last_os_error();
+            // macOS hides zombies from proc_pidinfo (ESRCH), even though they
+            // remain in proc_listpids. They own no running work or open pipes.
+            if error.raw_os_error() == Some(libc::ESRCH) {
+                continue;
+            }
+            return Err(error);
+        }
+        // SAFETY: proc_pidinfo returned the entire initialized proc_bsdinfo.
+        let info = unsafe { info.assume_init() };
+        if info.pbi_pgid != u32::try_from(group).map_err(io::Error::other)? {
+            return Err(io::Error::other(
+                "owned group membership changed during inspection",
+            ));
+        }
+        leader_seen |= *pid == group;
+        if info.pbi_status != libc::SZOMB {
+            return Ok(false);
+        }
+    }
+    if !leader_seen {
+        return Err(io::Error::other("unreaped owned group leader missing"));
+    }
+    Ok(true)
+}
+#[cfg(not(target_os = "macos"))]
+fn group_quiescent(_group: i32) -> io::Result<bool> {
+    Err(io::Error::new(
+        io::ErrorKind::Unsupported,
+        "process-group qualification currently supports macOS only",
+    ))
 }
 
 #[cfg(test)]
@@ -282,7 +439,7 @@ mod tests {
                 Ok(())
             }
         }
-        async fn wait(&mut self, _: Duration) -> io::Result<bool> {
+        async fn quiescent(&mut self, _: Duration) -> io::Result<bool> {
             self.waits.pop_front().unwrap()
         }
     }

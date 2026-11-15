@@ -1,3 +1,4 @@
+import type { ProviderHelpTopic } from "@/lib/provider-help";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -39,8 +40,12 @@ const guidance: Record<SetupProblem, { title: string; message: string }> = {
 };
 export function ProviderSetup({
   setup,
+  onOpenHelp,
+  helpError,
 }: {
   setup: ReturnType<typeof useProviderSetup>;
+  onOpenHelp: (topic: ProviderHelpTopic) => void;
+  helpError?: string;
 }) {
   const { target, observation, error, stale, pending, connected } = setup;
   const evidence = observation?.evidence;
@@ -152,7 +157,11 @@ export function ProviderSetup({
               <dt>Observed runtime</dt>
               <dd>{evidence?.version ?? "Unknown"}</dd>
               <dt>Diagnostic</dt>
-              <dd>{problem ?? "No setup error observed"}</dd>
+              <dd>
+                {observation?.diagnostic ??
+                  problem ??
+                  "No setup error observed"}
+              </dd>
             </dl>
           </CollapsibleContent>
         </Collapsible>
@@ -174,17 +183,23 @@ export function ProviderSetup({
           Existing API-key configuration stays with Codex. This app does not
           collect or edit API keys.
         </p>
-        <p className="text-muted-foreground">
-          Official installation:{" "}
-          <code className="break-all select-text">
-            https://developers.openai.com/codex/cli
-          </code>
-          <br />
-          Authentication:{" "}
-          <code className="break-all select-text">
-            https://developers.openai.com/codex/auth
-          </code>
-        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => onOpenHelp("install")}
+          >
+            Open official installation instructions
+          </Button>
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => onOpenHelp("authentication")}
+          >
+            Open official authentication guidance
+          </Button>
+        </div>
+        {helpError && <p role="alert">{helpError}</p>}
       </section>
     </section>
   );

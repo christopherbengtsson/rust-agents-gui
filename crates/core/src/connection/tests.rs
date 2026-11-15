@@ -513,6 +513,7 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
                                     phase: SetupPhase::Observed,
                                     evidence: None,
                                     problem: Some(SetupProblem::MissingExecutable),
+                                    diagnostic: Some("synthetic missing executable".into()),
                                 },
                             }),
                         })
@@ -593,7 +594,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         use crate::workspaces::*;
         use serde_json::{Value, json};
         let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v10.json"))
+            serde_json::from_str(include_str!("../../../../contracts/observations-v11.json"))
                 .unwrap();
         let owner = "owner-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));

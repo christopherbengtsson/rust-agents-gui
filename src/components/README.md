@@ -392,8 +392,9 @@ interest while its app-lifetime owner drains work and retains validated context.
   It receives the cohesive `useProviderSetup` view and callback, owns no IPC,
   cache, retry or process policy, and renders runtime strings as bounded text.
   Existing Tabs, Badge, Alert, Button, Spinner and Collapsible retain their Base UI
-  contracts. No toolkit component was added or regenerated. Official instructions
-  are selectable text URLs; this slice adds no external navigation handler.
+  contracts. No toolkit component was added or regenerated. Official documentation actions use the scoped native opener for exactly the
+  two fixed Codex installation/authentication URLs; no provider-return deep link
+  or login flow is added. Opener automatic link interception is disabled.
 - **ClaudeSetup** is an informational section with genuinely disabled connection
   controls. Its route mounts no provider hook and sends no Claude request.
 - **SettingsLayout** accepts the current `general | providers` section for its

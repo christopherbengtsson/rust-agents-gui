@@ -14,6 +14,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { createMemoryHistory } from "@tanstack/react-router";
 import { App } from "./App";
 import {
@@ -43,6 +44,9 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: vi.fn() }));
+vi.mock("@tauri-apps/plugin-opener", () => ({
+  openUrl: vi.fn(async () => {}),
+}));
 const repositoryId = "00000000-0000-4000-8000-000000000001";
 const workspaceId = "00000000-0000-4000-8000-000000000002";
 const otherId = "00000000-0000-4000-8000-000000000003";
@@ -110,6 +114,7 @@ beforeEach(() => {
             revision: 2,
             phase: "observed",
             evidence: providerEvidence,
+            diagnostic: null,
             problem: null,
           },
         };
@@ -492,6 +497,22 @@ test("Codex defaults to existing API-key evidence, retains stale details on fail
   );
   expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
   expect(screen.queryByRole("button", { name: "Run codex login" })).toBeNull();
+  const beforeHelp = vi
+    .mocked(invoke)
+    .mock.calls.filter(([name]) => name === "provider_request").length;
+  const help = screen.getByRole("button", {
+    name: "Open official installation instructions",
+  });
+  help.focus();
+  await user.keyboard("{Enter}");
+  expect(openUrl).toHaveBeenCalledWith(
+    "https://developers.openai.com/codex/cli",
+  );
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(beforeHelp);
   providerRead = async (request) =>
     request.operation === "target"
       ? { kind: "target", target: providerTarget }
@@ -502,6 +523,7 @@ test("Codex defaults to existing API-key evidence, retains stale details on fail
             revision: 4,
             phase: "observed",
             evidence: providerEvidence,
+            diagnostic: null,
             problem: "status_read_failed",
           },
         };
