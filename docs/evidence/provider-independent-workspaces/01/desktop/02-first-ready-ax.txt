@@ -1,0 +1,43 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 58-74
+~						40 container /private/tmp/aw-piw-qv5omkrn/Alpha Available
+~							43 button Create workspace in Alpha
+~							45 text Available
+~								47 button julian-brandt, Help: Workspace ready
+~					57 text Repository available
++				77 text Uncommitted changes
++				78 button Refresh changes
++				79 button (expanded) Hide changed files, Secondary Actions: Collapse
++				80 text Compared with HEAD 
++				81 text 5dddce1f77f42849780f6ca214fc5104a9539aab
++				82 text  · 
++				83 text 0
++				84 text changed files
++				85 text No uncommitted changes.
++				86 tab group (selectable) Workspace views
++					87 tab (selected) Workspace
++					88 tab (selectable) Changes
++				89 container Workspace
++					90 container Selected workspace
++						91 text Workspace ready
++						92 heading Your workspace is ready, Value: 2
++							93 text Your workspace is ready
++						94 text julian-brandt
++						95 description list
++							96 text Branch
++							97 text workspace/julian-brandt
++							98 text Workspace folder
++							99 text /private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout
++							100 text Local base
++							101 text refs/heads/main · 5dddce1f77f42849780f6ca214fc5104a9539aab
++							102 text Branch artifact
++							103 text Created by this action
++							104 text Folder artifact
++							105 text Worktree created
++						106 container
++							107 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
++				108 splitter Resize changed files, Value: 68
++				109 container Changed files
++					110 heading Changed files, Value: 2
++						111 text Changed files
+The focused UI element is 48 pop up button Add repository

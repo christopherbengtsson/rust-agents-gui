@@ -1,0 +1,6 @@
+{
+  "failure": "Post-Quit CUA AX lookup auto-reopened the app without fixture environment. No actions submitted in that instance; verified unique copied desktop terminated. Subsequent Quit has no post-exit UI call until explicit fixture launch.",
+  "auto_reopened_pid": 38993,
+  "verified_command": "/private/tmp/aw-piw-qv5omkrn/PIW Qualification.app/Contents/MacOS/workspace-desktop",
+  "default_supervisor_85891_preexisting": true
+}

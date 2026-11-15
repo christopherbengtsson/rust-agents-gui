@@ -1,0 +1,22 @@
+[
+  {
+    "capture": "01-first-ready",
+    "time": "2026-11-15T01:29:27.298Z"
+  },
+  {
+    "capture": "02-second-ready",
+    "time": "2026-11-15T01:29:35.092Z"
+  },
+  {
+    "capture": "04-tracked-diff",
+    "time": "2026-11-15T01:29:57.917Z"
+  },
+  {
+    "capture": "05-new-file-diff",
+    "time": "2026-11-15T01:30:06.340Z"
+  },
+  {
+    "capture": "07-reopened-without-providers",
+    "time": "2026-11-15T01:30:17.793Z"
+  }
+]

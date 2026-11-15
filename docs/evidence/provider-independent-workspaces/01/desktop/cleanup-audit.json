@@ -1,0 +1,33 @@
+{
+  "remaining_fixture_processes": [],
+  "preexisting_owners": [
+    {
+      "pid": 7681,
+      "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor /Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3/p4-6ad9613a",
+      "same_command_after": true
+    },
+    {
+      "pid": 9277,
+      "command": "/private/tmp/aw-f08-desktop-vxqzwtcr/F08 Release.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-desktop-vxqzwtcr/state",
+      "same_command_after": true
+    },
+    {
+      "pid": 9376,
+      "command": "/private/tmp/f04g-packaged-2sp_sppn/F04g packaged.app/Contents/Resources/workspace-supervisor /private/tmp/f04g-packaged-2sp_sppn/state",
+      "same_command_after": true
+    },
+    {
+      "pid": 85891,
+      "command": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor /Users/christopherbengtsson/Library/Application Support/AgentWorkspace",
+      "same_command_after": true
+    }
+  ],
+  "initial_eof_fixture": "No desktop or supervisor from /private/tmp/aw-piw-f27fn44b remained after launcher EOF; no explicit signal was sent because the recorded desktop PID was already absent. Not claimed as host-joined.",
+  "retained_private_roots": [
+    "/private/tmp/aw-piw-uc319c9y",
+    "/private/tmp/aw-piw-f27fn44b",
+    "/private/tmp/aw-piw-qv5omkrn",
+    "/private/tmp/aw-piw-pyinp8re"
+  ],
+  "ideas_sha256_unchanged": "0e27265032591956521df58dedd8c7c3520fcf97f0ffde9cba11bc4fbe2a3fa0"
+}

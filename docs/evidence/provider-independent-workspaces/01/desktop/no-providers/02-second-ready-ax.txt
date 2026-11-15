@@ -1,0 +1,81 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/77f1ac30-ba11-4e31-a94f-1270d9d7ad55?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/77f1ac30-ba11-4e31-a94f-1270d9d7ad55?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-piw-pyinp8re/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-piw-pyinp8re/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-piw-pyinp8re/Alpha
+							15 text Available
+							16 content list
+								17 button giacinto-facchetti, Help: Workspace ready
+								18 button fernandinho, Help: Workspace ready
+				19 pop up button Add repository
+				20 text Connected
+				21 pop up button Connection details
+				22 link Settings, Value: tauri://localhost/settings/general
+			23 container
+				24 heading giacinto-facchetti, Value: 1
+					25 text giacinto-facchetti
+				26 button Refresh status
+				27 container Selected repository
+					28 text /private/tmp/aw-piw-pyinp8re/Alpha
+					29 text Repository available
+				30 text Uncommitted changes
+				31 button Refresh changes
+				32 button (expanded) Hide changed files, Secondary Actions: Collapse
+				33 text Compared with HEAD 
+				34 text 75f3276ac368e5da7df9021c42e9dcd7b378ce6e
+				35 text  · 
+				36 text 0
+				37 text changed files
+				38 text No uncommitted changes.
+				39 tab group (selectable) Workspace views
+					40 tab (selected) Workspace
+					41 tab (selectable) Changes
+				42 container Workspace
+					43 container Selected workspace
+						44 text Workspace ready
+						45 heading Your workspace is ready, Value: 2
+							46 text Your workspace is ready
+						47 text giacinto-facchetti
+						48 description list
+							49 text Branch
+							50 text workspace/giacinto-facchetti
+							51 text Workspace folder
+							52 text /private/tmp/aw-piw-pyinp8re/state/workspaces/alpha/giacinto-facchetti/checkout
+							53 text Local base
+							54 text refs/heads/main · 75f3276ac368e5da7df9021c42e9dcd7b378ce6e
+							55 text Branch artifact
+							56 text Created by this action
+							57 text Folder artifact
+							58 text Worktree created
+						59 container
+							60 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				61 splitter Resize changed files, Value: 68
+				62 container Changed files
+					63 heading Changed files, Value: 2
+						64 text Changed files
+				65 text Local workspace
+				66 text Alpha
+	67 close button
+	68 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	69 minimize button
+	70 text Agent Workspace
+71 menu bar
+	72 PIW Qualification
+	73 File
+	74 Edit
+	75 View
+	76 Window
+	77 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/77f1ac30-ba11-4e31-a94f-1270d9d7ad55?view=workspace

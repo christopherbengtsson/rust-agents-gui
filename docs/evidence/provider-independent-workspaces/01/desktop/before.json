@@ -1,0 +1,41 @@
+{
+  "revision": "f0885d6cb211b404a0daa8c59ccfc3cd8ba4a5da",
+  "branch": "main",
+  "status": " M docs/IDEAS.md\n",
+  "source_match": {
+    "contracts/README.md": true,
+    "crates/core/src/connection.rs": true,
+    "crates/core/src/connection/framed_exchange.rs": true,
+    "crates/core/src/connection/subscription/tests.rs": true,
+    "crates/core/src/connection/tests.rs": true,
+    "crates/core/src/storage.rs": true,
+    "crates/core/src/workspaces/creation.rs": true,
+    "scripts/development-state.test.mjs": true,
+    "scripts/qualify-observations.py": true,
+    "src/components/README.md": true,
+    "src/components/blocks/workspace-details.tsx": true,
+    "src/generated-contracts.test.tsx": true,
+    "src/generated/contracts/manifest.json": true,
+    "src/generated/contracts/schemas.json": true,
+    "src/generated/contracts/types.ts": true,
+    "src/generated/contracts/validators.js": true,
+    "src/lib/workspaces.ts": true,
+    "src/observation-contracts.test.tsx": true,
+    "src/observation-feed-bridge.test.tsx": true,
+    "src/observation-feed.test.tsx": true,
+    "src/retained-delivery.test.tsx": true,
+    "src/routing.test.tsx": true,
+    "src/workspace-changes.test.tsx": true,
+    "src/workspace-details.test.tsx": true,
+    "src/workspaces.test.tsx": true,
+    "contracts/observations-v9.json": true
+  },
+  "artifact_match": {
+    "target/release/workspace-desktop": true,
+    "src-tauri/gen/sidecar/workspace-supervisor": true,
+    "target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": true,
+    "target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor": true
+  },
+  "ideas_sha256": "0e27265032591956521df58dedd8c7c3520fcf97f0ffde9cba11bc4fbe2a3fa0",
+  "preexisting_processes": " 7681     1 /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/workspace-supervisor /Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3/p4-6ad9613a\n 9277     1 /private/tmp/aw-f08-desktop-vxqzwtcr/F08 Release.app/Contents/Resources/workspace-supervisor /private/tmp/aw-f08-desktop-vxqzwtcr/state\n 9376     1 /private/tmp/f04g-packaged-2sp_sppn/F04g packaged.app/Contents/Resources/workspace-supervisor /private/tmp/f04g-packaged-2sp_sppn/state\n85891     1 /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri/gen/sidecar/workspace-supervisor /Users/christopherbengtsson/Library/Application Support/AgentWorkspace"
+}

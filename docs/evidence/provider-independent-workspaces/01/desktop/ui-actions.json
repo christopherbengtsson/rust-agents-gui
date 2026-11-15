@@ -1,0 +1,258 @@
+[
+  {
+    "capture": "01-empty-ordinary",
+    "time": "2026-11-15T01:21:04.843Z"
+  },
+  {
+    "action": "Click Add repository",
+    "time": "2026-11-15T01:21:04.844Z"
+  },
+  {
+    "action": "Enter Alpha path",
+    "time": "2026-11-15T01:21:08.947Z"
+  },
+  {
+    "action": "Register Alpha",
+    "time": "2026-11-15T01:21:12.694Z"
+  },
+  {
+    "capture": "02-first-ready",
+    "time": "2026-11-15T01:21:15.740Z"
+  },
+  {
+    "action": "Create second Alpha workspace",
+    "time": "2026-11-15T01:21:19.129Z"
+  },
+  {
+    "capture": "03-second-ready",
+    "time": "2026-11-15T01:21:24.070Z"
+  },
+  {
+    "action": "Select first Alpha workspace",
+    "time": "2026-11-15T01:21:24.070Z"
+  },
+  {
+    "action": "Open Changes tab",
+    "time": "2026-11-15T01:21:41.482Z"
+  },
+  {
+    "action": "Select tracked.txt",
+    "time": "2026-11-15T01:21:46.290Z"
+  },
+  {
+    "capture": "05-tracked-diff",
+    "time": "2026-11-15T01:21:49.580Z"
+  },
+  {
+    "action": "Select new-file.txt",
+    "time": "2026-11-15T01:21:49.580Z"
+  },
+  {
+    "action": "Select new-file.txt using refreshed AX index",
+    "time": "2026-11-15T01:21:53.093Z"
+  },
+  {
+    "capture": "06-new-file-diff",
+    "time": "2026-11-15T01:21:56.437Z"
+  },
+  {
+    "action": "Add ambiguous repository",
+    "time": "2026-11-15T01:22:01.183Z"
+  },
+  {
+    "action": "Replace path with Ambiguous repository",
+    "time": "2026-11-15T01:22:05.782Z"
+  },
+  {
+    "action": "Register Ambiguous",
+    "time": "2026-11-15T01:22:09.244Z"
+  },
+  {
+    "capture": "07-failed-ordinary",
+    "time": "2026-11-15T01:22:12.806Z"
+  },
+  {
+    "action": "Desktop Quit using Command-Q with Failed selected",
+    "time": "2026-11-15T01:22:31.464Z"
+  },
+  {
+    "capture": "10-retained-failed-after-reopen",
+    "time": "2026-11-15T01:23:08.038Z"
+  },
+  {
+    "action": "Resize bottom-right toward minimum",
+    "time": "2026-11-15T01:23:08.038Z"
+  },
+  {
+    "action": "Drag physical-pixel window corner to minimum",
+    "time": "2026-11-15T01:23:14.323Z"
+  },
+  {
+    "capture": "11-minimum-failed-layout",
+    "time": "2026-11-15T01:23:16.421Z"
+  },
+  {
+    "action": "Focus Refresh status then Tab to recovery control",
+    "time": "2026-11-15T01:23:29.664Z"
+  },
+  {
+    "action": "Keyboard traversal toward recovery",
+    "time": "2026-11-15T01:23:36.859Z"
+  },
+  {
+    "capture": "13-minimum-recovery-keyboard",
+    "time": "2026-11-15T01:23:37.280Z"
+  },
+  {
+    "action": "Option-Tab to recovery control",
+    "time": "2026-11-15T01:23:41.656Z"
+  },
+  {
+    "action": "Option-Tab traversal to Reconcile workspace",
+    "steps": 6
+  },
+  {
+    "capture": "14-minimum-reconcile-focused",
+    "time": "2026-11-15T01:23:53.572Z"
+  },
+  {
+    "action": "Command-Q before controlled supervisor restart; no post-exit AX lookup",
+    "time": "2026-11-15T01:23:57.563Z"
+  },
+  {
+    "capture": "17-failed-after-cold-owner-restart",
+    "time": "2026-11-15T01:24:16.512Z"
+  },
+  {
+    "action": "Resize current desktop to minimum using physical corner",
+    "time": "2026-11-15T01:24:31.169Z"
+  },
+  {
+    "capture": "19-fixed-base-still-failed-keyboard",
+    "time": "2026-11-15T01:24:38.388Z"
+  },
+  {
+    "action": "Explicitly reconcile the retained workspace using Return",
+    "time": "2026-11-15T01:24:42.406Z"
+  },
+  {
+    "capture": "20-reconciled-ready-minimum",
+    "time": "2026-11-15T01:24:48.055Z"
+  },
+  {
+    "action": "Switch to julian-brandt at minimum size",
+    "time": "2026-11-15T01:25:00.499Z"
+  },
+  {
+    "action": "Open narrow Changed files sheet",
+    "time": "2026-11-15T01:25:08.765Z"
+  },
+  {
+    "capture": "22-minimum-files-sheet",
+    "time": "2026-11-15T01:25:12.479Z"
+  },
+  {
+    "action": "Select focused tracked file with Space",
+    "time": "2026-11-15T01:25:12.479Z"
+  },
+  {
+    "capture": "23-minimum-tracked-keyboard",
+    "time": "2026-11-15T01:25:17.305Z"
+  },
+  {
+    "action": "Open Changed files using Return from returned focus",
+    "time": "2026-11-15T01:25:21.727Z"
+  },
+  {
+    "action": "Option-Tab to new-file.txt",
+    "time": "2026-11-15T01:25:25.778Z"
+  },
+  {
+    "action": "Activate new-file.txt using Space",
+    "time": "2026-11-15T01:25:29.834Z"
+  },
+  {
+    "capture": "24-minimum-new-file-keyboard",
+    "time": "2026-11-15T01:25:30.472Z"
+  },
+  {
+    "action": "Open picker using Return",
+    "time": "2026-11-15T01:25:34.066Z"
+  },
+  {
+    "action": "Escape closes sheet and returns trigger focus",
+    "time": "2026-11-15T01:25:38.740Z"
+  },
+  {
+    "capture": "25-minimum-escape-focus-return",
+    "time": "2026-11-15T01:25:39.364Z"
+  },
+  {
+    "action": "Quit before final recovered-state persistence check",
+    "time": "2026-11-15T01:25:39.364Z"
+  },
+  {
+    "capture": "28-final-reopen-diff",
+    "time": "2026-11-15T01:26:02.767Z"
+  },
+  {
+    "action": "Reselect retained new file after cold owner restart",
+    "time": "2026-11-15T01:26:08.059Z"
+  },
+  {
+    "capture": "29-final-reopened-new-file",
+    "time": "2026-11-15T01:26:11.773Z"
+  },
+  {
+    "action": "Select recovered david-de-gea after final restart",
+    "time": "2026-11-15T01:26:15.735Z"
+  },
+  {
+    "capture": "30-final-recovered-identity",
+    "time": "2026-11-15T01:26:19.781Z"
+  },
+  {
+    "action": "Final desktop Quit; cleanup joins child separately",
+    "time": "2026-11-15T01:26:19.781Z"
+  },
+  {
+    "action": "Add repository with provider commands absent",
+    "time": "2026-11-15T01:29:15.402Z"
+  },
+  {
+    "action": "Enter Git-only Alpha path",
+    "time": "2026-11-15T01:29:20.771Z"
+  },
+  {
+    "action": "Register Alpha with Git-only PATH",
+    "time": "2026-11-15T01:29:24.185Z"
+  },
+  {
+    "action": "Create another workspace with Git-only PATH",
+    "time": "2026-11-15T01:29:31.210Z"
+  },
+  {
+    "action": "Switch to fernandinho without provider commands",
+    "time": "2026-11-15T01:29:45.684Z"
+  },
+  {
+    "action": "Select Changes with Git-only PATH",
+    "time": "2026-11-15T01:29:49.548Z"
+  },
+  {
+    "action": "Select tracked diff with Git-only PATH",
+    "time": "2026-11-15T01:29:53.639Z"
+  },
+  {
+    "action": "Select provider-free new-file diff",
+    "time": "2026-11-15T01:30:02.180Z"
+  },
+  {
+    "action": "Quit Git-only desktop",
+    "time": "2026-11-15T01:30:06.340Z"
+  },
+  {
+    "action": "Quit final Git-only desktop",
+    "time": "2026-11-15T01:30:17.793Z"
+  }
+]

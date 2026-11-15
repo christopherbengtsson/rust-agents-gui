@@ -1,0 +1,39 @@
+The following is a diff from the previous accessibility tree for Window: "Agent Workspace" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 59-75
+~								51 button andre-pierre-gignac, Help: Workspace ready
++				78 text Uncommitted changes
++				79 button Refresh changes
++				80 button (expanded) Hide changed files, Secondary Actions: Collapse
++				81 text Compared with HEAD 
++				82 text 5dddce1f77f42849780f6ca214fc5104a9539aab
++				83 text  · 
++				84 text 0
++				85 text changed files
++				86 text No uncommitted changes.
++				87 tab group (selectable) Workspace views
++					88 tab (selected) Workspace
++					89 tab (selectable) Changes
++				90 container Workspace
++					91 container Selected workspace
++						92 text Workspace ready
++						93 heading Your workspace is ready, Value: 2
++							94 text Your workspace is ready
++						95 text andre-pierre-gignac
++						96 description list
++							97 text Branch
++							98 text workspace/andre-pierre-gignac
++							99 text Workspace folder
++							100 text /private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout
++							101 text Local base
++							102 text refs/heads/main · 5dddce1f77f42849780f6ca214fc5104a9539aab
++							103 text Branch artifact
++							104 text Created by this action
++							105 text Folder artifact
++							106 text Worktree created
++						107 container
++							108 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
++				109 splitter Resize changed files, Value: 68
++				110 container Changed files
++					111 heading Changed files, Value: 2
++						112 text Changed files
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/3c6bd9df-9cdf-4588-84a7-ecc2b6188a63/workspace/2883f63f-3e00-4196-99b2-5ff8c9c53693?view=workspace

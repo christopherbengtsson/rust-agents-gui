@@ -1,0 +1,40 @@
+{
+  "commands": [
+    {
+      "argv": ["sw_vers"],
+      "output": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56"
+    },
+    {
+      "argv": ["uname", "-m"],
+      "output": "arm64"
+    },
+    {
+      "argv": ["sysctl", "-n", "hw.model", "hw.memsize", "hw.logicalcpu"],
+      "output": "Mac16,8\n51539607552\n12"
+    },
+    {
+      "argv": ["node", "--version"],
+      "output": "v26.13.1"
+    },
+    {
+      "argv": ["corepack", "pnpm", "--version"],
+      "output": "12.18.0"
+    },
+    {
+      "argv": ["rustc", "--version"],
+      "output": "rustc 1.99.1 (58cf8f9c3 2026-10-13)"
+    },
+    {
+      "argv": ["cargo", "--version"],
+      "output": "cargo 1.99.1 (5f94df478 2026-08-27)"
+    }
+  ],
+  "target": "worktree default target/; warm release cache",
+  "profile": "release, no tauri/devtools; unchanged production CSP",
+  "state_mode": {
+    "/private/tmp/aw-piw-uc319c9y": "0o700",
+    "/private/tmp/aw-piw-f27fn44b": "0o700",
+    "/private/tmp/aw-piw-qv5omkrn": "0o700",
+    "/private/tmp/aw-piw-pyinp8re": "0o700"
+  }
+}

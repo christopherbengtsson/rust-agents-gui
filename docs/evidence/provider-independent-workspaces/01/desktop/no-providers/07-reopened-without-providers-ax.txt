@@ -1,0 +1,79 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/9115eb0b-f262-4a49-99e1-efd8a8c52100?view=changes
+			3 link Skip to workspace, Value: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/9115eb0b-f262-4a49-99e1-efd8a8c52100?view=changes#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-piw-pyinp8re/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-piw-pyinp8re/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-piw-pyinp8re/Alpha
+							15 text Available
+							16 content list
+								17 button giacinto-facchetti, Help: Workspace ready
+								18 button fernandinho, Help: Workspace ready
+				19 pop up button Add repository
+				20 text Connected
+				21 pop up button Connection details
+				22 link Settings, Value: tauri://localhost/settings/general
+			23 container
+				24 heading fernandinho, Value: 1
+					25 text fernandinho
+				26 button Refresh status
+				27 container Selected repository
+					28 text /private/tmp/aw-piw-pyinp8re/Alpha
+					29 text Repository available
+				30 text Uncommitted changes
+				31 button Refresh changes
+				32 button (expanded) Hide changed files, Secondary Actions: Collapse
+				33 text Compared with HEAD 
+				34 text 75f3276ac368e5da7df9021c42e9dcd7b378ce6e
+				35 text  · 
+				36 text 2
+				37 text changed files
+				38 tab group (selectable) Workspace views
+					39 tab (selectable) Workspace
+					40 tab (selected) Changes
+				41 container Changes
+					42 container Selected file changes
+						43 heading new-file.txt, Value: 2
+							44 text new-file.txt
+						45 container Unified file diff
+							46 container
+								47 container Old line
+								48 container New line
+								49 text @@ -0,0 +1,1 @@
+								50 container Old line
+								51 container New line
+									52 text 1
+								53 text workspace new file
+				54 splitter Resize changed files, Value: 68
+				55 container Changed files
+					56 heading Changed files, Value: 2
+						57 text Changed files
+					58 container
+						59 toggle button tracked.txt .M, Help: tracked.txt, Value: off
+						60 toggle button new-file.txt ??, Help: new-file.txt, Value: on
+					61 button First page
+					62 button (disabled) Next files
+				63 text Local workspace
+				64 text Alpha
+	65 close button
+	66 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	67 minimize button
+	68 text Agent Workspace
+69 menu bar
+	70 PIW Qualification
+	71 File
+	72 Edit
+	73 View
+	74 Window
+	75 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/9115eb0b-f262-4a49-99e1-efd8a8c52100?view=changes

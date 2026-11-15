@@ -1,0 +1,2 @@
+{"argv": ["corepack", "pnpm", "exec", "oxfmt", "--write", "docs/evidence/provider-independent-workspaces/01.md", ".scratch/provider-independent-workspaces/issues/01-retire-workspace-provider.md", "docs/evidence/provider-independent-workspaces/01/desktop"], "exit_code": 0, "seconds": 0.09024587494786829}
+Finished in 2ms on 33 files using 12 threads.

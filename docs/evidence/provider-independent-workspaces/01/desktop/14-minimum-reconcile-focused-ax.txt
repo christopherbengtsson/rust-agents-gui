@@ -1,0 +1,73 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/0407301a-1b3b-45ea-9341-6e306e26b74c/workspace/e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/0407301a-1b3b-45ea-9341-6e306e26b74c/workspace/e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-piw-qv5omkrn/Ambiguous Available
+							11 button Ambiguous, Help: /private/tmp/aw-piw-qv5omkrn/Ambiguous
+							12 button (expanded) Toggle details for Ambiguous, Secondary Actions: Collapse
+							13 button Create workspace in Ambiguous
+							14 text /private/tmp/aw-piw-qv5omkrn/Ambiguous
+							15 text Available
+							16 content list
+								17 button david-de-gea, Help: Creation needs attention
+						18 container /private/tmp/aw-piw-qv5omkrn/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-piw-qv5omkrn/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-piw-qv5omkrn/Alpha
+							23 text Available
+							24 content list
+								25 button andre-pierre-gignac, Help: Workspace ready
+								26 button julian-brandt, Help: Workspace ready
+				27 pop up button Add repository
+				28 text Connected
+				29 pop up button Connection details
+				30 link Settings, Value: tauri://localhost/settings/general
+			31 container
+				32 heading david-de-gea, Value: 1
+					33 text david-de-gea
+				34 button Refresh status
+				35 container Selected repository
+					36 text /private/tmp/aw-piw-qv5omkrn/Ambiguous
+					37 text Repository available
+				38 container Selected workspace
+					39 text Creation needs attention
+					40 heading Workspace needs attention, Value: 2
+						41 text Workspace needs attention
+					42 text david-de-gea
+					43 description list
+						44 text Branch
+						45 text workspace/david-de-gea
+						46 text Workspace folder
+						47 text /private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout
+						48 text Local base
+						49 text Waiting for an identifiable local default branch
+						50 text Branch artifact
+						51 text Not yet confirmed
+						52 text Folder artifact
+						53 text Not yet confirmed
+					54 container
+						55 text Creation needs attention Cannot identify a local default branch. Set origin/HEAD to an available local remote-tracking branch, or keep exactly one local main/master branch with a commit, then reconcile this workspace. No fetch was performed.
+						56 button Reconcile workspace
+				57 text Local workspace
+				58 text Ambiguous
+	59 close button
+	60 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	61 minimize button
+	62 text Agent Workspace
+63 menu bar
+	64 PIW Qualification
+	65 File
+	66 Edit
+	67 View
+	68 Window
+	69 Help
+
+The focused UI element is 56 button Reconcile workspace
