@@ -34,9 +34,9 @@ pending sign-in, focus, navigation, uncertainty and cleanup fences.
 - [x] Already installed? exposes a native Locate Codex… chooser; validate selected executables/capabilities and check authentication automatically.
 - [x] Remember validated selections across restart; cancellation/invalid selections preserve preferences; unavailable selections never silently fall back and persistence errors stay visible.
 - [x] Deterministically cover changed decisions, stale/duplicate/lost-reply actions, navigation/focus and cleanup exclusion with substituted effects.
-- [ ] Qualify affected packaged fixture and controlled native discovery paths, including unavailable/missed runtime, installation/update rediscovery, remembered and unavailable selection.
-- [ ] Qualify a normal Finder/Dock launch with private state and separately label read-only real-authentication observations; preserve installation/configuration/credentials.
-- [ ] Record keyboard/focus, ordinary/minimum-layout and cleanup observations with explicit accessibility and native limits.
+- [x] Qualify affected packaged fixture and controlled native discovery paths, including unavailable/missed runtime, installation/update rediscovery, remembered and unavailable selection.
+- [x] Qualify a normal Finder/Dock launch with private state and separately label read-only real-authentication observations; preserve installation/configuration/credentials.
+- [x] Record keyboard/focus, ordinary/minimum-layout and cleanup observations with explicit accessibility and native limits.
 - [x] Run affected checks, one final full gate/build and requested review; publish dated source/cohort/results evidence, reusing unchanged evidence and checking only verified acceptance.
 
 ## Limits
@@ -72,3 +72,25 @@ remain unchecked above. The real-authentication portion of the combined desktop
 criterion was performed through the packaged supervisor; it is not a Finder/UI pass.
 Implementation checks do not complete this ticket's remaining UI qualification or
 whole-milestone/native-agent acceptance. Stop here; 06a/07 were not implemented.
+
+### 2026-11-15 — bounded desktop UI follow-up
+
+The [dated UI addendum](../../../docs/evidence/codex-connection/05-ui-2026-11-15.md)
+and [session captures](../../../docs/evidence/codex-connection/05/ui-session-2026-11-15.json)
+record native access succeeding with both packaged hashes matching `final-source.json`.
+Finder launch, automatic shell discovery, whole-body checking/navigation, minimal
+Connected, native chooser cancellation/selection, remembered restart/unavailable
+selection, keyboard/focus observations, 900×680/600×480 layout, synthetic pending
+navigation/reopen/cancel, and product Quit cleanup were exercised. Final synthetic
+desktop exit was 0 with no cohort processes remaining. Existing unit, controlled
+native discovery and separately labeled real existing-auth evidence were reused;
+no rebuild, full verification or real sign-in was performed.
+
+The addendum explicitly records Finder retaining user HOME while CODEX_HOME/state
+remain private, incidental installed-runtime unauthenticated readiness, unestablished
+mouse-origin native chooser focus return, and unperformed VoiceOver/participant/
+Dock-specific checks. The remaining acceptance records are now checked for this
+bounded qualification scope; these limits are not claimed as passes. Implementation
+and historical evidence remain unchanged. No credentials were replaced, no agent
+work was submitted, and 06a/07 and whole-milestone/native-agent qualification remain
+outside this completion.
