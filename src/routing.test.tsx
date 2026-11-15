@@ -563,6 +563,31 @@ test("Codex defaults to existing API-key evidence, retains stale details on fail
   ).toBe(true);
 });
 
+test("Settings skip link focuses its landmark without replacing return provenance", async () => {
+  const user = userEvent.setup();
+  const history = mount(workspacePath);
+  await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  const href = history.location.href;
+  await user.click(screen.getByRole("link", { name: "Skip to settings" }));
+  expect(document.activeElement).toBe(
+    screen.getByRole("main", { name: "General" }),
+  );
+  expect(history.location.href).toBe(href);
+  await user.click(screen.getByRole("link", { name: "Providers" }));
+  await screen.findByRole("tab", { name: "Claude Code" });
+  await user.click(screen.getByRole("tab", { name: "Claude Code" }));
+  await user.click(screen.getByRole("link", { name: "General" }));
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(history.location.pathname).toBe(workspacePath));
+  await waitFor(() =>
+    expect(document.activeElement).toBe(
+      screen.getByRole("link", { name: "Settings" }),
+    ),
+  );
+});
+
 test("Settings ignores prevented, composing and repeated Escape events", async () => {
   const history = mount("/settings/general");
   const heading = await screen.findByRole("heading", {

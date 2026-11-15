@@ -130,6 +130,20 @@ export function AppRuntime() {
         <a
           className="skip-link"
           href={settings ? "#settings-main" : "#workspace"}
+          onClick={(event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            event.preventDefault();
+            document
+              .getElementById(settings ? "settings-main" : "workspace")
+              ?.focus();
+          }}
         >
           {settings ? "Skip to settings" : "Skip to workspace"}
         </a>
