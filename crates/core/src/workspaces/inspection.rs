@@ -882,7 +882,22 @@ pub(super) fn process_inspection(
                 if let Ok(record) = state.inspections.record(workspace.id) {
                     match result {
                         Ok(mut comparison) => {
+                            // Polling unchanged evidence must not expire reading context.
+                            // Status alone is insufficient: edits can retain the same XY.
+                            let unchanged = record.comparison.as_ref().is_some_and(|old| {
+                                old.head == comparison.head
+                                    && old.status == comparison.status
+                                    && old.files.len() == comparison.files.len()
+                                    && old.files.iter().zip(&comparison.files).all(|(a, b)| {
+                                        a.path == b.path
+                                            && a.evidence == b.evidence
+                                            && a.unsupported == b.unsupported
+                                    })
+                            });
                             if let Some(old) = &record.comparison {
+                                if unchanged {
+                                    comparison.id = old.id;
+                                }
                                 for file in &mut comparison.files {
                                     if let Some(previous) =
                                         old.files.iter().find(|f| f.path == file.path)
@@ -892,8 +907,12 @@ pub(super) fn process_inspection(
                                 }
                             }
                             if let Some(preview) = &mut record.preview {
-                                preview.phase = InspectionPhase::Failed;
-                                preview.error = Some(expired());
+                                preview.phase = if unchanged {
+                                    InspectionPhase::Idle
+                                } else {
+                                    InspectionPhase::Failed
+                                };
+                                preview.error = if unchanged { None } else { Some(expired()) };
                                 bound_failed_preview(preview);
                             }
                             record.comparison = Some(comparison);

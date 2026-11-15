@@ -1,0 +1,186 @@
+{
+  "protocol": 13,
+  "root": "/private/tmp/aw-ready-g61k4ppy",
+  "owner": "32615-1794766134392326000",
+  "supervisor_pid": 32615,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "supervisor_sha256": "3500a78e89d046547823e72b83c2d053f7f9a92755cd82f2133e96a63e2dd3a5",
+  "target": {
+    "id": "71189390-3e11-4ff5-bb32-3efd1e3b0592",
+    "provider": "codex",
+    "executable": "/private/tmp/aw-ready-g61k4ppy/fixture-codex",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-71189390-3e11-4ff5-bb32-3efd1e3b0592",
+    "minimum_supported_version": "0.169.0"
+  },
+  "checks": [
+    {
+      "name": "duplicate and competing browser admission",
+      "passed": true,
+      "attempt": "89907b84-dce7-424c-ac88-d3142b5e3dc5",
+      "competitor": {
+        "kind": "provider",
+        "owner": "32615-1794766134392326000",
+        "result": {
+          "Err": {
+            "code": "connection",
+            "message": "This credential scope already has an active check, sign-in or unconfirmed cleanup. Retrieve its recorded status."
+          }
+        }
+      }
+    }
+  ],
+  "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process.",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-ready-g61k4ppy/Connection Fixture",
+        "init",
+        "--initial-branch=main"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /private/tmp/aw-ready-g61k4ppy/Connection Fixture/.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-ready-g61k4ppy/Connection Fixture",
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-ready-g61k4ppy/Connection Fixture",
+        "-c",
+        "user.name=Fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--no-gpg-sign",
+        "-m",
+        "Disposable connection fixture"
+      ],
+      "exit": 0,
+      "stdout": "[main (root-commit) 656f0d8] Disposable connection fixture\n 1 file changed, 160 insertions(+)\n create mode 100644 reading.txt\n",
+      "stderr": ""
+    },
+    {
+      "control": "dirty-workspace",
+      "time": 1794766155.9493508
+    },
+    {
+      "control": "capture before-browser",
+      "time": 1794766231.365352
+    },
+    {
+      "control": "compete",
+      "time": 1794766241.6732621
+    },
+    {
+      "control": "capture browser-pending",
+      "time": 1794766241.674676
+    },
+    {
+      "control": "capture before-desktop-crash",
+      "time": 1794766308.0024588
+    },
+    {
+      "control": "kill-desktop",
+      "time": 1794766308.003714
+    },
+    {
+      "control": "restart-desktop",
+      "time": 1794766308.012015
+    },
+    {
+      "control": "capture after-desktop-crash",
+      "time": 1794766321.728278
+    },
+    {
+      "control": "capture browser-completed",
+      "time": 1794766368.216343
+    },
+    {
+      "control": "scenario browser_pending",
+      "time": 1794766388.1111171
+    },
+    {
+      "control": "scenario browser_verify_failure",
+      "time": 1794766397.612496
+    },
+    {
+      "control": "capture verification-failed",
+      "time": 1794766407.528417
+    },
+    {
+      "control": "scenario gateway_delay",
+      "time": 1794766407.5294552
+    },
+    {
+      "control": "scenario browser_pending",
+      "time": 1794766427.9135659
+    },
+    {
+      "control": "capture late-cancel",
+      "time": 1794766427.914258
+    },
+    {
+      "control": "capture before-quit",
+      "time": 1794766466.8637152
+    },
+    {
+      "control": "processes",
+      "time": 1794766476.8653052
+    },
+    {
+      "control": "stop",
+      "time": 1794766476.8660579
+    }
+  ],
+  "headless_browser": false,
+  "bundle": "/private/tmp/aw-ready-g61k4ppy/Connection Journey.app",
+  "repository": "/private/tmp/aw-ready-g61k4ppy/Connection Fixture",
+  "desktop": "/private/tmp/aw-ready-g61k4ppy/Connection Journey.app/Contents/MacOS/workspace-desktop",
+  "desktop_sha256": "a6573f6b2edc3facd1844dbc074709c5e22f8e0212079e08138b80b82c9b2ffe",
+  "desktop_pid": 32621,
+  "workspace": {
+    "id": "5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a",
+    "repository_id": "6039a2e2-08e0-4956-a178-fc23ad1906a9",
+    "creation_action_id": "c63d8b86-1037-409e-9d11-d1a338b7f109",
+    "name": "gilly-flaherty",
+    "branch": "workspace/gilly-flaherty",
+    "path": "/private/tmp/aw-ready-g61k4ppy/state/workspaces/connection-fixture/gilly-flaherty/checkout",
+    "legacy": false,
+    "base": {
+      "reference": "refs/heads/main",
+      "commit": "656f0d85ecfc2dc8a29e7209b0011f8a1c7263c0"
+    },
+    "artifacts": {
+      "branch": "owned",
+      "folder": "worktree"
+    },
+    "status": {
+      "state": "ready"
+    },
+    "cleanup_unconfirmed": false
+  },
+  "desktop_reopened_pid": 36766,
+  "supervisor_exit": 0,
+  "fixture_pids": [
+    35471, 35472, 35518, 35519, 37562, 37563, 37684, 37685, 37751, 37753, 37897,
+    37898, 37901, 37902, 38050, 38051, 38052, 38053, 38217, 38218
+  ],
+  "remaining_fixture_pids": []
+}

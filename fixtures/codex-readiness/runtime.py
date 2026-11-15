@@ -105,8 +105,8 @@ try:
             if scenario == "browser_verify_failure":
                 send({"id": identifier, "error": {"code": -32603, "message": "synthetic verification failure"}})
                 continue
-            account = None if scenario in ("no_auth", "browser_pending", "browser_open_failure", "browser_failure") else {"type": "apiKey"} if scenario == "api_key" else {"type": "chatgpt", "email": "fixture@example.test", "planType": "pro", "workspaceName": None}
-            send({"id": identifier, "result": {"account": account, "userId": None, "requiresOpenaiAuth": True}})
+            account = None if scenario in ("no_auth", "unknown_billing", "browser_pending", "browser_open_failure", "browser_failure") else {"type": "apiKey"} if scenario == "api_key" else {"type": "chatgpt", "email": "fixture@example.test", "planType": "pro", "workspaceName": None}
+            send({"id": identifier, "result": {"account": account, "userId": None, "requiresOpenaiAuth": scenario != "unknown_billing"}})
         elif method == "account/login/start":
             assert request["params"] == {"type": "chatgpt"}
             if scenario == "browser_start_failure":

@@ -1,0 +1,29 @@
+{
+  "state": {
+    "inspection": {
+      "5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a": {
+        "id": "4e1dc54c-713a-4bd5-bdde-7c07ca92b729",
+        "path": "reading.txt",
+        "comparison": "edf65c64-1184-4fbc-8eef-284d084cca9a",
+        "position": {
+          "top": 1360,
+          "left": 0
+        }
+      }
+    },
+    "contexts": {
+      "5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a": {
+        "view": "changes",
+        "filesWidth": 32,
+        "collapsed": false
+      }
+    },
+    "rememberedMain": {
+      "kind": "workspace",
+      "repositoryId": "6039a2e2-08e0-4956-a178-fc23ad1906a9",
+      "workspaceId": "5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a",
+      "view": "changes"
+    }
+  },
+  "version": 2
+}

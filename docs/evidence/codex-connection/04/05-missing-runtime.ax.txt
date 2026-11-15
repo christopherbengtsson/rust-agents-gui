@@ -1,0 +1,51 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selected) Codex
+					16 tab (selectable) Claude Code
+				17 container Codex
+					18 container Codex setup
+						19 text Setup needs attention
+						20 text OpenAI authentication not required
+						21 container
+							22 text Install the supported Codex runtime Install a stable Codex release meeting the minimum in Technical details using the official installation instructions, then choose Check again. If PATH changed, restart the owning supervisor with the updated environment, then reopen the app.
+							23 button Check again
+							24 button Official installation instructions
+						25 text Last known · current readiness unverified
+						26 description list
+							27 text Billing
+							28 text Unknown
+						29 container ChatGPT sign-in
+							30 heading ChatGPT, Value: 3
+								31 text ChatGPT
+							32 text Sign in through your browser.
+							33 text Your existing Codex setup stays in use until the runtime verifies a change.
+							34 button Sign in through browser
+						35 button (collapsed) Technical details, Secondary Actions: Expand
+						36 button (collapsed) Setup help, Secondary Actions: Expand
+	37 close button
+	38 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	39 minimize button
+	40 text Agent Workspace
+41 menu bar
+	42 Connection Journey
+	43 File
+	44 Edit
+	45 View
+	46 Window
+	47 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex

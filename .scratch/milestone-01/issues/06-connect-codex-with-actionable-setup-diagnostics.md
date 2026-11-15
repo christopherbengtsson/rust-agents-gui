@@ -34,14 +34,14 @@ The [MVP](../../../docs/MVP.md), [milestone](../../../docs/MILESTONE-01.md) and
 
 ## Aggregate acceptance
 
-- [ ] Connection 01, 02 and 02a each have verified acceptance, focused unit/fixture-desktop evidence and dated successor handoffs. Record 03 as deferred, without claiming implementation or qualification.
-- [ ] Connection 04 records cumulative acceptance/results, real-authentication allowance/results or explicit limits, and the A3 outcome without claiming native-agent execution qualification.
-- [ ] The supported schema/fixture provenance and real/fixture adapter seam remain available to later chat/approval tickets. Claude actions stay disabled; API-key setup and general terminals stay deferred.
-- [ ] The provider-independent workspace prerequisite is verified, and 01, 02, 02a and 04 record the agreed provider-connection ownership, adapter locality and shared observation design, including synthetic-target isolation evidence and its limits.
+- [x] Connection 01, 02 and 02a each have verified acceptance, focused unit/fixture-desktop evidence and dated successor handoffs. Record 03 as deferred, without claiming implementation or qualification.
+- [x] Connection 04 records cumulative acceptance/results, real-authentication allowance/results or explicit limits, and the A3 outcome without claiming native-agent execution qualification.
+- [x] The supported schema/fixture provenance and real/fixture adapter seam remain available to later chat/approval tickets. Claude actions stay disabled; API-key setup and general terminals stay deferred.
+- [x] The provider-independent workspace prerequisite is verified, and 01, 02, 02a and 04 record the agreed provider-connection ownership, adapter locality and shared observation design, including synthetic-target isolation evidence and its limits.
 
 The next milestone ticket remains [06a — Storage evaluation](06a-evaluate-storage-before-durable-chat.md),
-which waits for connection 04 and this aggregate outcome before 07. Implementation
-and qualification remain open. This documentation split grants no sign-in,
+which waits for connection 04 and this aggregate outcome before 07. The connection fixture aggregate is recorded below; native authentication, the
+hands-on trial and whole-milestone qualification remain open. This documentation split grants no sign-in,
 installation or provider submission allowance.
 
 ## Comments
@@ -133,3 +133,15 @@ superseded proposal with unchecked acceptance; they no longer block this aggrega
 This amendment changes current requirements only. Completed evidence and the
 historical publication comments above remain unchanged; cumulative 04 and parent
 acceptance remain open. No application implementation or qualification occurred.
+
+### 2026-11-15 — connection fixture aggregate recorded
+
+Connection 01, 02, 02a and [04](../../codex-connection/issues/04-qualify-connection-journey.md)
+now have checked fixture acceptance and dated evidence. [Cumulative A3/architecture mapping](../../../docs/evidence/codex-connection/04.md)
+links their supported-schema provenance, concrete adapter seam, shared observation
+module, provider-independent workspace handoff and synthetic-target isolation.
+03 is deferred, not passed. Real authentication and Christopher's hands-on trial
+move to a separate selected session starting with existing authentication; no
+credential replacement, native agent thread/turn or terminal work occurred.
+Whole-milestone/native execution qualification remains open. Existing 06a retains
+its separate storage-evaluation scope before 07; neither successor is implemented.

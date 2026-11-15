@@ -1,0 +1,31 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/118ee097-0952-4c06-a067-c3e7c4608089/workspace/328b7035-eea9-49d2-80b0-58c73ff5ebe3?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/118ee097-0952-4c06-a067-c3e7c4608089/workspace/328b7035-eea9-49d2-80b0-58c73ff5ebe3?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 container Loading repositories
+				10 pop up button (disabled) Add repository
+				11 text Checking connection…
+				12 pop up button Connection details
+				13 link Settings, Value: tauri://localhost/settings/general
+			14 container
+				15 heading Destination unavailable, Value: 1
+					16 text Destination unavailable
+				17 text The exact destination has not been confirmed. Retry its observations when the supervisor is available.
+				18 button Retry destination
+	19 close button
+	20 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	21 minimize button
+	22 text Agent Workspace
+23 menu bar
+	24 Connection Journey
+	25 File
+	26 Edit
+	27 View
+	28 Window
+	29 Help

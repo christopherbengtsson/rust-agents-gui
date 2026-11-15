@@ -1,0 +1,46 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 text Owned shutdown Quit could not finish: owned shutdown or its result remains unconfirmed. Keep the app open; choose Quit again to reconcile. No replacement work was started.
+			6 link Codex sign-in needs attention, Value: tauri://localhost/settings/providers?provider=codex
+			7 container
+				8 button Back
+				9 heading Settings, Value: 1
+					10 text Settings
+			11 container Settings
+				12 link General, Value: tauri://localhost/settings/general
+				13 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			14 container Providers
+				15 heading Providers, Value: 2
+					16 text Providers
+				17 tab group (selectable) Provider
+					18 tab (selected) Codex
+					19 tab (selectable) Claude Code
+				20 container Codex
+					21 container Codex setup
+						22 text Readiness unknown
+						23 container ChatGPT sign-in
+							24 heading ChatGPT, Value: 3
+								25 text ChatGPT
+							26 text Sign in through your browser.
+							27 text Your existing Codex setup stays in use until the runtime verifies a change.
+							28 text Sign-in cleanup unconfirmed
+							29 text The previous supervisor lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped.
+						30 button (collapsed) Technical details, Secondary Actions: Expand
+						31 button (collapsed) Setup help, Secondary Actions: Expand
+	32 close button
+	33 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	34 minimize button
+	35 text Agent Workspace
+36 menu bar
+	37 Connection Journey
+	38 File
+	39 Edit
+	40 View
+	41 Window
+	42 Help
+
+The focused UI element is 9 heading Settings, Value: 1

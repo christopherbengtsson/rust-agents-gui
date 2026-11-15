@@ -1,0 +1,6 @@
+{
+  "cause": "Capture helper retained the first app binding and relaunched it after its harness ended. Capture 08 is not workspace preservation evidence.",
+  "pid": 33216,
+  "verified_command": "/private/tmp/aw-ready-9j67_g4f/Connection Journey.app/Contents/MacOS/workspace-desktop",
+  "signal": "SIGTERM"
+}

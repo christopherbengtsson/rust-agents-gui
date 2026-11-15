@@ -1,0 +1,86 @@
+{
+  "cohorts": [
+    {
+      "name": "desktop",
+      "root": "/private/tmp/aw-ready-9j67_g4f",
+      "supervisor_exit": 0,
+      "desktop_exit": null,
+      "desktop_terminated_by_harness": null,
+      "remaining_fixture_pids": [],
+      "failure": "KeyError('result')",
+      "cleanup_failure": null
+    },
+    {
+      "name": "desktop-main",
+      "root": "/private/tmp/aw-ready-g61k4ppy",
+      "supervisor_exit": 0,
+      "desktop_exit": null,
+      "desktop_terminated_by_harness": null,
+      "remaining_fixture_pids": [],
+      "failure": null,
+      "cleanup_failure": null
+    },
+    {
+      "name": "supervisor-loss",
+      "root": "/private/tmp/aw-ready-ff0b4apa",
+      "supervisor_exit": -15,
+      "desktop_exit": null,
+      "desktop_terminated_by_harness": null,
+      "remaining_fixture_pids": [],
+      "failure": null,
+      "cleanup_failure": "RuntimeError('Owned provider shutdown failed; keep the app open and reconcile status.')"
+    },
+    {
+      "name": "reading-debug",
+      "root": "/private/tmp/aw-ready-g61k4ppy",
+      "supervisor_exit": 0,
+      "desktop_exit": null,
+      "desktop_terminated_by_harness": null,
+      "remaining_fixture_pids": [],
+      "failure": null,
+      "cleanup_failure": null
+    },
+    {
+      "name": "reading-debug-second",
+      "root": "/private/tmp/aw-ready-g61k4ppy",
+      "supervisor_exit": 0,
+      "desktop_exit": null,
+      "desktop_terminated_by_harness": null,
+      "remaining_fixture_pids": [],
+      "failure": null,
+      "cleanup_failure": null
+    },
+    {
+      "name": "reading-final",
+      "root": "/private/tmp/aw-ready-g61k4ppy",
+      "supervisor_exit": 0,
+      "desktop_exit": 0,
+      "desktop_terminated_by_harness": false,
+      "remaining_fixture_pids": [],
+      "failure": null,
+      "cleanup_failure": null
+    }
+  ],
+  "remaining_owned_processes": [],
+  "originals": {
+    "/private/tmp/aw-ready-9j67_g4f/Connection Fixture": {
+      "reading_file_sha256": "31859b09d44d4121882f2f07a85fdf36c29a7057c791e059cce0a36e0d2ed764",
+      "original_note": "Preserve the original checkout.\n",
+      "git_diff": ""
+    },
+    "/private/tmp/aw-ready-g61k4ppy/Connection Fixture": {
+      "reading_file_sha256": "31859b09d44d4121882f2f07a85fdf36c29a7057c791e059cce0a36e0d2ed764",
+      "original_note": "Preserve the original checkout.\n",
+      "git_diff": ""
+    },
+    "/private/tmp/aw-ready-ff0b4apa/Connection Fixture": {
+      "reading_file_sha256": "31859b09d44d4121882f2f07a85fdf36c29a7057c791e059cce0a36e0d2ed764",
+      "original_note": "Preserve the original checkout.\n",
+      "git_diff": ""
+    }
+  },
+  "fixture_browser_tabs_closed": 8,
+  "observer_created_process": "33216 verified and terminated; see observer-error.json",
+  "real_authentication": "not performed",
+  "agent_submissions": 0
+}

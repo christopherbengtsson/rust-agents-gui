@@ -69,3 +69,26 @@ exercise admission and recovery, not native compatibility with those releases.
 Use `qualify.py <supervisor> <new-report.json> --browser --headless --compatibility`
 for the focused compatibility process cohort. The desktop mode also accepts
 `version <semver>` to select synthetic version evidence without using user credentials.
+
+## Cumulative connection qualification — 2026-11-15
+
+Desktop mode with `--browser --journey` copies the fixture executable and packaged
+app into fresh private state, isolates desktop preferences, and prepares a
+disposable repository. `runtime-missing` / `runtime-restore` remove/restore only
+that private executable at the captured path; `dirty-workspace` edits only the
+one workspace created in that disposable repository. `capture <label>` saves full
+observations and process events alongside the report. `compete` exercises exact
+duplicate admission, competing-attempt rejection and readiness exclusion.
+`kill-supervisor` / `restart-supervisor` retain loss/recovery evidence; restarting
+does not clear the product's durable cleanup fence. Harness termination after
+that scenario is cleanup, not a successful product Quit claim.
+`--resume-from <completed-report.json>` reuses only that cohort's retained
+`/private/tmp/aw-ready-*` state/repository for an affected-check rerun after its
+owner has exited. It creates a new copied bundle and requires a new output report;
+it neither resets data nor clears cleanup fences. Raw events remain cumulative.
+
+`unknown_billing` supplies schema-valid `account:null` and
+`requiresOpenaiAuth:false` using the retained official **0.169.0**
+`GetAccountResponse.json`, source **d32063f96c2dff1dc96af839b3952abb6acfeda4**.
+It establishes unknown billing/account presentation, not a captured account or
+native provider behavior. All journey faults and runtime messages remain synthetic.

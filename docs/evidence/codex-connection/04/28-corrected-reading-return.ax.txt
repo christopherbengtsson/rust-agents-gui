@@ -1,0 +1,72 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/6039a2e2-08e0-4956-a178-fc23ad1906a9/workspace/5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a?view=changes
+			3 link Skip to workspace, Value: tauri://localhost/repository/6039a2e2-08e0-4956-a178-fc23ad1906a9/workspace/5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a?view=changes#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-ready-g61k4ppy/Connection Fixture Available
+							11 button Connection Fixture, Help: /private/tmp/aw-ready-g61k4ppy/Connection Fixture
+							12 button (expanded) Toggle details for Connection Fixture, Secondary Actions: Collapse
+							13 button Create workspace in Connection Fixture
+							14 text /private/tmp/aw-ready-g61k4ppy/Connection Fixture
+							15 text Available
+							16 content list
+								17 button gilly-flaherty, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 link Codex sign-in in progress, Value: tauri://localhost/settings/providers?provider=codex
+			23 container
+				24 heading gilly-flaherty, Value: 1
+					25 text gilly-flaherty
+				26 button Refresh status
+				27 container Selected repository
+					28 text /private/tmp/aw-ready-g61k4ppy/Connection Fixture
+					29 text Repository available
+				30 text Uncommitted changes
+				31 button Refresh changes
+				32 button (expanded) Hide changed files, Secondary Actions: Collapse
+				33 text Compared with HEAD 
+				34 text 656f0d85ecfc2dc8a29e7209b0011f8a1c7263c0
+				35 text  · 
+				36 text 2
+				37 text changed files
+				38 tab group (selectable) Workspace views
+					39 tab (selectable) Workspace
+					40 tab (selected) Changes
+				41 container Changes
+					42 container Selected file changes
+						43 heading reading.txt, Value: 2
+							44 text reading.txt
+						45 text Preview limited by the 200-row or 48 KiB response budget.
+						46 container Unified file diff
+				47 splitter Resize changed files, Value: 68
+				48 container Changed files
+					49 heading Changed files, Value: 2
+						50 text Changed files
+					51 container
+						52 toggle button reading.txt .M, Help: reading.txt, Value: on
+						53 toggle button second.txt ??, Help: second.txt, Value: off
+					54 button First page
+					55 button (disabled) Next files
+				56 text Local workspace
+				57 text Connection Fixture
+	58 close button
+	59 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	60 minimize button
+	61 text Agent Workspace
+62 menu bar
+	63 Connection Journey
+	64 File
+	65 Edit
+	66 View
+	67 Window
+	68 Help
+
+The focused UI element is 21 link Settings, Value: tauri://localhost/settings/general

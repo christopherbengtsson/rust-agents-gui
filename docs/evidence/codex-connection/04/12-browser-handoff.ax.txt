@@ -1,0 +1,32 @@
+Window: "private: Fixture Codex b…", App: Dia.
+0 standard window private: Fixture Codex b…, ID: bigBrowserWindow_C6EA213A-46EA-4DCB-9A1B-D3217427F082, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Fixture Codex browser sign-in, URL: 127.0.0.1:59307/fixture-sign-in
+			3 heading Fixture Codex browser sign-in
+				4 text Fixture Codex browser sign-in
+			5 text Synthetic local authentication. No credentials are collected.
+			6 link Complete fixture sign-in, Value: 127.0.0.1:59307/complete
+			7 link Fail fixture sign-in, Value: 127.0.0.1:59307/failure
+	8 container navigationBar
+		9 button (disabled) Description: Go back, Help: Hold to view history, ID: navigationBarBackButton
+		10 button (disabled) Description: Go forward, Help: Hold to view history, ID: navigationBarForwardButton
+		11 button Description: Reload this page, ID: navigationBarReloadOrStopLoadingButton
+		12 button Chat with this tab
+		13 collection
+		14 unknown navigationBarAssistantBar
+			15 unknown
+				16 scroll area
+					17 text entry area Value: http://127.0.0.1 / Fixture Codex browser sign-in, ID: navigationBarAssistantBarTextField
+18 menu bar
+	19 Dia
+	20 File
+	21 Edit
+	22 View
+	23 Tabs
+	24 Bookmarks
+	25 History
+	26 Extensions
+	27 Window
+	28 Help
+
+The focused UI element is 0 standard window private: Fixture Codex b…, ID: bigBrowserWindow_C6EA213A-46EA-4DCB-9A1B-D3217427F082, Secondary Actions: Raise

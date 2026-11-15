@@ -283,6 +283,7 @@ fn list_pages_expire_and_responses_stay_bounded() {
         .unwrap();
     assert!(serde_json::to_vec(&reply).unwrap().len() <= RESPONSE_BYTES);
     assert_eq!(observation(reply).page.unwrap().files.len(), 32);
+    effects.status.extend_from_slice(b"? added-later\0");
     refreshed(&shared, &workspace, &repository, &mut effects);
     assert!(
         shared
@@ -707,6 +708,7 @@ fn refreshed_comparisons_invalidate_queued_previews_before_effects() {
         comparison_id: page.comparison_id,
         file_id: page.files[0].id,
     };
+    effects.status = b"1 .D N... 100644 100644 000000 a b text.txt\0".to_vec();
     {
         let mut state = shared.lock().unwrap();
         state
@@ -757,6 +759,35 @@ fn load_preview(
         panic!("preview observation expected")
     };
     observation
+}
+
+#[test]
+fn unchanged_refresh_preserves_comparison_and_selected_preview() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    let first = refreshed(&shared, &workspace, &repository, &mut effects);
+    let target = PreviewTarget {
+        workspace_id: workspace.id,
+        comparison_id: first.comparison_id,
+        file_id: first.files[0].id,
+    };
+    let old = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+    let next = refreshed(&shared, &workspace, &repository, &mut effects);
+    assert_eq!(next.comparison_id, first.comparison_id);
+    assert_eq!(next.files[0].id, first.files[0].id);
+    let WorkspaceReply::ChangePreview { observation } = shared
+        .lock()
+        .unwrap()
+        .inspections
+        .preview(workspace, repository, target, false)
+        .unwrap()
+    else {
+        panic!("preview observation expected")
+    };
+    assert_eq!(observation.phase, InspectionPhase::Idle);
+    assert!(observation.error.is_none());
+    assert_eq!(observation.preview.unwrap().rows, old.preview.unwrap().rows);
 }
 
 #[test]

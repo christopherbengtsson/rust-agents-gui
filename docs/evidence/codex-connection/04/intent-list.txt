@@ -1,0 +1,39 @@
+
+3 intent-enabled packages, 11 skills
+
+PACKAGE                  SOURCE  VERSION   SKILLS  
+───────────────────────────────────────────────────
+@tanstack/react-router   local   1.170.46  2       
+@tanstack/router-plugin  local   1.169.0   1       
+@tanstack/router-core    local   1.171.39  8       
+
+Skills:
+
+  @tanstack/react-router
+    react-router            [framework]   React bindings for TanStack Router: RouterProvider, useRouter, useRouterState, useMatch, useMatches, useLocation, useSearch, useParams, useNavigate, useLoaderData, useLoaderDeps, useRouteContext, useBlocker, useCanGoBack, Link, Navigate, Outlet, CatchBoundary, ErrorComponent. React-specific patterns for hooks, providers, SSR hydration, and createLink with forwardRef.
+      Load: pnpm exec intent load @tanstack/react-router#react-router
+    compositions/router-query  [composition] Integrating TanStack Router with TanStack Query: queryClient in router context, static queries and fire-and-forget queries in loaders, useSuspenseQuery in components, defaultPreloadStaleTime: 0, setupRouterSsrQueryIntegration for SSR dehydration/hydration and streaming, per-request QueryClient isolation.
+      Load: pnpm exec intent load @tanstack/react-router#compositions/router-query
+
+  @tanstack/router-plugin
+    router-plugin           [core]        TanStack Router bundler plugin for route generation and automatic code splitting. Supports Vite, Webpack, Rspack, and esbuild. Configures autoCodeSplitting, routesDirectory, target framework, and code split groupings.
+      Load: pnpm exec intent load @tanstack/router-plugin#router-plugin
+
+  @tanstack/router-core
+    router-core             [core]        Framework-agnostic core concepts for TanStack Router: route trees, createRouter, createRoute, createRootRoute, createRootRouteWithContext, addChildren, Register type declaration, route matching, route sorting, file naming conventions. Entry point for all router skills.
+      Load: pnpm exec intent load @tanstack/router-core#router-core
+      code-splitting        [sub-skill]   Automatic code splitting (autoCodeSplitting), .lazy.tsx convention, createLazyFileRoute, createLazyRoute, lazyRouteComponent, getRouteApi for typed hooks in split files, codeSplitGroupings per-route override, splitBehavior programmatic config, critical vs non-critical properties.
+        Load: pnpm exec intent load @tanstack/router-core#router-core/code-splitting
+      data-loading          [sub-skill]   Route loader option, loaderDeps for cache keys, staleTime/gcTime/ defaultPreloadStaleTime SWR caching, pendingComponent/pendingMs/ pendingMinMs, errorComponent/onError/onCatch, beforeLoad, router context and createRootRouteWithContext DI pattern, router.invalidate, Await component, deferred data loading with unawaited promises.
+        Load: pnpm exec intent load @tanstack/router-core#router-core/data-loading
+      navigation            [sub-skill]   Link component, useNavigate, Navigate component, router.navigate, ToOptions/NavigateOptions/LinkOptions, from/to relative navigation, activeOptions/activeProps, preloading (intent/viewport/render), preloadDelay, navigation blocking (useBlocker, Block), createLink, linkOptions helper, scroll restoration, MatchRoute.
+        Load: pnpm exec intent load @tanstack/router-core#router-core/navigation
+      not-found-and-errors  [sub-skill]   notFound() function, notFoundComponent, defaultNotFoundComponent, notFoundMode (fuzzy/root), errorComponent, CatchBoundary, CatchNotFound, isNotFound, NotFoundRoute (deprecated), route masking (mask option, createRouteMask, unmaskOnReload).
+        Load: pnpm exec intent load @tanstack/router-core#router-core/not-found-and-errors
+      path-params           [sub-skill]   Dynamic path segments ($paramName), splat routes ($ / _splat), optional params ({-$paramName}), prefix/suffix patterns ({$param}.ext), useParams, params.parse/stringify, pathParamsAllowedCharacters, i18n locale patterns.
+        Load: pnpm exec intent load @tanstack/router-core#router-core/path-params
+      search-params         [sub-skill]   validateSearch, search param validation with Zod/Valibot/ArkType adapters, fallback(), search middlewares (retainSearchParams, stripSearchParams), custom serialization (parseSearch, stringifySearch), search param inheritance, loaderDeps for cache keys, reading and writing search params.
+        Load: pnpm exec intent load @tanstack/router-core#router-core/search-params
+      type-safety           [sub-skill]   Full type inference philosophy (never cast, never annotate inferred values), Register module declaration, from narrowing on hooks and Link, strict:false for shared components, getRouteApi for code-split typed access, addChildren with object syntax for TS perf, LinkProps and ValidateLinkOptions type utilities, as const satisfies pattern.
+        Load: pnpm exec intent load @tanstack/router-core#router-core/type-safety
+

@@ -1,0 +1,5 @@
+{
+  "argv": ["corepack", "pnpm", "verify"],
+  "exit": 0,
+  "seconds": 23.991680917097256
+}

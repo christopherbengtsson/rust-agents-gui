@@ -1,0 +1,405 @@
+{
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 32615,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "32615-1794766134392326000",
+        "revision": 224
+      },
+      "reset": true,
+      "provider_login_pending": true
+    }
+  },
+  "observation": {
+    "target": {
+      "id": "71189390-3e11-4ff5-bb32-3efd1e3b0592",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-ready-g61k4ppy/fixture-codex",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-71189390-3e11-4ff5-bb32-3efd1e3b0592",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 27,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "chatgpt",
+      "billing": "chatgpt",
+      "account": "fixture@example.test",
+      "plan": "pro",
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": "status_read_failed",
+    "diagnostic": "Readiness protocol exceeded its absolute 15-second deadline",
+    "login": {
+      "id": "6b27f1c1-5df0-48ad-a5e9-d1378f5b2b80",
+      "phase": "pending",
+      "outcome": null,
+      "browser_open_failed": false,
+      "diagnostic": null
+    }
+  },
+  "events": [
+    {
+      "pid": 35471,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 35472,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 35472,
+      "event": "exit"
+    },
+    {
+      "pid": 35518,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 35519,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 35519,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 35519,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 35519,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 35519,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 35519,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 35519,
+      "event": "login_cancelled",
+      "login_id": "217210bc-4bf4-4d5c-be13-5be1f64a06fc"
+    },
+    {
+      "pid": 35519,
+      "event": "exit"
+    },
+    {
+      "pid": 37562,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 37563,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 37563,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 37563,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 37563,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 37563,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 37563,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 37563,
+      "event": "exit"
+    },
+    {
+      "pid": 37684,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 37685,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 37685,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 37685,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 37685,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 37685,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 37685,
+      "event": "login_completed",
+      "login_id": "ea37126f-05f8-4d09-8070-16f639d20cb6"
+    },
+    {
+      "pid": 37685,
+      "event": "exit"
+    },
+    {
+      "pid": 37751,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 37753,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 37753,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 37753,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 37753,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 37753,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 37753,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 37753,
+      "event": "exit"
+    },
+    {
+      "pid": 37897,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 37898,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 37898,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 37898,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 37898,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 37898,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 37898,
+      "event": "login_completed",
+      "login_id": "3588a49a-5f39-48b8-9f7f-c62864ec17f3"
+    },
+    {
+      "pid": 37898,
+      "event": "exit"
+    },
+    {
+      "pid": 37901,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 37902,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 37902,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 37902,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 37902,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 37902,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 37902,
+      "event": "exit"
+    },
+    {
+      "pid": 38050,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 38051,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 38051,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 38051,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 38051,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 38052,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 38053,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 38053,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 38053,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 38053,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 38217,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 38218,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 38218,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 38218,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 38218,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 38218,
+      "event": "request",
+      "method": "account/login/start"
+    }
+  ],
+  "supervisor_poll": null,
+  "desktop_poll": null
+}

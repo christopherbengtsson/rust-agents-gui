@@ -20,7 +20,7 @@
     "crates/core/src/workspaces.rs": "856ed97f564a2baa6936c6bd3703f102f8002fd50f9b99be651598f746e38209",
     "crates/core/src/runtimes/provider_connection.rs": "c3d7be5652a2b65adc7a46bd34f3bb2ac5c5879a03771eeb617b2ab6caed87a7",
     "crates/core/src/workspaces/creation.rs": "a7daf40887919ba412f71977469ce04342071189217e58ff983bb024a77bcdb5",
-    "crates/core/src/workspaces/inspection.rs": "afb4127ad4bad14f1930b7dc04fc1cd4a0d10d40045f5e537cfac2d52ead5453",
+    "crates/core/src/workspaces/inspection.rs": "d57054b0fa57cb5a9df5d7418535d80666879dd25e0840c855321b97e07a0ae3",
     "package.json": "7b23413da273463c4f6fabd1a5acd7dc206d2c6bb5086d7edb5bd833568ec705",
     "pnpm-lock.yaml": "4e9e8b73ebb988a1f67d329a55dd93638089ebbb9cee03bf8599af0ce2f5b44c",
     "scripts/prepare-generated.mjs": "59d01036a330dc25e3b61162ad490ad31fd8931452dbb726c46fb425f74eaf92"

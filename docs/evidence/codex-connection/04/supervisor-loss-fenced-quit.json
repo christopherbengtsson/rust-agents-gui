@@ -1,0 +1,109 @@
+{
+  "snapshot": {
+    "kind": "transport",
+    "error": {
+      "code": "busy",
+      "delivery": "rejected",
+      "message": "Supervisor is shutting down; no new work admitted"
+    }
+  },
+  "observation": {
+    "target": {
+      "id": "e1890804-621c-46ec-bb45-c366cef2cc15",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-ready-ff0b4apa/fixture-codex",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-e1890804-621c-46ec-bb45-c366cef2cc15",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 0,
+    "phase": "unknown",
+    "evidence": null,
+    "problem": null,
+    "diagnostic": null,
+    "login": {
+      "id": "b7a11a6a-5c46-45c7-8534-5ac19819a561",
+      "phase": "cleanup_uncertain",
+      "outcome": null,
+      "browser_open_failed": false,
+      "diagnostic": "The previous supervisor lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped."
+    }
+  },
+  "events": [
+    {
+      "pid": 39218,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 39219,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 39219,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 39219,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 39219,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 39219,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 39219,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 39219,
+      "event": "exit"
+    },
+    {
+      "pid": 39220,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 39221,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 39221,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 39221,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 39221,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 39221,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 39221,
+      "event": "exit"
+    }
+  ],
+  "supervisor_poll": null,
+  "desktop_poll": null
+}

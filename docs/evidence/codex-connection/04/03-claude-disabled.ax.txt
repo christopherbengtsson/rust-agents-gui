@@ -1,0 +1,38 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=claude
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=claude#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selectable) Codex
+					16 tab (selected) Claude Code, Value: on
+				17 container Claude Code
+					18 container Claude Code setup
+						19 heading Claude connection isn't implemented yet, Value: 3
+							20 text Claude connection isn't implemented yet
+						21 text This tab is informational. Claude setup cannot be checked or connected here yet.
+						22 button (disabled) Sign in through browser
+						23 button (disabled) Run Claude login
+	24 close button
+	25 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	26 minimize button
+	27 text Agent Workspace
+28 menu bar
+	29 Connection Journey
+	30 File
+	31 Edit
+	32 View
+	33 Window
+	34 Help
+
+The focused UI element is 16 tab (selected) Claude Code, Value: on

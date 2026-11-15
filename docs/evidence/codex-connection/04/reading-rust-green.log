@@ -1,0 +1,104 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.55s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-f254d87852bf6363)
+
+running 26 tests
+test workspaces::inspection::tests::a_duplicate_active_preview_can_be_selected_again_without_losing_completion ... ok
+test workspaces::inspection::tests::a_hunk_header_does_not_hide_an_individually_oversized_content_row ... ok
+test workspaces::inspection::tests::acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows ... FAILED
+test workspaces::inspection::tests::binary_marker_words_inside_text_hunks_are_regular_content ... ok
+test workspaces::inspection::tests::escaped_failure_details_rebudget_the_last_good_preview ... ok
+test workspaces::inspection::tests::existing_jobs_and_inspection_take_fair_turns ... ok
+test workspaces::inspection::tests::head_status_and_selected_evidence_changes_reject_obsolete_preview_reads ... ok
+test workspaces::inspection::tests::inventory_capture_failures_do_not_establish_clean_and_can_recover ... ok
+test workspaces::inspection::tests::line_endings_and_untracked_missing_final_newline_preserve_bytes_and_numbers ... ok
+test workspaces::inspection::tests::list_byte_budget_and_pending_retention_are_bounded ... ok
+test workspaces::inspection::tests::list_pages_expire_and_responses_stay_bounded ... FAILED
+test workspaces::inspection::tests::manual_inspection_coalesces_and_retains_last_good_after_git_failure ... ok
+test workspaces::inspection::tests::manual_text_add_delete_and_clean_outcomes_are_distinct ... ok
+test workspaces::inspection::tests::previews_bound_rows_and_escaped_bytes_without_diff_pagination ... ok
+test workspaces::inspection::tests::refreshed_comparisons_invalidate_queued_previews_before_effects ... FAILED
+test workspaces::inspection::tests::refreshed_same_status_keeps_file_identity_and_replaces_selected_content ... ok
+test workspaces::inspection::tests::selected_file_failure_retains_previous_comparison_with_explicit_identity ... FAILED
+test workspaces::inspection::tests::status_keeps_index_worktree_and_raw_path_identity ... ok
+test workspaces::inspection::tests::supplied_content_outcomes_keep_unsupported_empty_and_net_cancellation_distinct ... ok
+test workspaces::inspection::tests::supplied_read_and_diff_failures_retain_last_good_then_clear_on_success ... FAILED
+test workspaces::inspection::tests::unchanged_refresh_preserves_comparison_and_selected_preview ... ok
+test workspaces::inspection::tests::unified_rows_keep_source_numbers_and_missing_newline_markers ... ok
+test workspaces::inspection::tests::unsafe_content_labels_and_changed_evidence_do_not_read_text ... ok
+test workspaces::inspection::tests::unsafe_inventory_entries_never_read_or_diff_as_text ... ok
+test workspaces::inspection::tests::unsupported_content_is_not_read_and_failed_diff_is_not_a_prefix ... ok
+test workspaces::inspection::tests::unusual_paths_keep_raw_identity_even_when_display_labels_collide ... ok
+
+failures:
+
+---- workspaces::inspection::tests::acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows stdout ----
+
+thread 'workspaces::inspection::tests::acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows' (34068127) panicked at crates/core/src/workspaces/inspection/tests.rs:749:5:
+assertion failed: process_inspection(shared, effects)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- workspaces::inspection::tests::list_pages_expire_and_responses_stay_bounded stdout ----
+
+thread 'workspaces::inspection::tests::list_pages_expire_and_responses_stay_bounded' (34068144) panicked at crates/core/src/workspaces/inspection/tests.rs:287:5:
+assertion failed: shared.lock().unwrap().inspections.changes(workspace, repository, false,
+        Some(first.comparison_id), first.next).is_err()
+
+---- workspaces::inspection::tests::refreshed_comparisons_invalidate_queued_previews_before_effects stdout ----
+
+thread 'workspaces::inspection::tests::refreshed_comparisons_invalidate_queued_previews_before_effects' (34068149) panicked at crates/core/src/workspaces/inspection/tests.rs:725:5:
+assertion failed: state.inspections.preview(workspace, repository, target, false).is_err()
+
+---- workspaces::inspection::tests::selected_file_failure_retains_previous_comparison_with_explicit_identity stdout ----
+
+thread 'workspaces::inspection::tests::selected_file_failure_retains_previous_comparison_with_explicit_identity' (34068151) panicked at crates/core/src/workspaces/inspection/tests.rs:253:5:
+assertion `left == right` failed
+  left: Ready
+ right: Failed
+
+---- workspaces::inspection::tests::supplied_read_and_diff_failures_retain_last_good_then_clear_on_success stdout ----
+
+thread 'workspaces::inspection::tests::supplied_read_and_diff_failures_retain_last_good_then_clear_on_success' (34068155) panicked at crates/core/src/workspaces/inspection/tests.rs:749:5:
+assertion failed: process_inspection(shared, effects)
+
+
+failures:
+    workspaces::inspection::tests::acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows
+    workspaces::inspection::tests::list_pages_expire_and_responses_stay_bounded
+    workspaces::inspection::tests::refreshed_comparisons_invalidate_queued_previews_before_effects
+    workspaces::inspection::tests::selected_file_failure_retains_previous_comparison_with_explicit_identity
+    workspaces::inspection::tests::supplied_read_and_diff_failures_retain_last_good_then_clear_on_success
+
+test result: FAILED. 21 passed; 5 failed; 0 ignored; 0 measured; 170 filtered out; finished in 0.24s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

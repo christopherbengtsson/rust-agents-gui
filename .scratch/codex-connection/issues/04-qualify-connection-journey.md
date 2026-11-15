@@ -26,13 +26,13 @@ Do not implement its archived plan during qualification.
 
 ## Acceptance
 
-- [ ] Record an A3 requirement-to-evidence mapping across 01, 02, 02a and this cumulative cohort, including supported runtime/schema/fixture provenance, source identity, effective configuration, exact commands/results, failed attempts and unperformed limits. Preserve predecessor evidence; identify 03 as deferred rather than passed and cover shared gaps here instead of mechanically repeating unchanged checks.
-- [ ] Map architecture acceptance to evidence: one Rust provider-connection owner, concrete adapters supplying evidence without duplicated policy, one provider-observation feature module reusing the foundation, provider-independent workspace records, and exact provider/configuration/attempt identity. Retain deterministic synthetic-target evidence for independent readiness, cross-target result isolation, same-scope readiness/login and duplicate-login exclusion, and scoped cleanup fencing; do not promote it to native multi-provider qualification.
-- [ ] Qualify the packaged desktop through the production core/supervisor path with private fixture state: existing authentication first without requiring a login-method choice, unknown billing/account data, missing/incompatible setup and recovery, one browser sign-in action with handoff/cancel/reopen and authoritative recheck, and failures that retain stale/uncertain observations. A CLI selector, embedded terminal and command-output viewer are outside this cohort.
-- [ ] Qualify browser admission and lifecycle: duplicate/competing requests, provider/Settings/workspace navigation and progress return, desktop-only crash/reconnect, supervisor loss, late setup/cancel results and explicit Quit. Confirm retained ownership, no automatic sign-in replay or agent launch, physical process cleanup, and visible/fenced cleanup uncertainty.
-- [ ] Qualify ordinary/minimum-window layout, keyboard access, accessible names/landmark labels, focus/return across General/Providers/tabs, nested-overlay Escape precedence, disabled-Claude explanations/actions, and workspace reading-context preservation. Record actual accessibility checks and their limits separately from controlled DOM units. Record a hands-on connection trial with Christopher when feasible, without claiming general usability from one trial.
-- [ ] Keep deterministic unit, actual fixture-desktop, real-authentication and native-agent results separately labeled. Agree any real-authentication scenarios before running them and record their cohort/results without signing out or replacing credentials silently. If not agreed/performed, record that limit explicitly; it neither proves native login nor waives the milestone's remaining qualification. Submit no agent threads/turns.
-- [ ] Resolve scoped defects, run the configured checks relevant to any fixes and affected cumulative paths, and publish dated evidence. Check only verified acceptance. Once required child acceptance passes, link the evidence from parent 06's aggregate acceptance; keep whole-milestone/native-agent acceptance open and hand off to existing 06a without implementing it.
+- [x] Record an A3 requirement-to-evidence mapping across 01, 02, 02a and this cumulative cohort, including supported runtime/schema/fixture provenance, source identity, effective configuration, exact commands/results, failed attempts and unperformed limits. Preserve predecessor evidence; identify 03 as deferred rather than passed and cover shared gaps here instead of mechanically repeating unchanged checks.
+- [x] Map architecture acceptance to evidence: one Rust provider-connection owner, concrete adapters supplying evidence without duplicated policy, one provider-observation feature module reusing the foundation, provider-independent workspace records, and exact provider/configuration/attempt identity. Retain deterministic synthetic-target evidence for independent readiness, cross-target result isolation, same-scope readiness/login and duplicate-login exclusion, and scoped cleanup fencing; do not promote it to native multi-provider qualification.
+- [x] Qualify the packaged desktop through the production core/supervisor path with private fixture state: existing authentication first without requiring a login-method choice, unknown billing/account data, missing/incompatible setup and recovery, one browser sign-in action with handoff/cancel/reopen and authoritative recheck, and failures that retain stale/uncertain observations. A CLI selector, embedded terminal and command-output viewer are outside this cohort.
+- [x] Qualify browser admission and lifecycle: duplicate/competing requests, provider/Settings/workspace navigation and progress return, desktop-only crash/reconnect, supervisor loss, late setup/cancel results and explicit Quit. Confirm retained ownership, no automatic sign-in replay or agent launch, physical process cleanup, and visible/fenced cleanup uncertainty.
+- [x] Qualify ordinary/minimum-window layout, keyboard access, accessible names/landmark labels, focus/return across General/Providers/tabs, nested-overlay Escape precedence, disabled-Claude explanations/actions, and workspace reading-context preservation. Record actual accessibility checks and their limits separately from controlled DOM units. Record a hands-on connection trial with Christopher when feasible, without claiming general usability from one trial.
+- [x] Keep deterministic unit, actual fixture-desktop, real-authentication and native-agent results separately labeled. Agree any real-authentication scenarios before running them and record their cohort/results without signing out or replacing credentials silently. If not agreed/performed, record that limit explicitly; it neither proves native login nor waives the milestone's remaining qualification. Submit no agent threads/turns.
+- [x] Resolve scoped defects, run the configured checks relevant to any fixes and affected cumulative paths, and publish dated evidence. Check only verified acceptance. Once required child acceptance passes, link the evidence from parent 06's aggregate acceptance; keep whole-milestone/native-agent acceptance open and hand off to existing 06a without implementing it.
 
 ## Handoff boundary
 
@@ -64,3 +64,24 @@ is deferred, not waived by a pass. Keep verification bounded: reuse unchanged
 evidence, run one focused fixture cohort and relevant gates once, and rerun only
 affected checks after a concrete failure or scoped fix. No product changes or
 qualification were performed in this scope update.
+
+### 2026-11-15 — cumulative fixture scope qualified
+
+[Evidence, A3/architecture mapping, commands, failures, cleanup and trial handoff](../../../docs/evidence/codex-connection/04.md)
+record the bounded fixture-only cohort across checked 01/02/02a. Actual packaged
+readiness/browser/navigation/minimum-layout/keyboard/reconnect/supervisor-loss/
+owned-Quit checks passed within their recorded source cohorts. Qualification
+exposed polling replacing unchanged workspace comparison identity; the scoped
+Rust correction passed its failing regression, all 26 inspection units, corrected
+static/preparation/packaging checks and actual reading-context return during sign-in.
+Baseline complete verification passed 195 Rust / 51 tooling / 253 frontend units;
+aggregate current coverage adds one Rust regression. Failed harness/observer and
+intermediate correction attempts remain retained. All fixture-process audits ended
+without remaining owned processes; uncertain product cleanup is separately labeled.
+
+The user moved Christopher's hands-on trial to a separate Codex session starting
+with existing real authentication. No real authentication, credential change,
+agent thread/turn, screen-reader speech, Claude/OpenCode integration, terminal or
+command viewer was performed. 03 remains deferred. Parent 06 records the fixture
+aggregate; whole-milestone/native-agent acceptance stays open. Separate-session
+trial instructions are in the evidence; 06a/07 were not implemented.

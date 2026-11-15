@@ -4,7 +4,9 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import plistlib
 import select
+import shutil
 import signal
 import socket
 import struct
@@ -16,13 +18,20 @@ import threading
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-root = Path(tempfile.mkdtemp(prefix="aw-ready-", dir="/private/tmp"))
+output = Path(sys.argv[2])
+assert not output.exists(), "Choose a new evidence destination; preserve prior attempts"
+if "--resume-from" in sys.argv:
+    assert "--journey" in sys.argv and len(sys.argv) > 3 and not sys.argv[3].startswith("--")
+resume = Path(sys.argv[sys.argv.index("--resume-from") + 1]) if "--resume-from" in sys.argv else None
+root = Path(json.loads(resume.read_text())["root"]) if resume else Path(tempfile.mkdtemp(prefix="aw-ready-", dir="/private/tmp"))
+assert root.parent == Path("/private/tmp") and root.name.startswith("aw-ready-")
 root.chmod(0o700)
 state = root / "state"
-state.mkdir(mode=0o700)
+state.mkdir(mode=0o700, exist_ok=bool(resume))
 control = root / "control.json"
 control.write_text(json.dumps({"scenario": "ready"}))
 browser = "--browser" in sys.argv
+journey = "--journey" in sys.argv
 landing = None
 def scenario(value):
     settings = json.loads(control.read_text())
@@ -45,6 +54,11 @@ if browser:
 supervisor_path = Path(sys.argv[1]).resolve(strict=True)
 protocol = int(subprocess.check_output([str(supervisor_path), "--protocol-version"], text=True))
 runtime = Path(__file__).with_name("runtime.py").resolve(strict=True)
+if journey:
+    private_runtime = root / "fixture-codex"
+    shutil.copyfile(runtime, private_runtime)
+    private_runtime.chmod(0o700)
+    runtime = private_runtime
 missing = "--missing" in sys.argv
 if missing:
     runtime = root / "missing-codex"
@@ -79,7 +93,9 @@ def exchange(**fields):
 owner = exchange()["snapshot"]["cursor"]["owner"]
 
 
-def provider(request, expected=owner):
+def provider(request, expected=None):
+    if expected is None:
+        expected = owner
     reply = exchange(expected_owner=expected, provider=request)
     assert reply["owner"] == expected
     return reply["result"]["Ok"]
@@ -128,9 +144,8 @@ def start_login(lost=False):
 
 
 report = {"protocol": protocol, "root": str(root), "owner": owner, "supervisor_pid": supervisor.pid, "supervisor": str(supervisor_path), "supervisor_sha256": hashlib.sha256(supervisor_path.read_bytes()).hexdigest(), "target": target, "checks": [], "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process."}
+report["commands"] = []
 report["headless_browser"] = "--headless" in sys.argv
-output = Path(sys.argv[2])
-assert not output.exists(), "Choose a new evidence destination; preserve prior attempts"
 desktop = None
 
 
@@ -153,6 +168,30 @@ def check(name, action):
 try:
     if len(sys.argv) > 3 and not sys.argv[3].startswith("--"):
         desktop_path = Path(sys.argv[3]).resolve(strict=True)
+        if journey:
+            bundle = root / ("Connection Journey " + output.stem + ".app")
+            shutil.copytree(desktop_path.parents[2], bundle)
+            plist = bundle / "Contents/Info.plist"
+            info = plistlib.loads(plist.read_bytes())
+            info.update(CFBundleIdentifier="dev.christopherbengtsson.connection." + root.name,
+                        CFBundleName="Connection Journey")
+            plist.write_bytes(plistlib.dumps(info))
+            desktop_path = bundle / "Contents/MacOS" / desktop_path.name
+            report["bundle"] = str(bundle)
+            repo = root / "Connection Fixture"
+            repo.mkdir(exist_ok=bool(resume))
+            for args in ([] if resume else [["init", "--initial-branch=main"], ["add", "."],
+                         ["-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+                          "-c", "core.hooksPath=/dev/null", "commit", "--no-gpg-sign", "-m", "Disposable connection fixture"]]):
+                if args[0] == "add":
+                    (repo / "reading.txt").write_text("".join(f"Committed reading line {i:03d}\n" for i in range(160)))
+                result = subprocess.run(["git", "-C", str(repo), *args], text=True, capture_output=True)
+                report["commands"].append({"argv": result.args, "exit": result.returncode,
+                                           "stdout": result.stdout, "stderr": result.stderr})
+                result.check_returncode()
+            if not resume:
+                (repo / "original-only.txt").write_text("Preserve the original checkout.\n")
+            report["repository"] = str(repo)
 
         def start_desktop():
             return subprocess.Popen([str(desktop_path)], env=env, stdout=(root / "desktop.log").open("a"), stderr=subprocess.STDOUT)
@@ -165,6 +204,7 @@ try:
         print(json.dumps(report), flush=True)
         for command in sys.stdin:
             command = command.strip()
+            report["commands"].append({"control": command, "time": time.time()})
             if command == "stop":
                 break
             if command.startswith("scenario "):
@@ -182,7 +222,50 @@ try:
             elif command == "kill-desktop":
                 desktop.kill(); desktop.wait(timeout=5)
             elif command == "processes":
-                print(json.dumps({"supervisor_alive": supervisor.poll() is None, "desktop_alive": desktop.poll() is None, "events": events()}), flush=True)
+                process_status = {"supervisor_alive": supervisor.poll() is None, "desktop_alive": desktop.poll() is None, "events": events()}
+                report.setdefault("process_observations", []).append(process_status)
+                print(json.dumps(process_status), flush=True)
+            elif journey and command in ("runtime-missing", "runtime-restore"):
+                parked = runtime.with_suffix(".parked")
+                (runtime if command == "runtime-missing" else parked).rename(parked if command == "runtime-missing" else runtime)
+            elif journey and command.startswith("capture "):
+                label = command.split(" ", 1)[1]
+                assert label.replace("-", "").isalnum(), "Use a simple capture label"
+                value = {"snapshot": exchange(), "observation": observe(), "events": events(),
+                         "supervisor_poll": supervisor.poll(), "desktop_poll": desktop.poll()}
+                output.with_name(output.stem + "-" + label + ".json").write_text(json.dumps(value, indent=2) + "\n")
+                print(json.dumps({"capture": label, "owner": owner, "events": len(value["events"]), "observation": value["observation"]}), flush=True)
+            elif journey and command == "dirty-workspace":
+                repos = exchange(expected_owner=owner, repository={"operation": "list", "after": None, "refresh": False})["result"]["Ok"]["page"]["repositories"]
+                assert len(repos) == 1
+                workspaces = exchange(expected_owner=owner, workspace={"operation": "list", "repository_id": repos[0]["id"], "after": None})["result"]["Ok"]["page"]["workspaces"]
+                assert len(workspaces) == 1 and workspaces[0]["path"]
+                workspace = Path(workspaces[0]["path"])
+                (workspace / "reading.txt").write_text("".join(f"Changed reading line {i:03d}\n" for i in range(160)))
+                (workspace / "second.txt").write_text("A second selectable fixture file.\n")
+                report["workspace"] = workspaces[0]
+                print(json.dumps({"workspace": workspaces[0]}), flush=True)
+            elif journey and command == "compete":
+                value = observe()
+                attempt = value["login"]
+                duplicate = provider({"operation": "start_browser_login", "target_id": target["id"], "attempt_id": attempt["id"], "expected_revision": value["revision"]})
+                competitor = exchange(expected_owner=owner, provider={"operation": "start_browser_login", "target_id": target["id"], "attempt_id": str(uuid.uuid4()), "expected_revision": value["revision"]})
+                assert duplicate["observation"]["login"]["id"] == attempt["id"]
+                assert "Err" in competitor["result"]
+                observe(True)
+                report["checks"].append({"name": "duplicate and competing browser admission", "passed": True, "attempt": attempt["id"], "competitor": competitor})
+            elif journey and command == "kill-supervisor":
+                report["before_supervisor_loss"] = {"observation": observe(), "events": events()}
+                supervisor.kill(); supervisor.wait(timeout=5)
+                report["lost_supervisor_exit"] = supervisor.returncode
+            elif journey and command == "restart-supervisor":
+                assert supervisor.poll() is not None
+                supervisor = subprocess.Popen([str(supervisor_path), str(state)], env=env, stdout=subprocess.PIPE, stderr=(root / "supervisor-restarted.log").open("w"))
+                assert select.select([supervisor.stdout], [], [], 5)[0]
+                assert supervisor.stdout.readline() == b"ready\n"
+                owner = exchange()["snapshot"]["cursor"]["owner"]
+                target = provider({"operation": "target"}, expected=owner)["target"]
+                report["replacement_supervisor"] = {"pid": supervisor.pid, "owner": owner, "target": target}
             save()
     elif "--compatibility" in sys.argv:
         def set_version(value):
@@ -401,7 +484,12 @@ try:
             assert len(events()) == before
             return reply
         check("wrong owner rejected without effects", wrong_owner)
+except BaseException as error:
+    report["failure"] = repr(error)
+    save()
+    raise
 finally:
+    report["desktop_terminated_by_harness"] = bool(desktop and desktop.poll() is None)
     if desktop and desktop.poll() is None:
         desktop.terminate()
         desktop.wait(timeout=5)
@@ -425,6 +513,7 @@ finally:
         supervisor.wait(timeout=5)
     if landing: landing.shutdown(); landing.server_close()
     report["supervisor_exit"] = supervisor.returncode
+    report["desktop_exit"] = desktop.returncode if desktop else None
     records = events()
     assert not any(e["event"].startswith("forbidden") for e in records)
     pids = sorted({e["pid"] for e in records})

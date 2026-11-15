@@ -1,0 +1,118 @@
+{
+  "protocol": 13,
+  "root": "/private/tmp/aw-ready-9j67_g4f",
+  "owner": "31945-1794765993126041000",
+  "supervisor_pid": 31945,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "supervisor_sha256": "3500a78e89d046547823e72b83c2d053f7f9a92755cd82f2133e96a63e2dd3a5",
+  "target": {
+    "id": "d187a16f-d982-4ef3-a161-5aae9a9cae38",
+    "provider": "codex",
+    "executable": "/private/tmp/aw-ready-9j67_g4f/fixture-codex",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-d187a16f-d982-4ef3-a161-5aae9a9cae38",
+    "minimum_supported_version": "0.169.0"
+  },
+  "checks": [],
+  "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process.",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-ready-9j67_g4f/Connection Fixture",
+        "init",
+        "--initial-branch=main"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /private/tmp/aw-ready-9j67_g4f/Connection Fixture/.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-ready-9j67_g4f/Connection Fixture",
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-ready-9j67_g4f/Connection Fixture",
+        "-c",
+        "user.name=Fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--no-gpg-sign",
+        "-m",
+        "Disposable connection fixture"
+      ],
+      "exit": 0,
+      "stdout": "[main (root-commit) d452514] Disposable connection fixture\n 1 file changed, 160 insertions(+)\n create mode 100644 reading.txt\n",
+      "stderr": ""
+    },
+    {
+      "control": "scenario ready",
+      "time": 1794765996.3608289
+    },
+    {
+      "control": "capture first-entry",
+      "time": 1794766015.253313
+    },
+    {
+      "control": "scenario unknown_billing",
+      "time": 1794766030.4916961
+    },
+    {
+      "control": "capture unknown-billing",
+      "time": 1794766048.008922
+    },
+    {
+      "control": "runtime-missing",
+      "time": 1794766048.011392
+    },
+    {
+      "control": "capture missing",
+      "time": 1794766063.975992
+    },
+    {
+      "control": "runtime-restore",
+      "time": 1794766063.9772742
+    },
+    {
+      "control": "scenario gateway_unsupported",
+      "time": 1794766063.9776719
+    },
+    {
+      "control": "capture incompatible",
+      "time": 1794766083.40299
+    },
+    {
+      "control": "scenario no_auth",
+      "time": 1794766083.404592
+    },
+    {
+      "control": "dirty-workspace",
+      "time": 1794766108.517113
+    }
+  ],
+  "headless_browser": false,
+  "bundle": "/private/tmp/aw-ready-9j67_g4f/Connection Journey.app",
+  "repository": "/private/tmp/aw-ready-9j67_g4f/Connection Fixture",
+  "desktop": "/private/tmp/aw-ready-9j67_g4f/Connection Journey.app/Contents/MacOS/workspace-desktop",
+  "desktop_sha256": "a6573f6b2edc3facd1844dbc074709c5e22f8e0212079e08138b80b82c9b2ffe",
+  "desktop_pid": 31951,
+  "failure": "KeyError('result')",
+  "supervisor_exit": 0,
+  "fixture_pids": [31989, 31990, 32059, 32060, 32189, 32190, 32253, 32254],
+  "remaining_fixture_pids": []
+}
