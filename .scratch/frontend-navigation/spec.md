@@ -10,6 +10,17 @@ Read the [MVP](../../docs/MVP.md), [Milestone 01](../../docs/MILESTONE-01.md),
 [verification policy](../../docs/agents/verification.md), and
 [component guide](../../src/components/README.md) for their respective policy and context.
 
+### Development compatibility amendment — 2026-11-15
+
+For subsequent Milestone 01 work, this spec adopts the milestone's
+[development compatibility policy](../../docs/MILESTONE-01.md#development-compatibility-policy).
+Earlier application storage, IPC and preference formats need no backward support,
+migration or compatibility-only tests. This supersedes such requirements in the
+foundation plan and its completed tickets for future changes; their recorded
+F05/F06/F08 migration results remain historical evidence. Current-format validation,
+persistence/recovery, owner exclusion, physical cleanup and external provider
+protocol qualification remain required.
+
 ## 1. Purpose, scope, and publication
 
 Build the foundation for our own Conductor-style application before starting
@@ -166,7 +177,8 @@ Generated structural checks precede named semantic assertions: owner, exact targ
 request/reply kind, cursor/watermark/batch relationships, state combinations, safe
 integers, UTF-8 byte budgets and normalized-path/custom-deserializer rules. Preserve
 variant-specific exclusions without imposing blanket closed-object rules that
-break flattened Serde shapes. Preference migrations remain explicit local contracts.
+break flattened Serde shapes. Preference format changes follow the development
+compatibility amendment above; earlier formats need no migration contract.
 
 One preparation owner provides explicit write and read-only drift modes, shared by
 dev/check/build/Tauri/CI; check drift before any generation can repair it. F06 adds
@@ -342,7 +354,7 @@ F04e establishes the store; F05 completes allowlisted persistence and integratio
 Use an app-scoped store for per-workspace selected-file/comparison context, reading
 position, panel layout, and selected remembered navigation preferences. Router owns
 current destination/view; remembered values only provide restoration defaults.
-Persist an allowlist with validation/migration and visible storage failures. Keep
+Persist an allowlist with current-format validation and visible storage failures. Keep
 heavy previews, transcripts, credentials, pending execution authority, and
 authoritative snapshots out. Retain context across workspace/settings switches;
 revalidate comparison-specific context before restoration.
@@ -371,8 +383,8 @@ remove independent selection ownership. Validate repository/workspace membership
 including records outside the current page.
 
 Explicit destinations override remembered navigation. Ordinary startup restores the
-last valid main destination/view. Migrate old selection preferences without touching
-pending-action records. Confirmed stale startup targets fall back home; temporary
+last valid main destination/view. Restore current-format selection preferences
+independently of pending-action records. Confirmed stale startup targets fall back home; temporary
 connection failures retain navigation and show failure. Invalid explicit targets show
 unavailable/retry guidance. Capture navigation generations for action completion;
 Settings, Back/Forward, and A→B→A navigation invalidate redirect eligibility.
@@ -478,7 +490,7 @@ Preserve existing scenarios. Add deterministic coverage for owner/target mismatc
 replacement before next UI snapshot, uncertainty after pre-send rejection, admission
 and physical draining, discovery/no-replay, publication completeness, coalescing,
 overflow/gaps/resync, changes during baseline/reads, acknowledgement/deadline/stall/
-cleanup, route history/preference migration/membership/late navigation, context
+cleanup, route history/current-format preferences/membership/late navigation, context
 restoration, and clean-checkout generated-route preparation.
 
 Application units substitute dependencies. Actual sockets, Tauri delivery, process

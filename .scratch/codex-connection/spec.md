@@ -200,3 +200,16 @@ feature implementation acceptance; and `git diff --check`. Seven historical
 outside-workspace links were skipped without inspecting their targets. Application
 units, generation, builds, fixture-desktop, authentication, native-agent and user
 trial qualification were not run for this documentation-only amendment.
+
+## Review record — 2026-11-15
+
+Independent Standards and Spec reviews examined the planning publication
+`96aa6ff...564e573` against repository policy and the agreed provider architecture,
+workspace cleanup, session boundaries and development compatibility policy.
+Standards found one precedence ambiguity: the higher-precedence frontend spec
+still required preference migrations. Its prospective amendment now adopts the
+milestone policy and replaces active migration requirements with current-format
+validation/restoration requirements, preserving historical checkpoint evidence.
+Standards re-review: zero unresolved findings. Spec review and re-review: zero
+findings. This reviews documentation consistency; implementation and qualification
+acceptance remain open.
