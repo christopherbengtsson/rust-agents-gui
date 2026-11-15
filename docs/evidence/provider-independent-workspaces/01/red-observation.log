@@ -1,0 +1,28 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-contracts.test.tsx (10 tests | 1 failed) 180ms
+   × provider-independent workspace observations retain allocation, recovery and target checks 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-contracts.test.tsx > provider-independent workspace observations retain allocation, recovery and target checks
+Error: Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/supervisor build.
+ ❯ replyUnavailable src/lib/observation-contracts.ts:84:24
+     82| }
+     83| export function replyUnavailable(message: string): ObservationError {
+     84|   return Object.assign(new Error(message), {
+       |                        ^
+     85|     code: "reply_unavailable",
+     86|     source: "transport" as const,
+ ❯ Module.decodeWorkspaceReply src/lib/workspaces.ts:148:9
+ ❯ src/observation-contracts.test.tsx:138:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  02:03:29
+   Duration  722ms (environment 44%, tests 27%, import 21%, transform 7%, setup 1%)
+

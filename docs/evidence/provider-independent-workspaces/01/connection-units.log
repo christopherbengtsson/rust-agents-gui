@@ -1,0 +1,72 @@
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-b1a480319bfd89d6)
+
+running 35 tests
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::admitted_error_unwind_unstarted_drop_and_server_ceiling_release_capacity ... ok
+test connection::tests::admitted_waiter_drop_retains_capacity_and_allows_status_and_control ... ok
+test connection::tests::application_corpus_matches_pure_rust_serialization ... ok
+test connection::tests::blocking_workers_keep_permits_after_waiter_drop_and_cleanup_awaits_completion ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::cancellation_closes_pending_request_and_server_handlers_without_effects ... ok
+test connection::tests::client_bad_lost_or_stalled_replies_never_reconnect_or_repeat ... ok
+test connection::tests::client_preserves_versions_cursor_chunked_reply_and_incompatibility_without_retry ... ok
+test connection::tests::client_private_access_and_connect_failure_precede_io_and_never_retry ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::desktop_admission_leaves_status_and_intent_independent_of_stalled_observations ... ok
+test connection::tests::discovery_cancellation_wakes_startup_delay_without_waiting ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::invalid_snapshot_cannot_replace_the_connections_observed_owner ... ok
+test connection::tests::large_chunked_reply_survives_eof_after_payload_and_preserves_buffered_next_frame ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::malformed_oversized_and_legacy_framing_close_without_dispatch_or_output ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::only_one_discovery_is_admitted_and_no_state_lock_spans_effects ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::oversized_request_rejects_before_private_checks_or_socket_access ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::server_routes_workspace_and_repository_errors_without_fabricating_empty_records ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers_without_domain_effects ... ok
+test connection::tests::targeted_client_rejects_replacement_kind_and_target_without_another_exchange ... ok
+test connection::tests::targeted_exchange_reports_delivery_at_physical_boundary_without_replay ... ok
+test connection::tests::two_running_observations_leave_status_and_intent_effects_responsive ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test connection::tests::workspace_variants_share_observation_and_intent_budgets_with_repository_requests ... ok
+test connection::tests::wrong_owner_every_target_and_mixed_context_are_rejected_before_effects ... ok
+
+test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 127 filtered out; finished in 0.01s
+

@@ -2377,9 +2377,6 @@
               "null"
             ]
           },
-          "provider": {
-            "type": "string"
-          },
           "repository_id": {
             "$ref": "#/$defs/RepositoryId"
           },
@@ -2395,7 +2392,6 @@
           "branch",
           "path",
           "legacy",
-          "provider",
           "base",
           "artifacts",
           "status",
@@ -4696,9 +4692,6 @@
           "null"
         ]
       },
-      "provider": {
-        "type": "string"
-      },
       "repository_id": {
         "$ref": "#/$defs/RepositoryId"
       },
@@ -4714,7 +4707,6 @@
       "branch",
       "path",
       "legacy",
-      "provider",
       "base",
       "artifacts",
       "status",
@@ -5016,9 +5008,6 @@
               "null"
             ]
           },
-          "provider": {
-            "type": "string"
-          },
           "repository_id": {
             "$ref": "#/$defs/RepositoryId"
           },
@@ -5034,7 +5023,6 @@
           "branch",
           "path",
           "legacy",
-          "provider",
           "base",
           "artifacts",
           "status",
@@ -5586,9 +5574,6 @@
               "null"
             ]
           },
-          "provider": {
-            "type": "string"
-          },
           "repository_id": {
             "$ref": "#/$defs/RepositoryId"
           },
@@ -5604,7 +5589,6 @@
           "branch",
           "path",
           "legacy",
-          "provider",
           "base",
           "artifacts",
           "status",

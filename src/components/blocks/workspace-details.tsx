@@ -55,7 +55,6 @@ export function WorkspaceDetails({
         <Badge variant={failure ? "destructive" : "secondary"}>
           {workspaceStatus(workspace.status)}
         </Badge>
-        <Badge variant="outline">Codex</Badge>
       </div>
       <h2 className="workspace-welcome">
         {workspace.status.state === "ready"

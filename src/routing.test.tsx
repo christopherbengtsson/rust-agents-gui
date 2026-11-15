@@ -55,7 +55,6 @@ const workspace: Workspace = {
   name: "exact workspace",
   branch: "workspace/exact",
   path: "/fixture/workspace",
-  provider: "codex",
   base: { reference: "refs/heads/main", commit: "a".repeat(40) },
   artifacts: { branch: "owned", folder: "worktree" },
   status: { state: "ready" },

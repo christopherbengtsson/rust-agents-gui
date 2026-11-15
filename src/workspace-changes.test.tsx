@@ -1120,7 +1120,6 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
     name: "first",
     path: "/private/first/checkout",
     branch: "workspace/first",
-    provider: "codex",
     base: null,
     artifacts: { branch: "owned", folder: "worktree" },
     status: { state: "ready" },

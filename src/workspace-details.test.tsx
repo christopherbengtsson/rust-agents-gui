@@ -12,7 +12,6 @@ const workspace: Workspace = {
   branch: `workspace/kyoto-${id}`,
   path: `/state/${id}/kyoto-${id}/checkout`,
   legacy: true,
-  provider: "codex",
   base: null,
   artifacts: { branch: "unknown", folder: "unknown" },
   status: { state: "queued" },
@@ -62,4 +61,31 @@ test("pending allocation reports missing location without inventing a path or sh
     screen.getByText("A name and folder have not been reserved yet."),
   ).toBeDefined();
   expect(view.container.textContent).not.toContain(id);
+});
+
+test("workspace facts and recovery have no provider ownership badge", () => {
+  const view = render(
+    <WorkspaceDetails
+      workspace={{
+        ...workspace,
+        legacy: false,
+        status: {
+          state: "failed",
+          error: { code: "git", message: "Worktree failed; files retained" },
+        },
+      }}
+      connected
+      stale={false}
+      pending={false}
+      onReconcile={() => {}}
+    />,
+  );
+  expect(screen.getByText(workspace.path!)).toBeDefined();
+  expect(screen.getByText(workspace.branch!)).toBeDefined();
+  expect(
+    screen
+      .getByRole("button", { name: "Reconcile workspace" })
+      .hasAttribute("disabled"),
+  ).toBe(false);
+  expect(view.container.textContent).not.toContain("Codex");
 });

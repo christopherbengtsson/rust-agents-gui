@@ -83,7 +83,6 @@ pub struct Workspace {
     pub path: Option<String>,
     #[serde(default)]
     pub legacy: bool,
-    pub provider: String,
     pub base: Option<PinnedBase>,
     pub artifacts: Artifacts,
     pub status: CreationStatus,
@@ -246,7 +245,6 @@ pub(crate) fn allocate(
         name: None,
         path: None,
         legacy: false,
-        provider: "codex".into(),
         base: None,
         artifacts: Artifacts {
             branch: BranchArtifact::Unknown,

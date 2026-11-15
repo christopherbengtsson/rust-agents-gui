@@ -202,7 +202,9 @@ For primary-source rationale and the article's stack adaptations, consult
 
 - **WorkspaceDetails** (`blocks/workspace-details.tsx`) owns selected-workspace
   identity, observed creation stage, pinned base, branch/folder evidence and the
-  explicit reconciliation callback. Use it for workspace creation/result/recovery;
+  explicit reconciliation callback. Displays provider-independent workspace facts;
+  provider identity belongs to a conversation or explicitly targeted setup status.
+  Use it for workspace creation/result/recovery;
   use WorkspacePanel for the screen and RepositorySidebar for navigation. It has
   no IPC or execution policy. Shared appearance uses semantic tokens; long names,
   branches and paths wrap without hiding recovery controls.

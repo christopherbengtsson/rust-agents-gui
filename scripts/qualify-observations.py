@@ -1,4 +1,4 @@
-"""Explicit protocol-8 OS qualification; never selected by application unit gates.
+"""Explicit protocol-9 OS qualification; never selected by application unit gates.
 
 Usage: python3 scripts/qualify-observations.py <supervisor> <results.json>
 Uses only disposable /private/tmp state/repositories. Faults are synthetic,
@@ -82,7 +82,7 @@ def main():
         return peer
 
     def request(**fields):
-        return {'protocol': 8, 'application_version': '0.1.0', 'after': None, **fields}
+        return {'protocol': 9, 'application_version': '0.1.0', 'after': None, **fields}
 
     def exchange(value):
         with connect() as peer:
@@ -171,7 +171,7 @@ def main():
             check(label, lambda payload=payload: rejected_bytes(payload))
 
         def incompatible():
-            for fields in [{'protocol': 6}, {'protocol': 7}, {'protocol': 999},
+            for fields in [{'protocol': 6}, {'protocol': 7}, {'protocol': 8}, {'protocol': 999},
                            {'application_version': '99.0.0'}]:
                 reply = exchange(request(**fields))
                 assert reply['kind'] == 'incompatible', reply

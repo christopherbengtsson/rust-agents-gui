@@ -1,4 +1,4 @@
-//! Shared private protocol-8 framing for requests and subscriptions.
+//! Shared private native framing for requests and subscriptions.
 use bytes::{Bytes, BytesMut};
 use futures_core::Stream;
 use futures_sink::Sink;

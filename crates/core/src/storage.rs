@@ -553,6 +553,51 @@ mod tests {
         }
     }
     #[test]
+    fn current_workspace_records_reopen_without_provider_and_retain_recovery_facts() {
+        use serde_json::json;
+        let pending = json!({
+            "id": "00000000-0000-0000-0000-000000000001",
+            "repository_id": "00000000-0000-0000-0000-000000000002",
+            "creation_action_id": "00000000-0000-0000-0000-000000000003",
+            "name": null, "branch": null, "path": null, "legacy": false,
+            "base": null,
+            "artifacts": { "branch": "unknown", "folder": "unknown" },
+            "status": { "state": "queued" }, "cleanup_unconfirmed": false
+        });
+        let allocated = json!({
+            "name": "kyoto", "branch": "workspace/kyoto",
+            "path": "/private/state/workspaces/repo/kyoto/checkout",
+            "base": { "reference": "refs/heads/main", "commit": "a".repeat(40) },
+            "artifacts": { "branch": "owned", "folder": "worktree" }
+        });
+        let error = json!({ "code": "git", "message": "Worktree creation failed; files retained" });
+        for status in [
+            json!({ "state": "queued" }),
+            json!({ "state": "running", "stage": "creating_worktree" }),
+            json!({ "state": "ready" }),
+            json!({ "state": "failed", "error": error }),
+            json!({ "state": "uncertain", "error": error }),
+        ] {
+            let mut record = pending.clone();
+            if status["state"] != "queued" {
+                for (key, value) in allocated.as_object().unwrap() {
+                    record[key] = value.clone();
+                }
+            }
+            if status["state"] == "failed" || status["state"] == "uncertain" {
+                record["artifacts"]["folder"] = json!("partial");
+                record["cleanup_unconfirmed"] = json!(true);
+            }
+            record["status"] = status;
+            let restored: Workspace = decode(record.to_string()).unwrap();
+            let written: serde_json::Value =
+                serde_json::from_str(&encode(&restored).unwrap()).unwrap();
+            assert_eq!(written, record);
+            assert!(written.get("provider").is_none());
+        }
+    }
+
+    #[test]
     fn corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result() {
         assert_eq!(
             decode::<RepositoryRecord>("{\"id\":\"wrong\"}".into())

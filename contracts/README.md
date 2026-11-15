@@ -90,3 +90,23 @@ Version/owner checks precede domain dispatch; malformed/legacy framing closes
 without dispatch or format fallback. Desktop failures stay visible and cannot
 authorize replacement of an established supervisor or replay of an action.
 Actual socket/process/desktop qualification remains F04g.
+
+## Provider-independent workspaces: protocol 9
+
+`observations-v9.json` is the synthetic application-owned corpus for application
+version 0.1.0 and the provider-independent workspace change in the containing
+commit. Active Rust serialization and TypeScript validator/decoder checks select
+v9. The v6/v7/v8 corpora and prior results remain historical evidence; no corpus
+is captured provider traffic.
+
+The current workspace record and observation omit `provider`. Workspace contextual
+assertions retain exact action/target/repository links, allocation/state combinations,
+normalized absolute paths, pinned commits and page bounds. Provider identity belongs
+to a conversation or an explicitly targeted setup destination.
+
+Protocol 9 keeps the existing framing, ownership and physical-completion rules.
+Protocol-8 peers are rejected before dispatch; install matching desktop/supervisor
+builds. Use fresh private development state rather than migrating earlier records.
+The development launcher selects a new protocol-specific directory automatically;
+explicit state overrides and packaged runs must select a fresh private directory.
+Current-build quit/reopen, persistence and recovery are qualified separately.

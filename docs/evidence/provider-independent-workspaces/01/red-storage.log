@@ -1,0 +1,52 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.37s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-b1a480319bfd89d6)
+
+running 1 test
+test storage::tests::current_workspace_records_reopen_without_provider_and_retain_recovery_facts ... FAILED
+
+failures:
+
+---- storage::tests::current_workspace_records_reopen_without_provider_and_retain_recovery_facts stdout ----
+
+thread 'storage::tests::current_workspace_records_reopen_without_provider_and_retain_recovery_facts' (32439366) panicked at crates/core/src/storage.rs:592:66:
+called `Result::unwrap()` on an `Err` value: RepositoryError { code: Storage, message: "Application storage failed: missing field `provider` at line 1 column 333. Check the private state directory and free disk space, then refresh to reconcile this action." }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    storage::tests::current_workspace_records_reopen_without_provider_and_retain_recovery_facts
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 161 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

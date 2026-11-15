@@ -1,7 +1,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import corpusText from "../contracts/observations-v8.json?raw";
+import corpusText from "../contracts/observations-v9.json?raw";
 import {
   decodeOwnedReply,
   decodeRequestFailure,
@@ -72,7 +72,7 @@ test("connection observations are decoded before they become presentation truth"
 });
 
 test("the shared application corpus passes production TypeScript decoders", () => {
-  expect(corpus.protocol).toBe(8);
+  expect(corpus.protocol).toBe(9);
   expect(decodeSnapshot(corpus.snapshot).cursor.owner).toBe(corpus.owner);
   expect(decodeDesktopPid(corpus.desktop_pid)).toBe(42);
   for (const { request, reply } of corpus.repositories) {
@@ -111,6 +111,75 @@ test("the shared application corpus passes production TypeScript decoders", () =
       delivery:
         failure.kind === "rejected" ? "not_sent" : failure.error.delivery,
     });
+  }
+});
+
+test("provider-independent workspace observations retain allocation, recovery and target checks", () => {
+  const id = "00000000-0000-0000-0000-000000000003";
+  const repositoryId = "00000000-0000-0000-0000-000000000001";
+  const actionId = "00000000-0000-0000-0000-000000000002";
+  const error = { code: "git", message: "Worktree failed; files retained" };
+  for (const status of [
+    { state: "queued" },
+    { state: "running", stage: "creating_worktree" },
+    { state: "ready" },
+    { state: "failed", error },
+    { state: "uncertain", error },
+  ]) {
+    const workspace = {
+      id,
+      repository_id: repositoryId,
+      creation_action_id: actionId,
+      name: "kyoto",
+      branch: "workspace/kyoto",
+      path: "/private/state/workspaces/repo/kyoto/checkout",
+      legacy: false,
+      base: { reference: "refs/heads/main", commit: "a".repeat(40) },
+      artifacts: { branch: "owned", folder: "reserved" },
+      status,
+      cleanup_unconfirmed: status.state === "uncertain",
+    };
+    const reply = { kind: "workspace", workspace };
+    expect(decodeWorkspaceReply({ operation: "get", id }, reply)).toEqual(
+      reply,
+    );
+    const page = {
+      kind: "workspaces",
+      page: { workspaces: [workspace], next: null },
+    };
+    expect(
+      decodeWorkspaceReply(
+        { operation: "list", repository_id: repositoryId, after: null },
+        page,
+      ),
+    ).toEqual(page);
+    const action = {
+      kind: "action",
+      action: {
+        operation: "create",
+        action_id: actionId,
+        repository_id: repositoryId,
+      },
+      workspace,
+    };
+    expect(
+      decodeWorkspaceReply(
+        { operation: "action", action_id: actionId },
+        action,
+      ),
+    ).toEqual(action);
+    for (const invalid of [
+      { ...workspace, repository_id: actionId },
+      { ...workspace, path: "/state/../checkout" },
+      { ...workspace, name: null },
+    ]) {
+      expect(() =>
+        decodeWorkspaceReply(
+          { operation: "list", repository_id: repositoryId, after: null },
+          { ...page, page: { workspaces: [invalid], next: null } },
+        ),
+      ).toThrow(/Invalid workspace observation/);
+    }
   }
 });
 

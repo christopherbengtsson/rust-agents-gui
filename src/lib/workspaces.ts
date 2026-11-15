@@ -55,7 +55,6 @@ function workspaceSemantics(value: Workspace): boolean {
   const status = value.status;
   return (
     (allocated || pending) &&
-    value.provider === "codex" &&
     (value.path === null || normalizedWorkspacePath(value.path)) &&
     (status.state === "running" || absent(status, "stage")) &&
     (status.state === "failed" || status.state === "uncertain"

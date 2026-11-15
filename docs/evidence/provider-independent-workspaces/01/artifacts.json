@@ -1,0 +1,56 @@
+{
+  "base_revision": "aba401363fac07d88799f2b62c4e089c6b63b51a",
+  "dirty": true,
+  "sidecar_provenance": {
+    "sourceRevision": "aba401363fac07d88799f2b62c4e089c6b63b51a",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "c495d3b1d487099819d3cbf271cfde79af87da3ae39cff30f506910b2609ff46"
+  },
+  "artifacts": {
+    "target/release/workspace-desktop": "a134bb2bcf9e489d82db49d00ae5ad03780e85857d1db1d5a25c969fa0fec55f",
+    "src-tauri/gen/sidecar/workspace-supervisor": "c495d3b1d487099819d3cbf271cfde79af87da3ae39cff30f506910b2609ff46",
+    "target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": "a134bb2bcf9e489d82db49d00ae5ad03780e85857d1db1d5a25c969fa0fec55f",
+    "target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor": "c495d3b1d487099819d3cbf271cfde79af87da3ae39cff30f506910b2609ff46"
+  },
+  "source_sha256": {
+    "contracts/README.md": "d21f0f6f188fa4fd724c42f55d16485f43e64d71c88db5bde3c951c34389b90f",
+    "crates/core/src/connection.rs": "43daea3c238786dbbcb325ac0abfb1152510423380ef17110649ff8ded0d7ac8",
+    "crates/core/src/connection/framed_exchange.rs": "5ef8a5c402214cef52a1ffdbb6fe897733639e27acb60287c8e272f8bf9761d9",
+    "crates/core/src/connection/subscription/tests.rs": "59972b8401b56a3a0274578e1e3999cb17b0ae62c8dfabab6c8070d39611d9c2",
+    "crates/core/src/connection/tests.rs": "5dd1d29c7d05ce14fe669d7a00379d4afafe9105c4debfc77541710859a453ae",
+    "crates/core/src/storage.rs": "8a30b2bfccdcc18c57f8b387edc65d60203c572ed2178f21fa8bf98530da4f19",
+    "crates/core/src/workspaces/creation.rs": "a7daf40887919ba412f71977469ce04342071189217e58ff983bb024a77bcdb5",
+    "scripts/development-state.test.mjs": "f6d0ef921d342d904422bfe127529b46c80ddd7cc5cb99853698251718ea5874",
+    "scripts/qualify-observations.py": "844cccce29853d723efdfa883811ae498326d69f0879a78e7dc75b3a508ff044",
+    "src/components/README.md": "f7b7896851d040629b39cbdf579c673f48c55806572082c46179f07f65292366",
+    "src/components/blocks/workspace-details.tsx": "df76bfc7aed4ffaab8f43ae17c4e7be58744e1d5ee87dcf87a413849831c9599",
+    "src/generated-contracts.test.tsx": "c17073c771ecfff809d465f108663964ca613aecc51c547c8465d7665c8e687d",
+    "src/generated/contracts/manifest.json": "aa8d82bae8da690d9ae68c1dd042c71e1e8ca8a10b4d5fe0eca6d4f5a59d6e54",
+    "src/generated/contracts/schemas.json": "ac3b681f4b78dcbc7715a323334befd1dc35dd790f6fe3f997354c411b486d2f",
+    "src/generated/contracts/types.ts": "b83c30d088cff6e0498297f953e68d7b91a204756e2702d163b9ccf2b2959e81",
+    "src/generated/contracts/validators.js": "3031a80db13a902ee39dc22de87435d5744b7e4e3f4e6acdb21d198f0b4f6eb0",
+    "src/lib/workspaces.ts": "437b8d709a8928a2df9ee79fab2afa77bf5b0cd36a7575e0eb25d243307444fe",
+    "src/observation-contracts.test.tsx": "d087d3d42c5a6c41199e2a11ec0657a2702e2f4c401fa3fed2d5e4c1290b9ccb",
+    "src/observation-feed-bridge.test.tsx": "f88b4a94d77cd6b1c891a7b23c445d5238dcc8896d7c84d28f7aac6e3fcbe396",
+    "src/observation-feed.test.tsx": "c01adf9d5509114614b9718d8fe21222718320f0b85b8c8da79fa83b386b6950",
+    "src/retained-delivery.test.tsx": "11218c5e7b64ec02d0a9cbb8b85ab2e8c9b8e1b5a849b0a9aac7e129d74bd586",
+    "src/routing.test.tsx": "646d699fcb91e403eebd315124244cb431b8badc160d3e3ffca5c0c367f7655a",
+    "src/workspace-changes.test.tsx": "89949be0a8c23d64e29f4719c99db98a244ac1667a3dc7afc7472eca063894cf",
+    "src/workspace-details.test.tsx": "c561bedcc4e5812aced2308eaa63e2a7c0663530b8d9c9d94638a523b64242c1",
+    "src/workspaces.test.tsx": "b1c6a09c137f4f957836ca53ffcda671e27d1b05b598c55b364d68355a73179e",
+    "contracts/observations-v9.json": "151a0f18e756f499261d666a10903c88f3cb038c004b3f21a79a4f4503b8701c"
+  },
+  "protocol": "9",
+  "fixture_desktop": "deferred by user on 2026-11-15; no desktop launched or private desktop state created"
+}

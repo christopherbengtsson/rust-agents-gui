@@ -14,20 +14,20 @@
     "crates/core/src/lib.rs": "243ae52364c9fa70317ecb14e9ebb27e3e9e9531e19e91a8cca6a997dedc953a",
     "crates/core/src/codegen.rs": "51ee4d91859484801eea78cf9cccc053c7f50d1181109753db934dad635c036a",
     "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
-    "crates/core/src/connection.rs": "71a44cd617f83fd51308e5ac183f853ed50864d27e0cf0eeff9bcafa45d875b6",
+    "crates/core/src/connection.rs": "43daea3c238786dbbcb325ac0abfb1152510423380ef17110649ff8ded0d7ac8",
     "crates/core/src/connection/subscription.rs": "747f6e033dd2a80b858da3765bb12a3032268aea7e32cedf0401bf282e98f436",
     "crates/core/src/observations.rs": "1a70c40c5602f7bb6e3db15c82d4022431a8223f0b602a4292e42835cbb3638a",
     "crates/core/src/workspaces.rs": "856ed97f564a2baa6936c6bd3703f102f8002fd50f9b99be651598f746e38209",
-    "crates/core/src/workspaces/creation.rs": "9571e73cd740b94586ab3b207ee7b43d4651bee4d5804a7e00b4002b558acb11",
+    "crates/core/src/workspaces/creation.rs": "a7daf40887919ba412f71977469ce04342071189217e58ff983bb024a77bcdb5",
     "crates/core/src/workspaces/inspection.rs": "afb4127ad4bad14f1930b7dc04fc1cd4a0d10d40045f5e537cfac2d52ead5453",
     "package.json": "7339708a61e0360038f88ecb099373cb58daee1556066cddc86b8ffbe421267d",
     "pnpm-lock.yaml": "1205860fa858b2143db1667c0f8dd9ef7337279d1755bce7240b94e07aa4e6ea",
     "scripts/prepare-generated.mjs": "43975cff1f66212d0cb937c90374548f953f1f1a4dcd81f78f7656d8e5950466"
   },
   "artifacts": {
-    "types.ts": "d86dcdc4f99002f72d0509dd9745054156d5864a051f542b4e931f04d7fca611",
-    "schemas.json": "7d3612154ecbb522a94c1402bab3c4315ed6adce8d8c504b4cfc06b5f923f0bd",
-    "validators.js": "ec400f091c5d783b8f9e1c7080b6d0b07d583d45c16c0d151e32819627eeceb4",
+    "types.ts": "b83c30d088cff6e0498297f953e68d7b91a204756e2702d163b9ccf2b2959e81",
+    "schemas.json": "ac3b681f4b78dcbc7715a323334befd1dc35dd790f6fe3f997354c411b486d2f",
+    "validators.js": "3031a80db13a902ee39dc22de87435d5744b7e4e3f4e6acdb21d198f0b4f6eb0",
     "validators.d.ts": "4ab1d6f020db28995641be77613925a09dbfdb1002d8b1509ffe2ac92342ab34"
   }
 }

@@ -530,7 +530,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         use crate::workspaces::*;
         use serde_json::{Value, json};
         let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v8.json"))
+            serde_json::from_str(include_str!("../../../../contracts/observations-v9.json"))
                 .unwrap();
         let owner = "owner-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));
@@ -618,7 +618,6 @@ fn application_corpus_matches_pure_rust_serialization() {
             branch: None,
             path: None,
             legacy: false,
-            provider: "codex".into(),
             base: None,
             artifacts: Artifacts {
                 branch: BranchArtifact::Unknown,
@@ -942,11 +941,12 @@ impl ClientEffects for ClientScenario {
 fn status_exchange_and_version_rejection_use_real_protocol_parsers_without_domain_effects() {
     run(async {
         for (protocol, version) in [
+            (9, env!("CARGO_PKG_VERSION")),
             (8, env!("CARGO_PKG_VERSION")),
             (7, env!("CARGO_PKG_VERSION")),
             (6, env!("CARGO_PKG_VERSION")),
             (999, env!("CARGO_PKG_VERSION")),
-            (8, "99.0.0"),
+            (9, "99.0.0"),
         ] {
             let request = Request {
                 protocol,
@@ -973,7 +973,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers_without_domai
             .unwrap();
             let replies = frames::<Response>(&trace.output());
             assert_eq!(replies.len(), 1);
-            if protocol == 8 && version == env!("CARGO_PKG_VERSION") {
+            if protocol == PROTOCOL_VERSION && version == env!("CARGO_PKG_VERSION") {
                 assert_eq!(*calls.lock().unwrap(), 1);
                 assert!(matches!(&replies[0], Response::Snapshot { .. }));
             } else {
@@ -1098,7 +1098,7 @@ fn client_preserves_versions_cursor_chunked_reply_and_incompatibility_without_re
         );
         let sent = frames::<Request>(&scenario.trace.output());
         assert_eq!(sent.len(), 1);
-        assert_eq!(sent[0].protocol, 8);
+        assert_eq!(sent[0].protocol, PROTOCOL_VERSION);
         assert_eq!(sent[0].application_version, env!("CARGO_PKG_VERSION"));
         assert_eq!(sent[0].after, Some(first.cursor));
         assert!(sent[0].expected_owner.is_none());

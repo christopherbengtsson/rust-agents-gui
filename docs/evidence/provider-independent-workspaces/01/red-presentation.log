@@ -1,0 +1,30 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/workspace-details.test.tsx (3 tests | 1 failed) 50ms
+   × workspace facts and recovery have no provider ownership badge 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/workspace-details.test.tsx > workspace facts and recovery have no provider ownership badge
+AssertionError: expected 'Creation needs attentionCodexWorkspac…' not to contain 'Codex'
+
+Expected: "Codex"
+Received: "Creation needs attentionCodexWorkspace needs attentionkyotoBranchworkspace/kyoto-00000000-0000-4000-8000-000000000001Workspace folder/state/00000000-0000-4000-8000-000000000001/kyoto-00000000-0000-4000-8000-000000000001/checkoutLocal baseWaiting for an identifiable local default branchBranch artifactNot yet confirmedFolder artifactNot yet confirmedCreation needs attentionWorktree failed; files retainedReconcile workspace"
+
+ ❯ src/workspace-details.test.tsx:79:42
+     77|   expect(screen.getByText(workspace.branch!)).toBeDefined();
+     78|   expect(screen.getByRole("button", { name: "Reconcile workspace" }).h…
+     79|   expect(view.container.textContent).not.toContain("Codex");
+       |                                          ^
+     80| });
+     81|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  02:04:28
+   Duration  455ms (environment 40%, import 39%, tests 12%, transform 8%, setup 1%)
+
