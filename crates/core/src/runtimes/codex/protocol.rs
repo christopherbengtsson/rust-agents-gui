@@ -193,6 +193,13 @@ pub(super) async fn login<
     let deadline = Instant::now() + std::time::Duration::from_secs(10 * 60);
     let mut notifications = 0usize;
     loop {
+        // Ready control messages must not starve the timer/read branch.
+        if Instant::now() >= deadline {
+            return Err(SetupFailure::at(
+                SetupProblem::StatusReadFailed,
+                "Browser sign-in exceeded its 10-minute deadline",
+            ));
+        }
         enum Next {
             Cancel,
             Reopen,
@@ -661,6 +668,39 @@ mod tests {
             }
             writer.write_all(b"1,\"result\":{}}\n").await.unwrap();
             assert_eq!(frames.next().await.unwrap(), json!({"id":1,"result":{}}));
+        });
+    }
+
+    #[test]
+    fn repeated_reopen_cannot_starve_the_absolute_login_deadline() {
+        run(async {
+            let (mut writer, read) = tokio::io::duplex(2048);
+            writer.write_all(b"{\"id\":1,\"result\":{}}\n{\"id\":2,\"result\":{\"type\":\"chatgpt\",\"loginId\":\"native-1\",\"authUrl\":\"https://auth.openai.com/authorize\"}}\n").await.unwrap();
+            let (send, receive) = tokio::sync::mpsc::channel(1);
+            let opens = std::cell::Cell::new(0);
+            let failure = login(
+                read,
+                Vec::new(),
+                &tokio_util::sync::CancellationToken::new(),
+                receive,
+                &|_| {},
+                |_| {
+                    let count = opens.get() + 1;
+                    opens.set(count);
+                    send.try_send(()).unwrap();
+                    async move {
+                        assert!(count <= 2, "expired login must not reopen again");
+                        if count == 2 {
+                            tokio::time::advance(std::time::Duration::from_secs(601)).await;
+                        }
+                        true
+                    }
+                },
+            )
+            .await
+            .unwrap_err();
+            assert_eq!(failure.problem, SetupProblem::StatusReadFailed);
+            assert_eq!(opens.get(), 2);
         });
     }
 

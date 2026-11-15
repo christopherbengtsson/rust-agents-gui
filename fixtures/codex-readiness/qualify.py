@@ -222,6 +222,23 @@ try:
             return login_settled("cancelled")
         check("browser-open failure and explicit same-attempt reopen", browser_failure_case)
 
+        def late_setup_case():
+            scenario("version_delay")
+            before = len(events())
+            login_starts = len([event for event in events() if event.get("method") == "account/login/start"])
+            request = start_login()
+            deadline = time.monotonic()+5
+            while time.monotonic()<deadline:
+                if any(event["event"] == "start" and event.get("argument") == ["--version"] for event in events()[before:]): break
+                time.sleep(.02)
+            else: raise TimeoutError("late version child did not start")
+            scenario("browser_pending")
+            provider({"operation":"cancel_login", "target_id":target["id"], "attempt_id":request["attempt_id"]})
+            result = login_settled("cancelled")
+            assert len([event for event in events() if event.get("method") == "account/login/start"]) == login_starts
+            return result
+        check("cancellation during late version setup stops owned work before authentication", late_setup_case)
+
         def descendant_case():
             scenario("fork_descendant")
             request = start_login(); login_settled("pending")

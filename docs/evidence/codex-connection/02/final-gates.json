@@ -1,0 +1,17 @@
+{
+  "source_revision": "a3a7507862746c60bbd0a4a151a742d853287a7f",
+  "results": [
+    {
+      "command": ["corepack", "pnpm", "generated:write"],
+      "log": "generated-last.log",
+      "exit": 0,
+      "wall_seconds": 3.374171125004068
+    },
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "log": "format-last.log",
+      "exit": 1,
+      "wall_seconds": 0.12078937503974885
+    }
+  ]
+}

@@ -22,6 +22,8 @@ def record(event, **fields):
 
 record("start", argument=sys.argv[1:])
 if sys.argv[1:] == ["--version"]:
+    if scenario == "version_delay":
+        time.sleep(60)
     if scenario == "version_exit":
         sys.exit(7)
     print("codex-cli 0.167.1" if scenario == "incompatible" else "codex-cli 0.169.0")

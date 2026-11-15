@@ -33,3 +33,8 @@ ordering race above. Final Spec result: **zero unresolved**.
 
 Both axes found the corrected architecture consistent with the selected browser
 slice and fixture-only allowance. CLI/PTY and real authentication remain deferred.
+
+Final targeted re-review also covers the loop-top absolute login deadline and
+controlled reopen-starvation regression. Both axes retained zero unresolved
+findings. The eight-case headless process cohort additionally proves cancellation
+during delayed version setup before authentication starts.
