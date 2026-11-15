@@ -5,6 +5,8 @@ import { useAppRuntime } from "@/app-runtime";
 import { ProviderSetup, ClaudeSetup } from "@/components/blocks/provider-setup";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useProviderSetup } from "@/hooks/use-provider-setup";
+import { useProviderLogin } from "@/hooks/use-provider-progress";
+import { ProviderSignIn } from "@/components/blocks/provider-sign-in";
 
 export function providerSearch(search: Record<string, unknown>): {
   provider: "codex" | "claude";
@@ -40,6 +42,7 @@ function CodexSetup() {
   const updatesAvailable =
     connection.feed?.state !== "stopped" && !connection.feed?.message;
   const setup = useProviderSetup(app, owner, updatesAvailable);
+  const login = useProviderLogin(app, owner, setup.observation);
   const openHelp = (topic: ProviderHelpTopic) => {
     setHelpError(undefined);
     void openProviderHelp(topic).catch(() =>
@@ -49,7 +52,18 @@ function CodexSetup() {
     );
   };
   return (
-    <ProviderSetup setup={setup} onOpenHelp={openHelp} helpError={helpError} />
+    <ProviderSetup
+      setup={setup}
+      onOpenHelp={openHelp}
+      helpError={helpError}
+      signIn={
+        <ProviderSignIn
+          observation={setup.observation}
+          available={!!owner && updatesAvailable}
+          login={login}
+        />
+      }
+    />
   );
 }
 function ProvidersScreen() {

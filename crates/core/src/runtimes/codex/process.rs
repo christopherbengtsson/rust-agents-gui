@@ -18,6 +18,13 @@ pub(in crate::runtimes) struct Launch {
     environment: Vec<(OsString, OsString)>,
 }
 impl Launch {
+    pub(in crate::runtimes) fn credential_scope(&self) -> String {
+        self.environment
+            .iter()
+            .find(|(key, _)| key == "CODEX_HOME" || key == "AW_FIXTURE_CONTROL")
+            .map(|(_, value)| value.to_string_lossy().into_owned())
+            .unwrap_or_else(|| self.directory.to_string_lossy().into_owned())
+    }
     pub(in crate::runtimes) fn capture() -> (Self, ProviderTarget) {
         let id = uuid::Uuid::new_v4();
         let directory = std::env::temp_dir().join(format!("agent-workspace-setup-{id}"));
@@ -241,6 +248,99 @@ pub(in crate::runtimes) async fn probe(
         .await
         .map_err(|error| SetupFailure::io("owned process cleanup", error))?;
     result
+}
+
+pub(in crate::runtimes) async fn browser_login(
+    launch: Launch,
+    cancel: &CancellationToken,
+    reopen: tokio::sync::mpsc::Receiver<()>,
+    event: impl Fn(protocol::LoginEvent),
+) -> Result<crate::runtimes::LoginOutcome, SetupFailure> {
+    let directory = launch.directory.clone();
+    tokio::task::spawn_blocking(move || {
+        match std::fs::DirBuilder::new().mode(0o700).create(&directory) {
+            Ok(()) => {}
+            Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {}
+            Err(error) => return Err(error),
+        }
+        crate::supervisor::check_private(&directory, true)
+    })
+    .await
+    .map_err(|_| {
+        SetupFailure::at(
+            SetupProblem::StatusReadFailed,
+            "Login directory worker failed",
+        )
+    })?
+    .map_err(|error| SetupFailure::io("private login directory", error))?;
+    let uncertain = || event(protocol::LoginEvent::CleanupUncertain);
+    if cancel.is_cancelled() {
+        return Ok(crate::runtimes::LoginOutcome::Cancelled);
+    }
+    version(&launch, cancel, &uncertain).await?;
+    if cancel.is_cancelled() {
+        return Ok(crate::runtimes::LoginOutcome::Cancelled);
+    }
+    let mut child = spawn(&launch, "app-server")?;
+    let stderr = child.stderr.take().expect("piped stderr");
+    let drain = tokio::spawn(async move {
+        tokio::io::copy(
+            &mut tokio::io::BufReader::new(stderr),
+            &mut tokio::io::sink(),
+        )
+        .await
+    });
+    let stdout = child.stdout.take().expect("piped stdout");
+    let stdin = child.stdin.take().expect("piped stdin");
+    let fixture = launch
+        .environment
+        .iter()
+        .any(|(key, _)| key == "AW_FIXTURE_CONTROL");
+    let result = protocol::login(stdout, stdin, cancel, reopen, &event, |url| {
+        let uncertain = &uncertain;
+        async move { open_browser(&url, fixture, uncertain).await }
+    })
+    .await;
+    finish(&mut child, drain, &uncertain)
+        .await
+        .map_err(|error| SetupFailure::io("login physical cleanup", error))?;
+    result
+}
+
+async fn open_browser(url: &str, fixture: bool, uncertain: &impl Fn()) -> bool {
+    if !protocol::browser_url(url, fixture) {
+        return false;
+    }
+    let mut command = Command::new("/usr/bin/open");
+    command
+        .arg(url)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .process_group(0);
+    let Ok(mut child) = command.spawn() else {
+        return false;
+    };
+    // Keep the unreaped identity until the same physical group cleanup used by
+    // provider children completes. The user's browser is not an owned resource.
+    let success = child
+        .quiescent(Duration::from_secs(5))
+        .await
+        .unwrap_or(false);
+    if !cleanup(&mut child).await {
+        uncertain();
+        while !child
+            .quiescent(Duration::from_millis(100))
+            .await
+            .unwrap_or(false)
+        {
+            tokio::time::sleep(Duration::from_millis(100)).await;
+        }
+    }
+    child
+        .wait()
+        .await
+        .is_ok_and(|status| success && status.success())
 }
 async fn version(
     launch: &Launch,

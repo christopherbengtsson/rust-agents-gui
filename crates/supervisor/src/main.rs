@@ -46,6 +46,9 @@ async fn run(owner: SupervisorOwner, core: Arc<Core>) -> io::Result<()> {
     println!("ready");
     io::stdout().flush()?;
     let outcome = 'accept: loop {
+        if server.shutdown_complete() {
+            break Ok(());
+        }
         // Ready accepts must not starve completion collection and grow the task set.
         while let Some(result) = handlers.try_join_next() {
             if let Err(error) = result {

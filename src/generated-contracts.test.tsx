@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import corpus from "../contracts/observations-v11.json";
+import corpus from "../contracts/observations-v12.json";
 import {
   validateRegistration,
   validateWorkspace,

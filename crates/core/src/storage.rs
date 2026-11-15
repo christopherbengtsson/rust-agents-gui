@@ -12,6 +12,46 @@ pub(crate) struct SqliteStore {
     connection: Connection,
     path: PathBuf,
 }
+
+/// Only non-secret intent/cleanup evidence. Never a provider URL, token or PID.
+pub(crate) trait ProviderLoginPersistence: Send + Sync {
+    fn record(&self, attempt: uuid::Uuid, pending: bool) -> Result<()>;
+}
+pub(crate) struct ProviderLoginStore {
+    path: PathBuf,
+    scope: String,
+}
+impl ProviderLoginStore {
+    pub(crate) fn open(state: &Path, scope: String) -> Result<Self> {
+        let store = SqliteStore::open(state)?;
+        store.connection.execute_batch("CREATE TABLE IF NOT EXISTS provider_login_fences (scope TEXT PRIMARY KEY NOT NULL, attempt TEXT NOT NULL, pending INTEGER NOT NULL)").map_err(storage)?;
+        Ok(Self {
+            path: store.path,
+            scope,
+        })
+    }
+    pub(crate) fn pending(&self) -> Result<Option<uuid::Uuid>> {
+        let connection = SqliteStore::connect(&self.path)?;
+        let value: Option<String> = connection
+            .query_row(
+                "SELECT attempt FROM provider_login_fences WHERE scope=?1 AND pending=1",
+                [&self.scope],
+                |row| row.get(0),
+            )
+            .optional()
+            .map_err(storage)?;
+        value
+            .map(|value| uuid::Uuid::parse_str(&value).map_err(storage))
+            .transpose()
+    }
+}
+impl ProviderLoginPersistence for ProviderLoginStore {
+    fn record(&self, attempt: uuid::Uuid, pending: bool) -> Result<()> {
+        let connection = SqliteStore::connect(&self.path)?;
+        connection.execute("INSERT INTO provider_login_fences(scope,attempt,pending) VALUES(?1,?2,?3) ON CONFLICT(scope) DO UPDATE SET attempt=excluded.attempt,pending=excluded.pending", params![self.scope, attempt.to_string(), pending]).map_err(storage)?;
+        Ok(())
+    }
+}
 fn storage(error: impl std::fmt::Display) -> RepositoryError {
     RepositoryError::storage(error)
 }

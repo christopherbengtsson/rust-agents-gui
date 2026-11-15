@@ -1,5 +1,5 @@
 // Generated. Do not edit.
-import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
+import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, LoginAttempt, LoginOutcome, LoginPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
 export declare function validateActionId(value: unknown): value is ActionId;
 export declare function validateArtifacts(value: unknown): value is Artifacts;
 export declare function validateAuthentication(value: unknown): value is Authentication;
@@ -24,6 +24,9 @@ export declare function validateFileId(value: unknown): value is FileId;
 export declare function validateFilePreview(value: unknown): value is FilePreview;
 export declare function validateFolderArtifact(value: unknown): value is FolderArtifact;
 export declare function validateInspectionPhase(value: unknown): value is InspectionPhase;
+export declare function validateLoginAttempt(value: unknown): value is LoginAttempt;
+export declare function validateLoginOutcome(value: unknown): value is LoginOutcome;
+export declare function validateLoginPhase(value: unknown): value is LoginPhase;
 export declare function validateOwnedObservation(value: unknown): value is OwnedObservation;
 export declare function validateOwnedProviderReply(value: unknown): value is OwnedProviderReply;
 export declare function validateOwnedRepositoryReply(value: unknown): value is OwnedRepositoryReply;

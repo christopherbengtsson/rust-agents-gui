@@ -23,6 +23,9 @@ export type FileId = string;
 export type FilePreview = { comparison_id: ComparisonId, head: string, rows: Array<DiffRow>, limited: string | null, unsupported: UnsupportedContent | null, note: string | null, };
 export type FolderArtifact = "unknown" | "absent" | "reserved" | "worktree" | "partial" | "conflict";
 export type InspectionPhase = "idle" | "queued" | "running" | "ready" | "failed";
+export type LoginAttempt = { id: string, phase: LoginPhase, outcome: LoginOutcome | null, browser_open_failed: boolean, diagnostic: string | null, };
+export type LoginOutcome = "completed" | "failed" | "cancelled";
+export type LoginPhase = "starting" | "pending" | "cancelling" | "verifying" | "completed" | "failed" | "cancelled" | "cleanup_uncertain";
 export type OwnedObservation = OwnedReply<unknown>;
 export type OwnedProviderReply = OwnedReply<ProviderReply>;
 export type OwnedReply<T> = { owner: string, result: { Ok : T } | { Err : RepositoryError }, };
@@ -31,9 +34,9 @@ export type OwnedWorkspaceReply = OwnedReply<WorkspaceReply>;
 export type PinnedBase = { reference: string, commit: string, };
 export type PreviewObservation = { target: PreviewTarget, phase: InspectionPhase, preview: FilePreview | null, error: RepositoryError | null, };
 export type PreviewTarget = { workspace_id: WorkspaceId, comparison_id: ComparisonId, file_id: FileId, };
-export type ProviderObservation = { target: ProviderTarget, revision: number, phase: SetupPhase, evidence: SetupEvidence | null, problem: SetupProblem | null, diagnostic: string | null, };
-export type ProviderReply = { "kind": "target", target: ProviderTarget, } | { "kind": "observation", observation: ProviderObservation, };
-export type ProviderRequest = { "operation": "target" } | { "operation": "observe", target_id: string, refresh: boolean, };
+export type ProviderObservation = { target: ProviderTarget, revision: number, phase: SetupPhase, evidence: SetupEvidence | null, problem: SetupProblem | null, diagnostic: string | null, login: LoginAttempt | null, };
+export type ProviderReply = { "kind": "target", target: ProviderTarget, } | { "kind": "observation", observation: ProviderObservation, } | { "kind": "shutdown", complete: boolean, diagnostic: string | null, };
+export type ProviderRequest = { "operation": "target" } | { "operation": "observe", target_id: string, refresh: boolean, } | { "operation": "start_browser_login", target_id: string, attempt_id: string, expected_revision: number, } | { "operation": "cancel_login", target_id: string, attempt_id: string, } | { "operation": "reopen_browser", target_id: string, attempt_id: string, } | { "operation": "reconcile_login", target_id: string, attempt_id: string, } | { "operation": "begin_shutdown" } | { "operation": "shutdown_status" } | { "operation": "finish_shutdown" };
 export type ProviderTarget = { id: string, provider: string, executable: string, codex_home: string, working_directory: string, supported_version: string, };
 export type RegisterRepository = { create_initial_workspace: boolean, action_id: ActionId, path: string, };
 export type Registration = { create_initial_workspace: boolean, initial_workspace_id: WorkspaceId | null, action_id: ActionId, path: string, } & ({ "state": "pending" } | { "state": "completed", repository_id: RepositoryId, } | { "state": "failed", error: RepositoryError, });
@@ -55,7 +58,7 @@ export type SupervisorSnapshot = { status: SupervisorStatus, cursor: SnapshotCur
 /**
  * A full snapshot replaces observations from another owner or cursor.
  */
-reset: boolean, };
+reset: boolean, provider_login_pending?: boolean, };
 export type SupervisorState = "ready";
 export type SupervisorStatus = { state: SupervisorState, supervisor_pid: number, application_version: string, };
 export type Target = { "kind": "provider", target_id: string, } | { "kind": "repositories" } | { "kind": "repository", repository_id: RepositoryId, } | { "kind": "registration", action_id: ActionId, } | { "kind": "workspaces", repository_id: RepositoryId | null, } | { "kind": "workspace", workspace_id: WorkspaceId, } | { "kind": "workspace_action", action_id: ActionId, } | { "kind": "inspection", workspace_id: WorkspaceId, };

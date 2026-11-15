@@ -1,5 +1,5 @@
 use std::{path::PathBuf, sync::Mutex};
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 use workspace_core::connection::{Delivery, OwnedReply, RequestFailure, TransportCode};
 use workspace_core::workspaces::{RepositoryReply, RepositoryRequest};
 use workspace_core::{SupervisorSnapshot, connection::SupervisorConnection};
@@ -121,13 +121,40 @@ fn desktop_pid() -> workspace_core::DesktopPid {
 
 fn main() {
     let connection = std::sync::Arc::new(Mutex::new(None::<SupervisorConnection>));
+    let quit_running = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let quit_complete = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
     tauri::Builder::default()
+        .menu(|app| {
+            let menu = tauri::menu::Menu::default(app)?;
+            // In pinned Tauri 2.12.5's macOS default, the final application-menu
+            // item is native Quit. Muda maps it directly to NSApp terminate:,
+            // bypassing cancellable ExitRequested. Preserve the other defaults
+            // and route Quit through Tauri's request-exit path instead.
+            if let Some(tauri::menu::MenuItemKind::Submenu(application)) = menu.items()?.first() {
+                let items = application.items()?;
+                if let Some(position) = items.len().checked_sub(1) {
+                    application.remove_at(position)?;
+                    let quit = tauri::menu::MenuItem::with_id(app, "quit-owned", "Quit Agent Workspace", true, Some("CmdOrCtrl+Q"))?;
+                    application.insert(&quit, position)?;
+                }
+            }
+            Ok(menu)
+        })
+        .on_menu_event(|app, event| {
+            if event.id().as_ref() == "quit-owned" { app.exit(0); }
+        })
         .plugin(
             tauri_plugin_opener::Builder::new()
                 .open_js_links_on_click(false)
                 .build(),
         )
         .plugin(tauri_plugin_dialog::init())
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                let _ = window.hide();
+            }
+        })
         .manage(connection.clone())
         .invoke_handler(tauri::generate_handler![
             supervisor_status,
@@ -139,8 +166,37 @@ fn main() {
             observation_acknowledge,
             observation_stop
         ])
-        .run(tauri::generate_context!())
-        .expect("failed to run desktop");
+        .build(tauri::generate_context!())
+        .expect("failed to build desktop")
+        .run({
+            let connection = connection.clone();
+            move |app, event| {
+                if let tauri::RunEvent::Reopen { has_visible_windows: false, .. } = event {
+                    if let Some(window) = app.get_webview_window("main") { let _ = window.show(); let _ = window.set_focus(); }
+                }
+                if let tauri::RunEvent::ExitRequested { api, .. } = event {
+                    if quit_complete.load(std::sync::atomic::Ordering::SeqCst) { return; }
+                    api.prevent_exit();
+                    if quit_running.swap(true, std::sync::atomic::Ordering::SeqCst) { return; }
+                    let client = connection.lock().ok().and_then(|connection| connection.clone());
+                    let app = app.clone();
+                    let running = quit_running.clone();
+                    let complete = quit_complete.clone();
+                    let _ = app.emit("owned-shutdown", "Stopping owned Codex activity…");
+                    tauri::async_runtime::spawn(async move {
+                        let result = if let Some(client) = client { client.quit_owned().await } else { Ok(()) };
+                        if result.is_ok() {
+                            complete.store(true, std::sync::atomic::Ordering::SeqCst);
+                            app.exit(0);
+                        } else {
+                            running.store(false, std::sync::atomic::Ordering::SeqCst);
+                            if let Some(window) = app.get_webview_window("main") { let _ = window.show(); let _ = window.set_focus(); }
+                            let _ = app.emit("owned-shutdown", "Quit could not finish: owned shutdown or its result remains unconfirmed. Keep the app open; choose Quit again to reconcile. No replacement work was started.");
+                        }
+                    });
+                }
+            }
+        });
     // The event loop has finished; shutdown/join never blocks rendering.
     if let Ok(client) = connected(&connection) {
         let _ = tauri::async_runtime::block_on(client.stop_observations());

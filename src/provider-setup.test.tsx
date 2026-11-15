@@ -31,6 +31,7 @@ const observed: ProviderObservation = {
   phase: "observed",
   problem: null,
   diagnostic: null,
+  login: null,
   evidence,
 };
 function view(

@@ -11,6 +11,8 @@ use std::{
     sync::{Arc, Mutex},
 };
 use tokio::task::JoinSet;
+mod login;
+pub use login::{LoginAttempt, LoginOutcome, LoginPhase};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
@@ -130,6 +132,7 @@ pub struct ProviderObservation {
     pub evidence: Option<SetupEvidence>,
     pub problem: Option<SetupProblem>,
     pub diagnostic: Option<String>,
+    pub login: Option<Box<LoginAttempt>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -141,18 +144,48 @@ pub enum ProviderRequest {
         target_id: uuid::Uuid,
         refresh: bool,
     },
+    StartBrowserLogin {
+        target_id: uuid::Uuid,
+        attempt_id: uuid::Uuid,
+        expected_revision: u32,
+    },
+    CancelLogin {
+        target_id: uuid::Uuid,
+        attempt_id: uuid::Uuid,
+    },
+    ReopenBrowser {
+        target_id: uuid::Uuid,
+        attempt_id: uuid::Uuid,
+    },
+    ReconcileLogin {
+        target_id: uuid::Uuid,
+        attempt_id: uuid::Uuid,
+    },
+    BeginShutdown,
+    ShutdownStatus,
+    FinishShutdown,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum ProviderReply {
-    Target { target: ProviderTarget },
-    Observation { observation: ProviderObservation },
+    Target {
+        target: ProviderTarget,
+    },
+    Observation {
+        observation: ProviderObservation,
+    },
+    Shutdown {
+        complete: bool,
+        diagnostic: Option<String>,
+    },
 }
 
 struct Entry {
     snapshot: ProviderObservation,
+    scope: String,
+    control: Option<login::LoginControl>,
 }
 pub struct ProviderConnections {
     records: Mutex<BTreeMap<uuid::Uuid, Entry>>,
@@ -160,11 +193,22 @@ pub struct ProviderConnections {
     journal: Arc<Journal>,
     launch: Option<codex::Launch>,
     cancel: tokio_util::sync::CancellationToken,
+    persistence: Option<Arc<dyn crate::storage::ProviderLoginPersistence>>,
+    shutdown: Mutex<Option<Result<(), String>>>,
+    exit_requested: std::sync::atomic::AtomicBool,
 }
 impl ProviderConnections {
-    pub(crate) fn open(journal: Arc<Journal>) -> Self {
+    pub(crate) fn open(
+        journal: Arc<Journal>,
+        state: &std::path::Path,
+    ) -> Result<Self, RepositoryError> {
         let (launch, target) = codex::Launch::capture();
-        Self {
+        let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
+            state,
+            launch.credential_scope(),
+        )?);
+        let recovered = persistence.pending()?;
+        Ok(Self {
             records: Mutex::new(BTreeMap::from([(
                 target.id,
                 Entry {
@@ -175,20 +219,56 @@ impl ProviderConnections {
                         evidence: None,
                         problem: None,
                         diagnostic: None,
+                        login: recovered.map(LoginAttempt::interrupted).map(Box::new),
                     },
+                    scope: launch.credential_scope(),
+                    control: None,
                 },
             )])),
             tasks: Mutex::new(JoinSet::new()),
             journal,
             launch: Some(launch),
             cancel: tokio_util::sync::CancellationToken::new(),
-        }
+            persistence: Some(persistence),
+            shutdown: Mutex::new(None),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
+        })
     }
     pub(crate) fn request(
         self: &Arc<Self>,
         request: ProviderRequest,
     ) -> Result<ProviderReply, RepositoryError> {
         match request {
+            ProviderRequest::StartBrowserLogin {
+                target_id,
+                attempt_id,
+                expected_revision,
+            } => self.start_browser(target_id, attempt_id, expected_revision),
+            ProviderRequest::CancelLogin {
+                target_id,
+                attempt_id,
+            } => self.cancel_login(target_id, attempt_id),
+            ProviderRequest::ReopenBrowser {
+                target_id,
+                attempt_id,
+            } => self.reopen_browser(target_id, attempt_id),
+            ProviderRequest::ReconcileLogin {
+                target_id,
+                attempt_id,
+            } => self.reconcile_login(target_id, attempt_id),
+            ProviderRequest::BeginShutdown => {
+                self.begin_shutdown();
+                Ok(self.shutdown_status())
+            }
+            ProviderRequest::ShutdownStatus => Ok(self.shutdown_status()),
+            ProviderRequest::FinishShutdown => {
+                if !self.shutdown_complete() {
+                    return Err(invalid_target("Owned shutdown is not complete"));
+                }
+                self.exit_requested
+                    .store(true, std::sync::atomic::Ordering::SeqCst);
+                Ok(self.shutdown_status())
+            }
             ProviderRequest::Target => {
                 let records = self.records.lock().expect("provider records poisoned");
                 let target = records
@@ -201,6 +281,13 @@ impl ProviderConnections {
                 Ok(ProviderReply::Target { target })
             }
             ProviderRequest::Observe { target_id, refresh } => {
+                // Baseline/reconnect/status retrieval has no process effects.
+                // A committed tab activation explicitly requests refresh:true.
+                if !refresh {
+                    return Ok(ProviderReply::Observation {
+                        observation: self.read(target_id)?,
+                    });
+                }
                 let launch = self
                     .launch
                     .clone()
@@ -241,13 +328,36 @@ impl ProviderConnections {
     ) -> Result<ProviderObservation, RepositoryError> {
         let mut tasks = self.tasks.lock().expect("provider tasks poisoned");
         let mut records = self.records.lock().expect("provider records poisoned");
+        let scope = records
+            .get(&id)
+            .ok_or_else(|| invalid_target("Unknown provider configuration"))?
+            .scope
+            .clone();
+        if records.values().any(|entry| {
+            entry.scope == scope
+                && entry
+                    .snapshot
+                    .login
+                    .as_ref()
+                    .is_some_and(|login| login.phase.active())
+        }) {
+            return records
+                .get(&id)
+                .map(|entry| entry.snapshot.clone())
+                .ok_or_else(|| invalid_target("Unknown provider configuration"));
+        }
         let entry = records
             .get_mut(&id)
             .ok_or_else(|| invalid_target("Unknown provider configuration. Refresh setup."))?;
         if matches!(
             entry.snapshot.phase,
             SetupPhase::Checking | SetupPhase::CleanupUncertain
-        ) || (!refresh && entry.snapshot.phase != SetupPhase::Unknown)
+        ) || entry
+            .snapshot
+            .login
+            .as_ref()
+            .is_some_and(|login| login.phase.active())
+            || (!refresh && entry.snapshot.phase != SetupPhase::Unknown)
         {
             return Ok(entry.snapshot.clone());
         }
@@ -355,6 +465,23 @@ impl ProviderConnections {
     pub(crate) async fn finish(&self) -> io::Result<()> {
         self.cancel.cancel();
         self.join().await?;
+        if self
+            .records
+            .lock()
+            .expect("provider records poisoned")
+            .values()
+            .any(|entry| {
+                entry
+                    .snapshot
+                    .login
+                    .as_ref()
+                    .is_some_and(|login| login.phase.active())
+            })
+        {
+            return Err(io::Error::other(
+                "A retained sign-in has unconfirmed cleanup",
+            ));
+        }
         if let Some(launch) = self.launch.clone() {
             tokio::task::spawn_blocking(move || launch.remove_neutral_directory())
                 .await
@@ -370,6 +497,9 @@ impl ProviderConnections {
             journal: Arc::default(),
             launch: None,
             cancel: tokio_util::sync::CancellationToken::new(),
+            persistence: None,
+            shutdown: Mutex::new(None),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
         }
     }
     #[cfg(test)]
@@ -393,7 +523,10 @@ impl ProviderConnections {
                     evidence: None,
                     problem: None,
                     diagnostic: None,
+                    login: None,
                 },
+                scope: id.to_string(),
+                control: None,
             },
         );
         id
@@ -414,12 +547,103 @@ pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
     exports.add::<SetupProblem>();
     exports.add::<Authentication>();
     exports.add::<BillingRoute>();
+    exports.add::<LoginAttempt>();
+    exports.add::<LoginPhase>();
+    exports.add::<LoginOutcome>();
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::sync::Arc;
+
+    #[test]
+    fn login_admission_is_exact_and_fences_checks_and_competing_attempts() {
+        run(async {
+            let owner = Arc::new(ProviderConnections::test_owner());
+            let a = owner.test_target("codex");
+            let b = owner.test_target("synthetic");
+            let id = uuid::Uuid::new_v4();
+            let first = owner.admit_login(a, id, 0).unwrap();
+            assert_eq!(first.login.as_ref().unwrap().phase, LoginPhase::Starting);
+            assert_eq!(owner.admit_login(a, id, 0).unwrap(), first);
+            assert!(
+                owner
+                    .admit_login(a, uuid::Uuid::new_v4(), first.revision)
+                    .is_err()
+            );
+            owner
+                .observe_with(a, true, || async { panic!("login must exclude a probe") })
+                .unwrap();
+            assert!(owner.admit_login(b, uuid::Uuid::new_v4(), 0).is_ok());
+            assert_eq!(owner.read(a).unwrap(), first);
+        });
+    }
+
+    #[test]
+    fn reconciliation_fences_a_late_start_and_uncertain_cleanup_is_scope_local() {
+        run(async {
+            let owner = Arc::new(ProviderConnections::test_owner());
+            let a = owner.test_target("codex");
+            let b = owner.test_target("synthetic");
+            let c = owner.test_target("synthetic-shared");
+            let scope = owner.records.lock().unwrap().get(&a).unwrap().scope.clone();
+            owner.records.lock().unwrap().get_mut(&c).unwrap().scope = scope;
+            let id = uuid::Uuid::new_v4();
+            owner.reconcile_login(a, id).unwrap();
+            assert!(owner.admit_login(a, id, 0).is_err());
+            owner.admit_login(a, id, 1).unwrap();
+            owner.update_login(a, id, |login| login.phase = LoginPhase::CleanupUncertain);
+            assert!(owner.admit_login(c, uuid::Uuid::new_v4(), 0).is_err());
+            assert!(owner.admit_login(b, uuid::Uuid::new_v4(), 0).is_ok());
+            owner.finish_login(b, id, LoginOutcome::Completed, Ok(test_evidence()));
+            assert_eq!(
+                owner.read(b).unwrap().login.unwrap().phase,
+                LoginPhase::Starting
+            );
+            assert_eq!(
+                owner.read(a).unwrap().login.unwrap().phase,
+                LoginPhase::CleanupUncertain
+            );
+            assert!(owner.finish().await.is_err());
+        });
+    }
+
+    #[test]
+    fn cancelled_login_retains_last_good_on_failed_verification_and_rejects_stale_cancel() {
+        run(async {
+            let owner = Arc::new(ProviderConnections::test_owner());
+            let a = owner.test_target("codex");
+            owner
+                .records
+                .lock()
+                .unwrap()
+                .get_mut(&a)
+                .unwrap()
+                .snapshot
+                .evidence = Some(test_evidence());
+            let id = uuid::Uuid::new_v4();
+            owner.admit_login(a, id, 0).unwrap();
+            assert!(owner.cancel_login(a, uuid::Uuid::new_v4()).is_err());
+            owner.cancel_login(a, id).unwrap();
+            owner.cancel_login(a, id).unwrap();
+            assert_eq!(
+                owner.read(a).unwrap().login.unwrap().phase,
+                LoginPhase::Cancelling
+            );
+            owner.finish_login(
+                a,
+                id,
+                LoginOutcome::Cancelled,
+                Err(SetupProblem::StatusReadFailed.into()),
+            );
+            let observation = owner.read(a).unwrap();
+            assert_eq!(observation.evidence, Some(test_evidence()));
+            assert_eq!(observation.problem, Some(SetupProblem::StatusReadFailed));
+            assert_eq!(observation.login.unwrap().phase, LoginPhase::Cancelled);
+            owner.finish().await.unwrap();
+        });
+    }
 
     #[test]
     fn diagnostics_retain_source_without_exporting_its_untrusted_message() {

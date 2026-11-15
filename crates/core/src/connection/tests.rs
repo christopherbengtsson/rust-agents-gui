@@ -514,6 +514,7 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
                                     evidence: None,
                                     problem: Some(SetupProblem::MissingExecutable),
                                     diagnostic: Some("synthetic missing executable".into()),
+                                    login: None,
                                 },
                             }),
                         })
@@ -546,6 +547,7 @@ fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
         let first = snapshot();
         for invalid in [
             SupervisorSnapshot {
+                provider_login_pending: None,
                 cursor: SnapshotCursor {
                     owner: "".into(),
                     revision: 1,
@@ -553,6 +555,7 @@ fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
                 ..first.clone()
             },
             SupervisorSnapshot {
+                provider_login_pending: None,
                 cursor: SnapshotCursor {
                     owner: "owner-b".into(),
                     revision: u64::MAX,
@@ -560,6 +563,7 @@ fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
                 ..first.clone()
             },
             SupervisorSnapshot {
+                provider_login_pending: None,
                 status: SupervisorStatus {
                     supervisor_pid: 0,
                     ..first.status.clone()
@@ -594,7 +598,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         use crate::workspaces::*;
         use serde_json::{Value, json};
         let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v11.json"))
+            serde_json::from_str(include_str!("../../../../contracts/observations-v12.json"))
                 .unwrap();
         let owner = "owner-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));

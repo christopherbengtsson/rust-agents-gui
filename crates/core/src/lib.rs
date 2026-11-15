@@ -44,6 +44,9 @@ pub struct SupervisorSnapshot {
     pub cursor: SnapshotCursor,
     /// A full snapshot replaces observations from another owner or cursor.
     pub reset: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "codegen", ts(optional))]
+    pub provider_login_pending: Option<bool>,
 }
 
 pub struct Core {
@@ -82,7 +85,7 @@ impl Core {
     pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
         let workspaces = workspaces::Workspaces::open(directory)?;
         let journal = workspaces.journal();
-        let providers = runtimes::ProviderConnections::open(journal.clone());
+        let providers = runtimes::ProviderConnections::open(journal.clone(), directory)?;
         Ok(Self {
             providers: Some(std::sync::Arc::new(providers)),
             journal,
@@ -135,6 +138,11 @@ impl Core {
             revision: self.workspaces.as_ref().map_or(1, |w| w.revision()),
         };
         SupervisorSnapshot {
+            provider_login_pending: self
+                .providers
+                .as_ref()
+                .filter(|providers| providers.has_pending_login())
+                .map(|_| true),
             status: self.status(),
             reset: after.as_ref() != Some(&cursor),
             cursor,

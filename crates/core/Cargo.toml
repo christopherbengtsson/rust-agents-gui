@@ -25,8 +25,10 @@ schemars = { version = "=1.2.3", features = ["uuid1"], optional = true }
 tokio = { version = "=1.54.1", default-features = false, features = ["io-util", "sync", "time", "net", "rt", "process"] }
 tokio-util = { version = "=0.7.20", default-features = false, features = ["codec", "rt"] }
 bytes = { version = "1.12.1", default-features = false }
+url = "=2.5.8"
 futures-core = { version = "0.3.34", default-features = false }
 futures-sink = { version = "0.3.34", default-features = false }
+futures-util = { version = "0.3.34", default-features = false, features = ["std"] }
 
 [dev-dependencies]
 tokio = { version = "=1.54.1", default-features = false, features = ["rt", "test-util"] }

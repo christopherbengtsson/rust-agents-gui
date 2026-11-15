@@ -4894,6 +4894,7 @@ dependencies = [
  "bytes",
  "futures-core",
  "futures-sink",
+ "futures-util",
  "libc",
  "rusqlite",
  "schemars 1.2.3",
@@ -4902,6 +4903,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "ts-rs",
+ "url",
  "uuid",
 ]
 

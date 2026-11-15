@@ -444,3 +444,27 @@ interest while its app-lifetime owner drains work and retains validated context.
   supersedes earlier retained-only navigation and permanent-Refresh requirements.
   02/03 add visible login choices beneath readiness and coordinate their active
   attempts with checks in Rust; 04 qualifies the combined UI.
+
+### Browser sign-in (connection 02)
+
+- **ProviderSignIn** presents the explained ChatGPT browser action, exact-attempt
+  progress, reopening, cancellation and reconciliation. Use below readiness and
+  account facts, outside Setup help. It receives observations and targeted
+  callbacks; it owns no authentication, URL, process or retry policy. Button,
+  Alert and Spinner retain their existing Base UI contracts. CLI controls remain
+  ticket 03. A completed browser attempt and current verified readiness are
+  separate facts; verification failure keeps account evidence Last known.
+- **AppRuntime** presents a compact progress link above routed content while
+  authoritative sign-in or uncertain delivery/cleanup is pending. Providers,
+  General and workspace navigation preserve the same attempt and Settings return
+  provenance. Native shutdown progress/failure remains visible here too. Window
+  close hides; explicit Quit requests supervisor-owned cleanup and waits for
+  owner release. A desktop crash leaves the supervisor-owned attempt running.
+- **ProviderObservations** retains identity-only pending-action interests before
+  dispatch, reconciles lost replies without replay and keeps Query as the only
+  observation cache. Pure status reads cannot start readiness checks; committed
+  Codex activation still requests its explicit bounded check. A supervisor
+  snapshot advertises pending provider login so a reopened desktop can recover
+  progress without probing providers on an ordinary workspace mount. The native
+  owner opens and retains the returned URL; JavaScript receives no auth URL or
+  native login ID. Unconfirmed cleanup fences its credential scope.

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/collapsible";
 import type { useProviderSetup } from "@/hooks/use-provider-setup";
 import type { SetupProblem } from "@/generated/contracts/types";
+import type { ReactNode } from "react";
+import { loginActive } from "@/hooks/use-provider-progress";
 
 const guidance: Record<SetupProblem, { title: string; message: string }> = {
   missing_executable: {
@@ -25,7 +27,7 @@ const guidance: Record<SetupProblem, { title: string; message: string }> = {
   authentication_unavailable: {
     title: "Sign in with the official Codex runtime",
     message:
-      "Run codex login in your terminal using the Codex home in Technical details, then choose Check again.",
+      "Sign in through your browser below. Codex manages your credentials and the app checks authentication when sign-in finishes.",
   },
   status_read_failed: {
     title: "Codex setup could not be checked",
@@ -42,10 +44,12 @@ export function ProviderSetup({
   setup,
   onOpenHelp,
   helpError,
+  signIn,
 }: {
   setup: ReturnType<typeof useProviderSetup>;
   onOpenHelp: (topic: ProviderHelpTopic) => void;
   helpError?: string;
+  signIn?: ReactNode;
 }) {
   const {
     target,
@@ -60,6 +64,7 @@ export function ProviderSetup({
   const evidence = observation?.evidence;
   const problem = observation?.problem;
   const cleanup = observation?.phase === "cleanup_uncertain";
+  const signingIn = loginActive(observation);
   // The setup view excludes failed retained phases from pending, while an
   // actual retry can be pending alongside its previous read error.
   const checking = available && pending;
@@ -68,6 +73,7 @@ export function ProviderSetup({
     !error &&
     !checking &&
     !stale &&
+    !signingIn &&
     !problem &&
     !!evidence &&
     evidence.authentication !== "unavailable" &&
@@ -120,7 +126,7 @@ export function ProviderSetup({
             ? guidance[problem]
             : undefined;
   const showRecovery = !checking || cleanup || !!error;
-  const canCheck = available && !pending && !cleanup && !ready;
+  const canCheck = available && !pending && !cleanup && !ready && !signingIn;
   return (
     <section aria-label="Codex setup" className="provider-setup">
       <div className="provider-status">
@@ -224,6 +230,7 @@ export function ProviderSetup({
           </dl>
         </div>
       )}
+      {signIn}
       <div className="provider-disclosures">
         {target && (
           <Collapsible className="provider-disclosure">

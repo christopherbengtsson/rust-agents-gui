@@ -6,6 +6,8 @@ from pathlib import Path
 import signal
 import sys
 import time
+import threading
+import uuid
 
 control = os.environ.get("AW_FIXTURE_CONTROL")
 settings = json.loads(Path(control).read_text()) if control else {}
@@ -43,6 +45,17 @@ if scenario == "fork_descendant":
 def send(value):
     print(json.dumps(value), flush=True)
 
+login_cancelled = threading.Event()
+login_id = str(uuid.uuid4())
+
+def finish_login():
+    while not login_cancelled.wait(.05):
+        current = json.loads(Path(control).read_text()) if control else settings
+        if current.get("scenario") in ("browser_complete", "browser_failure", "browser_verify_failure"):
+            send({"method": "account/login/completed", "params": {"loginId": login_id, "success": current["scenario"] != "browser_failure", "error": None}})
+            record("login_completed", login_id=login_id)
+            return
+
 
 try:
     for line in sys.stdin:
@@ -73,8 +86,24 @@ try:
             if scenario == "unrelated_id":
                 send({"id": 999, "result": {}})
                 continue
-            account = None if scenario == "no_auth" else {"type": "apiKey"} if scenario == "api_key" else {"type": "chatgpt", "email": "fixture@example.test", "planType": "pro", "workspaceName": None}
+            if scenario == "browser_verify_failure":
+                send({"id": identifier, "error": {"code": -32603, "message": "synthetic verification failure"}})
+                continue
+            account = None if scenario in ("no_auth", "browser_pending", "browser_open_failure", "browser_failure") else {"type": "apiKey"} if scenario == "api_key" else {"type": "chatgpt", "email": "fixture@example.test", "planType": "pro", "workspaceName": None}
             send({"id": identifier, "result": {"account": account, "userId": None, "requiresOpenaiAuth": True}})
+        elif method == "account/login/start":
+            assert request["params"] == {"type": "chatgpt"}
+            if scenario == "browser_start_failure":
+                send({"id": identifier, "error": {"code": -32603, "message": "synthetic login start failure"}})
+                continue
+            url = "aw-invalid:fixture" if scenario == "browser_open_failure" else settings.get("browser_url", "http://127.0.0.1:1456/fixture-sign-in")
+            send({"id": identifier, "result": {"type": "chatgpt", "loginId": login_id, "authUrl": url}})
+            threading.Thread(target=finish_login, daemon=True).start()
+        elif method == "account/login/cancel":
+            assert request["params"] == {"loginId": login_id}
+            login_cancelled.set()
+            record("login_cancelled", login_id=login_id)
+            send({"id": identifier, "result": {"status": "canceled"}})
         elif method == "config/read":
             assert request["params"] == {"includeLayers": False}
             if scenario == "config_failure":

@@ -41,11 +41,14 @@ export function decodeProviderReply(
     targetSemantics(value.target)
   )
     return value;
-  if (request.operation === "observe" && value.kind === "observation") {
+  if ("target_id" in request && value.kind === "observation") {
     const observation = value.observation;
     const evidence = observation.evidence;
     if (
       observation.target.id === request.target_id &&
+      (!("attempt_id" in request) ||
+        request.operation === "reconcile_login" ||
+        observation.login?.id === request.attempt_id) &&
       targetSemantics(observation.target) &&
       Number.isSafeInteger(observation.revision) &&
       observation.revision >= 0 &&
@@ -66,10 +69,22 @@ export function decodeProviderReply(
             (text(value, 512) && !/[\u0000-\u001f\u007f]/.test(value)),
         )) &&
       (observation.phase !== "cleanup_uncertain" ||
-        observation.problem === "cleanup_uncertain")
+        observation.problem === "cleanup_uncertain") &&
+      (!observation.login ||
+        (identity(observation.login.id) &&
+          (observation.login.diagnostic === null ||
+            (text(observation.login.diagnostic, 512) &&
+              !/[\u0000-\u001f\u007f]/.test(observation.login.diagnostic)))))
     )
       return value;
   }
+  if (
+    (request.operation === "begin_shutdown" ||
+      request.operation === "shutdown_status" ||
+      request.operation === "finish_shutdown") &&
+    value.kind === "shutdown"
+  )
+    return value;
   throw replyUnavailable(
     "Provider setup has the wrong configuration target. Refresh its recorded status.",
   );

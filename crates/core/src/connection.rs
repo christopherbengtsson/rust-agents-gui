@@ -30,7 +30,7 @@ use tokio::{
 use tokio_util::sync::CancellationToken;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 11;
+pub const PROTOCOL_VERSION: u32 = 12;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -220,7 +220,17 @@ impl SupervisorConnection {
         expected_owner: String,
         request: crate::runtimes::ProviderRequest,
     ) -> Result<Admitted<OwnedReply<crate::runtimes::ProviderReply>>, RequestFailure> {
-        let permit = Self::admit(&self.observations)?;
+        let lane = if matches!(
+            request,
+            crate::runtimes::ProviderRequest::Target
+                | crate::runtimes::ProviderRequest::Observe { .. }
+                | crate::runtimes::ProviderRequest::ShutdownStatus
+        ) {
+            &self.observations
+        } else {
+            &self.intents
+        };
+        let permit = Self::admit(lane)?;
         self.require_connection(&expected_owner)?;
         let client = self.client();
         Ok(Admitted::new(permit, self.tasks.clone(), async move {
@@ -271,6 +281,73 @@ impl SupervisorConnection {
         let feed = self.feed.stop_all().await;
         let requests = self.tasks.close_and_wait().await.map_err(unavailable);
         feed.and(requests)
+    }
+
+    /// Explicit Quit never invokes discovery or starts a replacement supervisor.
+    pub async fn quit_owned(&self) -> Result<(), RequestFailure> {
+        use crate::runtimes::{ProviderReply, ProviderRequest};
+        let owner = self
+            .observed
+            .lock()
+            .map_err(|_| unavailable("Connection state unavailable"))?
+            .cursor
+            .as_ref()
+            .map(|cursor| cursor.owner.clone())
+            .ok_or_else(|| unavailable("No observed supervisor owner for Quit"))?;
+        let first = self
+            .prepare_provider_request(owner.clone(), ProviderRequest::BeginShutdown)?
+            .run()
+            .await?;
+        first
+            .result
+            .map_err(|error| RequestFailure::Rejected { error })?;
+        let deadline = Instant::now() + Duration::from_secs(30);
+        loop {
+            let reply = self
+                .prepare_provider_request(owner.clone(), ProviderRequest::ShutdownStatus)?
+                .run()
+                .await?;
+            match reply
+                .result
+                .map_err(|error| RequestFailure::Rejected { error })?
+            {
+                ProviderReply::Shutdown { complete: true, .. } => break,
+                ProviderReply::Shutdown {
+                    diagnostic: Some(message),
+                    ..
+                } => return Err(unavailable(message)),
+                ProviderReply::Shutdown { .. } => {}
+                _ => return Err(unavailable("Invalid owned shutdown status")),
+            }
+            if Instant::now() >= deadline {
+                return Err(unavailable(
+                    "Owned shutdown is still pending. Keep the app open and reconcile Quit.",
+                ));
+            }
+            tokio::time::sleep(Duration::from_millis(100)).await;
+        }
+        let _ = self
+            .prepare_provider_request(owner.clone(), ProviderRequest::FinishShutdown)?
+            .run()
+            .await;
+        // The final response precedes releasing the supervisor lock. Observe
+        // actual release without signalling a saved PID or invoking discovery.
+        loop {
+            let state = self.state.clone();
+            let present = self
+                .tasks
+                .blocking(&self.blocking, move || owner_present(&state))
+                .await
+                .map_err(unavailable)?;
+            if !present {
+                break;
+            }
+            if Instant::now() >= deadline {
+                return Err(unavailable("Supervisor owner release is unconfirmed"));
+            }
+            tokio::time::sleep(Duration::from_millis(50)).await;
+        }
+        self.stop_observations().await
     }
     fn admit(lane: &ConnectionSlots) -> Result<admission::ConnectionPermit, RequestFailure> {
         lane.try_acquire().ok_or_else(|| RequestFailure::transport(
@@ -644,9 +721,27 @@ fn provider_target(
 ) -> bool {
     use crate::runtimes::{ProviderReply as R, ProviderRequest as Q};
     match (request, reply) {
+        (Q::BeginShutdown | Q::ShutdownStatus | Q::FinishShutdown, R::Shutdown { .. }) => true,
         (Q::Target, R::Target { target }) => target.provider == "codex",
-        (Q::Observe { target_id, .. }, R::Observation { observation }) => {
-            *target_id == observation.target.id && observation.target.provider == "codex"
+        (
+            Q::Observe { target_id, .. }
+            | Q::StartBrowserLogin { target_id, .. }
+            | Q::CancelLogin { target_id, .. }
+            | Q::ReopenBrowser { target_id, .. }
+            | Q::ReconcileLogin { target_id, .. },
+            R::Observation { observation },
+        ) => {
+            *target_id == observation.target.id
+                && observation.target.provider == "codex"
+                && match request {
+                    Q::StartBrowserLogin { attempt_id, .. }
+                    | Q::CancelLogin { attempt_id, .. }
+                    | Q::ReopenBrowser { attempt_id, .. } => observation
+                        .login
+                        .as_ref()
+                        .is_some_and(|login| login.id == *attempt_id),
+                    _ => true,
+                }
         }
         _ => false,
     }
@@ -962,6 +1057,12 @@ pub struct ConnectionServer {
     blocking: ConnectionSlots,
 }
 impl ConnectionServer {
+    pub fn shutdown_complete(&self) -> bool {
+        self.core
+            .providers
+            .as_ref()
+            .is_some_and(|providers| providers.exit_requested())
+    }
     pub fn new(core: Arc<Core>) -> Self {
         Self {
             core,
@@ -996,6 +1097,20 @@ impl ConnectionServer {
     }
 }
 fn route_request(core: &Core, request: Request) -> Response {
+    if core
+        .providers
+        .as_ref()
+        .is_some_and(|providers| providers.is_shutting_down())
+        && request.provider.is_none()
+    {
+        return Response::Transport {
+            error: transport_failure(
+                TransportCode::Busy,
+                Delivery::Rejected,
+                "Supervisor is shutting down; no new work admitted",
+            ),
+        };
+    }
     if let Some(request) = request.provider {
         Response::Provider {
             owner: core.owner.clone(),

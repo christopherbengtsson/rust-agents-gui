@@ -4,6 +4,8 @@
   "description": "The main window may choose a repository directory using the native open dialog.",
   "windows": ["main"],
   "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
     "dialog:allow-open",
     {
       "identifier": "opener:allow-open-url",

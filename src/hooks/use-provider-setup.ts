@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { loginActive } from "./use-provider-progress";
 import type { AppObservations } from "@/lib/app-observations";
 
 type SetupScope = { owner: string; targetId: string };
@@ -85,6 +86,7 @@ export function useProviderSetup(
   }, [feature, shownOwner, targetId]);
   const error = targetState?.error ?? state?.error;
   const stale =
+    loginActive(observation) ||
     !owner ||
     !updatesAvailable ||
     !entryAttached ||

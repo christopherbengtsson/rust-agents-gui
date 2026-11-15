@@ -115,6 +115,7 @@ beforeEach(() => {
             phase: "observed",
             evidence: providerEvidence,
             diagnostic: null,
+            login: null,
             problem: null,
           },
         };
@@ -525,6 +526,7 @@ test("Codex verifies on entry, retains stale evidence on failure and offers cont
             phase: "observed",
             evidence: providerEvidence,
             diagnostic: null,
+            login: null,
             problem: "status_read_failed",
           },
         };

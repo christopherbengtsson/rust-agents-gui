@@ -1,8 +1,10 @@
 import { useStore } from "zustand";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { listen } from "@tauri-apps/api/event";
 import {
   Outlet,
+  Link,
   useLocation,
   useRouteContext,
   useRouterState,
@@ -19,6 +21,7 @@ import {
   type MainDestination,
 } from "@/lib/navigation";
 import type { AppObservations } from "@/lib/app-observations";
+import { useProviderProgress } from "@/hooks/use-provider-progress";
 
 export function targetStatus(
   app: AppObservations,
@@ -110,6 +113,40 @@ export function useAppRuntime() {
 }
 export function AppRuntime() {
   const runtime = useRuntime();
+  const providerProgress = useProviderProgress(
+    runtime.app,
+    runtime.connection.state === "connected"
+      ? runtime.connection.observation.snapshot.cursor.owner
+      : undefined,
+    runtime.connection.observation?.snapshot.provider_login_pending === true,
+  );
+  const [shutdown, setShutdown] = useState<string>();
+  useEffect(() => {
+    let disposed = false;
+    let release: (() => void) | undefined;
+    void listen<unknown>("owned-shutdown", (event) => {
+      if (
+        !disposed &&
+        typeof event.payload === "string" &&
+        event.payload.length <= 512
+      )
+        setShutdown(event.payload);
+    })
+      .then((stop) => {
+        if (disposed) stop();
+        else release = stop;
+      })
+      .catch(() => {
+        if (!disposed)
+          setShutdown(
+            "Desktop shutdown updates are unavailable. Keep the app open if Quit cannot confirm owned cleanup.",
+          );
+      });
+    return () => {
+      disposed = true;
+      release?.();
+    };
+  }, []);
   const location = useLocation();
   const settings = isSettingsPath(location.pathname);
   const pending = useRouterState({
@@ -156,6 +193,32 @@ export function AppRuntime() {
           />
         )}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          {shutdown && (
+            <Alert>
+              <AlertTitle>Owned shutdown</AlertTitle>
+              <AlertDescription>{shutdown}</AlertDescription>
+            </Alert>
+          )}
+          {providerProgress.active && (
+            <div className="flex shrink-0 items-center gap-2 border-b px-4 py-2 text-sm">
+              <Link
+                to="/settings/providers"
+                search={{ provider: "codex" }}
+                replace={settings}
+              >
+                Codex sign-in{" "}
+                {providerProgress.observation?.login?.phase ===
+                "cleanup_uncertain"
+                  ? "needs attention"
+                  : "in progress"}
+              </Link>
+              {providerProgress.stale && (
+                <span className="text-muted-foreground">
+                  Last known · status unavailable
+                </span>
+              )}
+            </div>
+          )}
           {storageError && (
             <Alert>
               <AlertTitle>

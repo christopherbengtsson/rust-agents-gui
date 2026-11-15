@@ -1,7 +1,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import corpusText from "../contracts/observations-v11.json?raw";
+import corpusText from "../contracts/observations-v12.json?raw";
 import {
   decodeOwnedReply,
   decodeRequestFailure,

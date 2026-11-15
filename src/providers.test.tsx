@@ -38,6 +38,7 @@ const observation = (id = a) => ({
     evidence: null,
     problem: "missing_executable",
     diagnostic: "synthetic missing executable",
+    login: null,
   },
 });
 const flush = async () => {
@@ -72,6 +73,7 @@ function healthyBridge(outcome: ReadinessOutcome = {}) {
               phase: outcome.phase ?? "observed",
               problem: null,
               diagnostic: null,
+              login: null,
               evidence: {
                 version: "0.169.0",
                 authentication: "chatgpt",

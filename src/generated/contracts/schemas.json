@@ -1480,6 +1480,94 @@
     "title": "InspectionPhase",
     "type": "string"
   },
+  "LoginAttempt": {
+    "$defs": {
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "browser_open_failed": {
+        "type": "boolean"
+      },
+      "diagnostic": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "outcome": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/LoginOutcome"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phase": {
+        "$ref": "#/$defs/LoginPhase"
+      }
+    },
+    "required": [
+      "id",
+      "phase",
+      "outcome",
+      "browser_open_failed",
+      "diagnostic"
+    ],
+    "title": "LoginAttempt",
+    "type": "object"
+  },
+  "LoginOutcome": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "completed",
+      "failed",
+      "cancelled"
+    ],
+    "title": "LoginOutcome",
+    "type": "string"
+  },
+  "LoginPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "starting",
+      "pending",
+      "cancelling",
+      "verifying",
+      "completed",
+      "failed",
+      "cancelled",
+      "cleanup_uncertain"
+    ],
+    "title": "LoginPhase",
+    "type": "string"
+  },
   "OwnedObservation": {
     "$defs": {
       "ErrorCode": {
@@ -1587,6 +1675,65 @@
         ],
         "type": "string"
       },
+      "LoginAttempt": {
+        "properties": {
+          "browser_open_failed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/LoginPhase"
+          }
+        },
+        "required": [
+          "id",
+          "phase",
+          "outcome",
+          "browser_open_failed",
+          "diagnostic"
+        ],
+        "type": "object"
+      },
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
       "ProviderObservation": {
         "properties": {
           "diagnostic": {
@@ -1599,6 +1746,16 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/SetupEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "login": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginAttempt"
               },
               {
                 "type": "null"
@@ -1633,7 +1790,8 @@
           "phase",
           "evidence",
           "problem",
-          "diagnostic"
+          "diagnostic",
+          "login"
         ],
         "type": "object"
       },
@@ -1668,6 +1826,29 @@
             "required": [
               "kind",
               "observation"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "complete": {
+                "type": "boolean"
+              },
+              "diagnostic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "kind": {
+                "const": "shutdown",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "complete",
+              "diagnostic"
             ],
             "type": "object"
           }
@@ -3225,6 +3406,65 @@
         ],
         "type": "string"
       },
+      "LoginAttempt": {
+        "properties": {
+          "browser_open_failed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/LoginPhase"
+          }
+        },
+        "required": [
+          "id",
+          "phase",
+          "outcome",
+          "browser_open_failed",
+          "diagnostic"
+        ],
+        "type": "object"
+      },
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
       "ProviderTarget": {
         "properties": {
           "codex_home": {
@@ -3342,6 +3582,16 @@
           }
         ]
       },
+      "login": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/LoginAttempt"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "phase": {
         "$ref": "#/$defs/SetupPhase"
       },
@@ -3370,7 +3620,8 @@
       "phase",
       "evidence",
       "problem",
-      "diagnostic"
+      "diagnostic",
+      "login"
     ],
     "title": "ProviderObservation",
     "type": "object"
@@ -3395,6 +3646,65 @@
         ],
         "type": "string"
       },
+      "LoginAttempt": {
+        "properties": {
+          "browser_open_failed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/LoginPhase"
+          }
+        },
+        "required": [
+          "id",
+          "phase",
+          "outcome",
+          "browser_open_failed",
+          "diagnostic"
+        ],
+        "type": "object"
+      },
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
       "ProviderObservation": {
         "properties": {
           "diagnostic": {
@@ -3407,6 +3717,16 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/SetupEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "login": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginAttempt"
               },
               {
                 "type": "null"
@@ -3441,7 +3761,8 @@
           "phase",
           "evidence",
           "problem",
-          "diagnostic"
+          "diagnostic",
+          "login"
         ],
         "type": "object"
       },
@@ -3577,6 +3898,29 @@
           "observation"
         ],
         "type": "object"
+      },
+      {
+        "properties": {
+          "complete": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "const": "shutdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "complete",
+          "diagnostic"
+        ],
+        "type": "object"
       }
     ],
     "title": "ProviderReply"
@@ -3614,6 +3958,136 @@
           "operation",
           "target_id",
           "refresh"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "expected_revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "operation": {
+            "const": "start_browser_login",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id",
+          "expected_revision"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "cancel_login",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "reopen_browser",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "reconcile_login",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "operation": {
+            "const": "begin_shutdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "operation": {
+            "const": "shutdown_status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "operation": {
+            "const": "finish_shutdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
         ],
         "type": "object"
       }
@@ -5091,6 +5565,12 @@
     "properties": {
       "cursor": {
         "$ref": "#/$defs/SnapshotCursor"
+      },
+      "provider_login_pending": {
+        "type": [
+          "boolean",
+          "null"
+        ]
       },
       "reset": {
         "description": "A full snapshot replaces observations from another owner or cursor.",
