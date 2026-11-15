@@ -477,7 +477,7 @@ test("Providers and Claude inspection retain one Settings return entry and cause
   );
 });
 
-test("Codex defaults to existing API-key evidence, retains stale details on failed refresh and returns after tab changes", async () => {
+test("Codex verifies on entry, retains stale evidence on failure and offers contextual recovery", async () => {
   const user = userEvent.setup();
   const history = mount(repositoryPath);
   await screen.findByRole("heading", { name: "exact repository", level: 1 });
@@ -490,18 +490,19 @@ test("Codex defaults to existing API-key evidence, retains stale details on fail
   await screen.findByRole("heading", { name: "Settings", level: 1 });
   await user.click(screen.getByRole("link", { name: "Providers" }));
   await screen.findByRole("region", { name: "Codex setup" });
-  await waitFor(() =>
-    expect(
-      screen.getAllByText("Existing API-key configuration").length,
-    ).toBeGreaterThan(0),
-  );
+  await screen.findByText("Existing API-key configuration");
+  await screen.findByText("Connected");
+  expect(screen.queryByRole("button", { name: /^Refresh$/ })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
+  expect(screen.queryByText("/fixture/codex")).toBeNull();
+  await user.click(screen.getByRole("button", { name: "Setup help" }));
   expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
   expect(screen.queryByRole("button", { name: "Run codex login" })).toBeNull();
   const beforeHelp = vi
     .mocked(invoke)
     .mock.calls.filter(([name]) => name === "provider_request").length;
   const help = screen.getByRole("button", {
-    name: "Open official installation instructions",
+    name: "Official installation instructions",
   });
   help.focus();
   await user.keyboard("{Enter}");
@@ -527,9 +528,17 @@ test("Codex defaults to existing API-key evidence, retains stale details on fail
             problem: "status_read_failed",
           },
         };
-  await user.click(screen.getByRole("button", { name: /^Refresh$/ }));
+  await user.click(screen.getByRole("tab", { name: "Claude Code" }));
+  await user.click(screen.getByRole("tab", { name: "Codex" }));
   await screen.findByText("Codex setup could not be checked");
-  expect(screen.getByText("Stale · readiness unknown")).toBeTruthy();
+  expect(
+    screen.getByText("Last known · current readiness unverified"),
+  ).toBeTruthy();
+  expect(screen.queryByText("Connected")).toBeNull();
+  await user.click(screen.getByRole("button", { name: "Technical details" }));
+  expect(screen.getByText("/fixture/codex")).toBeTruthy();
+  await user.click(screen.getByRole("button", { name: "Check again" }));
+  await screen.findByText("Codex setup could not be checked");
   const before = vi
     .mocked(invoke)
     .mock.calls.filter(([name]) => name === "provider_request").length;

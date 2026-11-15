@@ -1,0 +1,32 @@
+$ vitest run --maxWorkers=1 src/provider-setup.test.tsx -t 'stopped observation delivery'
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-setup.test.tsx (15 tests | 1 failed | 14 skipped) 26ms
+   × stopped observation delivery exposes supervisor reconnection guidance instead of retained checking 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-setup.test.tsx > stopped observation delivery exposes supervisor reconnection guidance instead of retained checking
+AssertionError: expected 'Readiness unknown' to be 'Status unavailable' // Object.is equality
+
+Expected: "Status unavailable"
+Received: "Readiness unknown"
+
+ ❯ src/provider-setup.test.tsx:233:50
+    231|     observation: { ...observed, phase: "checking" },
+    232|   })} onOpenHelp={vi.fn()} />);
+    233|   expect(screen.getByRole("status").textContent).toBe("Status unavaila…
+       |                                                  ^
+    234|   expect(screen.getByRole("alert").textContent).toContain("Live setup …
+    235|   expect(screen.getByRole("alert").textContent).toContain("supervisor …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  13:12:45
+   Duration  385ms (environment 50%, import 34%, tests 8%, transform 6%, setup 1%)
+
+[ELIFECYCLE] Command failed with exit code 1.

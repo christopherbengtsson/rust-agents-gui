@@ -1,0 +1,41 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selected) Codex
+					16 tab (selectable) Claude Code
+				17 container Codex
+					18 container Codex setup
+						19 text Checking…
+						20 text Existing API-key configuration
+						21 text Last known · current readiness unverified
+						22 description list
+							23 text Billing
+							24 text API key
+						25 button (collapsed) Technical details, Secondary Actions: Expand
+						26 button (collapsed) Setup help, Secondary Actions: Expand
+	27 close button
+	28 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	29 minimize button
+	30 text Agent Workspace
+31 menu bar
+	32 Agent Workspace
+	33 File
+	34 Edit
+	35 View
+	36 Window
+	37 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex

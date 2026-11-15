@@ -37,7 +37,9 @@ function CodexSetup() {
     connection.state === "connected"
       ? connection.observation.snapshot.cursor.owner
       : undefined;
-  const setup = useProviderSetup(app, owner);
+  const updatesAvailable =
+    connection.feed?.state !== "stopped" && !connection.feed?.message;
+  const setup = useProviderSetup(app, owner, updatesAvailable);
   const openHelp = (topic: ProviderHelpTopic) => {
     setHelpError(undefined);
     void openProviderHelp(topic).catch(() =>
@@ -55,27 +57,33 @@ function ProvidersScreen() {
   const navigate = Route.useNavigate();
   return (
     <div className="workspace-content flex flex-col gap-5">
-      <h2 id="settings-providers-heading" className="font-medium">
-        Providers
-      </h2>
-      <Tabs
-        value={provider}
-        onValueChange={(value) => {
-          if (value === "codex" || value === "claude")
-            void navigate({ search: { provider: value }, replace: true });
-        }}
-      >
-        <TabsList aria-label="Provider">
-          <TabsTrigger value="codex">Codex</TabsTrigger>
-          <TabsTrigger value="claude">Claude Code</TabsTrigger>
-        </TabsList>
-        <TabsContent value="codex" className="pt-4">
-          {provider === "codex" && <CodexSetup />}
-        </TabsContent>
-        <TabsContent value="claude" className="pt-4">
-          {provider === "claude" && <ClaudeSetup />}
-        </TabsContent>
-      </Tabs>
+      <div className="providers-content">
+        <h2 id="settings-providers-heading" className="settings-page-heading">
+          Providers
+        </h2>
+        <Tabs
+          value={provider}
+          onValueChange={(value) => {
+            if (value === "codex" || value === "claude")
+              void navigate({ search: { provider: value }, replace: true });
+          }}
+        >
+          <TabsList
+            aria-label="Provider"
+            variant="line"
+            className="provider-tabs"
+          >
+            <TabsTrigger value="codex">Codex</TabsTrigger>
+            <TabsTrigger value="claude">Claude Code</TabsTrigger>
+          </TabsList>
+          <TabsContent value="codex" className="pt-4">
+            {provider === "codex" && <CodexSetup />}
+          </TabsContent>
+          <TabsContent value="claude" className="pt-4">
+            {provider === "claude" && <ClaudeSetup />}
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

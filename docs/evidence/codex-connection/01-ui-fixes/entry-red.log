@@ -1,0 +1,35 @@
+$ vitest run --maxWorkers=1 src/providers.test.tsx -t 'awaiting baseline'
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/providers.test.tsx (6 tests | 1 failed | 5 skipped) 68ms
+   × an entry verification awaiting baseline survives disconnect until its first dispatch 67ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/providers.test.tsx > an entry verification awaiting baseline survives disconnect until its first dispatch
+AssertionError: expected [ [ 'provider_request', { …(2) } ] ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/providers.test.tsx:179:34
+    177|   next.rerender(initialProps);
+    178|   await act(flush);
+    179|   expect(verificationRequests()).toHaveLength(2);
+       |                                  ^
+    180|   expect(next.result.current.pending).toBe(false);
+    181|   expect(next.result.current.stale).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  12:50:01
+   Duration  418ms (environment 45%, import 25%, tests 19%, transform 9%, setup 1%)
+
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "checks": [
+    "healthy 900x680 and 600x480 without Refresh",
+    "retained Checking on controlled slow read",
+    "stopped delivery exposes Status unavailable/reconnection guidance",
+    "no ineffective Check again while delivery is unavailable",
+    "Escape returns to workspace; existing Refresh status restores delivery",
+    "reopening Providers verifies setup and restores Connected",
+    "native snapshot observed with problem null",
+    "allowed read-only provider methods only",
+    "zero remaining fixture PIDs"
+  ],
+  "qualification_limits": [
+    "baseline queue interruption and owner replacement are controlled unit scenarios",
+    "screen-reader speech and hands-on user trial unperformed",
+    "no live authentication or native-agent compatibility qualification",
+    "no ticket 02\u201304 implementation"
+  ]
+}

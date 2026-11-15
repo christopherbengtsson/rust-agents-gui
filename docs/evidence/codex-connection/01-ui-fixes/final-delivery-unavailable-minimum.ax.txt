@@ -1,0 +1,47 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selected) Codex
+					16 tab (selectable) Claude Code
+				17 container Codex
+					18 container Codex setup
+						19 text Status unavailable
+						20 text Signed in with ChatGPT
+						21 container
+							22 text Live setup updates unavailable Return to your workspace and refresh the supervisor connection. Then reopen Providers to verify setup. Retained information cannot establish current readiness.
+						23 text Last known · current readiness unverified
+						24 description list
+							25 text Account
+							26 text fixture@example.test
+							27 text Plan
+							28 text Pro
+							29 text Billing
+							30 text ChatGPT
+						31 button (collapsed) Technical details, Secondary Actions: Expand
+						32 button (collapsed) Setup help, Secondary Actions: Expand
+	33 close button
+	34 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	35 minimize button
+	36 text Agent Workspace
+37 menu bar
+	38 Agent Workspace
+	39 File
+	40 Edit
+	41 View
+	42 Window
+	43 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex

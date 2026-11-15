@@ -1,5 +1,6 @@
 import type { ProviderHelpTopic } from "@/lib/provider-help";
-import { Badge } from "@/components/ui/badge";
+import { ChevronRight } from "lucide-react";
+import { StatusIndicator } from "@/components/primitives/status-indicator";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
@@ -7,7 +8,6 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
-import { Spinner } from "@/components/ui/spinner";
 import type { useProviderSetup } from "@/hooks/use-provider-setup";
 import type { SetupProblem } from "@/generated/contracts/types";
 
@@ -15,27 +15,27 @@ const guidance: Record<SetupProblem, { title: string; message: string }> = {
   missing_executable: {
     title: "Install the supported Codex runtime",
     message:
-      "Install Codex 0.169.0 using the official installation instructions, then choose Refresh. If PATH changed, restart the owning supervisor with the updated environment, then reopen the app.",
+      "Install Codex 0.169.0 using the official installation instructions, then choose Check again. If PATH changed, restart the owning supervisor with the updated environment, then reopen the app.",
   },
   incompatible_protocol: {
     title: "Use the supported Codex version",
     message:
-      "This setup reader supports Codex 0.169.0. Check the executable below, install that version, then choose Refresh. If the selected executable path changed, restart the owning supervisor and reopen the app. A malformed or unexpected runtime reply also requires rechecking the installed runtime.",
+      "This setup reader supports Codex 0.169.0. Check the executable in Technical details, install that version, then choose Check again. If the selected executable path changed, restart the owning supervisor and reopen the app. A malformed or unexpected runtime reply also requires rechecking the installed runtime.",
   },
   authentication_unavailable: {
     title: "Sign in with the official Codex runtime",
     message:
-      "Run codex login in your terminal using the Codex home shown below, then choose Refresh. Browser sign-in and an embedded login terminal will be added here later.",
+      "Run codex login in your terminal using the Codex home in Technical details, then choose Check again.",
   },
   status_read_failed: {
     title: "Codex setup could not be checked",
     message:
-      "Check that the executable and its configuration are accessible, then choose Refresh. Previously observed account details remain stale until a successful check.",
+      "Check that the executable and its configuration are accessible, then choose Check again. Previously observed account details remain stale until a successful check.",
   },
   cleanup_uncertain: {
     title: "Waiting for owned Codex cleanup",
     message:
-      "The setup process has not confirmed its exit. A replacement is blocked while the supervisor retains ownership. Recheck status; do not launch another setup process to bypass this state.",
+      "Codex cleanup is still unconfirmed. Another check is blocked until the supervisor confirms the process has stopped. See Technical details for the retained diagnostic.",
   },
 };
 export function ProviderSetup({
@@ -47,160 +47,258 @@ export function ProviderSetup({
   onOpenHelp: (topic: ProviderHelpTopic) => void;
   helpError?: string;
 }) {
-  const { target, observation, error, stale, pending, connected } = setup;
+  const {
+    target,
+    observation,
+    error,
+    stale,
+    pending,
+    connected,
+    updatesAvailable,
+  } = setup;
+  const available = connected && updatesAvailable;
   const evidence = observation?.evidence;
   const problem = observation?.problem;
-  const recovery = problem ? guidance[problem] : undefined;
+  const cleanup = observation?.phase === "cleanup_uncertain";
+  // The setup view excludes failed retained phases from pending, while an
+  // actual retry can be pending alongside its previous read error.
+  const checking = available && pending;
+  const ready =
+    available &&
+    !error &&
+    !checking &&
+    !stale &&
+    !problem &&
+    !!evidence &&
+    evidence.authentication !== "unavailable" &&
+    evidence.authentication !== "unknown";
   const authentication = evidence
     ? {
         chatgpt: "Signed in with ChatGPT",
         api_key: "Existing API-key configuration",
         not_required: "OpenAI authentication not required",
         unavailable: "Not signed in",
-        unknown: "Unknown authentication route",
+        unknown: "Authentication unknown",
       }[evidence.authentication]
-    : "Not yet observed";
-  return (
-    <section aria-label="Codex setup" className="flex min-w-0 flex-col gap-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-col gap-2">
-          <h3 className="font-medium">Existing Codex setup</h3>
-          <div className="flex flex-wrap items-center gap-2" aria-live="polite">
-            <Badge variant={problem ? "destructive" : "secondary"}>
-              {pending ? "Checking…" : authentication}
-            </Badge>
-            {stale && evidence && (
-              <Badge variant="outline">Stale · readiness unknown</Badge>
-            )}
-          </div>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={
-            !connected || pending || observation?.phase === "cleanup_uncertain"
-          }
-          onClick={() => void setup.refresh()}
-        >
-          {pending && <Spinner data-icon="inline-start" />}Refresh
-        </Button>
-      </div>
-      <p className="text-sm text-muted-foreground">
-        User-level setup. Project overrides are not inspected here. This check
-        starts no conversation.
-      </p>
-      {!connected && (
-        <Alert>
-          <AlertTitle>Supervisor unavailable</AlertTitle>
-          <AlertDescription>
-            Reconnect using the supervisor diagnostics. Retained provider
-            evidence cannot establish current readiness.
-          </AlertDescription>
-        </Alert>
-      )}
-      {!!error && (
-        <Alert variant="destructive">
-          <AlertTitle>Setup observation unavailable</AlertTitle>
-          <AlertDescription>
-            Refresh after reconnecting to the current supervisor. Retained
-            information is stale.
-          </AlertDescription>
-        </Alert>
-      )}
-      {evidence && (
-        <dl className="provider-facts text-sm">
-          <dt>Authentication</dt>
-          <dd>{authentication}</dd>
-          <dt>Account</dt>
-          <dd>{evidence.account ?? "Unknown"}</dd>
-          <dt>Plan</dt>
-          <dd>{evidence.plan ?? "Unknown"}</dd>
-          <dt>Billing route</dt>
-          <dd>
-            {
-              { chatgpt: "ChatGPT", api_key: "API key", unknown: "Unknown" }[
-                evidence.billing
-              ]
+    : undefined;
+  const label = !available
+    ? "Status unavailable"
+    : cleanup
+      ? "Cleanup unconfirmed"
+      : checking
+        ? "Checking…"
+        : error
+          ? "Status unavailable"
+          : problem === "authentication_unavailable"
+            ? "Not connected"
+            : problem
+              ? "Setup needs attention"
+              : ready
+                ? "Connected"
+                : "Readiness unknown";
+  const recovery = !connected
+    ? {
+        title: "Supervisor unavailable",
+        message:
+          "Reconnect using the supervisor diagnostics. Current Codex setup could not be verified.",
+      }
+    : !updatesAvailable
+      ? {
+          title: "Live setup updates unavailable",
+          message:
+            "Return to your workspace and refresh the supervisor connection. Then reopen Providers to verify setup. Retained information cannot establish current readiness.",
+        }
+      : cleanup
+        ? guidance.cleanup_uncertain
+        : error
+          ? {
+              title: "Codex setup could not be checked",
+              message:
+                "The setup observation is unavailable. Choose Check again to retry the status read.",
             }
-          </dd>
-          <dt>Model provider</dt>
-          <dd>{evidence.model_provider ?? "Runtime default"}</dd>
-          <dt>Model</dt>
-          <dd>{evidence.model ?? "Runtime default"}</dd>
-        </dl>
-      )}
-      {recovery && (
+          : problem
+            ? guidance[problem]
+            : undefined;
+  const showRecovery = !checking || cleanup || !!error;
+  const canCheck = available && !pending && !cleanup && !ready;
+  return (
+    <section aria-label="Codex setup" className="provider-setup">
+      <div className="provider-status">
+        <StatusIndicator
+          tone={
+            ready
+              ? "success"
+              : problem && problem !== "authentication_unavailable" && !pending
+                ? "error"
+                : "neutral"
+          }
+          label={label}
+        />
+        {evidence && <p className="provider-status-detail">{authentication}</p>}
+      </div>
+      {showRecovery && recovery && (
         <Alert
           variant={
-            problem === "authentication_unavailable" ? "default" : "destructive"
+            problem && problem !== "authentication_unavailable"
+              ? "destructive"
+              : "default"
           }
         >
           <AlertTitle>{recovery.title}</AlertTitle>
           <AlertDescription>{recovery.message}</AlertDescription>
+          {canCheck && (
+            <div className="pt-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => void setup.refresh()}
+              >
+                Check again
+              </Button>
+            </div>
+          )}
+          {(problem === "missing_executable" ||
+            problem === "incompatible_protocol" ||
+            problem === "authentication_unavailable") && (
+            <div className="pt-2">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() =>
+                  onOpenHelp(
+                    problem === "authentication_unavailable"
+                      ? "authentication"
+                      : "install",
+                  )
+                }
+              >
+                {problem === "authentication_unavailable"
+                  ? "Official sign-in instructions"
+                  : "Official installation instructions"}
+              </Button>
+            </div>
+          )}
         </Alert>
       )}
-      {target && (
-        <Collapsible>
+      {canCheck && !recovery && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="self-start"
+          onClick={() => void setup.refresh()}
+        >
+          Check again
+        </Button>
+      )}
+      {evidence && (
+        <div className="provider-account">
+          {(stale || pending) && (
+            <p className="provider-retained-label">
+              Last known · current readiness unverified
+            </p>
+          )}
+          <dl className="provider-account-facts">
+            {(evidence.account || evidence.authentication === "chatgpt") && (
+              <>
+                <dt>Account</dt>
+                <dd>{evidence.account ?? "Unknown"}</dd>
+              </>
+            )}
+            {evidence.plan && evidence.plan !== "unknown" && (
+              <>
+                <dt>Plan</dt>
+                <dd>
+                  {evidence.plan.charAt(0).toUpperCase() +
+                    evidence.plan.slice(1)}
+                </dd>
+              </>
+            )}
+            <dt>Billing</dt>
+            <dd>
+              {
+                { chatgpt: "ChatGPT", api_key: "API key", unknown: "Unknown" }[
+                  evidence.billing
+                ]
+              }
+            </dd>
+          </dl>
+        </div>
+      )}
+      <div className="provider-disclosures">
+        {target && (
+          <Collapsible className="provider-disclosure">
+            <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>
+              <ChevronRight aria-hidden="true" data-icon="inline-start" />
+              Technical details
+            </CollapsibleTrigger>
+            <CollapsibleContent className="provider-disclosure-content">
+              <p className="text-muted-foreground">
+                User-level setup. Project overrides are not inspected here.
+              </p>
+              <dl className="provider-facts">
+                <dt>Model provider</dt>
+                <dd>{evidence?.model_provider ?? "Runtime default"}</dd>
+                <dt>Model</dt>
+                <dd>{evidence?.model ?? "Runtime default"}</dd>
+                <dt>Executable</dt>
+                <dd>{target.executable}</dd>
+                <dt>Codex home</dt>
+                <dd>{target.codex_home}</dd>
+                <dt>Setup directory</dt>
+                <dd>{target.working_directory}</dd>
+                <dt>Supported runtime</dt>
+                <dd>{target.supported_version}</dd>
+                <dt>Observed runtime</dt>
+                <dd>{evidence?.version ?? "Unknown"}</dd>
+                <dt>Diagnostic</dt>
+                <dd>
+                  {observation?.diagnostic ??
+                    problem ??
+                    "No setup error observed"}
+                </dd>
+              </dl>
+            </CollapsibleContent>
+          </Collapsible>
+        )}
+        <Collapsible className="provider-disclosure">
           <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>
-            Technical setup details
+            <ChevronRight aria-hidden="true" data-icon="inline-start" />
+            Setup help
           </CollapsibleTrigger>
-          <CollapsibleContent className="pt-3">
-            <dl className="provider-facts text-sm">
-              <dt>Executable</dt>
-              <dd>{target.executable}</dd>
-              <dt>Codex home</dt>
-              <dd>{target.codex_home}</dd>
-              <dt>Setup directory</dt>
-              <dd>{target.working_directory}</dd>
-              <dt>Supported runtime</dt>
-              <dd>{target.supported_version}</dd>
-              <dt>Observed runtime</dt>
-              <dd>{evidence?.version ?? "Unknown"}</dd>
-              <dt>Diagnostic</dt>
-              <dd>
-                {observation?.diagnostic ??
-                  problem ??
-                  "No setup error observed"}
-              </dd>
-            </dl>
+          <CollapsibleContent className="provider-disclosure-content">
+            <p>
+              To sign in outside this app, run <code>codex login</code> in your
+              terminal using the configuration in Technical details, then return
+              to Providers. Setup is checked automatically when you open the
+              Codex tab.
+            </p>
+            <p className="text-muted-foreground">
+              Existing API-key configuration is detected through Codex.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => onOpenHelp("install")}
+              >
+                Official installation instructions
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => onOpenHelp("authentication")}
+              >
+                Official sign-in instructions
+              </Button>
+            </div>
           </CollapsibleContent>
         </Collapsible>
+      </div>
+      {helpError && (
+        <p role="alert" className="text-sm text-destructive">
+          {helpError}
+        </p>
       )}
-      <section
-        aria-label="Codex setup guidance"
-        className="flex flex-col gap-3 border-t pt-5 text-sm"
-      >
-        <h3 className="font-medium">Official setup options</h3>
-        <p>
-          <strong>ChatGPT</strong> — Sign in through your browser using the
-          official Codex runtime.
-        </p>
-        <p>
-          <strong>CLI</strong> — Use your existing Codex setup, or run{" "}
-          <code>codex login</code> in your terminal and return here to Refresh.
-        </p>
-        <p className="text-muted-foreground">
-          Existing API-key configuration stays with Codex. This app does not
-          collect or edit API keys.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="link"
-            size="sm"
-            onClick={() => onOpenHelp("install")}
-          >
-            Open official installation instructions
-          </Button>
-          <Button
-            variant="link"
-            size="sm"
-            onClick={() => onOpenHelp("authentication")}
-          >
-            Open official authentication guidance
-          </Button>
-        </div>
-        {helpError && <p role="alert">{helpError}</p>}
-      </section>
     </section>
   );
 }

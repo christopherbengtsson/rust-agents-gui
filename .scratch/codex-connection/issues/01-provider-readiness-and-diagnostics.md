@@ -95,3 +95,65 @@ physical scheduling. Provider tab search is presentation only. No workspace
 provider field, login/chat placeholder or universal provider interface was added.
 Use fresh protocol-11 private development state and matching peers; prior formats
 need no migration. Stop after this ticket.
+
+### 2026-11-15 — agreed readiness presentation refinement
+
+The user approved the [shared presentation refinement](../spec.md#presentation-refinement--2026-11-15):
+automatically verify on committed Codex Providers activation; use an inline glowing
+status indicator, compact account facts and collapsed details/help; remove Refresh
+from healthy presentation entirely. Failed/missing setup retains contextual
+Check again; uncertain cleanup and disconnected status retain their recovery paths.
+This prospectively supersedes the Refresh and retained-status-only navigation
+parts of the completed acceptance above, preserving that cohort as historical evidence.
+
+The readiness wire contract and Rust owner remain unchanged. `useProviderSetup`
+requests one targeted `Observe { refresh: true }` per actual Codex-tab activation,
+using the existing shared observation module. Preload gets only the descriptor;
+rerenders, invalidations and reconnect do not replay that activation. 02 adds visible
+ChatGPT sign-in below readiness; 03 adds CLI alongside it, outside collapsed help.
+Both automatically verify login completion and must keep check/login admission in
+the same Rust owner. 04 qualifies entry checks and the healthy screen without
+Refresh; all sessions keep their focused verification. Successor work is not
+implemented by this refinement.
+
+### 2026-11-15 — presentation refinement implemented and fixture-qualified
+
+[Refinement evidence](../../../docs/evidence/codex-connection/01-ui.md) records the
+implemented inline status primitive, automatic committed-entry verification,
+compact facts, collapsed help/details and contextual Check again. Healthy setup
+has no Refresh. The existing readiness wire contract and Rust owner are unchanged;
+the shared spec and 02–04 handoffs explicitly retain their sequence and visible
+login controls. Historical ticket evidence remains intact.
+
+Formatting, lint, generated drift/types/Clippy, measured **174 Rust / 51 tooling /
+237 frontend** units and production packaging passed. Actual packaged fixture
+checks covered ordinary/minimum layout, keyboard/focus, entry freshness after
+external fixture changes, pending/stale evidence, contextual recovery, API-key and
+missing-authentication setup, Claude isolation, wrapped paths/long account values
+and Settings return. Both private fixture cohorts ended with no remaining fixture
+PIDs. One automation window-binding error was recovered and recorded. Native
+authentication/agent compatibility, screen-reader speech and a hands-on user trial
+remain unperformed. Tickets 02–04 and parent milestone acceptance remain open.
+
+### 2026-11-15 — review corrections remain within readiness scope
+
+The [shared correction clarification](../spec.md#readiness-correction-clarification--2026-11-15)
+keeps both reviewed failures in this ticket: preserve an undispatched readiness
+check through same-owner transport detachment, scope entry/attachment markers by
+owner/target, and show failed-read/disconnected recovery independently of retained
+Checking. An actual retry shows progress and blocks another retry until settlement;
+cleanup uncertainty still fences replacement. Rust readiness admission, generated
+contracts and the wire interface are unchanged. Browser/CLI login, attempt
+reconciliation and terminal ownership remain exclusively in 02/03; 04 retains
+cumulative qualification. Correction evidence and re-review are recorded separately
+from the original ticket and first UI checkpoint.
+
+2026-11-15: [Correction evidence](../../../docs/evidence/codex-connection/01-ui-fixes.md)
+records the reviewed readiness fixes, replacement-scope and retry-feedback variants,
+and the actual stopped-delivery issue exposed during qualification. Final gates
+passed **174 Rust / 51 tooling / 246 frontend** units, static checks and production
+packaging. Corrected actual fixture-desktop outage/reconnection/healthy/minimum-size
+checks passed with no remaining fixture PIDs; failed attempts are retained.
+Independent Standards and Spec re-reviews each have **0 unresolved findings**.
+No Rust/protocol, authentication, login/terminal lifecycle or 02–04 implementation
+was added. Native authentication/agent compatibility and user-trial limits remain.

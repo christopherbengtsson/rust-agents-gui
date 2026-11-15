@@ -51,3 +51,6 @@ qualification acceptance remain unchecked.
 2026-11-15: Browser authentication now explicitly extends 01's cohesive owner and
 shared observations with provider-scoped identity, admission and cleanup. The
 working browser journey and separately recorded qualification scope are retained.
+
+2026-11-15: The user-approved [presentation refinement](../spec.md#presentation-refinement--2026-11-15)
+supersedes the original permanent Refresh presentation. Add the visible ChatGPT choice beneath readiness, outside collapsed Setup help. Preserve automatic readiness verification on Codex-tab activation and after browser completion. Extend Rust admission so checks cannot compete with active authentication or uncertain cleanup; reconnect retrieves the existing attempt without replay.

@@ -1,0 +1,11 @@
+{
+  "source_revision": "30cf4d1a8d00181f65549a4a59dc5c5602e05f5e",
+  "source_status": "M .scratch/codex-connection/issues/01-provider-readiness-and-diagnostics.md\n M .scratch/codex-connection/issues/02-official-browser-sign-in.md\n M .scratch/codex-connection/issues/03-embedded-cli-login.md\n M .scratch/codex-connection/issues/04-qualify-connection-journey.md\n M .scratch/codex-connection/spec.md\n M docs/IDEAS.md\n M src/components/README.md\n M src/components/blocks/provider-setup.tsx\n M src/hooks/use-provider-setup.ts\n M src/providers.test.tsx\n M src/routes/settings.providers.tsx\n M src/routing.test.tsx\n M src/style.css\n?? src/components/primitives/status-indicator.tsx\n?? src/provider-setup.test.tsx",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "hardware": "Mac16,8",
+  "cpu": "Apple M4 Pro",
+  "node": "v26.13.1",
+  "pnpm": "12.18.0",
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "qualification": "Fixtures only; no live authentication or agent submissions."
+}

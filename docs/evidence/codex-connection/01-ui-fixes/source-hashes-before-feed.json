@@ -1,0 +1,6 @@
+{
+  "src/hooks/use-provider-setup.ts": "66ee191e4a884d813350785c2e8abc77e3a643d04d70b1312fd8842599f49627",
+  "src/components/blocks/provider-setup.tsx": "fbd5e7cf5dae6ba9bab37ac358586a2c42ca24a70ab229029c86b3f6f810e615",
+  "src/providers.test.tsx": "5c3c7f8ddffc79f5630b0e0d806005621bcf8a2f8c71dae085d2cd9f7d9e0754",
+  "src/provider-setup.test.tsx": "8a633caa03ec3e626b1d9ccb2e102060e7ad519ddcd8d0d2ec1c0d94ac3cfaf5"
+}

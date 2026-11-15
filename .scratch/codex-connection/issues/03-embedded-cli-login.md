@@ -50,3 +50,6 @@ qualification acceptance remain unchecked.
 2026-11-15: CLI login extends the same provider-scoped owner/observations as the
 browser path. Small internal process seams support this working slice; general
 terminals and new provider implementations remain deferred.
+
+2026-11-15: The user-approved [presentation refinement](../spec.md#presentation-refinement--2026-11-15)
+supersedes the original permanent Refresh presentation. Add the visible CLI choice alongside ChatGPT beneath readiness, outside collapsed Setup help. Preserve automatic entry verification and verification after command exit. Extend the same Rust admission so browser/CLI login and readiness checks cannot compete within a configuration scope.

@@ -81,12 +81,12 @@ and [07 — Durable streamed chat](../milestone-01/issues/07-durable-streamed-ch
 The intended benefit to validate is: **“I connected Codex—or understood exactly what to fix—without leaving my workspace behind.”** Conductor supplies the layout and interaction reference; this app retains its own execution ownership and milestone limits.
 
 - Extend routed Settings with one shared **Providers** page and selectable **Codex** / **Claude Code** tabs, defaulting to Codex. Relevant workspace setup/status links open the Codex tab. Keep provider setup distinct from `SupervisorConnection` transport diagnostics.
-- Show detected authentication and account/configuration status first, with **Refresh**. Already-configured users need not choose a method to discover their connection. Show the observed authentication/billing route when available, otherwise unknown; recognize existing API-key configuration without offering API-key setup controls.
+- Show detected authentication and account/configuration status first. Each actual activation of the Codex Providers tab requests one fresh, bounded read-only readiness check through the existing provider-observation module. This includes first entry and return from another provider, Settings section or workspace. Preloading, rerendering and feed invalidation do not create another activation request. Same-scope reconnect retrieves authoritative status without replaying admitted work; a visible readiness interest preserves any known-undispatched check while baseline admission is unavailable. A replacement supervisor owner or configuration target receives its own fresh readiness check and cannot inherit the previous scope’s entry/attachment markers. Rust admits/coalesces checks and retains cleanup fencing. Show **Checking…** immediately, label retained evidence **Last known**, and show the green **Connected** indicator only when current evidence establishes usable setup. Healthy presentation has no Refresh/recheck control, including in Technical details. Failed or missing setup offers contextual **Check again** only when a new check is permitted. Already-configured users need not choose a method. Show the observed authentication/billing route when available, otherwise unknown; recognize existing API-key configuration without offering API-key setup controls.
 - Follow Conductor's authentication-choice and status/detail layout using shared controls and semantic styling. Offer **ChatGPT** (“Sign in through your browser.”) and **CLI** (“Use your existing Codex setup, or run Codex login here.”), giving browser sign-in greater visual emphasis. Choice selection changes presentation only; it neither starts authentication nor changes the active runtime configuration/billing route.
 - An explicit browser sign-in action starts official Codex-managed authentication, opens its returned URL, and presents pending, completed, failed and cancelled outcomes. Offer reopening the same browser attempt without automatically creating another. Recheck authoritative authentication after completion; opening the browser or receiving a completion notification alone is not proof of readiness.
 - An explicit **Run codex login** action launches the selected installed official executable directly with its login argument in an embedded terminal, using the effective runtime configuration. Support input/output, resize, keyboard focus, starting/running/error/exited states and **Done**. End with the login command; expose no post-login general shell. Recheck authentication after command exit, even when its exit code is successful; distinguish login failure from a failed status read.
 - Preserve pending sign-in and terminal progress across provider tabs, Settings sections and workspace navigation. Display a compact **Codex sign-in in progress** status linking back to Providers. Navigation hides the terminal without cancelling it; reopening retrieves the same attempt. Provide an explicit **Cancel sign-in** action; closing a running login terminal requests cancellation and must be named **Cancel sign-in and close terminal**, rather than an ambiguous close control.
-- Pair failures with their next useful action: missing executable → official installation instructions and explicit recheck; unsupported version/protocol → supported-version guidance and recheck; missing authentication → sign-in; browser-open failure → reopen the current attempt; uncertain delivery/cleanup → status reconciliation before retry. Put technical diagnostics beneath recovery guidance. Retained observations remain visibly stale/unknown when verification fails.
+- Pair failures with their next useful action: missing executable → official installation instructions and explicit recheck; unsupported version/protocol → supported-version guidance and recheck; missing authentication → sign-in; browser-open failure → reopen the current attempt; uncertain delivery/cleanup → status reconciliation before retry. Put technical diagnostics beneath recovery guidance. Retained observations remain visibly stale/unknown when verification fails. Use a compact account table and an inline 6–8 px status light with a soft static green halo on healthy setup; text communicates every state. Model/configuration fields, runtime paths and diagnostics belong in collapsed **Technical details**. General external instructions belong in collapsed **Setup help** when healthy; relevant recovery and future login controls stay visible outside these disclosures.
 - After authentication, show the authoritative connection result without automatically starting agent work or navigating away. Preserve workspace reading context and the user's return destination. Back/Escape must retain the established return/focus behavior across General, Providers and provider-tab changes; nested overlays and terminal keyboard handling take precedence. Supply the correct page landmark label, accessible names, focus return, visible focus and usable ordinary/minimum-window layouts.
 - Keep Claude's tab inspectable with **“Claude connection isn't implemented yet”** and disabled connection actions. Avoid an elaborate unusable form. Tab inspection and disabled actions trigger no Claude readiness probes, sign-in, terminal, adapter or runtime processes.
 
@@ -213,3 +213,49 @@ validation/restoration requirements, preserving historical checkpoint evidence.
 Standards re-review: zero unresolved findings. Spec review and re-review: zero
 findings. This reviews documentation consistency; implementation and qualification
 acceptance remain open.
+
+## Presentation refinement — 2026-11-15
+
+The user approved minimal Conductor-inspired readiness presentation, an inline
+illuminated status indicator and automatic verification on actual Codex-tab entry.
+This supersedes the original always-visible Refresh and retained-status-only
+navigation requirements for future work. Historical ticket-01 evidence remains
+unchanged. Entry checks use the existing owner/configuration-targeted readiness
+operation; navigation starts no authentication, thread or turn. Initial disconnected
+entry waits for a usable owner/descriptor. Same-scope reconnect preserves any
+known-undispatched readiness intent and retrieves status without replaying admitted
+work. Actual owner/target replacement gets its own read-only verification and cannot
+inherit another scope’s entry/attachment markers. A new actual tab activation
+requests verification again. These readiness rules authorize no authentication
+attempt replay; browser/CLI admission and reconciliation remain 02/03.
+
+02 adds prominent ChatGPT sign-in below readiness; 03 adds CLI alongside it while
+retaining browser emphasis. Both already require automatic authoritative verification
+after login, and must coordinate readiness admission with active authentication and
+uncertain cleanup in Rust. 04 qualifies entry freshness and the healthy screen
+without Refresh alongside the complete journey. Each ticket retains its focused
+checks. Login controls must remain outside collapsed Setup help.
+
+### Readiness correction clarification — 2026-11-15
+
+The UI refinement's review found lost entry verification before baseline admission
+and failure recovery hidden by retained Checking. Their correction belongs to 01's
+existing readiness/observation presentation, not the browser or CLI lifecycle. Keep
+a visible readiness interest bound to its exact retained owner/target through
+transport detachment; release it on navigation or actual scope replacement. Baseline
+readiness gates queue admission; already admitted physical reads retain their
+identity. Scope entry/attachment markers by owner and target. A replacement scope
+gets its own readiness verification, without replay to the old scope.
+
+A failed read's retained Checking phase is not current progress. Show recovery and
+contextual Check again when permitted; during an actual retry show Checking, retain
+the previous failure explanation and withhold another retry until that read settles.
+Disconnected guidance and cleanup uncertainty remain visible, and cleanup fencing
+continues to block replacement. No new provider wire operations, authentication,
+login-attempt owner, terminal lifecycle or successor implementation is introduced.
+
+The Providers view also consumes the existing observation-feed availability. Stopped
+or failed delivery labels retained evidence unavailable/stale and directs the user
+to the existing workspace supervisor-connection recovery. It offers no ineffective
+readiness recheck while delivery is unavailable. This is readiness presentation of
+an existing observation, not a new feed/reconnect owner or authentication mechanism.

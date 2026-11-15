@@ -1,0 +1,10 @@
+{
+  "src/components/blocks/provider-setup.tsx": "6e2e62763b27e0811b23a651af67865f5c39e799714c3ddd0d582b41a0415068",
+  "src/components/primitives/status-indicator.tsx": "84e5b635d4d454067bd370aa3ec9623aea7bf5852fa30d0e3f4687a161263745",
+  "src/hooks/use-provider-setup.ts": "f78c5ba8f23073074060b36e26f81af4876fa319474d5c504890930ce1357eac",
+  "src/routes/settings.providers.tsx": "5c726ba0235dcba38786922a4fb978b24bbe17b7fcba210e47060b3d92520b41",
+  "src/style.css": "b3976efafc44fb2ec5ecaf1bd76c93c255548183472e386f0b72488fe2638a54",
+  "src/providers.test.tsx": "6881c9eb4630017d0d9d1acdc1abb8b79a94a4cd8adabfa383a40035ebd56e9d",
+  "src/provider-setup.test.tsx": "b45932919c9baf2cd8a3c733943f85c23b81cf2c6559e3649a4c95d92acd4c3b",
+  "src/routing.test.tsx": "cf36c6f5f3b973cd891de90541589d798504edc058db22aa98f3063e8007b97f"
+}

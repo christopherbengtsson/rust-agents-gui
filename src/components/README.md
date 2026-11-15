@@ -386,12 +386,12 @@ interest while its app-lifetime owner drains work and retains validated context.
 ### Provider readiness (connection 01)
 
 - **ProviderSetup** (`blocks/provider-setup.tsx`) presents one exact Codex/user
-  configuration's retained evidence, Refresh, recovery guidance and secondary
+  configuration's current/retained evidence, contextual Check again, recovery guidance and secondary
   technical details. Use it for provider setup; SupervisorConnection remains
   transport diagnostics and WorkspaceDetails remains workspace identity/recovery.
   It receives the cohesive `useProviderSetup` view and callback, owns no IPC,
   cache, retry or process policy, and renders runtime strings as bounded text.
-  Existing Tabs, Badge, Alert, Button, Spinner and Collapsible retain their Base UI
+  Existing Tabs (line variant), Alert, Button and Collapsible retain their Base UI
   contracts. No toolkit component was added or regenerated. Official documentation actions use the scoped native opener for exactly the
   two fixed Codex installation/authentication URLs; no provider-return deep link
   or login flow is added. Opener automatic link interception is disabled.
@@ -405,9 +405,42 @@ interest while its app-lifetime owner drains work and retains validated context.
   field or automatic provider read on workspace mount.
 - **ProviderObservations** is constructed once by AppObservations and uses its
   shared Query client, feature freshness, accepted feed and physical scheduler.
-  `useProviderSetup` acquires/releases presentation interests; route preload reads
-  only the default target descriptor. Rust owns initial probe admission, explicit
-  refresh, last-good evidence and cleanup fencing. Returning or reconnecting reads
-  that owner instead of replaying probes. User setup runs from a private neutral
+  `useProviderSetup` acquires/releases presentation interests. A committed Codex-tab
+  activation requests one fresh check with the existing targeted refresh operation
+  before attaching readiness interest. Entry intent and attachment markers are scoped
+  by owner/target, so a replacement cannot inherit the previous scope's presentation.
+  Same-scope transport detachment retains the visible readiness interest and its
+  undispatched force flag. Navigation or actual scope replacement releases it.
+  Deferred setup skips disposed mounts; effect identity uses stable target IDs.
+  Query remains the sole evidence cache. Initial entry pending feedback prevents
+  retained healthy evidence from appearing current before the check. Preload reads
+  only the default descriptor; rerenders, feed updates and reconnect do not replay
+  the entry intent. Returning from another tab/route is a new activation. Rust owns
+  probe admission/coalescing, last-good evidence and cleanup fencing. User setup runs from a private neutral
   directory, with captured executable/environment/Codex home; project overrides
   and account/profile management are outside this slice.
+
+### Provider presentation refinement
+
+- **StatusIndicator** (`primitives/status-indicator.tsx`) owns the inline decorative
+  light, static success halo and polite atomic text announcement. Use for observed
+  readiness, supplying `tone: success | neutral | error` and a text `label`; use
+  Badge for enclosed labels/tags and Spinner for busy actions. The caller interprets
+  evidence. `className` supplies placement; the primitive owns appearance through
+  shared semantic tokens and has no IPC, hook or process dependency.
+- **ProviderSetup** uses one status line and compact account/billing facts. Healthy
+  setup has no Refresh, including in disclosures. Checking/stale evidence is Last
+  known; recovery offers Check again only when connected and not checking/fenced.
+  Read failures override retained runtime Checking for recovery; an actual retry
+  shows Checking alongside the retained failure and withholds another Check again
+  until that read settles. CodexSetup supplies existing feed availability to the
+  hook; unavailable delivery forces stale/non-pending presentation and visible
+  supervisor-reconnection guidance, without changing interest/intent lifetimes.
+  Cleanup uncertainty still fences retry. Technical details
+  and general Setup help start collapsed. Recovery, help-opening
+  errors and future login controls remain outside the disclosures. The scoped
+  documentation opener and all Settings return/focus contracts are unchanged.
+- The [shared connection journey](../../.scratch/codex-connection/spec.md#presentation-refinement--2026-11-15)
+  supersedes earlier retained-only navigation and permanent-Refresh requirements.
+  02/03 add visible login choices beneath readiness and coordinate their active
+  attempts with checks in Rust; 04 qualifies the combined UI.

@@ -1,0 +1,35 @@
+$ vitest run --maxWorkers=1 src/providers.test.tsx -t 'replacement owner gets'
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/providers.test.tsx (9 tests | 1 failed | 8 skipped) 120ms
+   × a replacement owner gets its own entry verification over retained evidence 119ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/providers.test.tsx > a replacement owner gets its own entry verification over retained evidence
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/providers.test.tsx:235:39
+    233|   await act(async () => { app.connect("owner-b"); app.freshness.accept…
+    234|   hook.rerender({ owner: "owner-b" });
+    235|   expect(hook.result.current.pending).toBe(true);
+       |                                       ^
+    236|   expect(hook.result.current.stale).toBe(true);
+    237|   await act(flush);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  12:58:01
+   Duration  530ms (import 33%, environment 32%, tests 25%, transform 9%, setup 1%)
+
+[ELIFECYCLE] Command failed with exit code 1.

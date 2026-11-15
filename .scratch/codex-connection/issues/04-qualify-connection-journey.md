@@ -49,3 +49,6 @@ qualification acceptance remain unchecked.
 2026-11-15: Added cumulative architecture/identity evidence mapping and the
 workspace-provider cleanup handoff. Actual desktop qualification remains the
 Codex/fixture journey; Claude/OpenCode integration is not introduced.
+
+2026-11-15: The user-approved [presentation refinement](../spec.md#presentation-refinement--2026-11-15)
+supersedes the original permanent Refresh presentation. Include automatic verification on actual Codex-tab entry/return, no extra activation checks on preload/rerender/reconnect, Last known evidence while checking, and the healthy screen without Refresh. Qualify contextual Check again recovery and visible login controls outside collapsed Setup help alongside the existing combined journey.

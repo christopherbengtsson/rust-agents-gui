@@ -1,0 +1,13 @@
+$ vitest run --maxWorkers=1 src/providers.test.tsx src/provider-setup.test.tsx src/routing.test.tsx
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  3 passed (3)
+      Tests  65 passed (65)
+   Start at  13:13:21
+   Duration  3.31s (tests 67%, import 17%, environment 14%, transform 2%)
+
+    Isolate  3 workers spawned · ~194ms startup each (spawn + environment, per file)
+             at least ~389ms faster with isolate: false — reuses workers across files instead of one per file
+
