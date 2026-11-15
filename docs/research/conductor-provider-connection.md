@@ -114,6 +114,10 @@ qualification under [Milestone 01](../MILESTONE-01.md#verification-order).
 
 ## Agreed adaptation for our connection journey
 
+**Historical proposal:** the [2026-11-15 scope amendment](../../.scratch/codex-connection/spec.md#authentication-scope-amendment--2026-11-15)
+supersedes the CLI/terminal requirements below. Preserve them as the original
+research-to-design handoff; current requirements live in the connection spec.
+
 The decisions below belong to the future
 [connection feature journey](../../.scratch/codex-connection/spec.md#connection-journey),
 not claims about Conductor or completed implementation:
@@ -150,3 +154,32 @@ claimed. Static shipped-code branches establish available code paths, not their
 reachability for every account or successful execution. Source-map and dependency
 version limits remain as recorded above; native-provider and desktop qualification
 remain separate future work under [Milestone 01](../MILESTONE-01.md#verification-order).
+
+## Authentication scope correction — 2026-11-15
+
+Further read-only review of the same pinned Codex source found that normal
+[`codex login` dispatch](https://github.com/openai/codex/blob/d32063f96c2dff1dc96af839b3952abb6acfeda4/codex-rs/cli/src/main.rs)
+invokes the [browser login flow](https://github.com/openai/codex/blob/d32063f96c2dff1dc96af839b3952abb6acfeda4/codex-rs/cli/src/login.rs):
+start a callback server, print the URL and await browser completion. The inspected
+normal path requires no terminal input; secret-on-stdin options are separate.
+Managed remote-configuration authorization is a separate branch, so this is not
+a universal equivalence claim for every configuration or newer release. No native
+login was run. The ordinary ChatGPT path also clears/revokes existing authentication
+before replacement sign-in; a future CLI helper must not promise cancellation
+restores the previous credentials.
+
+Conductor's [official announcement](https://www.conductor.build/blog/sign-in-with-chatgpt)
+describes bringing ChatGPT identity and subscription access to a Conductor account
+without separately running `codex login`. Its
+[provider guide](https://www.conductor.build/docs/guides/providers#codex) separately
+describes CLI auth for an existing login. This explains why Conductor's choices
+need not map to distinct user capabilities in our local-only, runtime-owned design;
+it does not establish Conductor's exact backend credential storage or refresh.
+
+The [shadcn Terminal pattern](https://ui.shadcn.com/docs/ai-elements/base/terminal)
+is a read-only Trace + CodeBlock composition; Stack Trace displays error frames.
+A command viewer could avoid terminal emulation if a future CLI use case is
+selected. The user instead approved deferring the separate CLI helper and both
+terminal/output-viewer variants. The current connection scope retains one browser
+sign-in action and detection of existing authentication. Earlier terminal design
+and dependency research remain history, not an active implementation requirement.

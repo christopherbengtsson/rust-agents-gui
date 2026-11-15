@@ -39,15 +39,15 @@ No product account or GitHub login is needed for local coding. Initially use use
 
 Deliberate reductions from Conductor: no cloud/collaboration, built-in PR creation/merge/checks, full embedded terminal, extension manager, or turn-level code rewind. External editor/terminal handoff keeps the coding loop usable. A full TUI is a later independent client, not an MVP prerequisite. Provider child-agent execution remains runtime-owned; rich child-agent inspection/control is deferred, and cleanup must still account for owned child work.
 
-The full-terminal deferral has one narrow exception: an embedded official-runtime
-authentication terminal. [Milestone 01 ticket 06](../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
-adds Codex login only; it ends with the login command and exposes no general shell.
-Its renderer and supervisor-owned process plumbing should support later extension
-to a development terminal without implementing workspace terminals or run/test
-controls now. Navigation preserves pending authentication; explicit cancellation
-requests owned cleanup. API-key setup UI and automatic installation remain outside
-that milestone, while existing runtime configuration stays usable. Claude's
-disabled provider presentation there does not implement Claude integration.
+The current [Codex connection scope](../.scratch/codex-connection/spec.md#authentication-scope-amendment--2026-11-15)
+recognizes existing runtime authentication and offers one explicit official-runtime
+browser sign-in action. Navigation preserves pending authentication; cancellation
+requests owned cleanup and completion requires authoritative verification. The
+separate CLI helper and embedded authentication terminal are deferred along with
+terminal emulation, PTY plumbing and command-output viewers. Select those only
+when a concrete workflow needs them. API-key setup UI and automatic installation
+remain outside Milestone 01, while existing runtime configuration stays usable.
+Claude's disabled provider presentation does not implement Claude integration.
 
 Workspace defaults follow Conductor's [fetch-before-create behavior](https://www.conductor.build/docs/concepts/workspaces-and-branches#branches-and-review); Plan Mode and local diff comments follow its [agent controls](https://www.conductor.build/docs/concepts/agent-modes) and [diff feedback](https://www.conductor.build/docs/reference/diff-viewer). Archive commits and restoration follow its [archive-save behavior](https://www.conductor.build/changelog/0.49.0-conductor-allegro-gpt-5-5), [restoration guarantees](https://www.conductor.build/changelog/0.33.5-better-archiving), and [configurable branch cleanup](https://www.conductor.build/docs/reference/settings/reference). Exact folder-removal mechanics are not established by these sources; preserving/restoring saved work governs implementation choices.
 

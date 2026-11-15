@@ -372,8 +372,9 @@ interest while its app-lifetime owner drains work and retains validated context.
   Their [shared journey](../../.scratch/codex-connection/spec.md#connection-journey)
   owns provider presentation, login controls and progress continuity. Connection 01
   extends Settings landmark labels and return/focus/context behavior; 02 adds
-  browser progress/cancellation; 03 adds the login-terminal renderer under Rust
-  process ownership; 04 qualifies the combined desktop interaction. Each slice
+  browser progress/cancellation; 02a adds runtime compatibility; 04 qualifies the
+  combined desktop interaction. The current connection scope defers 03's
+  CLI/terminal renderer and command-output viewer. Each slice
   uses existing UI/primitives/tokens and documents actual new block contracts
   when implemented. Supervisor diagnostics stay separate. These are planned
   successor contracts; F07 implemented no provider setup.
@@ -442,8 +443,10 @@ interest while its app-lifetime owner drains work and retains validated context.
   documentation opener and all Settings return/focus contracts are unchanged.
 - The [shared connection journey](../../.scratch/codex-connection/spec.md#presentation-refinement--2026-11-15)
   supersedes earlier retained-only navigation and permanent-Refresh requirements.
-  02/03 add visible login choices beneath readiness and coordinate their active
-  attempts with checks in Rust; 04 qualifies the combined UI.
+  02 adds the visible browser sign-in action beneath readiness and coordinates
+  its attempts with checks in Rust; 04 qualifies the combined UI. The current
+  [scope amendment](../../.scratch/codex-connection/spec.md#authentication-scope-amendment--2026-11-15)
+  defers the CLI choice and terminal work formerly assigned to 03.
 
 ### Browser sign-in (connection 02)
 
@@ -451,8 +454,9 @@ interest while its app-lifetime owner drains work and retains validated context.
   progress, reopening, cancellation and reconciliation. Use below readiness and
   account facts, outside Setup help. It receives observations and targeted
   callbacks; it owns no authentication, URL, process or retry policy. Button,
-  Alert and Spinner retain their existing Base UI contracts. CLI controls remain
-  ticket 03. A completed browser attempt and current verified readiness are
+  Alert and Spinner retain their existing Base UI contracts. CLI controls and
+  ticket 03 are deferred from the current connection scope. A completed browser
+  attempt and current verified readiness are
   separate facts; verification failure keeps account evidence Last known.
 - **AppRuntime** presents a compact progress link above routed content while
   authoritative sign-in or uncertain delivery/cleanup is pending. Providers,
