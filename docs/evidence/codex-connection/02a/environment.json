@@ -1,0 +1,50 @@
+{
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "machine": "Mac16,8",
+  "cpu": "Apple M4 Pro",
+  "logical_cpus": "12",
+  "baseline": "6f2db05901d0cbed524bf781aca4da71fa66ed48",
+  "implementation": "81f91637977fda508a34b74855fcf587dc743ca8",
+  "versions": {
+    "node": "v26.13.1",
+    "pnpm": "12.18.0",
+    "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)"
+  },
+  "limits": "Fixture-only qualification; no real provider authentication or agent work. Single complete-gate attempt plus targeted corrections/remaining suites; repeated warm measurements omitted per user request.",
+  "reviewed_source": "235193c",
+  "build_source_note": "Corrected source was already present before packaging started. Commit 235193c landed while packaging ran; sidecar provenance therefore records base 81f9163 plus dirty state. No runtime source changed during packaging or afterward.",
+  "binaries": {
+    "target/release/workspace-supervisor": "3500a78e89d046547823e72b83c2d053f7f9a92755cd82f2133e96a63e2dd3a5",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop": "a6573f6b2edc3facd1844dbc074709c5e22f8e0212079e08138b80b82c9b2ffe"
+  },
+  "source_hashes": {
+    "Cargo.lock": "bcf6869426352e02bcf4a424d9c77331b0a22f72b4dc2928ba86d6c21449aafb",
+    "contracts/observations-v13.json": "68442e21cbb354462551e2ef3f7d5d1e52e4e2a2f5e1cb0206724bd9e4ffe5a5",
+    "crates/core/Cargo.toml": "78affc8872a18f107a6cee7999c6ecacd846c33a1400a62827cffd438e073aff",
+    "crates/core/src/connection.rs": "840cdc58ecde90f4d9c1c339743d6d460c65ef234518ed0de848c82cbb90e1cb",
+    "crates/core/src/connection/subscription/tests.rs": "a67a4d58b6e994fb354f10a19f60debd0b703993ae15597752274fc2cac8c6e5",
+    "crates/core/src/connection/tests.rs": "28d62ce7196e8083a9e508d0f21393554e562169327414b9d2e690179e8079f2",
+    "crates/core/src/runtimes/codex/process.rs": "b4344f489761bfc29c7f1c5f7af2aa1036318c423a131918b3b37decf7fcd0fb",
+    "crates/core/src/runtimes/codex/protocol.rs": "43ee969aabfe3007e22238f66166ef5edcbfe84329be963651eb70e813c7bb4a",
+    "crates/core/src/runtimes/provider_connection.rs": "c3d7be5652a2b65adc7a46bd34f3bb2ac5c5879a03771eeb617b2ab6caed87a7",
+    "fixtures/codex-readiness/README.md": "5a8102d5735ca8c0c2db5589d05c31b2d54a7d911afd4c32d2e4015255d5648d",
+    "fixtures/codex-readiness/qualify.py": "fb39dd27e82e8d9a5dcee6f075295b8e28a38072be162f6be751cd4f8ce45333",
+    "fixtures/codex-readiness/runtime.py": "5ef79d14fde9f00f4198c64f174590b31189a23430b7084d31619733956ddccb",
+    "fixtures/codex-readiness/schema/GatewayOAuthReadResponse.json": "1982a912474d75786151153e4e11928a31fe913e5f18609d687061cd3c287bba",
+    "src/components/blocks/provider-setup.tsx": "0a8d4cd3380af0e12045fa5b393d4369830bcad2e248dfa177616b889d1787ce",
+    "src/generated-contracts.test.tsx": "9a47afd78fd5cdca906b774b845040b3b8a2520b8e05142c327f38cc294db2d7",
+    "src/generated/contracts/manifest.json": "bede38eebc4eecf8824723569b014f2419732e70301381ee4e3b138909424822",
+    "src/generated/contracts/schemas.json": "b2dcccefd1f547b3934ea581f57be603d55af6c959ded8eccbecc8c32afc6e80",
+    "src/generated/contracts/types.ts": "2fe055dc2f05e33817e4e929b401f35b6b9a6eab5dd7ff85db1b4535c5b15ece",
+    "src/generated/contracts/validators.js": "d81372a789ea4ed788edcd8881fddc3c04c29496dc74d4fa9900c4736aa425f3",
+    "src/lib/providers.ts": "7e0f5732d770d53a4683a94ebc5eda9e12b08e6f253952e5feec2b5aa9142036",
+    "src/observation-contracts.test.tsx": "5a3c43e3ed1b9b83f8514dd27a995f8fef4b652943dcfcd6351c85e0aa61a288",
+    "src/observation-feed-bridge.test.tsx": "2dfb4ae5f15d714ee006184457a484c31d1e46b8dbeb3922cd673b8cec1c9f5b",
+    "src/observation-feed.test.tsx": "cd3f56b72d6139d3076d600fe851b4d55e766ad8b666daadc3d2ccbd77d41eeb",
+    "src/provider-login.test.tsx": "6fecd85768769b72086cb17b421a7abbd9309423c06919597e1a74563eccb708",
+    "src/provider-setup.test.tsx": "6015c5d8745658ef14c41ab678a63dae5fd9891c1ad99ec752350eadfb306a89",
+    "src/providers.test.tsx": "bf8ad2b2cd50fc08bc6b2c3c0e44a97a974f2bda19d03eafe2ccfcb7e871a7a7",
+    "src/routing.test.tsx": "8791597de60789bb85c2e4a2147756a125bfbc81277dd3e887a6a636a5da524c"
+  }
+}

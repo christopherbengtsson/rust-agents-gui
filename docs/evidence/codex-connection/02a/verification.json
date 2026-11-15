@@ -1,0 +1,10 @@
+{
+  "command": "corepack pnpm verify",
+  "exit_code": 1,
+  "seconds": 10.870967417024076,
+  "source_commit": "81f91637977fda508a34b74855fcf587dc743ca8",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "target": "workspace default target",
+  "profile": "dev/test",
+  "qualification": "fixture-only; no native authentication or agent work"
+}

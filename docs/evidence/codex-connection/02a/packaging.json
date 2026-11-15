@@ -1,0 +1,6 @@
+{
+  "command": "corepack pnpm build",
+  "exit_code": 0,
+  "seconds": 48.798399584018625,
+  "source_commit": "235193c3b35e253bc38c97c36117965c85dcf10a"
+}

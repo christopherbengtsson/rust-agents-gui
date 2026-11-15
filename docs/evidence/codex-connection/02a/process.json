@@ -1,0 +1,276 @@
+{
+  "protocol": 13,
+  "root": "/private/tmp/aw-ready-e0f_2lwy",
+  "owner": "18723-1794753466357928000",
+  "supervisor_pid": 18723,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "supervisor_sha256": "3500a78e89d046547823e72b83c2d053f7f9a92755cd82f2133e96a63e2dd3a5",
+  "target": {
+    "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+    "provider": "codex",
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+    "minimum_supported_version": "0.169.0"
+  },
+  "checks": [
+    {
+      "name": "newer stable readiness reports actual version",
+      "passed": true,
+      "seconds": 0.27156516700051725,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 2,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": null
+      }
+    },
+    {
+      "name": "gateway_unsupported blocks dependent requests and retains stale evidence",
+      "passed": true,
+      "seconds": 0.19295187492389232,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 4,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol",
+        "diagnostic": "Setup response 4 rejected; RPC code Some(-32600); expected exact response ID and no server request",
+        "login": null
+      }
+    },
+    {
+      "name": "gateway_malformed blocks dependent requests and retains stale evidence",
+      "passed": true,
+      "seconds": 0.19065345893613994,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 6,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol",
+        "diagnostic": "Required gateway capability response fields are invalid",
+        "login": null
+      }
+    },
+    {
+      "name": "gateway_failure blocks dependent requests and retains stale evidence",
+      "passed": true,
+      "seconds": 0.17021637503057718,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 8,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed",
+        "diagnostic": "Setup response 4 rejected; RPC code Some(-32603); expected exact response ID and no server request",
+        "login": null
+      }
+    },
+    {
+      "name": "prerelease blocks dependent requests and retains stale evidence",
+      "passed": true,
+      "seconds": 0.07379266596399248,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 10,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol",
+        "diagnostic": "Version command exit Some(0); requires stable codex-cli >= 0.169.0 with valid SemVer",
+        "login": null
+      }
+    },
+    {
+      "name": "unsupported capability prevents browser login start",
+      "passed": true,
+      "seconds": 0.3929719999432564,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 13,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol",
+        "diagnostic": "Setup response 4 rejected; RPC code Some(-32600); expected exact response ID and no server request",
+        "login": {
+          "id": "4d6c451c-d32e-4118-9308-510ea8706cbd",
+          "phase": "failed",
+          "outcome": "failed",
+          "browser_open_failed": false,
+          "diagnostic": "Setup response 4 rejected; RPC code Some(-32600); expected exact response ID and no server request"
+        }
+      }
+    },
+    {
+      "name": "newer browser completion rechecks actual version",
+      "passed": true,
+      "seconds": 0.45439837500452995,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 18,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": {
+          "id": "b9f4fdfd-d2fb-4c3a-8dfa-0b8212b0d449",
+          "phase": "completed",
+          "outcome": "completed",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "cancel during capability probe completes owned cleanup",
+      "passed": true,
+      "seconds": 2.4204850000096485,
+      "result": {
+        "target": {
+          "id": "7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7750b82a-a3df-4edf-9e7c-675dbfb989f8",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 22,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.170.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "0b38cf4d-307c-4811-91b4-b79f4182f353",
+          "phase": "cancelled",
+          "outcome": "cancelled",
+          "browser_open_failed": false,
+          "diagnostic": null
+        }
+      }
+    }
+  ],
+  "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process.",
+  "headless_browser": true,
+  "supervisor_exit": 0,
+  "fixture_pids": [
+    18724, 18725, 18726, 18727, 18728, 18729, 18732, 18733, 18753, 18754, 18755,
+    18756, 18757, 18758, 18759, 18761, 18762, 18765, 18769, 18808, 18809
+  ],
+  "remaining_fixture_pids": []
+}

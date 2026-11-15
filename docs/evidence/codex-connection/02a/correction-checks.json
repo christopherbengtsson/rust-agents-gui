@@ -1,0 +1,34 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "--locked",
+      "-p",
+      "workspace-core",
+      "--lib",
+      "--features",
+      "codegen",
+      "runtimes::codex::protocol::tests",
+      "--",
+      "--test-threads=1"
+    ],
+    "exit_code": 0,
+    "seconds": 2.676759791909717
+  },
+  {
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "--maxWorkers=1",
+      "src/observation-contracts.test.tsx",
+      "src/generated-contracts.test.tsx"
+    ],
+    "exit_code": 0,
+    "seconds": 1.1048656658967957
+  }
+]

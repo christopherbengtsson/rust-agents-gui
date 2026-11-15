@@ -32,13 +32,13 @@ allows newer stable releases without implying native qualification.
 
 ## Acceptance
 
-- [ ] Minimum stable policy and truthful observed version work through readiness and browser verification.
-- [ ] Both paths prove required capability support before dependent requests, preserving correlation, cancellation, deadlines and owned cleanup.
-- [ ] Typed contracts, contextual validation and desktop guidance communicate minimum versus observed version accurately.
-- [ ] Deterministic units cover version policy, probe success/failures, additive messages, blocked effects and preserved owning-module behavior.
-- [ ] Synthetic fixture process and focused packaged-desktop checks cover newer readiness, probe recovery and browser completion/reverification; record native limits separately.
-- [ ] MVP/spec record the provider policy; 03 is blocked by this prerequisite; prior evidence and user edits are preserved.
-- [ ] Generated/static/type/lint/format/unit gates, packaging and independent Standards/Spec review are recorded with failures and unperformed limits.
+- [x] Minimum stable policy and truthful observed version work through readiness and browser verification.
+- [x] Both paths prove required capability support before dependent requests, preserving correlation, cancellation, deadlines and owned cleanup.
+- [x] Typed contracts, contextual validation and desktop guidance communicate minimum versus observed version accurately.
+- [x] Deterministic units cover version policy, probe success/failures, additive messages, blocked effects and preserved owning-module behavior.
+- [x] Synthetic fixture process and focused packaged-desktop checks cover newer readiness, probe recovery and browser completion/reverification; record native limits separately.
+- [x] MVP/spec record the provider policy; 03 is blocked by this prerequisite; prior evidence and user edits are preserved.
+- [x] Generated/static/type/lint/format/unit gates, packaging and independent Standards/Spec review are recorded with failures and unperformed limits.
 
 ## Comments
 
@@ -46,3 +46,15 @@ allows newer stable releases without implying native qualification.
 and architecture review. Initial minimum is 0.169.0; newer stable releases are
 allowed after required checks; prereleases remain unsupported. Qualification is
 fixture-only: no real authentication, credential changes or native agent work.
+
+
+### 2026-11-15 — implemented, reviewed and fixture-qualified
+
+Implemented in `81f9163`, corrected in `235193c`. [Evidence and handoff](../../../docs/evidence/codex-connection/02a.md)
+record the one full-gate attempt, retained corpus failures, targeted corrections,
+195 Rust / 51 tooling / 253 frontend coverage, packaging, eight process and six
+actual desktop fixture checks, binary provenance and qualification limits.
+Independent Standards/Spec review has zero unresolved findings. No real provider
+authentication, credential changes or native agent work occurred. Prior evidence
+and user edits were preserved. Protocol 13 requires matching peers/fresh private
+state. Stop after this prerequisite; 03/04 and parent acceptance remain separate.

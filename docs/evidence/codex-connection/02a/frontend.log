@@ -1,0 +1,60 @@
+$ vitest run --maxWorkers=1
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-contracts.test.tsx (10 tests | 1 failed) 180ms
+   × the shared application corpus passes production TypeScript decoders 2ms
+ ❯ src/generated-contracts.test.tsx (7 tests | 1 failed) 7ms
+   × every current synthetic corpus root passes its generated serialization validator 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/generated-contracts.test.tsx > every current synthetic corpus root passes its generated serialization validator
+AssertionError: expected 13 to be 12 // Object.is equality
+
+- Expected
++ Received
+
+- 12
++ 13
+
+ ❯ src/generated-contracts.test.tsx:100:27
+     98|
+     99| test("every current synthetic corpus root passes its generated seriali…
+    100|   expect(corpus.protocol).toBe(12);
+       |                           ^
+    101|   expect(validateDesktopPid(corpus.desktop_pid)).toBe(true);
+    102|   expect(validateSupervisorSnapshot(corpus.snapshot)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/observation-contracts.test.tsx > the shared application corpus passes production TypeScript decoders
+AssertionError: expected 13 to be 12 // Object.is equality
+
+- Expected
++ Received
+
+- 12
++ 13
+
+ ❯ src/observation-contracts.test.tsx:75:27
+     73|
+     74| test("the shared application corpus passes production TypeScript decod…
+     75|   expect(corpus.protocol).toBe(12);
+       |                           ^
+     76|   expect(decodeSnapshot(corpus.snapshot).cursor.owner).toBe(corpus.own…
+     77|   expect(decodeDesktopPid(corpus.desktop_pid)).toBe(42);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 19 passed (21)
+      Tests  2 failed | 251 passed (253)
+   Start at  15:34:31
+   Duration  13.02s (tests 51%, environment 26%, import 19%, transform 3%, setup 1%)
+
+Environment  jsdom was created 21 times · 3.12s total, 26% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+[ELIFECYCLE] Command failed with exit code 1.

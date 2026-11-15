@@ -1,0 +1,38 @@
+{"pid": 18875, "event": "start", "argument": ["--version"]}
+{"pid": 18876, "event": "start", "argument": ["app-server"]}
+{"pid": 18876, "event": "request", "method": "initialize"}
+{"pid": 18876, "event": "request", "method": "initialized"}
+{"pid": 18876, "event": "request", "method": "account/gatewayOAuth/read"}
+{"pid": 18876, "event": "request", "method": "account/read"}
+{"pid": 18876, "event": "request", "method": "config/read"}
+{"pid": 18876, "event": "exit"}
+{"pid": 18894, "event": "start", "argument": ["--version"]}
+{"pid": 18895, "event": "start", "argument": ["app-server"]}
+{"pid": 18895, "event": "request", "method": "initialize"}
+{"pid": 18895, "event": "request", "method": "initialized"}
+{"pid": 18895, "event": "request", "method": "account/gatewayOAuth/read"}
+{"pid": 18895, "event": "exit"}
+{"pid": 18905, "event": "start", "argument": ["--version"]}
+{"pid": 18906, "event": "start", "argument": ["app-server"]}
+{"pid": 18906, "event": "request", "method": "initialize"}
+{"pid": 18906, "event": "request", "method": "initialized"}
+{"pid": 18906, "event": "request", "method": "account/gatewayOAuth/read"}
+{"pid": 18906, "event": "request", "method": "account/read"}
+{"pid": 18906, "event": "request", "method": "config/read"}
+{"pid": 18906, "event": "exit"}
+{"pid": 18915, "event": "start", "argument": ["--version"]}
+{"pid": 18916, "event": "start", "argument": ["app-server"]}
+{"pid": 18916, "event": "request", "method": "initialize"}
+{"pid": 18916, "event": "request", "method": "initialized"}
+{"pid": 18916, "event": "request", "method": "account/gatewayOAuth/read"}
+{"pid": 18916, "event": "request", "method": "account/login/start"}
+{"pid": 18916, "event": "login_completed", "login_id": "3dc197d2-a0c2-4a63-9d29-5ef9f4fbb5c1"}
+{"pid": 18916, "event": "exit"}
+{"pid": 18927, "event": "start", "argument": ["--version"]}
+{"pid": 18928, "event": "start", "argument": ["app-server"]}
+{"pid": 18928, "event": "request", "method": "initialize"}
+{"pid": 18928, "event": "request", "method": "initialized"}
+{"pid": 18928, "event": "request", "method": "account/gatewayOAuth/read"}
+{"pid": 18928, "event": "request", "method": "account/read"}
+{"pid": 18928, "event": "request", "method": "config/read"}
+{"pid": 18928, "event": "exit"}
