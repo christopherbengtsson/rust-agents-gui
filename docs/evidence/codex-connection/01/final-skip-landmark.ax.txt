@@ -1,0 +1,29 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/general
+			3 link Skip to settings, Value: tauri://localhost/settings/general#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container General
+				12 heading General, Value: 2
+					13 text General
+				14 text General settings will be available here.
+	15 close button
+	16 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	17 minimize button
+	18 text Agent Workspace
+19 menu bar
+	20 Agent Workspace
+	21 File
+	22 Edit
+	23 View
+	24 Window
+	25 Help
+
+The focused UI element is 11 container General

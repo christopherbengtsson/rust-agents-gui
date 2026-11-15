@@ -1,0 +1,443 @@
+{
+  "root": "/private/tmp/aw-ready-p9u4fln0",
+  "owner": "59150-1794737901077709000",
+  "supervisor_pid": 59150,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "supervisor_sha256": "73ae85aa29dac16eb8d5d265bc2096ec19b4854ab0bdb6870fceb7145797f993",
+  "target": {
+    "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+    "provider": "codex",
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+    "supported_version": "0.169.0"
+  },
+  "checks": [
+    {
+      "name": "initial readiness and active refresh coalescing",
+      "passed": true,
+      "seconds": 0.46671824995428324,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 2,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null
+      }
+    },
+    {
+      "name": "api_key",
+      "passed": true,
+      "seconds": 0.16083387506660074,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 4,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "api_key",
+          "billing": "api_key",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null
+      }
+    },
+    {
+      "name": "no_auth",
+      "passed": true,
+      "seconds": 0.15846695809159428,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 6,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable"
+      }
+    },
+    {
+      "name": "ready",
+      "passed": true,
+      "seconds": 0.16251079190988094,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 8,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null
+      }
+    },
+    {
+      "name": "config_failure",
+      "passed": true,
+      "seconds": 0.1561152080539614,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 10,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed"
+      }
+    },
+    {
+      "name": "incompatible",
+      "passed": true,
+      "seconds": 0.08702483295928687,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 12,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol"
+      }
+    },
+    {
+      "name": "version_exit",
+      "passed": true,
+      "seconds": 0.0808885000878945,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 14,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed"
+      }
+    },
+    {
+      "name": "malformed",
+      "passed": true,
+      "seconds": 0.1431142499204725,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 16,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol"
+      }
+    },
+    {
+      "name": "oversized",
+      "passed": true,
+      "seconds": 0.15224170801229775,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 18,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol"
+      }
+    },
+    {
+      "name": "unrelated_id",
+      "passed": true,
+      "seconds": 0.16330183297395706,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 20,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol"
+      }
+    },
+    {
+      "name": "unexpected_request",
+      "passed": true,
+      "seconds": 0.16824241599533707,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 22,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "incompatible_protocol"
+      }
+    },
+    {
+      "name": "eof",
+      "passed": true,
+      "seconds": 0.14417504193261266,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 24,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed"
+      }
+    },
+    {
+      "name": "deadline",
+      "passed": true,
+      "seconds": 17.093240250018425,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 26,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed"
+      }
+    },
+    {
+      "name": "cleanup_delay",
+      "passed": true,
+      "seconds": 19.09962745802477,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 28,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed"
+      }
+    },
+    {
+      "name": "ready",
+      "passed": true,
+      "seconds": 0.20577895804308355,
+      "result": {
+        "target": {
+          "id": "02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-02c396c4-ebf9-4ad5-9027-6bdd6d66b07e",
+          "supported_version": "0.169.0"
+        },
+        "revision": 30,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null
+      }
+    },
+    {
+      "name": "wrong owner rejected without effects",
+      "passed": true,
+      "seconds": 0.0004142499528825283,
+      "result": {
+        "kind": "transport",
+        "error": {
+          "code": "owner_changed",
+          "delivery": "rejected",
+          "message": "The supervisor owner differs from the caller observation. Refresh status; this attempt was rejected before domain dispatch."
+        }
+      }
+    }
+  ],
+  "limits": "Synthetic runtime; no native authentication, login, thread, turn or Claude process.",
+  "supervisor_exit": -15,
+  "fixture_pids": [
+    59151, 59152, 59160, 59161, 59166, 59177, 59178, 59179, 59180, 59181, 59182,
+    59183, 59184, 59185, 59186, 59187, 59190, 59193, 59206, 59207, 59208, 59209,
+    59210, 59211, 59240, 59241, 59261, 59262
+  ],
+  "remaining_fixture_pids": []
+}

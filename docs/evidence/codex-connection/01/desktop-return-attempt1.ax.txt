@@ -1,0 +1,46 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/
+			3 link Skip to workspace, Value: tauri://localhost/#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-ready-e08mjem_/Repository Available
+							11 button Repository, Help: /private/tmp/aw-ready-e08mjem_/Repository
+							12 button (expanded) Toggle details for Repository, Secondary Actions: Collapse
+							13 button Create workspace in Repository
+							14 text /private/tmp/aw-ready-e08mjem_/Repository
+							15 text Available
+							16 content list
+								17 button davinson-sanchez, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 container
+					24 heading Workspace, Value: 1
+						25 text Workspace
+					26 button Refresh status
+				27 heading A place for your next change, Value: 2
+					28 text A place for your next change
+				29 text Add an existing Git repository from the sidebar to get started.
+				30 container
+					31 text Local workspace No repository selected
+	32 close button
+	33 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	34 minimize button
+	35 text Agent Workspace
+36 menu bar
+	37 Agent Workspace
+	38 File
+	39 Edit
+	40 View
+	41 Window
+	42 Help
+
+The focused UI element is 22 container

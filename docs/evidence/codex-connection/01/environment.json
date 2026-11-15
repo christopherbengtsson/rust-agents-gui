@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-15",
+  "baseline": "38a863dc9acc0eda2ecd19ccf126565b04115922",
+  "branch": "main",
+  "os": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "hardware": "Mac16,8",
+  "cpu": "Apple M4 Pro",
+  "node": "v26.13.1",
+  "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "codex": "0.169.0",
+  "source": "d32063f96c2dff1dc96af839b3952abb6acfeda4",
+  "auth_qualification": "fixtures only; no native authentication check authorized",
+  "ideAS_sha256": "0e27265032591956521df58dedd8c7c3520fcf97f0ffde9cba11bc4fbe2a3fa0",
+  "schema_sha256": {
+    "fixtures/codex-readiness/schema/ConfigReadParams.json": "257c54a423b47c1d209ff1076765a1564d82322fd5161670fd489a2874de1bac",
+    "fixtures/codex-readiness/schema/ConfigReadResponse.json": "3bda115e4295fed371c9acb98685d105a358e5cf92225c2d34dd2ef774436cc2",
+    "fixtures/codex-readiness/schema/GetAccountParams.json": "30b545275f60975b55bd6fbaafd70f15505801d14168ee82d3931b6e93c78aab",
+    "fixtures/codex-readiness/schema/InitializeParams.json": "c608ff6bdd94e661423dca9b44cd1dcea7eac610f74e1310284c61eab64280bc",
+    "fixtures/codex-readiness/schema/GetAccountResponse.json": "588bac1dacbcf8d0676f2c31d9d5750e8baaee5c3062ef820ae4e6ee68687418"
+  }
+}

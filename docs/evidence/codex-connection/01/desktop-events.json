@@ -1,0 +1,270 @@
+[
+  {
+    "pid": 66574,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66575,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66575,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66575,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66575,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 66575,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 66575,
+    "event": "exit"
+  },
+  {
+    "pid": 66632,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66633,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66633,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66633,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66633,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 66633,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 66633,
+    "event": "exit"
+  },
+  {
+    "pid": 66642,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66643,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66643,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66643,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66643,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 66643,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 66643,
+    "event": "exit"
+  },
+  {
+    "pid": 66727,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66728,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66728,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66728,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66728,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 66728,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 66728,
+    "event": "exit"
+  },
+  {
+    "pid": 66729,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66730,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66730,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66730,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66730,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 66730,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 66730,
+    "event": "exit"
+  },
+  {
+    "pid": 66846,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66847,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66847,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66847,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66847,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 66847,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 66847,
+    "event": "exit"
+  },
+  {
+    "pid": 66904,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66976,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 66977,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 66977,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 66977,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 66977,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 71549,
+    "event": "start",
+    "argument": ["--version"]
+  },
+  {
+    "pid": 71550,
+    "event": "start",
+    "argument": ["app-server"]
+  },
+  {
+    "pid": 71550,
+    "event": "request",
+    "method": "initialize"
+  },
+  {
+    "pid": 71550,
+    "event": "request",
+    "method": "initialized"
+  },
+  {
+    "pid": 71550,
+    "event": "request",
+    "method": "account/read"
+  },
+  {
+    "pid": 71550,
+    "event": "request",
+    "method": "config/read"
+  },
+  {
+    "pid": 71550,
+    "event": "exit"
+  }
+]

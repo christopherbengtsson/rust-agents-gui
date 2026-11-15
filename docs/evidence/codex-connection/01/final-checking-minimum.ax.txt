@@ -1,0 +1,78 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex#settings-main
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selected) Codex
+					16 tab (selectable) Claude Code
+				17 container Codex
+					18 container Codex setup
+						19 heading Existing Codex setup, Value: 3
+							20 text Existing Codex setup
+						21 container
+							22 text Checking… Stale · readiness unknown
+						23 button (disabled) Loading Refresh
+						24 text User-level setup. Project overrides are not inspected here. This check starts no conversation.
+						25 description list
+							26 text Authentication
+							27 text Not signed in
+							28 text Account
+							29 text Unknown
+							30 text Plan
+							31 text Unknown
+							32 text Billing route
+							33 text Unknown
+							34 text Model provider
+							35 text openai
+							36 text Model
+							37 text fixture-model
+						38 container
+							39 text Use the supported Codex version This setup reader supports Codex 0.169.0. Check the executable below, install that version, then choose Refresh. If the selected executable path changed, restart the owning supervisor and reopen the app. A malformed or unexpected runtime reply also requires rechecking the installed runtime.
+						40 button (expanded) Technical setup details, Secondary Actions: Collapse
+						41 description list
+							42 text Executable
+							43 text /Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py
+							44 text Codex home
+							45 text Fixture-owned configuration
+							46 text Setup directory
+							47 text /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-7f030d29-ac51-4433-b48c-f95dae080519
+							48 text Supported runtime
+							49 text 0.169.0
+							50 text Observed runtime
+							51 text 0.169.0
+							52 text Diagnostic
+							53 text Version command exit Some(0); expected codex-cli 0.169.0
+						54 container Codex setup guidance
+							55 heading Official setup options, Value: 3
+								56 text Official setup options
+							57 container
+								58 text ChatGPT  — Sign in through your browser using the official Codex runtime.
+							59 container
+								60 text CLI  — Use your existing Codex setup, or run codex login  in your terminal and return here to Refresh.
+							61 text Existing API-key configuration stays with Codex. This app does not collect or edit API keys.
+							62 button Open official installation instructions
+							63 button Open official authentication guidance
+	64 close button
+	65 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	66 minimize button
+	67 text Agent Workspace
+68 menu bar
+	69 Agent Workspace
+	70 File
+	71 Edit
+	72 View
+	73 Window
+	74 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex#settings-main

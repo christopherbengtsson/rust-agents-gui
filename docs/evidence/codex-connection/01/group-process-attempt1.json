@@ -1,0 +1,27 @@
+{
+  "root": "/private/tmp/aw-ready-8d7nxnd4",
+  "owner": "60477-1794738390545410000",
+  "supervisor_pid": 60477,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "supervisor_sha256": "7d974e84a4ccfc692a1f21a2fa12f9756dd1bba606457a127e515b644f407713",
+  "target": {
+    "id": "947601f5-a264-492d-9f05-3a75809a124a",
+    "provider": "codex",
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-947601f5-a264-492d-9f05-3a75809a124a",
+    "supported_version": "0.169.0"
+  },
+  "checks": [
+    {
+      "name": "initial readiness and active refresh coalescing",
+      "passed": false,
+      "seconds": 25.01531112496741,
+      "error": "TimeoutError('fixture setup failed to settle')"
+    }
+  ],
+  "limits": "Synthetic runtime; no native authentication, login, thread, turn or Claude process.",
+  "supervisor_exit": -15,
+  "fixture_pids": [60478],
+  "remaining_fixture_pids": []
+}

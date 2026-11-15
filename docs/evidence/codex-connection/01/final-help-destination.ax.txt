@@ -1,0 +1,254 @@
+Window: "private: Codex CLI | Cha…", App: Dia.
+0 standard window private: Codex CLI | Cha…, ID: bigBrowserWindow_C6EA213A-46EA-4DCB-9A1B-D3217427F082, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Codex CLI | ChatGPT Learn, URL: learn.chatgpt.com/docs/codex/cli
+			3 container
+				4 text For the complete documentation index, see 
+				5 link llms.txt, Value: learn.chatgpt.com/llms.txt
+				6 text . Markdown versions of documentation pages are available by appending 
+				7 text .md
+				8 text  to the page URL.
+				9 link ChatGPT, Value: learn.chatgpt.com/
+				10 button Start searching
+				11 link Try ChatGPT, Value: chatgpt.com/
+				12 container
+					13 pop up button Choose language
+				14 button Choose theme
+				15 container
+					16 link Home, Value: learn.chatgpt.com/
+					17 link Docs, Value: learn.chatgpt.com/docs
+					18 link Use cases, Value: learn.chatgpt.com/use-cases
+					19 link Training, Value: learn.chatgpt.com/training
+					20 link Resources, Value: learn.chatgpt.com/resources
+				21 container Docs sections
+					22 link Overview, Value: learn.chatgpt.com/docs
+					23 link Features, Value: learn.chatgpt.com/docs/features
+					24 link Configuration, Value: learn.chatgpt.com/docs/configuration
+					25 link Developers, Value: learn.chatgpt.com/docs/developers
+					26 link Security, Value: learn.chatgpt.com/docs/security-administration
+					27 link Administration, Value: learn.chatgpt.com/docs/administration
+				28 container
+					29 content list
+						30 link Home, Value: learn.chatgpt.com/docs
+					31 heading Get started
+						32 text Get started
+					33 content list
+						34 link Quickstart, Value: learn.chatgpt.com/docs/quickstart
+						35 link Use ChatGPT, Value: learn.chatgpt.com/docs/use-chatgpt
+						36 link Get started with Work, Value: learn.chatgpt.com/docs/get-started-with-work
+						37 link Meet dots, Value: learn.chatgpt.com/docs/dots?nav=overview
+						38 link Import from another agent, Value: learn.chatgpt.com/docs/import
+					39 heading Foundations
+						40 text Foundations
+					41 content list
+						42 link Prompting, Value: learn.chatgpt.com/docs/prompting
+						43 link Working with agents, Value: learn.chatgpt.com/docs/working-with-agents
+						44 link Model selection, Value: learn.chatgpt.com/docs/model-selection
+						45 link Personalize ChatGPT, Value: learn.chatgpt.com/docs/personalize
+						46 link Skills & Plugins, Value: learn.chatgpt.com/docs/skills-and-plugins
+						47 link Permissions, Value: learn.chatgpt.com/docs/permission-modes
+					48 heading Explore
+						49 text Explore
+					50 content list
+						51 link What's new, Value: learn.chatgpt.com/docs/whats-new
+						52 link Models, Value: learn.chatgpt.com/docs/models
+						53 link Pricing, Value: learn.chatgpt.com/docs/pricing
+						54 link Glossary, Value: learn.chatgpt.com/docs/glossary
+					55 heading Available on
+						56 text Available on
+					57 content list
+						58 link ChatGPT desktop app, Value: learn.chatgpt.com/docs/app
+						59 link ChatGPT mobile app, Value: learn.chatgpt.com/docs/mobile
+						60 link ChatGPT on the web, Value: learn.chatgpt.com/docs/web
+						61 link Codex CLI, Value: learn.chatgpt.com/docs/codex/cli
+						62 link Codex IDE extension, Value: learn.chatgpt.com/docs/codex/ide
+						63 link Codex Cloud, Value: learn.chatgpt.com/docs/cloud
+					64 heading Releases
+						65 text Releases
+					66 content list
+						67 link Changelog, Value: learn.chatgpt.com/docs/changelog
+						68 link Feature Maturity, Value: learn.chatgpt.com/docs/feature-maturity
+						69 link Open Source, Value: learn.chatgpt.com/docs/open-source
+				70 container
+					71 container Inspect, edit, and run code from your terminal
+						72 text Codex CLI
+						73 heading Inspect, edit, and run code from your terminal
+							74 text Inspect, edit, and run code from your terminal
+						75 text Inspect code, make changes, run commands, and automate repeatable work without leaving your terminal.
+						76 link Install Codex, Value: learn.chatgpt.com/docs/codex/cli#getting-started
+						77 link CLI reference, Value: learn.chatgpt.com/docs/developer-commands?surface=cli
+						78 container
+							79 text $ codex ╭──────────────────────────────────────────────────╮
+│ >_  OpenAI Codex                                   │
+│                                                  │
+│ model:      gpt-6.1-sol medium /model  to change │
+│ directory:  ~/code                                 │
+╰──────────────────────────────────────────────────╯
+
+  To get started, describe a task or try one of these commands:
+
+   /init  - create an AGENTS.md file with instructions for Codex
+   /status  - show current session configuration
+   /permissions  - choose what Codex is allowed to do
+   /model  - choose what model and reasoning effort to use
+   /review  - review any changes and find issues
+       ›
+							80 text Write unit tests for ut
+							81 text   100% context left · ? for shortcuts
+      
+					82 container Codex CLI advantages
+						83 container
+							84 text 01
+							85 heading Work against your local repository
+								86 text Work against your local repository
+							87 text Let Codex inspect files, make edits, and run the tools already installed on your machine.
+						88 container
+							89 text 02
+							90 heading Stay in control
+								91 text Stay in control
+							92 text Choose the model, reasoning effort, permissions, and commands that fit the task.
+						93 container
+							94 text 03
+							95 heading Compose with scripts and CI
+								96 text Compose with scripts and CI
+							97 text Use Codex interactively or call codex exec from repeatable workflows and pipelines.
+					98 container Get started with Codex CLI
+						99 text Quickstart
+						100 heading Get started with Codex CLI
+							101 text Get started with Codex CLI
+						102 text Install Codex, sign in, and run your first task from a project directory.
+						103 content list
+							104 container
+								105 heading Install Codex
+									106 text Install Codex
+								107 container Choose an install method
+									108 radio button (settable) macOS/Linux
+									109 radio button (settable) Windows
+									110 radio button (settable) npm
+									111 radio button (settable) Homebrew
+								112 text Install the Codex CLI with the standalone installer for macOS and Linux. Install Codex
+								113 container
+									114 button Copy macOS/Linux install command
+									115 container
+										116 text curl -fsSL https://chatgpt.com/codex/install.sh | sh
+								117 text Update Codex
+								118 container
+									119 button Copy macOS/Linux update command
+									120 container
+										121 text curl -fsSL https://chatgpt.com/codex/install.sh | sh
+							122 container
+								123 heading Run Codex and sign in
+									124 text Run Codex and sign in
+								125 text Open a project directory and run 
+								126 text codex
+								127 text . The first time you run Codex, choose 
+								128 text Sign in with ChatGPT
+								129 text  or another available sign-in method.
+								130 link Review authentication options, Value: learn.chatgpt.com/docs/auth
+							131 container
+								132 heading Start your first task
+									133 text Start your first task
+								134 text Describe what you want to accomplish. For example, ask Codex to explain the project, make a focused change, or help debug an issue.
+								135 text Tell me about this project
+								136 text Create Git checkpoints before and after a task so you can revert changes. See the 
+								137 link best practices, Value: learn.chatgpt.com/guides/best-practices
+								138 text .
+						139 container Codex CLI next steps
+							140 text Next steps
+							141 content list
+								142 link Explore the CLI reference, Value: learn.chatgpt.com/docs/developer-commands?surface=cli
+								143 link Configure Codex, Value: learn.chatgpt.com/docs/configuration?surface=cli
+								144 link Automate with codex exec, Value: learn.chatgpt.com/docs/non-interactive-mode
+					145 container See what Codex CLI can do
+						146 heading See what Codex CLI can do
+							147 text See what Codex CLI can do
+						148 text Use one focused terminal loop for interactive work, automation, review, and delegation.
+						149 container
+							150 text 01
+							151 heading Keep the coding loop in your terminal
+								152 text Keep the coding loop in your terminal
+							153 text Start Codex in a repository to explore unfamiliar code, plan a change, edit files, and run your local development tools. Steer the active turn, inspect commands and diffs as they appear, and keep follow-up work in the same session.
+							154 link Learn more, Value: learn.chatgpt.com/docs/developer-commands?surface=cli
+							155 image Codex CLI inspecting a repository, editing code, and running tests in a terminal
+						156 container
+							157 text 02
+							158 heading Use skills and plugins
+								159 text Use skills and plugins
+							160 text Package repeatable instructions as skills, then add plugins to connect Codex to your team's tools and data without leaving the CLI.
+							161 link Learn more, Value: learn.chatgpt.com/docs/skills-and-plugins?surface=cli
+							162 image Skills, plugins, and connected developer tools available in Codex CLI
+						163 container
+							164 text 03
+							165 heading Review changes before they ship
+								166 text Review changes before they ship
+							167 text Run a dedicated review against uncommitted changes, a commit, or a base branch. Codex reports prioritized findings without modifying your working tree, so you can address risks before you commit or open a pull request.
+							168 link Learn more, Value: learn.chatgpt.com/docs/code-review?surface=cli
+							169 image Codex CLI reporting prioritized findings from a local code review
+					170 container Build a terminal workflow around Codex
+						171 heading Build a terminal workflow around Codex
+							172 text Build a terminal workflow around Codex
+						173 text Learn about the CLI features you can use to resume sessions, add visual and web context, split up complex work, and connect Codex to your development tools.
+						174 link Value: learn.chatgpt.com/docs/developer-commands?surface=cli#codex-resume, 01 codex resume Return to a saved chat Reopen a recent chat from the current repository, or search across local chats when you need to return to older work.
+						175 link Value: learn.chatgpt.com/docs/image-inputs?surface=cli, 02 codex --image Bring visual context into the prompt Pass an error screenshot, architecture diagram, or design reference with the first prompt, or paste an image into the interactive composer.
+						176 link Value: learn.chatgpt.com/docs/agent-configuration/subagents, 03 subagents Split up a larger investigation Ask Codex to delegate focused work to specialized agents, then bring their findings back into the main terminal session.
+						177 link Value: learn.chatgpt.com/docs/web-search?surface=cli, 04 codex --search Search for current context Switch a run to live web search when a task depends on current releases, documentation, or external behavior. Search activity stays visible in the transcript.
+						178 link Value: learn.chatgpt.com/docs/cloud#use-codex-cloud-from-the-cli, 05 codex cloud Move work to Codex cloud Browse active and completed chats, submit work to a configured environment, and apply the result to your local repository from the terminal.
+						179 link Value: learn.chatgpt.com/docs/extend/mcp?surface=cli, 06 codex mcp Connect external tools with MCP Add local or remote MCP servers, authenticate when needed, and inspect the tools available to the current session before Codex uses them.
+						180 link Value: learn.chatgpt.com/docs/agent-approvals-security, 07 /permissions Set the boundaries for each run Choose when Codex can edit files or run commands without asking, and inspect the active sandbox and writable roots before you continue.
+						181 link Value: learn.chatgpt.com/docs/cli-customization, 08 codex completion Fit Codex to your terminal Generate completions for your shell, choose a syntax theme, and open longer prompts in the editor configured by VISUAL or EDITOR.
+					182 container Use Codex CLI when…
+						183 heading Use Codex CLI when…
+							184 text Use Codex CLI when…
+						185 container
+							186 heading You work from the terminal
+								187 text You work from the terminal
+							188 text Explore, edit, and run a repository in one focused loop.
+						189 heading You need scripting or CI
+							190 text You need scripting or CI
+						191 text Run a non-interactive command in a repeatable workflow.
+						192 heading You want a local code review
+							193 text You want a local code review
+						194 text Inspect changes before you commit or open a pull request.
+						195 heading You want to hand work to the cloud
+							196 text You want to hand work to the cloud
+						197 text Launch a cloud chat and return to the terminal later.
+					198 container Other ChatGPT and Codex surfaces
+						199 heading Other ChatGPT and Codex surfaces
+							200 text Other ChatGPT and Codex surfaces
+						201 container ChatGPT and Codex surfaces
+							202 link Desktop app Coordinate projects and long-running tasks on your desktop., Value: learn.chatgpt.com/docs/app
+							203 link ChatGPT web Research, analyze, and create from your browser., Value: learn.chatgpt.com/docs/web
+							204 link IDE extension Work with Codex beside the code in your editor., Value: learn.chatgpt.com/docs/codex/ide
+							205 link Codex Cloud Run coding tasks in parallel cloud environments., Value: learn.chatgpt.com/docs/cloud
+				206 pop up button Ask AI
+				207 container Docs agent
+					208 container
+						209 heading Docs agent
+							210 text Docs agent
+						211 button Start a new docs agent chat, Help: Start a new chat
+						212 button Close docs agent
+					213 container
+						214 text Loading docs agent...
+	215 container navigationBar
+		216 button (disabled) Description: Go back, Help: Hold to view history, ID: navigationBarBackButton
+		217 button (disabled) Description: Go forward, Help: Hold to view history, ID: navigationBarForwardButton
+		218 button Description: Reload this page, ID: navigationBarReloadOrStopLoadingButton
+		219 button Chat with this tab
+		220 collection
+		221 unknown navigationBarAssistantBar
+			222 unknown
+				223 scroll area
+					224 text entry area Value: learn.chatgpt.com / Codex CLI ChatGPT Learn, ID: navigationBarAssistantBarTextField
+225 menu bar
+	226 Dia
+	227 File
+	228 Edit
+	229 View
+	230 Tabs
+	231 Bookmarks
+	232 History
+	233 Extensions
+	234 Window
+	235 Help
+
+The focused UI element is 0 standard window private: Codex CLI | Cha…, ID: bigBrowserWindow_C6EA213A-46EA-4DCB-9A1B-D3217427F082, Secondary Actions: Raise

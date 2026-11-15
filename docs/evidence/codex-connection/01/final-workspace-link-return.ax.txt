@@ -1,0 +1,83 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/29a33e2c-03b1-4351-a6ba-b12cdc54f332/workspace/9bbec681-eb5d-4571-85c5-e6873dfb99d2?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/29a33e2c-03b1-4351-a6ba-b12cdc54f332/workspace/9bbec681-eb5d-4571-85c5-e6873dfb99d2?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-ready-e08mjem_/Repository Available
+							11 button Repository, Help: /private/tmp/aw-ready-e08mjem_/Repository
+							12 button (expanded) Toggle details for Repository, Secondary Actions: Collapse
+							13 button Create workspace in Repository
+							14 text /private/tmp/aw-ready-e08mjem_/Repository
+							15 text Available
+							16 content list
+								17 button davinson-sanchez, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 container
+					24 heading davinson-sanchez, Value: 1
+						25 text davinson-sanchez
+					26 button Refresh status
+				27 container Selected repository
+					28 text /private/tmp/aw-ready-e08mjem_/Repository
+					29 text Repository available
+				30 text Uncommitted changes
+				31 button Refresh changes
+				32 button (expanded) Hide changed files, Secondary Actions: Collapse
+				33 container
+					34 text Compared with HEAD  e6f5552e96bd8ef2457bcfa7fd71425243038c07  ·  1 changed files
+				35 tab group (selectable) Workspace views
+					36 tab (selected) Workspace
+					37 tab (selectable) Changes
+				38 container Workspace
+					39 container Selected workspace
+						40 text Workspace ready
+						41 heading Your workspace is ready, Value: 2
+							42 text Your workspace is ready
+						43 text davinson-sanchez
+						44 description list
+							45 text Branch
+							46 text workspace/davinson-sanchez
+							47 text Workspace folder
+							48 text /private/tmp/aw-ready-e08mjem_/state/workspaces/repository/davinson-sanchez/checkout
+							49 text Local base
+							50 text refs/heads/main · e6f5552e96bd8ef2457bcfa7fd71425243038c07
+							51 text Branch artifact
+							52 text Created by this action
+							53 text Folder artifact
+							54 text Worktree created
+						55 container
+							56 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+					57 container
+						58 text Ready to set up coding?
+						59 link Check Codex setup, Value: tauri://localhost/settings/providers?provider=codex
+				60 splitter Resize changed files, Value: 68
+				61 container Changed files
+					62 heading Changed files, Value: 2
+						63 text Changed files
+					64 toggle button sample.txt .M, Help: sample.txt, Value: off
+					65 button First page
+					66 button (disabled) Next files
+				67 container
+					68 text Local workspace Repository
+	69 close button
+	70 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	71 minimize button
+	72 text Agent Workspace
+73 menu bar
+	74 Agent Workspace
+	75 File
+	76 Edit
+	77 View
+	78 Window
+	79 Help
+
+The focused UI element is 22 container

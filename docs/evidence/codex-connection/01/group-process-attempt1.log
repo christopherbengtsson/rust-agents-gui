@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/qualify.py", line 155, in <module>
+    check("initial readiness and active refresh coalescing", readiness)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/qualify.py", line 99, in check
+    value = action()
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/qualify.py", line 151, in readiness
+    result = settled()
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/qualify.py", line 78, in settled
+    raise TimeoutError("fixture setup failed to settle")
+TimeoutError: fixture setup failed to settle
