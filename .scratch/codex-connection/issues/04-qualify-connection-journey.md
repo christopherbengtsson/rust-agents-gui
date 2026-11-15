@@ -85,3 +85,7 @@ agent thread/turn, screen-reader speech, Claude/OpenCode integration, terminal o
 command viewer was performed. 03 remains deferred. Parent 06 records the fixture
 aggregate; whole-milestone/native-agent acceptance stays open. Separate-session
 trial instructions are in the evidence; 06a/07 were not implemented.
+
+Independent Standards and Spec reviews of `627f1af` each reported zero findings;
+[review results](../../../docs/evidence/codex-connection/04/review.md) retain their
+separate conclusions. Closing changes record evidence only.
