@@ -386,7 +386,7 @@ fn completed_error_and_panic_workers_are_joined_before_replacement() {
 #[test]
 fn shared_corpus_matches_rust_feed_serialization_and_delivery_bounds() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
-        "../../../../../contracts/observations-v13.json"
+        "../../../../../contracts/observations-v14.json"
     ))
     .unwrap();
     for value in corpus["feed"].as_array().unwrap() {

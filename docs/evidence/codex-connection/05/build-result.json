@@ -1,0 +1,5 @@
+{
+  "command": "corepack pnpm build",
+  "exit": 0,
+  "seconds": 48.930092333001085
+}

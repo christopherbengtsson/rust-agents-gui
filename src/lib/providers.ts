@@ -18,12 +18,23 @@ function targetSemantics(target: ProviderTarget) {
   return (
     identity(target.id) &&
     target.provider === "codex" &&
-    [target.executable, target.codex_home, target.working_directory].every(
+    [target.codex_home, target.working_directory].every(
       (value) =>
         text(value, 4096) &&
         value.length > 0 &&
         !/[\u0000-\u001f\u007f]/.test(value),
     ) &&
+    [target.executable, target.selected_executable].every(
+      (value) =>
+        value === null ||
+        (text(value, 4096) &&
+          value.length > 0 &&
+          !/[\u0000-\u001f\u007f]/.test(value)),
+    ) &&
+    (target.discovery_source === null ||
+      ["path", "shell", "conventional", "selected", "fixture"].includes(
+        target.discovery_source,
+      )) &&
     text(target.minimum_supported_version, 128)
   );
 }
@@ -46,6 +57,14 @@ export function decodeProviderReply(
     const evidence = observation.evidence;
     if (
       observation.target.id === request.target_id &&
+      (!("action_id" in request) ||
+        request.operation === "reconcile_selection" ||
+        observation.selection?.id === request.action_id) &&
+      (!observation.selection ||
+        (identity(observation.selection.id) &&
+          text(observation.selection.path, 4096) &&
+          observation.selection.path.startsWith("/") &&
+          !/[\u0000-\u001f\u007f]/.test(observation.selection.path))) &&
       (!("attempt_id" in request) ||
         request.operation === "reconcile_login" ||
         observation.login?.id === request.attempt_id) &&

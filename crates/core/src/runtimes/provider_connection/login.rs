@@ -220,7 +220,7 @@ impl ProviderConnections {
         self.changed(target);
         Ok(result)
     }
-    fn changed(&self, target_id: uuid::Uuid) {
+    pub(super) fn changed(&self, target_id: uuid::Uuid) {
         self.journal.publish(vec![Target::Provider { target_id }]);
         self.journal.wake();
     }
@@ -253,11 +253,14 @@ impl ProviderConnections {
         attempt: uuid::Uuid,
         revision: u32,
     ) -> Result<ProviderReply, RepositoryError> {
-        let launch = self
-            .launch
-            .clone()
-            .ok_or_else(|| invalid_target("No browser authentication adapter configured"))?;
         let mut tasks = self.tasks.lock().expect("provider tasks poisoned");
+        let launch = self
+            .records
+            .lock()
+            .expect("provider records poisoned")
+            .get(&target)
+            .and_then(|entry| entry.launch.clone())
+            .ok_or_else(|| invalid_target("Check and validate Codex before signing in"))?;
         while let Some(result) = tasks.try_join_next() {
             if result.is_err() {
                 return Err(invalid_target(

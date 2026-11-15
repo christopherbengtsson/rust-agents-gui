@@ -13,9 +13,10 @@ use tokio_util::sync::CancellationToken;
 
 #[derive(Clone)]
 pub(in crate::runtimes) struct Launch {
-    program: PathBuf,
-    directory: PathBuf,
-    environment: Vec<(OsString, OsString)>,
+    pub(super) program: PathBuf,
+    pub(super) directory: PathBuf,
+    pub(super) environment: Vec<(OsString, OsString)>,
+    pub(super) fixture: bool,
 }
 impl Launch {
     pub(in crate::runtimes) fn credential_scope(&self) -> String {
@@ -29,17 +30,10 @@ impl Launch {
         let id = uuid::Uuid::new_v4();
         let directory = std::env::temp_dir().join(format!("agent-workspace-setup-{id}"));
         let fixture = std::env::var_os("AGENT_WORKSPACE_CODEX_FIXTURE");
-        let program = fixture.clone().map(PathBuf::from).unwrap_or_else(|| {
-            std::env::var_os("PATH")
-                .and_then(|paths| {
-                    std::env::split_paths(&paths)
-                        .map(|path| path.join("codex"))
-                        .find(|path| path.is_file())
-                })
-                .unwrap_or_else(|| PathBuf::from("codex"))
-        });
-        // Keep the resolved path stable across a standalone-runtime symlink update.
-        let program = std::fs::canonicalize(&program).unwrap_or(program);
+        let program = fixture
+            .clone()
+            .map(PathBuf::from)
+            .unwrap_or_else(|| PathBuf::from("codex"));
         let home = std::env::var_os("CODEX_HOME")
             .map(PathBuf::from)
             .unwrap_or_else(|| {
@@ -76,7 +70,9 @@ impl Launch {
         let target = ProviderTarget {
             id,
             provider: "codex".into(),
-            executable: program.to_string_lossy().into_owned(),
+            executable: None,
+            selected_executable: None,
+            discovery_source: None,
             codex_home: if fixture.is_some() {
                 "Fixture-owned configuration".into()
             } else {
@@ -90,9 +86,26 @@ impl Launch {
                 program,
                 directory,
                 environment,
+                fixture: fixture.is_some(),
             },
             target,
         )
+    }
+    pub(in crate::runtimes) fn executable(&self) -> String {
+        self.program.to_string_lossy().into_owned()
+    }
+    pub(in crate::runtimes) async fn discover(
+        &self,
+        selected: Option<&std::path::Path>,
+        cancel: &CancellationToken,
+        uncertain: &(impl Fn() + Sync),
+    ) -> Result<(Self, &'static str), SetupFailure> {
+        let search = NativeSearch {
+            launch: self,
+            cancel,
+            uncertain,
+        };
+        super::discovery::discover(self, selected, &search).await
     }
     fn command(&self, argument: &str) -> Command {
         let mut command = Command::new(&self.program);
@@ -114,6 +127,89 @@ impl Launch {
             Err(error) => Err(error),
         }
     }
+}
+
+struct NativeSearch<'a, F> {
+    launch: &'a Launch,
+    cancel: &'a CancellationToken,
+    uncertain: &'a F,
+}
+impl<F: Fn() + Sync> super::discovery::Search for NativeSearch<'_, F> {
+    async fn resolve(&self, path: &std::path::Path) -> Option<PathBuf> {
+        let path = path.to_owned();
+        tokio::task::spawn_blocking(move || {
+            use std::os::unix::fs::PermissionsExt;
+            let metadata = std::fs::metadata(&path).ok()?;
+            if !metadata.is_file() || metadata.permissions().mode() & 0o111 == 0 {
+                return None;
+            }
+            std::fs::canonicalize(path).ok()
+        })
+        .await
+        .ok()
+        .flatten()
+    }
+    async fn shell_path(&self) -> Option<OsString> {
+        use std::os::unix::ffi::OsStringExt;
+        let shell = self
+            .launch
+            .environment
+            .iter()
+            .find(|(key, _)| key == "SHELL")
+            .map(|(_, value)| PathBuf::from(value))
+            .filter(|path| path.is_absolute())
+            .unwrap_or_else(|| PathBuf::from("/bin/zsh"));
+        let mut command = Command::new(shell);
+        // Disable job control before startup: a background desktop/helper must
+        // never try to acquire its launcher’s controlling terminal.
+        command
+            .args([
+                "-il",
+                "+m",
+                "-c",
+                "printf '\\0AW_PATH_START\\0%s\\0AW_PATH_END\\0' \"$PATH\"",
+            ])
+            .current_dir("/")
+            .env_clear()
+            .envs(self.launch.environment.iter().cloned())
+            .stdin(Stdio::null())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .process_group(0);
+        let mut child = command.spawn().ok()?;
+        let stderr = child.stderr.take()?;
+        let drain = tokio::spawn(async move {
+            tokio::io::copy(
+                &mut tokio::io::BufReader::new(stderr),
+                &mut tokio::io::sink(),
+            )
+            .await
+        });
+        let mut stdout = child.stdout.take()?.take(65537);
+        let mut bytes = Vec::new();
+        let read = self
+            .cancel
+            .run_until_cancelled(timeout(
+                Duration::from_secs(10),
+                stdout.read_to_end(&mut bytes),
+            ))
+            .await;
+        drop(stdout);
+        let status = finish(&mut child, drain, self.uncertain).await.ok()?;
+        if !status.success() || !matches!(read, Some(Ok(Ok(_)))) || bytes.len() > 65536 {
+            return None;
+        }
+        shell_path_bytes(&bytes).map(OsString::from_vec)
+    }
+}
+fn shell_path_bytes(bytes: &[u8]) -> Option<Vec<u8>> {
+    let start = b"\0AW_PATH_START\0";
+    let end = b"\0AW_PATH_END\0";
+    let offset = bytes.windows(start.len()).position(|part| part == start)? + start.len();
+    let tail = &bytes[offset..];
+    let length = tail.windows(end.len()).position(|part| part == end)?;
+    let path = &tail[..length];
+    (!path.contains(&0)).then(|| path.to_vec())
 }
 
 fn spawn(launch: &Launch, argument: &str) -> Result<Child, SetupFailure> {
@@ -196,6 +292,26 @@ pub(in crate::runtimes) async fn probe(
     cancel: &CancellationToken,
     uncertain: impl Fn(),
 ) -> Result<SetupEvidence, SetupFailure> {
+    probe_checked(launch, cancel, uncertain).await.1
+}
+pub(in crate::runtimes) async fn probe_checked(
+    launch: Launch,
+    cancel: &CancellationToken,
+    uncertain: impl Fn(),
+) -> (bool, Result<SetupEvidence, SetupFailure>) {
+    let validated = std::sync::atomic::AtomicBool::new(false);
+    let result = probe_inner(launch, cancel, uncertain, || {
+        validated.store(true, std::sync::atomic::Ordering::SeqCst);
+    })
+    .await;
+    (validated.load(std::sync::atomic::Ordering::SeqCst), result)
+}
+async fn probe_inner(
+    launch: Launch,
+    cancel: &CancellationToken,
+    uncertain: impl Fn(),
+    validated: impl Fn(),
+) -> Result<SetupEvidence, SetupFailure> {
     let directory = launch.directory.clone();
     tokio::task::spawn_blocking(move || {
         match std::fs::DirBuilder::new().mode(0o700).create(&directory) {
@@ -232,11 +348,12 @@ pub(in crate::runtimes) async fn probe(
     let stdout = child.stdout.take().expect("piped stdout");
     let stdin = child.stdin.take().expect("piped stdin");
     let result = cancel
-        .run_until_cancelled(protocol::inspect(
+        .run_until_cancelled(protocol::inspect_checked(
             stdout,
             stdin,
             Instant::now() + Duration::from_secs(15),
             &observed_version,
+            validated,
         ))
         .await
         .unwrap_or_else(|| {
@@ -546,11 +663,24 @@ mod tests {
         }
     }
     #[test]
+    fn shell_path_requires_bounded_framed_path_and_ignores_startup_noise() {
+        assert_eq!(
+            shell_path_bytes(b"startup text\0AW_PATH_START\0/tool/bin:/usr/bin\0AW_PATH_END\0bye"),
+            Some(b"/tool/bin:/usr/bin".to_vec())
+        );
+        assert_eq!(shell_path_bytes(b"/unframed/path"), None);
+        assert_eq!(
+            shell_path_bytes(b"\0AW_PATH_START\0/bad\0/path\0AW_PATH_END\0"),
+            None
+        );
+    }
+    #[test]
     fn launch_uses_the_captured_executable_environment_and_neutral_directory_without_a_shell() {
         let launch = Launch {
             program: PathBuf::from("/fixture/codex"),
             directory: PathBuf::from("/fixture/neutral"),
             environment: vec![("CODEX_HOME".into(), "/fixture/home".into())],
+            fixture: true,
         };
         let command = launch.command("app-server");
         let command = command.as_std();

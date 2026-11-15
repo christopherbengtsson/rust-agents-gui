@@ -1,0 +1,215 @@
+{
+  "root": "/private/tmp/aw-discovery-real-z801r0v4",
+  "source": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "supervisor_sha256": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069",
+  "protocol": 14,
+  "installed_executable": "/Users/christopherbengtsson/.codex/packages/standalone/releases/0.169.0-aarch64-apple-darwin/bin/codex",
+  "runtime_sha256_before": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002",
+  "runtime_sha256_after": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002",
+  "observation": {
+    "selection": null,
+    "target": {
+      "id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "provider": "codex",
+      "executable": "/Users/christopherbengtsson/.codex/packages/standalone/releases/0.169.0-aarch64-apple-darwin/bin/codex",
+      "selected_executable": null,
+      "discovery_source": "path",
+      "codex_home": "/Users/christopherbengtsson/.codex",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 2,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "chatgpt",
+      "billing": "chatgpt",
+      "account": "<redacted>",
+      "plan": "pro",
+      "model_provider": null,
+      "model": "gpt-6.1-sol"
+    },
+    "problem": null,
+    "diagnostic": null,
+    "login": null
+  },
+  "requests": [
+    {
+      "operation": "target"
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": true
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "observe",
+      "target_id": "015ac929-ceec-443b-8a3b-45b04f29cd77",
+      "refresh": false
+    },
+    {
+      "operation": "begin_shutdown"
+    },
+    {
+      "operation": "shutdown_status"
+    },
+    {
+      "operation": "shutdown_status"
+    },
+    {
+      "operation": "finish_shutdown"
+    }
+  ],
+  "shutdown": {
+    "kind": "shutdown",
+    "complete": true,
+    "diagnostic": null
+  },
+  "supervisor_exit": 0,
+  "limits": "Read-only existing authentication via packaged supervisor. No desktop/Finder UI, browser sign-in, credential-file inspection or native agent work. Account redacted before publication."
+}

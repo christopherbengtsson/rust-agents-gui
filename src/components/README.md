@@ -472,3 +472,21 @@ interest while its app-lifetime owner drains work and retains validated context.
   progress without probing providers on an ordinary workspace mount. The native
   owner opens and retains the returned URL; JavaScript receives no auth URL or
   native login ID. Unconfirmed cleanup fences its credential scope.
+
+### Codex connection refinement (05)
+
+ProviderSetup now presents the agreed status/recovery matrix and whole-section
+Skeleton while a check runs. Healthy setup contains only Connected and available
+identity (or Using API key); billing and general help are absent. Pending browser
+sign-in and cleanup/delivery uncertainty remain actionable rather than loading
+placeholders. StatusIndicator adds semantic warning alongside success/error.
+Focus recovery stays within the mounted section and yields to navigation or user
+focus movement. Recovery diagnostics remain collapsed and do not grant retry authority.
+
+Already installed? composes the existing Collapsible and Button. Locate Codex…
+uses the installed native file chooser through useProviderSelection, guarding late
+results by owner/target/view generation. The provider feature owns identity-only
+selection delivery feedback and observation interests; Rust validates, persists
+and reconciles selection. No extra cache or toolkit dependency is added. A saved
+location becoming unavailable never silently selects another runtime. Native
+chooser cancellation changes nothing; selected path and resolved launch are distinct.

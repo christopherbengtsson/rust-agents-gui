@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-11-15T19:04:06.442815+00:00",
+  "method": "Product Cmd-Q; launcher child.wait(); ps -axo pid=,ppid=,comm=; matching-runtime cwd inspected with lsof only if present",
+  "desktop_exit": 0,
+  "remaining_private_bundle_processes": [],
+  "runtime_candidates_checked": [],
+  "remaining_runtime_with_trial_cwd": [],
+  "supervisor_exit_code": "Not captured: production desktop spawned supervisor",
+  "harness_termination": false,
+  "private_state_retained": true,
+  "credential_files_read_by_harness": false,
+  "credential_mutation_requested": false,
+  "threads_or_turns_submitted": 0,
+  "limits": "No process signalling. No credential-content audit. No raw provider RPC trace; method absence is based on exercised UI actions and inspected readiness command path."
+}

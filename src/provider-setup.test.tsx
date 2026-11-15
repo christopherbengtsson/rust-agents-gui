@@ -23,10 +23,13 @@ const observed: ProviderObservation = {
     id: "00000000-0000-4000-8000-000000000001",
     provider: "codex",
     executable: "/fixture/codex",
+    selected_executable: null,
+    discovery_source: "fixture",
     codex_home: "/fixture/home",
     working_directory: "/fixture/neutral",
     minimum_supported_version: "0.169.0",
   },
+  selection: null,
   revision: 2,
   phase: "observed",
   problem: null,
@@ -51,180 +54,211 @@ function view(
 }
 afterEach(cleanup);
 
-test("healthy setup is compact, has a decorative status light, and discloses help and diagnostics by keyboard", async () => {
-  const user = userEvent.setup();
-  const onOpenHelp = vi.fn();
-  render(<ProviderSetup setup={view()} onOpenHelp={onOpenHelp} />);
-  const status = screen.getByRole("status");
-  expect(status.textContent).toBe("Connected");
-  expect(status.getAttribute("data-tone")).toBe("success");
-  expect(status.getAttribute("aria-live")).toBe("polite");
-  expect(status.querySelector("[aria-hidden=true]")).not.toBeNull();
-  expect(screen.getByText("Signed in with ChatGPT")).toBeTruthy();
-  expect(screen.getByText("fixture@example.test")).toBeTruthy();
-  expect(screen.getByText("Pro")).toBeTruthy();
-  expect(
-    screen.queryByRole("button", { name: /refresh|check again/i }),
-  ).toBeNull();
-  expect(screen.queryByText("fixture-model")).toBeNull();
-  expect(
-    screen.queryByRole("button", { name: "Official sign-in instructions" }),
-  ).toBeNull();
-  const details = screen.getByRole("button", { name: "Technical details" });
-  details.focus();
-  await user.keyboard("{Enter}");
-  expect(details.getAttribute("aria-expanded")).toBe("true");
-  expect(screen.getByText("fixture-model")).toBeTruthy();
-  expect(screen.getByText("/fixture/codex")).toBeTruthy();
-  await user.click(screen.getByRole("button", { name: "Setup help" }));
-  await user.click(
-    screen.getByRole("button", { name: "Official sign-in instructions" }),
+test("verified connection shows only status and identity, without setup controls or billing", () => {
+  render(
+    <ProviderSetup
+      setup={view()}
+      onOpenHelp={vi.fn()}
+      signIn={<button>Sign in</button>}
+      helpError="Earlier help failure"
+      locateError="Earlier chooser failure"
+    />,
   );
-  expect(onOpenHelp).toHaveBeenCalledExactlyOnceWith("authentication");
-  expect(
-    screen.queryByRole("button", { name: /refresh|check again/i }),
-  ).toBeNull();
+  expect(screen.getByRole("status").textContent).toBe("Connected");
+  expect(screen.getByRole("status").getAttribute("data-tone")).toBe("success");
+  expect(screen.getByText("fixture@example.test")).toBeTruthy();
+  for (const label of [
+    "Sign in",
+    "Technical details",
+    "Setup help",
+    "Check again",
+  ])
+    expect(screen.queryByRole("button", { name: label })).toBeNull();
+  expect(screen.queryByText("Plan")).toBeNull();
+  expect(screen.queryByText("Billing")).toBeNull();
+  expect(screen.queryByRole("alert")).toBeNull();
 });
 
-test("technical details distinguish the minimum runtime from the newer observed release", async () => {
-  const user = userEvent.setup();
+test("existing API key is Connected without setup controls", () => {
   render(
     <ProviderSetup
       setup={view({
         observation: {
           ...observed,
+          evidence: { ...evidence, authentication: "api_key", account: null },
+        },
+      })}
+      onOpenHelp={vi.fn()}
+    />,
+  );
+  expect(screen.getByRole("status").textContent).toBe(
+    "Connected · Using API key",
+  );
+  expect(screen.queryByRole("button")).toBeNull();
+});
+
+test("checking replaces the entire body and returns explicit-action focus to the resulting status", async () => {
+  const user = userEvent.setup();
+  const failed = view({
+    stale: true,
+    observation: { ...observed, problem: "status_read_failed" },
+  });
+  const { rerender } = render(
+    <ProviderSetup setup={failed} onOpenHelp={vi.fn()} />,
+  );
+  await user.click(screen.getByRole("button", { name: "Check again" }));
+  expect(failed.refresh).toHaveBeenCalledTimes(1);
+  rerender(
+    <ProviderSetup setup={view({ pending: true })} onOpenHelp={vi.fn()} />,
+  );
+  expect(screen.getByRole("status").textContent).toBe("Checking Codex…");
+  expect(screen.queryByText("fixture@example.test")).toBeNull();
+  expect(screen.queryByRole("button")).toBeNull();
+  rerender(<ProviderSetup setup={view()} onOpenHelp={vi.fn()} />);
+  expect(document.activeElement?.contains(screen.getByRole("status"))).toBe(
+    true,
+  );
+});
+
+test.each([
+  "status_read_failed",
+  "authentication_unavailable",
+  "missing_executable",
+  "incompatible_protocol",
+  "selection_failed",
+] satisfies SetupProblem[])(
+  "%s has truthful tone and relevant recovery",
+  async (problem) => {
+    const setup = view({ stale: true, observation: { ...observed, problem } });
+    render(<ProviderSetup setup={setup} onOpenHelp={vi.fn()} />);
+    const red = [
+      "missing_executable",
+      "incompatible_protocol",
+      "selection_failed",
+    ].includes(problem);
+    expect(screen.getByRole("status").getAttribute("data-tone")).toBe(
+      red ? "error" : "warning",
+    );
+    expect(screen.getByText(/Last verified account:/)).toBeTruthy();
+    if (problem === "authentication_unavailable") {
+      expect(screen.getByRole("status").textContent).toBe("Not connected");
+    } else {
+      await userEvent
+        .setup()
+        .click(screen.getByRole("button", { name: "Check again" }));
+      expect(setup.refresh).toHaveBeenCalledTimes(1);
+    }
+  },
+);
+
+test("missing runtime explains lookup failure and discloses native locating only on request", async () => {
+  const locate = vi.fn(async () => {});
+  const help = vi.fn();
+  render(
+    <ProviderSetup
+      setup={view({
+        stale: true,
+        observation: { ...observed, problem: "missing_executable" },
+      })}
+      onOpenHelp={help}
+      onLocate={locate}
+    />,
+  );
+  expect(screen.getByRole("status").textContent).toBe("Codex not found");
+  expect(screen.queryByRole("button", { name: "Locate Codex…" })).toBeNull();
+  await userEvent
+    .setup()
+    .click(screen.getByRole("button", { name: "Already installed?" }));
+  await userEvent
+    .setup()
+    .click(screen.getByRole("button", { name: "Locate Codex…" }));
+  expect(locate).toHaveBeenCalledTimes(1);
+  await userEvent
+    .setup()
+    .click(screen.getByRole("button", { name: "Installation guide" }));
+  expect(help).toHaveBeenCalledExactlyOnceWith("install");
+});
+
+test("compatibility recovery retains minimum and observed release diagnostics", async () => {
+  render(
+    <ProviderSetup
+      setup={view({
+        stale: true,
+        observation: {
+          ...observed,
+          problem: "incompatible_protocol",
           evidence: { ...evidence, version: "0.170.0" },
         },
       })}
       onOpenHelp={vi.fn()}
     />,
   );
-  expect(screen.getByRole("status").textContent).toBe("Connected");
-  await user.click(screen.getByRole("button", { name: "Technical details" }));
-  expect(
-    screen.getByText("Minimum runtime").nextElementSibling?.textContent,
-  ).toBe("0.169.0");
+  await userEvent
+    .setup()
+    .click(screen.getByRole("button", { name: "Technical details" }));
   expect(
     screen.getByText("Observed runtime").nextElementSibling?.textContent,
   ).toBe("0.170.0");
-});
-
-test.each([
-  { pending: true, stale: false },
-  { pending: false, stale: true },
-  { pending: false, stale: true, connected: false },
-  {
-    pending: false,
-    stale: true,
-    error: new Error("controlled transport failure"),
-  },
-])("unverified evidence cannot retain a green Connected light: %j", (patch) => {
-  render(<ProviderSetup setup={view(patch)} onOpenHelp={vi.fn()} />);
-  expect(screen.getByRole("status").getAttribute("data-tone")).not.toBe(
-    "success",
-  );
-  expect(screen.getByRole("status").textContent).not.toBe("Connected");
   expect(
-    screen.getByText("Last known · current readiness unverified"),
-  ).toBeTruthy();
-  expect(screen.getByText("fixture@example.test")).toBeTruthy();
-  if (patch.pending || patch.connected === false)
-    expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
-});
-
-test.each<SetupProblem>([
-  "missing_executable",
-  "incompatible_protocol",
-  "authentication_unavailable",
-  "status_read_failed",
-])(
-  "%s has contextual recheck and recovery without opening details",
-  async (problem) => {
-    const setup = view({ stale: true, observation: { ...observed, problem } });
-    render(<ProviderSetup setup={setup} onOpenHelp={vi.fn()} />);
-    expect(screen.getByRole("alert")).toBeTruthy();
-    expect(screen.getByRole("status").getAttribute("data-tone")).not.toBe(
-      "success",
-    );
-    await userEvent
-      .setup()
-      .click(screen.getByRole("button", { name: "Check again" }));
-    expect(setup.refresh).toHaveBeenCalledTimes(1);
-  },
-);
-
-test("uncertain cleanup explains why a replacement check is unavailable", () => {
-  render(
-    <ProviderSetup
-      setup={view({
-        stale: true,
-        observation: {
-          ...observed,
-          phase: "cleanup_uncertain",
-          problem: "cleanup_uncertain",
-        },
-      })}
-      onOpenHelp={vi.fn()}
-    />,
-  );
-  expect(screen.getByRole("status").textContent).toBe("Cleanup unconfirmed");
-  expect(screen.getByText(/Another check is blocked/)).toBeTruthy();
-  expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
-});
-
-test("a read failure cannot remove the retained cleanup fence", () => {
-  render(
-    <ProviderSetup
-      setup={view({
-        stale: true,
-        pending: true,
-        error: new Error("Controlled status read failure"),
-        observation: {
-          ...observed,
-          phase: "cleanup_uncertain",
-          problem: "cleanup_uncertain",
-        },
-      })}
-      onOpenHelp={vi.fn()}
-    />,
-  );
-  expect(screen.getByRole("status").textContent).toBe("Cleanup unconfirmed");
-  expect(screen.getByRole("alert").textContent).toContain(
-    "Another check is blocked",
-  );
-  expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
+    screen.getByText("Minimum runtime").nextElementSibling?.textContent,
+  ).toBe("0.169.0");
 });
 
 test.each([false, true])(
-  "transport failure overrides retained checking; connected=%s",
-  (connected) => {
+  "cleanup fence survives a failed read and pending feedback; error=%s",
+  (failure) => {
     render(
       <ProviderSetup
         setup={view({
-          connected,
-          pending: !connected,
           stale: true,
-          error: connected ? new Error("controlled observation failure") : null,
+          pending: true,
+          error: failure ? new Error("controlled") : null,
+          observation: {
+            ...observed,
+            phase: "cleanup_uncertain",
+            problem: "cleanup_uncertain",
+          },
+        })}
+        onOpenHelp={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole("status").textContent).toBe("Cleanup unconfirmed");
+    expect(screen.getByRole("alert").textContent).toContain("blocked");
+    expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
+  },
+);
+
+test.each([
+  { connected: false },
+  { updatesAvailable: false },
+  { error: new Error("controlled") },
+])(
+  "failed delivery cannot retain checking or claim signed out: %j",
+  (patch) => {
+    render(
+      <ProviderSetup
+        setup={view({
+          ...patch,
+          stale: true,
+          pending: false,
           observation: { ...observed, phase: "checking" },
         })}
         onOpenHelp={vi.fn()}
       />,
     );
-    expect(screen.getByRole("status").textContent).toBe("Status unavailable");
-    expect(screen.getByRole("alert").textContent).toContain(
-      connected ? "Codex setup could not be checked" : "Supervisor unavailable",
+    expect(screen.getByRole("status").textContent).toBe(
+      "Couldn’t verify Codex",
     );
-    expect(screen.getByRole("status").getAttribute("data-tone")).not.toBe(
-      "success",
+    expect(screen.getByRole("status").getAttribute("data-tone")).toBe(
+      "warning",
     );
-    if (connected)
-      expect(screen.getByRole("button", { name: "Check again" })).toBeTruthy();
-    else
+    expect(screen.getByText(/Last verified account:/)).toBeTruthy();
+    if (patch.connected === false || patch.updatesAvailable === false)
       expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
   },
 );
 
-test("unknown authentication and billing are explicit and never appear connected", () => {
+test("unknown authentication remains unverified and does not invent an account or billing field", () => {
   render(
     <ProviderSetup
       setup={view({
@@ -233,38 +267,64 @@ test("unknown authentication and billing are explicit and never appear connected
           evidence: {
             ...evidence,
             authentication: "unknown",
-            billing: "unknown",
             account: null,
-            plan: null,
+            billing: "unknown",
           },
         },
       })}
       onOpenHelp={vi.fn()}
     />,
   );
-  expect(screen.getByRole("status").textContent).toBe("Readiness unknown");
-  expect(screen.getByText("Authentication unknown")).toBeTruthy();
-  expect(screen.getByText("Unknown")).toBeTruthy();
+  expect(screen.getByRole("status").textContent).toBe("Couldn’t verify Codex");
+  expect(screen.queryByText("Billing")).toBeNull();
 });
 
-test("stopped observation delivery exposes supervisor reconnection guidance instead of retained checking", () => {
+test("pending browser attempt remains actionable during retrieval", () => {
   render(
     <ProviderSetup
       setup={view({
-        updatesAvailable: false,
+        pending: true,
         stale: true,
-        pending: false,
-        observation: { ...observed, phase: "checking" },
+        observation: {
+          ...observed,
+          login: {
+            id: "attempt",
+            phase: "pending",
+            outcome: null,
+            browser_open_failed: false,
+            diagnostic: null,
+          },
+        },
+      })}
+      onOpenHelp={vi.fn()}
+      signIn={<button>Reopen browser</button>}
+    />,
+  );
+  expect(screen.getByRole("button", { name: "Reopen browser" })).toBeTruthy();
+  expect(screen.queryByText("Checking Codex…")).toBeNull();
+  expect(screen.getByRole("status").getAttribute("data-tone")).toBe("warning");
+});
+
+test("a failed current verification outranks a retained failed login", () => {
+  render(
+    <ProviderSetup
+      setup={view({
+        stale: true,
+        observation: {
+          ...observed,
+          problem: "status_read_failed",
+          login: {
+            id: "prior",
+            phase: "failed",
+            outcome: "failed",
+            browser_open_failed: false,
+            diagnostic: null,
+          },
+        },
       })}
       onOpenHelp={vi.fn()}
     />,
   );
-  expect(screen.getByRole("status").textContent).toBe("Status unavailable");
-  expect(screen.getByRole("alert").textContent).toContain(
-    "Live setup updates unavailable",
-  );
-  expect(screen.getByRole("alert").textContent).toContain(
-    "supervisor connection",
-  );
-  expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
+  expect(screen.getByRole("status").textContent).toBe("Couldn’t verify Codex");
+  expect(screen.getByRole("status").getAttribute("data-tone")).toBe("warning");
 });

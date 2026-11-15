@@ -471,15 +471,26 @@ async fn initialize<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     Ok(())
 }
 
+#[cfg(test)]
 pub(super) async fn inspect<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
+    read: R,
+    write: W,
+    deadline: Instant,
+    observed_version: &str,
+) -> Result<SetupEvidence, SetupFailure> {
+    inspect_checked(read, write, deadline, observed_version, || {}).await
+}
+pub(super) async fn inspect_checked<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     read: R,
     mut write: W,
     deadline: Instant,
     observed_version: &str,
+    validated: impl Fn(),
 ) -> Result<SetupEvidence, SetupFailure> {
     timeout_at(deadline, async {
         let mut read = Frames::new(read);
         initialize(&mut read, &mut write).await?;
+        validated();
         send(
             &mut write,
             json!({"id":2,"method":"account/read","params":{"refreshToken":false}}),

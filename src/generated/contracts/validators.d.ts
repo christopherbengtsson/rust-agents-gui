@@ -1,5 +1,5 @@
 // Generated. Do not edit.
-import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, LoginAttempt, LoginOutcome, LoginPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
+import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, ExecutableSelection, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, LoginAttempt, LoginOutcome, LoginPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SelectionPhase, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
 export declare function validateActionId(value: unknown): value is ActionId;
 export declare function validateArtifacts(value: unknown): value is Artifacts;
 export declare function validateAuthentication(value: unknown): value is Authentication;
@@ -16,6 +16,7 @@ export declare function validateDelivery(value: unknown): value is Delivery;
 export declare function validateDesktopPid(value: unknown): value is DesktopPid;
 export declare function validateDiffRow(value: unknown): value is DiffRow;
 export declare function validateErrorCode(value: unknown): value is ErrorCode;
+export declare function validateExecutableSelection(value: unknown): value is ExecutableSelection;
 export declare function validateFeedAck(value: unknown): value is FeedAck;
 export declare function validateFeedBatch(value: unknown): value is FeedBatch;
 export declare function validateFeedCursor(value: unknown): value is FeedCursor;
@@ -50,6 +51,7 @@ export declare function validateRepositoryRequest(value: unknown): value is Repo
 export declare function validateRequestFailure(value: unknown): value is RequestFailure;
 export declare function validateRowKind(value: unknown): value is RowKind;
 export declare function validateSample(value: unknown): value is Sample;
+export declare function validateSelectionPhase(value: unknown): value is SelectionPhase;
 export declare function validateSetupEvidence(value: unknown): value is SetupEvidence;
 export declare function validateSetupPhase(value: unknown): value is SetupPhase;
 export declare function validateSetupProblem(value: unknown): value is SetupProblem;

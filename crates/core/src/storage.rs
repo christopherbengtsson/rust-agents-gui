@@ -52,6 +52,44 @@ impl ProviderLoginPersistence for ProviderLoginStore {
         Ok(())
     }
 }
+/// Application-owned non-secret executable preference; runtime credentials stay external.
+pub(crate) trait ProviderSelectionPersistence: Send + Sync {
+    fn remember(&self, id: uuid::Uuid, path: &str) -> Result<()>;
+}
+pub(crate) struct ProviderSelectionStore {
+    path: PathBuf,
+    scope: String,
+}
+impl ProviderSelectionStore {
+    pub(crate) fn open(state: &Path, scope: String) -> Result<Self> {
+        let store = SqliteStore::open(state)?;
+        store.connection.execute_batch("CREATE TABLE IF NOT EXISTS provider_executables (scope TEXT PRIMARY KEY NOT NULL, action TEXT NOT NULL, path TEXT NOT NULL)").map_err(storage)?;
+        Ok(Self {
+            path: store.path,
+            scope,
+        })
+    }
+    pub(crate) fn selected(&self) -> Result<Option<(uuid::Uuid, String)>> {
+        let connection = SqliteStore::connect(&self.path)?;
+        let row: Option<(String, String)> = connection
+            .query_row(
+                "SELECT action,path FROM provider_executables WHERE scope=?1",
+                [&self.scope],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )
+            .optional()
+            .map_err(storage)?;
+        row.map(|(id, path)| Ok((uuid::Uuid::parse_str(&id).map_err(storage)?, path)))
+            .transpose()
+    }
+}
+impl ProviderSelectionPersistence for ProviderSelectionStore {
+    fn remember(&self, id: uuid::Uuid, path: &str) -> Result<()> {
+        let connection = SqliteStore::connect(&self.path)?;
+        connection.execute("INSERT INTO provider_executables(scope,action,path) VALUES(?1,?2,?3) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path", params![self.scope, id.to_string(), path]).map_err(storage)?;
+        Ok(())
+    }
+}
 fn storage(error: impl std::fmt::Display) -> RepositoryError {
     RepositoryError::storage(error)
 }

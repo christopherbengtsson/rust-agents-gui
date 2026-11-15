@@ -1,0 +1,6 @@
+{
+  "command": "corepack pnpm verify",
+  "exit": 1,
+  "seconds": 3.807628917042166,
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O"
+}

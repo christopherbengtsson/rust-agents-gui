@@ -1,0 +1,152 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error: this `if` statement can be collapsed
+  --> crates/core/src/runtimes/codex/discovery.rs:23:9
+   |
+23 | /         if !launch.fixture {
+24 | |             if let Some(paths) = search.shell_path().await {
+25 | |                 found.environment.retain(|(name, _)| name != "PATH");
+26 | |                 found.environment.push(("PATH".into(), paths));
+27 | |             }
+28 | |         }
+   | |_________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+   = note: `-D clippy::collapsible-if` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+   |
+23 ~         if !launch.fixture
+24 ~             && let Some(paths) = search.shell_path().await {
+25 |                 found.environment.retain(|(name, _)| name != "PATH");
+26 |                 found.environment.push(("PATH".into(), paths));
+27 ~             }
+   |
+
+error: this `if` statement can be collapsed
+  --> crates/core/src/runtimes/codex/discovery.rs:34:5
+   |
+34 | /     if let Some(path) = launch
+35 | |         .environment
+36 | |         .iter()
+37 | |         .find(|(key, _)| key == "PATH")
+...  |
+43 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+38 ~         .map(|(_, value)| value)
+39 ~         && let Some(found) = in_path(launch, path, "path", search).await {
+40 |             return Ok(found);
+41 ~         }
+   |
+
+error: this `if` statement can be collapsed
+  --> crates/core/src/runtimes/codex/discovery.rs:44:5
+   |
+44 | /     if let Some(path) = search.shell_path().await {
+45 | |         if let Some(found) = in_path(launch, &path, "shell", search).await {
+46 | |             return Ok(found);
+47 | |         }
+48 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+44 ~     if let Some(path) = search.shell_path().await
+45 ~         && let Some(found) = in_path(launch, &path, "shell", search).await {
+46 |             return Ok(found);
+47 ~         }
+   |
+
+error: large size difference between variants
+   --> crates/core/src/runtimes/provider_connection.rs:203:1
+    |
+203 | /   pub enum ProviderReply {
+204 | | /     Target {
+205 | | |         target: ProviderTarget,
+206 | | |     },
+    | | |_____- the second-largest variant contains at least 184 bytes
+207 | | /     Observation {
+208 | | |         observation: ProviderObservation,
+209 | | |     },
+    | | |_____- the largest variant contains at least 400 bytes
+...   |
+213 | |       },
+214 | |   }
+    | |___^ the entire enum is at least 400 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#large_enum_variant
+    = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+208 -         observation: ProviderObservation,
+208 +         observation: Box<ProviderObservation>,
+    |
+
+error: could not compile `workspace-core` (lib) due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `workspace-core` (lib test) due to 4 previous errors

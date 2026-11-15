@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "baseline_has_no_provider_effects": true,
+    "unavailable_runtime": true,
+    "installed_but_gui_path_missed": true,
+    "fresh_shell_path_and_link_update": true,
+    "failed_check_retains_account": true,
+    "selection_without_auth": true,
+    "selection_survives_restart": true,
+    "unavailable_saved_selection_no_fallback": true,
+    "validated_selection_remembered_with_failed_auth_read": true,
+    "same_browser_attempt": true,
+    "exact_cancellation": true,
+    "existing_api_key": true,
+    "owned_shutdowns": true,
+    "no_agent_work": true
+  },
+  "passed": 14,
+  "total": 14,
+  "limits": "Native discovery/process effects; synthetic protocol/authentication, no desktop UI qualification."
+}

@@ -12,6 +12,7 @@ use std::{
 };
 use tokio::task::JoinSet;
 mod login;
+mod selection;
 pub use login::{LoginAttempt, LoginOutcome, LoginPhase};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -19,7 +20,9 @@ pub use login::{LoginAttempt, LoginOutcome, LoginPhase};
 pub struct ProviderTarget {
     pub id: uuid::Uuid,
     pub provider: String,
-    pub executable: String,
+    pub executable: Option<String>,
+    pub selected_executable: Option<String>,
+    pub discovery_source: Option<String>,
     pub codex_home: String,
     pub working_directory: String,
     pub minimum_supported_version: String,
@@ -66,6 +69,7 @@ pub enum SetupProblem {
     AuthenticationUnavailable,
     StatusReadFailed,
     CleanupUncertain,
+    SelectionFailed,
 }
 
 #[derive(Debug)]
@@ -126,6 +130,7 @@ pub enum SetupPhase {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct ProviderObservation {
+    pub selection: Option<Box<ExecutableSelection>>,
     pub target: ProviderTarget,
     pub revision: u32,
     pub phase: SetupPhase,
@@ -133,6 +138,22 @@ pub struct ProviderObservation {
     pub problem: Option<SetupProblem>,
     pub diagnostic: Option<String>,
     pub login: Option<Box<LoginAttempt>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
+pub struct ExecutableSelection {
+    pub id: uuid::Uuid,
+    pub path: String,
+    pub phase: SelectionPhase,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
+#[serde(rename_all = "snake_case")]
+pub enum SelectionPhase {
+    Checking,
+    Remembered,
+    Failed,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -161,6 +182,16 @@ pub enum ProviderRequest {
         target_id: uuid::Uuid,
         attempt_id: uuid::Uuid,
     },
+    SelectExecutable {
+        target_id: uuid::Uuid,
+        action_id: uuid::Uuid,
+        expected_revision: u32,
+        path: String,
+    },
+    ReconcileSelection {
+        target_id: uuid::Uuid,
+        action_id: uuid::Uuid,
+    },
     BeginShutdown,
     ShutdownStatus,
     FinishShutdown,
@@ -186,6 +217,7 @@ struct Entry {
     snapshot: ProviderObservation,
     scope: String,
     control: Option<login::LoginControl>,
+    launch: Option<codex::Launch>,
 }
 pub struct ProviderConnections {
     records: Mutex<BTreeMap<uuid::Uuid, Entry>>,
@@ -194,6 +226,7 @@ pub struct ProviderConnections {
     launch: Option<codex::Launch>,
     cancel: tokio_util::sync::CancellationToken,
     persistence: Option<Arc<dyn crate::storage::ProviderLoginPersistence>>,
+    selection_store: Option<Arc<dyn crate::storage::ProviderSelectionPersistence>>,
     shutdown: Mutex<Option<Result<(), String>>>,
     exit_requested: std::sync::atomic::AtomicBool,
 }
@@ -202,7 +235,15 @@ impl ProviderConnections {
         journal: Arc<Journal>,
         state: &std::path::Path,
     ) -> Result<Self, RepositoryError> {
-        let (launch, target) = codex::Launch::capture();
+        let (launch, mut target) = codex::Launch::capture();
+        let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
+            state,
+            launch.credential_scope(),
+        )?);
+        let selected = selection_store.selected()?;
+        if let Some((_, path)) = &selected {
+            target.selected_executable = Some(path.clone());
+        }
         let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
             state,
             launch.credential_scope(),
@@ -213,6 +254,13 @@ impl ProviderConnections {
                 target.id,
                 Entry {
                     snapshot: ProviderObservation {
+                        selection: selected.map(|(id, path)| {
+                            Box::new(ExecutableSelection {
+                                id,
+                                path,
+                                phase: SelectionPhase::Remembered,
+                            })
+                        }),
                         target,
                         revision: 0,
                         phase: SetupPhase::Unknown,
@@ -223,6 +271,7 @@ impl ProviderConnections {
                     },
                     scope: launch.credential_scope(),
                     control: None,
+                    launch: None,
                 },
             )])),
             tasks: Mutex::new(JoinSet::new()),
@@ -230,6 +279,7 @@ impl ProviderConnections {
             launch: Some(launch),
             cancel: tokio_util::sync::CancellationToken::new(),
             persistence: Some(persistence),
+            selection_store: Some(selection_store),
             shutdown: Mutex::new(None),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
         })
@@ -239,6 +289,61 @@ impl ProviderConnections {
         request: ProviderRequest,
     ) -> Result<ProviderReply, RepositoryError> {
         match request {
+            ProviderRequest::ReconcileSelection {
+                target_id,
+                action_id,
+            } => {
+                let mut records = self.records.lock().expect("provider records poisoned");
+                let entry = records
+                    .get_mut(&target_id)
+                    .ok_or_else(|| invalid_target("Unknown provider configuration"))?;
+                if entry
+                    .snapshot
+                    .selection
+                    .as_ref()
+                    .is_none_or(|selection| selection.id != action_id)
+                    && !matches!(
+                        entry.snapshot.phase,
+                        SetupPhase::Checking | SetupPhase::CleanupUncertain
+                    )
+                    && !entry
+                        .snapshot
+                        .login
+                        .as_ref()
+                        .is_some_and(|login| login.phase.active())
+                {
+                    entry.snapshot.revision = entry
+                        .snapshot
+                        .revision
+                        .checked_add(1)
+                        .ok_or_else(|| invalid_target("Provider revision exhausted"))?;
+                }
+                let observation = entry.snapshot.clone();
+                drop(records);
+                self.changed(target_id);
+                Ok(ProviderReply::Observation { observation })
+            }
+            ProviderRequest::SelectExecutable {
+                target_id,
+                action_id,
+                expected_revision,
+                path,
+            } => {
+                if !selection::valid_path(&path) {
+                    return Err(invalid_target(
+                        "Choose an absolute executable path without control characters (maximum 4096 bytes).",
+                    ));
+                }
+                let owner = self.clone();
+                let selected = path.clone();
+                let observation = self.check_with(
+                    target_id,
+                    true,
+                    Some((action_id, expected_revision, path)),
+                    move || async move { owner.discover_verify(target_id, Some(selected)).await },
+                )?;
+                Ok(ProviderReply::Observation { observation })
+            }
             ProviderRequest::StartBrowserLogin {
                 target_id,
                 attempt_id,
@@ -288,21 +393,9 @@ impl ProviderConnections {
                         observation: self.read(target_id)?,
                     });
                 }
-                let launch = self
-                    .launch
-                    .clone()
-                    .ok_or_else(|| invalid_target("No provider adapter configured"))?;
                 let owner = self.clone();
-                let cancel = self.cancel.clone();
                 let observation = self.observe_with(target_id, refresh, move || async move {
-                    let generation = owner
-                        .read(target_id)
-                        .expect("admitted target retained")
-                        .revision;
-                    codex::probe(launch, &cancel, || {
-                        owner.cleanup_uncertain(target_id, generation)
-                    })
-                    .await
+                    owner.discover_verify(target_id, None).await
                 })?;
                 Ok(ProviderReply::Observation { observation })
             }
@@ -326,8 +419,40 @@ impl ProviderConnections {
         refresh: bool,
         probe: impl FnOnce() -> F,
     ) -> Result<ProviderObservation, RepositoryError> {
+        self.check_with(id, refresh, None, probe)
+    }
+    fn check_with<F: Future<Output = Result<SetupEvidence, SetupFailure>> + Send + 'static>(
+        self: &Arc<Self>,
+        id: uuid::Uuid,
+        refresh: bool,
+        selection: Option<(uuid::Uuid, u32, String)>,
+        probe: impl FnOnce() -> F,
+    ) -> Result<ProviderObservation, RepositoryError> {
         let mut tasks = self.tasks.lock().expect("provider tasks poisoned");
         let mut records = self.records.lock().expect("provider records poisoned");
+        if let Some((action, expected, path)) = &selection {
+            let entry = records
+                .get(&id)
+                .ok_or_else(|| invalid_target("Unknown provider configuration"))?;
+            if let Some(previous) = entry
+                .snapshot
+                .selection
+                .as_ref()
+                .filter(|previous| previous.id == *action)
+            {
+                if previous.path != *path {
+                    return Err(invalid_target(
+                        "Selection identity already belongs to another path",
+                    ));
+                }
+                return Ok(entry.snapshot.clone());
+            }
+            if entry.snapshot.revision != *expected {
+                return Err(invalid_target(
+                    "Setup changed. Retrieve current status before selecting Codex.",
+                ));
+            }
+        }
         let scope = records
             .get(&id)
             .ok_or_else(|| invalid_target("Unknown provider configuration"))?
@@ -344,6 +469,11 @@ impl ProviderConnections {
                     .as_ref()
                     .is_some_and(|login| login.phase.active()))
         }) {
+            if selection.is_some() {
+                return Err(invalid_target(
+                    "An active check, sign-in or cleanup fence blocks executable selection.",
+                ));
+            }
             return records
                 .get(&id)
                 .map(|entry| entry.snapshot.clone())
@@ -377,6 +507,14 @@ impl ProviderConnections {
             })?;
         entry.snapshot.revision = revision;
         entry.snapshot.phase = SetupPhase::Checking;
+        entry.launch = None;
+        if let Some((id, _, path)) = selection {
+            entry.snapshot.selection = Some(Box::new(ExecutableSelection {
+                id,
+                path,
+                phase: SelectionPhase::Checking,
+            }));
+        }
         let snapshot = entry.snapshot.clone();
         while let Some(result) = tasks.try_join_next() {
             // Probe tasks contain no unchecked external panics. A panic is an
@@ -425,6 +563,14 @@ impl ProviderConnections {
                 entry.snapshot.problem = Some(failure.problem);
                 entry.snapshot.diagnostic = Some(failure.diagnostic);
             }
+        }
+        if let Some(selection) = entry
+            .snapshot
+            .selection
+            .as_mut()
+            .filter(|selection| selection.phase == SelectionPhase::Checking)
+        {
+            selection.phase = SelectionPhase::Failed;
         }
         entry.snapshot.phase = SetupPhase::Observed;
         entry.snapshot.revision += 1; // start reserves this final revision.
@@ -501,6 +647,7 @@ impl ProviderConnections {
             launch: None,
             cancel: tokio_util::sync::CancellationToken::new(),
             persistence: None,
+            selection_store: None,
             shutdown: Mutex::new(None),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
         }
@@ -511,7 +658,9 @@ impl ProviderConnections {
         let target = ProviderTarget {
             id,
             provider: provider.into(),
-            executable: "fixture".into(),
+            executable: Some("fixture".into()),
+            selected_executable: None,
+            discovery_source: None,
             codex_home: "/fixture/home".into(),
             working_directory: "/fixture/neutral".into(),
             minimum_supported_version: "0.169.0".into(),
@@ -520,6 +669,7 @@ impl ProviderConnections {
             id,
             Entry {
                 snapshot: ProviderObservation {
+                    selection: None,
                     target,
                     revision: 0,
                     phase: SetupPhase::Unknown,
@@ -530,6 +680,7 @@ impl ProviderConnections {
                 },
                 scope: id.to_string(),
                 control: None,
+                launch: None,
             },
         );
         id
@@ -542,6 +693,8 @@ fn invalid_target(message: &str) -> RepositoryError {
 #[cfg(feature = "codegen")]
 pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
     exports.add::<ProviderRequest>();
+    exports.add::<ExecutableSelection>();
+    exports.add::<SelectionPhase>();
     exports.add::<ProviderReply>();
     exports.add::<ProviderTarget>();
     exports.add::<ProviderObservation>();

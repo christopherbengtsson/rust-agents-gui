@@ -1,0 +1,40 @@
+{
+  "label": "baseline",
+  "owner": "65551-1794776855204184000",
+  "observation": {
+    "selection": null,
+    "target": {
+      "id": "52fc5cd4-83cf-4a3e-9e01-d5b17ba088fc",
+      "provider": "codex",
+      "executable": null,
+      "selected_executable": null,
+      "discovery_source": null,
+      "codex_home": "/private/tmp/aw-discovery-wkpgn7re/codex-home",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-52fc5cd4-83cf-4a3e-9e01-d5b17ba088fc",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 0,
+    "phase": "unknown",
+    "evidence": null,
+    "problem": null,
+    "diagnostic": null,
+    "login": null
+  },
+  "events": [],
+  "desktop_exit": null,
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 65551,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "65551-1794776855204184000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  }
+}

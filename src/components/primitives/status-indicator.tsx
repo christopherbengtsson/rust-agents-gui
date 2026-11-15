@@ -6,7 +6,7 @@ export function StatusIndicator({
   label,
   className,
 }: {
-  tone: "success" | "neutral" | "error";
+  tone: "success" | "neutral" | "warning" | "error";
   label: string;
   className?: string;
 }) {

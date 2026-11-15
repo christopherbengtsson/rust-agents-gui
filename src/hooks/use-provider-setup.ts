@@ -97,7 +97,7 @@ export function useProviderSetup(
           observation.problem !== "authentication_unavailable"))) ||
     (!!target && !current);
   return {
-    target,
+    target: observation?.target ?? target,
     observation,
     error,
     stale,

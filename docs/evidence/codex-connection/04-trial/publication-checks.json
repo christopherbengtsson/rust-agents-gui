@@ -1,0 +1,14 @@
+{
+  "local_links_checked": 74,
+  "outside_workspace_links_skipped_without_inspection": 0,
+  "artifacts_parsed_and_redaction_checked": 5,
+  "product_changes": false,
+  "commands": [
+    "corepack pnpm exec oxfmt --write docs/evidence/codex-connection/04.md docs/evidence/codex-connection/04-trial.md docs/evidence/codex-connection/04-trial/cohort.json docs/evidence/codex-connection/04-trial/cleanup.json",
+    "local relative-link existence, artifact JSON parsing and account-email redaction assertions",
+    "git diff --check"
+  ],
+  "application_verification": "Unchanged evidence reused; no product changes or application gates rerun.",
+  "format_check": "corepack pnpm exec oxfmt --check docs/evidence/codex-connection/04.md docs/evidence/codex-connection/04-trial.md docs/evidence/codex-connection/04-trial/cohort.json docs/evidence/codex-connection/04-trial/cleanup.json docs/evidence/codex-connection/04-trial/publication-checks.json",
+  "exit_status": 0
+}

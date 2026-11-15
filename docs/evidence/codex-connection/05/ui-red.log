@@ -1,0 +1,35 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-setup.test.tsx (16 tests | 1 failed) 109ms
+   × verified connection shows only status and identity, without setup controls or billing 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-setup.test.tsx > verified connection shows only status and identity, without setup controls or billing
+AssertionError: expected <button></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button>
+  Sign in
+</button>
+
+ ❯ src/provider-setup.test.tsx:60:59
+     58|   expect(screen.getByText("fixture@example.test")).toBeTruthy();
+     59|   for (const label of ["Sign in", "Technical details", "Setup help", "…
+     60|     expect(screen.queryByRole("button", { name: label })).toBeNull();
+       |                                                           ^
+     61|   expect(screen.queryByText("Plan")).toBeNull();
+     62|   expect(screen.queryByText("Billing")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  21:52:05
+   Duration  640ms (environment 50%, import 26%, tests 19%, transform 5%, setup 1%)
+

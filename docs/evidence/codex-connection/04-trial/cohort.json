@@ -1,0 +1,87 @@
+{
+  "started": "2026-11-15T18:58:57.728596+00:00",
+  "source": "612ffef82de675fd9261a40fec4a2f60a1c49b2f",
+  "initial_status": "",
+  "root": "/private/tmp/aw-codex-trial-9vnkfxax",
+  "state": "/private/tmp/aw-codex-trial-9vnkfxax/state",
+  "state_mode": "0o700",
+  "bundle": "/private/tmp/aw-codex-trial-9vnkfxax/Codex Connection Trial.app",
+  "bundle_id": "dev.christopherbengtsson.connection.aw-codex-trial-9vnkfxax",
+  "binaries": {
+    "Contents/MacOS/workspace-desktop": "a5c9432cf2d7013ae0ed0e05626dda1bf928014dcc806928fed637dbb924e2c7",
+    "Contents/Resources/workspace-supervisor": "000e91968fb4c7c272f2ad8d159d159cbd66ef251bd2ccd02003203ca8fe33cc"
+  },
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "hardware": "Mac16,8",
+  "macos": "26.2",
+  "configuration": "Existing runtime environment preserved; fixture/supervisor overrides removed; no credentials read by harness.",
+  "repository": "/private/tmp/aw-codex-trial-9vnkfxax/Trial Repository",
+  "preparation_commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-codex-trial-9vnkfxax/Trial Repository",
+        "init",
+        "--initial-branch=main"
+      ],
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-codex-trial-9vnkfxax/Trial Repository",
+        "add",
+        "."
+      ],
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-codex-trial-9vnkfxax/Trial Repository",
+        "-c",
+        "user.name=Trial",
+        "-c",
+        "user.email=trial@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--no-gpg-sign",
+        "-m",
+        "Disposable trial baseline"
+      ],
+      "exit": 0
+    }
+  ],
+  "protocol": "13",
+  "desktop_pid": 55397,
+  "desktop_exit": 0,
+  "desktop_exited_at": "2026-11-15T19:03:30.745295+00:00",
+  "pretrial_git_status": "clean (observed before preparation)",
+  "runtime_observation": {
+    "source": "Packaged desktop Providers/Codex Technical details",
+    "version": "0.169.0",
+    "minimum_version": "0.169.0",
+    "executable": "/Users/christopherbengtsson/.codex/packages/standalone/releases/0.169.0-aarch64-apple-darwin/bin/codex",
+    "executable_sha256": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002",
+    "codex_home": "/Users/christopherbengtsson/.codex",
+    "setup_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-baffc9ea-2171-43f9-8a4c-99cae13d2da5",
+    "readiness": "Connected",
+    "authentication": "Signed in with ChatGPT",
+    "plan": "Pro",
+    "billing": "ChatGPT",
+    "model_provider": "Runtime default",
+    "model": "gpt-6.1-sol",
+    "configuration_scope": "User-level setup; project overrides not inspected",
+    "diagnostic": "No setup error observed"
+  },
+  "schema": {
+    "version": "0.169.0",
+    "source_revision": "d32063f96c2dff1dc96af839b3952abb6acfeda4",
+    "evidence": "../02a.md"
+  }
+}

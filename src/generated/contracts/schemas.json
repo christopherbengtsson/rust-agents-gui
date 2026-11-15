@@ -711,6 +711,38 @@
     "title": "ErrorCode",
     "type": "string"
   },
+  "ExecutableSelection": {
+    "$defs": {
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      },
+      "phase": {
+        "$ref": "#/$defs/SelectionPhase"
+      }
+    },
+    "required": [
+      "id",
+      "path",
+      "phase"
+    ],
+    "title": "ExecutableSelection",
+    "type": "object"
+  },
   "FeedAck": {
     "$defs": {
       "FeedCursor": {
@@ -1675,6 +1707,26 @@
         ],
         "type": "string"
       },
+      "ExecutableSelection": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/$defs/SelectionPhase"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "phase"
+        ],
+        "type": "object"
+      },
       "LoginAttempt": {
         "properties": {
           "browser_open_failed": {
@@ -1780,11 +1832,22 @@
             "minimum": 0,
             "type": "integer"
           },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ExecutableSelection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "target": {
             "$ref": "#/$defs/ProviderTarget"
           }
         },
         "required": [
+          "selection",
           "target",
           "revision",
           "phase",
@@ -1859,8 +1922,17 @@
           "codex_home": {
             "type": "string"
           },
+          "discovery_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "executable": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "id": {
             "format": "uuid",
@@ -1872,6 +1944,12 @@
           "provider": {
             "type": "string"
           },
+          "selected_executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "working_directory": {
             "type": "string"
           }
@@ -1880,6 +1958,8 @@
           "id",
           "provider",
           "executable",
+          "selected_executable",
+          "discovery_source",
           "codex_home",
           "working_directory",
           "minimum_supported_version"
@@ -1926,6 +2006,14 @@
             "type": "object"
           }
         ]
+      },
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
       },
       "SetupEvidence": {
         "properties": {
@@ -1989,7 +2077,8 @@
           "incompatible_protocol",
           "authentication_unavailable",
           "status_read_failed",
-          "cleanup_uncertain"
+          "cleanup_uncertain",
+          "selection_failed"
         ],
         "type": "string"
       }
@@ -3406,6 +3495,26 @@
         ],
         "type": "string"
       },
+      "ExecutableSelection": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/$defs/SelectionPhase"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "phase"
+        ],
+        "type": "object"
+      },
       "LoginAttempt": {
         "properties": {
           "browser_open_failed": {
@@ -3470,8 +3579,17 @@
           "codex_home": {
             "type": "string"
           },
+          "discovery_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "executable": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "id": {
             "format": "uuid",
@@ -3483,6 +3601,12 @@
           "provider": {
             "type": "string"
           },
+          "selected_executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "working_directory": {
             "type": "string"
           }
@@ -3491,11 +3615,21 @@
           "id",
           "provider",
           "executable",
+          "selected_executable",
+          "discovery_source",
           "codex_home",
           "working_directory",
           "minimum_supported_version"
         ],
         "type": "object"
+      },
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
       },
       "SetupEvidence": {
         "properties": {
@@ -3559,7 +3693,8 @@
           "incompatible_protocol",
           "authentication_unavailable",
           "status_read_failed",
-          "cleanup_uncertain"
+          "cleanup_uncertain",
+          "selection_failed"
         ],
         "type": "string"
       }
@@ -3610,11 +3745,22 @@
         "minimum": 0,
         "type": "integer"
       },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ExecutableSelection"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "target": {
         "$ref": "#/$defs/ProviderTarget"
       }
     },
     "required": [
+      "selection",
       "target",
       "revision",
       "phase",
@@ -3645,6 +3791,26 @@
           "unknown"
         ],
         "type": "string"
+      },
+      "ExecutableSelection": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/$defs/SelectionPhase"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "phase"
+        ],
+        "type": "object"
       },
       "LoginAttempt": {
         "properties": {
@@ -3751,11 +3917,22 @@
             "minimum": 0,
             "type": "integer"
           },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ExecutableSelection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "target": {
             "$ref": "#/$defs/ProviderTarget"
           }
         },
         "required": [
+          "selection",
           "target",
           "revision",
           "phase",
@@ -3771,8 +3948,17 @@
           "codex_home": {
             "type": "string"
           },
+          "discovery_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "executable": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "id": {
             "format": "uuid",
@@ -3784,6 +3970,12 @@
           "provider": {
             "type": "string"
           },
+          "selected_executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "working_directory": {
             "type": "string"
           }
@@ -3792,11 +3984,21 @@
           "id",
           "provider",
           "executable",
+          "selected_executable",
+          "discovery_source",
           "codex_home",
           "working_directory",
           "minimum_supported_version"
         ],
         "type": "object"
+      },
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
       },
       "SetupEvidence": {
         "properties": {
@@ -3860,7 +4062,8 @@
           "incompatible_protocol",
           "authentication_unavailable",
           "status_read_failed",
-          "cleanup_uncertain"
+          "cleanup_uncertain",
+          "selection_failed"
         ],
         "type": "string"
       }
@@ -4057,6 +4260,60 @@
       },
       {
         "properties": {
+          "action_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "expected_revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "operation": {
+            "const": "select_executable",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "action_id",
+          "expected_revision",
+          "path"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "reconcile_selection",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "action_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
           "operation": {
             "const": "begin_shutdown",
             "type": "string"
@@ -4100,8 +4357,17 @@
       "codex_home": {
         "type": "string"
       },
+      "discovery_source": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
       "executable": {
-        "type": "string"
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "id": {
         "format": "uuid",
@@ -4113,6 +4379,12 @@
       "provider": {
         "type": "string"
       },
+      "selected_executable": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
       "working_directory": {
         "type": "string"
       }
@@ -4121,6 +4393,8 @@
       "id",
       "provider",
       "executable",
+      "selected_executable",
+      "discovery_source",
       "codex_home",
       "working_directory",
       "minimum_supported_version"
@@ -5403,6 +5677,16 @@
     ],
     "title": "Sample"
   },
+  "SelectionPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "checking",
+      "remembered",
+      "failed"
+    ],
+    "title": "SelectionPhase",
+    "type": "string"
+  },
   "SetupEvidence": {
     "$defs": {
       "Authentication": {
@@ -5490,7 +5774,8 @@
       "incompatible_protocol",
       "authentication_unavailable",
       "status_read_failed",
-      "cleanup_uncertain"
+      "cleanup_uncertain",
+      "selection_failed"
     ],
     "title": "SetupProblem",
     "type": "string"

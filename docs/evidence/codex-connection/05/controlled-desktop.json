@@ -1,0 +1,22 @@
+{
+  "root": "/private/tmp/aw-discovery-i96g5m_4",
+  "bundle": "/private/tmp/aw-discovery-i96g5m_4/Discovery Refinement.app",
+  "protocol": 14,
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "HOME": "/private/tmp/aw-discovery-i96g5m_4/home",
+    "SHELL": "/bin/zsh",
+    "ZDOTDIR": "/private/tmp/aw-discovery-i96g5m_4/shell",
+    "CODEX_HOME": "/private/tmp/aw-discovery-i96g5m_4/codex-home",
+    "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/aw-discovery-i96g5m_4/state",
+    "AW_FIXTURE_CONTROL": "/private/tmp/aw-discovery-i96g5m_4/control.json"
+  },
+  "desktop_sha256": "e9e836982f643db1beae7b89eb984f26a05296586eaa6896a7bc0e2dfc7483e6",
+  "supervisor_sha256": "22807930d4624a2f91d4c9b327c891fe4069d06f0c049ddf8ef5281bfb65d154",
+  "limits": "Controlled native filesystem/shell/process discovery; synthetic account/protocol evidence. No user credentials, real authentication or agent work.",
+  "commands": [],
+  "captures": [],
+  "desktop_pid": 65485,
+  "ui_limit": "Computer Use denied access; user selected recording UI checks as unperformed.",
+  "cleanup": "Supervisor owned shutdown completed; verified harness desktop terminated with SIGTERM. Not product Quit."
+}

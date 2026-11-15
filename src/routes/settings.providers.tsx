@@ -5,6 +5,7 @@ import { useAppRuntime } from "@/app-runtime";
 import { ProviderSetup, ClaudeSetup } from "@/components/blocks/provider-setup";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useProviderSetup } from "@/hooks/use-provider-setup";
+import { useProviderSelection } from "@/hooks/use-provider-selection";
 import { useProviderLogin } from "@/hooks/use-provider-progress";
 import { ProviderSignIn } from "@/components/blocks/provider-sign-in";
 
@@ -43,6 +44,7 @@ function CodexSetup() {
     connection.feed?.state !== "stopped" && !connection.feed?.message;
   const setup = useProviderSetup(app, owner, updatesAvailable);
   const login = useProviderLogin(app, owner, setup.observation);
+  const selection = useProviderSelection(app, owner, setup.observation);
   const openHelp = (topic: ProviderHelpTopic) => {
     setHelpError(undefined);
     void openProviderHelp(topic).catch(() =>
@@ -56,6 +58,12 @@ function CodexSetup() {
       setup={setup}
       onOpenHelp={openHelp}
       helpError={helpError}
+      onLocate={selection.locate}
+      locating={selection.picking}
+      locateError={selection.error}
+      actionUncertain={login.uncertain || selection.uncertain}
+      selectionUncertain={selection.uncertain}
+      onReconcileSelection={selection.reconcile}
       signIn={
         <ProviderSignIn
           observation={setup.observation}

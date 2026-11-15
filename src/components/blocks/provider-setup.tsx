@@ -2,6 +2,7 @@ import type { ProviderHelpTopic } from "@/lib/provider-help";
 import { ChevronRight } from "lucide-react";
 import { StatusIndicator } from "@/components/primitives/status-indicator";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Collapsible,
@@ -9,47 +10,31 @@ import {
   CollapsibleContent,
 } from "@/components/ui/collapsible";
 import type { useProviderSetup } from "@/hooks/use-provider-setup";
-import type { SetupProblem } from "@/generated/contracts/types";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { loginActive } from "@/hooks/use-provider-progress";
 
-const guidance: Record<SetupProblem, { title: string; message: string }> = {
-  missing_executable: {
-    title: "Install the supported Codex runtime",
-    message:
-      "Install a stable Codex release meeting the minimum in Technical details using the official installation instructions, then choose Check again. If PATH changed, restart the owning supervisor with the updated environment, then reopen the app.",
-  },
-  incompatible_protocol: {
-    title: "Use a compatible Codex runtime",
-    message:
-      "Use a stable Codex release meeting the minimum in Technical details. Newer stable releases are accepted when required protocol checks pass; prereleases are unsupported. Check the selected executable and choose Check again. If the selected executable path changed, restart the owning supervisor and reopen the app. A malformed or unexpected runtime reply also requires rechecking the installed runtime.",
-  },
-  authentication_unavailable: {
-    title: "Sign in with the official Codex runtime",
-    message:
-      "Sign in through your browser below. Codex manages your credentials and the app checks authentication when sign-in finishes.",
-  },
-  status_read_failed: {
-    title: "Codex setup could not be checked",
-    message:
-      "Check that the executable and its configuration are accessible, then choose Check again. Previously observed account details remain stale until a successful check.",
-  },
-  cleanup_uncertain: {
-    title: "Waiting for owned Codex cleanup",
-    message:
-      "Codex cleanup is still unconfirmed. Another check is blocked until the supervisor confirms the process has stopped. See Technical details for the retained diagnostic.",
-  },
-};
 export function ProviderSetup({
   setup,
   onOpenHelp,
   helpError,
   signIn,
+  onLocate,
+  locating = false,
+  locateError,
+  actionUncertain = false,
+  selectionUncertain = false,
+  onReconcileSelection,
 }: {
   setup: ReturnType<typeof useProviderSetup>;
   onOpenHelp: (topic: ProviderHelpTopic) => void;
   helpError?: string;
   signIn?: ReactNode;
+  onLocate?: () => Promise<void>;
+  locating?: boolean;
+  locateError?: string;
+  actionUncertain?: boolean;
+  selectionUncertain?: boolean;
+  onReconcileSelection?: () => void;
 }) {
   const {
     target,
@@ -63,14 +48,20 @@ export function ProviderSetup({
   const available = connected && updatesAvailable;
   const evidence = observation?.evidence;
   const problem = observation?.problem;
-  const cleanup = observation?.phase === "cleanup_uncertain";
+  const cleanup =
+    observation?.phase === "cleanup_uncertain" ||
+    observation?.login?.phase === "cleanup_uncertain";
   const signingIn = loginActive(observation);
-  // The setup view excludes failed retained phases from pending, while an
-  // actual retry can be pending alongside its previous read error.
-  const checking = available && pending;
+  const verifying = observation?.login?.phase === "verifying";
+  const checking =
+    available &&
+    !cleanup &&
+    !actionUncertain &&
+    ((pending && !signingIn) || verifying);
   const ready =
     available &&
     !error &&
+    !actionUncertain &&
     !checking &&
     !stale &&
     !signingIn &&
@@ -78,233 +69,289 @@ export function ProviderSetup({
     !!evidence &&
     evidence.authentication !== "unavailable" &&
     evidence.authentication !== "unknown";
-  const authentication = evidence
-    ? {
-        chatgpt: "Signed in with ChatGPT",
-        api_key: "Existing API-key configuration",
-        not_required: "OpenAI authentication not required",
-        unavailable: "Not signed in",
-        unknown: "Authentication unknown",
-      }[evidence.authentication]
-    : undefined;
-  const label = !available
-    ? "Status unavailable"
-    : cleanup
-      ? "Cleanup unconfirmed"
-      : checking
-        ? "Checking…"
-        : error
-          ? "Status unavailable"
-          : problem === "authentication_unavailable"
-            ? "Not connected"
-            : problem
-              ? "Setup needs attention"
+  const missing = problem === "missing_executable";
+  const signedOut =
+    !error && available && problem === "authentication_unavailable";
+  const loginFailed =
+    observation?.login?.phase === "failed" &&
+    !ready &&
+    problem !== "status_read_failed";
+  const confirmedFailure =
+    !error &&
+    available &&
+    (missing ||
+      problem === "incompatible_protocol" ||
+      problem === "selection_failed" ||
+      loginFailed);
+  const uncertain =
+    !available ||
+    !!error ||
+    problem === "status_read_failed" ||
+    (!ready && !signedOut && !confirmedFailure && !signingIn);
+  const canCheck =
+    available &&
+    !pending &&
+    !cleanup &&
+    !ready &&
+    !signingIn &&
+    !actionUncertain;
+  const label = cleanup
+    ? "Cleanup unconfirmed"
+    : signingIn
+      ? "Codex sign-in in progress"
+      : !available || error
+        ? "Couldn’t verify Codex"
+        : missing
+          ? "Codex not found"
+          : confirmedFailure
+            ? "Codex needs attention"
+            : signedOut
+              ? "Not connected"
               : ready
-                ? "Connected"
-                : "Readiness unknown";
-  const recovery = !connected
-    ? {
-        title: "Supervisor unavailable",
-        message:
-          "Reconnect using the supervisor diagnostics. Current Codex setup could not be verified.",
-      }
-    : !updatesAvailable
-      ? {
-          title: "Live setup updates unavailable",
-          message:
-            "Return to your workspace and refresh the supervisor connection. Then reopen Providers to verify setup. Retained information cannot establish current readiness.",
-        }
-      : cleanup
-        ? guidance.cleanup_uncertain
-        : error
-          ? {
-              title: "Codex setup could not be checked",
-              message:
-                "The setup observation is unavailable. Choose Check again to retry the status read.",
-            }
-          : problem
-            ? guidance[problem]
-            : undefined;
-  const showRecovery = !checking || cleanup || !!error;
-  const canCheck = available && !pending && !cleanup && !ready && !signingIn;
+                ? evidence.authentication === "api_key"
+                  ? "Connected · Using API key"
+                  : "Connected"
+                : "Couldn’t verify Codex";
+  const section = useRef<HTMLElement>(null);
+  const focusOrigin = useRef<HTMLElement | undefined>(undefined);
+  const status = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const origin = focusOrigin.current;
+    if (
+      origin &&
+      !origin.isConnected &&
+      document.activeElement === document.body
+    )
+      section.current?.focus({ preventScroll: true });
+    if (
+      !checking &&
+      focusOrigin.current &&
+      document.activeElement === section.current
+    ) {
+      status.current?.focus({ preventScroll: true });
+      focusOrigin.current = undefined;
+    }
+  }, [checking, label]);
+  function check() {
+    focusOrigin.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : undefined;
+    void setup.refresh();
+  }
   return (
-    <section aria-label="Codex setup" className="provider-setup">
-      <div className="provider-status">
-        <StatusIndicator
-          tone={
-            ready
-              ? "success"
-              : problem && problem !== "authentication_unavailable" && !pending
-                ? "error"
-                : "neutral"
-          }
-          label={label}
-        />
-        {evidence && <p className="provider-status-detail">{authentication}</p>}
-      </div>
-      {showRecovery && recovery && (
-        <Alert
-          variant={
-            problem && problem !== "authentication_unavailable"
-              ? "destructive"
-              : "default"
-          }
-        >
-          <AlertTitle>{recovery.title}</AlertTitle>
-          <AlertDescription>{recovery.message}</AlertDescription>
-          {canCheck && (
-            <div className="pt-3">
+    <section
+      ref={section}
+      onFocusCapture={(event) => {
+        focusOrigin.current = event.target;
+      }}
+      tabIndex={-1}
+      aria-label="Codex setup"
+      aria-busy={checking}
+      className="provider-setup"
+    >
+      {checking ? (
+        <>
+          <span role="status" className="sr-only">
+            Checking Codex…
+          </span>
+          <div aria-hidden="true" className="flex flex-col gap-4">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-5 w-64 max-w-full" />
+            <Skeleton className="h-9 w-28" />
+          </div>
+        </>
+      ) : (
+        <>
+          <div ref={status} tabIndex={-1} className="provider-status">
+            <StatusIndicator
+              tone={
+                ready
+                  ? "success"
+                  : confirmedFailure &&
+                      !cleanup &&
+                      !signingIn &&
+                      !actionUncertain
+                    ? "error"
+                    : "warning"
+              }
+              label={label}
+            />
+            {ready && evidence.account && (
+              <p className="provider-status-detail">{evidence.account}</p>
+            )}
+            {!ready && evidence?.account && (
+              <p className="provider-status-detail">
+                Last verified account: {evidence.account} · current readiness
+                unverified
+              </p>
+            )}
+          </div>
+          {!ready && !signingIn && (
+            <>
+              {cleanup ? (
+                <Alert>
+                  <AlertTitle>Waiting for owned Codex cleanup</AlertTitle>
+                  <AlertDescription>
+                    Cleanup is unconfirmed. Another check or executable
+                    selection is blocked until owned resources have stopped.
+                  </AlertDescription>
+                </Alert>
+              ) : !available ? (
+                <Alert>
+                  <AlertTitle>Supervisor updates unavailable</AlertTitle>
+                  <AlertDescription>
+                    Return to your workspace and reconnect using the supervisor
+                    diagnostics, then reopen Providers. Retained information
+                    cannot establish current readiness.
+                  </AlertDescription>
+                </Alert>
+              ) : missing ? (
+                <p className="text-sm text-muted-foreground">
+                  {target?.selected_executable
+                    ? "The remembered Codex location is unavailable. Check it again or locate a replacement."
+                    : "We couldn’t find Codex. Install it or locate an existing executable, then check again."}
+                </p>
+              ) : problem === "incompatible_protocol" ? (
+                <Alert variant="destructive">
+                  <AlertTitle>Use a compatible Codex runtime</AlertTitle>
+                  <AlertDescription>
+                    Choose a stable Codex release at or above{" "}
+                    {target?.minimum_supported_version ??
+                      "the supported minimum"}{" "}
+                    with the required runtime capabilities.
+                  </AlertDescription>
+                </Alert>
+              ) : problem === "selection_failed" ? (
+                <Alert variant="destructive">
+                  <AlertTitle>
+                    Codex location could not be remembered
+                  </AlertTitle>
+                  <AlertDescription>
+                    The previous selection is unchanged. Locate Codex again to
+                    retry.
+                  </AlertDescription>
+                </Alert>
+              ) : uncertain ? (
+                <p className="text-sm text-muted-foreground">
+                  Current authentication could not be verified. Check again to
+                  retrieve authoritative status.
+                </p>
+              ) : null}
+              <div className="flex flex-wrap gap-2">
+                {missing && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onOpenHelp("install")}
+                  >
+                    Installation guide
+                  </Button>
+                )}
+                {canCheck && !signedOut && (
+                  <Button variant="outline" size="sm" onClick={check}>
+                    Check again
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
+          {selectionUncertain && (
+            <Alert>
+              <AlertTitle>Codex location status is unconfirmed</AlertTitle>
+              <AlertDescription>
+                Retrieve the recorded selection before choosing another
+                executable.
+              </AlertDescription>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => void setup.refresh()}
+                disabled={!available}
+                onClick={onReconcileSelection}
               >
-                Check again
+                Retrieve location status
               </Button>
-            </div>
+            </Alert>
           )}
-          {(problem === "missing_executable" ||
-            problem === "incompatible_protocol" ||
-            problem === "authentication_unavailable") && (
-            <div className="pt-2">
-              <Button
-                variant="link"
-                size="sm"
-                onClick={() =>
-                  onOpenHelp(
-                    problem === "authentication_unavailable"
-                      ? "authentication"
-                      : "install",
-                  )
-                }
-              >
-                {problem === "authentication_unavailable"
-                  ? "Official sign-in instructions"
-                  : "Official installation instructions"}
-              </Button>
-            </div>
-          )}
-        </Alert>
-      )}
-      {canCheck && !recovery && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="self-start"
-          onClick={() => void setup.refresh()}
-        >
-          Check again
-        </Button>
-      )}
-      {evidence && (
-        <div className="provider-account">
-          {(stale || pending) && (
-            <p className="provider-retained-label">
-              Last known · current readiness unverified
-            </p>
-          )}
-          <dl className="provider-account-facts">
-            {(evidence.account || evidence.authentication === "chatgpt") && (
-              <>
-                <dt>Account</dt>
-                <dd>{evidence.account ?? "Unknown"}</dd>
-              </>
+          {!ready && signIn}
+          {!ready &&
+            (missing ||
+              problem === "incompatible_protocol" ||
+              problem === "selection_failed") && (
+              <Collapsible className="provider-disclosure">
+                <CollapsibleTrigger
+                  render={<Button variant="ghost" size="sm" />}
+                >
+                  <ChevronRight aria-hidden="true" data-icon="inline-start" />
+                  Already installed?
+                </CollapsibleTrigger>
+                <CollapsibleContent className="provider-disclosure-content">
+                  <p>Choose the Codex executable on this Mac.</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="self-start"
+                    disabled={!canCheck || locating || !onLocate}
+                    onClick={() => {
+                      focusOrigin.current =
+                        document.activeElement instanceof HTMLElement
+                          ? document.activeElement
+                          : undefined;
+                      void onLocate?.().finally(() => {
+                        const origin = focusOrigin.current;
+                        if (
+                          origin?.isConnected &&
+                          document.activeElement === document.body
+                        )
+                          origin.focus({ preventScroll: true });
+                      });
+                    }}
+                  >
+                    Locate Codex…
+                  </Button>
+                </CollapsibleContent>
+              </Collapsible>
             )}
-            {evidence.plan && evidence.plan !== "unknown" && (
-              <>
-                <dt>Plan</dt>
-                <dd>
-                  {evidence.plan.charAt(0).toUpperCase() +
-                    evidence.plan.slice(1)}
-                </dd>
-              </>
-            )}
-            <dt>Billing</dt>
-            <dd>
-              {
-                { chatgpt: "ChatGPT", api_key: "API key", unknown: "Unknown" }[
-                  evidence.billing
-                ]
-              }
-            </dd>
-          </dl>
-        </div>
-      )}
-      {signIn}
-      <div className="provider-disclosures">
-        {target && (
-          <Collapsible className="provider-disclosure">
-            <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>
-              <ChevronRight aria-hidden="true" data-icon="inline-start" />
-              Technical details
-            </CollapsibleTrigger>
-            <CollapsibleContent className="provider-disclosure-content">
-              <p className="text-muted-foreground">
-                User-level setup. Project overrides are not inspected here.
-              </p>
-              <dl className="provider-facts">
-                <dt>Model provider</dt>
-                <dd>{evidence?.model_provider ?? "Runtime default"}</dd>
-                <dt>Model</dt>
-                <dd>{evidence?.model ?? "Runtime default"}</dd>
-                <dt>Executable</dt>
-                <dd>{target.executable}</dd>
-                <dt>Codex home</dt>
-                <dd>{target.codex_home}</dd>
-                <dt>Setup directory</dt>
-                <dd>{target.working_directory}</dd>
-                <dt>Minimum runtime</dt>
-                <dd>{target.minimum_supported_version}</dd>
-                <dt>Observed runtime</dt>
-                <dd>{evidence?.version ?? "Unknown"}</dd>
-                <dt>Diagnostic</dt>
-                <dd>
-                  {observation?.diagnostic ??
-                    problem ??
-                    "No setup error observed"}
-                </dd>
-              </dl>
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-        <Collapsible className="provider-disclosure">
-          <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>
-            <ChevronRight aria-hidden="true" data-icon="inline-start" />
-            Setup help
-          </CollapsibleTrigger>
-          <CollapsibleContent className="provider-disclosure-content">
-            <p>
-              To sign in outside this app, run <code>codex login</code> in your
-              terminal using the configuration in Technical details, then return
-              to Providers. Setup is checked automatically when you open the
-              Codex tab.
+          {!ready && target && !signingIn && (
+            <Collapsible className="provider-disclosure">
+              <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>
+                <ChevronRight aria-hidden="true" data-icon="inline-start" />
+                Technical details
+              </CollapsibleTrigger>
+              <CollapsibleContent className="provider-disclosure-content">
+                <dl className="provider-facts">
+                  <dt>Executable</dt>
+                  <dd>{observation?.target.executable ?? "Not found"}</dd>
+                  <dt>Remembered location</dt>
+                  <dd>
+                    {observation?.target.selected_executable ??
+                      "Automatic discovery"}
+                  </dd>
+                  <dt>Minimum runtime</dt>
+                  <dd>{target.minimum_supported_version}</dd>
+                  <dt>Observed runtime</dt>
+                  <dd>{evidence?.version ?? "Unknown"}</dd>
+                  <dt>Diagnostic</dt>
+                  <dd>
+                    {observation?.diagnostic ??
+                      error?.message ??
+                      "No diagnostic available"}
+                  </dd>
+                </dl>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+          {!ready && helpError && (
+            <p role="alert" className="text-sm text-destructive">
+              {helpError}
             </p>
-            <p className="text-muted-foreground">
-              Existing API-key configuration is detected through Codex.
+          )}
+          {!ready && locateError && (
+            <p role="alert" className="text-sm text-destructive">
+              {locateError}
             </p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="link"
-                size="sm"
-                onClick={() => onOpenHelp("install")}
-              >
-                Official installation instructions
-              </Button>
-              <Button
-                variant="link"
-                size="sm"
-                onClick={() => onOpenHelp("authentication")}
-              >
-                Official sign-in instructions
-              </Button>
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
-      {helpError && (
-        <p role="alert" className="text-sm text-destructive">
-          {helpError}
-        </p>
+          )}
+        </>
       )}
     </section>
   );

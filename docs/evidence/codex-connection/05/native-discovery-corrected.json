@@ -1,0 +1,250 @@
+{
+  "root": "/private/tmp/aw-discovery-ji14c4_l",
+  "bundle": "/private/tmp/aw-discovery-ji14c4_l/Discovery Refinement.app",
+  "protocol": 14,
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "HOME": "/private/tmp/aw-discovery-ji14c4_l/home",
+    "SHELL": "/bin/zsh",
+    "ZDOTDIR": "/private/tmp/aw-discovery-ji14c4_l/shell",
+    "CODEX_HOME": "/private/tmp/aw-discovery-ji14c4_l/codex-home",
+    "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/aw-discovery-ji14c4_l/state",
+    "AW_FIXTURE_CONTROL": "/private/tmp/aw-discovery-ji14c4_l/control.json"
+  },
+  "desktop_sha256": "86ea3673d7b69df3beead5dbd8c870f0b878b50df326dc3f986072dda3e33078",
+  "supervisor_sha256": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069",
+  "limits": "Controlled native filesystem/shell/process discovery; synthetic account/protocol evidence. No user credentials, real authentication or agent work.",
+  "commands": [
+    {
+      "command": "capture baseline",
+      "time": 1794777037.4971058
+    },
+    {
+      "command": "check",
+      "time": 1794777037.500268
+    },
+    {
+      "command": "capture unavailable",
+      "time": 1794777037.549257
+    },
+    {
+      "command": "install",
+      "time": 1794777037.550064
+    },
+    {
+      "command": "check",
+      "time": 1794777037.550295
+    },
+    {
+      "command": "capture shell-installed",
+      "time": 1794777038.0478652
+    },
+    {
+      "command": "update",
+      "time": 1794777038.048595
+    },
+    {
+      "command": "check",
+      "time": 1794777038.048938
+    },
+    {
+      "command": "capture updated-shell-and-link",
+      "time": 1794777038.409873
+    },
+    {
+      "command": "scenario config_failure",
+      "time": 1794777038.410524
+    },
+    {
+      "command": "check",
+      "time": 1794777038.410673
+    },
+    {
+      "command": "capture verification-failed",
+      "time": 1794777038.5081432
+    },
+    {
+      "command": "remove-auto",
+      "time": 1794777038.5086389
+    },
+    {
+      "command": "check",
+      "time": 1794777038.5087612
+    },
+    {
+      "command": "capture removed-auto",
+      "time": 1794777038.530112
+    },
+    {
+      "command": "scenario no_auth",
+      "time": 1794777038.530692
+    },
+    {
+      "command": "select-manual",
+      "time": 1794777038.5309162
+    },
+    {
+      "command": "capture manual-validated-signed-out",
+      "time": 1794777038.631039
+    },
+    {
+      "command": "scenario ready",
+      "time": 1794777038.6316428
+    },
+    {
+      "command": "check",
+      "time": 1794777038.6317701
+    },
+    {
+      "command": "capture manual-ready",
+      "time": 1794777038.731615
+    },
+    {
+      "command": "shutdown",
+      "time": 1794777038.732376
+    },
+    {
+      "command": "restart",
+      "time": 1794777038.734079
+    },
+    {
+      "command": "check",
+      "time": 1794777038.78965
+    },
+    {
+      "command": "capture remembered-after-restart",
+      "time": 1794777038.8897128
+    },
+    {
+      "command": "update",
+      "time": 1794777057.5508502
+    },
+    {
+      "command": "remove-selected",
+      "time": 1794777057.5531762
+    },
+    {
+      "command": "check",
+      "time": 1794777057.553833
+    },
+    {
+      "command": "capture unavailable-selection-no-fallback",
+      "time": 1794777057.555052
+    },
+    {
+      "command": "scenario config_failure",
+      "time": 1794777057.557024
+    },
+    {
+      "command": "select-replacement",
+      "time": 1794777057.5579221
+    },
+    {
+      "command": "capture validated-location-failed-auth-read",
+      "time": 1794777057.703417
+    },
+    {
+      "command": "scenario no_auth",
+      "time": 1794777057.704129
+    },
+    {
+      "command": "check",
+      "time": 1794777057.704353
+    },
+    {
+      "command": "capture replacement-signed-out",
+      "time": 1794777057.823509
+    },
+    {
+      "command": "scenario browser_pending",
+      "time": 1794777057.824266
+    },
+    {
+      "command": "start-pending",
+      "time": 1794777057.8244932
+    },
+    {
+      "command": "capture pending",
+      "time": 1794777057.8986921
+    },
+    {
+      "command": "reopen",
+      "time": 1794777057.8994272
+    },
+    {
+      "command": "capture same-attempt-reopened",
+      "time": 1794777057.899679
+    },
+    {
+      "command": "cancel",
+      "time": 1794777057.9003038
+    },
+    {
+      "command": "capture cancelled",
+      "time": 1794777058.0245278
+    },
+    {
+      "command": "scenario api_key",
+      "time": 1794777058.025423
+    },
+    {
+      "command": "check",
+      "time": 1794777058.025679
+    },
+    {
+      "command": "capture existing-api-key",
+      "time": 1794777058.144865
+    },
+    {
+      "command": "shutdown",
+      "time": 1794777058.145777
+    },
+    {
+      "command": "stop",
+      "time": 1794777058.17184
+    }
+  ],
+  "captures": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-baseline.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-unavailable.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-shell-installed.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-updated-shell-and-link.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-verification-failed.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-removed-auto.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-manual-validated-signed-out.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-manual-ready.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-remembered-after-restart.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-unavailable-selection-no-fallback.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-validated-location-failed-auth-read.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-replacement-signed-out.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-pending.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-same-attempt-reopened.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-cancelled.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-corrected-existing-api-key.json"
+  ],
+  "mode": "packaged-supervisor-process",
+  "desktop_pid": 66874,
+  "owned_shutdowns": [
+    {
+      "pid": 66874,
+      "exit": 0,
+      "status": {
+        "kind": "shutdown",
+        "complete": true,
+        "diagnostic": null
+      }
+    },
+    {
+      "pid": 66993,
+      "exit": 0,
+      "status": {
+        "kind": "shutdown",
+        "complete": true,
+        "diagnostic": null
+      }
+    }
+  ],
+  "restarted_pid": 66993,
+  "desktop_exit": 0,
+  "remaining_processes": []
+}

@@ -30,7 +30,7 @@ use tokio::{
 use tokio_util::sync::CancellationToken;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 13;
+pub const PROTOCOL_VERSION: u32 = 14;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -786,6 +786,8 @@ fn provider_target(
         (Q::Target, R::Target { target }) => target.provider == "codex",
         (
             Q::Observe { target_id, .. }
+            | Q::SelectExecutable { target_id, .. }
+            | Q::ReconcileSelection { target_id, .. }
             | Q::StartBrowserLogin { target_id, .. }
             | Q::CancelLogin { target_id, .. }
             | Q::ReopenBrowser { target_id, .. }
@@ -795,6 +797,10 @@ fn provider_target(
             *target_id == observation.target.id
                 && observation.target.provider == "codex"
                 && match request {
+                    Q::SelectExecutable { action_id, .. } => observation
+                        .selection
+                        .as_ref()
+                        .is_some_and(|selection| selection.id == *action_id),
                     Q::StartBrowserLogin { attempt_id, .. }
                     | Q::CancelLogin { attempt_id, .. }
                     | Q::ReopenBrowser { attempt_id, .. } => observation

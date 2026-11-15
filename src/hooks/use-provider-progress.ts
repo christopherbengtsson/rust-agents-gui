@@ -28,7 +28,11 @@ export function useProviderProgress(
       : undefined;
   const targetId = target?.id;
   const action = useSyncExternalStore(feature.subscribeActions, () =>
-    shownOwner && targetId ? feature.action(shownOwner, targetId) : undefined,
+    shownOwner &&
+    targetId &&
+    feature.action(shownOwner, targetId)?.kind === "login"
+      ? feature.action(shownOwner, targetId)
+      : undefined,
   );
   const state = useSyncExternalStore(feature.subscribe, () =>
     shownOwner && targetId
@@ -81,7 +85,9 @@ export function useProviderLogin(
 ) {
   const target = observation?.target.id;
   const action = useSyncExternalStore(app.providers.subscribeActions, () =>
-    owner && target ? app.providers.action(owner, target) : undefined,
+    owner && target && app.providers.action(owner, target)?.kind === "login"
+      ? app.providers.action(owner, target)
+      : undefined,
   );
   const attempt = observation?.login?.id;
   return {

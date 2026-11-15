@@ -1,0 +1,2 @@
+55397 55384 /private/tmp/aw-codex-trial-9vnkfxax/Codex Connection Trial.app/Contents/MacOS/workspace-desktop
+55404 55397 /private/tmp/aw-codex-trial-9vnkfxax/Codex Connection Trial.app/Contents/Resources/workspace-supervisor

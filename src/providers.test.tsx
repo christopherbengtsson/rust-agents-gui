@@ -25,6 +25,8 @@ const target: ProviderTarget = {
   id: a,
   provider: "codex",
   executable: "/fixture/codex",
+  selected_executable: null,
+  discovery_source: "fixture",
   codex_home: "/fixture/home",
   working_directory: "/fixture/neutral",
   minimum_supported_version: "0.169.0",
@@ -33,6 +35,7 @@ const observation = (id = a) => ({
   kind: "observation",
   observation: {
     target: { ...target, id },
+    selection: null,
     revision: 2,
     phase: "observed",
     evidence: null,
@@ -69,6 +72,7 @@ function healthyBridge(outcome: ReadinessOutcome = {}) {
             kind: "observation",
             observation: {
               target,
+              selection: null,
               revision: 2,
               phase: outcome.phase ?? "observed",
               problem: null,
@@ -282,10 +286,10 @@ test("a failed observation after checking exposes recovery through the real setu
   const block = render(
     <ProviderSetup setup={hook.result.current} onOpenHelp={() => {}} />,
   );
-  expect(screen.getByRole("status").textContent).toBe("Status unavailable");
-  expect(screen.getByRole("alert").textContent).toContain(
-    "Codex setup could not be checked",
-  );
+  expect(screen.getByRole("status").textContent).toBe("Couldn’t verify Codex");
+  expect(
+    screen.getByText(/Current authentication could not be verified/),
+  ).toBeTruthy();
   outcome.fail = false;
   outcome.phase = "observed";
   let releaseRetry = () => {};
@@ -299,10 +303,8 @@ test("a failed observation after checking exposes recovery through the real setu
   block.rerender(
     <ProviderSetup setup={hook.result.current} onOpenHelp={() => {}} />,
   );
-  expect(screen.getByRole("status").textContent).toBe("Checking…");
-  expect(screen.getByRole("alert").textContent).toContain(
-    "Codex setup could not be checked",
-  );
+  expect(screen.getByRole("status").textContent).toBe("Checking Codex…");
+  expect(screen.queryByRole("alert")).toBeNull();
   expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
   await act(async () => {
     releaseRetry();

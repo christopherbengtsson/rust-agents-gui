@@ -1,0 +1,33 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-selection.test.tsx (4 tests | 1 failed) 27ms
+   × owner replacement during a chooser discards the old result without fencing the new chooser 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-selection.test.tsx > owner replacement during a chooser discards the old result without fencing the new chooser
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/provider-selection.test.tsx:150:34
+    148|   await act(async () => {resolve("/chosen/codex"); await pending;});
+    149|   expect(invoke).not.toHaveBeenCalled();
+    150|   expect(result.current.picking).toBe(false);
+       |                                  ^
+    151| });
+    152|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  22:02:22
+   Duration  379ms (environment 49%, import 31%, transform 10%, tests 8%, setup 1%, worker 1%)
+

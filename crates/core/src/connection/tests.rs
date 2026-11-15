@@ -536,7 +536,9 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
             let target = ProviderTarget {
                 id: target_id,
                 provider: "codex".into(),
-                executable: "/fixture/codex".into(),
+                executable: Some("/fixture/codex".into()),
+                selected_executable: None,
+                discovery_source: None,
                 codex_home: "/fixture/home".into(),
                 working_directory: "/fixture/neutral".into(),
                 minimum_supported_version: "0.169.0".into(),
@@ -556,6 +558,7 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
                             owner: owner.into(),
                             result: Ok(ProviderReply::Observation {
                                 observation: ProviderObservation {
+                                    selection: None,
                                     target,
                                     revision: 2,
                                     phase: SetupPhase::Observed,
@@ -646,7 +649,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         use crate::workspaces::*;
         use serde_json::{Value, json};
         let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v13.json"))
+            serde_json::from_str(include_str!("../../../../contracts/observations-v14.json"))
                 .unwrap();
         let owner = "owner-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));

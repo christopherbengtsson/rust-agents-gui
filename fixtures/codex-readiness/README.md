@@ -92,3 +92,14 @@ it neither resets data nor clears cleanup fences. Raw events remain cumulative.
 `GetAccountResponse.json`, source **d32063f96c2dff1dc96af839b3952abb6acfeda4**.
 It establishes unknown billing/account presentation, not a captured account or
 native provider behavior. All journey faults and runtime messages remain synthetic.
+
+
+## Discovery refinement — 2026-11-15
+
+Connection 05 retains official Codex 0.169.0 source
+`d32063f96c2dff1dc96af839b3952abb6acfeda4` and the schemas above. The existing
+initialize/gateway capability sequence now exposes a local validation checkpoint
+before account/config reads, without adding a provider method. Synthetic protocol
+and discovery outcomes remain synthetic; no credentials or native messages are
+captured. Version/capability validation and authentication are distinct, and a
+validated executable can be remembered even when authentication is unavailable.

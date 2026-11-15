@@ -1,0 +1,9 @@
+{"root": "/private/tmp/aw-discovery-lgvrpi0s", "bundle": "/private/tmp/aw-discovery-lgvrpi0s/Discovery Refinement.app", "protocol": 14, "environment": {"PATH": "/usr/bin:/bin", "HOME": "/private/tmp/aw-discovery-lgvrpi0s/home", "SHELL": "/bin/zsh", "ZDOTDIR": "/private/tmp/aw-discovery-lgvrpi0s/shell", "CODEX_HOME": "/private/tmp/aw-discovery-lgvrpi0s/codex-home", "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/aw-discovery-lgvrpi0s/state", "AW_FIXTURE_CONTROL": "/private/tmp/aw-discovery-lgvrpi0s/control.json"}, "desktop_sha256": "1662c2c58be29f3315e40909cec151d591f7dc39fc930e24c88d14c73b72e6d8", "supervisor_sha256": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069", "limits": "Controlled native filesystem/shell/process discovery; synthetic account/protocol evidence. No user credentials, real authentication or agent work.", "commands": [], "captures": [], "mode": "packaged-supervisor-process", "desktop_pid": 69125}
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/qualify-discovery.py", line 167, in <module>
+    elif command == "remove-selected": (root / "manual-codex").unlink()
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 1042, in unlink
+    os.unlink(self)
+    ~~~~~~~~~^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/aw-discovery-lgvrpi0s/manual-codex'

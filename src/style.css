@@ -25,6 +25,7 @@
   --accent-foreground: var(--foreground);
   --destructive: #ffb0a5;
   --success: #a5d7b4;
+  --warning: #e9c46a;
   --border: #38383e;
   --input: var(--border);
   --ring: #c2b6f5;
@@ -515,6 +516,9 @@
 }
 .status-indicator[data-tone="success"] {
   --status-light-color: var(--success);
+}
+.status-indicator[data-tone="warning"] {
+  --status-light-color: var(--warning);
 }
 .status-indicator[data-tone="error"] {
   --status-light-color: var(--destructive);

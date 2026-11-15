@@ -1,0 +1,338 @@
+{
+  "protocol": 14,
+  "owner": "owner-a",
+  "desktop_pid": 42,
+  "snapshot": {
+    "status": {
+      "state": "ready",
+      "supervisor_pid": 41,
+      "application_version": "0.1.0"
+    },
+    "cursor": {
+      "owner": "owner-a",
+      "revision": 1
+    },
+    "reset": true
+  },
+  "repositories": [
+    {
+      "request": {
+        "operation": "list",
+        "after": null,
+        "refresh": false
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "repositories",
+            "page": {
+              "repositories": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000001",
+                  "name": "one",
+                  "path": "/projects/one",
+                  "availability": {
+                    "state": "available"
+                  }
+                }
+              ],
+              "next": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "operation": "register",
+        "request": {
+          "action_id": "00000000-0000-0000-0000-000000000002",
+          "path": "/projects/one",
+          "create_initial_workspace": false
+        }
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "registration",
+            "registration": {
+              "create_initial_workspace": false,
+              "initial_workspace_id": null,
+              "action_id": "00000000-0000-0000-0000-000000000002",
+              "path": "/projects/one",
+              "state": "completed",
+              "repository_id": "00000000-0000-0000-0000-000000000001"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "operation": "action",
+        "action_id": "00000000-0000-0000-0000-000000000002"
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "action",
+            "registration": null
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "operation": "get",
+        "id": "00000000-0000-0000-0000-000000000001",
+        "refresh": false
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Err": {
+            "code": "storage",
+            "message": "Storage unavailable"
+          }
+        }
+      }
+    }
+  ],
+  "workspaces": [
+    {
+      "request": {
+        "operation": "create",
+        "action_id": "00000000-0000-0000-0000-000000000002",
+        "repository_id": "00000000-0000-0000-0000-000000000001"
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "action",
+            "action": {
+              "operation": "create",
+              "action_id": "00000000-0000-0000-0000-000000000002",
+              "repository_id": "00000000-0000-0000-0000-000000000001"
+            },
+            "workspace": {
+              "id": "00000000-0000-0000-0000-000000000003",
+              "repository_id": "00000000-0000-0000-0000-000000000001",
+              "creation_action_id": "00000000-0000-0000-0000-000000000002",
+              "name": null,
+              "branch": null,
+              "path": null,
+              "legacy": false,
+              "base": null,
+              "artifacts": {
+                "branch": "unknown",
+                "folder": "unknown"
+              },
+              "status": {
+                "state": "queued"
+              },
+              "cleanup_unconfirmed": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "operation": "list",
+        "repository_id": "00000000-0000-0000-0000-000000000001",
+        "after": null
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "workspaces",
+            "page": {
+              "workspaces": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "repository_id": "00000000-0000-0000-0000-000000000001",
+                  "creation_action_id": "00000000-0000-0000-0000-000000000002",
+                  "name": null,
+                  "branch": null,
+                  "path": null,
+                  "legacy": false,
+                  "base": null,
+                  "artifacts": {
+                    "branch": "unknown",
+                    "folder": "unknown"
+                  },
+                  "status": {
+                    "state": "queued"
+                  },
+                  "cleanup_unconfirmed": false
+                }
+              ],
+              "next": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "operation": "changes",
+        "workspace_id": "00000000-0000-0000-0000-000000000003",
+        "refresh": false,
+        "comparison_id": null,
+        "after": null
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "changes",
+            "observation": {
+              "workspace_id": "00000000-0000-0000-0000-000000000003",
+              "phase": "ready",
+              "page": {
+                "comparison_id": "00000000-0000-0000-0000-000000000004",
+                "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "files": [],
+                "total": 0,
+                "next": null
+              },
+              "error": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "operation": "change_preview",
+        "target": {
+          "workspace_id": "00000000-0000-0000-0000-000000000003",
+          "comparison_id": "00000000-0000-0000-0000-000000000004",
+          "file_id": "00000000-0000-0000-0000-000000000005"
+        },
+        "load": true
+      },
+      "reply": {
+        "owner": "owner-a",
+        "result": {
+          "Ok": {
+            "kind": "change_preview",
+            "observation": {
+              "target": {
+                "workspace_id": "00000000-0000-0000-0000-000000000003",
+                "comparison_id": "00000000-0000-0000-0000-000000000004",
+                "file_id": "00000000-0000-0000-0000-000000000005"
+              },
+              "phase": "ready",
+              "preview": {
+                "comparison_id": "00000000-0000-0000-0000-000000000004",
+                "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "rows": [
+                  {
+                    "kind": "added",
+                    "old_line": null,
+                    "new_line": 1,
+                    "text": "hello"
+                  }
+                ],
+                "limited": null,
+                "unsupported": null,
+                "note": null
+              },
+              "error": null
+            }
+          }
+        }
+      }
+    }
+  ],
+  "failures": [
+    {
+      "kind": "rejected",
+      "error": {
+        "code": "capacity",
+        "message": "Local input limit"
+      }
+    },
+    {
+      "kind": "transport",
+      "error": {
+        "code": "busy",
+        "delivery": "not_sent",
+        "message": "Busy"
+      }
+    },
+    {
+      "kind": "transport",
+      "error": {
+        "code": "not_connected",
+        "delivery": "not_sent",
+        "message": "Not connected"
+      }
+    },
+    {
+      "kind": "transport",
+      "error": {
+        "code": "owner_changed",
+        "delivery": "rejected",
+        "message": "Owner changed"
+      }
+    },
+    {
+      "kind": "transport",
+      "error": {
+        "code": "reply_unavailable",
+        "delivery": "unknown",
+        "message": "Reply unavailable"
+      }
+    },
+    {
+      "kind": "transport",
+      "error": {
+        "code": "incompatible",
+        "delivery": "rejected",
+        "message": "Incompatible versions"
+      }
+    }
+  ],
+  "feed": [
+    {
+      "subscription_id": "feed-1",
+      "batch_id": 1,
+      "cursor": {
+        "owner": "owner-a",
+        "sequence": 1
+      },
+      "sample": {
+        "kind": "resync_required",
+        "watermark": 1
+      }
+    },
+    {
+      "subscription_id": "feed-1",
+      "batch_id": 2,
+      "cursor": {
+        "owner": "owner-a",
+        "sequence": 2
+      },
+      "sample": {
+        "kind": "hints",
+        "watermark": 2,
+        "targets": [
+          {
+            "kind": "repositories"
+          },
+          {
+            "kind": "workspaces",
+            "repository_id": null
+          }
+        ]
+      }
+    }
+  ]
+}

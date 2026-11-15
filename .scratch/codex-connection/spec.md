@@ -295,3 +295,41 @@ or failed delivery labels retained evidence unavailable/stale and directs the us
 to the existing workspace supervisor-connection recovery. It offers no ineffective
 readiness recheck while delivery is unavailable. This is readiness presentation of
 an existing observation, not a new feed/reconnect owner or authentication mechanism.
+
+
+## Connection UX and discovery amendment — 2026-11-15
+
+The accepted follow-up [05 — Refine Codex connection UX and executable discovery](issues/05-refine-connection-ux-and-discovery.md)
+supersedes conflicting prospective presentation/discovery requirements above.
+Completed 01–04 and the separate existing-authentication trial remain historical
+results; their acceptance is not rewritten.
+
+Detection/rechecking skeleton-loads the entire Codex section body while Settings
+navigation and provider tabs remain usable. Verified Connected shows a green
+indicator and available account identity only; existing API-key configuration
+shows “Connected · Using API key”. Hide sign-in, technical details, billing/plan
+and general help while healthy. Missing authentication shows yellow “Not connected”
+and Sign in. Pending browser authentication remains actionable: yellow status,
+browser instructions, Reopen browser and Cancel sign-in, preserving the exact
+attempt across navigation. Verification failure shows yellow “Couldn’t verify
+Codex”, contextual Check again and explicitly labeled last verified account;
+it does not establish signed-out status. Missing executable shows red “Codex not
+found”, Installation guide, Check again and collapsed “Already installed?” with
+Locate Codex… inside. Confirmed setup/sign-in failures show red recovery. Text,
+accessibility, focus, uncertainty and physical cleanup fencing remain required.
+
+Refresh performs fresh automatic discovery for desktop launches, including bounded
+shell PATH recovery and fresh symlink resolution. A native executable chooser is
+the only manual selection form. Rust validates version/capabilities, checks auth
+automatically and remembers a validated selection in private application state.
+An unavailable remembered selection stays selected and requires explicit recovery;
+never silently switch installations. Credentials/configuration remain runtime-owned.
+Shell discovery updates launcher PATH only, preserving the target credential scope.
+No automatic installation or initial-discovery codex doctor is added.
+
+No backward compatibility, migration or mixed-version support is required. Current
+build restart recovery, exact owner/target/action identity and external runtime
+compatibility remain required. 05 reuses unchanged passing evidence and qualifies
+changed deterministic and packaged paths separately. Real browser sign-in requires
+a separate exact scenario; sign-out, credential replacement and agent threads/turns
+are excluded. Storage 06a and chat 07 remain separately selected work.

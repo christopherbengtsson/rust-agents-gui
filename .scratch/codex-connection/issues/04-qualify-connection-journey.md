@@ -89,3 +89,18 @@ trial instructions are in the evidence; 06a/07 were not implemented.
 Independent Standards and Spec reviews of `627f1af` each reported zero findings;
 [review results](../../../docs/evidence/codex-connection/04/review.md) retain their
 separate conclusions. Closing changes record evidence only.
+
+### 2026-11-15 — Christopher's separate existing-authentication trial
+
+[Dated trial report](../../../docs/evidence/codex-connection/04-trial.md) records
+the user-authorized real-runtime observation through the unchanged production
+desktop with private state: Codex 0.169.0 detected existing ChatGPT authentication,
+Pro and ChatGPT billing. Christopher reported that the journey seemed clear but
+questioned the sign-in button while already Connected. He explicitly deferred
+the fix to a separate session; the concern remains open and no product code changed.
+Normal product Quit exited desktop 0; no trial processes remained in the audit.
+Fixture evidence is reused, not relabeled as native evidence. Browser sign-in,
+credential replacement, agent threads/turns, detailed participant navigation/layout
+qualification and native execution were not performed. Existing checked fixture
+acceptance is preserved; whole-milestone/native-agent gates remain open. 06a and
+07 were not started.

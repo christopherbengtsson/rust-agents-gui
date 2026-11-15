@@ -34,10 +34,13 @@ const initial: ProviderObservation = {
     id,
     provider: "codex",
     executable: "/fixture/codex",
+    selected_executable: null,
+    discovery_source: "fixture",
     codex_home: "/fixture/home",
     working_directory: "/fixture/neutral",
     minimum_supported_version: "0.169.0",
   },
+  selection: null,
   revision: 2,
   phase: "observed",
   evidence: null,
@@ -231,11 +234,9 @@ test("mount and explained ChatGPT presentation have no login effect; reopen and 
   const view = render(
     <ProviderSignIn observation={initial} available login={callbacks} />,
   );
-  expect(screen.getByText("Sign in through your browser.")).toBeTruthy();
+  expect(screen.getByText(/Sign in with ChatGPT/)).toBeTruthy();
   expect(callbacks.start).not.toHaveBeenCalled();
-  await user.click(
-    screen.getByRole("button", { name: "Sign in through browser" }),
-  );
+  await user.click(screen.getByRole("button", { name: "Sign in" }));
   expect(callbacks.start).toHaveBeenCalledTimes(1);
   view.rerender(
     <ProviderSignIn observation={pending} available login={callbacks} />,

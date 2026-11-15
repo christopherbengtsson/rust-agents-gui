@@ -52,19 +52,15 @@ export function ProviderSignIn({
     !login.uncertain &&
     !active &&
     observation.phase !== "checking" &&
-    observation.phase !== "cleanup_uncertain";
+    observation.phase !== "cleanup_uncertain" &&
+    observation.problem === "authentication_unavailable";
   return (
     <section aria-label="ChatGPT sign-in" className="flex flex-col gap-3">
-      <div>
-        <h3 className="font-medium">ChatGPT</h3>
+      {!active && observation?.problem === "authentication_unavailable" && (
         <p className="text-sm text-muted-foreground">
-          Sign in through your browser.
+          Sign in with ChatGPT in your browser. Codex manages your credentials.
         </p>
-        <p className="text-sm text-muted-foreground">
-          Your existing Codex setup stays in use until the runtime verifies a
-          change.
-        </p>
-      </div>
+      )}
       {attempt && (
         <div className="flex flex-col gap-2">
           <p
@@ -120,7 +116,7 @@ export function ProviderSignIn({
         </Alert>
       )}
       <div className="flex flex-wrap gap-2">
-        {!active && (
+        {!active && observation?.problem === "authentication_unavailable" && (
           <Button
             disabled={!canStart}
             onClick={(event) => {
@@ -128,7 +124,7 @@ export function ProviderSignIn({
               login.start();
             }}
           >
-            Sign in through browser
+            Sign in
           </Button>
         )}
         {attempt?.phase === "pending" && (

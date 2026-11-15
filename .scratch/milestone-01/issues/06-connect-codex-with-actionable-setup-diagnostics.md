@@ -41,7 +41,9 @@ The [MVP](../../../docs/MVP.md), [milestone](../../../docs/MILESTONE-01.md) and
 
 The next milestone ticket remains [06a — Storage evaluation](06a-evaluate-storage-before-durable-chat.md),
 which waits for connection 04 and this aggregate outcome before 07. The connection fixture aggregate is recorded below; native authentication, the
-hands-on trial and whole-milestone qualification remain open. This documentation split grants no sign-in,
+hands-on trial and whole-milestone qualification were open at that fixture checkpoint;
+the separate trial below adds existing-authentication readiness and participant
+feedback, with its remaining native limits. This documentation split grants no sign-in,
 installation or provider submission allowance.
 
 ## Comments
@@ -145,3 +147,16 @@ move to a separate selected session starting with existing authentication; no
 credential replacement, native agent thread/turn or terminal work occurred.
 Whole-milestone/native execution qualification remains open. Existing 06a retains
 its separate storage-evaluation scope before 07; neither successor is implemented.
+
+### 2026-11-15 — separate hands-on trial recorded
+
+[Christopher's existing-authentication trial](../../../docs/evidence/codex-connection/04-trial.md)
+used the qualified unchanged packaged desktop with private app state. Real Codex
+0.169.0 readiness detected existing ChatGPT authentication and billing; Christopher
+reported clear presentation except for the sign-in button remaining visible while
+Connected. He requested recording that finding and fixing it in a separate session.
+No product code changed; normal Quit and process cleanup were observed. Existing
+fixture acceptance/evidence is preserved. Browser sign-in and native-agent execution
+remain unperformed, and whole-milestone qualification remains open. No credential
+replacement or agent thread/turn was performed. Storage evaluation 06a and chat 07
+were not started.

@@ -14,7 +14,6 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { createMemoryHistory } from "@tanstack/react-router";
 import { App } from "./App";
 import {
@@ -83,6 +82,8 @@ const providerTarget = {
   id: otherId,
   provider: "codex",
   executable: "/fixture/codex",
+  selected_executable: null,
+  discovery_source: "fixture",
   codex_home: "/fixture/home",
   working_directory: "/fixture/neutral",
   minimum_supported_version: "0.169.0",
@@ -119,6 +120,7 @@ beforeEach(() => {
             evidence: providerEvidence,
             diagnostic: null,
             login: null,
+            selection: null,
             problem: null,
           },
         };
@@ -494,30 +496,12 @@ test("Codex verifies on entry, retains stale evidence on failure and offers cont
   await screen.findByRole("heading", { name: "Settings", level: 1 });
   await user.click(screen.getByRole("link", { name: "Providers" }));
   await screen.findByRole("region", { name: "Codex setup" });
-  await screen.findByText("Existing API-key configuration");
-  await screen.findByText("Connected");
+  await screen.findByText("Connected · Using API key");
   expect(screen.queryByRole("button", { name: /^Refresh$/ })).toBeNull();
   expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
   expect(screen.queryByText("/fixture/codex")).toBeNull();
-  await user.click(screen.getByRole("button", { name: "Setup help" }));
+  expect(screen.queryByRole("button", { name: "Setup help" })).toBeNull();
   expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
-  expect(screen.queryByRole("button", { name: "Run codex login" })).toBeNull();
-  const beforeHelp = vi
-    .mocked(invoke)
-    .mock.calls.filter(([name]) => name === "provider_request").length;
-  const help = screen.getByRole("button", {
-    name: "Official installation instructions",
-  });
-  help.focus();
-  await user.keyboard("{Enter}");
-  expect(openUrl).toHaveBeenCalledWith(
-    "https://developers.openai.com/codex/cli",
-  );
-  expect(
-    vi
-      .mocked(invoke)
-      .mock.calls.filter(([name]) => name === "provider_request"),
-  ).toHaveLength(beforeHelp);
   providerRead = async (request) =>
     request.operation === "target"
       ? { kind: "target", target: providerTarget }
@@ -530,20 +514,19 @@ test("Codex verifies on entry, retains stale evidence on failure and offers cont
             evidence: providerEvidence,
             diagnostic: null,
             login: null,
+            selection: null,
             problem: "status_read_failed",
           },
         };
   await user.click(screen.getByRole("tab", { name: "Claude Code" }));
   await user.click(screen.getByRole("tab", { name: "Codex" }));
-  await screen.findByText("Codex setup could not be checked");
-  expect(
-    screen.getByText("Last known · current readiness unverified"),
-  ).toBeTruthy();
+  await screen.findByText("Couldn’t verify Codex");
+  expect(screen.queryByText("Billing")).toBeNull();
   expect(screen.queryByText("Connected")).toBeNull();
   await user.click(screen.getByRole("button", { name: "Technical details" }));
   expect(screen.getByText("/fixture/codex")).toBeTruthy();
   await user.click(screen.getByRole("button", { name: "Check again" }));
-  await screen.findByText("Codex setup could not be checked");
+  await screen.findByText("Couldn’t verify Codex");
   const before = vi
     .mocked(invoke)
     .mock.calls.filter(([name]) => name === "provider_request").length;
