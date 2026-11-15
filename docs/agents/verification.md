@@ -8,6 +8,11 @@ and qualification. This file owns testing policy and engineering-skill constrain
 Use supported-version official documentation for API and platform facts. Its
 examples and third-party skills do not create project requirements.
 
+For Milestone 01, apply its [development compatibility policy](../MILESTONE-01.md#development-compatibility-policy).
+Qualify current-build persistence/recovery with fresh private state; retired
+development-format compatibility needs no migration fixtures or replacement tests.
+Keep external provider protocol qualification and owner/cleanup coverage.
+
 ## Unit tests
 
 Test application decisions and responses to success, failure, and uncertainty with

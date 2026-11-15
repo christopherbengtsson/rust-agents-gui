@@ -32,12 +32,22 @@ This follows Conductor's documented [workspace loop](https://www.conductor.build
 | Human control | Show running, waiting, completed, interrupted, failed, or unknown based on runtime evidence. Approve once/deny the exact pending operation; reject stale approvals. Interrupt a turn separately from stopping a runtime. Follow-ups steer where supported and distinguish pending from received. |
 | Change inspection | Show uncommitted changes and the workspace's full changes against its base, including new files. Refresh after agent edits. Write/edit comments on changed lines and attach them to the chosen chat for explicit sending, retaining file/line and comparison context. Changed comparisons require revalidation rather than silently relocating feedback. Open the workspace in an external editor/terminal for testing and ordinary Git operations. |
 | Durable history and recovery | After restart, restore workspace/chat identity, readable messages, attachment content, and provider IDs. Explicit resume recalls the same conversation. Lost replies cannot silently cause duplicate turns. Crash/transport loss exposes uncertainty and reconciles ownership before restart; viewing history never starts work. Storage errors are visible. |
-| Runtime configuration | Use existing runtime authentication and API-key configuration. Identify the billing route when available; otherwise show unknown. Exercise project/user instructions, skills, hooks, and MCP with recorded results. Show unsupported features honestly; preserve external access to native tools. |
+| Runtime configuration | Use existing runtime authentication and API-key configuration; explicit user actions may initiate the official runtime's own sign-in flow while credentials remain runtime-owned. Identify the billing route when available; otherwise show unknown. Exercise project/user instructions, skills, hooks, and MCP with recorded results. Show unsupported features honestly; preserve external access to native tools. |
 | Safe lifecycle and responsiveness | Archive only after accounting for all affected chats and confirming owned stop. Save code state, including uncommitted changes, as a local archive commit and retain chat history. Restore the saved workspace/code/history even if the original branch has changed. Local branch deletion on archive is configurable and its consequence is visible; snapshot/storage failure retains the original work and reports failure. Under the concurrency scenario, target navigation feedback within 100 ms and opening recent history within one second on the test Mac; record measurements and versions. |
 
 No product account or GitHub login is needed for local coding. Initially use user-installed official runtimes with version checks. Bundled runtime distribution is deferred; packaging the Claude SDK bridge still needs qualification.
 
 Deliberate reductions from Conductor: no cloud/collaboration, built-in PR creation/merge/checks, full embedded terminal, extension manager, or turn-level code rewind. External editor/terminal handoff keeps the coding loop usable. A full TUI is a later independent client, not an MVP prerequisite. Provider child-agent execution remains runtime-owned; rich child-agent inspection/control is deferred, and cleanup must still account for owned child work.
+
+The full-terminal deferral has one narrow exception: an embedded official-runtime
+authentication terminal. [Milestone 01 ticket 06](../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+adds Codex login only; it ends with the login command and exposes no general shell.
+Its renderer and supervisor-owned process plumbing should support later extension
+to a development terminal without implementing workspace terminals or run/test
+controls now. Navigation preserves pending authentication; explicit cancellation
+requests owned cleanup. API-key setup UI and automatic installation remain outside
+that milestone, while existing runtime configuration stays usable. Claude's
+disabled provider presentation there does not implement Claude integration.
 
 Workspace defaults follow Conductor's [fetch-before-create behavior](https://www.conductor.build/docs/concepts/workspaces-and-branches#branches-and-review); Plan Mode and local diff comments follow its [agent controls](https://www.conductor.build/docs/concepts/agent-modes) and [diff feedback](https://www.conductor.build/docs/reference/diff-viewer). Archive commits and restoration follow its [archive-save behavior](https://www.conductor.build/changelog/0.49.0-conductor-allegro-gpt-5-5), [restoration guarantees](https://www.conductor.build/changelog/0.33.5-better-archiving), and [configurable branch cleanup](https://www.conductor.build/docs/reference/settings/reference). Exact folder-removal mechanics are not established by these sources; preserving/restoring saved work governs implementation choices.
 
@@ -47,12 +57,31 @@ Workspace defaults follow Conductor's [fetch-before-create behavior](https://www
 
 **Foundation principle:** each milestone adds a usable capability to the intended product architecture. Build production-intended implementations that later milestones extend. Limit capabilities temporarily while retaining the intended ownership, persistence, and execution seams. Avoid known architectural shortcuts that require replacement in the next milestone; allow refactoring when implementation evidence justifies it. Add concrete implementations as needed rather than speculative frameworks.
 
+Milestone 01 follows its [early-development compatibility policy](MILESTONE-01.md#development-compatibility-policy):
+earlier development storage/contracts/preferences need no backward support or
+migration. Current-build durability/recovery and external runtime compatibility
+remain required; use fresh private development state for incompatible changes.
+
 Keep one Rust core with concrete modules:
 
 - `workspaces` owns repository/worktree identity, base/setup, and workspace-wide admission and archive across every affected conversation.
 - `conversations` owns durable execution policy: application/provider identities, turns, pending sends, approval validity, exact resume, and reconciliation after lost replies.
-- `runtimes` owns execution mechanics: provider connections, process ownership, cancellation and cleanup evidence. Use concrete Codex stdio app-server and official Claude SDK bridge adapters; credentials remain runtime-owned.
+- `runtimes` owns execution mechanics and contains a deep provider-connection module owning readiness, login attempts, connection admission, cancellation, reconciliation and process-cleanup evidence. Its interface hides lifecycle coordination from callers; concrete provider adapters keep protocol and authentication details local. Use Codex stdio app-server and official Claude SDK bridge adapters as their features enter scope; credentials remain runtime-owned. Share mechanisms internally when exercised behavior warrants it, without a universal provider framework.
 - `storage` owns authoritative writes for SQLite metadata and durable transcripts/attachments, outside project files and independent of provider history availability. Execution policy stays with its owning module.
+
+Provider availability, the provider being inspected, a login attempt and a
+conversation's provider binding are distinct. Several providers may be usable at
+once; a workspace has no exclusive provider. Connection observations and login
+results target the exact provider/configuration and supervisor owner. Competing
+authentication methods exclude each other within the same effective credential
+scope; unrelated providers remain independent within resource budgets. Later
+providers, including OpenCode, extend concrete adapters when selected; this
+direction adds no integration or account/profile-management scope to Milestone 01.
+
+The [provider-independent workspace prerequisite](../.scratch/provider-independent-workspaces/spec.md)
+retires the current hardcoded workspace provider field without changing workspace
+identity or creation/recovery policy. Provider defaults belong to explicit
+conversation admission or presentation, and each conversation retains its provider.
 
 Tauri requests actions against explicit conversation/turn identities and presents observations. Save action identity and intent before runtime effects; distinguish local durability, provider receipt, and unknown outcome. Retrying the same action retrieves its recorded status or outcome; an uncertain result triggers reconciliation before any potentially duplicate effect. Approvals bind to the exact pending operation. Conversation, turn, and runtime-process lifetimes remain distinct. Archive fences new work before reconciling all affected conversations. This provides recovery without promising exactly-once provider execution.
 

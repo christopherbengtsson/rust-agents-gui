@@ -1,0 +1,202 @@
+# Codex connection — Milestone 01 ticket 06
+
+Status: ready-for-agent
+
+Agreed 2026-11-15. This feature implements the outcome tracked by
+[Milestone 01 ticket 06](../milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+in four separately selected sessions. No implementation or qualification is
+claimed by this documentation publication.
+
+Amended 2026-11-15 after the provider architecture discussion: the four connection
+sessions remain, with a separately selected
+[provider-independent workspace prerequisite](../provider-independent-workspaces/spec.md).
+The architecture below is agreed direction, not implemented behavior.
+
+## Authority and fresh sessions
+
+[MVP](../../docs/MVP.md) owns product scope and execution ownership;
+[Milestone 01](../../docs/MILESTONE-01.md) owns A3 acceptance and qualification;
+the [milestone implementation spec](../milestone-01/spec.md) supplies the wider
+workflow. This spec owns the shared connection journey and constraints; child
+tickets own session deliverables and completion evidence. The
+[frontend foundation](../frontend-navigation/spec.md) remains the prerequisite.
+
+1. Work only the selected child ticket. Confirm its blockers using their checked
+   acceptance and dated evidence before product edits; the sequence does not
+   authorize continuing into the next ticket.
+2. Read the selected ticket's requirement pointers and predecessor handoff. Follow
+   [verification policy](../../docs/agents/verification.md) before selecting checks,
+   [observation guidance](../../docs/agents/observations.md) for IPC/lifetimes, and
+   the [component guide](../../src/components/README.md) for UI work. Use applicable
+   repository-local UX/UI, React, Rust, shadcn and XState skills under repository
+   precedence; inspect installed Intent guidance when the task requires it.
+3. Inspect current source/scripts and preserve existing changes. Earlier session
+   evidence identifies actual interfaces and versions; a plan is not proof that a
+   module, method or dependency already exists.
+4. Deliver one working increment through core, supervisor, typed IPC and desktop.
+   Add dependencies with their first use. Unit-test the owning decisions with
+   controlled dependencies and qualify the ticket's focused fixture-desktop path
+   in that session; cumulative ticket 04 does not defer those checks.
+5. Append a dated evidence comment to the selected ticket with source identity,
+   exact checks/results, unit/fixture/native distinctions and unperformed limits.
+   Check only verified acceptance, identify successor interfaces and stop. Required
+   failed/unperformed checks stay open. Parent 06 and whole-milestone acceptance
+   stay open until their own aggregate gates pass.
+
+## Session sequence
+
+First complete [provider-independent workspaces 01](../provider-independent-workspaces/issues/01-retire-workspace-provider.md),
+which removes workspace-level provider ownership through current-format records,
+generated contracts and desktop observations. It is a bounded prefactor, not a
+provider framework or a storage-driver redesign. Connection 01 consumes its dated
+handoff alongside the existing foundation prerequisites.
+
+All sessions follow the milestone's [development compatibility policy](../../docs/MILESTONE-01.md#development-compatibility-policy).
+Application-owned record/contract changes need no support for previous development
+formats. Update the current model and generated contracts together, use fresh
+private state where needed and retain current-build recovery/owner checks.
+
+| Ticket | Working outcome | Blocked by |
+| --- | --- | --- |
+| [01 — Readiness and diagnostics](issues/01-provider-readiness-and-diagnostics.md) | Shared Providers page, existing Codex setup/status and actionable errors through real/fixture adapters | Provider-independent workspaces 01; Milestone 02a; foundation F08 |
+| [02 — Browser sign-in](issues/02-official-browser-sign-in.md) | Explicit official-runtime browser login, progress return, cancellation and reconciliation | 01 |
+| [03 — Embedded CLI login](issues/03-embedded-cli-login.md) | Direct official login in a terminal, retained attachment, completion and owned cleanup | 02 |
+| [04 — Qualify the connection journey](issues/04-qualify-connection-journey.md) | Cumulative desktop/lifecycle/accessibility evidence and separately recorded authentication limits | 03 |
+
+01 establishes the actual setup adapter seam and supported-schema provenance;
+02 extends it with browser authentication and a shared login-attempt owner;
+03 reuses that owner for CLI login. Deliver only the methods exercised by each
+slice, retaining the intended real/fixture seam for later chat/approval tickets.
+Keep unavailable Codex actions absent until their implementing ticket; Claude's
+explicitly requested disabled actions are the scoped presentation exception.
+
+After 04, complete the [parent 06 evidence](../milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+without rerunning unchanged checks, then proceed only when selected to existing
+[06a — Storage evaluation](../milestone-01/issues/06a-evaluate-storage-before-durable-chat.md)
+and [07 — Durable streamed chat](../milestone-01/issues/07-durable-streamed-chat-and-uncertain-send-recovery.md).
+06a retains its identifier; this feature's 01–04 are not milestone ticket numbers.
+
+## Connection journey
+
+The intended benefit to validate is: **“I connected Codex—or understood exactly what to fix—without leaving my workspace behind.”** Conductor supplies the layout and interaction reference; this app retains its own execution ownership and milestone limits.
+
+- Extend routed Settings with one shared **Providers** page and selectable **Codex** / **Claude Code** tabs, defaulting to Codex. Relevant workspace setup/status links open the Codex tab. Keep provider setup distinct from `SupervisorConnection` transport diagnostics.
+- Show detected authentication and account/configuration status first, with **Refresh**. Already-configured users need not choose a method to discover their connection. Show the observed authentication/billing route when available, otherwise unknown; recognize existing API-key configuration without offering API-key setup controls.
+- Follow Conductor's authentication-choice and status/detail layout using shared controls and semantic styling. Offer **ChatGPT** (“Sign in through your browser.”) and **CLI** (“Use your existing Codex setup, or run Codex login here.”), giving browser sign-in greater visual emphasis. Choice selection changes presentation only; it neither starts authentication nor changes the active runtime configuration/billing route.
+- An explicit browser sign-in action starts official Codex-managed authentication, opens its returned URL, and presents pending, completed, failed and cancelled outcomes. Offer reopening the same browser attempt without automatically creating another. Recheck authoritative authentication after completion; opening the browser or receiving a completion notification alone is not proof of readiness.
+- An explicit **Run codex login** action launches the selected installed official executable directly with its login argument in an embedded terminal, using the effective runtime configuration. Support input/output, resize, keyboard focus, starting/running/error/exited states and **Done**. End with the login command; expose no post-login general shell. Recheck authentication after command exit, even when its exit code is successful; distinguish login failure from a failed status read.
+- Preserve pending sign-in and terminal progress across provider tabs, Settings sections and workspace navigation. Display a compact **Codex sign-in in progress** status linking back to Providers. Navigation hides the terminal without cancelling it; reopening retrieves the same attempt. Provide an explicit **Cancel sign-in** action; closing a running login terminal requests cancellation and must be named **Cancel sign-in and close terminal**, rather than an ambiguous close control.
+- Pair failures with their next useful action: missing executable → official installation instructions and explicit recheck; unsupported version/protocol → supported-version guidance and recheck; missing authentication → sign-in; browser-open failure → reopen the current attempt; uncertain delivery/cleanup → status reconciliation before retry. Put technical diagnostics beneath recovery guidance. Retained observations remain visibly stale/unknown when verification fails.
+- After authentication, show the authoritative connection result without automatically starting agent work or navigating away. Preserve workspace reading context and the user's return destination. Back/Escape must retain the established return/focus behavior across General, Providers and provider-tab changes; nested overlays and terminal keyboard handling take precedence. Supply the correct page landmark label, accessible names, focus return, visible focus and usable ordinary/minimum-window layouts.
+- Keep Claude's tab inspectable with **“Claude connection isn't implemented yet”** and disabled connection actions. Avoid an elaborate unusable form. Tab inspection and disabled actions trigger no Claude readiness probes, sign-in, terminal, adapter or runtime processes.
+
+## Ownership and protocol
+
+- Keep connection, login-attempt and terminal-process ownership, admission, cancellation, reconciliation and retries inside the deep provider-connection module in supervisor-hosted Rust `runtimes`, following the [architecture and extension constraints](#architecture-and-extension-constraints). Tauri forwards explicitly targeted actions and observations; screens use the established observation interfaces without creating another runtime, queue or cache. Bind results to the expected owner, provider/configuration and exact attempt; prevent duplicate/competing login starts, ignore stale results, and reconcile lost replies rather than replaying authentication on mount/reconnect.
+- Preserve runtime-owned credentials/configuration. Explicit user actions may initiate official-runtime sign-in; extract/store no subscription tokens, silently change no login state, and silently substitute no billing route. Do not collect API keys or change credential-storage settings in this milestone. Authentication choices are presentation, not app-owned credential or provider-mode settings.
+- Build the terminal renderer and bounded process/PTY transport with small seams that the later development terminal can extend. The supervisor owns the login process independently of the routed view. Cancellation, late setup and explicit Quit retain owned handles until physical cleanup is observed; failed/unknown cleanup stays visible and fences replacement. Login output is transient setup presentation, not durable chat history. General shells, workspace terminal management and run/test controls remain deferred.
+- Before adapter or fixture changes, select/record the supported Codex runtime version, inspect its official protocol/schema and retained evidence, and record schema/source revision and captured-versus-synthetic provenance beside fixtures.
+- Ground observer/approval-validation assumptions in the selected official schema and retained local evidence, preserving exact operation/request/turn matching. Qualify the selected cohort explicitly; archived repository inspection is not required.
+- Implement the concrete Codex stdio app-server adapter and deterministic fixture adapter at the same execution seam, using supported-version protocol behavior rather than guessed payloads.
+- Expose connection/configuration observations and actionable missing-executable, incompatible-protocol, and unavailable-authentication errors in the desktop through core actions/observations.
+- Separate protocol interpretation from process/stdio mechanics with small internal substitutions. Test deadline decisions using controlled time/events or immediate timeout outcomes; keep production deadlines intact and unit execution free of runtime processes or waits.
+
+## Architecture and extension constraints
+
+These are supporting parts of one design, not separate architectural systems or
+horizontal implementation tickets. The first working readiness slice establishes
+the exercised interface; browser and CLI slices extend it.
+
+- **Provider-connection owner:** one cohesive Rust module hides readiness,
+  login-attempt admission, authoritative verification, stale-result rejection,
+  reconciliation and cleanup fencing. Browser and CLI share that owner. Keep
+  process handles with the execution owner until physical completion is observed;
+  navigation releases presentation interest only. The existing observation shutdown
+  path is not a completed provider-Quit mechanism: each login slice adds and
+  qualifies cleanup for the resources it introduces.
+- **Identity and cardinality:** provider availability, the inspected tab, login
+  attempt, conversation binding and process identity remain distinct. Scope
+  observations/actions to the expected supervisor and exact provider/configuration;
+  bind attempt and terminal traffic to their exact identities as well. Browser and
+  CLI compete within the same effective credential/configuration scope. An
+  unrelated provider's status or attempt must not be overwritten or fenced by
+  another's result or failed cleanup, except where an actual shared resource
+  requires it. App-wide resource budgets remain valid.
+- **Concrete adapters:** Codex protocol/version interpretation, correlation,
+  authentication evidence and diagnostic meaning stay inside its adapter. The
+  deterministic fixture adapter substitutes runtime evidence at the same execution
+  seam; it does not implement application admission or recovery policy. Internal
+  process/stream/time substitutions retain the real parser and command construction
+  under test. The supervisor's protocol-8 codec is not evidence for provider framing.
+  Extend only operations used by the current slice; derive future provider-specific
+  authentication methods from supported evidence instead of requiring Codex's flow.
+- **Provider observations:** add one app-scoped feature module to the existing
+  observation composition. It hides generated validation, contextual owner/target
+  checks, Query identity, freshness and pending-attempt interests from Settings,
+  workspace guidance and compact progress. Query remains the sole observation
+  cache, using existing feed invalidation and physical scheduling. Pending attempts
+  retain observation interest above routes; reconnect retrieves status without
+  replay. Presentation memory stores only allowed choices/context, never a second
+  copy of execution or authentication state.
+- **Conversation ownership:** workspaces remain shared and provider-independent;
+  later `conversations` owns each conversation's provider/native mapping, durable
+  sends, turns, approvals and exact resume. Provider connection readiness alone
+  does not start a conversation. Milestone capability limits belong in admission
+  and presentation, not workspace/storage identity.
+- **Extension limit:** support several provider targets structurally now, proving
+  isolation with synthetic owning-module targets and controlled outcomes. This
+  does not implement or probe Claude/OpenCode, add enable switches, dynamic plugin
+  loading, a universal capability interface, another cache/scheduler, or multi-account
+  configuration management. Concrete future adapters and supported operations arrive
+  with their first selected feature. General terminal mechanics remain internal
+  until their actual consumers justify a shared seam.
+
+Use the owning module's interface and small internal effect seams as the test
+surface under repository verification policy. Removing the provider-connection
+module should redistribute lifecycle decisions among callers; a forwarding-only
+module does not earn its place. Existing feature-observation tests supply prior
+art for target isolation, retained interests and freshness; existing workspace
+effect substitutions supply prior art for deterministic Rust policy tests.
+
+## Verification and qualification
+
+- Unit-test setup with schema-grounded frames and mocked process outcomes: existing authentication/configuration, missing executable, version/exit failure, unrelated IDs, malformed/oversized frames, unexpected requests, EOF, timeout and cleanup uncertainty. Cover duplicate actions, lost replies, stale results, concurrent browser/CLI start rejection, navigation continuity, cancellation during late setup, and command completion without successful authentication. Metadata/status reads and choice selection must not start login, threads or turns; disabled Claude actions have no effects.
+- Prove independent provider/configuration targets with controlled synthetic outcomes: distinct readiness records, late-result isolation, same-scope authentication exclusion, unrelated-target progress, scoped cleanup fencing and provider/attempt-specific observation identity. Keep application policy real. Synthetic targets establish cardinality and routing decisions, not Claude/OpenCode protocol support or native concurrency qualification.
+- Separately demonstrate actual fixture-desktop setup, browser-handoff and embedded-terminal states with private test state and controlled fixture commands. Check progress discovery after navigation, retained terminal attachment, keyboard/focus/landmark behavior, ordinary/minimum-window sizing and actual cleanup. Controlled DOM/unit success is partial evidence; perform a hands-on connection task with Christopher when feasible and record its limits.
+- Keep metadata/schema inspection read-only with respect to authentication; explicit user-requested sign-in is a separate action. Record any real authentication check as its own agreed scenario, runtime/schema/configuration cohort and result, distinct from fixture-desktop and native-agent qualification. Do not silently sign out or replace existing credentials to manufacture test states. No real authentication check may start an agent thread or turn.
+- Record inspection sources, versions, exact checks, results, failures and unperformed qualification. Synthetic setup success and real authentication success do not establish native execution compatibility. Starting a real agent session is outside this feature's allowance.
+
+## Scope boundary
+
+Use deterministic fixtures and private test state for execution checks. This
+feature covers Codex setup only: API-key setup UI, installer/bundling,
+model-selection flows, Claude/OpenCode integration and general development terminals remain
+deferred. Recognize existing runtime-owned API-key configuration. Real
+authentication checks retain separately agreed scenarios/results; these tickets
+authorize no live agent submissions. Real authentication success does not establish
+native chat/approval/resume compatibility. The 2026-11-15 split changes documentation
+only and leaves every child implementation acceptance item open.
+
+## Reference evidence
+
+Read [Conductor connection research](../../docs/research/conductor-provider-connection.md)
+when comparing UI, authentication or terminal behavior. It records hash-verified
+shipped-source evidence and intentional differences, not successful sign-in,
+original source organization, installed Codex compatibility or a user trial.
+
+## Publication record — 2026-11-15 architecture amendment
+
+The user agreed one cohesive provider-connection design with concrete adapters and
+shared observations on the existing foundation. Published the separate workspace
+provider cleanup as a prerequisite; retained connection sessions 01–04 and their
+focused evidence requirements. Updated the MVP, milestone/current successor
+guidance, glossary and conversation/storage handoffs without changing historical
+checkpoint results or completing implementation acceptance.
+
+Documentation checks passed: 224 local links and 47 Markdown heading anchors in
+16 changed/new documents; prerequisite/connection/chat dependency edges and cycle
+checks; documentation-only changes relative to the staged baseline; unchecked
+feature implementation acceptance; and `git diff --check`. Seven historical
+outside-workspace links were skipped without inspecting their targets. Application
+units, generation, builds, fixture-desktop, authentication, native-agent and user
+trial qualification were not run for this documentation-only amendment.

@@ -392,8 +392,34 @@ superseding the original remembered-destination fallback. Preserve keyboard,
 focus, minimum-window usability, and existing inspection presentation.
 
 [Milestone 01 ticket 06 — Connect Codex with actionable setup diagnostics](../milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
-adds Settings → Providers → Codex; workspace status links there. Keep
-supervisor transport diagnostics separate.
+is the parent/index for the [connection feature's separate sessions](../codex-connection/spec.md#session-sequence).
+The [shared connection journey](../codex-connection/spec.md#connection-journey)
+owns Providers/Codex/disabled-Claude presentation, browser/CLI authentication and
+progress return. Keep supervisor transport diagnostics separate.
+The [provider-independent workspace prerequisite](../provider-independent-workspaces/spec.md)
+now precedes connection 01. The connection feature's
+[architecture constraints](../codex-connection/spec.md#architecture-and-extension-constraints)
+extend the existing observation composition with one provider feature module;
+they add no replacement cache, scheduler or frontend execution owner. Foundation
+implementation and qualification evidence remain historical results.
+
+Connection 01 extends Settings return provenance across General, Providers and tab
+changes: Back/Escape still returns to the preceding app destination, with the
+existing home fallback, workspace reading context and focus restoration. Use the
+correct content heading for each main landmark; nested overlays and terminal
+keyboard handling take precedence over page Escape. Route/view changes release
+presentation interests without cancelling supervisor-owned setup. A compact
+sign-in-progress status links back to Providers; cancellation and closing a running
+login terminal are explicitly named actions requesting owned cleanup. Completion
+does not navigate away automatically. Reopening or preloading a route retrieves
+observations, never replays sign-in.
+
+The [2026-11-15 session split](../milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md#2026-11-15--split-into-separate-connection-sessions)
+preserves F07/F08 implementation evidence. Connection 01–03 each implement and
+qualify their focused slice; connection 04 qualifies the combined journey. The
+embedded official-login terminal and runtime-owned authentication remain successor
+work, not implemented foundation features. API-key setup and general development
+terminals remain deferred.
 
 ### Route preparation and Intent
 
@@ -424,12 +450,14 @@ dependency updates.
 | F07                                                     | Footer Settings, General, focus/return/context, ticket-6 seam                                                                  | F06                    |
 | F08                                                     | Cumulative routed desktop/accessibility/packaging/performance/size evidence and fixes                                          | F07                    |
 
-All foundation implementation and F08 qualification precede Milestone 01 ticket 6. Update its blockers and settings
-requirement; correct stale milestone summaries without rewriting completed evidence.
+All foundation implementation and F08 qualification precede connection 01 under
+Milestone 01 parent 06. The [connection sequence](../codex-connection/spec.md#session-sequence)
+continues through 04 before storage research. Preserve completed foundation evidence.
 
 ### Storage research checkpoint
 
-Add a separate ticket after 6 and before 7: evaluate rusqlite/SQLx inside Rust-owned
+[Existing 06a](../milestone-01/issues/06a-evaluate-storage-before-durable-chat.md)
+follows connection 04 and parent 06's aggregate before 07: evaluate rusqlite/SQLx inside Rust-owned
 persistence; WAL/rollback configuration; connection scheduling; transcript batching
 and history paging; synchronization/checkpoint/recovery/backup; atomicity across
 records and transcript/attachment files; future disposable disk-cache separation;

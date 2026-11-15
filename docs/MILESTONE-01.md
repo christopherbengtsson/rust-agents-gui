@@ -10,11 +10,48 @@ Build the first lasting part of the product. [MVP.md](MVP.md) is the product con
 
 ## Scope
 
-One local Apple Silicon macOS workflow using an installed official Codex runtime and its existing authentication. Support multiline text chat and one active conversation at a time in this slice. Persist separate repository, workspace, conversation, turn, and action identities; do not encode a permanent one-conversation-per-workspace limit.
+### Development compatibility policy
+
+Milestone 01 is early development with no backward-compatibility commitment to
+earlier development builds. Change application-owned storage schemas, serialized
+records, internal IPC/generated contracts and presentation preferences directly
+when the current design needs it. Old-format readers, migrations, dual formats,
+compatibility adapters and preservation of disposable development application
+state are not acceptance requirements. Use fresh private application state for
+incompatible changes and document any required development reset/restart steps.
+This supersedes earlier milestone/spec/ticket requirements to support previous
+development formats; completed results remain historical evidence.
+
+Current-build persistence, restart/crash recovery, exact action targeting, owner
+exclusion and physical cleanup remain required. Reject incompatible running peers
+rather than supporting mixed versions. Protect repository files/worktrees,
+runtime-owned credentials and archived evidence; changing a format grants no
+authority to delete those resources or abandon owned processes. Historical
+migration/compatibility results remain checkpoint evidence, not requirements to
+carry those old formats forward. External provider protocol compatibility still
+requires the selected runtime/schema evidence.
+
+### Working scope
+
+One local Apple Silicon macOS workflow using an installed official Codex runtime and its existing authentication, with explicit user-requested official-runtime browser or embedded CLI sign-in when needed. Credentials remain runtime-owned. Support multiline text chat and one active conversation at a time in this slice. Persist separate repository, workspace, conversation, turn, and action identities; do not encode a permanent one-conversation-per-workspace limit.
 
 Include the minimal on-demand local supervisor and one Tauri desktop client from the start, following MVP.md. Establish the real process connection and reconnection path; keep scheduling, login-time startup, and additional independent clients deferred.
 
-Adding a new repository automatically requests its first workspace; repository + immediately requests another. Defer the composer dialog and base picker. Generate workspace names, branches and managed folders. Create from the locally available origin/HEAD commit, otherwise exactly one usable local main/master; missing or ambiguous defaults fail actionably. Resolve and pin the commit before mutation. This is a temporary milestone limitation; the full MVP fetches its configured remote before creation. Show workspace path, branch, and provider. Provide a usable desktop composition with navigation, chat, pending approval, changed-file list, and text diff. Controls represent working behavior; failures remain actionable within the app.
+Adding a new repository automatically requests its first workspace; repository + immediately requests another. Defer the composer dialog and base picker. Generate workspace names, branches and managed folders. Create from the locally available origin/HEAD commit, otherwise exactly one usable local main/master; missing or ambiguous defaults fail actionably. Resolve and pin the commit before mutation. This is a temporary milestone limitation; the full MVP fetches its configured remote before creation. Show workspace path and branch; show provider identity with its conversation or explicitly targeted setup status. Workspaces have no exclusive provider. Provide a usable desktop composition with navigation, chat, pending approval, changed-file list, and text diff. Controls represent working behavior; failures remain actionable within the app. The sole provider-setup exception is the requested informational Claude Code tab with disabled connection actions and a clear not-implemented explanation; it starts no Claude probes or processes.
+
+Settings → Providers uses Conductor's layout, with Codex selected by default and
+existing authentication/status plus Refresh shown before sign-in choices. Explain
+ChatGPT/browser and CLI choices, emphasizing browser sign-in. Selection alone
+does not change authentication or billing. The embedded terminal runs official
+`codex login` directly and ends with that command; general development terminals
+remain deferred. Preserve pending setup across navigation with a compact progress
+link back; cancellation and closing a running login terminal explicitly request
+owned cleanup. Recheck authoritative authentication after completion, without
+starting agent work or navigating away. The [connection feature spec](../.scratch/codex-connection/spec.md)
+owns the detailed journey, recovery, accessibility and qualification requirements;
+milestone ticket 06 indexes its separate sessions. Existing API-key
+authentication/configuration is observable; API-key entry/edit controls and
+credential-storage changes are omitted.
 
 Implement only the code this workflow exercises. Follow the Rust-core, thin-Tauri, exact-identity, runtime-owned-authentication, and durable-storage constraints in [MVP.md](MVP.md#starting-architecture). Keep the real Codex adapter and deterministic fixture adapter at the same execution seam. Reuse the archived [proof results and artifact inventory](../../rust-agent-terminal/.scratch/integrated-agent-chat/proof-results.md) as evidence; preserve its files, ledgers, credentials, and native conversations. Before further RAT inspection, follow its AGENTS.md and required documentation.
 
@@ -23,6 +60,24 @@ Implement only the code this workflow exercises. Follow the Rust-core, thin-Taur
 Prepare one implementation spec for this milestone, then split execution into tickets sized for separate coding sessions. Keep the product contract and this milestone's acceptance/evidence requirements authoritative.
 
 The [implementation spec](../.scratch/milestone-01/spec.md) captures the agreed build and testing decisions and is published in the local Markdown tracker.
+
+[Parent 06](../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+is an index/aggregate for the [connection feature's four sessions](../.scratch/codex-connection/spec.md#session-sequence):
+readiness/diagnostics, browser sign-in, embedded CLI login, then cumulative
+qualification. Each implementation session includes its own focused evidence;
+the final session qualifies the combined journey. Existing 06a keeps its storage
+research scope and waits for connection 04 and the parent aggregate before 07.
+This split changes documentation/session boundaries only; implementation and
+native qualification remain open.
+
+The separately selected [provider-independent workspace cleanup](../.scratch/provider-independent-workspaces/spec.md)
+precedes connection 01 and retires the current hardcoded Codex record/validation
+constraint with current-format and focused desktop evidence. The
+[connection architecture](../.scratch/codex-connection/spec.md#architecture-and-extension-constraints)
+defines one deep Rust provider-connection owner, concrete adapters and a feature
+observation module reusing the foundation. The four connection sessions remain;
+Claude/OpenCode integrations and native multi-provider qualification remain deferred.
+Earlier workspace/foundation evidence is preserved as its recorded checkpoint.
 
 The first ticket installs dependencies and establishes a verified build/start baseline before product behavior is implemented. Completion requires a minimal Tauri window, a separately launched supervisor, and a successful connection/status exchange between them. Repository registration, persistence, chat, and recovery behavior follow in subsequent tickets.
 
@@ -38,7 +93,7 @@ The desktop should have a clear, usable layout for navigation, chat, approvals, 
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | A1 · Register            | Register an existing Git repository as a separate durable operation without Git/project-file mutation or starting Codex; desktop addition also requests its first workspace through a separately recorded continuation. Reopening restores its identity. Invalid paths and unavailable repositories produce an actionable error rather than a broken saved entry.                                                                                                                                                                                                                        |
 | A2 · Workspace           | Create a separate branch/worktree at the automatically identified and pinned local default commit and retain its identity across restart. Original checkout files remain untouched. Creation failures identify any branch/folder already created; retry reconciles that operation instead of creating duplicates or deleting unrelated work.                                                                                                                                                                                                                                             |
-| A3 · Connect             | Connect to the supported installed Codex version using its existing authentication/configuration. Missing executable, unsupported protocol, or unavailable authentication gives setup/retry guidance. No app-owned token extraction, login changes, or silent switch of billing route.                                                                                                                                                                                                                                                                                                   |
+| A3 · Connect             | Detect existing authentication/configuration first; explicitly connect through official Codex browser sign-in or an embedded CLI login terminal. Missing executable, unsupported protocol and unavailable authentication give concrete setup/recheck guidance. Preserve progress across navigation, reconcile duplicate/stale/uncertain outcomes, and verify cancellation/cleanup. Recheck authentication after command/browser completion. Credentials stay runtime-owned; no token extraction, silent login/billing changes, API-key setup UI or Claude effects. |
 | A4 · Chat                | Send multiline text and see streamed replies/tool activity in the correct conversation. Keep saved, provider-received, and uncertain delivery distinguishable. Navigation and interrupt remain usable during sustained output. Preserve supported provider evidence instead of inferring completion from silence.                                                                                                                                                                                                                                                                        |
 | A5 · Approval            | Show the actual requested operation and available scope before allow-once or deny. Match the pending provider request to its conversation/turn; reject stale or conflicting answers. Verify an allowed fixture operation occurs and a denied operation does not. A lost approval reply retains uncertainty rather than broadening permission.                                                                                                                                                                                                                                            |
 | A6 · Diff                | Inspect uncommitted text edits, new files, and deletions in the workspace. Identify the comparison shown and refresh after further edits. Binary/unsupported content is labeled honestly; Git/read errors stay visible without replacing the last good result with an apparent clean workspace.                                                                                                                                                                                                                                                                                          |
@@ -51,12 +106,21 @@ The desktop should have a clear, usable layout for navigation, chat, approvals, 
 
 1. **Deterministic unit checks first.** Follow the [testing policy](agents/verification.md) for automated coverage of A1–A10 decisions. Ground protocol inputs in the supported Codex schema and record captured-versus-synthetic provenance. Exercise routing, intent-before-effect, lost replies, duplicate/late events, malformed approvals, connection loss and storage/recovery failures with substituted outcomes. Unit success establishes application decisions; actual OS ownership, durability, cleanup and provider compatibility remain separate qualification claims. Apply this policy from the first tests of each ticket and record evidence for the implemented behavior.
 2. **Desktop workflow with fixtures.** Qualify the actual process/desktop behavior separately from unit tests, using the production core/supervisor path and private disposable state. Include A10 owner-exclusivity, private-access and version checks. Complete the full sequence in the actual app, including denied approval, interrupt, normal quit/restart, desktop-only crash/reconnect, supervisor failure/recovery, and exact resume. Record screenshots of the working states and errors, plus navigation/history-opening measurements against the MVP targets under this single-conversation workload. Run the implemented repository's build, formatting, static checks, and relevant tests; record exact commands and results.
-3. **Bounded live-provider qualification.** Before any real run, agree the exact scenarios, permitted submissions, selected model/effort, time/usage limits, and stop conditions. Record runtime/schema versions, effective configuration and MCP startup exposure, and source hashes before/after the cohort. Use disposable test checkouts and private application state while leaving authentication with the runtime. No automatic scenario retries, larger-model fallback, or reuse of archived proof allowances. Codex has no established hard dollar cap in the existing proof.
+3. **Bounded live-provider qualification.** Before any real agent run, agree the exact scenarios, permitted submissions, selected model/effort, time/usage limits, and stop conditions. Record runtime/schema versions, effective configuration and MCP startup exposure, and source hashes before/after the cohort. Use disposable test checkouts and private application state while leaving authentication with the runtime. No automatic scenario retries, larger-model fallback, or reuse of archived proof allowances. Codex has no established hard dollar cap in the existing proof.
 4. **Close against evidence.** Demonstrate native streaming, allow/deny, interruption/owned cleanup, restart, and exact resume in the desktop app. Observe subscription-backed execution through the existing account and record non-secret account/billing evidence when available. API-key compatibility remains separately unqualified unless included in the agreed run. Failed or unperformed native checks remain open; fixture success cannot substitute for them.
+
+A3 metadata/schema inspection is read-only with respect to authentication. Agree
+and record real authentication checks separately from fixture-desktop and
+native-agent qualification, preserving the runtime/schema/configuration cohort
+and any failures or unperformed checks. Explicit runtime-managed sign-in starts no
+agent thread or turn; do not silently sign out or replace existing credentials for
+test setup. Include actual terminal cleanup and keyboard/focus/window-size checks
+in fixture-desktop evidence. A hands-on connection trial remains distinct from
+source inspection or controlled DOM success.
 
 ## Deferred work
 
-Claude integration; multiple active chats and concurrency qualification; complete skills/hooks/MCP/configuration compatibility; attachments/images and file-reference UX; steering; model/effort selection UI and Plan Mode; multi-project coordination; full workspace/base diffs and inline diff comments sent to chat; remote-base fetching; project setup commands; archive commits/restoration and configurable branch cleanup; editor/terminal handoff; and remaining MVP onboarding/performance qualification. These remain full-MVP requirements where specified in MVP.md; their deferral here applies only to Milestone 01.
+Claude authentication/readiness/execution integration (its informational tab and disabled connection actions are included); API-key setup UI; automatic runtime installation/bundling; general shells, workspace terminal management and run/test controls beyond the official-runtime login terminal; multiple active chats and concurrency qualification; complete skills/hooks/MCP/configuration compatibility; attachments/images and file-reference UX; steering; model/effort selection UI and Plan Mode; multi-project coordination; full workspace/base diffs and inline diff comments sent to chat; remote-base fetching; project setup commands; archive commits/restoration and configurable branch cleanup; editor/terminal handoff; and remaining MVP onboarding/performance qualification. These remain full-MVP requirements where specified in MVP.md; their deferral here applies only to Milestone 01.
 
 PR inbox, automated review preparation/handoffs, PR creation/feedback/merge controls, and review configuration remain later product scope under MVP.md. Add their implementations when needed, using the supervisor/core established here. General scheduling, login-time startup, running after explicit Quit, and additional independent clients remain deferred; their deferral does not defer the supervisor itself.
 

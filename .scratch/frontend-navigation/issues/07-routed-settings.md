@@ -107,3 +107,29 @@ attempts, exact commands/timings, source/package hashes, independent review
 submissions or actual desktop/process cohort was performed for F07. F08 retains
 cumulative real WebView layout/focus/reload/responsiveness qualification and remains
 unimplemented. The containing commit owns F07. Stop after F07.
+
+### 2026-11-15 — provider successor handoff superseded
+
+The revised [Milestone 01 ticket 06](../../milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
+replaces the earlier **Settings → Providers → Codex** successor wording with one
+shared Providers page: Codex is the default tab; Claude Code is inspectable with
+disabled connection actions and an explicit not-implemented explanation. Ticket 06
+adds official-runtime Codex browser/embedded CLI sign-in, preserves pending setup
+across navigation and provides a compact progress link back. API-key setup and
+general development terminals remain deferred. Supervisor diagnostics stay separate.
+
+That successor must extend section landmark labels and Settings return/focus
+provenance across General, Providers and provider tabs, retaining workspace
+context and nested-overlay/terminal keyboard precedence. F07's General-only
+implementation, checked acceptance, dated results and linked evidence above
+remain historical evidence. This comment publishes documentation only; it does
+not add provider setup or complete ticket 06.
+
+### 2026-11-15 — separate provider implementation sessions
+
+The [connection feature](../../codex-connection/spec.md#session-sequence) now splits
+that successor into readiness/Settings diagnostics (01), browser sign-in (02),
+embedded CLI login (03) and cumulative qualification (04). Milestone 06 remains
+their parent/index; existing 06a storage research follows 04 and the parent
+aggregate. F07's recorded implementation and evidence are unchanged. Follow one
+selected connection child ticket rather than implementing the whole successor.

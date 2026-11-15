@@ -346,8 +346,8 @@ interest while its app-lifetime owner drains work and retains validated context.
   use WorkspacePanel for repository/workspace presentation and SupervisorConnection
   for transport diagnostics. It receives `onBack: () => void` and route content;
   the General content supplies `settings-general-heading` for the main landmark.
-  General is the only section and uses Empty with honest placeholder text. No
-  account or provider controls are present.
+  At the F07 checkpoint, General is the only section and uses Empty with honest
+  placeholder text. No account or provider controls were implemented there.
 - The layout focuses its heading on mount. Its window bubble-phase Escape handler
   follows installed Base UI overlay dismissal; consumed, composing and repeated
   Escape events do not navigate. Navigation owns ephemeral return provenance keyed
@@ -366,5 +366,17 @@ interest while its app-lifetime owner drains work and retains validated context.
   Sheet/resizing contracts remain. Actual WebView focus/layout and cumulative
   responsiveness qualification belongs to F08.
 - [Original milestone 06](../../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
-  extends this composition with Settings → Providers → Codex and workspace status
-  links. It remains separate from supervisor diagnostics; F07 implements no setup.
+  now indexes the [connection feature sessions](../../.scratch/codex-connection/spec.md#session-sequence).
+  Their [shared journey](../../.scratch/codex-connection/spec.md#connection-journey)
+  owns provider presentation, login controls and progress continuity. Connection 01
+  extends Settings landmark labels and return/focus/context behavior; 02 adds
+  browser progress/cancellation; 03 adds the login-terminal renderer under Rust
+  process ownership; 04 qualifies the combined desktop interaction. Each slice
+  uses existing UI/primitives/tokens and documents actual new block contracts
+  when implemented. Supervisor diagnostics stay separate. These are planned
+  successor contracts; F07 implemented no provider setup.
+  The [provider-independent workspace prerequisite](../../.scratch/provider-independent-workspaces/spec.md)
+  precedes connection 01. Its cleanup removes workspace-level provider ownership;
+  setup links explicitly target a provider. All setup/progress consumers use the
+  [shared provider observation module](../../.scratch/codex-connection/spec.md#architecture-and-extension-constraints)
+  planned on the existing foundation; blocks do not own login attempts or another cache.
