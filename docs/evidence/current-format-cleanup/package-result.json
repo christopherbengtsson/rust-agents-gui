@@ -1,0 +1,6 @@
+{
+  "command": "corepack pnpm build",
+  "exit": 0,
+  "wall_seconds": 12.658521208097227,
+  "target": "workspace target; warm release cache; normal features"
+}

@@ -1,0 +1,32 @@
+{
+  "baseline": "a00a243259ff238bbb73e8dd9c0682572b72a9d1",
+  "utc": "2026-11-16T20:28:04.142414+00:00",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "commands": {
+    "node --version": {
+      "exit": 0,
+      "stdout": "v26.13.1"
+    },
+    "corepack pnpm --version": {
+      "exit": 0,
+      "stdout": "12.18.0"
+    },
+    "rustc --version": {
+      "exit": 0,
+      "stdout": "rustc 1.99.1 (58cf8f9c3 2026-10-13)"
+    },
+    "cargo --version": {
+      "exit": 0,
+      "stdout": "cargo 1.99.1 (5f94df478 2026-08-27)"
+    },
+    "sw_vers": {
+      "exit": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56"
+    },
+    "sysctl -n machdep.cpu.brand_string hw.memsize": {
+      "exit": 0,
+      "stdout": "Apple M4 Pro\n51539607552"
+    }
+  }
+}

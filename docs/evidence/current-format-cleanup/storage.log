@@ -1,0 +1,4 @@
+$ node scripts/qualify.mjs storage -- /Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/current-format-cleanup/storage.json
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.99s
+Qualification storage: passed; retained /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-storage-7fPInI

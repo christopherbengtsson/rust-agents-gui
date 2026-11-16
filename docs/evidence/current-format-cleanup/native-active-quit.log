@@ -1,0 +1,71 @@
+2026-11-16T20:34:42.732240Z  INFO workspace_core::native: native startup settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 phase=Some(Ready)
+2026-11-16T20:34:42.860457Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.860493Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.860512Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.878497Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.878529Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.878558Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.880576Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.880600Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.880607Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.900734Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.900772Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.900781Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.904117Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.904143Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.904154Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.928208Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.928242Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.928251Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.960019Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.960055Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.960063Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:42.991371Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:42.991406Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:42.991417Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.022860Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.022879Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.022886Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.045525Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.045571Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.045579Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.054213Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.054238Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.054245Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.054745Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=Some(c612002a-c9b1-4496-bc5f-5dda0cd94f22)
+2026-11-16T20:34:43.054756Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.054769Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.055111Z  INFO workspace_core::storage: storage write admitted action=c612002a-c9b1-4496-bc5f-5dda0cd94f22 sequence=1 queued=0
+2026-11-16T20:34:43.056152Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.056783Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.057074Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.057064Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.057084Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.057096Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.068896Z  INFO workspace_core::storage: storage writer settled action=c612002a-c9b1-4496-bc5f-5dda0cd94f22 sequence=1 succeeded=true
+2026-11-16T20:34:43.087965Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.087994Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.088002Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.119791Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.119817Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.119825Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.151580Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.151606Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.151615Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.183173Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.183198Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.183206Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.209332Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.209367Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.209374Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.214141Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.214166Z  INFO workspace_core::native: native request admitted incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 control=false
+2026-11-16T20:34:43.214176Z  INFO workspace_core::native: native request settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 succeeded=true
+2026-11-16T20:34:43.237485Z  INFO workspace_core::native: native shutdown fenced incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2
+2026-11-16T20:34:43.274497Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.296277Z  INFO workspace_core::storage: storage write admitted action=c612002a-c9b1-4496-bc5f-5dda0cd94f22 sequence=2 queued=0
+2026-11-16T20:34:43.297835Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+2026-11-16T20:34:43.301439Z  INFO workspace_core::storage: storage writer settled action=c612002a-c9b1-4496-bc5f-5dda0cd94f22 sequence=2 succeeded=true
+2026-11-16T20:34:43.303427Z  INFO workspace_core::native: provider request incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 action=None
+Storage close checkpoint: {"busy":0,"log_frames":11,"checkpointed_frames":11,"wal_bytes":45352,"elapsed":{"secs":0,"nanos":9027916}}
+2026-11-16T20:34:43.311509Z  INFO workspace_core::native: native shutdown settled incarnation=a7d83f5a-a50b-47e7-bad1-19f16e332eb2 failures=0

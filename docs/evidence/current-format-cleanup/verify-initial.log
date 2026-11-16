@@ -1,0 +1,956 @@
+$ node scripts/check.mjs verify
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_initial_workspace"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+Gate: corepack pnpm format:check
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json tsr.config.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 18ms on 767 files using 12 threads.
+Gate: corepack pnpm lint
+$ oxlint src --max-warnings 0 --report-unused-disable-directives-severity warn
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Checking workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:102:9
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+101 |     checks.push(
+    |            ---- arguments to this method are incorrect
+102 |         json!({"case":"fresh-open/replacement/effective-settings/settled-read", "status":"passed"}),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:112:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+112 |     checks.push(json!({"case":"read-only-engine-rejection", "status":"passed", "error":format!("{:?}",rejected.unwrap_err())}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:122:9
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+121 |     checks.push(
+    |            ---- arguments to this method are incorrect
+122 |         json!({"case":"requester-cancellation-keeps-write-and-fresh-status", "status":"passed"}),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:140:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+140 |     checks.push(json!({"case":"pinned-reader/checkpoint-pressure", "status":"passed", "busy":checkpoint.busy,"log_frames":checkpoint.log_frames,"checkpointed_frames":checkpoint.checkpointed_frames,"wal_bytes":checkpoint.wal_bytes}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:172:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+172 |     checks.push(json!({"case":"close/repeated-close/current-build-reopen", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:192:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+192 |     checks.push(json!({"case":"acquisition-timeout/close-retains-failure", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:231:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+231 |     checks.push(json!({"case":"real-deferred-foreign-key-commit-fault/retirement/fresh-absence", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:346:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+346 |     checks.push(json!({"case":"atomic-registration/initial-continuation/reservation/immutable-location/identity", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:442:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+442 |     checks.push(json!({"case":"cross-repository-folder-constraint/settled-next-candidate", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:540:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+540 |     checks.push(json!({"case":"provider-records-only/exact-action-history/scope-exclusion/no-duplicate-replay", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:580:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+580 |     checks.push(json!({"case":"controlled-engine-SQLITE_FULL/failed-write-retirement/retained-close-fault", "status":"passed", "error":full.to_string()}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:614:15
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+614 |         .push(json!({"case":"row-and-byte-keyset-pagination", "status":"passed", "records":count}));
+    |          ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |          |
+    |          arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:641:21
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+641 |         checks.push(json!({"case":kind,"status":"passed"}));
+    |                ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |                |
+    |                arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/workspace-checkpoint/src/../../core/src/storage/qualification.rs:643:17
+    |
+643 |     checks.push(pressure(&root).await?);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+    = note: `?` operator cannot convert from `serde_json::Value` to `&str`
+
+warning: failed to parse serde attribute
+warning: failed to parse serde attribute
+  | 
+  | 
+  | transparent 
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+warning: failed to parse serde attribute
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+warning: failed to parse serde attribute
+  | deserialize_with = "deserialize_initial_workspace"
+  | 
+  | deserialize_with = "deserialize_initial_workspace"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+warning: failed to parse serde attribute
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_initial_workspace"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_initial_workspace"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:102:9
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+101 |     checks.push(
+    |            ---- arguments to this method are incorrect
+102 |         json!({"case":"fresh-open/replacement/effective-settings/settled-read", "status":"passed"}),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:112:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+112 |     checks.push(json!({"case":"read-only-engine-rejection", "status":"passed", "error":format!("{:?}",rejected.unwrap_err())}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:122:9
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+121 |     checks.push(
+    |            ---- arguments to this method are incorrect
+122 |         json!({"case":"requester-cancellation-keeps-write-and-fresh-status", "status":"passed"}),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:140:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+140 |     checks.push(json!({"case":"pinned-reader/checkpoint-pressure", "status":"passed", "busy":checkpoint.busy,"log_frames":checkpoint.log_frames,"checkpointed_frames":checkpoint.checkpointed_frames,"wal_bytes":checkpoint.wal_bytes}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:172:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+172 |     checks.push(json!({"case":"close/repeated-close/current-build-reopen", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:192:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+192 |     checks.push(json!({"case":"acquisition-timeout/close-retains-failure", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:231:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+231 |     checks.push(json!({"case":"real-deferred-foreign-key-commit-fault/retirement/fresh-absence", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:346:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+346 |     checks.push(json!({"case":"atomic-registration/initial-continuation/reservation/immutable-location/identity", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:442:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+442 |     checks.push(json!({"case":"cross-repository-folder-constraint/settled-next-candidate", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:540:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+540 |     checks.push(json!({"case":"provider-records-only/exact-action-history/scope-exclusion/no-duplicate-replay", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:580:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+580 |     checks.push(json!({"case":"controlled-engine-SQLITE_FULL/failed-write-retirement/retained-close-fault", "status":"passed", "error":full.to_string()}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:614:15
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+614 |         .push(json!({"case":"row-and-byte-keyset-pagination", "status":"passed", "records":count}));
+    |          ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |          |
+    |          arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:641:21
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+641 |         checks.push(json!({"case":kind,"status":"passed"}));
+    |                ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |                |
+    |                arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:643:17
+    |
+643 |     checks.push(pressure(&root).await?);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+    = note: `?` operator cannot convert from `serde_json::Value` to `&str`
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `workspace-checkpoint` (lib) due to 14 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `workspace-checkpoint` (lib test) due to 14 previous errors
+error: could not compile `storage-checkpoint` (lib) due to 14 previous errors
+error: could not compile `storage-checkpoint` (lib test) due to 14 previous errors
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:102:9
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+101 |     checks.push(
+    |            ---- arguments to this method are incorrect
+102 |         json!({"case":"fresh-open/replacement/effective-settings/settled-read", "status":"passed"}),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:112:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+112 |     checks.push(json!({"case":"read-only-engine-rejection", "status":"passed", "error":format!("{:?}",rejected.unwrap_err())}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:122:9
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+121 |     checks.push(
+    |            ---- arguments to this method are incorrect
+122 |         json!({"case":"requester-cancellation-keeps-write-and-fresh-status", "status":"passed"}),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:140:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+140 |     checks.push(json!({"case":"pinned-reader/checkpoint-pressure", "status":"passed", "busy":checkpoint.busy,"log_frames":checkpoint.log_frames,"checkpointed_frames":checkpoint.checkpointed_frames,"wal_bytes":checkpoint.wal_bytes}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:172:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+172 |     checks.push(json!({"case":"close/repeated-close/current-build-reopen", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:192:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+192 |     checks.push(json!({"case":"acquisition-timeout/close-retains-failure", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:231:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+231 |     checks.push(json!({"case":"real-deferred-foreign-key-commit-fault/retirement/fresh-absence", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:346:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+346 |     checks.push(json!({"case":"atomic-registration/initial-continuation/reservation/immutable-location/identity", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:442:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+442 |     checks.push(json!({"case":"cross-repository-folder-constraint/settled-next-candidate", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:540:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+540 |     checks.push(json!({"case":"provider-records-only/exact-action-history/scope-exclusion/no-duplicate-replay", "status":"passed"}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:580:17
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+580 |     checks.push(json!({"case":"controlled-engine-SQLITE_FULL/failed-write-retirement/retained-close-fault", "status":"passed", "error":full.to_string()}));
+    |            ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |            |
+    |            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:614:15
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+614 |         .push(json!({"case":"row-and-byte-keyset-pagination", "status":"passed", "records":count}));
+    |          ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |          |
+    |          arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: mismatched types
+   --> crates/core/src/storage/qualification.rs:641:21
+    |
+ 80 |     checks.push("nonempty state without metadata rejects initialization");
+    |     ------      -------------------------------------------------------- this argument has type `&str`...
+    |     |
+    |     ... which causes `checks` to have type `std::vec::Vec<&str>`
+...
+641 |         checks.push(json!({"case":kind,"status":"passed"}));
+    |                ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |                |
+    |                arguments to this method are incorrect
+    |
+note: method defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:995:12
+    |
+995 |     pub fn push(&mut self, value: T) {
+    |            ^^^^
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/core/src/storage/qualification.rs:643:17
+    |
+643 |     checks.push(pressure(&root).await?);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Value`
+    |
+    = note: `?` operator cannot convert from `serde_json::Value` to `&str`
+
+error: could not compile `workspace-core` (lib) due to 14 previous errors
+error: could not compile `workspace-core` (lib test) due to 14 previous errors
+file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:45
+      throw new Error(
+            ^
+
+Error: Gate failed (101): node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+    at check (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:45:13)
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:54:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.13.1
+[ELIFECYCLE] Command failed with exit code 1.

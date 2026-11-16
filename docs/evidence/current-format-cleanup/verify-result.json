@@ -1,0 +1,7 @@
+{
+  "command": "corepack pnpm verify",
+  "exit": 0,
+  "wall_seconds": 17.672512167016976,
+  "target": "workspace target; warm cache",
+  "harness_threads": 1
+}

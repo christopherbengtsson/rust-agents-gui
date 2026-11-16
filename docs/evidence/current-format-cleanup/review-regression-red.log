@@ -1,0 +1,35 @@
+$ vitest run --maxWorkers=1 src/repositories.test.tsx -t 'unreadable workspace evidence disables'
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/repositories.test.tsx (21 tests | 1 failed | 20 skipped) 86ms
+   × unreadable workspace evidence disables both creation controls 86ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/repositories.test.tsx > unreadable workspace evidence disables both creation controls
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/repositories.test.tsx:865:102
+    863|   render(<App />);
+    864|   await screen.findByRole("heading", { level: 1, name: "one" });
+    865|   expect((await screen.findByRole("button", { name: "Create workspace"…
+       |                                                                                                      ^
+    866|   expect(screen.getByRole("button", { name: "Create workspace in one" …
+    867|   expect(screen.getByText(/could not read pending action evidence/)).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  21:32:52
+   Duration  655ms (import 45%, environment 27%, tests 14%, transform 13%, setup 1%)
+
+[ELIFECYCLE] Command failed with exit code 1.

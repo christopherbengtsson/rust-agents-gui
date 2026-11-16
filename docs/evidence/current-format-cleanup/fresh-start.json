@@ -1,0 +1,46 @@
+{
+  "utc": "2026-11-16T20:28:30.809853+00:00",
+  "native_owners_before": [],
+  "method": "Stopped native app; delete only the three named keys from its owner-specific WebKit local-storage database. No metadata file or provider storage modified.",
+  "origins": [
+    {
+      "path": "/Users/christopherbengtsson/Library/WebKit/dev.christopherbengtsson.agent-workspace/WebsiteData/Default/jZV3OjMFyRThOx9A_SOzv5c7znHeZQ362k3Twq8jM-o/jZV3OjMFyRThOx9A_SOzv5c7znHeZQ362k3Twq8jM-o/LocalStorage/localstorage.sqlite3",
+      "removed": ["agent-workspace.presentation"],
+      "remaining_target_keys": []
+    }
+  ],
+  "preserved_roots": [
+    {
+      "path": "/Users/christopherbengtsson/.agent-workspace/dev/3fc7c8ecb5d3",
+      "entries": ["p4-6ad9613a", "p14-6ad9613a"]
+    },
+    {
+      "path": "/Users/christopherbengtsson/Library/Application Support/AgentWorkspace",
+      "entries": ["supervisor.sock", "owner.lock"]
+    }
+  ],
+  "normal_start": {
+    "root": "/Users/christopherbengtsson/Library/Application Support/AgentWorkspace/native-schema-1",
+    "schema": 1,
+    "table_counts_after_owned_quit": {
+      "repositories": 0,
+      "registration_actions": 0,
+      "workspaces": 0,
+      "workspace_actions": 0,
+      "provider_actions": 0
+    },
+    "owner_lock_inode": 60136810,
+    "ui": ["Connected", "No repositories yet", "No repository selected"],
+    "quit": "Application menu Quit completed; no open owner lease",
+    "binary_sha256": "35f06ccd7138c4576c58b7a993f77a3edc0e06fdf023fad67e962c14773c3c85",
+    "package_inventory": [
+      "Contents/Info.plist",
+      "Contents/MacOS/workspace-desktop"
+    ],
+    "reopen": {
+      "ui": ["Connected", "No repositories yet", "No repository selected"],
+      "same_owner_lock_inode": true,
+      "result": "passed; application left open on its empty current state"
+    }
+  }
+}

@@ -1,0 +1,100 @@
+$ tauri build --features qualification --bundles app -- --locked
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm frontend:build`
+$ corepack pnpm generated:check && tsc --noEmit && vite build
+$ node scripts/prepare-generated.mjs --check
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_initial_workspace"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+Generated contracts and routes match source
+vite v8.3.8 building client environment for production...
+transforming...
+[plugin vite:react-compiler] (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts:62:6]
+ 61 |         });
+ 62 |     } finally {
+    :      ^^^^^^^^^
+ 63 |       if (generation.current === current)
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+✓ 2641 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                            1.04 kB │ gzip:   0.41 kB
+dist/assets/index-B8UooZVM.css                                           102.97 kB │ gzip:  16.98 kB
+dist/assets/repository._repositoryId.index-DtgVx7rW.js                     0.07 kB │ gzip:   0.08 kB
+dist/assets/repository._repositoryId.workspace._workspaceId-DtgVx7rW.js    0.07 kB │ gzip:   0.08 kB
+dist/assets/routes-DtgVx7rW.js                                             0.07 kB │ gzip:   0.08 kB
+dist/assets/repository._repositoryId-DaUnzvob.js                           0.08 kB │ gzip:   0.09 kB
+dist/assets/repository._repositoryId-DxB1rHxL.js                           0.24 kB │ gzip:   0.21 kB
+dist/assets/useMatch-CUXcU6IH.js                                           0.53 kB │ gzip:   0.35 kB
+dist/assets/settings.general-Cew9Kp7f.js                                   0.57 kB │ gzip:   0.35 kB
+dist/assets/target-error-c_COoP3a.js                                       1.04 kB │ gzip:   0.59 kB
+dist/assets/repository._repositoryId.workspace._workspaceId-aVcA-6rz.js    1.43 kB │ gzip:   0.68 kB
+dist/assets/useSelector-DdFe2ywY.js                                        1.90 kB │ gzip:   0.83 kB
+dist/assets/empty-Dn3ewsdA.js                                              2.29 kB │ gzip:   0.79 kB
+dist/assets/settings-BPpGQ3G3.js                                           3.25 kB │ gzip:   1.43 kB
+dist/assets/Match-BRTduizL.js                                              4.59 kB │ gzip:   1.81 kB
+dist/assets/jsx-runtime-D_Haqy6R.js                                        8.95 kB │ gzip:   3.36 kB
+dist/assets/button-BkK1RviJ.js                                            16.54 kB │ gzip:   6.78 kB
+dist/assets/tabs-mIAHIH1S.js                                              17.44 kB │ gzip:   6.32 kB
+dist/assets/settings.providers-CtH1NqT4.js                                19.34 kB │ gzip:   6.93 kB
+dist/assets/dist-BV1HJemj.js                                              26.67 kB │ gzip:  11.11 kB
+dist/assets/matchContext-BtDqw2sa.js                                      55.44 kB │ gzip:  19.71 kB
+dist/assets/main-BkVhDaAa.js                                              92.64 kB │ gzip:  30.67 kB
+dist/assets/index-jB85YV-3.js                                            297.33 kB │ gzip:  92.57 kB
+dist/assets/app-runtime-C0vqBwTs.js                                      868.82 kB │ gzip: 128.05 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 490ms
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+    Finished `release` profile [optimized] target(s) in 14.53s
+       Built application at: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-desktop
+    Bundling Agent Workspace.app (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app)
+    Finished 1 bundle at:
+        /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app (17.49 MiB)
+

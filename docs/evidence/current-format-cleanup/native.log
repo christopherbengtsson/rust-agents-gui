@@ -1,0 +1,2 @@
+$ node scripts/qualify.mjs native -- '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app' /Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/current-format-cleanup/native.json
+{"report": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/current-format-cleanup/native.json", "outcome": "passed", "root": "/private/tmp/aw-native07-5aaumefz"}
