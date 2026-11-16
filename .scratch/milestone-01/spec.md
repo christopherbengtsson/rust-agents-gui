@@ -1,5 +1,14 @@
 # Milestone 01 implementation spec — one usable Codex desktop workflow
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../sqlx-architecture/spec.md) and
+[supersession amendments A2/A3/A8](../sqlx-architecture/amendments.md) govern
+host/lifecycle, one-active admission, concurrency deferral, acceptance and ticket dependencies.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Status: ready-for-agent
 
 Implementation baseline: tickets 01–05, including 02a, are complete for their recorded fixture scope. Tickets 06–13 and whole-milestone qualification remain incomplete. The [frontend foundation spec](../frontend-navigation/spec.md) defines the prerequisite implementation and qualification sequence.
@@ -57,12 +66,13 @@ Deliver this as one implementation spec with session-sized implementation ticket
 
 ## Implementation Decisions
 
-Apply the milestone-wide [development compatibility policy](../../docs/MILESTONE-01.md#development-compatibility-policy)
-to every remaining ticket. Earlier development storage/IPC/preferences may change
-directly, with fresh private state and documented reset/restart steps instead of
-migrations or compatibility shims. Preserve current-build recovery, ownership and
-cleanup requirements and external provider/schema qualification. Historical
-compatibility evidence does not impose support for old application formats.
+Apply the global [MVP development compatibility policy](../../docs/MVP.md#development-compatibility-policy)
+to every ticket and successor milestone. Retired application compatibility is
+excluded from engineering and acceptance; implement only the current design with
+fresh private state and documented reset/restart steps. Carry its clean-state
+completion gate through final MVP qualification. Preserve current-build recovery,
+ownership/cleanup and selected external-provider qualification; historical
+compatibility results remain evidence only.
 
 ### Bootstrap and delivery
 

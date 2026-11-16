@@ -1,5 +1,14 @@
 # Frontend and observation architecture foundation
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../sqlx-architecture/spec.md) and
+[supersession amendments A1/A4/A8](../sqlx-architecture/amendments.md) govern
+native host/owner, application socket/protocol transport, physical lifetime and refactor sequence.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Status: ready-for-agent
 
 Agreed 2026-11-14; amended by the F04a documentation publication below. Branch:
@@ -12,14 +21,14 @@ Read the [MVP](../../docs/MVP.md), [Milestone 01](../../docs/MILESTONE-01.md),
 
 ### Development compatibility amendment — 2026-11-15
 
-For subsequent Milestone 01 work, this spec adopts the milestone's
-[development compatibility policy](../../docs/MILESTONE-01.md#development-compatibility-policy).
-Earlier application storage, IPC and preference formats need no backward support,
-migration or compatibility-only tests. This supersedes such requirements in the
-foundation plan and its completed tickets for future changes; their recorded
-F05/F06/F08 migration results remain historical evidence. Current-format validation,
-persistence/recovery, owner exclusion, physical cleanup and external provider
-protocol qualification remain required.
+This spec follows the global
+[MVP development compatibility policy](../../docs/MVP.md#development-compatibility-policy),
+expanded on 2026-11-16 to all MVP work and every milestone. Build current storage,
+IPC and preferences directly with fresh state; retired-build compatibility work
+is excluded. This supersedes compatibility obligations in the foundation and its
+tickets. Recorded F05/F06/F08 migration results remain historical evidence, while
+current-build recovery/cleanup and selected external-provider qualification retain
+their requirements. Final MVP qualification uses a clean current state.
 
 ## 1. Purpose, scope, and publication
 

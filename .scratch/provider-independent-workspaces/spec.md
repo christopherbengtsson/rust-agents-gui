@@ -38,7 +38,7 @@ Codex default in admission/presentation instead of workspace identity.
   current record access. Remove the provider field from the current workspace
   model, newly written records and exported observation contract. Do not replace
   it with an enabled-provider list or another workspace-level provider selector.
-- Apply the milestone's [development compatibility policy](../../docs/MILESTONE-01.md#development-compatibility-policy):
+- Apply the global [MVP development compatibility policy](../../docs/MVP.md#development-compatibility-policy):
   change the current record/contract directly, using fresh private application
   state and documenting reset/restart steps where required. Add no old-format
   reader, migration or dual representation. Current-build reopen/recovery still

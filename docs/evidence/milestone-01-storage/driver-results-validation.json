@@ -1,0 +1,49 @@
+{
+  "checks": [
+    {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "docs/evidence/milestone-01-storage/driver-bench/common.rs",
+        "docs/evidence/milestone-01-storage/driver-bench/common-screen.rs",
+        "docs/evidence/milestone-01-storage/driver-bench/rusqlite/src/main.rs",
+        "docs/evidence/milestone-01-storage/driver-bench/sqlx/src/main.rs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "py_compile",
+        "docs/evidence/milestone-01-storage/driver-bench/run.py",
+        "docs/evidence/milestone-01-storage/driver-bench/summarize.py",
+        "docs/evidence/milestone-01-storage/driver-bench/build_costs.py"
+      ],
+      "environment_override": {
+        "PYTHONPYCACHEPREFIX": "/tmp/storage-driver-06a.e28Ggc/pycache"
+      },
+      "exit_code": 0
+    },
+    {
+      "check": "All9 previously generated driver result JSON/JSONL files parse; final common source SHA256 matches finalist/scale/corrected-resource provenance and final-source fresh builds",
+      "exit_code": 0
+    },
+    {
+      "check": "screen common source and manifest snapshots SHA256 match original screen provenance",
+      "exit_code": 0
+    },
+    {
+      "check": "Final-source fresh-build binary hashes match runtime artifact hashes for both drivers",
+      "exit_code": 0
+    }
+  ],
+  "unperformed": [
+    "Application units (production unchanged)",
+    "Production desktop/native-provider qualification",
+    "End-to-end user-visible latency",
+    "Long soak / power-loss qualification"
+  ]
+}

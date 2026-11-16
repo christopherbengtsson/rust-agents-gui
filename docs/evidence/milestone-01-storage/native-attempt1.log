@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/storage-probes.py", line 469, in <module>
+    main()
+    ~~~~^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/storage-probes.py", line 446, in main
+    db = DB(root / "version.db")
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/storage-probes.py", line 60, in __init__
+    raise RuntimeError(f"open: {code}")
+RuntimeError: open: 14
+        0.42 real         0.05 user         0.01 sys
+            29261824  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                2852  page reclaims
+                  58  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  12  voluntary context switches
+                  67  involuntary context switches
+           500986259  instructions retired
+           215002171  cycles elapsed
+            17793480  peak memory footprint

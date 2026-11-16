@@ -1,5 +1,14 @@
 # Milestone 01 — one usable Codex desktop workflow
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A2/A3/A8](../.scratch/sqlx-architecture/amendments.md) govern
+working scope, A4/A8/A10, concurrency, verification workload and prerequisite sequence.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Status: In progress — tickets 01–05, including 02a, are complete for their recorded fixture scope. Frontend F01–F08 have recorded foundation implementation and scoped qualification evidence. F08 returns material size/performance costs for decision. Milestone 06–13, the complete workflow and native-provider qualification remain open.
 
 ## Outcome and authority
@@ -12,24 +21,12 @@ Build the first lasting part of the product. [MVP.md](MVP.md) is the product con
 
 ### Development compatibility policy
 
-Milestone 01 is early development with no backward-compatibility commitment to
-earlier development builds. Change application-owned storage schemas, serialized
-records, internal IPC/generated contracts and presentation preferences directly
-when the current design needs it. Old-format readers, migrations, dual formats,
-compatibility adapters and preservation of disposable development application
-state are not acceptance requirements. Use fresh private application state for
-incompatible changes and document any required development reset/restart steps.
-This supersedes earlier milestone/spec/ticket requirements to support previous
-development formats; completed results remain historical evidence.
-
-Current-build persistence, restart/crash recovery, exact action targeting, owner
-exclusion and physical cleanup remain required. Reject incompatible running peers
-rather than supporting mixed versions. Protect repository files/worktrees,
-runtime-owned credentials and archived evidence; changing a format grants no
-authority to delete those resources or abandon owned processes. Historical
-migration/compatibility results remain checkpoint evidence, not requirements to
-carry those old formats forward. External provider protocol compatibility still
-requires the selected runtime/schema evidence.
+Apply the global [MVP development compatibility policy](MVP.md#development-compatibility-policy).
+It excludes backward compatibility with earlier application builds throughout
+every milestone and requires a clean current implementation and fresh-state MVP
+qualification. This section is a forwarding reference, not a Milestone 01 exception.
+Current-build recovery/cleanup and selected external-provider compatibility remain
+required under that policy; historical compatibility results remain evidence only.
 
 ### Working scope
 

@@ -1,5 +1,14 @@
 # Testing and verification
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A8](../../.scratch/sqlx-architecture/amendments.md) govern
+retired supervisor/sidecar/socket verification gates and refactor handoff.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 ## Authority
 
 The user owns requirements and engineering policy. [MVP.md](../MVP.md) owns
@@ -8,10 +17,14 @@ and qualification. This file owns testing policy and engineering-skill constrain
 Use supported-version official documentation for API and platform facts. Its
 examples and third-party skills do not create project requirements.
 
-For Milestone 01, apply its [development compatibility policy](../MILESTONE-01.md#development-compatibility-policy).
-Qualify current-build persistence/recovery with fresh private state; retired
-development-format compatibility needs no migration fixtures or replacement tests.
-Keep external provider protocol qualification and owner/cleanup coverage.
+For every MVP milestone, feature and ticket, apply the global
+[development compatibility policy](../MVP.md#development-compatibility-policy).
+Test and qualify current-build persistence/recovery from fresh private state.
+Remove checks whose only assertion is compatibility with retired application
+builds/formats; they need no replacement migration fixtures. Keep useful current-build
+owner/cleanup/recovery assertions and external provider qualification. Final MVP
+evidence must record clean initialization and the absence of compatibility-only
+production paths, without depending on old application state/builds.
 
 ## Unit tests
 

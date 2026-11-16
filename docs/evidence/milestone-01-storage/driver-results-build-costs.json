@@ -1,0 +1,50 @@
+[
+  {
+    "driver": "rusqlite",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--manifest-path",
+      "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/driver-bench/rusqlite/Cargo.toml",
+      "--target-dir",
+      "/private/tmp/storage-driver-06a.e28Ggc/cost-final-rusqlite"
+    ],
+    "exit_code": 0,
+    "wall_s": 13.047365332953632,
+    "log": "driver-results-build-rusqlite-final-fresh.log",
+    "profile": "release,stripped,default optimization; warm registry/toolchain/OS caches, new target",
+    "common_sha256": "eefb786f576def143ac3197c961c0602b6fd92aa2f6ff26d779bab9aba735fa1",
+    "manifest_sha256": "78ca86669fa95dc8e68fd2a0a6b632cf25f016bf53e9018d27d5e747aaba3da7",
+    "lock_sha256": "4b141c5d553ff4ff9ddbcbe2ece6420d22c53a6bf12f2bc8fe7ceb2ee3419bb1",
+    "binary_bytes": 2363808,
+    "binary_sha256": "511101d6c4d6b9774499e67a1082948d1379ede7c87a70b6d727f6dc4b874614"
+  },
+  {
+    "driver": "sqlx",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--manifest-path",
+      "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/driver-bench/sqlx/Cargo.toml",
+      "--target-dir",
+      "/private/tmp/storage-driver-06a.e28Ggc/cost-final-sqlx"
+    ],
+    "exit_code": 0,
+    "wall_s": 15.929503374965861,
+    "log": "driver-results-build-sqlx-final-fresh.log",
+    "profile": "release,stripped,default optimization; warm registry/toolchain/OS caches, new target",
+    "common_sha256": "eefb786f576def143ac3197c961c0602b6fd92aa2f6ff26d779bab9aba735fa1",
+    "manifest_sha256": "aeb76801f7245f14cd53a8d6da8ed823e11d41e160e7822886ad2e2851968b55",
+    "lock_sha256": "05080f55e2dc084e6778262e9d19c238aec1bfd0c883c2e3cf9425e002caeb62",
+    "binary_bytes": 2848992,
+    "binary_sha256": "fa3fd9272c59f010f3092736b21dac8c059f670a1477a3367cb2df6c57ed21f2"
+  }
+]

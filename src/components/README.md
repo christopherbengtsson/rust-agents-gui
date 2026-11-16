@@ -1,5 +1,14 @@
 # Component guide
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A4/A5](../../.scratch/sqlx-architecture/amendments.md) govern
+supervisor diagnostics/owner fields and browser-sign-in native-crash lifetime.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Read this guide before choosing, creating, styling, moving, updating, or reviewing
 frontend components. It owns the repository's component conventions. Use the
 [React skill](../../.agents/skills/react-engineering/SKILL.md) for state and lifecycle

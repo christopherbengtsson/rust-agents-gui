@@ -1,5 +1,14 @@
 # Local agent workspace — MVP product contract
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A2/A3/A6/A9](../.scratch/sqlx-architecture/amendments.md) govern
+hosting, native lifetime, storage and concurrent-work requirements.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 2026-11-12 · Product contract. Milestone documents track implementation and qualification against this scope.
 
 ## User, promise, and decision status
@@ -51,16 +60,52 @@ Claude's disabled provider presentation does not implement Claude integration.
 
 Workspace defaults follow Conductor's [fetch-before-create behavior](https://www.conductor.build/docs/concepts/workspaces-and-branches#branches-and-review); Plan Mode and local diff comments follow its [agent controls](https://www.conductor.build/docs/concepts/agent-modes) and [diff feedback](https://www.conductor.build/docs/reference/diff-viewer). Archive commits and restoration follow its [archive-save behavior](https://www.conductor.build/changelog/0.49.0-conductor-allegro-gpt-5-5), [restoration guarantees](https://www.conductor.build/changelog/0.33.5-better-archiving), and [configurable branch cleanup](https://www.conductor.build/docs/reference/settings/reference). Exact folder-removal mechanics are not established by these sources; preserving/restoring saved work governs implementation choices.
 
+## Development compatibility policy
+
+Accepted 2026-11-16 for the entire MVP and every current or future development
+milestone, feature spec and ticket, through final MVP qualification. Backward
+compatibility with our earlier application builds is never a design,
+implementation, testing or acceptance consideration during this development.
+This supersedes older compatibility obligations anywhere in the repository;
+historical results remain evidence of their original checkpoint.
+
+Build only the current intended design. Change application-owned storage schemas,
+serialized records, internal IPC/generated contracts, configuration and presentation
+preferences directly. Remove obsolete readers, migrations, shims, aliases, dual
+formats and fallback implementations whose only purpose is supporting retired
+application builds. Do not retain compatibility-only tests or add replacement
+fixtures for retired formats. A milestone boundary creates no compatibility promise
+to the preceding milestone, and an old implementation never constrains its replacement.
+
+Use fresh private application state when formats change incompatibly and document
+the exact reset/restart procedure. Disposable development metadata, app-owned history
+and preferences need no migration, import or continued readability. Keeping old
+builds or state is optional investigation convenience, not an acceptance obligation.
+Finish the MVP with one clean current implementation and qualify it from newly
+initialized state, without importing earlier development data or requiring retired
+formats/builds. Record this clean-state check in the final MVP completion evidence;
+its publication here does not claim that check has passed.
+
+Current-build durability, normal reopen/restart/crash recovery, exact action identity,
+owner exclusion and physical cleanup remain requirements: create state with the
+current build and verify that same build recovers it. An incompatible old format
+must produce actionable fresh-state guidance, never silent data reinterpretation.
+Support and qualify the selected external provider protocols/dependencies/platforms;
+that external compatibility is distinct from supporting our retired application builds.
+
+A reset must account for and stop owned work before replacing metadata. Preserve
+repository files, branches/worktrees, runtime-owned credentials/native history and
+retained evidence; disposable app metadata does not make those resources disposable.
+Handle a database and its WAL/SHM as one stopped-owner set and retain owner exclusion
+through cleanup. This policy requires no automatic erase and performs no reset.
+
 ## Starting architecture
 
 **Confirmed stack:** Rust application core + Tauri. **Recommendation:** TypeScript web presentation, with the Rust core independent of Tauri and UI state.
 
 **Foundation principle:** each milestone adds a usable capability to the intended product architecture. Build production-intended implementations that later milestones extend. Limit capabilities temporarily while retaining the intended ownership, persistence, and execution seams. Avoid known architectural shortcuts that require replacement in the next milestone; allow refactoring when implementation evidence justifies it. Add concrete implementations as needed rather than speculative frameworks.
 
-Milestone 01 follows its [early-development compatibility policy](MILESTONE-01.md#development-compatibility-policy):
-earlier development storage/contracts/preferences need no backward support or
-migration. Current-build durability/recovery and external runtime compatibility
-remain required; use fresh private development state for incompatible changes.
+Every milestone follows the global [development compatibility policy](#development-compatibility-policy).
 
 Keep one Rust core with concrete modules:
 

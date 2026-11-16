@@ -1,0 +1,3247 @@
+{
+  "measured_cases": [
+    {
+      "driver": "sqlx-0.9.0",
+      "workload": "baseline",
+      "n": 5,
+      "offered_per_run": [
+        15000
+      ],
+      "offered_signature": [
+        1870142700
+      ],
+      "committed": {
+        "median": 15000,
+        "range": [
+          15000,
+          15000
+        ]
+      },
+      "rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "throughput_including_writer_drain": {
+        "median": 499.57107383789406,
+        "range": [
+          499.4953820098003,
+          499.6815238167827
+        ]
+      },
+      "writer_drain_s": {
+        "median": 0.025757666000000512,
+        "range": [
+          0.01912074999999902,
+          0.030307666999998872
+        ]
+      },
+      "reader_drain_s": {
+        "median": 0.03133512499999824,
+        "range": [
+          0.020403000000001725,
+          0.0320594579999991
+        ]
+      },
+      "close_ack_ms": {
+        "median": 0.6826249999999999,
+        "range": [
+          0.341834,
+          0.719958
+        ]
+      },
+      "loop_heartbeat_p95_ms": {
+        "median": 1.795083,
+        "range": [
+          1.520208,
+          2.29375
+        ]
+      },
+      "loop_heartbeat_max_ms": {
+        "median": 6.515792,
+        "range": [
+          3.70075,
+          8.10275
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 32.5175,
+        "range": [
+          32.235208,
+          33.083917
+        ]
+      },
+      "arrival_to_commit_p99_ms": {
+        "median": 37.998208,
+        "range": [
+          37.317292,
+          40.032708
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 12.245041,
+        "range": [
+          10.5035,
+          27.124917
+        ]
+      },
+      "urgent_rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "max_outstanding_events": {
+        "median": 30,
+        "range": [
+          28,
+          30
+        ]
+      },
+      "max_outstanding_logical_payload_bytes": {
+        "median": 105216,
+        "range": [
+          104704,
+          105216
+        ]
+      },
+      "whole_process_max_rss_bytes": {
+        "median": 46825472,
+        "range": [
+          46645248,
+          46940160
+        ]
+      },
+      "sampled_threads": [
+        4
+      ],
+      "sampled_rss_max_kib": {
+        "median": 10592,
+        "range": [
+          10464,
+          10752
+        ]
+      },
+      "database_bytes_after_final_checkpoint": {
+        "median": 82296832,
+        "range": [
+          82296832,
+          82300928
+        ]
+      },
+      "checkpoint_sample_count": {
+        "median": 15,
+        "range": [
+          15,
+          15
+        ]
+      },
+      "checkpoint_passive_p95_ms": {
+        "median": 19.751375000000003,
+        "range": [
+          18.924083,
+          21.875875
+        ]
+      },
+      "checkpoint_passive_max_ms": {
+        "median": 23.728958000000002,
+        "range": [
+          19.76625,
+          25.085832999999997
+        ]
+      },
+      "checkpoint_final_truncate_ms": {
+        "median": 1.006542,
+        "range": [
+          0.983125,
+          9.184625
+        ]
+      },
+      "max_sampled_wal_log_frames": 704,
+      "nonzero_checkpoint_busy_tuples": 0,
+      "checkpoint_final_tuples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_workspace": [
+        {
+          "workspace": 0,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.508542,
+            "range": [
+              32.294791000000004,
+              33.044542
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 39.252584,
+            "range": [
+              38.438916,
+              41.924375
+            ]
+          }
+        },
+        {
+          "workspace": 1,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.444833,
+            "range": [
+              32.191916,
+              32.843125
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 37.953083,
+            "range": [
+              36.502167,
+              49.165625
+            ]
+          }
+        },
+        {
+          "workspace": 2,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.503707999999996,
+            "range": [
+              32.222958000000006,
+              33.150875000000006
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 38.518417,
+            "range": [
+              33.810416000000004,
+              54.062917
+            ]
+          }
+        },
+        {
+          "workspace": 3,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 35.953417,
+            "range": [
+              32.731375,
+              37.597166
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 57.597166,
+            "range": [
+              54.14725,
+              60.033292
+            ]
+          }
+        },
+        {
+          "workspace": 4,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 35.158958999999996,
+            "range": [
+              33.428917000000006,
+              36.460125000000005
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 52.676583,
+            "range": [
+              49.273875000000004,
+              53.371375
+            ]
+          }
+        },
+        {
+          "workspace": 5,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.350042,
+            "range": [
+              32.149875,
+              32.57875
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 37.324417,
+            "range": [
+              36.174291999999994,
+              37.601625
+            ]
+          }
+        },
+        {
+          "workspace": 6,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.424542,
+            "range": [
+              32.175375,
+              32.994333
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 33.650625000000005,
+            "range": [
+              33.352875,
+              42.553416
+            ]
+          }
+        },
+        {
+          "workspace": 7,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.489417,
+            "range": [
+              32.211833000000006,
+              33.073917
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 38.178084,
+            "range": [
+              37.569417,
+              51.309625
+            ]
+          }
+        },
+        {
+          "workspace": 8,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.262084,
+            "range": [
+              32.192541,
+              32.597833
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 36.309625,
+            "range": [
+              33.459500000000006,
+              47.549833
+            ]
+          }
+        },
+        {
+          "workspace": 9,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.726583,
+            "range": [
+              32.188958,
+              33.171709
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 51.375459,
+            "range": [
+              48.421791999999996,
+              54.161167000000006
+            ]
+          }
+        }
+      ],
+      "readers": {
+        "recent_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 2.45125,
+            "range": [
+              2.2352499999999997,
+              2.509875
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 4.107583,
+            "range": [
+              3.804875,
+              4.288333
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "older_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 2.3647080000000003,
+            "range": [
+              2.1717500000000003,
+              2.6106670000000003
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.788542,
+            "range": [
+              3.413166,
+              4.319500000000001
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "context": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.041333,
+            "range": [
+              1.028709,
+              1.0519159999999999
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.685125,
+            "range": [
+              2.324291,
+              3.0757499999999998
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "draft_inbox": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 0.484,
+            "range": [
+              0.476584,
+              0.516667
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.145,
+            "range": [
+              1.963291,
+              2.643958
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        }
+      }
+    },
+    {
+      "driver": "sqlx-0.9.0",
+      "workload": "heavy",
+      "n": 5,
+      "offered_per_run": [
+        66000
+      ],
+      "offered_signature": [
+        31838400288
+      ],
+      "committed": {
+        "median": 54624,
+        "range": [
+          47739,
+          55604
+        ]
+      },
+      "rejected": {
+        "median": 11376,
+        "range": [
+          10396,
+          18261
+        ]
+      },
+      "throughput_including_writer_drain": {
+        "median": 1787.7614508406111,
+        "range": [
+          1561.1596426700423,
+          1819.9249220890251
+        ]
+      },
+      "writer_drain_s": {
+        "median": 0.5544120409999991,
+        "range": [
+          0.5242864999999988,
+          0.5823213329999994
+        ]
+      },
+      "reader_drain_s": {
+        "median": 0.5629719999999985,
+        "range": [
+          0.5318115829999996,
+          0.5923905000000005
+        ]
+      },
+      "close_ack_ms": {
+        "median": 0.349833,
+        "range": [
+          0.3355,
+          0.35750000000000004
+        ]
+      },
+      "loop_heartbeat_p95_ms": {
+        "median": 2.404916,
+        "range": [
+          2.030709,
+          2.6912920000000002
+        ]
+      },
+      "loop_heartbeat_max_ms": {
+        "median": 5.130958,
+        "range": [
+          3.702125,
+          7.248917
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 701.338041,
+        "range": [
+          687.818041,
+          873.596583
+        ]
+      },
+      "arrival_to_commit_p99_ms": {
+        "median": 733.2713749999999,
+        "range": [
+          722.4639579999999,
+          945.67825
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 28.716416000000002,
+        "range": [
+          26.131625,
+          37.668542
+        ]
+      },
+      "urgent_rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "max_outstanding_events": {
+        "median": 1024,
+        "range": [
+          1024,
+          1024
+        ]
+      },
+      "max_outstanding_logical_payload_bytes": {
+        "median": 1415168,
+        "range": [
+          1377024,
+          1451264
+        ]
+      },
+      "whole_process_max_rss_bytes": {
+        "median": 128303104,
+        "range": [
+          112656384,
+          128843776
+        ]
+      },
+      "sampled_threads": [
+        4
+      ],
+      "sampled_rss_max_kib": {
+        "median": 14592,
+        "range": [
+          14192,
+          67312
+        ]
+      },
+      "database_bytes_after_final_checkpoint": {
+        "median": 127328256,
+        "range": [
+          118665216,
+          128241664
+        ]
+      },
+      "checkpoint_sample_count": {
+        "median": 15,
+        "range": [
+          15,
+          15
+        ]
+      },
+      "checkpoint_passive_p95_ms": {
+        "median": 19.165916000000003,
+        "range": [
+          16.986959,
+          25.911416
+        ]
+      },
+      "checkpoint_passive_max_ms": {
+        "median": 21.934167000000002,
+        "range": [
+          18.941709,
+          34.826667
+        ]
+      },
+      "checkpoint_final_truncate_ms": {
+        "median": 17.263625,
+        "range": [
+          14.040791,
+          19.136416999999998
+        ]
+      },
+      "max_sampled_wal_log_frames": 1037,
+      "nonzero_checkpoint_busy_tuples": 0,
+      "checkpoint_final_tuples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_workspace": [
+        {
+          "workspace": 0,
+          "offered": [
+            9000
+          ],
+          "admitted": {
+            "median": 2848,
+            "range": [
+              2565,
+              2975
+            ]
+          },
+          "rejected": {
+            "median": 6152,
+            "range": [
+              6025,
+              6435
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 716.3769159999999,
+            "range": [
+              701.661375,
+              920.665167
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 771.293416,
+            "range": [
+              745.772291,
+              1058.705792
+            ]
+          }
+        },
+        {
+          "workspace": 1,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2721,
+            "range": [
+              2380,
+              2775
+            ]
+          },
+          "rejected": {
+            "median": 279,
+            "range": [
+              225,
+              620
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 682.2994580000001,
+            "range": [
+              644.757833,
+              890.127875
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 760.443708,
+            "range": [
+              740.756083,
+              1059.6473330000001
+            ]
+          }
+        },
+        {
+          "workspace": 2,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2722,
+            "range": [
+              2357,
+              2775
+            ]
+          },
+          "rejected": {
+            "median": 278,
+            "range": [
+              225,
+              643
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 683.10325,
+            "range": [
+              649.4098329999999,
+              850.621667
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 761.464416,
+            "range": [
+              749.8474160000001,
+              1055.648292
+            ]
+          }
+        },
+        {
+          "workspace": 3,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2725,
+            "range": [
+              2362,
+              2774
+            ]
+          },
+          "rejected": {
+            "median": 275,
+            "range": [
+              226,
+              638
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 701.257583,
+            "range": [
+              682.274375,
+              837.584958
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 767.7078750000001,
+            "range": [
+              749.4578750000001,
+              1035.6157079999998
+            ]
+          }
+        },
+        {
+          "workspace": 4,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2721,
+            "range": [
+              2352,
+              2768
+            ]
+          },
+          "rejected": {
+            "median": 279,
+            "range": [
+              232,
+              648
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 703.438416,
+            "range": [
+              693.704958,
+              865.965208
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 763.5225,
+            "range": [
+              761.365083,
+              1025.6157079999998
+            ]
+          }
+        },
+        {
+          "workspace": 5,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2718,
+            "range": [
+              2369,
+              2767
+            ]
+          },
+          "rejected": {
+            "median": 282,
+            "range": [
+              233,
+              631
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 705.336666,
+            "range": [
+              692.9032910000001,
+              862.039083
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 764.03325,
+            "range": [
+              756.288083,
+              999.674375
+            ]
+          }
+        },
+        {
+          "workspace": 6,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2727,
+            "range": [
+              2384,
+              2761
+            ]
+          },
+          "rejected": {
+            "median": 273,
+            "range": [
+              239,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 707.4918749999999,
+            "range": [
+              682.584791,
+              860.9129170000001
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 762.1937909999999,
+            "range": [
+              745.802541,
+              984.6743749999999
+            ]
+          }
+        },
+        {
+          "workspace": 7,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2726,
+            "range": [
+              2384,
+              2770
+            ]
+          },
+          "rejected": {
+            "median": 274,
+            "range": [
+              230,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 702.342916,
+            "range": [
+              696.736,
+              826.872042
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 771.0919160000001,
+            "range": [
+              758.5912500000001,
+              933.5114169999999
+            ]
+          }
+        },
+        {
+          "workspace": 8,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2726,
+            "range": [
+              2383,
+              2765
+            ]
+          },
+          "rejected": {
+            "median": 274,
+            "range": [
+              235,
+              617
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 708.3780830000001,
+            "range": [
+              694.648791,
+              869.888292
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 770.3928330000001,
+            "range": [
+              761.4465419999999,
+              1004.547083
+            ]
+          }
+        },
+        {
+          "workspace": 9,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2726,
+            "range": [
+              2384,
+              2761
+            ]
+          },
+          "rejected": {
+            "median": 274,
+            "range": [
+              239,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 697.251541,
+            "range": [
+              685.625625,
+              857.784417
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 764.884666,
+            "range": [
+              760.392833,
+              1000.645458
+            ]
+          }
+        },
+        {
+          "workspace": 10,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2727,
+            "range": [
+              2385,
+              2775
+            ]
+          },
+          "rejected": {
+            "median": 273,
+            "range": [
+              225,
+              615
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 705.3249999999999,
+            "range": [
+              691.319458,
+              860.658
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 768.326916,
+            "range": [
+              760.9457080000001,
+              990.6454580000001
+            ]
+          }
+        },
+        {
+          "workspace": 11,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2726,
+            "range": [
+              2372,
+              2771
+            ]
+          },
+          "rejected": {
+            "median": 274,
+            "range": [
+              229,
+              628
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 692.382375,
+            "range": [
+              689.8209159999999,
+              842.791042
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 769.484875,
+            "range": [
+              752.457292,
+              1009.5486250000001
+            ]
+          }
+        },
+        {
+          "workspace": 12,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2724,
+            "range": [
+              2385,
+              2773
+            ]
+          },
+          "rejected": {
+            "median": 276,
+            "range": [
+              227,
+              615
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 692.280208,
+            "range": [
+              688.1036670000001,
+              870.2554580000001
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 772.4366249999999,
+            "range": [
+              757.0567080000001,
+              1014.6502500000001
+            ]
+          }
+        },
+        {
+          "workspace": 13,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2727,
+            "range": [
+              2372,
+              2774
+            ]
+          },
+          "rejected": {
+            "median": 273,
+            "range": [
+              226,
+              628
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 696.413583,
+            "range": [
+              686.457083,
+              847.899375
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 776.302708,
+            "range": [
+              747.692125,
+              974.74025
+            ]
+          }
+        },
+        {
+          "workspace": 14,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2727,
+            "range": [
+              2384,
+              2774
+            ]
+          },
+          "rejected": {
+            "median": 273,
+            "range": [
+              226,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 703.332708,
+            "range": [
+              686.707541,
+              874.571958
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 774.2609160000001,
+            "range": [
+              748.7026249999999,
+              984.536125
+            ]
+          }
+        },
+        {
+          "workspace": 15,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2728,
+            "range": [
+              2384,
+              2774
+            ]
+          },
+          "rejected": {
+            "median": 272,
+            "range": [
+              226,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 701.428583,
+            "range": [
+              677.1185830000001,
+              887.608708
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 778.556542,
+            "range": [
+              748.775458,
+              1006.7679579999999
+            ]
+          }
+        },
+        {
+          "workspace": 16,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2728,
+            "range": [
+              2385,
+              2773
+            ]
+          },
+          "rejected": {
+            "median": 272,
+            "range": [
+              227,
+              615
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 702.184583,
+            "range": [
+              685.15675,
+              887.490958
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 767.5140419999999,
+            "range": [
+              761.582041,
+              984.90225
+            ]
+          }
+        },
+        {
+          "workspace": 17,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2728,
+            "range": [
+              2384,
+              2773
+            ]
+          },
+          "rejected": {
+            "median": 272,
+            "range": [
+              227,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 697.5575,
+            "range": [
+              678.363917,
+              892.6318749999999
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 771.842,
+            "range": [
+              760.586875,
+              1007.5772919999999
+            ]
+          }
+        },
+        {
+          "workspace": 18,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2717,
+            "range": [
+              2384,
+              2774
+            ]
+          },
+          "rejected": {
+            "median": 283,
+            "range": [
+              226,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 684.484875,
+            "range": [
+              654.156042,
+              900.5638329999999
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 758.631458,
+            "range": [
+              736.46425,
+              1046.549875
+            ]
+          }
+        },
+        {
+          "workspace": 19,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2718,
+            "range": [
+              2384,
+              2773
+            ]
+          },
+          "rejected": {
+            "median": 282,
+            "range": [
+              227,
+              616
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 666.7898749999999,
+            "range": [
+              657.314208,
+              898.584833
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 753.9775,
+            "range": [
+              745.093458,
+              1050.5828749999998
+            ]
+          }
+        }
+      ],
+      "readers": {
+        "recent_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 2.241875,
+            "range": [
+              1.919041,
+              2.4125
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 4.147875,
+            "range": [
+              3.352125,
+              4.433458000000001
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "older_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.7836670000000001,
+            "range": [
+              1.6267079999999998,
+              2.272417
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.649958,
+            "range": [
+              3.137666,
+              4.219416
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "context": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.053625,
+            "range": [
+              1.007875,
+              1.478667
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.104458,
+            "range": [
+              2.722041,
+              3.4984170000000003
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "draft_inbox": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 0.445083,
+            "range": [
+              0.37591600000000003,
+              0.642708
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.506125,
+            "range": [
+              2.209916,
+              2.9343749999999997
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        }
+      }
+    },
+    {
+      "driver": "tokio-rusqlite-0.9.0-rusqlite-0.42.0",
+      "workload": "baseline",
+      "n": 5,
+      "offered_per_run": [
+        15000
+      ],
+      "offered_signature": [
+        1870142700
+      ],
+      "committed": {
+        "median": 15000,
+        "range": [
+          15000,
+          15000
+        ]
+      },
+      "rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "throughput_including_writer_drain": {
+        "median": 499.58087316269945,
+        "range": [
+          499.5484921205729,
+          499.6021702557337
+        ]
+      },
+      "writer_drain_s": {
+        "median": 0.02516870799999893,
+        "range": [
+          0.023888792000001047,
+          0.027114957999998524
+        ]
+      },
+      "reader_drain_s": {
+        "median": 0.032343208000000345,
+        "range": [
+          0.030894457999998792,
+          0.03391787500000021
+        ]
+      },
+      "close_ack_ms": {
+        "median": 0.604375,
+        "range": [
+          0.374959,
+          0.666166
+        ]
+      },
+      "loop_heartbeat_p95_ms": {
+        "median": 2.268917,
+        "range": [
+          1.454,
+          2.388041
+        ]
+      },
+      "loop_heartbeat_max_ms": {
+        "median": 6.541625,
+        "range": [
+          5.072125000000001,
+          13.976167
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 32.069916,
+        "range": [
+          31.873458,
+          32.16508399999999
+        ]
+      },
+      "arrival_to_commit_p99_ms": {
+        "median": 37.965125,
+        "range": [
+          37.11775,
+          40.102
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 27.218166,
+        "range": [
+          7.865499999999999,
+          29.733875
+        ]
+      },
+      "urgent_rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "max_outstanding_events": {
+        "median": 30,
+        "range": [
+          28,
+          30
+        ]
+      },
+      "max_outstanding_logical_payload_bytes": {
+        "median": 105216,
+        "range": [
+          104704,
+          105216
+        ]
+      },
+      "whole_process_max_rss_bytes": {
+        "median": 10731520,
+        "range": [
+          10600448,
+          10878976
+        ]
+      },
+      "sampled_threads": [
+        4
+      ],
+      "sampled_rss_max_kib": {
+        "median": 9696,
+        "range": [
+          9568,
+          9872
+        ]
+      },
+      "database_bytes_after_final_checkpoint": {
+        "median": 82296832,
+        "range": [
+          82292736,
+          82300928
+        ]
+      },
+      "checkpoint_sample_count": {
+        "median": 15,
+        "range": [
+          15,
+          15
+        ]
+      },
+      "checkpoint_passive_p95_ms": {
+        "median": 19.065875,
+        "range": [
+          18.880916000000003,
+          20.099875
+        ]
+      },
+      "checkpoint_passive_max_ms": {
+        "median": 20.787917,
+        "range": [
+          20.006166999999998,
+          24.774542
+        ]
+      },
+      "checkpoint_final_truncate_ms": {
+        "median": 0.9562499999999999,
+        "range": [
+          0.942541,
+          0.9804160000000001
+        ]
+      },
+      "max_sampled_wal_log_frames": 713,
+      "nonzero_checkpoint_busy_tuples": 0,
+      "checkpoint_final_tuples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_workspace": [
+        {
+          "workspace": 0,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.104166000000006,
+            "range": [
+              31.848750000000003,
+              32.931584
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 38.975750000000005,
+            "range": [
+              37.849417,
+              43.099667000000004
+            ]
+          }
+        },
+        {
+          "workspace": 1,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.040708,
+            "range": [
+              31.871625,
+              32.081166
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 37.074333,
+            "range": [
+              33.139958,
+              57.731457999999996
+            ]
+          }
+        },
+        {
+          "workspace": 2,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.010708,
+            "range": [
+              31.841166999999995,
+              32.09975
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 42.448833,
+            "range": [
+              33.122666,
+              53.928625000000004
+            ]
+          }
+        },
+        {
+          "workspace": 3,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 39.028416,
+            "range": [
+              36.79024999999999,
+              42.003458
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 55.897084,
+            "range": [
+              52.859958,
+              56.983708
+            ]
+          }
+        },
+        {
+          "workspace": 4,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 33.825624999999995,
+            "range": [
+              32.994833,
+              33.89175
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 50.102000000000004,
+            "range": [
+              46.857166,
+              53.932415999999996
+            ]
+          }
+        },
+        {
+          "workspace": 5,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.032334000000006,
+            "range": [
+              31.812082999999998,
+              32.062791
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 36.978625,
+            "range": [
+              36.896375,
+              41.078791
+            ]
+          }
+        },
+        {
+          "workspace": 6,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 31.937209000000003,
+            "range": [
+              31.798833,
+              32.023333
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 33.359833,
+            "range": [
+              33.025082999999995,
+              38.021833
+            ]
+          }
+        },
+        {
+          "workspace": 7,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.031166,
+            "range": [
+              31.843625,
+              32.065416
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 37.153,
+            "range": [
+              37.065416,
+              53.72025
+            ]
+          }
+        },
+        {
+          "workspace": 8,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.00145800000001,
+            "range": [
+              31.778833,
+              32.056959000000006
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 35.858208000000005,
+            "range": [
+              33.938666,
+              37.082416
+            ]
+          }
+        },
+        {
+          "workspace": 9,
+          "offered": [
+            1500
+          ],
+          "admitted": {
+            "median": 1500,
+            "range": [
+              1500,
+              1500
+            ]
+          },
+          "rejected": {
+            "median": 0,
+            "range": [
+              0,
+              0
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 32.151790999999996,
+            "range": [
+              32.061792,
+              33.066542
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 53.053583,
+            "range": [
+              48.871833,
+              59.124875
+            ]
+          }
+        }
+      ],
+      "readers": {
+        "recent_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.81625,
+            "range": [
+              1.686958,
+              2.2233330000000002
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.874459,
+            "range": [
+              3.000292,
+              4.324041
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "older_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.921292,
+            "range": [
+              1.583125,
+              2.096959
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.876083,
+            "range": [
+              3.249208,
+              4.301
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "context": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 0.660125,
+            "range": [
+              0.6170410000000001,
+              0.7299169999999999
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.676,
+            "range": [
+              1.788792,
+              2.876166
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "draft_inbox": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 0.257083,
+            "range": [
+              0.205375,
+              0.306125
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.5142089999999997,
+            "range": [
+              1.462083,
+              2.548833
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        }
+      }
+    },
+    {
+      "driver": "tokio-rusqlite-0.9.0-rusqlite-0.42.0",
+      "workload": "heavy",
+      "n": 5,
+      "offered_per_run": [
+        66000
+      ],
+      "offered_signature": [
+        31838400288
+      ],
+      "committed": {
+        "median": 54554,
+        "range": [
+          47401,
+          57658
+        ]
+      },
+      "rejected": {
+        "median": 11446,
+        "range": [
+          8342,
+          18599
+        ]
+      },
+      "throughput_including_writer_drain": {
+        "median": 1784.9547924234046,
+        "range": [
+          1548.2136991999796,
+          1889.6941253873258
+        ]
+      },
+      "writer_drain_s": {
+        "median": 0.5127438330000018,
+        "range": [
+          0.49685625000000044,
+          0.6165744589999989
+        ]
+      },
+      "reader_drain_s": {
+        "median": 0.5238066249999989,
+        "range": [
+          0.5031724580000017,
+          0.6216125840000011
+        ]
+      },
+      "close_ack_ms": {
+        "median": 0.305167,
+        "range": [
+          0.289083,
+          0.32925
+        ]
+      },
+      "loop_heartbeat_p95_ms": {
+        "median": 2.392291,
+        "range": [
+          1.9586249999999998,
+          2.939625
+        ]
+      },
+      "loop_heartbeat_max_ms": {
+        "median": 6.300083,
+        "range": [
+          2.830458,
+          29.505958999999997
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 726.714083,
+        "range": [
+          654.0717080000001,
+          848.580375
+        ]
+      },
+      "arrival_to_commit_p99_ms": {
+        "median": 803.972583,
+        "range": [
+          684.1074160000001,
+          908.4672499999999
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 32.928375,
+        "range": [
+          30.172333,
+          37.255291
+        ]
+      },
+      "urgent_rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "max_outstanding_events": {
+        "median": 1024,
+        "range": [
+          1024,
+          1024
+        ]
+      },
+      "max_outstanding_logical_payload_bytes": {
+        "median": 1441536,
+        "range": [
+          1425664,
+          1456128
+        ]
+      },
+      "whole_process_max_rss_bytes": {
+        "median": 16056320,
+        "range": [
+          15728640,
+          16269312
+        ]
+      },
+      "sampled_threads": [
+        4
+      ],
+      "sampled_rss_max_kib": {
+        "median": 13648,
+        "range": [
+          13280,
+          14368
+        ]
+      },
+      "database_bytes_after_final_checkpoint": {
+        "median": 129871872,
+        "range": [
+          115752960,
+          133304320
+        ]
+      },
+      "checkpoint_sample_count": {
+        "median": 15,
+        "range": [
+          15,
+          15
+        ]
+      },
+      "checkpoint_passive_p95_ms": {
+        "median": 22.96925,
+        "range": [
+          14.936917,
+          34.043208
+        ]
+      },
+      "checkpoint_passive_max_ms": {
+        "median": 35.070334,
+        "range": [
+          17.012542,
+          44.181958
+        ]
+      },
+      "checkpoint_final_truncate_ms": {
+        "median": 17.216084,
+        "range": [
+          14.272541,
+          22.116875
+        ]
+      },
+      "max_sampled_wal_log_frames": 1034,
+      "nonzero_checkpoint_busy_tuples": 0,
+      "checkpoint_final_tuples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_workspace": [
+        {
+          "workspace": 0,
+          "offered": [
+            9000
+          ],
+          "admitted": {
+            "median": 2896,
+            "range": [
+              2501,
+              3062
+            ]
+          },
+          "rejected": {
+            "median": 6104,
+            "range": [
+              5938,
+              6499
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 742.3797079999999,
+            "range": [
+              675.189166,
+              868.54975
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 905.713667,
+            "range": [
+              716.0467080000001,
+              1006.485833
+            ]
+          }
+        },
+        {
+          "workspace": 1,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2720,
+            "range": [
+              2363,
+              2879
+            ]
+          },
+          "rejected": {
+            "median": 280,
+            "range": [
+              121,
+              637
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 719.798583,
+            "range": [
+              649.1371660000001,
+              852.786792
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 890.060584,
+            "range": [
+              726.0095,
+              1002.4332499999999
+            ]
+          }
+        },
+        {
+          "workspace": 2,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2727,
+            "range": [
+              2375,
+              2868
+            ]
+          },
+          "rejected": {
+            "median": 273,
+            "range": [
+              132,
+              625
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 703.089292,
+            "range": [
+              598.855916,
+              841.331834
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 894.013417,
+            "range": [
+              695.928,
+              1003.3833750000001
+            ]
+          }
+        },
+        {
+          "workspace": 3,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2726,
+            "range": [
+              2364,
+              2872
+            ]
+          },
+          "rejected": {
+            "median": 274,
+            "range": [
+              128,
+              636
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 690.312792,
+            "range": [
+              653.894333,
+              838.4159169999999
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 865.060584,
+            "range": [
+              727.0567500000001,
+              964.4494169999999
+            ]
+          }
+        },
+        {
+          "workspace": 4,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2724,
+            "range": [
+              2349,
+              2878
+            ]
+          },
+          "rejected": {
+            "median": 276,
+            "range": [
+              122,
+              651
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 721.299625,
+            "range": [
+              659.187833,
+              827.472084
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 883.021917,
+            "range": [
+              706.9816249999999,
+              964.412334
+            ]
+          }
+        },
+        {
+          "workspace": 5,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2708,
+            "range": [
+              2333,
+              2878
+            ]
+          },
+          "rejected": {
+            "median": 292,
+            "range": [
+              122,
+              667
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 719.8356249999999,
+            "range": [
+              648.882833,
+              829.779625
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 887.0190839999999,
+            "range": [
+              731.0896660000001,
+              957.2888750000001
+            ]
+          }
+        },
+        {
+          "workspace": 6,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2711,
+            "range": [
+              2344,
+              2878
+            ]
+          },
+          "rejected": {
+            "median": 289,
+            "range": [
+              122,
+              656
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 746.818667,
+            "range": [
+              645.991666,
+              852.424375
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 884.809417,
+            "range": [
+              729.025916,
+              1000.290834
+            ]
+          }
+        },
+        {
+          "workspace": 7,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2712,
+            "range": [
+              2351,
+              2872
+            ]
+          },
+          "rejected": {
+            "median": 288,
+            "range": [
+              128,
+              649
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 738.6381250000001,
+            "range": [
+              639.989833,
+              850.535584
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 884.664583,
+            "range": [
+              729.061791,
+              980.976875
+            ]
+          }
+        },
+        {
+          "workspace": 8,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2711,
+            "range": [
+              2371,
+              2872
+            ]
+          },
+          "rejected": {
+            "median": 289,
+            "range": [
+              128,
+              629
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 742.8028330000001,
+            "range": [
+              656.192291,
+              847.513917
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 882.8475,
+            "range": [
+              733.345083,
+              997.305375
+            ]
+          }
+        },
+        {
+          "workspace": 9,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2723,
+            "range": [
+              2369,
+              2870
+            ]
+          },
+          "rejected": {
+            "median": 277,
+            "range": [
+              130,
+              631
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 730.717,
+            "range": [
+              641.801875,
+              847.5357919999999
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 881.827667,
+            "range": [
+              731.287666,
+              994.977291
+            ]
+          }
+        },
+        {
+          "workspace": 10,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2724,
+            "range": [
+              2371,
+              2878
+            ]
+          },
+          "rejected": {
+            "median": 276,
+            "range": [
+              122,
+              629
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 737.021042,
+            "range": [
+              655.8447080000001,
+              841.462917
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 913.8329170000001,
+            "range": [
+              732.210541,
+              1017.181916
+            ]
+          }
+        },
+        {
+          "workspace": 11,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2725,
+            "range": [
+              2358,
+              2868
+            ]
+          },
+          "rejected": {
+            "median": 275,
+            "range": [
+              132,
+              642
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 730.676792,
+            "range": [
+              657.968958,
+              832.412917
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 915.687083,
+            "range": [
+              729.1973750000001,
+              1016.136
+            ]
+          }
+        },
+        {
+          "workspace": 12,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2716,
+            "range": [
+              2371,
+              2874
+            ]
+          },
+          "rejected": {
+            "median": 284,
+            "range": [
+              126,
+              629
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 718.7826670000001,
+            "range": [
+              651.0949579999999,
+              834.4377910000001
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 862.814542,
+            "range": [
+              727.1785,
+              1016.4297499999999
+            ]
+          }
+        },
+        {
+          "workspace": 13,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2718,
+            "range": [
+              2370,
+              2868
+            ]
+          },
+          "rejected": {
+            "median": 282,
+            "range": [
+              132,
+              630
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 717.3558340000001,
+            "range": [
+              650.965208,
+              846.417084
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 885.149042,
+            "range": [
+              724.178625,
+              1001.42975
+            ]
+          }
+        },
+        {
+          "workspace": 14,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2722,
+            "range": [
+              2370,
+              2872
+            ]
+          },
+          "rejected": {
+            "median": 278,
+            "range": [
+              128,
+              630
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 742.778375,
+            "range": [
+              647.264375,
+              851.395792
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 918.259042,
+            "range": [
+              716.2569159999999,
+              1014.193583
+            ]
+          }
+        },
+        {
+          "workspace": 15,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2723,
+            "range": [
+              2371,
+              2877
+            ]
+          },
+          "rejected": {
+            "median": 277,
+            "range": [
+              123,
+              629
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 718.883542,
+            "range": [
+              658.025958,
+              855.32425
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 895.026209,
+            "range": [
+              722.2330000000001,
+              1015.250375
+            ]
+          }
+        },
+        {
+          "workspace": 16,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2722,
+            "range": [
+              2370,
+              2876
+            ]
+          },
+          "rejected": {
+            "median": 278,
+            "range": [
+              124,
+              630
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 746.836375,
+            "range": [
+              657.210541,
+              867.4841250000001
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 924.786208,
+            "range": [
+              718.082,
+              1014.286333
+            ]
+          }
+        },
+        {
+          "workspace": 17,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2720,
+            "range": [
+              2370,
+              2874
+            ]
+          },
+          "rejected": {
+            "median": 280,
+            "range": [
+              126,
+              630
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 728.629125,
+            "range": [
+              654.0717080000001,
+              860.4125839999999
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 909.786208,
+            "range": [
+              710.157708,
+              1009.368
+            ]
+          }
+        },
+        {
+          "workspace": 18,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2715,
+            "range": [
+              2371,
+              2876
+            ]
+          },
+          "rejected": {
+            "median": 285,
+            "range": [
+              124,
+              629
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 730.852583,
+            "range": [
+              651.948208,
+              863.32175
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 917.8214999999999,
+            "range": [
+              706.038166,
+              1015.285916
+            ]
+          }
+        },
+        {
+          "workspace": 19,
+          "offered": [
+            3000
+          ],
+          "admitted": {
+            "median": 2711,
+            "range": [
+              2359,
+              2866
+            ]
+          },
+          "rejected": {
+            "median": 289,
+            "range": [
+              134,
+              641
+            ]
+          },
+          "arrival_to_commit_p95_ms": {
+            "median": 690.9737500000001,
+            "range": [
+              589.937042,
+              847.4562500000001
+            ]
+          },
+          "arrival_to_commit_max_ms": {
+            "median": 852.691417,
+            "range": [
+              707.2046250000001,
+              996.406167
+            ]
+          }
+        }
+      ],
+      "readers": {
+        "recent_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.7921250000000002,
+            "range": [
+              1.540833,
+              2.040959
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.651459,
+            "range": [
+              3.199,
+              4.415958
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "older_page": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 1.943875,
+            "range": [
+              1.4765,
+              2.0515
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 3.8236250000000003,
+            "range": [
+              2.959041,
+              4.352125
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "context": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 0.7244579999999999,
+            "range": [
+              0.6916249999999999,
+              0.9748340000000001
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.748834,
+            "range": [
+              2.3722499999999997,
+              3.270833
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        },
+        "draft_inbox": {
+          "execution_p95_ms_worst_reader_per_run": {
+            "median": 0.190708,
+            "range": [
+              0.163375,
+              0.41100000000000003
+            ]
+          },
+          "scheduled_to_completion_p95_ms_worst_reader_per_run": {
+            "median": 2.5067090000000003,
+            "range": [
+              2.095958,
+              3.070958
+            ]
+          },
+          "requests_per_reader_per_run": 150
+        }
+      }
+    }
+  ],
+  "focused": [
+    {
+      "committed_after_reply_dropped": true,
+      "drain_close_completed": true,
+      "driver": "tokio-rusqlite-0.9.0-rusqlite-0.42.0",
+      "dropped_reply_capacity_retained": true,
+      "future_primitives": {
+        "atomic_completion_next_intent_context_version": true,
+        "consistent_context_snapshot": true,
+        "draft_revision": 1,
+        "external_operation_identity": "local-external-operation-0"
+      },
+      "kind": "focused",
+      "permit_released_only_after_physical": true,
+      "private_open": {
+        "adoption_gate": "passed real alias probe; not complete filesystem security qualification",
+        "alias_rejected": true,
+        "native_nofollow_supported": true
+      },
+      "real_commit_busy": {
+        "busy_code": 5,
+        "persisted_rows": 2,
+        "same_transaction_commit_retry": true,
+        "transaction_retained_after_error": true
+      },
+      "saturation_rejected_absent": true,
+      "saturation_rejected_identity": 2,
+      "label": "before-bridge",
+      "process_wall_s": 0.20972137502394617,
+      "resource_samples": [],
+      "time_l": "        0.18 real         0.00 user         0.00 sys\n             4636672  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 448  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                  55  voluntary context switches\n                  77  involuntary context switches\n            56715681  instructions retired\n            25414157  cycles elapsed\n             2359584  peak memory footprint\n",
+      "binary_sha256": "cce84982b9aebaa8b200bf066847b1b31d2b1bd49430dbaed9c865f3525f18f7",
+      "post_close_live_rows_sha256": "227f4bce8e5c2ee88d90c0500b2c926ce768f77a78f890d5f8dc46adf337db52",
+      "post_close_live_rows_count": 1,
+      "post_close_integrity": "ok"
+    },
+    {
+      "committed_after_reply_dropped": true,
+      "drain_close_completed": true,
+      "driver": "sqlx-0.9.0",
+      "dropped_reply_capacity_retained": true,
+      "future_primitives": {
+        "atomic_completion_next_intent_context_version": true,
+        "consistent_context_snapshot": true,
+        "draft_revision": 1,
+        "external_operation_identity": "local-external-operation-0"
+      },
+      "kind": "focused",
+      "permit_released_only_after_physical": true,
+      "private_open": {
+        "adoption_gate": "FAILED: supported API exposes no native SQLITE_OPEN_NOFOLLOW; no fork/VFS workaround attempted",
+        "alias_opened_by_default": true,
+        "native_nofollow_supported": false
+      },
+      "real_commit_busy": {
+        "busy_code": "5",
+        "persisted_rows": 2,
+        "same_transaction_commit_retry": true
+      },
+      "saturation_rejected_absent": true,
+      "saturation_rejected_identity": 2,
+      "label": "before-sqlx",
+      "process_wall_s": 0.5424417079193518,
+      "resource_samples": [],
+      "time_l": "        0.51 real         0.00 user         0.01 sys\n             5046272  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 474  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                  57  voluntary context switches\n                 263  involuntary context switches\n            66537474  instructions retired\n            43980553  cycles elapsed\n             2408760  peak memory footprint\n",
+      "binary_sha256": "61a8d1eeb0ce797b6b1ef908cdd5332fce6353bd4aeb1e588a85e62e577d1732",
+      "post_close_live_rows_sha256": "227f4bce8e5c2ee88d90c0500b2c926ce768f77a78f890d5f8dc46adf337db52",
+      "post_close_live_rows_count": 1,
+      "post_close_integrity": "ok"
+    },
+    {
+      "committed_after_reply_dropped": true,
+      "drain_close_completed": true,
+      "driver": "sqlx-0.9.0",
+      "dropped_reply_capacity_retained": true,
+      "future_primitives": {
+        "atomic_completion_next_intent_context_version": true,
+        "consistent_context_snapshot": true,
+        "draft_revision": 1,
+        "external_operation_identity": "local-external-operation-0"
+      },
+      "kind": "focused",
+      "permit_released_only_after_physical": true,
+      "private_open": {
+        "adoption_gate": "FAILED: supported API exposes no native SQLITE_OPEN_NOFOLLOW; no fork/VFS workaround attempted",
+        "alias_opened_by_default": true,
+        "native_nofollow_supported": false
+      },
+      "real_commit_busy": {
+        "busy_code": "5",
+        "persisted_rows": 2,
+        "same_transaction_commit_retry": true
+      },
+      "saturation_rejected_absent": true,
+      "saturation_rejected_identity": 2,
+      "label": "after-sqlx",
+      "process_wall_s": 0.21568741591181606,
+      "resource_samples": [],
+      "time_l": "        0.19 real         0.00 user         0.00 sys\n             5029888  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 477  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                  58  voluntary context switches\n                 249  involuntary context switches\n            58799810  instructions retired\n            29431643  cycles elapsed\n             2375968  peak memory footprint\n",
+      "binary_sha256": "61a8d1eeb0ce797b6b1ef908cdd5332fce6353bd4aeb1e588a85e62e577d1732",
+      "post_close_live_rows_sha256": "227f4bce8e5c2ee88d90c0500b2c926ce768f77a78f890d5f8dc46adf337db52",
+      "post_close_live_rows_count": 1,
+      "post_close_integrity": "ok"
+    },
+    {
+      "committed_after_reply_dropped": true,
+      "drain_close_completed": true,
+      "driver": "tokio-rusqlite-0.9.0-rusqlite-0.42.0",
+      "dropped_reply_capacity_retained": true,
+      "future_primitives": {
+        "atomic_completion_next_intent_context_version": true,
+        "consistent_context_snapshot": true,
+        "draft_revision": 1,
+        "external_operation_identity": "local-external-operation-0"
+      },
+      "kind": "focused",
+      "permit_released_only_after_physical": true,
+      "private_open": {
+        "adoption_gate": "passed real alias probe; not complete filesystem security qualification",
+        "alias_rejected": true,
+        "native_nofollow_supported": true
+      },
+      "real_commit_busy": {
+        "busy_code": 5,
+        "persisted_rows": 2,
+        "same_transaction_commit_retry": true,
+        "transaction_retained_after_error": true
+      },
+      "saturation_rejected_absent": true,
+      "saturation_rejected_identity": 2,
+      "label": "after-bridge",
+      "process_wall_s": 0.21676920889876783,
+      "resource_samples": [],
+      "time_l": "        0.19 real         0.00 user         0.01 sys\n             4669440  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 451  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                  55  voluntary context switches\n                  79  involuntary context switches\n            53591413  instructions retired\n            25925124  cycles elapsed\n             2408760  peak memory footprint\n",
+      "binary_sha256": "cce84982b9aebaa8b200bf066847b1b31d2b1bd49430dbaed9c865f3525f18f7",
+      "post_close_live_rows_sha256": "227f4bce8e5c2ee88d90c0500b2c926ce768f77a78f890d5f8dc46adf337db52",
+      "post_close_live_rows_count": 1,
+      "post_close_integrity": "ok"
+    }
+  ],
+  "completion": {
+    "workload_runs": 24,
+    "measured_runs": 20,
+    "successful_post_close_integrity": true,
+    "successful_live_record_audits": true
+  },
+  "limits": [
+    "synthetic hierarchical event-stream sequencing, no provider turn mapping",
+    "different bundled engines",
+    "logical admitted payload bound does not equal RSS",
+    "close acknowledgement not OS worker join",
+    "resource max RSS covers setup/live workload/audit/drain",
+    "SQLx native NOFOLLOW adoption gate failed",
+    "overload rejections expected; not a product concurrency cap"
+  ]
+}

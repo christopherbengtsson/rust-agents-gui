@@ -1,0 +1,14 @@
+   Compiling storage-bench-rusqlite v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/driver-bench/rusqlite)
+error[E0382]: use of moved value: `d`
+   --> src/../../common.rs:282:9
+    |
+246 |             let outcome = (|| -> Result<()> {
+    |                            ---------------- value moved into closure here, in previous iteration of loop
+...
+282 |         d.close()?;
+    |         ^ value used here after move
+    |
+    = note: move occurs because `d` has type `Database`, which does not implement the `Copy` trait
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `storage-bench-rusqlite` (bin "storage-bench-rusqlite") due to 1 previous error

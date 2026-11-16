@@ -1,0 +1,94 @@
+[
+  {
+    "driver": "tokio-rusqlite-0.9.0-rusqlite-0.42.0",
+    "n": 1,
+    "classification": "single diagnostic, not five-run qualified capacity",
+    "group_max_events": 64,
+    "offered": 66000,
+    "committed": 65439,
+    "rejected": 561,
+    "hot_workspace_rejected": 561,
+    "nonhot_workspace_rejected": 0,
+    "arrival_to_commit": {
+      "max_ms": 68.566875,
+      "n": 65439,
+      "p50_ms": 21.287708,
+      "p95_ms": 42.591416,
+      "p99_ms": 56.36016600000001
+    },
+    "events_per_second_including_drain": 2178.8856706257225,
+    "urgent": {
+      "max_ms": 42.590083,
+      "n": 150,
+      "p50_ms": 6.4079999999999995,
+      "p95_ms": 17.432291,
+      "p99_ms": 34.40775
+    },
+    "heartbeat_lateness": {
+      "max_ms": 5.405208,
+      "n": 3005,
+      "p50_ms": 1.24525,
+      "p95_ms": 1.92225,
+      "p99_ms": 2.279125
+    },
+    "max_outstanding_logical_bytes": 237056,
+    "source_manifest": "harness/group64-manifest.json",
+    "verify": {
+      "actual_count": 65439,
+      "actual_signature": 31573366317,
+      "all_record_full_payload_hashes_and_parent_routes_match": true,
+      "expected_count": 65439,
+      "expected_signature": 31573366317,
+      "hash_algorithm": "FNV1a64 over ordered id/stream/seq/workspace/root/parent LE bytes and full payload; exact per-record comparison, noncryptographic",
+      "integrity": "ok",
+      "matched": true
+    },
+    "post_close_integrity": "ok"
+  },
+  {
+    "driver": "sqlx-0.9.0",
+    "n": 1,
+    "classification": "single diagnostic, not five-run qualified capacity",
+    "group_max_events": 64,
+    "offered": 66000,
+    "committed": 65382,
+    "rejected": 618,
+    "hot_workspace_rejected": 618,
+    "nonhot_workspace_rejected": 0,
+    "arrival_to_commit": {
+      "max_ms": 67.990166,
+      "n": 65382,
+      "p50_ms": 21.837333,
+      "p95_ms": 43.71775,
+      "p99_ms": 56.753875
+    },
+    "events_per_second_including_drain": 2177.5200622972725,
+    "urgent": {
+      "max_ms": 36.780833,
+      "n": 150,
+      "p50_ms": 6.738208,
+      "p95_ms": 23.7775,
+      "p99_ms": 35.729957999999996
+    },
+    "heartbeat_lateness": {
+      "max_ms": 6.990833,
+      "n": 3004,
+      "p50_ms": 1.453375,
+      "p95_ms": 2.076542,
+      "p99_ms": 2.4922500000000003
+    },
+    "max_outstanding_logical_bytes": 235008,
+    "source_manifest": "harness/group64-manifest.json",
+    "verify": {
+      "actual_count": 65382,
+      "actual_signature": 31531857025,
+      "all_record_full_payload_hashes_and_parent_routes_match": true,
+      "expected_count": 65382,
+      "expected_signature": 31531857025,
+      "hash_algorithm": "FNV1a64 over ordered id/stream/seq/workspace/root/parent LE bytes and full payload; exact per-record comparison, noncryptographic",
+      "integrity": "ok",
+      "matched": true
+    },
+    "post_close_integrity": "ok"
+  }
+]

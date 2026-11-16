@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-11-15T22:23:31.934877+00:00",
+  "local_links": 56,
+  "local_heading_anchors": 7,
+  "json_documents_or_jsonl_records": 126,
+  "python_source_compile": "passed",
+  "final_native_kill_points": 24,
+  "production_inputs_and_user_IDEAS_hashes": "unchanged",
+  "native_source_provenance": "matched",
+  "git_diff_check": "passed",
+  "formatting": "oxfmt write on six authored Markdown files only; raw evidence/source/manifest bytes preserved",
+  "application_units_static_build_package_desktop_provider": "not run; production unchanged",
+  "markdown_format_check": "passed on six authored files after review clarifications",
+  "independent_architecture_evidence_review": "no blocking issue; two minor evidence clarifications addressed",
+  "combined_summary_crash_count": "18 main + 6 maintenance = 24; input hashes matched"
+}

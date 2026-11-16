@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/storage-async-comparison/harness/run.py", line 61, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/storage-async-comparison/harness/run.py", line 53, in main
+    for driver in ['bridge','sqlx']:trial(driver,['focused'],'before-'+driver)
+                                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/storage-async-comparison/harness/run.py", line 36, in trial
+    if p.returncode:raise RuntimeError(f'failed {label}: {stderr}')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: failed before-bridge: Error: SqliteFailure(Error { code: CannotOpen, extended_code: 1550 }, Some("unable to open database file: /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/storage-async-comparison-5yugwfmd/before-bridge/events.sqlite"))
+

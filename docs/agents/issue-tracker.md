@@ -12,6 +12,12 @@ Publishing means writing the spec or ticket to this location.
 Fetching means reading the referenced file.
 Use the labels defined in `triage-labels.md`.
 
+Every MVP spec, ticket and milestone inherits the global
+[development compatibility policy](../MVP.md#development-compatibility-policy).
+Specify the current design and fresh-state verification; exclude retired-build
+compatibility work. Future milestones must carry this policy forward, and final MVP
+completion evidence must include the policy's clean-state gate.
+
 ## Completion
 
 `Status` records triage; the five labels include no completed state. Complete a

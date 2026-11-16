@@ -1,0 +1,21 @@
+{
+  "source": "/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.40.0/sqlite3/sqlite3.c",
+  "source_sha256": "0c657666d819f261cc4007526ad57e1669de9949df7a8ea847aa284a2bf0ee52",
+  "command": [
+    "clang",
+    "-dynamiclib",
+    "-O2",
+    "-DSQLITE_THREADSAFE=1",
+    "/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.40.0/sqlite3/sqlite3.c",
+    "-o",
+    "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/storage-native-06a-bwy8lf9t/libsqlite3.dylib"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 6.703015582985245,
+  "stdout": "",
+  "stderr": "",
+  "private_root": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/storage-native-06a-bwy8lf9t",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin\n",
+  "qualification": "same SQLite source as app, distinct probe compile options; not the app artifact",
+  "library_sha256": "6cc3fa374039c090d1e669c80d24f86208b8f08ddf5da7d2488651888f5c4031"
+}

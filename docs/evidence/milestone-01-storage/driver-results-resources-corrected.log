@@ -1,0 +1,7 @@
+{"phase": "provenance"}
+{"phase": "seed", "driver": "rusqlite", "label": "10000", "exit_code": 0}
+{"phase": "resources", "driver": "rusqlite", "label": "saturation-b16", "exit_code": 0}
+{"phase": "artifact", "driver": "rusqlite"}
+{"phase": "seed", "driver": "sqlx", "label": "10000", "exit_code": 0}
+{"phase": "resources", "driver": "sqlx", "label": "saturation-b16", "exit_code": 0}
+{"phase": "artifact", "driver": "sqlx"}

@@ -1,0 +1,147 @@
+{
+  "date": "2026-11-16",
+  "scope": "read-only installed application code and tagged upstream sources; no execution or user-data inspection",
+  "application": {
+    "path": "/Applications/Conductor.app/Contents/MacOS/conductor",
+    "version": "0.93.0",
+    "build": "0.93.0",
+    "identifier": "com.conductor.app",
+    "bytes": 68776816,
+    "sha256_before": "062937acd521353151df361604d08af8d16b6ba687b6a6e74c67ff8a1e6d05e4",
+    "sha256_after": "062937acd521353151df361604d08af8d16b6ba687b6a6e74c67ff8a1e6d05e4"
+  },
+  "embedded_dependency_paths": [
+    {
+      "marker": "tauri-plugin-sql-2.4.0/src/wrapper.rs",
+      "executable_byte_offset": 46775221
+    },
+    {
+      "marker": "tauri-plugin-sql-2.4.0/src/commands.rs",
+      "executable_byte_offset": 46776806
+    },
+    {
+      "marker": "sqlx-sqlite-0.8.6/src/connection/worker.rs",
+      "executable_byte_offset": 45370677
+    },
+    {
+      "marker": "sqlx-core-0.8.6/src/rt/mod.rs",
+      "executable_byte_offset": 46776709
+    }
+  ],
+  "frontend": {
+    "path": "/private/tmp/conductor-frontend-research/main-B00nPG1d.js",
+    "bytes": 3601846,
+    "sha256": "e79bc002a09829f0e9903c7d9520243ef52213abf32d2700a4cc720fbc65720f",
+    "markers": [
+      {
+        "marker": "plugin:sql|load",
+        "unicode_character_offsets": [
+          956197
+        ],
+        "byte_offsets": [
+          956213
+        ]
+      },
+      {
+        "marker": "plugin:sql|select",
+        "unicode_character_offsets": [
+          956440
+        ],
+        "byte_offsets": [
+          956456
+        ]
+      },
+      {
+        "marker": "plugin:sql|execute",
+        "unicode_character_offsets": [
+          956310
+        ],
+        "byte_offsets": [
+          956326
+        ]
+      },
+      {
+        "marker": "sqlite:conductor.db",
+        "unicode_character_offsets": [
+          956591
+        ],
+        "byte_offsets": [
+          956607
+        ]
+      },
+      {
+        "marker": "sqlite:cache.db",
+        "unicode_character_offsets": [
+          956617
+        ],
+        "byte_offsets": [
+          956633
+        ]
+      },
+      {
+        "marker": "get_db_uri",
+        "unicode_character_offsets": [
+          956680
+        ],
+        "byte_offsets": [
+          956696
+        ]
+      },
+      {
+        "marker": "PRAGMA journal_mode = WAL",
+        "unicode_character_offsets": [
+          956748,
+          957483
+        ],
+        "byte_offsets": [
+          956764,
+          957499
+        ]
+      }
+    ]
+  },
+  "native_symbols": [
+    {
+      "name": "conductor_lib::terminal_history_storage::set_private_file_permissions",
+      "mangled": "__RNvNtCscx4y0Vy4BD_13conductor_lib24terminal_history_storage28set_private_file_permissions",
+      "virtual_address": "0x1007b5d84",
+      "instructions": [
+        {
+          "address": "0x1007b5da0",
+          "assembly": "mov w2, #0x180",
+          "interpretation": "mode value 384 decimal = octal 0600"
+        },
+        {
+          "address": "0x1007b5da4",
+          "assembly": "bl std::sys::fs::set_permissions"
+        }
+      ],
+      "limit": "helper takes a path; main SQLite database/sidecar call coverage not established"
+    },
+    {
+      "name": "conductor_lib::terminal_history_storage::resolve_db_path",
+      "virtual_address": "0x1007b18a4",
+      "observation": "inspected instructions compare sqlite: prefix; accept absolute path or join app_data_dir",
+      "limit": "terminal-history helper; not recovered get_db_uri implementation"
+    },
+    {
+      "name": "conductor_lib::terminal_history_storage::app_data_dir",
+      "virtual_address": "0x1007b15a8",
+      "observation": "uses Tauri PathResolver; observed no permission-setting call in inspected function",
+      "limit": "path resolution does not itself establish private filesystem permissions"
+    }
+  ],
+  "commands": [
+    "Read Info.plist with Python plistlib; SHA-256 executable and decoded assets with hashlib.",
+    "nm -nm /Applications/Conductor.app/Contents/MacOS/conductor (filter relevant native symbols)",
+    "otool -tvV -p <mangled-symbol> /Applications/Conductor.app/Contents/MacOS/conductor (bounded function excerpts)",
+    "Search exact string markers in executable bytes and hash-verified decoded main bundle; record byte and Unicode-character offsets."
+  ],
+  "limits": [
+    "Dependency build paths identify compiled version labels, not proof dependencies are unmodified upstream releases.",
+    "Numeric opening flags need not retain symbolic NOFOLLOW strings; negative string searches do not prove missing protection.",
+    "No original Conductor Rust sources, build manifest or complete source maps were available in inspected resources.",
+    "No main-database get_db_uri native body or whole startup/open/reopen protection path was recovered.",
+    "No Conductor process launch, database/user-support-directory/credential/provider-history/RAT access, storage experiments or app modifications."
+  ]
+}

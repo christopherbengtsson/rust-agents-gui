@@ -1,5 +1,14 @@
 # 06: Connect Codex with actionable setup diagnostics
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../sqlx-architecture/spec.md) and
+[supersession amendments A5/A8](../../sqlx-architecture/amendments.md) govern
+host-sensitive connection qualification and the storage/chat successor route.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 **What to build:** Deliver the Codex connection outcome through the current
 [Codex connection feature](../../codex-connection/spec.md): provider readiness,
 official browser sign-in, compatibility checks and cumulative qualification.

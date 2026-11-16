@@ -1,5 +1,14 @@
 # Routed observations and retained presentation context
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A4](../../.scratch/sqlx-architecture/amendments.md) govern
+separate host, supervisor-owner and socket/peer-specific decisions.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Use TanStack Router for current navigation, Query for shared asynchronous observations,
 and Zustand for retained presentation context. Keep feature decoding/freshness behind
 cohesive feature interfaces and app-lifetime resource ownership above routed layouts.

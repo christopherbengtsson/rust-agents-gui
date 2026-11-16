@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-11-15T22:52:26.596256+00:00",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "private_root": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/storage-async-comparison-5yugwfmd",
+  "source_files": {
+    "bridge/Cargo.lock": "dcc05302f0273c96f3e12813d4dd47df6fabbc5b413c25186397e95589432312",
+    "bridge/Cargo.toml": "27a93848ed392afff250b5efa351747b8ba7e382562fd8ffdf5a9144ea937788",
+    "bridge/src/main.rs": "f685506ad29ff3d9f96780d9ca012d9ccf33e8ebcdf25ee5fe58b6dd3ea0f7aa",
+    "common.rs": "e6b67d76e1997b48812613154bb1c5fe44085b635c9f5863aca8d6a5bf2823b7",
+    "driver.rs": "5fb223bb7ee285ed3699ce443e3b967d59746630636bc342c163fe83ab19493d",
+    "manifest.json": "423b5c01367976ce6bbac2a40589e8596498b09cb5257c9b75059d58b382158f",
+    "run.py": "bc22baa13ee7fb4e6583a6f75de048bac406eb5c246c1496d235e0c929802854",
+    "sqlx/Cargo.lock": "41bc891e7702c82a1f2982302efe3226f1a29f7d41a1c16dff2da0041c7fff93",
+    "sqlx/Cargo.toml": "3f5cd21afd38866c8103501af4543181bf1df01908faa0dcd4e689d775d5db26",
+    "sqlx/src/main.rs": "f685506ad29ff3d9f96780d9ca012d9ccf33e8ebcdf25ee5fe58b6dd3ea0f7aa"
+  },
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)\n",
+  "hardware": "hw.model: Mac16,8\nhw.memsize: 51539607552\nhw.ncpu: 12\n",
+  "source_revision": "24390a1e7ba108ca88704fbf73deac92915d3ab6\n",
+  "dirty": " M .scratch/milestone-01/issues/06a-evaluate-storage-before-durable-chat.md\n M docs/IDEAS.md\n?? .scratch/milestone-01/issues/06b-prepare-storage-for-durable-chat.md\n?? docs/evidence/milestone-01-storage/\n?? docs/evidence/storage-async-comparison/\n?? docs/research/milestone-01-storage-evaluation.md\n?? docs/research/sqlx-vs-rusqlite-selection.md\n?? docs/research/storage-async-architecture-comparison.md\n",
+  "profiles": "release, strip=true; private target dirs; one current-thread Tokio runtime; no app/provider run"
+}

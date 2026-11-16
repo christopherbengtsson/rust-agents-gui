@@ -1,0 +1,195 @@
+{
+  "source_revision": "24390a1e7ba108ca88704fbf73deac92915d3ab6",
+  "method": "Python urllib read-only GET; SHA-256 of response bodies; dynamic docs are access-date evidence, tagged sources carry version identity",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/rusqlite/rusqlite/v0.42.0/libsqlite3-sys/sqlite3/sqlite3.h",
+      "accessed_at_utc": "2026-11-15T21:58:42.955768+00:00",
+      "status": 200,
+      "bytes": 695729,
+      "sha256": "d6c84557261893439b341d2e6c35187ae3ea24fbfd843ad94616f72d89242b8c",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/rusqlite/rusqlite/v0.42.0/libsqlite3-sys/sqlite3/sqlite3.h"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/Cargo.toml",
+      "accessed_at_utc": "2026-11-15T21:58:42.956073+00:00",
+      "status": 200,
+      "bytes": 14370,
+      "sha256": "77c3ab21aa396a7dad0daf09210d9c517cd98ca084c39f59e8db28ba1b9221fe",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/Cargo.toml"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/Cargo.toml",
+      "accessed_at_utc": "2026-11-15T21:58:42.956158+00:00",
+      "status": 200,
+      "bytes": 2829,
+      "sha256": "af4193e1d9d8e9f63c85bf2468cdb24f4e9b7c217bd0745082fecf1a7369b0c6",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/Cargo.toml"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/rusqlite/rusqlite/v0.39.0/libsqlite3-sys/Cargo.toml",
+      "accessed_at_utc": "2026-11-15T21:58:42.956229+00:00",
+      "status": 200,
+      "bytes": 2084,
+      "sha256": "e0f5f73f6a36336b53d0e4321f48e852aa2fff8f8d2e0033025a4bdc6c5625ed",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/rusqlite/rusqlite/v0.39.0/libsqlite3-sys/Cargo.toml"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/rusqlite/rusqlite/v0.39.0/libsqlite3-sys/sqlite3/sqlite3.h",
+      "accessed_at_utc": "2026-11-15T21:58:42.956287+00:00",
+      "status": 200,
+      "bytes": 671786,
+      "sha256": "19585c8b5230e9d4f223bf31b709ece7b6a0bb3faf00d8310625d8e58cda1b1d",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/rusqlite/rusqlite/v0.39.0/libsqlite3-sys/sqlite3/sqlite3.h"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/src/lib.rs",
+      "accessed_at_utc": "2026-11-15T21:58:43.363431+00:00",
+      "status": 200,
+      "bytes": 6797,
+      "sha256": "6e19e45ffc8e018912798e2290527a2a332ecc775b70bd86223efffc06d6e57b",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/src/lib.rs"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/src/connection/mod.rs",
+      "accessed_at_utc": "2026-11-15T21:58:43.368046+00:00",
+      "status": 200,
+      "bytes": 20337,
+      "sha256": "a20c2e51a1505e298fd897b378f9032c89b82850838aa6e5d9409f612fb1e7fd",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/src/connection/mod.rs"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/src/options/mod.rs",
+      "accessed_at_utc": "2026-11-15T21:58:43.368604+00:00",
+      "status": 200,
+      "bytes": 28010,
+      "sha256": "ff5005abc6408f2df073d95bf3440c2a3ee96c1a312d73468bf66123f8ab2f1e",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/transact-rs/sqlx/v0.9.0/sqlx-sqlite/src/options/mod.rs"
+    },
+    {
+      "url": "https://www.sqlite.org/pragma.html",
+      "accessed_at_utc": "2026-11-15T21:58:43.809048+00:00",
+      "status": 200,
+      "bytes": 139936,
+      "sha256": "af75d7d7ab00c29e6eea98618cb1259a3919c308af60a6173215bf9798706034",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/pragma.html"
+    },
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fsync.2.html",
+      "accessed_at_utc": "2026-11-15T21:58:43.830946+00:00",
+      "status": 200,
+      "bytes": 15388,
+      "sha256": "6f2812ad0289bff54203ea3912be236d48f3aaf87db41bb3afe5af85aa7fd1f7",
+      "content_type": "text/html",
+      "final_url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fsync.2.html"
+    },
+    {
+      "url": "https://www.sqlite.org/lang_transaction.html",
+      "accessed_at_utc": "2026-11-15T21:58:43.851993+00:00",
+      "status": 200,
+      "bytes": 27068,
+      "sha256": "b65dc308fd9e0ce471844c97366a4f5ad3a1f42833a3b19486ad7d6555a8e24e",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/lang_transaction.html"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tokio-rs/tokio/tokio-1.54.1/tokio/src/task/blocking.rs",
+      "accessed_at_utc": "2026-11-15T21:58:43.869652+00:00",
+      "status": 200,
+      "bytes": 10015,
+      "sha256": "ff8743009dd0f12e46a7076913d5aa24cce1a9838b63f739e445262cf1e2a774",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/tokio-rs/tokio/tokio-1.54.1/tokio/src/task/blocking.rs"
+    },
+    {
+      "url": "https://www.sqlite.org/wal.html",
+      "accessed_at_utc": "2026-11-15T21:58:43.888469+00:00",
+      "status": 200,
+      "bytes": 42143,
+      "sha256": "f3467b530b883d4a00574fe1a898b3d121ed72764ae28cf66941080ac0badb9e",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/wal.html"
+    },
+    {
+      "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "accessed_at_utc": "2026-11-15T21:58:44.189221+00:00",
+      "status": 200,
+      "bytes": 9619,
+      "sha256": "0b1d1ff100749da95b6db5032ad1f1b9dc93b531c864441b75507b85d91b7a0f",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html"
+    },
+    {
+      "url": "https://www.sqlite.org/lang_attach.html",
+      "accessed_at_utc": "2026-11-15T21:58:44.226378+00:00",
+      "status": 200,
+      "bytes": 306699,
+      "sha256": "5ad54b7f4829c69c88f4bbf8b39c5b88e80740fc84a555ce9c23e5faf1e48138",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/lang_attach.html"
+    },
+    {
+      "url": "https://www.sqlite.org/atomiccommit.html",
+      "accessed_at_utc": "2026-11-15T21:58:44.786018+00:00",
+      "status": 200,
+      "bytes": 77968,
+      "sha256": "5a5be7b660217c9408c8a81eaf2faa2d08832ed3790f895a0a713916ad856ea1",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/atomiccommit.html"
+    },
+    {
+      "url": "https://www.sqlite.org/fasterthanfs.html",
+      "accessed_at_utc": "2026-11-15T21:58:44.881636+00:00",
+      "status": 200,
+      "bytes": 25222,
+      "sha256": "2cba6be472d242d223739f783b937be8b2019321e35fe0018cdb645f5f394855",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/fasterthanfs.html"
+    },
+    {
+      "url": "https://www.sqlite.org/intern-v-extern-blob.html",
+      "accessed_at_utc": "2026-11-15T21:58:45.019528+00:00",
+      "status": 200,
+      "bytes": 7492,
+      "sha256": "7977fddc668200aca255f1c164dfc76c1df0855a30d266d3a26df5cebc74fcb0",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/intern-v-extern-blob.html"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/rust-lang/rust/1.99.1/library/std/src/fs.rs",
+      "accessed_at_utc": "2026-11-15T21:58:45.182789+00:00",
+      "status": 200,
+      "bytes": 128307,
+      "sha256": "9d6d8134748d4fa301339478ed6fdeb5fa6f555d4c39a83d66aefbdf744f4054",
+      "content_type": "text/plain; charset=utf-8",
+      "final_url": "https://raw.githubusercontent.com/rust-lang/rust/1.99.1/library/std/src/fs.rs"
+    },
+    {
+      "url": "https://www.sqlite.org/backup.html",
+      "accessed_at_utc": "2026-11-15T21:58:45.374559+00:00",
+      "status": 200,
+      "bytes": 28195,
+      "sha256": "306b6cca5c7c2f93b648040ae139f14d7d3221c0d16d79b5749e69d808382e04",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/backup.html"
+    },
+    {
+      "url": "https://www.sqlite.org/lang_vacuum.html#vacuum_with_an_into_clause",
+      "accessed_at_utc": "2026-11-15T21:58:45.628593+00:00",
+      "status": 200,
+      "bytes": 15215,
+      "sha256": "740f02ade00626f50c7a71ded2615995362fedfc30e09aa22dbe4535b7615c54",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://www.sqlite.org/lang_vacuum.html#vacuum_with_an_into_clause"
+    }
+  ]
+}

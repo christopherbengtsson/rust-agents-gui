@@ -1,5 +1,14 @@
 # Codex connection — Milestone 01 ticket 06
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../sqlx-architecture/spec.md) and
+[supersession amendments A2/A5](../sqlx-architecture/amendments.md) govern
+native host/owner, setup-attempt crash lifetime, progress contracts and whole-app Quit handoff.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Status: ready-for-agent
 
 Agreed 2026-11-15; current scope follows the authentication amendment below.
@@ -80,10 +89,11 @@ generated contracts and desktop observations. It is a bounded prefactor, not a
 provider framework or a storage-driver redesign. Connection 01 consumes its dated
 handoff alongside the existing foundation prerequisites.
 
-All sessions follow the milestone's [development compatibility policy](../../docs/MILESTONE-01.md#development-compatibility-policy).
-Application-owned record/contract changes need no support for previous development
-formats. Update the current model and generated contracts together, use fresh
-private state where needed and retain current-build recovery/owner checks.
+All sessions follow the global [MVP development compatibility policy](../../docs/MVP.md#development-compatibility-policy).
+Update the current application model/generated contracts together and use fresh
+private state for incompatible changes; retired application compatibility work is
+excluded throughout the MVP and every milestone. Current-build recovery/owner
+checks and the selected external Codex protocol compatibility remain required.
 
 | Ticket | Working outcome | Blocked by |
 | --- | --- | --- |

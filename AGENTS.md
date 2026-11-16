@@ -4,11 +4,28 @@
 
 Repository requirements and policies take precedence over conflicting global skill guidance. Apply this rule to direct skill use, nested skill calls, and delegated work. Use the compatible parts of a skill to carry out the requested task.
 
-For the frontend foundation, the current [frontend-navigation spec](.scratch/frontend-navigation/spec.md) takes precedence over conflicting repository guidance on requirements, architecture, technology choices, sequencing and acceptance. Other documents supply their respective policy where the spec does not supersede it; preserve historical evidence as checkpoint results.
+The MVP's [development compatibility policy](docs/MVP.md#development-compatibility-policy)
+applies throughout MVP development and every current or future milestone, spec and
+ticket. Backward compatibility with earlier application builds is excluded from
+design, implementation, testing and acceptance. Build the current design directly,
+use fresh development state, and qualify the completed MVP from a clean state.
+This overrides older compatibility obligations in any repository document.
+
+The current [native-core and SQLx spec](.scratch/sqlx-architecture/spec.md) and its
+[supersession amendments](.scratch/sqlx-architecture/amendments.md) take precedence
+for native hosting, core lifetime/incarnation, storage, concurrency and their
+refactor contracts/tooling/sequence, including conflicts with the frontend spec.
+These are accepted requirements; implementation and qualification remain pending.
+
+For the remaining frontend foundation, the current
+[frontend-navigation spec](.scratch/frontend-navigation/spec.md) takes precedence
+over conflicting repository guidance on requirements, architecture, technology
+choices, sequencing and acceptance. Other documents supply their respective policy
+where neither spec supersedes it; preserve historical evidence as checkpoint results.
 
 ## Read by task
 
-- Before changing product behavior, architecture, or execution ownership, read [MVP.md](docs/MVP.md). It is authoritative for scope, module responsibilities, and the supervisor lifecycle.
+- Before changing product behavior, architecture, or execution ownership, read [MVP.md](docs/MVP.md). It is authoritative for scope, module responsibilities, lifecycle and the global development compatibility policy, subject to the scoped architecture amendments above.
 - Before implementing or verifying Milestone 01, read [MILESTONE-01.md](docs/MILESTONE-01.md). Its acceptance criteria, verification order, and completion gate govern that slice.
 - Before designing tests, invoking engineering skills, or running verification, read [testing and verification](docs/agents/verification.md). It owns engineering-skill constraints and testing policy.
 - Before changing or reviewing native IPC, generated contracts, feature observations, or observation resource lifetimes, read [observation engineering](docs/agents/observations.md) for module ownership, preparation and physical-completion guidance.

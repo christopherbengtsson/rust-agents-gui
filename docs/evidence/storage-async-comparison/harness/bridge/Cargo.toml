@@ -1,0 +1,16 @@
+[package]
+name = "storage-async-bridge"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+[workspace]
+[features]
+default = []
+sqlx-driver = []
+[dependencies]
+tokio-rusqlite = { version = "=0.9.0", features = ["bundled"] }
+rusqlite = { version = "=0.42.0", features = ["bundled"] }
+tokio = { version = "=1.54.1", default-features = false, features = ["rt", "time", "net", "sync", "macros"] }
+serde_json = "=1.0.154"
+[profile.release]
+strip = true

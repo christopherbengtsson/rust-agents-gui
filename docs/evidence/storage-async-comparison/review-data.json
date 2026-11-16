@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-16",
+  "recommendation": "rusqlite bridge",
+  "recommendation_reason": "Use the maintained tokio-rusqlite bridge behind the core storage module. Both native async stacks were comparable; the bridge preserves the current supported opening guard without a fork. Both delegate connection workers. Keep admission, fairness, durable outcomes and physical completion with their Rust owners; qualify larger grouping and real provider-output backpressure in implementation.",
+  "sqlx_status": "Worth exploring",
+  "bridge_status": "Strong",
+  "metrics": [
+    {
+      "metric": "Baseline \u00b7 250 streams / 500 events per second",
+      "sqlx": "15,000 / 15,000 committed",
+      "bridge": "15,000 / 15,000 committed"
+    },
+    {
+      "metric": "Baseline scheduled arrival \u2192 commit p95 \u00b7 warm-five median",
+      "sqlx": "32.52 ms",
+      "bridge": "32.07 ms"
+    },
+    {
+      "metric": "Heavy \u00b7 500 streams / 66,000 offered \u00b7 median committed",
+      "sqlx": "54,624",
+      "bridge": "54,554"
+    },
+    {
+      "metric": "Heavy group16 p95 \u00b7 warm-five median",
+      "sqlx": "701.34 ms",
+      "bridge": "726.71 ms"
+    },
+    {
+      "metric": "Group64 diagnostic \u00b7 ONE heavy run per stack",
+      "sqlx": "65,382 committed / 618 rejected",
+      "bridge": "65,439 committed / 561 rejected"
+    },
+    {
+      "metric": "Group64 diagnostic p95 \u00b7 not repeated capacity qualification",
+      "sqlx": "43.72 ms",
+      "bridge": "42.59 ms"
+    },
+    {
+      "metric": "Quiet-workspace rejections \u00b7 group64 diagnostic",
+      "sqlx": "0",
+      "bridge": "0"
+    },
+    {
+      "metric": "Native current NOFOLLOW opening behavior",
+      "sqlx": "Supported option unresolved; alias followed",
+      "bridge": "Supported flag; actual alias rejected"
+    },
+    {
+      "metric": "Observed threads \u00b7 one writer / two readers",
+      "sqlx": "4",
+      "bridge": "4"
+    }
+  ],
+  "limits": [
+    "24 original 30-second windows (20 measured) plus two single diagnostic windows; no production migration.",
+    "Both original heavy stacks rejected offered output. Larger groups improved the single diagnostic; hot-workspace rejections remain.",
+    "Different SQLite engine versions and statement-cache settings; no isolated driver-overhead or universal capacity claim.",
+    "Synthetic parent/child streams and transaction shapes; no provider turn mapping, real child execution or GitHub/Jira workflow qualification.",
+    "Dropped-reply evidence retained its async owner; arbitrary owner abort/panic and cancelled COMMIT remain unqualified.",
+    "Post-window payload audits differ, so whole-process RSS is not a steady-state driver comparison.",
+    "No application unit/build/desktop/provider qualification or power-loss/long-soak proof. Future ideas remain probes, not feature commitments."
+  ],
+  "report_path": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/research/storage-async-architecture-comparison.md",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/storage-async-comparison/README.md"
+  ]
+}
