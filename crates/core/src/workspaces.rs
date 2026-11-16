@@ -329,6 +329,7 @@ struct OwnerState {
     storage_closed: bool,
     revision: u64,
     active_workspace: Option<WorkspaceId>,
+    active_registration: Option<ActionId>,
     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
 }
 impl OwnerState {
@@ -357,6 +358,7 @@ impl OwnerState {
             revision: 1,
             journal: Arc::new(crate::observations::Journal::default()),
             active_workspace: None,
+            active_registration: None,
             workspace_faults: BTreeMap::new(),
         })
     }
@@ -485,7 +487,20 @@ impl Drop for OwnerGuard<'_> {
     }
 }
 fn lock_state(shared: &Mutex<OwnerState>) -> Result<OwnerGuard<'_>> {
-    let inner = shared.lock().map_err(RepositoryError::storage)?;
+    let inner = shared.lock().map_err(|poison| {
+        let mut state = poison.into_inner();
+        state.fenced = true;
+        let identity = format!(
+            "owner panic: registration {:?}, workspace {:?}",
+            state.active_registration, state.active_workspace
+        );
+        let error = RepositoryError::new(
+            ErrorCode::CleanupUnconfirmed,
+            "Workspace decision owner panicked; cleanup remains fenced",
+        );
+        state.cleanup_faults.insert(identity, error.clone());
+        error
+    })?;
     let journal = inner.journal.clone();
     Ok(OwnerGuard {
         inner: Some(inner),
@@ -563,6 +578,11 @@ impl Workspaces {
                             RepositoryError::storage(format!("Workspace worker failed: {error}"));
                         let mut state = worker_state.lock().unwrap_or_else(|e| e.into_inner());
                         state.fenced = true;
+                        let identity = format!(
+                            "worker panic: registration {:?}, workspace {:?}",
+                            state.active_registration, state.active_workspace
+                        );
+                        state.cleanup_faults.insert(identity, failure.clone());
                         state.fault = Some(failure.clone());
                         break;
                     }
@@ -739,6 +759,7 @@ fn process_one(
                 {
                     return false;
                 }
+                state.active_registration = Some(action.action_id);
                 Work::Register(action)
             }
             Ok(None) => {
@@ -838,6 +859,7 @@ fn process_one(
             state.cache(record.id, availability)
         }
     };
+    state.active_registration = None;
     match result {
         Ok(()) => {
             if state

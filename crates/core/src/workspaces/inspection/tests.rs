@@ -33,6 +33,7 @@ fn shared() -> Mutex<OwnerState> {
         revision: 1,
         journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
+        active_registration: None,
         workspace_faults: BTreeMap::new(),
     })
 }

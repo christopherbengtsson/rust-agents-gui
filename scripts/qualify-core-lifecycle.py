@@ -99,7 +99,7 @@ try:
     owner2 = recovered["cursor"]["owner"]
     assert owner2 != owner
     recorded = exchange(owner2, repository={"operation":"action", "action_id":action})
-    assert recorded["result"]["Ok"]["registration"]["state"]["state"] == "completed", recorded
+    assert recorded["result"]["Ok"]["registration"]["state"] == "completed", recorded
     exchange(owner2, quit="begin")
     wait_for(lambda: exchange(owner2, quit="status")["status"]["complete"])
     exchange(owner2, quit="finish")

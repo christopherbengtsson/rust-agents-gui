@@ -270,6 +270,7 @@ fn state(store: Store) -> Mutex<OwnerState> {
         revision: 1,
         journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
+        active_registration: None,
         workspace_faults: BTreeMap::new(),
     })
 }
@@ -1649,5 +1650,25 @@ fn registration_panic_survives_failed_persistence_without_replaying_effects() {
             .unwrap()
             .cleanup_faults
             .contains_key(&identity)
+    );
+}
+
+#[test]
+fn poisoned_decision_owner_retains_active_identity_and_fences_reuse() {
+    let shared = state(Store::default());
+    let action = ActionId(Uuid::new_v4());
+    let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let mut state = shared.lock().unwrap();
+        state.active_registration = Some(action);
+        panic!("controlled decision owner panic");
+    }));
+    assert!(lock_state(&shared).is_err());
+    let state = shared.lock().unwrap_or_else(|e| e.into_inner());
+    assert!(state.fenced);
+    assert!(
+        state
+            .cleanup_faults
+            .keys()
+            .any(|identity| identity.contains(&action.0.to_string()))
     );
 }
