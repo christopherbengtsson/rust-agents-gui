@@ -4,24 +4,29 @@ import { Channel, invoke } from "@tauri-apps/api/core";
 import { ObservationFeed, type FeedAcceptance } from "@/lib/observation-feed";
 
 export function useObservationFeed(
-  owner: string | undefined,
+  incarnation: string | undefined,
   acceptance: FeedAcceptance,
 ) {
   const [feed] = useState(
     () =>
       new ObservationFeed(
         {
-          subscribe: async (expectedOwner, subscriptionId, after, receive) => {
+          subscribe: async (
+            expectedIncarnation,
+            subscriptionId,
+            after,
+            receive,
+          ) => {
             const onEvent = new Channel<unknown>(receive);
             try {
               await invoke("observation_subscribe", {
-                expectedOwner,
+                expectedIncarnation,
                 subscriptionId,
                 after: after ?? null,
                 onEvent,
               });
             } catch (error) {
-              // No Rust channel owner exists if registration failed.
+              // No Rust channel incarnation exists if registration failed.
               onEvent.onmessage = () => {};
               throw error;
             }
@@ -40,12 +45,12 @@ export function useObservationFeed(
     (a, b) =>
       a.state === b.state &&
       a.message === b.message &&
-      a.accepted?.owner === b.accepted?.owner &&
+      a.accepted?.incarnation === b.accepted?.incarnation &&
       a.accepted?.sequence === b.accepted?.sequence,
   );
   useEffect(() => {
-    feed.connect(owner);
+    feed.connect(incarnation);
     return () => feed.connect(undefined);
-  }, [feed, owner]);
+  }, [feed, incarnation]);
   return state;
 }

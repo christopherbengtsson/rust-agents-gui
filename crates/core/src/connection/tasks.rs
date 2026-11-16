@@ -4,12 +4,12 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::{sync::oneshot, task::JoinSet};
 
 #[derive(Default)]
-pub(super) struct Tasks {
+pub(crate) struct Tasks {
     set: Mutex<JoinSet<()>>,
     cleanup: tokio::sync::Mutex<()>,
     closed: AtomicBool,
     failure: Arc<Mutex<Vec<String>>>,
-    pub(super) cancel: CancellationToken,
+    pub(crate) cancel: CancellationToken,
 }
 impl Tasks {
     fn reap(&self, set: &mut JoinSet<()>) {
@@ -23,7 +23,12 @@ impl Tasks {
             }
         }
     }
-    pub(super) fn spawn<T: Send + 'static>(
+    pub(crate) fn diagnostic(&self) -> Option<String> {
+        self.reap(&mut self.set.lock().unwrap_or_else(|e| e.into_inner()));
+        let failures = self.failure.lock().unwrap_or_else(|e| e.into_inner());
+        (!failures.is_empty()).then(|| failures.join("; "))
+    }
+    pub(crate) fn spawn<T: Send + 'static>(
         &self,
         work: impl Future<Output = T> + Send + 'static,
     ) -> io::Result<oneshot::Receiver<T>> {
@@ -44,7 +49,7 @@ impl Tasks {
         });
         Ok(receive)
     }
-    pub(super) async fn blocking<T: Send + 'static>(
+    pub(crate) async fn blocking<T: Send + 'static>(
         &self,
         slots: &ConnectionSlots,
         work: impl FnOnce() -> io::Result<T> + Send + 'static,
@@ -81,7 +86,7 @@ impl Tasks {
             .await
             .map_err(|error| io::Error::other(error.to_string()))?
     }
-    pub(super) async fn close_and_wait(&self) -> io::Result<()> {
+    pub(crate) async fn close_and_wait(&self) -> io::Result<()> {
         self.cancel.cancel();
         let _cleanup = self.cleanup.lock().await;
         self.closed.store(true, Ordering::Release);

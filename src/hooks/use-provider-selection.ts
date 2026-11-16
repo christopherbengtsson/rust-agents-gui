@@ -6,7 +6,7 @@ import type { ProviderObservation } from "@/generated/contracts/types";
 /** Native chooser interaction only. Validation, persistence and retry belong to Rust. */
 export function useProviderSelection(
   app: AppObservations,
-  owner: string | undefined,
+  incarnation: string | undefined,
   observation: ProviderObservation | undefined,
 ) {
   const [picker, setPicker] = useState<{
@@ -16,7 +16,7 @@ export function useProviderSelection(
   }>();
   const generation = useRef(0);
   const target = observation?.target.id;
-  const scope = `${owner}:${target}`;
+  const scope = `${incarnation}:${target}`;
   const picking = picker?.scope === scope && picker.picking;
   const error = picker?.scope === scope ? picker.error : undefined;
   useEffect(
@@ -24,16 +24,18 @@ export function useProviderSelection(
       generation.current += 1;
       setPicker(undefined);
     },
-    [owner, target],
+    [incarnation, target],
   );
   const action = useSyncExternalStore(app.providers.subscribeActions, () =>
-    owner && target && app.providers.action(owner, target)?.kind === "selection"
-      ? app.providers.action(owner, target)
+    incarnation &&
+    target &&
+    app.providers.action(incarnation, target)?.kind === "selection"
+      ? app.providers.action(incarnation, target)
       : undefined,
   );
   async function locate() {
     if (
-      !owner ||
+      !incarnation ||
       !observation ||
       picking ||
       (action && action.state !== "rejected")
@@ -48,7 +50,7 @@ export function useProviderSelection(
         title: "Locate Codex executable",
       });
       if (generation.current === current && typeof path === "string")
-        await app.providers.selectExecutable(owner, observation, path);
+        await app.providers.selectExecutable(incarnation, observation, path);
     } catch {
       if (generation.current === current)
         setPicker({
@@ -72,8 +74,12 @@ export function useProviderSelection(
     error: error ?? action?.message,
     uncertain: action?.state === "uncertain",
     reconcile: () => {
-      if (owner && target && action)
-        void app.providers.reconcileSelection(owner, target, action.attempt);
+      if (incarnation && target && action)
+        void app.providers.reconcileSelection(
+          incarnation,
+          target,
+          action.attempt,
+        );
     },
   };
 }

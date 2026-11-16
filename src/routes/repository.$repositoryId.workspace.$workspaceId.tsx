@@ -15,10 +15,10 @@ export const Route = createFileRoute(
   },
   validateSearch: workspaceSearch,
   loader: ({ context: { app }, params, abortController }) => {
-    const owner = app.freshness.currentOwner();
-    if (owner)
+    const incarnation = app.freshness.currentIncarnation();
+    if (incarnation)
       void app.workspaces.prepare(
-        owner,
+        incarnation,
         { operation: "get", id: params.workspaceId },
         abortController.signal,
       );

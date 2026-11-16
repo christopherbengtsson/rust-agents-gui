@@ -6,11 +6,11 @@ import {
   decodeDesktopPid,
   decodeRequestFailure,
   decodeSnapshot,
-  type SupervisorSnapshot,
+  type CoreSnapshot,
 } from "@/lib/observation-contracts";
 
 export type Observation = {
-  snapshot: SupervisorSnapshot;
+  snapshot: CoreSnapshot;
   desktopPid: number;
 };
 
@@ -29,7 +29,7 @@ async function readObservation(): Promise<
 > {
   try {
     const [snapshot, desktopPid] = await Promise.allSettled([
-      invoke<unknown>("supervisor_status").then(decodeSnapshot),
+      invoke<unknown>("core_status").then(decodeSnapshot),
       invoke<unknown>("desktop_pid").then(decodeDesktopPid),
     ]);
     if (snapshot.status === "rejected") throw snapshot.reason;
@@ -47,9 +47,9 @@ async function readObservation(): Promise<
   }
 }
 
-// One owner supplies observations to the shell and diagnostics. Rust owns
+// One incarnation supplies observations to the shell and diagnostics. Rust owns
 // discovery, reconnect and recovery; these reads never submit execution actions.
-export function useSupervisorConnection() {
+export function useCoreConnection() {
   const [connection, setConnection] = useState<Connection>({
     state: "checking",
   });
@@ -78,12 +78,30 @@ export function useSupervisorConnection() {
             pending.current !== request
           )
             return;
-          if (outcome.ok)
-            setConnection({
-              state: "connected",
-              observation: outcome.observation,
-            });
-          else
+          if (outcome.ok) {
+            const snapshot = outcome.observation.snapshot;
+            if (snapshot.status.state === "ready")
+              setConnection({
+                state: "connected",
+                observation: outcome.observation,
+              });
+            else if (
+              snapshot.status.state === "starting" ||
+              snapshot.status.state === "recovering"
+            )
+              setConnection({
+                state: "checking",
+                observation: outcome.observation,
+              });
+            else
+              setConnection({
+                state: "error",
+                observation: outcome.observation,
+                error:
+                  snapshot.diagnostic ??
+                  `Native core is ${snapshot.status.state}. Check core status; no action was replayed.`,
+              });
+          } else
             setConnection((last) => ({
               state: "error",
               error: outcome.error,
@@ -122,5 +140,12 @@ export function useSupervisorConnection() {
     };
   }, [readStatus]);
 
+  useEffect(() => {
+    if (connection.state !== "checking" || !connection.observation) return;
+    const timer = setTimeout(() => {
+      void readStatus();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [connection, readStatus]);
   return { connection, refreshStatus };
 }

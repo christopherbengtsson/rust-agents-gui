@@ -1,0 +1,36 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/observation-contracts.test.tsx (10 tests | 1 failed) 186ms
+   × the shared application corpus passes production TypeScript decoders 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/observation-contracts.test.tsx > the shared application corpus passes production TypeScript decoders
+AssertionError: expected undefined to be 15 // Object.is equality
+
+- Expected:
+15
+
++ Received:
+undefined
+
+ ❯ src/observation-contracts.test.tsx:75:27
+     73|
+     74| test("the shared application corpus passes production TypeScript decod…
+     75|   expect(corpus.protocol).toBe(15);
+       |                           ^
+     76|   expect(decodeSnapshot(corpus.snapshot).cursor.incarnation).toBe(corp…
+     77|   expect(decodeDesktopPid(corpus.desktop_pid)).toBe(42);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 46 passed (47)
+   Start at  18:55:17
+   Duration  2.12s (environment 60%, tests 17%, import 16%, transform 5%, setup 1%)
+
+    Isolate  5 workers spawned · ~273ms startup each (spawn + environment, per file)
+             at least ~1.09s faster with isolate: false — reuses workers across files instead of one per file
+

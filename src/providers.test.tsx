@@ -15,7 +15,7 @@ import { AppObservations } from "./lib/app-observations";
 import type { ProviderTarget, SetupPhase } from "./generated/contracts/types";
 import { ProviderSetup } from "./components/blocks/provider-setup";
 import { useProviderSetup } from "./hooks/use-provider-setup";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { validateProviderRequest } from "./generated/contracts/validators";
 import { object } from "./lib/observation-contracts";
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
@@ -60,7 +60,7 @@ type ReadinessOutcome = {
 };
 function healthyBridge(outcome: ReadinessOutcome = {}) {
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_command, args) => {
+    incarnationBound(async (_command, args) => {
       if (!object(args) || !validateProviderRequest(args.request))
         throw new Error("Unexpected provider request");
       if (args.request.operation === "observe") await outcome.wait;
@@ -107,15 +107,20 @@ function verificationRequests() {
 test("one committed Strict Mode activation verifies once; renders, hints and reconnect only observe", async () => {
   healthyBridge();
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
-  const initialProps: { owner: string | undefined } = { owner: "owner-a" };
-  const hook = renderHook(({ owner }) => useProviderSetup(app, owner), {
-    initialProps,
-    wrapper: ({ children }: { children: ReactNode }) => (
-      <StrictMode>{children}</StrictMode>
-    ),
-  });
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
+  const initialProps: { incarnation: string | undefined } = {
+    incarnation: "incarnation-a",
+  };
+  const hook = renderHook(
+    ({ incarnation }) => useProviderSetup(app, incarnation),
+    {
+      initialProps,
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <StrictMode>{children}</StrictMode>
+      ),
+    },
+  );
   expect(hook.result.current.pending).toBe(true);
   await waitFor(() => expect(hook.result.current.pending).toBe(false));
   expect(hook.result.current.stale).toBe(false);
@@ -126,16 +131,16 @@ test("one committed Strict Mode activation verifies once; renders, hints and rec
   expect(verificationRequests()).toHaveLength(1);
   await act(async () => {
     app.providers.invalidate({ kind: "provider", target_id: a });
-    app.freshness.accept("owner-a");
+    app.freshness.accept("incarnation-a");
     await flush();
   });
   expect(verificationRequests()).toHaveLength(1);
   await act(async () => app.connect(undefined));
-  hook.rerender({ owner: undefined });
+  hook.rerender({ incarnation: undefined });
   expect(hook.result.current.stale).toBe(true);
   await act(async () => {
-    app.connect("owner-a");
-    app.freshness.accept("owner-a");
+    app.connect("incarnation-a");
+    app.freshness.accept("incarnation-a");
   });
   hook.rerender(initialProps);
   await act(flush);
@@ -147,19 +152,19 @@ test("one committed Strict Mode activation verifies once; renders, hints and rec
 test("preload only gets the descriptor; reentry verifies retained healthy evidence anew", async () => {
   healthyBridge();
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
   await app.providers.prepare(
-    "owner-a",
+    "incarnation-a",
     { operation: "target" },
     new AbortController().signal,
   );
   expect(verificationRequests()).toHaveLength(0);
   expect(vi.mocked(invoke).mock.calls).toHaveLength(1);
-  const first = renderHook(() => useProviderSetup(app, "owner-a"));
+  const first = renderHook(() => useProviderSetup(app, "incarnation-a"));
   await waitFor(() => expect(first.result.current.pending).toBe(false));
   first.unmount();
-  const second = renderHook(() => useProviderSetup(app, "owner-a"));
+  const second = renderHook(() => useProviderSetup(app, "incarnation-a"));
   expect(second.result.current.observation?.evidence?.account).toBe(
     "fixture@example.test",
   );
@@ -174,28 +179,33 @@ test("preload only gets the descriptor; reentry verifies retained healthy eviden
 test("an entry verification awaiting baseline survives disconnect until its first dispatch", async () => {
   healthyBridge();
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
-  const first = renderHook(() => useProviderSetup(app, "owner-a"));
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
+  const first = renderHook(() => useProviderSetup(app, "incarnation-a"));
   await waitFor(() => expect(first.result.current.pending).toBe(false));
   first.unmount();
 
   // Keep the descriptor/account cached, but hold the new connection baseline.
-  await act(async () => app.connect("owner-a"));
-  const initialProps: { owner: string | undefined } = { owner: "owner-a" };
-  const next = renderHook(({ owner }) => useProviderSetup(app, owner), {
-    initialProps,
-  });
+  await act(async () => app.connect("incarnation-a"));
+  const initialProps: { incarnation: string | undefined } = {
+    incarnation: "incarnation-a",
+  };
+  const next = renderHook(
+    ({ incarnation }) => useProviderSetup(app, incarnation),
+    {
+      initialProps,
+    },
+  );
   await act(flush);
   expect(verificationRequests()).toHaveLength(1);
   expect(next.result.current.stale).toBe(true);
   await act(async () => app.connect(undefined));
-  next.rerender({ owner: undefined });
+  next.rerender({ incarnation: undefined });
   await act(flush);
   expect(verificationRequests()).toHaveLength(1);
   await act(async () => {
-    app.connect("owner-a");
-    app.freshness.accept("owner-a");
+    app.connect("incarnation-a");
+    app.freshness.accept("incarnation-a");
   });
   next.rerender(initialProps);
   await act(flush);
@@ -209,57 +219,64 @@ test("an entry verification awaiting baseline survives disconnect until its firs
 test("leaving before baseline releases an unsent entry verification", async () => {
   healthyBridge();
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
-  const first = renderHook(() => useProviderSetup(app, "owner-a"));
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
+  const first = renderHook(() => useProviderSetup(app, "incarnation-a"));
   await waitFor(() => expect(first.result.current.pending).toBe(false));
   first.unmount();
-  await act(async () => app.connect("owner-a"));
-  const next = renderHook(() => useProviderSetup(app, "owner-a"));
+  await act(async () => app.connect("incarnation-a"));
+  const next = renderHook(() => useProviderSetup(app, "incarnation-a"));
   await act(flush);
   next.unmount();
   await act(async () => {
-    app.freshness.accept("owner-a");
+    app.freshness.accept("incarnation-a");
     await flush();
   });
   expect(verificationRequests()).toHaveLength(1);
   app.client.clear();
 });
 
-test("a replacement owner gets its own entry verification over retained evidence", async () => {
+test("a replacement incarnation gets its own entry verification over retained evidence", async () => {
   healthyBridge();
   const app = new AppObservations();
-  for (const owner of ["owner-b", "owner-a"]) {
-    app.connect(owner);
-    app.freshness.accept(owner);
-    const prior = renderHook(() => useProviderSetup(app, owner));
+  for (const incarnation of ["incarnation-b", "incarnation-a"]) {
+    app.connect(incarnation);
+    app.freshness.accept(incarnation);
+    const prior = renderHook(() => useProviderSetup(app, incarnation));
     await waitFor(() => expect(prior.result.current.pending).toBe(false));
     prior.unmount();
   }
-  await act(async () => app.connect("owner-a"));
-  const initialProps: { owner: string | undefined } = { owner: "owner-a" };
-  const hook = renderHook(({ owner }) => useProviderSetup(app, owner), {
-    initialProps,
-  });
+  await act(async () => app.connect("incarnation-a"));
+  const initialProps: { incarnation: string | undefined } = {
+    incarnation: "incarnation-a",
+  };
+  const hook = renderHook(
+    ({ incarnation }) => useProviderSetup(app, incarnation),
+    {
+      initialProps,
+    },
+  );
   await act(flush);
   await act(async () => app.connect(undefined));
-  hook.rerender({ owner: undefined });
+  hook.rerender({ incarnation: undefined });
   await act(async () => {
-    app.connect("owner-b");
-    app.freshness.accept("owner-b");
+    app.connect("incarnation-b");
+    app.freshness.accept("incarnation-b");
   });
-  hook.rerender({ owner: "owner-b" });
+  hook.rerender({ incarnation: "incarnation-b" });
   expect(hook.result.current.pending).toBe(true);
   expect(hook.result.current.stale).toBe(true);
   await act(flush);
   expect(
     verificationRequests().filter(
-      ([, args]) => object(args) && args.expectedOwner === "owner-a",
+      ([, args]) =>
+        object(args) && args.expectedIncarnation === "incarnation-a",
     ),
   ).toHaveLength(1);
   expect(
     verificationRequests().filter(
-      ([, args]) => object(args) && args.expectedOwner === "owner-b",
+      ([, args]) =>
+        object(args) && args.expectedIncarnation === "incarnation-b",
     ),
   ).toHaveLength(2);
   hook.unmount();
@@ -270,16 +287,16 @@ test("a failed observation after checking exposes recovery through the real setu
   const outcome: ReadinessOutcome = { phase: "checking" };
   healthyBridge(outcome);
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
-  const hook = renderHook(() => useProviderSetup(app, "owner-a"));
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
+  const hook = renderHook(() => useProviderSetup(app, "incarnation-a"));
   await waitFor(() =>
     expect(hook.result.current.observation?.phase).toBe("checking"),
   );
   outcome.fail = true;
   await act(async () => {
     app.providers.invalidate({ kind: "provider", target_id: a });
-    app.freshness.accept("owner-a");
+    app.freshness.accept("incarnation-a");
     await flush();
   });
   expect(hook.result.current.error).toBeTruthy();
@@ -323,18 +340,18 @@ test("a failed observation after checking exposes recovery through the real setu
 
 test("late target discovery after leaving cannot admit an entry check", async () => {
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
   let complete = () => {};
   vi.mocked(invoke).mockImplementation(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           complete = () => resolve({ kind: "target", target });
         }),
     ),
   );
-  const hook = renderHook(() => useProviderSetup(app, "owner-a"));
+  const hook = renderHook(() => useProviderSetup(app, "incarnation-a"));
   await act(flush);
   hook.unmount();
   await act(async () => {
@@ -349,11 +366,11 @@ test("late target discovery after leaving cannot admit an entry check", async ()
 test("stopped delivery makes setup stale without replaying its entry verification", async () => {
   healthyBridge();
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
   const hook = renderHook(
     ({ updatesAvailable }) =>
-      useProviderSetup(app, "owner-a", updatesAvailable),
+      useProviderSetup(app, "incarnation-a", updatesAvailable),
     {
       initialProps: { updatesAvailable: true },
     },
@@ -389,16 +406,18 @@ test("provider observations reject cross-configuration replies and unsafe semant
   expect(decodeProviderReply(request, observation())).toEqual(observation());
 });
 
-test("provider freshness is independent per target and late old-owner results stay isolated", async () => {
+test("provider freshness is independent per target and late old-incarnation results stay isolated", async () => {
   const app = new AppObservations();
-  app.connect("owner-a");
-  app.freshness.accept("owner-a");
+  app.connect("incarnation-a");
+  app.freshness.accept("incarnation-a");
   const completions: (() => void)[] = [];
   vi.mocked(invoke).mockImplementation(
     (_command, args) =>
       new Promise((resolve) => {
         const expected =
-          args && "expectedOwner" in args ? args.expectedOwner : undefined;
+          args && "expectedIncarnation" in args
+            ? args.expectedIncarnation
+            : undefined;
         const request = args && "request" in args ? args.request : undefined;
         if (
           !request ||
@@ -408,17 +427,17 @@ test("provider freshness is independent per target and late old-owner results st
           throw new Error("wrong request");
         completions.push(() =>
           resolve({
-            owner: expected,
+            incarnation: expected,
             result: { Ok: observation(String(request.target_id)) },
           }),
         );
       }),
   );
-  const releaseA = app.providers.observe("owner-a", {
+  const releaseA = app.providers.observe("incarnation-a", {
     operation: "observe",
     target_id: a,
   });
-  const releaseB = app.providers.observe("owner-a", {
+  const releaseB = app.providers.observe("incarnation-a", {
     operation: "observe",
     target_id: b,
   });
@@ -428,19 +447,20 @@ test("provider freshness is independent per target and late old-owner results st
   completions[1]();
   await flush();
   app.providers.invalidate({ kind: "provider", target_id: a });
-  app.freshness.accept("owner-a");
+  app.freshness.accept("incarnation-a");
   await flush();
   expect(invoke).toHaveBeenCalledTimes(3);
-  app.connect("owner-b");
-  app.freshness.accept("owner-b");
+  app.connect("incarnation-b");
+  app.freshness.accept("incarnation-b");
   completions[2]();
   await flush();
   expect(
-    app.providers.peek("owner-b", { operation: "observe", target_id: a })?.data,
+    app.providers.peek("incarnation-b", { operation: "observe", target_id: a })
+      ?.data,
   ).toBeUndefined();
   expect(
-    app.providers.peek("owner-a", { operation: "observe", target_id: b })?.data
-      ?.value,
+    app.providers.peek("incarnation-a", { operation: "observe", target_id: b })
+      ?.data?.value,
   ).toEqual(observation(b));
   releaseA();
   releaseB();

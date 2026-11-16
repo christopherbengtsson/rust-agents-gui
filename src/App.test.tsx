@@ -1,4 +1,4 @@
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { StrictMode } from "react";
 import {
   act,
@@ -13,7 +13,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { App } from "./test-support/app";
-import { SupervisorConnection } from "./components/blocks/supervisor-connection";
+import { CoreConnection } from "./components/blocks/core-connection";
 import { decodeSnapshot } from "./lib/observation-contracts";
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -51,13 +51,12 @@ function connectionCalls() {
   return vi
     .mocked(invoke)
     .mock.calls.filter(
-      ([command]) =>
-        command === "supervisor_status" || command === "desktop_pid",
+      ([command]) => command === "core_status" || command === "desktop_pid",
     );
 }
 function mockConnection(implementation: (command: string) => Promise<unknown>) {
   vi.mocked(invoke).mockImplementation(
-    ownerBound((command) =>
+    incarnationBound((command) =>
       command === "observation_stop" || command === "observation_acknowledge"
         ? Promise.resolve(undefined)
         : command === "repository_request"
@@ -71,8 +70,8 @@ function mockConnection(implementation: (command: string) => Promise<unknown>) {
 }
 
 const snapshot = {
-  status: { state: "ready", supervisor_pid: 41, application_version: "0.1.0" },
-  cursor: { owner: "owner-41", revision: 1 },
+  status: { state: "ready", native_pid: 41, application_version: "0.1.0" },
+  cursor: { incarnation: "incarnation-41", revision: 1 },
   reset: false,
 };
 
@@ -96,7 +95,7 @@ test("late shutdown-listener setup is physically released after the root unmount
   expect(stop).toHaveBeenCalledTimes(1);
 });
 
-test("a failed shutdown-listener registration remains visible independently of supervisor status", async () => {
+test("a failed shutdown-listener registration remains visible independently of core status", async () => {
   vi.mocked(listen).mockRejectedValueOnce(
     new Error("controlled registration failure"),
   );
@@ -163,7 +162,7 @@ test.each([600, 900])(
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(writeCookie).not.toHaveBeenCalled();
     expect(connectionCalls().map(([command]) => command)).toEqual([
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
     ]);
   },
@@ -186,7 +185,7 @@ test("diagnostics opens from the keyboard and Escape returns focus without readi
   expect(document.activeElement).toBe(trigger);
   await user.keyboard("{Enter}");
   const dialog = await screen.findByRole("dialog", {
-    name: "Supervisor connection",
+    name: "Native core diagnostics",
   });
   await waitFor(() =>
     expect(dialog.contains(document.activeElement)).toBe(true),
@@ -212,7 +211,7 @@ test("connection failure stays visible until an explicit status retry; diagnosti
     connectionCalls()
       .map(([command]) => command)
       .sort(),
-  ).toEqual(["desktop_pid", "supervisor_status"]);
+  ).toEqual(["core_status", "desktop_pid"]);
 
   await user.click(screen.getByRole("button", { name: "Connection details" }));
   expect(screen.getByRole("dialog").textContent).toContain(
@@ -235,7 +234,7 @@ test("connection failure stays visible until an explicit status retry; diagnosti
   );
   expect(screen.queryByRole("alert")).toBeNull();
   await user.click(screen.getByRole("button", { name: "Connection details" }));
-  expect(screen.getByRole("dialog").textContent).toContain("owner-41");
+  expect(screen.getByRole("dialog").textContent).toContain("incarnation-41");
   expect(connectionCalls()).toHaveLength(4);
 });
 
@@ -259,14 +258,14 @@ test("refresh exposes pending feedback, blocks duplicate reads, and labels retai
   expect(checking.hasAttribute("disabled")).toBe(true);
   await user.click(checking);
   expect(connectionCalls()).toHaveLength(4);
-  rejectStatus("Connection lost; reopen to reconcile the owner");
+  rejectStatus("Connection lost; reopen to reconcile the incarnation");
   await screen.findByRole("alert");
   await user.click(screen.getByRole("button", { name: "Connection details" }));
   expect(
     screen.getByRole("region", { name: "Last successful observation" })
       .textContent,
   ).toContain("may be stale");
-  expect(screen.getByRole("dialog").textContent).toContain("owner-41");
+  expect(screen.getByRole("dialog").textContent).toContain("incarnation-41");
 });
 
 test("remounting retrieves observations and never submits execution actions", async () => {
@@ -279,9 +278,9 @@ test("remounting retrieves observations and never submits execution actions", as
   render(<App />);
   await screen.findByRole("button", { name: "Refresh status" });
   expect(connectionCalls().map(([command]) => command)).toEqual([
-    "supervisor_status",
+    "core_status",
     "desktop_pid",
-    "supervisor_status",
+    "core_status",
     "desktop_pid",
   ]);
   expect(screen.queryByRole("button", { name: /send|resume/i })).toBeNull();
@@ -294,7 +293,7 @@ test("a connection failure with no error text still exposes the alert and retry"
   });
   render(<App />);
   expect((await screen.findByRole("alert")).textContent).toContain(
-    "Cannot reach the supervisor",
+    "Cannot reach the core",
   );
   expect(
     screen.getByRole("button", { name: "Retry connection" }),
@@ -334,24 +333,28 @@ test.each(["success", "failure"])(
     expect(screen.queryByRole("alert")).toBeNull();
     await user.click(screen.getByRole("button", { name: "Checking…" }));
     expect(connectionCalls().map(([command]) => command)).toEqual([
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
     ]);
 
     await act(async () => {
       resolveCurrent({
         ...snapshot,
-        cursor: { owner: "current-owner", revision: 2 },
+        cursor: { incarnation: "current-incarnation", revision: 2 },
       });
     });
     expect(screen.getByRole("status").textContent).toContain("Connected");
     await user.click(
       screen.getByRole("button", { name: "Connection details" }),
     );
-    expect(screen.getByRole("dialog").textContent).toContain("current-owner");
-    expect(screen.getByRole("dialog").textContent).not.toContain("owner-41");
+    expect(screen.getByRole("dialog").textContent).toContain(
+      "current-incarnation",
+    );
+    expect(screen.getByRole("dialog").textContent).not.toContain(
+      "incarnation-41",
+    );
   },
 );
 
@@ -371,7 +374,7 @@ test.each(["success", "failure"])(
         ? oldStatus
         : Promise.resolve({
             ...snapshot,
-            cursor: { owner: "current-owner", revision: 2 },
+            cursor: { incarnation: "current-incarnation", revision: 2 },
           });
     });
     render(
@@ -390,12 +393,16 @@ test.each(["success", "failure"])(
     await user.click(
       screen.getByRole("button", { name: "Connection details" }),
     );
-    expect(screen.getByRole("dialog").textContent).toContain("current-owner");
-    expect(screen.getByRole("dialog").textContent).not.toContain("owner-41");
+    expect(screen.getByRole("dialog").textContent).toContain(
+      "current-incarnation",
+    );
+    expect(screen.getByRole("dialog").textContent).not.toContain(
+      "incarnation-41",
+    );
     expect(connectionCalls().map(([command]) => command)).toEqual([
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
     ]);
   },
@@ -421,7 +428,7 @@ test("a failed desktop identity read releases the pending guard for explicit ret
 
 test("connection failure replaces initial repository skeletons with unavailable guidance", async () => {
   mockConnection(async () => {
-    throw new Error("Incompatible supervisor versions");
+    throw new Error("Incompatible core versions");
   });
   const view = render(<App />);
   await screen.findByRole("button", { name: "Retry connection" });
@@ -463,7 +470,7 @@ test("the app mounts one feed and exposes native delivery failure without replay
 
 test("feed failures stay visible while native cleanup is still pending", async () => {
   render(
-    <SupervisorConnection
+    <CoreConnection
       connection={{
         state: "connected",
         observation: { snapshot: decodeSnapshot(snapshot), desktopPid: 42 },

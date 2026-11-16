@@ -1,7 +1,7 @@
 //! Versioned, bounded observations; transport loss never replays actions.
 use crate::workspaces::{ErrorCode, RepositoryError, RepositoryReply, RepositoryRequest};
 use crate::{
-    Core, SnapshotCursor, SupervisorSnapshot, SupervisorStatus,
+    Core, CoreSnapshot, CoreStatus, SnapshotCursor,
     supervisor::{check_private, owner_present, prepare_state, socket_path},
 };
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
@@ -16,8 +16,8 @@ use std::{
 };
 mod admission;
 mod framed_exchange;
-mod subscription;
-mod tasks;
+pub(crate) mod subscription;
+pub(crate) mod tasks;
 pub use admission::{Admitted, ConnectionSlots};
 use framed_exchange::FramedExchange;
 pub use subscription::{FeedAck, FeedBatch, FeedEvent};
@@ -48,7 +48,7 @@ pub enum Delivery {
 pub enum TransportCode {
     Busy,
     NotConnected,
-    OwnerChanged,
+    IncarnationChanged,
     ReplyUnavailable,
     Incompatible,
 }
@@ -96,7 +96,7 @@ fn transport_failure(
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct OwnedReply<T> {
-    pub owner: String,
+    pub incarnation: String,
     pub result: Result<T, RepositoryError>,
 }
 
@@ -140,11 +140,11 @@ struct Request {
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
     Quit {
-        owner: String,
+        incarnation: String,
         status: crate::QuitStatus,
     },
     Provider {
-        owner: String,
+        incarnation: String,
         result: Result<crate::runtimes::ProviderReply, RepositoryError>,
     },
     Feed {
@@ -154,17 +154,17 @@ enum Response {
         error: TransportFailure,
     },
     Workspace {
-        owner: String,
+        incarnation: String,
         result: Result<crate::workspaces::WorkspaceReply, RepositoryError>,
     },
     Snapshot {
-        snapshot: SupervisorSnapshot,
+        snapshot: CoreSnapshot,
     },
     Incompatible {
         message: String,
     },
     Repository {
-        owner: String,
+        incarnation: String,
         result: Result<RepositoryReply, RepositoryError>,
     },
 }
@@ -213,7 +213,7 @@ impl SupervisorConnection {
             blocking: self.blocking.clone(),
         }
     }
-    /// Nonwaiting admission occurs before task creation; run transfers to the completion owner.
+    /// Nonwaiting admission occurs before task creation; run transfers to the completion incarnation.
     pub fn prepare_repository_request(
         &self,
         expected_owner: String,
@@ -273,7 +273,7 @@ impl SupervisorConnection {
             client.workspace_request(&expected_owner, request).await
         }))
     }
-    pub fn prepare_snapshot(&self) -> Result<Admitted<SupervisorSnapshot>, RequestFailure> {
+    pub fn prepare_snapshot(&self) -> Result<Admitted<CoreSnapshot>, RequestFailure> {
         let permit = Self::admit(&self.status)?;
         if self.quitting.load(std::sync::atomic::Ordering::SeqCst) {
             return Err(RequestFailure::transport(
@@ -308,7 +308,7 @@ impl SupervisorConnection {
     /// Explicit Quit never invokes discovery or starts a replacement supervisor.
     pub async fn quit_owned(&self) -> Result<(), RequestFailure> {
         let mut effects = LocalDiscovery::new(self.client());
-        let Some(owner) = self
+        let Some(incarnation) = self
             .quit_target_with(&mut effects)
             .await
             .map_err(unavailable)?
@@ -317,14 +317,14 @@ impl SupervisorConnection {
         };
         let first = self
             .client()
-            .quit_request(&owner, QuitRequest::Begin)
+            .quit_request(&incarnation, QuitRequest::Begin)
             .await?;
         let _ = first;
         let deadline = Instant::now() + Duration::from_secs(30);
         loop {
             let reply = self
                 .client()
-                .quit_request(&owner, QuitRequest::Status)
+                .quit_request(&incarnation, QuitRequest::Status)
                 .await?;
             if reply.complete {
                 break;
@@ -341,7 +341,7 @@ impl SupervisorConnection {
         }
         let _ = self
             .client()
-            .quit_request(&owner, QuitRequest::Finish)
+            .quit_request(&incarnation, QuitRequest::Finish)
             .await;
         // The final response precedes releasing the supervisor lock. Observe
         // actual release without signalling a saved PID or invoking discovery.
@@ -356,7 +356,7 @@ impl SupervisorConnection {
                 break;
             }
             if Instant::now() >= deadline {
-                return Err(unavailable("Supervisor owner release is unconfirmed"));
+                return Err(unavailable("Supervisor incarnation release is unconfirmed"));
             }
             tokio::time::sleep(Duration::from_millis(50)).await;
         }
@@ -368,11 +368,16 @@ impl SupervisorConnection {
         let observed_owner = || {
             self.observed
                 .lock()
-                .map(|state| state.cursor.as_ref().map(|cursor| cursor.owner.clone()))
+                .map(|state| {
+                    state
+                        .cursor
+                        .as_ref()
+                        .map(|cursor| cursor.incarnation.clone())
+                })
                 .map_err(|_| io::Error::other("Connection state unavailable"))
         };
-        if let Some(owner) = observed_owner()? {
-            return Ok(Some(owner));
+        if let Some(incarnation) = observed_owner()? {
+            return Ok(Some(incarnation));
         }
         // No new startup can be admitted. An already admitted discovery must
         // physically settle before absence can establish safe desktop exit.
@@ -388,20 +393,20 @@ impl SupervisorConnection {
             }
             tokio::time::sleep(Duration::from_millis(20)).await;
         };
-        if let Some(owner) = observed_owner()? {
-            return Ok(Some(owner));
+        if let Some(incarnation) = observed_owner()? {
+            return Ok(Some(incarnation));
         }
         match effects.snapshot(&self.state, None).await {
             Ok(snapshot) => {
                 validate_snapshot(&snapshot)?;
-                let owner = snapshot.cursor.owner.clone();
+                let incarnation = snapshot.cursor.incarnation.clone();
                 let mut state = self
                     .observed
                     .lock()
                     .map_err(|_| io::Error::other("Connection state unavailable"))?;
                 state.initialized = true;
                 state.cursor = Some(snapshot.cursor);
-                Ok(Some(owner))
+                Ok(Some(incarnation))
             }
             Err(error) => match effects.owner_present(&self.state).await {
                 Ok(false) => Ok(None),
@@ -457,22 +462,22 @@ impl SupervisorConnection {
         if observed
             .cursor
             .as_ref()
-            .is_some_and(|cursor| cursor.owner != expected_owner)
+            .is_some_and(|cursor| cursor.incarnation != expected_owner)
         {
             return Err(RequestFailure::transport(
-                TransportCode::OwnerChanged,
+                TransportCode::IncarnationChanged,
                 Delivery::Rejected,
-                "The observed supervisor owner has changed. Refresh status before continuing.",
+                "The observed supervisor incarnation has changed. Refresh status before continuing.",
             ));
         }
         Ok(())
     }
 
-    pub async fn snapshot(&self) -> Result<SupervisorSnapshot, RequestFailure> {
+    pub async fn snapshot(&self) -> Result<CoreSnapshot, RequestFailure> {
         self.prepare_snapshot()?.run().await
     }
     #[cfg(test)]
-    async fn snapshot_with(&self, effects: &mut impl Discovery) -> io::Result<SupervisorSnapshot> {
+    async fn snapshot_with(&self, effects: &mut impl Discovery) -> io::Result<CoreSnapshot> {
         let _permit = self
             .status
             .try_acquire()
@@ -482,7 +487,7 @@ impl SupervisorConnection {
     async fn snapshot_admitted_with(
         &self,
         effects: &mut impl Discovery,
-    ) -> io::Result<SupervisorSnapshot> {
+    ) -> io::Result<CoreSnapshot> {
         let (initialized, cursor) = {
             let observed = self
                 .observed
@@ -500,7 +505,7 @@ impl SupervisorConnection {
         }
         let snapshot = effects.snapshot(&self.state, cursor).await
             .map_err(|e| io::Error::new(e.kind(), format!(
-                "Cannot read supervisor observations: {e}. Refresh to reconnect to this owner. If it has exited, reopen the desktop; no actions have been replayed.")))?;
+                "Cannot read supervisor observations: {e}. Refresh to reconnect to this incarnation. If it has exited, reopen the desktop; no actions have been replayed.")))?;
         validate_snapshot(&snapshot)?;
         self.observed
             .lock()
@@ -528,14 +533,14 @@ impl SupervisorClient {
     }
     async fn quit_request(
         &self,
-        owner: &str,
+        incarnation: &str,
         action: QuitRequest,
     ) -> Result<crate::QuitStatus, RequestFailure> {
         let request = Request {
             quit: Some(action),
             protocol: PROTOCOL_VERSION,
             application_version: env!("CARGO_PKG_VERSION").into(),
-            expected_owner: Some(owner.into()),
+            expected_owner: Some(incarnation.into()),
             after: None,
             repository: None,
             workspace: None,
@@ -553,9 +558,9 @@ impl SupervisorClient {
         .await?
         {
             Response::Quit {
-                owner: actual,
+                incarnation: actual,
                 status,
-            } if actual == owner => Ok(status),
+            } if actual == incarnation => Ok(status),
             response => Err(response_failure(response)),
         }
     }
@@ -581,7 +586,10 @@ impl SupervisorClient {
         )
         .await?;
         match response {
-            Response::Provider { owner, result } => {
+            Response::Provider {
+                incarnation,
+                result,
+            } => {
                 if result
                     .as_ref()
                     .is_ok_and(|reply| !provider_target(&request, reply))
@@ -590,7 +598,7 @@ impl SupervisorClient {
                         "Provider reply has the wrong kind or configuration target",
                     ));
                 }
-                owned_reply(expected_owner, owner, result)
+                owned_reply(expected_owner, incarnation, result)
             }
             other => Err(response_failure(other)),
         }
@@ -627,14 +635,17 @@ impl SupervisorClient {
         )
         .await?;
         match response {
-            Response::Workspace { owner, result } => {
+            Response::Workspace {
+                incarnation,
+                result,
+            } => {
                 if result
                     .as_ref()
                     .is_ok_and(|reply| !workspace_target(&request, reply))
                 {
                     return Err(unavailable("Workspace reply has the wrong kind or target"));
                 }
-                owned_reply(expected_owner, owner, result)
+                owned_reply(expected_owner, incarnation, result)
             }
             other => Err(response_failure(other)),
         }
@@ -675,14 +686,17 @@ impl SupervisorClient {
         )
         .await?;
         match response {
-            Response::Repository { owner, result } => {
+            Response::Repository {
+                incarnation,
+                result,
+            } => {
                 if result
                     .as_ref()
                     .is_ok_and(|reply| !repository_target(&request, reply))
                 {
                     return Err(unavailable("Repository reply has the wrong kind or target"));
                 }
-                owned_reply(expected_owner, owner, result)
+                owned_reply(expected_owner, incarnation, result)
             }
             other => Err(response_failure(other)),
         }
@@ -695,7 +709,7 @@ impl SupervisorClient {
         }
     }
 
-    /// Opening the desktop may start an absent owner. Subsequent observations never start one.
+    /// Opening the desktop may start an absent incarnation. Subsequent observations never start one.
     pub async fn connect_or_start(state: PathBuf, executable: &Path) -> io::Result<Self> {
         let client = Self::new(state);
         discover(
@@ -713,10 +727,10 @@ impl SupervisorClient {
         }
     }
 
-    pub async fn status(&self) -> io::Result<SupervisorStatus> {
+    pub async fn status(&self) -> io::Result<CoreStatus> {
         Ok(self.snapshot(None).await?.status)
     }
-    pub async fn snapshot(&self, after: Option<SnapshotCursor>) -> io::Result<SupervisorSnapshot> {
+    pub async fn snapshot(&self, after: Option<SnapshotCursor>) -> io::Result<CoreSnapshot> {
         self.snapshot_with_version(after, PROTOCOL_VERSION, env!("CARGO_PKG_VERSION"))
             .await
     }
@@ -725,7 +739,7 @@ impl SupervisorClient {
         after: Option<SnapshotCursor>,
         protocol: u32,
         application_version: &str,
-    ) -> io::Result<SupervisorSnapshot> {
+    ) -> io::Result<CoreSnapshot> {
         self.snapshot_with(after, protocol, application_version, &mut self.effects())
             .await
     }
@@ -736,7 +750,7 @@ impl SupervisorClient {
         protocol: u32,
         application_version: &str,
         effects: &mut impl ClientEffects,
-    ) -> io::Result<SupervisorSnapshot> {
+    ) -> io::Result<CoreSnapshot> {
         let cancel = self.tasks.cancel.clone();
         let request = Request {
             quit: None,
@@ -771,14 +785,14 @@ impl SupervisorClient {
     }
 }
 
-fn validate_snapshot(snapshot: &SupervisorSnapshot) -> io::Result<()> {
-    if snapshot.status.supervisor_pid == 0
+fn validate_snapshot(snapshot: &CoreSnapshot) -> io::Result<()> {
+    if snapshot.status.native_pid == 0
         || snapshot.status.application_version != env!("CARGO_PKG_VERSION")
-        || snapshot.cursor.owner.is_empty()
-        || snapshot.cursor.owner.len() > 128
+        || snapshot.cursor.incarnation.is_empty()
+        || snapshot.cursor.incarnation.len() > 128
         || snapshot
             .cursor
-            .owner
+            .incarnation
             .chars()
             .any(|c| c.is_whitespace() || c.is_control())
         || snapshot.cursor.revision > 9_007_199_254_740_991
@@ -942,18 +956,26 @@ fn workspace_target(
 
 fn owned_reply<T>(
     expected: &str,
-    owner: String,
+    incarnation: String,
     result: Result<T, RepositoryError>,
 ) -> Result<OwnedReply<T>, RequestFailure> {
-    if owner != expected {
-        return Err(unavailable("Reply came from a different supervisor owner"));
+    if incarnation != expected {
+        return Err(unavailable(
+            "Reply came from a different supervisor incarnation",
+        ));
     }
-    Ok(OwnedReply { owner, result })
+    Ok(OwnedReply {
+        incarnation,
+        result,
+    })
 }
 fn response_failure(response: Response) -> RequestFailure {
     match response {
         Response::Transport { error } => match (error.code, error.delivery) {
-            (TransportCode::OwnerChanged | TransportCode::Incompatible, Delivery::Rejected)
+            (
+                TransportCode::IncarnationChanged | TransportCode::Incompatible,
+                Delivery::Rejected,
+            )
             | (TransportCode::Busy, Delivery::NotSent) => RequestFailure::Transport { error },
             _ => unavailable("Invalid transport evidence from supervisor"),
         },
@@ -1019,7 +1041,7 @@ async fn open_stream(
     effects: &mut impl ClientEffects,
     cancel: &CancellationToken,
 ) -> io::Result<impl AsyncRead + AsyncWrite + Unpin + 'static> {
-    // Blocking checks always finish under their owner, even during cancellation.
+    // Blocking checks always finish under their incarnation, even during cancellation.
     effects.check_private(state, true).await?;
     let socket = socket_path(state);
     effects.check_private(&socket, false).await?;
@@ -1036,7 +1058,7 @@ trait Discovery {
         &mut self,
         state: &Path,
         after: Option<SnapshotCursor>,
-    ) -> io::Result<SupervisorSnapshot>;
+    ) -> io::Result<CoreSnapshot>;
     async fn owner_present(&mut self, state: &Path) -> io::Result<bool>;
     async fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()>;
     fn elapsed(&self) -> Duration;
@@ -1067,7 +1089,7 @@ impl Discovery for LocalDiscovery {
         &mut self,
         state: &Path,
         after: Option<SnapshotCursor>,
-    ) -> io::Result<SupervisorSnapshot> {
+    ) -> io::Result<CoreSnapshot> {
         debug_assert_eq!(state, self.client.state);
         self.client.snapshot(after).await
     }
@@ -1150,14 +1172,14 @@ async fn discover(state: &Path, executable: &Path, effects: &mut impl Discovery)
         if effects.elapsed() >= deadline {
             return Err(io::Error::new(
                 io::ErrorKind::TimedOut,
-                "Supervisor did not become available. An owner may still hold this state; check the installed supervisor and state permissions, then reopen. Do not remove the owner lock.",
+                "Supervisor did not become available. An incarnation may still hold this state; check the installed supervisor and state permissions, then reopen. Do not remove the incarnation lock.",
             ));
         }
         effects.wait(Duration::from_millis(25)).await;
     }
 }
 
-/// Per-server completion owner and bounded blocking dispatch, independent of Tauri.
+/// Per-server completion incarnation and bounded blocking dispatch, independent of Tauri.
 pub struct ConnectionServer {
     core: Arc<Core>,
     tasks: Arc<Tasks>,
@@ -1166,7 +1188,7 @@ pub struct ConnectionServer {
 }
 impl ConnectionServer {
     pub fn is_ready(&self) -> bool {
-        self.core.status().state == crate::SupervisorState::Ready
+        self.core.status().state == crate::CoreState::Ready
     }
     pub fn shutdown_complete(&self) -> bool {
         self.core
@@ -1185,7 +1207,7 @@ impl ConnectionServer {
         let core = self.core.clone();
         serve_stream(
             stream,
-            &core.owner.clone(),
+            &core.incarnation.clone(),
             core.journal.clone(),
             cancel,
             async |request| {
@@ -1259,39 +1281,24 @@ async fn route_request(core: &Arc<Core>, request: Request) -> Response {
             }
         };
         return Response::Quit {
-            owner: core.owner.clone(),
+            incarnation: core.incarnation.clone(),
             status,
         };
     }
     if let Some(request) = request.provider {
-        let result = (|| {
-            let effect = matches!(
-                request,
-                crate::runtimes::ProviderRequest::Observe { refresh: true, .. }
-                    | crate::runtimes::ProviderRequest::SelectExecutable { .. }
-                    | crate::runtimes::ProviderRequest::StartBrowserLogin { .. }
-                    | crate::runtimes::ProviderRequest::ReopenBrowser { .. }
-            );
-            let _start = effect.then(|| core.lifetime.admit()).transpose()?;
-            core.providers
-                .as_ref()
-                .ok_or_else(|| {
-                    RepositoryError::new(ErrorCode::Connection, "Provider setup is unavailable")
-                })?
-                .request(request)
-        })();
+        let result = core.provider_request(request);
         Response::Provider {
-            owner: core.owner.clone(),
+            incarnation: core.incarnation.clone(),
             result,
         }
     } else if let Some(request) = request.workspace {
         Response::Workspace {
-            owner: core.owner.clone(),
+            incarnation: core.incarnation.clone(),
             result: core.workspace_request(request).await,
         }
     } else if let Some(request) = request.repository {
         Response::Repository {
-            owner: core.owner.clone(),
+            incarnation: core.incarnation.clone(),
             result: core.repository_request(request).await,
         }
     } else {
@@ -1303,14 +1310,14 @@ async fn route_request(core: &Arc<Core>, request: Request) -> Response {
 
 async fn serve_stream<S: AsyncRead + AsyncWrite + Unpin + 'static>(
     stream: S,
-    owner: &str,
+    incarnation: &str,
     journal: Arc<crate::observations::Journal>,
     cancel: &CancellationToken,
     route: impl AsyncFnOnce(Request) -> io::Result<Response>,
 ) -> io::Result<()> {
     let mut exchange = FramedExchange::new(stream);
     let request: Request = read_json(&mut exchange, Instant::now() + IO_TIMEOUT, cancel).await?;
-    if let Some(rejection) = reject_request(&request, owner)? {
+    if let Some(rejection) = reject_request(&request, incarnation)? {
         return write_json(
             &mut exchange,
             &rejection,
@@ -1321,9 +1328,9 @@ async fn serve_stream<S: AsyncRead + AsyncWrite + Unpin + 'static>(
     }
     let mut request = request;
     if let Some(subscribe) = request.subscribe.take() {
-        return subscription::serve(owner, &journal, subscribe, &mut exchange, cancel).await;
+        return subscription::serve(incarnation, &journal, subscribe, &mut exchange, cancel).await;
     }
-    // No cancellation race drops a started blocking dispatch; its owner joins it.
+    // No cancellation race drops a started blocking dispatch; its incarnation joins it.
     let response = route(request).await?;
     write_json(
         &mut exchange,
@@ -1335,13 +1342,13 @@ async fn serve_stream<S: AsyncRead + AsyncWrite + Unpin + 'static>(
 }
 
 // The gate owns authorization; a controlled route records whether domain dispatch occurred.
-fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>> {
+fn reject_request(request: &Request, incarnation: &str) -> io::Result<Option<Response>> {
     if request.protocol != PROTOCOL_VERSION
         || request.application_version != env!("CARGO_PKG_VERSION")
     {
         return Ok(Some(Response::Incompatible {
             message: format!(
-                "Incompatible desktop/supervisor versions (client protocol {} / app {}, supervisor protocol {} / app {}). Install matching desktop and supervisor builds; close the old owner through its matching desktop before reopening.",
+                "Incompatible desktop/supervisor versions (client protocol {} / app {}, supervisor protocol {} / app {}). Install matching desktop and supervisor builds; close the old incarnation through its matching desktop before reopening.",
                 request.protocol,
                 request.application_version,
                 PROTOCOL_VERSION,
@@ -1372,12 +1379,12 @@ fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>
             "Invalid status/target context",
         ));
     }
-    if targeted && request.expected_owner.as_deref() != Some(owner) {
+    if targeted && request.expected_owner.as_deref() != Some(incarnation) {
         return Ok(Some(Response::Transport {
             error: transport_failure(
-                TransportCode::OwnerChanged,
+                TransportCode::IncarnationChanged,
                 Delivery::Rejected,
-                "The supervisor owner differs from the caller observation. Refresh status; this attempt was rejected before domain dispatch.",
+                "The supervisor incarnation differs from the caller observation. Refresh status; this attempt was rejected before domain dispatch.",
             ),
         }));
     }

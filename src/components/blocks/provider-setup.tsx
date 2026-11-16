@@ -199,9 +199,9 @@ export function ProviderSetup({
                 </Alert>
               ) : !available ? (
                 <Alert>
-                  <AlertTitle>Supervisor updates unavailable</AlertTitle>
+                  <AlertTitle>Core updates unavailable</AlertTitle>
                   <AlertDescription>
-                    Return to your workspace and reconnect using the supervisor
+                    Return to your workspace and reconnect using the core
                     diagnostics, then reopen Providers. Retained information
                     cannot establish current readiness.
                   </AlertDescription>

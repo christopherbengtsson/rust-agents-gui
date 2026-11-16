@@ -1,0 +1,51 @@
+{
+  "root": "/private/tmp/aw-native06-n83dhiia",
+  "bundle": "/private/tmp/aw-native06-n83dhiia/Native06.app",
+  "repository": "/private/tmp/aw-native06-n83dhiia/repository",
+  "source": "97265159cbfcc0998df66b861eb119cae1dd910a",
+  "binary_sha256": "121b7152cde9d421d8ed86cad79d36c9a54941e68a2b605b296c356d97e0f9a3",
+  "fixture_sha256": "cfeb46bd02d2cdae024197874c7dfd26a2d1117d4e18075c152cc4748703cf30",
+  "checks": [],
+  "processes": [
+    {
+      "label": "initial",
+      "pid": 91141
+    }
+  ],
+  "records": "/private/tmp/aw-native06-n83dhiia/webview.jsonl",
+  "limits": [
+    "Synthetic Codex protocol; no real authentication/agent calls",
+    "SIGKILL establishes process-crash recovery, not power loss",
+    "Retained supervisor resource is unreachable; deletion/package audit belongs to ticket 07"
+  ],
+  "outcome": "failed",
+  "error": "AssertionError({'error': 'Error: Fixture deadline: first workspace', 'stack': '@tauri://localhost:16:20', 'stage': 'failed'})",
+  "fixture_events": [],
+  "webview_records": [
+    {
+      "pid": 91141,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "dd226306-882f-4d9d-86cc-390da5653158",
+          "revision": 1
+        },
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 91141,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "error": "Error: Fixture deadline: first workspace",
+      "stack": "@tauri://localhost:16:20",
+      "stage": "failed"
+    }
+  ],
+  "forced_cleanup": [91141],
+  "exit_codes": {
+    "91141": -9
+  }
+}

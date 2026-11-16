@@ -121,7 +121,7 @@ pub(in crate::connection) fn initialize(connection: &SupervisorConnection) {
     let mut state = connection.observed.lock().unwrap();
     state.initialized = true;
     state.cursor = Some(SnapshotCursor {
-        owner: "owner-a".into(),
+        incarnation: "incarnation-a".into(),
         revision: 999,
     });
 }

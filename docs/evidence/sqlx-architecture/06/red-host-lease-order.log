@@ -1,0 +1,22 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.61s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-278ff42e15b22cbe)
+
+running 1 test
+test native::tests::lease_stays_owned_until_native_host_resources_finish ... FAILED
+
+failures:
+
+---- native::tests::lease_stays_owned_until_native_host_resources_finish stdout ----
+
+thread 'native::tests::lease_stays_owned_until_native_host_resources_finish' (36160666) panicked at crates/core/src/native.rs:664:9:
+assertion failed: !released.load(Ordering::SeqCst)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    native::tests::lease_stays_owned_until_native_host_resources_finish
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 230 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

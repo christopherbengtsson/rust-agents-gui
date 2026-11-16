@@ -9,14 +9,14 @@ const flush = async () => {
 afterEach(() => vi.useRealTimers());
 function scenario() {
   const deliveries: {
-    owner: string;
+    incarnation: string;
     id: string;
     after: unknown;
     receive: (value: unknown) => void;
   }[] = [];
   const transport: FeedTransport = {
-    subscribe: vi.fn(async (owner, id, after, receive) => {
-      deliveries.push({ owner, id, after, receive });
+    subscribe: vi.fn(async (incarnation, id, after, receive) => {
+      deliveries.push({ incarnation, id, after, receive });
     }),
     acknowledge: vi.fn(async () => {}),
     stop: vi.fn(async () => {}),
@@ -35,7 +35,7 @@ function scenario() {
       batch: {
         subscription_id: session.id,
         batch_id: batch,
-        cursor: { owner: session.owner, sequence: seq },
+        cursor: { incarnation: session.incarnation, sequence: seq },
         sample: {
           kind,
           watermark: seq,
@@ -48,7 +48,7 @@ function scenario() {
 }
 test("acceptance precedes ack, and reconnect uses the feed cursor rather than status", async () => {
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   vi.mocked(s.transport.acknowledge).mockImplementation(async (ack) => {
     expect(s.feed.getSnapshot().accepted).toEqual(ack.cursor);
@@ -59,12 +59,15 @@ test("acceptance precedes ack, and reconnect uses the feed cursor rather than st
   s.send(0, 1, 10);
   await flush();
   s.feed.connect(undefined);
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
-  expect(s.deliveries[1].after).toEqual({ owner: "owner-a", sequence: 10 });
+  expect(s.deliveries[1].after).toEqual({
+    incarnation: "incarnation-a",
+    sequence: 10,
+  });
   s.send(0, 2, 999);
   expect(s.feed.getSnapshot().accepted?.sequence).toBe(10);
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   await flush();
   expect(s.deliveries[2].after).toBeUndefined();
   s.feed.connect(undefined);
@@ -72,7 +75,7 @@ test("acceptance precedes ack, and reconnect uses the feed cursor rather than st
 });
 test("a next batch may arrive before the preceding IPC acknowledgement promise settles", async () => {
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   let finish!: () => void;
   vi.mocked(s.transport.acknowledge).mockImplementationOnce(
@@ -92,7 +95,7 @@ test("a next batch may arrive before the preceding IPC acknowledgement promise s
 test("stalls and malformed deliveries stop visibly without advancing the accepted cursor", async () => {
   vi.useFakeTimers();
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   s.send(0, 1, 7);
   await flush();
@@ -102,7 +105,7 @@ test("stalls and malformed deliveries stop visibly without advancing the accepte
   expect(s.transport.stop).toHaveBeenCalledWith(s.deliveries[0].id);
   s.send(0, 2, 8);
   expect(s.feed.getSnapshot().accepted?.sequence).toBe(7);
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   s.deliveries[1].receive({ kind: "batch", batch: {} });
   expect(s.feed.getSnapshot().state).toBe("stopping");
@@ -116,16 +119,16 @@ test("late setup is stopped and joined before the replacement is subscribed", as
   const s = scenario();
   let finish!: () => void;
   vi.mocked(s.transport.subscribe).mockImplementationOnce(
-    async (owner, id, after, receive) => {
-      s.deliveries.push({ owner, id, after, receive });
+    async (incarnation, id, after, receive) => {
+      s.deliveries.push({ incarnation, id, after, receive });
       await new Promise<void>((resolve) => {
         finish = resolve;
       });
     },
   );
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   await flush();
   expect(s.transport.stop).toHaveBeenCalledWith(s.deliveries[0].id);
   expect(s.deliveries).toHaveLength(1);
@@ -134,15 +137,15 @@ test("late setup is stopped and joined before the replacement is subscribed", as
   finish();
   await flush();
   expect(s.deliveries).toHaveLength(2);
-  expect(s.deliveries[1].owner).toBe("owner-b");
+  expect(s.deliveries[1].incarnation).toBe("incarnation-b");
   s.feed.connect(undefined);
   await flush();
 });
-import corpus from "../contracts/observations-v15.json";
+import corpus from "../contracts/observations-native.json";
 test("the shared protocol corpus passes production feed decoding", () => {
   let previous = 0;
   for (const value of corpus.feed) {
-    const batch = decodeFeedBatch(value, "owner-a", "feed-1", previous);
+    const batch = decodeFeedBatch(value, "incarnation-a", "feed-1", previous);
     expect(batch).toEqual(value);
     previous = batch.batch_id;
   }
@@ -150,8 +153,13 @@ test("the shared protocol corpus passes production feed decoding", () => {
 test.each([
   { subscription_id: "other" },
   { batch_id: 2 },
-  { cursor: { owner: "replacement", sequence: 2 } },
-  { cursor: { owner: "owner-a", sequence: Number.MAX_SAFE_INTEGER + 1 } },
+  { cursor: { incarnation: "replacement", sequence: 2 } },
+  {
+    cursor: {
+      incarnation: "incarnation-a",
+      sequence: Number.MAX_SAFE_INTEGER + 1,
+    },
+  },
   {
     sample: {
       kind: "hints",
@@ -174,7 +182,7 @@ test.each([
       {
         subscription_id: "feed-1",
         batch_id: 1,
-        cursor: { owner: "owner-a", sequence: 2 },
+        cursor: { incarnation: "incarnation-a", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,
@@ -182,7 +190,7 @@ test.each([
         },
         ...override,
       },
-      "owner-a",
+      "incarnation-a",
       "feed-1",
       0,
     ),
@@ -191,16 +199,16 @@ test.each([
 
 test("a failed stop attempt does not permanently block later explicit reconnect", async () => {
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   vi.mocked(s.transport.stop).mockRejectedValueOnce(
     new Error("Controlled lost stop reply"),
   );
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   await flush();
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   await flush();
-  expect(s.deliveries.at(-1)?.owner).toBe("owner-b");
+  expect(s.deliveries.at(-1)?.incarnation).toBe("incarnation-b");
   s.feed.connect(undefined);
   await flush();
 });
@@ -210,7 +218,7 @@ test("failed registration requests cleanup of its possibly attached native subsc
   vi.mocked(s.transport.subscribe).mockRejectedValueOnce(
     new Error("Lost registration reply"),
   );
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   expect(s.feed.getSnapshot().state).toBe("stopped");
   expect(s.transport.stop).toHaveBeenCalledTimes(2);
@@ -221,27 +229,30 @@ test("failed registration requests cleanup of its possibly attached native subsc
 
 test("cleanup failure stays visible and fenced until explicit native reconciliation", async () => {
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   vi.mocked(s.transport.stop).mockRejectedValue(
     new Error("Native cleanup unconfirmed"),
   );
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   await flush();
   expect(s.feed.getSnapshot().state).toBe("stopped");
   expect(s.feed.getSnapshot().message).toMatch(/cleanup unconfirmed/);
   expect(s.deliveries).toHaveLength(1);
   vi.mocked(s.transport.stop).mockResolvedValue(undefined);
-  s.feed.connect("owner-c");
+  s.feed.connect("incarnation-c");
   await flush();
-  expect(s.deliveries.map((d) => d.owner)).toEqual(["owner-a", "owner-c"]);
+  expect(s.deliveries.map((d) => d.incarnation)).toEqual([
+    "incarnation-a",
+    "incarnation-c",
+  ]);
   s.feed.connect(undefined);
   await flush();
 });
 
-test("configuration changes during stopping retain only the latest desired owner", async () => {
+test("configuration changes during stopping retain only the latest desired incarnation", async () => {
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   let join: () => void = () => {
     throw new Error("Cleanup not started");
@@ -252,23 +263,26 @@ test("configuration changes during stopping retain only the latest desired owner
         join = resolve;
       }),
   );
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   await flush();
   expect(s.feed.getSnapshot().state).toBe("stopping");
-  s.feed.connect("owner-c");
-  s.feed.connect("owner-d");
+  s.feed.connect("incarnation-c");
+  s.feed.connect("incarnation-d");
   await flush();
   expect(s.deliveries).toHaveLength(1);
   join();
   await flush();
-  expect(s.deliveries.map((d) => d.owner)).toEqual(["owner-a", "owner-d"]);
+  expect(s.deliveries.map((d) => d.incarnation)).toEqual([
+    "incarnation-a",
+    "incarnation-d",
+  ]);
   s.feed.connect(undefined);
   await flush();
 });
 
-test("owner changes preserve the delivery failure while exact native cleanup is pending", async () => {
+test("incarnation changes preserve the delivery failure while exact native cleanup is pending", async () => {
   const s = scenario();
-  s.feed.connect("owner-a");
+  s.feed.connect("incarnation-a");
   await flush();
   let join: () => void = () => {
     throw new Error("Cleanup not started");
@@ -284,13 +298,13 @@ test("owner changes preserve the delivery failure while exact native cleanup is 
     subscription_id: s.deliveries[0].id,
     message: "Delivery failed; native cleanup pending",
   });
-  s.feed.connect("owner-b");
+  s.feed.connect("incarnation-b");
   expect(s.feed.getSnapshot().state).toBe("stopping");
   expect(s.feed.getSnapshot().message).toContain("Delivery failed");
   expect(s.deliveries).toHaveLength(1);
   join();
   await flush();
-  expect(s.deliveries.at(-1)?.owner).toBe("owner-b");
+  expect(s.deliveries.at(-1)?.incarnation).toBe("incarnation-b");
   expect(s.feed.getSnapshot().message).toBeUndefined();
   s.feed.connect(undefined);
   await flush();

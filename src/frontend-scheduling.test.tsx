@@ -3,10 +3,10 @@ import { afterEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { useWorkspaces } from "./test-support/feature-hooks";
 import { ObservationCoordinator } from "./lib/observation-coordinator";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import type { WorkspaceRequest } from "./lib/workspaces";
 import { useRepositories } from "./test-support/feature-hooks";
-import { useSupervisorConnection } from "./hooks/use-supervisor-connection";
+import { useCoreConnection } from "./hooks/use-core-connection";
 import { useWorkspaceChanges } from "./hooks/use-workspace-changes";
 import { AppObservations } from "./lib/app-observations";
 
@@ -27,7 +27,7 @@ test("workspace list fan-out waits behind two physical reads while explicit crea
   const releases: (() => void)[] = [];
   const requests: WorkspaceRequest[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (args as { request: WorkspaceRequest }).request;
       requests.push(request);
       if (request.operation === "create")
@@ -44,7 +44,7 @@ test("workspace list fan-out waits behind two physical reads while explicit crea
     }),
   );
   const first = renderHook(() =>
-    useWorkspaces("owner-a", ids[0], ids.join(","), null, reads),
+    useWorkspaces("incarnation-a", ids[0], ids.join(","), null, reads),
   );
   await waitFor(() => expect(requests.length).toBeGreaterThan(0));
   expect(requests).toHaveLength(2);
@@ -69,16 +69,16 @@ test("repository, workspace and inspection share a budget while status remains i
   const releases: (() => void)[] = [];
   const requests: string[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (command, args) => {
+    incarnationBound(async (command, args) => {
       if (command === "desktop_pid") return 42;
-      if (command === "supervisor_status")
+      if (command === "core_status")
         return {
           status: {
             state: "ready",
-            supervisor_pid: 43,
+            native_pid: 43,
             application_version: "0.1.0",
           },
-          cursor: { owner: "owner-a", revision: 1 },
+          cursor: { incarnation: "incarnation-a", revision: 1 },
           reset: true,
         };
       const { request } = args as { request: { operation: string } };
@@ -100,10 +100,10 @@ test("repository, workspace and inspection share a budget while status remains i
     }),
   );
   const view = renderHook(() => {
-    const connection = useSupervisorConnection();
-    useRepositories("owner-a", app);
-    useWorkspaces("owner-a", id, id, null, app);
-    useWorkspaceChanges("owner-a", id, false, true, reader);
+    const connection = useCoreConnection();
+    useRepositories("incarnation-a", app);
+    useWorkspaces("incarnation-a", id, id, null, app);
+    useWorkspaceChanges("incarnation-a", id, false, true, reader);
     return connection;
   });
   await waitFor(() =>
@@ -135,21 +135,21 @@ test("navigation drops queued old targets while physically stalled reads drain",
   const requests: WorkspaceRequest[] = [];
   const releases: (() => void)[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       requests.push((args as { request: WorkspaceRequest }).request);
       await new Promise<void>((resolve) => releases.push(resolve));
       return { kind: "workspaces", page: { workspaces: [], next: null } };
     }),
   );
   const view = renderHook(
-    ({ owner, targets }) =>
-      useWorkspaces(owner, targets[0], targets.join(","), null, reads),
+    ({ incarnation, targets }) =>
+      useWorkspaces(incarnation, targets[0], targets.join(","), null, reads),
     {
-      initialProps: { owner: "owner-a", targets: ids },
+      initialProps: { incarnation: "incarnation-a", targets: ids },
     },
   );
   await waitFor(() => expect(requests).toHaveLength(2));
-  view.rerender({ owner: "owner-b", targets: [ids[3]] });
+  view.rerender({ incarnation: "incarnation-b", targets: [ids[3]] });
   expect(requests).toHaveLength(2);
   await act(async () => {
     releases[0]();
@@ -177,7 +177,7 @@ test("a failed desktop identity read cannot release a still-running status reque
       finish = resolve;
     });
   });
-  const view = renderHook(() => useSupervisorConnection());
+  const view = renderHook(() => useCoreConnection());
   await act(async () => {});
   await act(async () => {
     await view.result.current.refreshStatus();
@@ -188,10 +188,10 @@ test("a failed desktop identity read cannot release a still-running status reque
     finish({
       status: {
         state: "ready",
-        supervisor_pid: 43,
+        native_pid: 43,
         application_version: "0.1.0",
       },
-      cursor: { owner: "owner-a", revision: 1 },
+      cursor: { incarnation: "incarnation-a", revision: 1 },
       reset: true,
     });
   });
@@ -213,7 +213,7 @@ test("typed status admission errors retain readable transport feedback", async (
       },
     };
   });
-  const view = renderHook(() => useSupervisorConnection());
+  const view = renderHook(() => useCoreConnection());
   await waitFor(() =>
     expect(view.result.current.connection).toMatchObject({
       state: "error",

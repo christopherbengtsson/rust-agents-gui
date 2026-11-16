@@ -11,22 +11,22 @@ import { useWorkspaces as useWorkspaceFeature } from "../hooks/use-workspaces";
 // Isolated feature scenarios supply an accepted baseline explicitly. App scenarios
 // exercise the real feed sink; physical scheduling scenarios share their real gate.
 function useFixtureApp(
-  owner: string | undefined,
+  incarnation: string | undefined,
   reads?: ObservationCoordinator | AppObservations,
 ) {
   const [app] = useState(() =>
     reads instanceof AppObservations ? reads : new AppObservations(reads),
   );
   useEffect(() => {
-    app.connect(owner);
-    if (owner)
+    app.connect(incarnation);
+    if (incarnation)
       app.accept({
         subscription_id: "fixture",
         batch_id: 1,
-        cursor: { owner, sequence: 1 },
+        cursor: { incarnation, sequence: 1 },
         sample: { kind: "resync_required", watermark: 1 },
       });
-  }, [app, owner]);
+  }, [app, incarnation]);
   return app;
 }
 // A controlled history supplies explicit targets to these isolated hook units.
@@ -62,35 +62,35 @@ function useFixtureNavigation(repository: string | null, workspace?: string) {
   return { navigation, target: mainDestination(href) };
 }
 export function useRepositories(
-  owner: string | undefined,
+  incarnation: string | undefined,
   reads?: ObservationCoordinator | AppObservations,
   repositoryTarget: string | null = readSelection() ??
     "00000000-0000-4000-8000-000000000001",
 ) {
-  const app = useFixtureApp(owner, reads);
+  const app = useFixtureApp(incarnation, reads);
   const { navigation, target } = useFixtureNavigation(repositoryTarget);
   return useRepositoryFeature(
-    owner,
+    incarnation,
     app,
     target && target.kind !== "home" ? target.repositoryId : null,
     navigation,
   );
 }
 export function useWorkspaces(
-  owner: string | undefined,
+  incarnation: string | undefined,
   repositoryId: string | undefined,
   repositoryIds: string,
   initial: { repository_id: string; workspace_id: string } | null,
   reads?: ObservationCoordinator | AppObservations,
 ) {
-  const app = useFixtureApp(owner, reads);
+  const app = useFixtureApp(incarnation, reads);
   const saved = readWorkspaceSelection();
   const { navigation, target } = useFixtureNavigation(
     repositoryId ?? "fixture",
     saved?.workspace_id ?? initial?.workspace_id,
   );
   return useWorkspaceFeature(
-    owner,
+    incarnation,
     repositoryId,
     repositoryIds,
     target?.kind === "workspace" ? target.workspaceId : undefined,

@@ -21,7 +21,7 @@ import {
 } from "@/lib/workspaces";
 
 export function useWorkspaces(
-  owner: string | undefined,
+  incarnation: string | undefined,
   repositoryId: string | undefined,
   repositoryIds: string,
   workspaceId: string | undefined,
@@ -43,7 +43,7 @@ export function useWorkspaces(
   const pendingNavigation = useRef<number | undefined>(undefined);
   const sending = useRef(false);
   const [cursors, setCursors] = useState<Record<string, (string | null)[]>>({});
-  const shownOwner = owner ?? feature.retainedOwner();
+  const shownIncarnation = incarnation ?? feature.retainedIncarnation();
   const targets = useMemo(
     () =>
       Array.from(
@@ -59,12 +59,12 @@ export function useWorkspaces(
     [repositoryIds, repositoryId, cursors],
   );
   const wanted = workspaceId;
-  const lists = shownOwner
-    ? targets.map((target) => feature.peek(shownOwner, target))
+  const lists = shownIncarnation
+    ? targets.map((target) => feature.peek(shownIncarnation, target))
     : [];
   const detail =
-    shownOwner && wanted
-      ? feature.peek(shownOwner, { operation: "get", id: wanted })
+    shownIncarnation && wanted
+      ? feature.peek(shownIncarnation, { operation: "get", id: wanted })
       : undefined;
   const pages: Record<string, WorkspacePage> = {};
   for (let index = 0; index < targets.length; index++) {
@@ -76,10 +76,10 @@ export function useWorkspaces(
     detail?.data?.value.kind === "workspace"
       ? (detail.data.value.workspace ?? undefined)
       : undefined;
-  const observedOwner =
-    detail?.data?.owner ??
-    lists.find((state) => state?.data)?.data?.owner ??
-    owner;
+  const observedIncarnation =
+    detail?.data?.incarnation ??
+    lists.find((state) => state?.data)?.data?.incarnation ??
+    incarnation;
   const actionId = pending?.action_id;
   const observationError =
     lists.find((state) => state?.error)?.error ?? detail?.error;
@@ -93,20 +93,25 @@ export function useWorkspaces(
       actionEpoch.current += 1;
       pendingNavigation.current = undefined;
     };
-  }, [owner]);
+  }, [incarnation]);
   useEffect(() => {
-    if (!owner || !visible) return;
-    const releases = targets.map((target) => feature.observe(owner, target));
+    if (!incarnation || !visible) return;
+    const releases = targets.map((target) =>
+      feature.observe(incarnation, target),
+    );
     return () => releases.forEach((release) => release());
-  }, [feature, owner, targets, visible]);
+  }, [feature, incarnation, targets, visible]);
   useEffect(() => {
-    if (!owner || !visible || !wanted) return;
-    return feature.observe(owner, { operation: "get", id: wanted });
-  }, [feature, owner, wanted, visible]);
+    if (!incarnation || !visible || !wanted) return;
+    return feature.observe(incarnation, { operation: "get", id: wanted });
+  }, [feature, incarnation, wanted, visible]);
   useEffect(() => {
-    if (!owner || !actionId) return;
-    return feature.observe(owner, { operation: "action", action_id: actionId });
-  }, [feature, owner, actionId]);
+    if (!incarnation || !actionId) return;
+    return feature.observe(incarnation, {
+      operation: "action",
+      action_id: actionId,
+    });
+  }, [feature, incarnation, actionId]);
   const settleAction = useCallback(
     (request: WorkspaceAction, workspace: Workspace) => {
       if (intent.current?.action_id !== request.action_id) return;
@@ -138,8 +143,8 @@ export function useWorkspaces(
   useEffect(
     () =>
       feature.subscribe(() => {
-        if (!owner || !actionId || !intent.current) return;
-        const action = feature.peek(owner, {
+        if (!incarnation || !actionId || !intent.current) return;
+        const action = feature.peek(incarnation, {
           operation: "action",
           action_id: actionId,
         });
@@ -170,7 +175,7 @@ export function useWorkspaces(
             return;
           }
           settleAction(outstanding, result.workspace);
-          feature.recordAction(owner, result);
+          feature.recordAction(incarnation, result);
         } else if (!sending.current)
           setActionError(
             (last) =>
@@ -181,10 +186,10 @@ export function useWorkspaces(
               },
           );
       }),
-    [owner, actionId, feature, settleAction],
+    [incarnation, actionId, feature, settleAction],
   );
   async function submit(request: WorkspaceAction) {
-    if (!owner || !observedOwner || sending.current) return;
+    if (!incarnation || !observedIncarnation || sending.current) return;
     if (
       intent.current &&
       JSON.stringify(intent.current) !== JSON.stringify(request)
@@ -220,24 +225,24 @@ export function useWorkspaces(
     const actionGeneration = actionEpoch.current;
     return completeOperation(
       async () => {
-        const result = await workspaceRequest(observedOwner, request);
+        const result = await workspaceRequest(observedIncarnation, request);
         if (
           !mounted.current ||
           actionEpoch.current !== actionGeneration ||
-          !app.freshness.matches(observedOwner) ||
+          !app.freshness.matches(observedIncarnation) ||
           intent.current?.action_id !== request.action_id
         )
           return;
         if (result.kind === "action" && result.workspace) {
           settleAction(request, result.workspace);
-          feature.recordAction(observedOwner, result);
+          feature.recordAction(observedIncarnation, result);
         }
       },
       (error) => {
         if (
           mounted.current &&
           actionEpoch.current === actionGeneration &&
-          app.freshness.matches(observedOwner) &&
+          app.freshness.matches(observedIncarnation) &&
           intent.current?.action_id === request.action_id
         ) {
           const failure = repositoryError(error);
@@ -282,13 +287,13 @@ export function useWorkspaces(
         if (mounted.current) {
           setSubmitting(false);
           if (actionEpoch.current === actionGeneration)
-            void feature.refresh(owner);
+            void feature.refresh(incarnation);
         }
       },
     );
   }
   function select(workspace: Workspace) {
-    if (shownOwner) feature.recordWorkspace(shownOwner, workspace);
+    if (shownIncarnation) feature.recordWorkspace(shownIncarnation, workspace);
     navigation.go({
       kind: "workspace",
       repositoryId: workspace.repository_id,
@@ -315,7 +320,7 @@ export function useWorkspaces(
     });
   }
   function refresh() {
-    return owner ? feature.refresh(owner) : Promise.resolve();
+    return incarnation ? feature.refresh(incarnation) : Promise.resolve();
   }
   function next(id: string) {
     const cursor = pages[id]?.next;

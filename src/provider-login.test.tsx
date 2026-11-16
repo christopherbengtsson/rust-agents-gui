@@ -17,7 +17,7 @@ import type {
   ProviderObservation,
   ProviderRequest,
 } from "./generated/contracts/types";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { useProviderProgress } from "./hooks/use-provider-progress";
 import { ProviderSignIn } from "./components/blocks/provider-sign-in";
 
@@ -62,12 +62,12 @@ const pending: ProviderObservation = {
 
 test("lost start replies reconcile once and app progress retains interest after the settings view releases it", async () => {
   const app = new AppObservations();
-  app.connect("owner");
-  app.freshness.accept("owner");
+  app.connect("incarnation");
+  app.freshness.accept("incarnation");
   let current = initial;
   const requests: ProviderRequest[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_command, args) => {
+    incarnationBound(async (_command, args) => {
       if (!object(args) || !validateProviderRequest(args.request))
         throw new Error("Unexpected request");
       const request = args.request;
@@ -91,22 +91,29 @@ test("lost start replies reconcile once and app progress retains interest after 
       return { kind: "observation", observation: current };
     }),
   );
-  const releaseTarget = app.providers.observe("owner", { operation: "target" });
-  const releaseView = app.providers.observe("owner", {
+  const releaseTarget = app.providers.observe("incarnation", {
+    operation: "target",
+  });
+  const releaseView = app.providers.observe("incarnation", {
     operation: "observe",
     target_id: id,
   });
-  const initialProps: { owner: string | undefined } = { owner: "owner" };
-  const root = renderHook(({ owner }) => useProviderProgress(app, owner), {
-    initialProps,
-  });
+  const initialProps: { incarnation: string | undefined } = {
+    incarnation: "incarnation",
+  };
+  const root = renderHook(
+    ({ incarnation }) => useProviderProgress(app, incarnation),
+    {
+      initialProps,
+    },
+  );
   await waitFor(() =>
     expect(root.result.current.observation?.revision).toBe(2),
   );
   await act(async () => {
     await Promise.all([
-      app.providers.startBrowser("owner", initial),
-      app.providers.startBrowser("owner", initial),
+      app.providers.startBrowser("incarnation", initial),
+      app.providers.startBrowser("incarnation", initial),
     ]);
   });
   await waitFor(() => expect(root.result.current.active).toBe(true));
@@ -122,24 +129,24 @@ test("lost start replies reconcile once and app progress retains interest after 
   await act(async () => {
     await vi.advanceTimersByTimeAsync(5 * 60 * 1000 + 1);
   });
-  root.rerender({ owner: "owner" });
+  root.rerender({ incarnation: "incarnation" });
   expect(root.result.current.active).toBe(true);
   expect(root.result.current.observation?.login?.phase).toBe("pending");
   await act(async () => {
     app.connect(undefined);
   });
-  root.rerender({ owner: undefined });
+  root.rerender({ incarnation: undefined });
   await act(async () => {
     await vi.advanceTimersByTimeAsync(5 * 60 * 1000 + 1);
   });
-  root.rerender({ owner: undefined });
+  root.rerender({ incarnation: undefined });
   expect(root.result.current.active).toBe(true);
   expect(root.result.current.stale).toBe(true);
   await act(async () => {
-    app.connect("owner");
-    app.freshness.accept("owner");
+    app.connect("incarnation");
+    app.freshness.accept("incarnation");
   });
-  root.rerender({ owner: "owner" });
+  root.rerender({ incarnation: "incarnation" });
   current = {
     ...current,
     revision: 4,
@@ -153,7 +160,7 @@ test("lost start replies reconcile once and app progress retains interest after 
   };
   await act(async () => {
     app.providers.invalidate({ kind: "provider", target_id: id });
-    app.freshness.accept("owner");
+    app.freshness.accept("incarnation");
     await vi.advanceTimersByTimeAsync(0);
   });
   expect(root.result.current.observation?.login?.phase).toBe("completed");
@@ -165,12 +172,12 @@ test("lost start replies reconcile once and app progress retains interest after 
 
 test("unknown start delivery stays fenced until explicit reconciliation and reconnect never repeats start", async () => {
   const app = new AppObservations();
-  app.connect("owner");
-  app.freshness.accept("owner");
+  app.connect("incarnation");
+  app.freshness.accept("incarnation");
   let canRead = false;
   const requests: ProviderRequest[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_command, args) => {
+    incarnationBound(async (_command, args) => {
       if (!object(args) || !validateProviderRequest(args.request))
         throw new Error("Unexpected request");
       requests.push(args.request);
@@ -179,18 +186,18 @@ test("unknown start delivery stays fenced until explicit reconciliation and reco
       return { kind: "observation", observation: pending };
     }),
   );
-  await app.providers.startBrowser("owner", initial);
-  expect(app.providers.action("owner", id)?.state).toBe("uncertain");
-  await app.providers.startBrowser("owner", initial);
+  await app.providers.startBrowser("incarnation", initial);
+  expect(app.providers.action("incarnation", id)?.state).toBe("uncertain");
+  await app.providers.startBrowser("incarnation", initial);
   expect(
     requests.filter((request) => request.operation === "start_browser_login"),
   ).toHaveLength(1);
   app.connect(undefined);
   canRead = true;
-  app.connect("owner");
-  app.freshness.accept("owner");
+  app.connect("incarnation");
+  app.freshness.accept("incarnation");
   await waitFor(() =>
-    expect(app.providers.action("owner", id)).toBeUndefined(),
+    expect(app.providers.action("incarnation", id)).toBeUndefined(),
   );
   expect(
     requests.filter((request) => request.operation === "start_browser_login"),

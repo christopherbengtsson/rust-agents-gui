@@ -1,0 +1,19 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Checking workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+error[E0433]: cannot find module or crate `tracing` in this scope
+   --> crates/storage-checkpoint/src/../../core/src/storage.rs:495:9
+    |
+495 | ...   tracing::info!(action = %identity, sequence = receipt.sequence, queued = self.jobs.max_capacity() - self.jobs.capacity(), "st...
+    |       ^^^^^^^ use of unresolved module or unlinked crate `tracing`
+
+error[E0433]: cannot find module or crate `tracing` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:495:9
+    |
+495 | ...   tracing::info!(action = %identity, sequence = receipt.sequence, queued = self.jobs.max_capacity() - self.jobs.capacity(), "st...
+    |       ^^^^^^^ use of unresolved module or unlinked crate `tracing`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `storage-checkpoint` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `workspace-checkpoint` (lib) due to 1 previous error

@@ -10,20 +10,25 @@ function subscribeVisibility(changed: () => void) {
 }
 const documentVisible = () => document.visibilityState !== "hidden";
 
-// One presentation owner above both tab panels; no workspace/provider actions.
+// One presentation incarnation above both tab panels; no workspace/provider actions.
 export function useWorkspaceChanges(
-  owner: string | undefined,
+  incarnation: string | undefined,
   workspaceId: string,
   active: boolean,
   visible = true,
   reader: WorkspaceChangesReader,
 ) {
-  // App supplies the lifetime owner; view cleanup releases only its interest.
+  // App supplies the lifetime incarnation; view cleanup releases only its interest.
   const view = useInspectionView(reader);
   const shown = useSyncExternalStore(subscribeVisibility, documentVisible);
   useEffect(() => {
-    reader.configure({ owner, workspaceId, active, visible: visible && shown });
-  }, [reader, owner, workspaceId, active, visible, shown]);
+    reader.configure({
+      incarnation,
+      workspaceId,
+      active,
+      visible: visible && shown,
+    });
+  }, [reader, incarnation, workspaceId, active, visible, shown]);
   useEffect(() => () => reader.release(), [reader]);
   return {
     ...view,

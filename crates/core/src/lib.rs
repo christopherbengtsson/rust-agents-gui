@@ -1,10 +1,11 @@
-//! UI-independent application interface hosted by the local supervisor.
+//! UI-independent application core hosted by native Tauri.
 
 #[cfg(feature = "codegen")]
 pub mod codegen;
 pub mod connection;
 mod git;
 mod lifetime;
+pub mod native;
 pub mod observations;
 mod private_state;
 mod process_effects;
@@ -21,7 +22,7 @@ pub type DesktopPid = u32;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
-pub enum SupervisorState {
+pub enum CoreState {
     Starting,
     Recovering,
     Ready,
@@ -32,29 +33,32 @@ pub enum SupervisorState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-pub struct SupervisorStatus {
-    pub state: SupervisorState,
-    pub supervisor_pid: u32,
+pub struct CoreStatus {
+    pub state: CoreState,
+    pub native_pid: u32,
     pub application_version: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct SnapshotCursor {
-    pub owner: String,
+    pub incarnation: String,
     pub revision: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-pub struct SupervisorSnapshot {
-    pub status: SupervisorStatus,
+pub struct CoreSnapshot {
+    pub status: CoreStatus,
     pub cursor: SnapshotCursor,
-    /// A full snapshot replaces observations from another owner or cursor.
+    /// A full snapshot replaces observations from another incarnation or cursor.
     pub reset: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[cfg_attr(feature = "codegen", ts(optional))]
     pub provider_login_pending: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "codegen", ts(optional))]
+    pub diagnostic: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -67,7 +71,7 @@ pub struct Core {
     keepalive: std::sync::Mutex<Option<std::sync::Arc<Self>>>,
     lifetime: std::sync::Arc<lifetime::Lifetime>,
     exit_requested: std::sync::atomic::AtomicBool,
-    owner: String,
+    incarnation: String,
     pid: u32,
     providers: Option<std::sync::Arc<runtimes::ProviderConnections>>,
     workspaces: Option<workspaces::Workspaces>,
@@ -88,7 +92,7 @@ impl Core {
             keepalive: std::sync::Mutex::new(None),
             lifetime: std::sync::Arc::default(),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
-            owner: format!(
+            incarnation: format!(
                 "{}-{}",
                 std::process::id(),
                 std::time::SystemTime::now()
@@ -110,7 +114,16 @@ impl Core {
         directory: std::path::PathBuf,
         lease: supervisor::StateLease,
     ) -> std::sync::Arc<Self> {
-        let lifetime = std::sync::Arc::new(lifetime::Lifetime::starting(lease));
+        Self::start_native(
+            directory,
+            std::sync::Arc::new(lifetime::Lifetime::starting(lease)),
+        )
+        .await
+    }
+    async fn start_native(
+        directory: std::path::PathBuf,
+        lifetime: std::sync::Arc<lifetime::Lifetime>,
+    ) -> std::sync::Arc<Self> {
         let workspace_directory = directory.clone();
         let processes = process_effects::Processes::new();
         let workspace_processes = processes.clone();
@@ -207,6 +220,34 @@ impl Core {
         });
         task.await
             .expect("startup coordinator must retain its core")
+    }
+    fn fence_native(&self) {
+        self.lifetime.fence();
+        if let Some(providers) = &self.providers {
+            providers.fence();
+        }
+    }
+    fn provider_request(
+        &self,
+        request: runtimes::ProviderRequest,
+    ) -> Result<runtimes::ProviderReply, workspaces::RepositoryError> {
+        let effect = matches!(
+            request,
+            runtimes::ProviderRequest::Observe { refresh: true, .. }
+                | runtimes::ProviderRequest::SelectExecutable { .. }
+                | runtimes::ProviderRequest::StartBrowserLogin { .. }
+                | runtimes::ProviderRequest::ReopenBrowser { .. }
+        );
+        let _start = effect.then(|| self.lifetime.admit()).transpose()?;
+        self.providers
+            .as_ref()
+            .ok_or_else(|| {
+                workspaces::RepositoryError::new(
+                    workspaces::ErrorCode::Connection,
+                    "Provider setup is unavailable",
+                )
+            })?
+            .request(request)
     }
     pub fn begin_quit(self: &std::sync::Arc<Self>) -> QuitStatus {
         if self.lifetime.fence() {
@@ -309,7 +350,7 @@ impl Core {
             .as_ref()
             .ok_or_else(|| {
                 workspaces::RepositoryError::storage(
-                    "Repository storage has not been opened by the execution owner",
+                    "Repository storage has not been opened by the execution incarnation",
                 )
             })?
             .request(request)
@@ -332,29 +373,30 @@ impl Core {
             .as_ref()
             .ok_or_else(|| {
                 workspaces::RepositoryError::storage(
-                    "Workspace storage has not been opened by the execution owner",
+                    "Workspace storage has not been opened by the execution incarnation",
                 )
             })?
             .workspace_request(request)
             .await
     }
 
-    pub fn status(&self) -> SupervisorStatus {
-        SupervisorStatus {
+    pub fn status(&self) -> CoreStatus {
+        CoreStatus {
             state: self.lifetime.phase(),
-            supervisor_pid: self.pid,
+            native_pid: self.pid,
             application_version: env!("CARGO_PKG_VERSION").into(),
         }
     }
 }
 
 impl Core {
-    pub fn snapshot(&self, after: Option<SnapshotCursor>) -> SupervisorSnapshot {
+    pub fn snapshot(&self, after: Option<SnapshotCursor>) -> CoreSnapshot {
         let cursor = SnapshotCursor {
-            owner: self.owner.clone(),
+            incarnation: self.incarnation.clone(),
             revision: self.workspaces.as_ref().map_or(1, |w| w.revision()),
         };
-        SupervisorSnapshot {
+        CoreSnapshot {
+            diagnostic: self.quit_status().diagnostic,
             provider_login_pending: self
                 .providers
                 .as_ref()
@@ -376,7 +418,7 @@ mod tests {
             keepalive: std::sync::Mutex::new(None),
             lifetime: std::sync::Arc::default(),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
-            owner: "test-owner".into(),
+            incarnation: "test-incarnation".into(),
             pid: 42,
             workspaces: None,
             storage: None,
@@ -420,7 +462,7 @@ mod tests {
                 )
                 .await;
                 assert!(completed.load(Ordering::SeqCst));
-                assert_eq!(core.status().state, SupervisorState::Failed);
+                assert_eq!(core.status().state, CoreState::Failed);
                 assert!(
                     core.quit_status()
                         .diagnostic
@@ -429,7 +471,7 @@ mod tests {
                 );
                 core.release_lease();
                 assert!(!released.load(Ordering::SeqCst));
-                // Test-only teardown of the deliberately retained failed owner.
+                // Test-only teardown of the deliberately retained failed incarnation.
                 core.keepalive.lock().unwrap().take();
             });
     }
@@ -461,7 +503,7 @@ mod tests {
                 });
                 let guard = core.lifetime.admit().unwrap();
                 core.begin_quit();
-                assert_eq!(core.status().state, SupervisorState::Stopping);
+                assert_eq!(core.status().state, CoreState::Stopping);
                 assert!(core.lifetime.admit().is_err());
                 core.release_lease();
                 assert!(!released.load(Ordering::SeqCst));
@@ -505,7 +547,7 @@ mod tests {
                     tokio::task::yield_now().await;
                 }
                 assert!(providers.is_fenced());
-                assert_eq!(core.status().state, SupervisorState::Failed);
+                assert_eq!(core.status().state, CoreState::Failed);
                 let status = core.begin_quit();
                 assert!(!status.complete);
                 assert!(status.diagnostic.unwrap().contains("Workspaces"));
@@ -514,8 +556,8 @@ mod tests {
     #[test]
     fn initial_status_reports_the_execution_owner_without_starting_work() {
         let status = core().status();
-        assert_eq!(status.state, SupervisorState::Ready);
-        assert_eq!(status.supervisor_pid, 42);
+        assert_eq!(status.state, CoreState::Ready);
+        assert_eq!(status.native_pid, 42);
         assert_eq!(status.application_version, env!("CARGO_PKG_VERSION"));
     }
 
@@ -529,15 +571,15 @@ mod tests {
         assert_eq!(caught_up.cursor, first.cursor);
         for cursor in [
             SnapshotCursor {
-                owner: "previous-owner".into(),
+                incarnation: "previous-incarnation".into(),
                 revision: 1,
             },
             SnapshotCursor {
-                owner: first.cursor.owner.clone(),
+                incarnation: first.cursor.incarnation.clone(),
                 revision: 0,
             },
             SnapshotCursor {
-                owner: first.cursor.owner.clone(),
+                incarnation: first.cursor.incarnation.clone(),
                 revision: 999,
             },
         ] {

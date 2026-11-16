@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./components/ui/dialog";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { object } from "./lib/observation-contracts";
 import { PRESENTATION_KEY } from "./lib/presentation-store";
 import type { RepositoryReply, RepositoryRequest } from "./lib/repositories";
@@ -146,16 +146,16 @@ beforeEach(() => {
       ? { kind: "workspace", workspace }
       : { kind: "workspaces", page: { workspaces: [], next: null } };
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (command, args) => {
-      if (command === "supervisor_status") {
+    incarnationBound(async (command, args) => {
+      if (command === "core_status") {
         if (!connected) throw new Error("Controlled connection unavailable");
         return {
           status: {
             state: "ready",
-            supervisor_pid: 41,
+            native_pid: 41,
             application_version: "0.1.0",
           },
-          cursor: { owner: "owner-41", revision: 1 },
+          cursor: { incarnation: "incarnation-41", revision: 1 },
           reset: true,
         };
       }
@@ -970,11 +970,11 @@ test("route preloading prepares through feature interests without navigation or 
   const { AppObservations } = await import("./lib/app-observations");
   const { createAppRouter } = await import("./router");
   const app = new AppObservations();
-  app.connect("owner-41");
+  app.connect("incarnation-41");
   app.accept({
     subscription_id: "fixture",
     batch_id: 1,
-    cursor: { owner: "owner-41", sequence: 1 },
+    cursor: { incarnation: "incarnation-41", sequence: 1 },
     sample: { kind: "resync_required", watermark: 1 },
   });
   const history = createMemoryHistory({ initialEntries: ["/"] });
@@ -989,7 +989,7 @@ test("route preloading prepares through feature interests without navigation or 
   });
   await waitFor(() =>
     expect(
-      app.workspaces.isCurrent("owner-41", {
+      app.workspaces.isCurrent("incarnation-41", {
         operation: "get",
         id: workspaceId,
       }),
@@ -1000,7 +1000,7 @@ test("route preloading prepares through feature interests without navigation or 
   app.accept({
     subscription_id: "fixture",
     batch_id: 2,
-    cursor: { owner: "owner-41", sequence: 2 },
+    cursor: { incarnation: "incarnation-41", sequence: 2 },
     sample: {
       kind: "hints",
       watermark: 2,
@@ -1112,7 +1112,7 @@ test("Settings releases collection interests, retains dirty generations and refr
       batch: {
         subscription_id: subscription.subscriptionId,
         batch_id: 2,
-        cursor: { owner: "owner-41", sequence: 2 },
+        cursor: { incarnation: "incarnation-41", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,
@@ -1200,7 +1200,7 @@ test("direct Settings keeps retained action status interested without reading hi
       batch: {
         subscription_id: subscription.subscriptionId,
         batch_id: 2,
-        cursor: { owner: "owner-41", sequence: 2 },
+        cursor: { incarnation: "incarnation-41", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,
@@ -1278,7 +1278,7 @@ test("Settings retains uncertain workspace action lookup without hidden reads or
       batch: {
         subscription_id: subscription.subscriptionId,
         batch_id: 2,
-        cursor: { owner: "owner-41", sequence: 2 },
+        cursor: { incarnation: "incarnation-41", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,

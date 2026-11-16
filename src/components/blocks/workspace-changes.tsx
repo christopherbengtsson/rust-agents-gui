@@ -60,14 +60,14 @@ const readNarrow = () => window.matchMedia(narrowQuery).matches;
 export function WorkspaceInspection({
   view: tab,
   onViewChange,
-  owner,
+  incarnation,
   workspaceId,
   reader,
   children,
 }: {
   view: WorkspaceView;
   onViewChange: (view: WorkspaceView) => void;
-  owner: string | undefined;
+  incarnation: string | undefined;
   workspaceId: string;
   reader: WorkspaceChangesReader;
   children: ReactNode;
@@ -80,7 +80,7 @@ export function WorkspaceInspection({
   const [sheet, setSheet] = useState(false);
   const narrow = useSyncExternalStore(subscribeNarrow, readNarrow);
   const changes = useWorkspaceChanges(
-    owner,
+    incarnation,
     workspaceId,
     tab === "changes",
     tab === "changes" || (narrow ? sheet : !collapsed),
@@ -116,7 +116,7 @@ export function WorkspaceInspection({
             size="sm"
             variant="outline"
             disabled={
-              !owner ||
+              !incarnation ||
               changes.loading ||
               (pendingInspection(changes.observation?.phase) && !changes.error)
             }
@@ -160,7 +160,7 @@ export function WorkspaceInspection({
             </Button>
           )}
         </div>
-        <InspectionStatus changes={changes} connected={!!owner} />
+        <InspectionStatus changes={changes} connected={!!incarnation} />
         <ResizablePanelGroup
           orientation="horizontal"
           className="inspection-panels"

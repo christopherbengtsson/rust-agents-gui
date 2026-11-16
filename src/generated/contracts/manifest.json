@@ -9,14 +9,14 @@
   "contract": "draft2020-12 serialization; JSON numbers; UUID formats",
   "sources": {
     "Cargo.toml": "6d1d6abee71180ea3d6182fae98ab423a1166440eb0a227a00c0972cb77338f2",
-    "Cargo.lock": "3deef572ae4154744a44e41c047a90d8af35b9e7e2e3b132e19b1979ba60a649",
-    "crates/core/Cargo.toml": "57139927eb2a72b8a011752ce0dc5134fd8acc1f72290798525db116ba1daf23",
-    "crates/core/src/lib.rs": "87d947fcb6a947ae8c3b72f06cd5a5ff376c462ec5c04ce90e48a953185b120b",
-    "crates/core/src/codegen.rs": "8942d299dde04dffab052d0f810d3f39c595e8b3b84a1d7ab55220967f00286a",
+    "Cargo.lock": "91eb43c0cac30d103972cf26513187484fe62291899a9250e7609ff47aaeaa34",
+    "crates/core/Cargo.toml": "40b624fbf31916355fe34b9a1f4607af58fc936a7dca042ea7c4559e2cc08854",
+    "crates/core/src/lib.rs": "4aacdf5893e20e431d89a9b0b037587750da6364800cc66e735f7b867e6cd4ec",
+    "crates/core/src/codegen.rs": "0379a80dc63fec6d4a33b6da24c8c7d94d847d7762084828b666aa9e6711f77b",
     "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
-    "crates/core/src/connection.rs": "8cd87a380eea1a21dac197ae945e3a709df5b8442482994ab9115fd381b89af8",
-    "crates/core/src/connection/subscription.rs": "39daad90c39a245df9c6842aa2c09106a8b0251a9cd2869f92027809783e3be7",
-    "crates/core/src/observations.rs": "a3c41684ce06dd447d3493d9794bef6da4fcc1adabb99bfab67709da756968ee",
+    "crates/core/src/connection.rs": "9c04d35b4d360943f9cc83d4a2f05a839c78114c87096aeb8c119d528f2e7409",
+    "crates/core/src/connection/subscription.rs": "de3cd452b6ee9965e9a00b16a0ceb0ba728c9b412b8987fa2f4c249e06984725",
+    "crates/core/src/observations.rs": "5906fb717fcf80824d19ef5d6646af0d75ebf6d80d095b335184da2feea3d027",
     "crates/core/src/workspaces.rs": "3e6171bae84890142276eeeecc99f37b44c0df7a5391ad3ac10bc2bdee9b459f",
     "crates/core/src/runtimes/provider_connection.rs": "aec9d425b5833b968cb395c7cf93ba6934bfd464528d3ef0b95fc58e01edfa52",
     "crates/core/src/runtimes/provider_connection/login.rs": "7df510e32177be582095d48b76f3999ae2f339cb8242f66d8805ffacfcb3bec2",
@@ -28,9 +28,9 @@
     "scripts/prepare-generated.mjs": "5e98f71efa28250437c7bcc0643eff2d85e40a36409f5dc83d0f6eb58e6cc6af"
   },
   "artifacts": {
-    "types.ts": "f12c4dc51ecbd51809c1384d4a1ff6a5593335c1b8a3b9e14a20852cee17eb79",
-    "schemas.json": "0c3c91bc831ffac866e5132275eac20047089396eab7076f46d516eac87990ac",
-    "validators.js": "c9431fe4fefdfe0c53159774ccedcbe6111f3edc17aa965b2adb95f1e9e8dbea",
-    "validators.d.ts": "5ccad4273d1a095d654e442676dcab5901cc673bba485ec1a83f4001b871098d"
+    "types.ts": "786bd13d354521ad7af18b67382a2d64befed76effbed3655203ff07861042bc",
+    "schemas.json": "a386185c651f703e11dd81727b2ef9e43532d449db1a7aeca7d43ec44b441841",
+    "validators.js": "114ca777b17cac6655a60df946eade75503e2a0ebc6d6ae929c9d360c99cc30c",
+    "validators.d.ts": "68fb249cb415b33d86f842e7f32dbbf82d943a6646d6df90b2683be2aefe9099"
   }
 }

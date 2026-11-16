@@ -1,5 +1,5 @@
 //! Root admission and one retained shutdown attempt; domain outcomes stay in domains.
-use crate::SupervisorState;
+use crate::CoreState;
 use std::sync::{Arc, Mutex};
 use tokio::sync::Notify;
 
@@ -9,7 +9,7 @@ pub(crate) struct Lifetime {
     settled: Notify,
 }
 struct State {
-    phase: SupervisorState,
+    phase: CoreState,
     starts: usize,
     attempted: bool,
     errors: Vec<String>,
@@ -30,7 +30,7 @@ impl Default for Lifetime {
     fn default() -> Self {
         Self {
             state: Mutex::new(State {
-                phase: SupervisorState::Ready,
+                phase: CoreState::Ready,
                 starts: 0,
                 attempted: false,
                 errors: Vec::new(),
@@ -46,12 +46,12 @@ impl Lifetime {
         let owner = Self::default();
         {
             let mut state = owner.state.lock().unwrap();
-            state.phase = SupervisorState::Starting;
+            state.phase = CoreState::Starting;
             state.lease = Some(lease);
         }
         owner
     }
-    pub(crate) fn phase(&self) -> SupervisorState {
+    pub(crate) fn phase(&self) -> CoreState {
         self.state
             .lock()
             .unwrap_or_else(|e| e.into_inner())
@@ -59,16 +59,16 @@ impl Lifetime {
             .clone()
     }
     pub(crate) fn recovering(&self) {
-        self.state.lock().unwrap_or_else(|e| e.into_inner()).phase = SupervisorState::Recovering;
+        self.state.lock().unwrap_or_else(|e| e.into_inner()).phase = CoreState::Recovering;
     }
     pub(crate) fn ready(&self) {
-        self.state.lock().unwrap_or_else(|e| e.into_inner()).phase = SupervisorState::Ready;
+        self.state.lock().unwrap_or_else(|e| e.into_inner()).phase = CoreState::Ready;
     }
     pub(crate) fn admit(
         self: &Arc<Self>,
     ) -> Result<StartGuard, crate::workspaces::RepositoryError> {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
-        if state.phase != SupervisorState::Ready {
+        if state.phase != CoreState::Ready {
             return Err(crate::workspaces::RepositoryError::new(
                 crate::workspaces::ErrorCode::Connection,
                 "Core is fenced; retrieve status before starting work",
@@ -83,7 +83,7 @@ impl Lifetime {
             return false;
         }
         state.attempted = true;
-        state.phase = SupervisorState::Stopping;
+        state.phase = CoreState::Stopping;
         true
     }
     pub(crate) async fn transferred(&self) {
@@ -98,9 +98,9 @@ impl Lifetime {
     pub(crate) fn settle(&self, errors: Vec<String>) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         state.phase = if errors.is_empty() {
-            SupervisorState::Stopped
+            CoreState::Stopped
         } else {
-            SupervisorState::Failed
+            CoreState::Failed
         };
         state.errors = errors;
         self.settled.notify_waiters();
@@ -120,19 +120,19 @@ impl Lifetime {
     pub(crate) fn report(&self) -> crate::QuitStatus {
         let state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         crate::QuitStatus {
-            complete: state.phase == SupervisorState::Stopped,
+            complete: state.phase == CoreState::Stopped,
             diagnostic: (!state.errors.is_empty()).then(|| state.errors.join("; ")),
         }
     }
     pub(crate) fn cleanup_failed(&self, error: String) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
-        state.phase = SupervisorState::Failed;
+        state.phase = CoreState::Failed;
         state.errors.push(error);
         self.settled.notify_waiters();
     }
     pub(crate) fn release(&self) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
-        if state.phase == SupervisorState::Stopped {
+        if state.phase == CoreState::Stopped {
             state.lease.take();
         }
     }

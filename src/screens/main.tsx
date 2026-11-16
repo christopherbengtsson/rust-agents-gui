@@ -33,7 +33,7 @@ export function MainScreen() {
           <p>
             {status === "missing"
               ? "This repository or workspace does not exist, or the workspace belongs to another repository."
-              : "The exact destination has not been confirmed. Retry its observations when the supervisor is available."}
+              : "The exact destination has not been confirmed. Retry its observations when the core is available."}
           </p>
           <Button variant="outline" onClick={() => void refresh()}>
             Retry destination

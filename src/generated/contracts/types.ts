@@ -9,6 +9,13 @@ export type ChangePage = { comparison_id: ComparisonId, head: string, files: Arr
 export type ChangedFile = { id: FileId, path: string, index_status: string, worktree_status: string, unsupported: UnsupportedContent | null, };
 export type ChangesObservation = { workspace_id: WorkspaceId, phase: InspectionPhase, page: ChangePage | null, error: RepositoryError | null, };
 export type ComparisonId = string;
+export type CoreSnapshot = { status: CoreStatus, cursor: SnapshotCursor,
+/**
+ * A full snapshot replaces observations from another incarnation or cursor.
+ */
+reset: boolean, provider_login_pending?: boolean, diagnostic?: string, };
+export type CoreState = "starting" | "recovering" | "ready" | "failed" | "stopping" | "stopped";
+export type CoreStatus = { state: CoreState, native_pid: number, application_version: string, };
 export type CreationStage = "allocating_name" | "resolving_base" | "reserving_folder" | "creating_branch" | "creating_worktree";
 export type CreationStatus = { "state": "queued" } | { "state": "running", stage: CreationStage, } | { "state": "ready" } | { "state": "failed", error: RepositoryError, } | { "state": "uncertain", error: RepositoryError, };
 export type Delivery = "not_sent" | "rejected" | "unknown";
@@ -18,7 +25,7 @@ export type ErrorCode = "invalid_path" | "git" | "storage" | "conflict" | "capac
 export type ExecutableSelection = { id: string, path: string, phase: SelectionPhase, };
 export type FeedAck = { subscription_id: string, batch_id: number, cursor: FeedCursor, };
 export type FeedBatch = { sample: Sample, subscription_id: string, batch_id: number, cursor: FeedCursor, };
-export type FeedCursor = { owner: string, sequence: number, };
+export type FeedCursor = { incarnation: string, sequence: number, };
 export type FeedEvent = { "kind": "batch", batch: FeedBatch, } | { "kind": "stopped", subscription_id: string, message: string, };
 export type FileId = string;
 export type FilePreview = { comparison_id: ComparisonId, head: string, rows: Array<DiffRow>, limited: string | null, unsupported: UnsupportedContent | null, note: string | null, };
@@ -29,7 +36,7 @@ export type LoginOutcome = "completed" | "failed" | "cancelled";
 export type LoginPhase = "starting" | "pending" | "cancelling" | "verifying" | "completed" | "failed" | "cancelled" | "cleanup_uncertain";
 export type OwnedObservation = OwnedReply<unknown>;
 export type OwnedProviderReply = OwnedReply<ProviderReply>;
-export type OwnedReply<T> = { owner: string, result: { Ok : T } | { Err : RepositoryError }, };
+export type OwnedReply<T> = { incarnation: string, result: { Ok : T } | { Err : RepositoryError }, };
 export type OwnedRepositoryReply = OwnedReply<RepositoryReply>;
 export type OwnedWorkspaceReply = OwnedReply<WorkspaceReply>;
 export type PinnedBase = { reference: string, commit: string, };
@@ -55,16 +62,9 @@ export type SelectionPhase = "checking" | "remembered" | "failed";
 export type SetupEvidence = { version: string, authentication: Authentication, billing: BillingRoute, account: string | null, plan: string | null, model_provider: string | null, model: string | null, };
 export type SetupPhase = "unknown" | "checking" | "observed" | "cleanup_uncertain";
 export type SetupProblem = "missing_executable" | "incompatible_protocol" | "authentication_unavailable" | "status_read_failed" | "cleanup_uncertain" | "selection_failed";
-export type SnapshotCursor = { owner: string, revision: number, };
-export type SupervisorSnapshot = { status: SupervisorStatus, cursor: SnapshotCursor,
-/**
- * A full snapshot replaces observations from another owner or cursor.
- */
-reset: boolean, provider_login_pending?: boolean, };
-export type SupervisorState = "starting" | "recovering" | "ready" | "failed" | "stopping" | "stopped";
-export type SupervisorStatus = { state: SupervisorState, supervisor_pid: number, application_version: string, };
+export type SnapshotCursor = { incarnation: string, revision: number, };
 export type Target = { "kind": "provider", target_id: string, } | { "kind": "repositories" } | { "kind": "repository", repository_id: RepositoryId, } | { "kind": "registration", action_id: ActionId, } | { "kind": "workspaces", repository_id: RepositoryId | null, } | { "kind": "workspace", workspace_id: WorkspaceId, } | { "kind": "workspace_action", action_id: ActionId, } | { "kind": "inspection", workspace_id: WorkspaceId, };
-export type TransportCode = "busy" | "not_connected" | "owner_changed" | "reply_unavailable" | "incompatible";
+export type TransportCode = "busy" | "not_connected" | "incarnation_changed" | "reply_unavailable" | "incompatible";
 export type TransportFailure = { code: TransportCode, delivery: Delivery, message: string, };
 export type UnsupportedContent = "binary" | "non_utf8" | "symlink" | "submodule" | "conflict" | "special_file" | "oversized" | "preview_limit";
 export type Workspace = { id: WorkspaceId, repository_id: RepositoryId, creation_action_id: ActionId, name: string | null, branch: string | null, path: string | null, legacy: boolean, base: PinnedBase | null, artifacts: Artifacts, status: CreationStatus, cleanup_unconfirmed: boolean, };

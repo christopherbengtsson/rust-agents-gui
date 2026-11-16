@@ -118,7 +118,7 @@ impl ReadBudget {
     }
 }
 
-/// One owner across handshake and subsequent frames. No raw stream/buffer escape.
+/// One incarnation across handshake and subsequent frames. No raw stream/buffer escape.
 pub(super) struct FramedExchange<S> {
     framed: Option<Framed<Progress<S>, StrictCodec>>,
     read_budget: Option<ReadBudget>,

@@ -499,6 +499,140 @@
     "title": "ComparisonId",
     "type": "string"
   },
+  "CoreSnapshot": {
+    "$defs": {
+      "CoreState": {
+        "enum": [
+          "starting",
+          "recovering",
+          "ready",
+          "failed",
+          "stopping",
+          "stopped"
+        ],
+        "type": "string"
+      },
+      "CoreStatus": {
+        "properties": {
+          "application_version": {
+            "type": "string"
+          },
+          "native_pid": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "state": {
+            "$ref": "#/$defs/CoreState"
+          }
+        },
+        "required": [
+          "state",
+          "native_pid",
+          "application_version"
+        ],
+        "type": "object"
+      },
+      "SnapshotCursor": {
+        "properties": {
+          "incarnation": {
+            "type": "string"
+          },
+          "revision": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "incarnation",
+          "revision"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "cursor": {
+        "$ref": "#/$defs/SnapshotCursor"
+      },
+      "diagnostic": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "provider_login_pending": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "reset": {
+        "description": "A full snapshot replaces observations from another incarnation or cursor.",
+        "type": "boolean"
+      },
+      "status": {
+        "$ref": "#/$defs/CoreStatus"
+      }
+    },
+    "required": [
+      "status",
+      "cursor",
+      "reset"
+    ],
+    "title": "CoreSnapshot",
+    "type": "object"
+  },
+  "CoreState": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "starting",
+      "recovering",
+      "ready",
+      "failed",
+      "stopping",
+      "stopped"
+    ],
+    "title": "CoreState",
+    "type": "string"
+  },
+  "CoreStatus": {
+    "$defs": {
+      "CoreState": {
+        "enum": [
+          "starting",
+          "recovering",
+          "ready",
+          "failed",
+          "stopping",
+          "stopped"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "application_version": {
+        "type": "string"
+      },
+      "native_pid": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "state": {
+        "$ref": "#/$defs/CoreState"
+      }
+    },
+    "required": [
+      "state",
+      "native_pid",
+      "application_version"
+    ],
+    "title": "CoreStatus",
+    "type": "object"
+  },
   "CreationStage": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "enum": [
@@ -747,7 +881,7 @@
     "$defs": {
       "FeedCursor": {
         "properties": {
-          "owner": {
+          "incarnation": {
             "type": "string"
           },
           "sequence": {
@@ -757,7 +891,7 @@
           }
         },
         "required": [
-          "owner",
+          "incarnation",
           "sequence"
         ],
         "type": "object"
@@ -794,7 +928,7 @@
       },
       "FeedCursor": {
         "properties": {
-          "owner": {
+          "incarnation": {
             "type": "string"
           },
           "sequence": {
@@ -804,7 +938,7 @@
           }
         },
         "required": [
-          "owner",
+          "incarnation",
           "sequence"
         ],
         "type": "object"
@@ -1050,7 +1184,7 @@
   "FeedCursor": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "sequence": {
@@ -1060,7 +1194,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "sequence"
     ],
     "title": "FeedCursor",
@@ -1100,7 +1234,7 @@
       },
       "FeedCursor": {
         "properties": {
-          "owner": {
+          "incarnation": {
             "type": "string"
           },
           "sequence": {
@@ -1110,7 +1244,7 @@
           }
         },
         "required": [
-          "owner",
+          "incarnation",
           "sequence"
         ],
         "type": "object"
@@ -1659,7 +1793,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -1667,7 +1801,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -2063,7 +2197,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -2071,7 +2205,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -2405,7 +2539,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -2413,7 +2547,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -3166,7 +3300,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -3174,7 +3308,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -5299,7 +5433,7 @@
         "enum": [
           "busy",
           "not_connected",
-          "owner_changed",
+          "incarnation_changed",
           "reply_unavailable",
           "incompatible"
         ],
@@ -5701,7 +5835,7 @@
   "SnapshotCursor": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "revision": {
@@ -5711,138 +5845,10 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "revision"
     ],
     "title": "SnapshotCursor",
-    "type": "object"
-  },
-  "SupervisorSnapshot": {
-    "$defs": {
-      "SnapshotCursor": {
-        "properties": {
-          "owner": {
-            "type": "string"
-          },
-          "revision": {
-            "format": "uint64",
-            "minimum": 0,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "owner",
-          "revision"
-        ],
-        "type": "object"
-      },
-      "SupervisorState": {
-        "enum": [
-          "starting",
-          "recovering",
-          "ready",
-          "failed",
-          "stopping",
-          "stopped"
-        ],
-        "type": "string"
-      },
-      "SupervisorStatus": {
-        "properties": {
-          "application_version": {
-            "type": "string"
-          },
-          "state": {
-            "$ref": "#/$defs/SupervisorState"
-          },
-          "supervisor_pid": {
-            "format": "uint32",
-            "minimum": 0,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "state",
-          "supervisor_pid",
-          "application_version"
-        ],
-        "type": "object"
-      }
-    },
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "cursor": {
-        "$ref": "#/$defs/SnapshotCursor"
-      },
-      "provider_login_pending": {
-        "type": [
-          "boolean",
-          "null"
-        ]
-      },
-      "reset": {
-        "description": "A full snapshot replaces observations from another owner or cursor.",
-        "type": "boolean"
-      },
-      "status": {
-        "$ref": "#/$defs/SupervisorStatus"
-      }
-    },
-    "required": [
-      "status",
-      "cursor",
-      "reset"
-    ],
-    "title": "SupervisorSnapshot",
-    "type": "object"
-  },
-  "SupervisorState": {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "enum": [
-      "starting",
-      "recovering",
-      "ready",
-      "failed",
-      "stopping",
-      "stopped"
-    ],
-    "title": "SupervisorState",
-    "type": "string"
-  },
-  "SupervisorStatus": {
-    "$defs": {
-      "SupervisorState": {
-        "enum": [
-          "starting",
-          "recovering",
-          "ready",
-          "failed",
-          "stopping",
-          "stopped"
-        ],
-        "type": "string"
-      }
-    },
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "application_version": {
-        "type": "string"
-      },
-      "state": {
-        "$ref": "#/$defs/SupervisorState"
-      },
-      "supervisor_pid": {
-        "format": "uint32",
-        "minimum": 0,
-        "type": "integer"
-      }
-    },
-    "required": [
-      "state",
-      "supervisor_pid",
-      "application_version"
-    ],
-    "title": "SupervisorStatus",
     "type": "object"
   },
   "Target": {
@@ -6005,7 +6011,7 @@
     "enum": [
       "busy",
       "not_connected",
-      "owner_changed",
+      "incarnation_changed",
       "reply_unavailable",
       "incompatible"
     ],
@@ -6027,7 +6033,7 @@
         "enum": [
           "busy",
           "not_connected",
-          "owner_changed",
+          "incarnation_changed",
           "reply_unavailable",
           "incompatible"
         ],

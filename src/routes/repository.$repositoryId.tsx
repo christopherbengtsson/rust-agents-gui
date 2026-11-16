@@ -11,10 +11,10 @@ export const Route = createFileRoute("/repository/$repositoryId")({
   },
   errorComponent: TargetError,
   loader: ({ context: { app }, params, abortController }) => {
-    const owner = app.freshness.currentOwner();
-    if (owner)
+    const incarnation = app.freshness.currentIncarnation();
+    if (incarnation)
       void app.repositories.prepare(
-        owner,
+        incarnation,
         { operation: "get", id: params.repositoryId },
         abortController.signal,
       );

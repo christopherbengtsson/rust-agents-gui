@@ -74,19 +74,19 @@ function replySemantics(value: RepositoryReply): boolean {
   }
 }
 export async function repositoryRequest(
-  expectedOwner: string,
+  expectedIncarnation: string,
   request: RepositoryRequest,
 ): Promise<RepositoryReply> {
   let value: unknown;
   try {
     value = await invoke<unknown>("repository_request", {
-      expectedOwner,
+      expectedIncarnation,
       request,
     });
   } catch (error) {
     throw decodeRequestFailure(error);
   }
-  return decodeOwnedReply(expectedOwner, value, (reply) =>
+  return decodeOwnedReply(expectedIncarnation, value, (reply) =>
     decodeRepositoryReply(request, reply),
   );
 }
@@ -106,7 +106,7 @@ export function decodeRepositoryReply(
     value.kind !== expected
   )
     throw replyUnavailable(
-      "The supervisor returned an invalid repository observation. Refresh to reconnect to a matching build.",
+      "The core returned an invalid repository observation. Refresh to reconnect to a matching build.",
     );
   if (
     (request.operation === "register" || request.operation === "action") &&

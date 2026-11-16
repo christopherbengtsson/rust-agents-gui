@@ -6,7 +6,7 @@ fn batch(id: u64, sequence: u64, sample: Sample) -> FeedBatch {
             subscription_id: "feed-1".into(),
             batch_id: id,
             cursor: FeedCursor {
-                owner: "owner-a".into(),
+                incarnation: "incarnation-a".into(),
                 sequence,
             },
         },
@@ -35,14 +35,14 @@ fn acknowledgements_match_subscription_batch_and_cursor_exactly() {
             },
             FeedAck {
                 cursor: FeedCursor {
-                    owner: "other".into(),
+                    incarnation: "other".into(),
                     sequence: 1,
                 },
                 ..ack.clone()
             },
             FeedAck {
                 cursor: FeedCursor {
-                    owner: "owner-a".into(),
+                    incarnation: "incarnation-a".into(),
                     sequence: 2,
                 },
                 ..ack.clone()
@@ -98,10 +98,10 @@ fn native_delivery_waits_for_frontend_acceptance_before_acknowledging() {
         let accepted = Mutex::new(Vec::new());
         let result = run_subscribed(
             &mut FramedExchange::new(stream),
-            "owner-a",
+            "incarnation-a",
             "feed-1",
             Some(FeedCursor {
-                owner: "owner-a".into(),
+                incarnation: "incarnation-a".into(),
                 sequence: 7,
             }),
             &control,
@@ -139,7 +139,7 @@ fn sink_failure_and_frontend_stall_close_without_acknowledgement() {
             let trace = stream.0.clone();
             let result = run_subscribed(
                 &mut FramedExchange::new(stream),
-                "owner-a",
+                "incarnation-a",
                 "feed-1",
                 None,
                 &Control::default(),
@@ -175,15 +175,15 @@ fn owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery() {
             targets: vec![crate::observations::Target::Repositories],
         },
     );
-    assert!(validate_batch(&good, "owner-a", "feed-1", 0, Some(1)).is_ok());
-    for (owner, id, previous, cursor) in [
+    assert!(validate_batch(&good, "incarnation-a", "feed-1", 0, Some(1)).is_ok());
+    for (incarnation, id, previous, cursor) in [
         ("other", "feed-1", 0, Some(1)),
-        ("owner-a", "old", 0, Some(1)),
-        ("owner-a", "feed-1", 1, Some(1)),
-        ("owner-a", "feed-1", 0, Some(2)),
-        ("owner-a", "feed-1", u64::MAX, Some(1)),
+        ("incarnation-a", "old", 0, Some(1)),
+        ("incarnation-a", "feed-1", 1, Some(1)),
+        ("incarnation-a", "feed-1", 0, Some(2)),
+        ("incarnation-a", "feed-1", u64::MAX, Some(1)),
     ] {
-        assert!(validate_batch(&good, owner, id, previous, cursor).is_err());
+        assert!(validate_batch(&good, incarnation, id, previous, cursor).is_err());
     }
     assert!(
         validate_batch(
@@ -195,7 +195,7 @@ fn owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery() {
                     targets: vec![crate::observations::Target::Repositories; 33]
                 }
             ),
-            "owner-a",
+            "incarnation-a",
             "feed-1",
             0,
             Some(1)
@@ -218,7 +218,7 @@ fn server_stops_on_wrong_ack_and_preserves_changes_during_resync() {
             let cancel = CancellationToken::new();
             let mut exchange = FramedExchange::new(stream);
             let future = serve(
-                "owner-a",
+                "incarnation-a",
                 &journal,
                 Subscribe {
                     subscription_id: "feed-1".into(),
@@ -268,12 +268,12 @@ fn idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute() {
         let cancel = CancellationToken::new();
         let mut exchange = FramedExchange::new(Stream::pending());
         let future = serve(
-            "owner-a",
+            "incarnation-a",
             &journal,
             Subscribe {
                 subscription_id: "feed-1".into(),
                 after: Some(FeedCursor {
-                    owner: "owner-a".into(),
+                    incarnation: "incarnation-a".into(),
                     sequence: 1,
                 }),
             },
@@ -287,7 +287,7 @@ fn idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute() {
         let mut exchange = FramedExchange::new(Stream::pending());
         assert_eq!(
             serve(
-                "owner-a",
+                "incarnation-a",
                 &journal,
                 Subscribe {
                     subscription_id: "feed-1".into(),
@@ -312,15 +312,15 @@ fn stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement() {
         let (release, finish) = tokio::sync::oneshot::channel();
         connection
             .start_subscription_with(
-                "owner-a".into(),
+                "incarnation-a".into(),
                 "feed-1".into(),
                 Some(FeedCursor {
-                    owner: "owner-a".into(),
+                    incarnation: "incarnation-a".into(),
                     sequence: 7,
                 }),
                 |_| Ok(()),
-                async move |owner, id, after, control, _| {
-                    assert_eq!(owner, "owner-a");
+                async move |incarnation, id, after, control, _| {
+                    assert_eq!(incarnation, "incarnation-a");
                     assert_eq!(id, "feed-1");
                     assert_eq!(after.unwrap().sequence, 7);
                     started.send(()).unwrap();
@@ -344,7 +344,7 @@ fn stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement() {
             assert!(pending(stop.as_mut()).await);
             assert!(
                 connection
-                    .start_subscription("owner-a".into(), "feed-2".into(), None, |_| Ok(()))
+                    .start_subscription("incarnation-a".into(), "feed-2".into(), None, |_| Ok(()))
                     .is_err()
             );
         }
@@ -365,7 +365,7 @@ fn completed_error_and_panic_workers_are_joined_before_replacement() {
             let (started, entered) = tokio::sync::oneshot::channel();
             connection
                 .start_subscription_with(
-                    "owner-a".into(),
+                    "incarnation-a".into(),
                     "feed-1".into(),
                     None,
                     |_| Ok(()),
@@ -386,7 +386,7 @@ fn completed_error_and_panic_workers_are_joined_before_replacement() {
 #[test]
 fn shared_corpus_matches_rust_feed_serialization_and_delivery_bounds() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
-        "../../../../../contracts/observations-v15.json"
+        "../../../../../contracts/observations-native.json"
     ))
     .unwrap();
     for value in corpus["feed"].as_array().unwrap() {
@@ -413,7 +413,7 @@ fn reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_rep
         let (release, finish) = tokio::sync::oneshot::channel();
         connection
             .start_subscription_with(
-                "owner-a".into(),
+                "incarnation-a".into(),
                 "old-page".into(),
                 None,
                 |_| Ok(()),
@@ -428,12 +428,12 @@ fn reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_rep
         entered.await.unwrap();
         let (replacement_started, replacement_entered) = tokio::sync::oneshot::channel();
         let replacement = connection.replace_subscription_with(
-            "owner-a".into(),
+            "incarnation-a".into(),
             "new-page".into(),
             None,
             |_| Ok(()),
-            async move |owner, id, after, control, _| {
-                assert_eq!(owner, "owner-a");
+            async move |incarnation, id, after, control, _| {
+                assert_eq!(incarnation, "incarnation-a");
                 assert_eq!(id, "new-page");
                 assert!(after.is_none());
                 replacement_started.send(()).unwrap();
@@ -449,7 +449,7 @@ fn reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_rep
             "old-page"
         );
         let competing = connection.replace_subscription_with(
-            "owner-a".into(),
+            "incarnation-a".into(),
             "competing-page".into(),
             None,
             |_| Ok(()),
@@ -482,13 +482,16 @@ fn reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_rep
 #[test]
 fn invalid_reload_replacement_cannot_stop_the_current_feed() {
     run(async {
-        for (owner, id) in [("other-owner", "new-page"), ("owner-a", "invalid id")] {
+        for (incarnation, id) in [
+            ("other-incarnation", "new-page"),
+            ("incarnation-a", "invalid id"),
+        ] {
             let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
             initialize(&connection);
             let (started, entered) = tokio::sync::oneshot::channel();
             connection
                 .start_subscription_with(
-                    "owner-a".into(),
+                    "incarnation-a".into(),
                     "current-page".into(),
                     None,
                     |_| Ok(()),
@@ -503,7 +506,7 @@ fn invalid_reload_replacement_cannot_stop_the_current_feed() {
             assert!(
                 connection
                     .replace_subscription_with(
-                        owner.into(),
+                        incarnation.into(),
                         id.into(),
                         None,
                         |_| Ok(()),
@@ -528,7 +531,7 @@ fn cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_
         let (release, finish) = tokio::sync::oneshot::channel();
         connection
             .start_subscription_with(
-                "owner-a".into(),
+                "incarnation-a".into(),
                 "old-page".into(),
                 None,
                 |_| Ok(()),
@@ -540,7 +543,7 @@ fn cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_
             .unwrap();
         {
             let replacement = connection.replace_subscription_with(
-                "owner-a".into(),
+                "incarnation-a".into(),
                 "abandoned-page".into(),
                 None,
                 |_| Ok(()),
@@ -557,7 +560,7 @@ fn cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_
             "old-page"
         );
         let replacement = connection.replace_subscription_with(
-            "owner-a".into(),
+            "incarnation-a".into(),
             "latest-page".into(),
             None,
             |_| Ok(()),

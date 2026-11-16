@@ -1,0 +1,33 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/lib/feature-observations.test.tsx (10 tests | 1 failed) 30ms
+   × Query count eviction preserves observed bodies and independent freshness obligations 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/feature-observations.test.tsx > Query count eviction preserves observed bodies and independent freshness obligations
+AssertionError: expected 160 to be 128 // Object.is equality
+
+- Expected
++ Received
+
+- 128
++ 160
+
+ ❯ src/lib/feature-observations.test.tsx:439:101
+    437|   for (let index = 0; index < 160; index++) client.setQueryData(["hist…
+    438|   await flush();
+    439|   expect(client.getQueryCache().getAll().filter((query) => query.getOb…
+       |                                                                                                     ^
+    440|   expect(client.getQueryData(["visible"])).toBe("last good");
+    441|   expect(freshness.ready("current")).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  18:49:35
+   Duration  638ms (transform 49%, environment 31%, import 14%, tests 5%, setup 1%)
+

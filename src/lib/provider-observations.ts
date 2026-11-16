@@ -12,7 +12,7 @@ import { providerRequest } from "./providers";
 
 type PendingAction = {
   kind: "login" | "selection";
-  owner: string;
+  incarnation: string;
   target: string;
   attempt: string;
   state: "pending" | "uncertain" | "rejected";
@@ -39,20 +39,20 @@ export class ProviderObservations extends FeatureQueryCache<
   private publishActions() {
     this.actionListeners.forEach((listener) => listener());
   }
-  action(owner: string, target: string) {
-    return this.actions.get(`${owner}:${target}`);
+  action(incarnation: string, target: string) {
+    return this.actions.get(`${incarnation}:${target}`);
   }
   async selectExecutable(
-    owner: string,
+    incarnation: string,
     observation: ProviderObservation,
     path: string,
   ) {
     if (
-      this.action(owner, observation.target.id)?.state !== undefined &&
-      this.action(owner, observation.target.id)?.state !== "rejected"
+      this.action(incarnation, observation.target.id)?.state !== undefined &&
+      this.action(incarnation, observation.target.id)?.state !== "rejected"
     )
       return;
-    await this.sendAction(owner, {
+    await this.sendAction(incarnation, {
       operation: "select_executable",
       target_id: observation.target.id,
       expected_revision: observation.revision,
@@ -60,18 +60,22 @@ export class ProviderObservations extends FeatureQueryCache<
       path,
     });
   }
-  async reconcileSelection(owner: string, target: string, action: string) {
-    if (this.action(owner, target)?.state === "pending") return;
-    await this.sendAction(owner, {
+  async reconcileSelection(
+    incarnation: string,
+    target: string,
+    action: string,
+  ) {
+    if (this.action(incarnation, target)?.state === "pending") return;
+    await this.sendAction(incarnation, {
       operation: "reconcile_selection",
       target_id: target,
       action_id: action,
     });
   }
-  async startBrowser(owner: string, observation: ProviderObservation) {
-    const previous = this.action(owner, observation.target.id);
+  async startBrowser(incarnation: string, observation: ProviderObservation) {
+    const previous = this.action(incarnation, observation.target.id);
     if (previous && previous.state !== "rejected") return;
-    await this.sendAction(owner, {
+    await this.sendAction(incarnation, {
       operation: "start_browser_login",
       target_id: observation.target.id,
       attempt_id: crypto.randomUUID(),
@@ -79,37 +83,37 @@ export class ProviderObservations extends FeatureQueryCache<
     });
   }
   async loginAction(
-    owner: string,
+    incarnation: string,
     target: string,
     attempt: string,
     operation: "cancel_login" | "reopen_browser" | "reconcile_login",
   ) {
-    if (this.action(owner, target)?.state === "pending") return;
-    await this.sendAction(owner, {
+    if (this.action(incarnation, target)?.state === "pending") return;
+    await this.sendAction(incarnation, {
       operation,
       target_id: target,
       attempt_id: attempt,
     });
   }
   private async sendAction(
-    owner: string,
+    incarnation: string,
     request: Extract<
       ProviderRequest,
       { attempt_id: string } | { action_id: string }
     >,
   ) {
-    const key = `${owner}:${request.target_id}`;
+    const key = `${incarnation}:${request.target_id}`;
     const previous = this.actions.get(key);
     let action: PendingAction = {
       kind: "attempt_id" in request ? "login" : "selection",
-      owner,
+      incarnation,
       target: request.target_id,
       attempt: "attempt_id" in request ? request.attempt_id : request.action_id,
       state: "pending",
       release:
         previous && previous.state !== "rejected"
           ? previous.release
-          : this.observe(owner, {
+          : this.observe(incarnation, {
               operation: "observe",
               target_id: request.target_id,
             }),
@@ -117,8 +121,8 @@ export class ProviderObservations extends FeatureQueryCache<
     this.actions.set(key, action);
     this.publishActions();
     try {
-      const reply = await providerRequest(owner, request);
-      this.acceptAction(owner, request.target_id, reply);
+      const reply = await providerRequest(incarnation, request);
+      this.acceptAction(incarnation, request.target_id, reply);
       if (this.actions.get(key) === action) {
         this.actions.delete(key);
         action.release();
@@ -136,7 +140,7 @@ export class ProviderObservations extends FeatureQueryCache<
       this.actions.set(key, action);
       try {
         const reply = await providerRequest(
-          owner,
+          incarnation,
           "attempt_id" in request
             ? {
                 operation: "reconcile_login",
@@ -149,7 +153,7 @@ export class ProviderObservations extends FeatureQueryCache<
                 action_id: request.action_id,
               },
         );
-        this.acceptAction(owner, request.target_id, reply);
+        this.acceptAction(incarnation, request.target_id, reply);
         if (this.actions.get(key) === action) {
           action.release();
           if (
@@ -167,20 +171,24 @@ export class ProviderObservations extends FeatureQueryCache<
       }
     } finally {
       this.publishActions();
-      void this.refresh(owner, false, [
+      void this.refresh(incarnation, false, [
         { operation: "observe", target_id: request.target_id },
       ]);
     }
   }
-  private acceptAction(owner: string, target: string, reply: ProviderReply) {
+  private acceptAction(
+    incarnation: string,
+    target: string,
+    reply: ProviderReply,
+  ) {
     const request = { operation: "observe", target_id: target } as const;
-    const current = this.snapshot(owner, request)?.data?.value;
+    const current = this.snapshot(incarnation, request)?.data?.value;
     if (
       reply.kind === "observation" &&
       (current?.kind !== "observation" ||
         reply.observation.revision >= current.observation.revision)
     )
-      this.record(owner, request, reply);
+      this.record(incarnation, request, reply);
   }
   constructor(
     client: QueryClient,
@@ -196,20 +204,21 @@ export class ProviderObservations extends FeatureQueryCache<
         request.operation === "target"
           ? ["provider-target"]
           : [`provider:${request.target_id}`],
-      (owner, request, refresh) =>
+      (incarnation, request, refresh) =>
         providerRequest(
-          owner,
+          incarnation,
           request.operation === "target" ? request : { ...request, refresh },
         ),
       (request) => request.operation === "observe",
     );
-    let readyOwner: string | undefined;
+    let readyIncarnation: string | undefined;
     generations.subscribe(() => {
-      const owner = generations.currentOwner();
-      const ready = owner && generations.ready(owner) ? owner : undefined;
-      if (ready && ready !== readyOwner) {
+      const incarnation = generations.currentIncarnation();
+      const ready =
+        incarnation && generations.ready(incarnation) ? incarnation : undefined;
+      if (ready && ready !== readyIncarnation) {
         for (const action of this.actions.values())
-          if (action.owner === ready && action.state === "uncertain")
+          if (action.incarnation === ready && action.state === "uncertain")
             if (action.kind === "selection")
               void this.reconcileSelection(
                 ready,
@@ -224,7 +233,7 @@ export class ProviderObservations extends FeatureQueryCache<
                 "reconcile_login",
               );
       }
-      readyOwner = ready;
+      readyIncarnation = ready;
     });
   }
   invalidate(target: Target) {

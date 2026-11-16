@@ -1,0 +1,29 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.80s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-278ff42e15b22cbe)
+
+running 4 tests
+test native::tests::abandoned_request_keeps_capacity_and_control_remains_available ... ok
+test native::tests::direct_feed_requires_exact_ack_and_replacement_joins_failed_delivery ... FAILED
+test native::tests::quit_during_startup_retains_one_drain_and_never_publishes_ready ... ok
+test native::tests::stale_incarnation_rejects_before_domain_dispatch ... ok
+
+failures:
+
+---- native::tests::direct_feed_requires_exact_ack_and_replacement_joins_failed_delivery stdout ----
+
+thread 'native::tests::direct_feed_requires_exact_ack_and_replacement_joins_failed_delivery' (36064419) panicked at crates/core/src/native.rs:232:87:
+controlled delivery panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'native::tests::direct_feed_requires_exact_ack_and_replacement_joins_failed_delivery' (36064419) panicked at crates/core/src/native.rs:235:9:
+assertion failed: host.replace_subscription(host.incarnation.clone(), "replacement".into(),
+            None, |_| Ok(())).await.is_err()
+
+
+failures:
+    native::tests::direct_feed_requires_exact_ack_and_replacement_joins_failed_delivery
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 223 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

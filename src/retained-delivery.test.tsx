@@ -13,7 +13,7 @@ import {
   type WorkspaceAction,
   type Workspace,
 } from "./lib/workspaces";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const repositoryId = "00000000-0000-4000-8000-000000000001";
@@ -26,9 +26,9 @@ const rejection = [
   {
     kind: "transport",
     error: {
-      code: "owner_changed",
+      code: "incarnation_changed",
       delivery: "rejected",
-      message: "Refresh owner",
+      message: "Refresh incarnation",
     },
   },
   {
@@ -56,10 +56,10 @@ test.each(rejection)(
     const submissions: RegistrationRequest[] = [];
     let recorded = false;
     vi.mocked(invoke).mockImplementation(
-      ownerBound(async (_, args) => {
+      incarnationBound(async (_, args) => {
         if (!object(args) || !object(args.request))
           throw new Error("Missing request");
-        expect(args.expectedOwner).toBe("owner-a");
+        expect(args.expectedIncarnation).toBe("incarnation-a");
         const request = args.request;
         if (request.operation === "register") {
           const pending = JSON.parse(localStorage.getItem(PENDING_KEY)!);
@@ -84,7 +84,7 @@ test.each(rejection)(
         return { kind: "repositories", page: { repositories: [], next: null } };
       }),
     );
-    const first = renderHook(() => useRepositories("owner-a"));
+    const first = renderHook(() => useRepositories("incarnation-a"));
     await waitFor(() => expect(first.result.current.loading).toBe(false));
     await act(async () => {
       await first.result.current.register("/projects/one");
@@ -100,7 +100,7 @@ test.each(rejection)(
     );
     expect(first.result.current.pending?.request).toEqual(submissions[0]);
     first.unmount();
-    const restored = renderHook(() => useRepositories("owner-a"));
+    const restored = renderHook(() => useRepositories("incarnation-a"));
     await waitFor(() => expect(restored.result.current.loading).toBe(false));
     expect(restored.result.current.pending?.uncertain).toBe(true);
     expect(submissions).toHaveLength(2);
@@ -120,10 +120,10 @@ test.each(rejection)(
     const submissions: WorkspaceAction[] = [];
     let recorded = false;
     vi.mocked(invoke).mockImplementation(
-      ownerBound(async (_, args) => {
+      incarnationBound(async (_, args) => {
         if (!object(args) || !object(args.request))
           throw new Error("Missing request");
-        expect(args.expectedOwner).toBe("owner-a");
+        expect(args.expectedIncarnation).toBe("incarnation-a");
         const request = args.request;
         if (request.operation === "create") {
           expect(
@@ -160,7 +160,7 @@ test.each(rejection)(
       }),
     );
     const first = renderHook(() =>
-      useWorkspaces("owner-a", repositoryId, repositoryId, null),
+      useWorkspaces("incarnation-a", repositoryId, repositoryId, null),
     );
     await act(async () => {});
     await act(async () => {
@@ -177,7 +177,7 @@ test.each(rejection)(
     expect(first.result.current.pending).toEqual(submissions[0]);
     first.unmount();
     const restored = renderHook(() =>
-      useWorkspaces("owner-a", repositoryId, repositoryId, null),
+      useWorkspaces("incarnation-a", repositoryId, repositoryId, null),
     );
     await act(async () => {});
     expect(restored.result.current.pending).toEqual(submissions[0]);
@@ -196,7 +196,7 @@ test("a late registration transport failure cannot resurrect an authoritatively 
   let sent: RegistrationRequest | undefined;
   let reject!: (error: unknown) => void;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       if (!object(args) || !object(args.request))
         throw new Error("Missing request");
       const request = args.request;
@@ -219,7 +219,7 @@ test("a late registration transport failure cannot resurrect an authoritatively 
       return { kind: "repositories", page: { repositories: [], next: null } };
     }),
   );
-  const { result } = renderHook(() => useRepositories("owner-a"));
+  const { result } = renderHook(() => useRepositories("incarnation-a"));
   await waitFor(() => expect(result.current.loading).toBe(false));
   let submission!: Promise<boolean>;
   act(() => {
@@ -238,15 +238,15 @@ test("a late registration transport failure cannot resurrect an authoritatively 
   expect(localStorage.getItem(PENDING_KEY)).toBeNull();
 });
 
-test("a callback captured before owner replacement cannot select its old-owner result when invoked later", async () => {
-  let submittedOwner: unknown;
+test("a callback captured before incarnation replacement cannot select its old-incarnation result when invoked later", async () => {
+  let submittedIncarnation: unknown;
   vi.mocked(invoke).mockImplementation(
-    ownerBound((_, args) => {
+    incarnationBound((_, args) => {
       if (!object(args) || !object(args.request))
         throw new Error("Missing request");
       const request = args.request;
       if (request.operation === "create") {
-        submittedOwner = args.expectedOwner;
+        submittedIncarnation = args.expectedIncarnation;
         return {
           kind: "action",
           action: request,
@@ -271,16 +271,17 @@ test("a callback captured before owner replacement cannot select its old-owner r
     }),
   );
   const view = renderHook(
-    ({ owner }) => useWorkspaces(owner, repositoryId, repositoryId, null),
-    { initialProps: { owner: "old" } },
+    ({ incarnation }) =>
+      useWorkspaces(incarnation, repositoryId, repositoryId, null),
+    { initialProps: { incarnation: "old" } },
   );
   await act(async () => {});
   const captured = view.result.current.create;
-  view.rerender({ owner: "new" });
+  view.rerender({ incarnation: "new" });
   await act(async () => {
     await captured(repositoryId);
   });
-  expect(submittedOwner).toBe("old");
+  expect(submittedIncarnation).toBe("old");
   expect(view.result.current.selected).toBeUndefined();
   expect(view.result.current.pending).not.toBeNull();
 });
@@ -307,7 +308,7 @@ test("retained repository and workspace lookups reject conflicting payloads with
     JSON.stringify({ request: workspaceRequest, uncertain: true }),
   );
   vi.mocked(invoke).mockImplementation(
-    ownerBound((command, args) => {
+    incarnationBound((command, args) => {
       if (!object(args) || !object(args.request))
         throw new Error("Missing request");
       if (
@@ -348,8 +349,8 @@ test("retained repository and workspace lookups reject conflicting payloads with
     }),
   );
   const view = renderHook(() => ({
-    repositories: useRepositories("owner", undefined, null),
-    workspaces: useWorkspaces("owner", repositoryId, repositoryId, null),
+    repositories: useRepositories("incarnation", undefined, null),
+    workspaces: useWorkspaces("incarnation", repositoryId, repositoryId, null),
   }));
   await waitFor(() => {
     expect(view.result.current.repositories.actionError?.code).toBe("conflict");

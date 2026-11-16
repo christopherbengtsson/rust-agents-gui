@@ -1,5 +1,5 @@
 // Generated. Do not edit.
-import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, ExecutableSelection, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, LoginAttempt, LoginOutcome, LoginPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SelectionPhase, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, SupervisorSnapshot, SupervisorState, SupervisorStatus, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
+import type { ActionId, Artifacts, Authentication, Availability, BillingRoute, BranchArtifact, ChangePage, ChangedFile, ChangesObservation, ComparisonId, CoreSnapshot, CoreState, CoreStatus, CreationStage, CreationStatus, Delivery, DesktopPid, DiffRow, ErrorCode, ExecutableSelection, FeedAck, FeedBatch, FeedCursor, FeedEvent, FileId, FilePreview, FolderArtifact, InspectionPhase, LoginAttempt, LoginOutcome, LoginPhase, OwnedObservation, OwnedProviderReply, OwnedRepositoryReply, OwnedWorkspaceReply, PinnedBase, PreviewObservation, PreviewTarget, ProviderObservation, ProviderReply, ProviderRequest, ProviderTarget, RegisterRepository, Registration, RegistrationState, Repository, RepositoryError, RepositoryId, RepositoryPage, RepositoryReply, RepositoryRequest, RequestFailure, RowKind, Sample, SelectionPhase, SetupEvidence, SetupPhase, SetupProblem, SnapshotCursor, Target, TransportCode, TransportFailure, UnsupportedContent, Workspace, WorkspaceAction, WorkspaceId, WorkspacePage, WorkspaceReply, WorkspaceRequest } from "./types";
 export declare function validateActionId(value: unknown): value is ActionId;
 export declare function validateArtifacts(value: unknown): value is Artifacts;
 export declare function validateAuthentication(value: unknown): value is Authentication;
@@ -10,6 +10,9 @@ export declare function validateChangePage(value: unknown): value is ChangePage;
 export declare function validateChangedFile(value: unknown): value is ChangedFile;
 export declare function validateChangesObservation(value: unknown): value is ChangesObservation;
 export declare function validateComparisonId(value: unknown): value is ComparisonId;
+export declare function validateCoreSnapshot(value: unknown): value is CoreSnapshot;
+export declare function validateCoreState(value: unknown): value is CoreState;
+export declare function validateCoreStatus(value: unknown): value is CoreStatus;
 export declare function validateCreationStage(value: unknown): value is CreationStage;
 export declare function validateCreationStatus(value: unknown): value is CreationStatus;
 export declare function validateDelivery(value: unknown): value is Delivery;
@@ -56,9 +59,6 @@ export declare function validateSetupEvidence(value: unknown): value is SetupEvi
 export declare function validateSetupPhase(value: unknown): value is SetupPhase;
 export declare function validateSetupProblem(value: unknown): value is SetupProblem;
 export declare function validateSnapshotCursor(value: unknown): value is SnapshotCursor;
-export declare function validateSupervisorSnapshot(value: unknown): value is SupervisorSnapshot;
-export declare function validateSupervisorState(value: unknown): value is SupervisorState;
-export declare function validateSupervisorStatus(value: unknown): value is SupervisorStatus;
 export declare function validateTarget(value: unknown): value is Target;
 export declare function validateTransportCode(value: unknown): value is TransportCode;
 export declare function validateTransportFailure(value: unknown): value is TransportFailure;

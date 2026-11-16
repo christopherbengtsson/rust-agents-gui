@@ -23,10 +23,10 @@ export const Route = createFileRoute("/settings/providers")({
   validateSearch: providerSearch,
   loaderDeps: ({ search }) => ({ provider: search.provider }),
   loader: ({ context: { app }, deps, abortController }) => {
-    const owner = app.freshness.currentOwner();
-    if (owner && deps.provider === "codex")
+    const incarnation = app.freshness.currentIncarnation();
+    if (incarnation && deps.provider === "codex")
       void app.providers.prepare(
-        owner,
+        incarnation,
         { operation: "target" },
         abortController.signal,
       );
@@ -36,15 +36,15 @@ export const Route = createFileRoute("/settings/providers")({
 function CodexSetup() {
   const [helpError, setHelpError] = useState<string>();
   const { app, connection } = useAppRuntime();
-  const owner =
+  const incarnation =
     connection.state === "connected"
-      ? connection.observation.snapshot.cursor.owner
+      ? connection.observation.snapshot.cursor.incarnation
       : undefined;
   const updatesAvailable =
     connection.feed?.state !== "stopped" && !connection.feed?.message;
-  const setup = useProviderSetup(app, owner, updatesAvailable);
-  const login = useProviderLogin(app, owner, setup.observation);
-  const selection = useProviderSelection(app, owner, setup.observation);
+  const setup = useProviderSetup(app, incarnation, updatesAvailable);
+  const login = useProviderLogin(app, incarnation, setup.observation);
+  const selection = useProviderSelection(app, incarnation, setup.observation);
   const openHelp = (topic: ProviderHelpTopic) => {
     setHelpError(undefined);
     void openProviderHelp(topic).catch(() =>
@@ -67,7 +67,7 @@ function CodexSetup() {
       signIn={
         <ProviderSignIn
           observation={setup.observation}
-          available={!!owner && updatesAvailable}
+          available={!!incarnation && updatesAvailable}
           login={login}
         />
       }

@@ -5,7 +5,7 @@ use std::{
     sync::mpsc,
     time::Duration,
 };
-use workspace_core::{SupervisorState, connection::SupervisorClient};
+use workspace_core::{CoreState, connection::SupervisorClient};
 
 struct Supervisor(Child);
 
@@ -42,15 +42,12 @@ fn desktop_client_receives_status_from_a_separate_supervisor_process() {
 
         let client = SupervisorClient::new(state.path().to_owned());
         let status = client.status().await.unwrap();
-        assert_eq!(status.state, SupervisorState::Ready);
-        assert_eq!(status.supervisor_pid, process.0.id());
-        assert_ne!(status.supervisor_pid, std::process::id());
+        assert_eq!(status.state, CoreState::Ready);
+        assert_eq!(status.native_pid, process.0.id());
+        assert_ne!(status.native_pid, std::process::id());
         assert_eq!(status.application_version, "0.1.0");
         // A second observation uses the same owner, without creating work.
-        assert_eq!(
-            client.status().await.unwrap().supervisor_pid,
-            status.supervisor_pid
-        );
+        assert_eq!(client.status().await.unwrap().native_pid, status.native_pid);
     });
 }
 

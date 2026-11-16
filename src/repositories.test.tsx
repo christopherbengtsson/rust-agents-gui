@@ -1,4 +1,4 @@
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import {
   act,
   cleanup,
@@ -44,8 +44,8 @@ const repository: Repository = {
   availability: { state: "available" },
 };
 const snapshot = {
-  status: { state: "ready", supervisor_pid: 41, application_version: "0.1.0" },
-  cursor: { owner: "owner-41", revision: 1 },
+  status: { state: "ready", native_pid: 41, application_version: "0.1.0" },
+  cursor: { incarnation: "incarnation-41", revision: 1 },
   reset: true,
 };
 beforeEach(() => {
@@ -58,11 +58,11 @@ beforeEach(() => {
     }),
   );
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (command) => {
+    incarnationBound(async (command) => {
       if (command === "workspace_request")
         return { kind: "workspaces", page: { workspaces: [], next: null } };
       if (command === "desktop_pid") return 42;
-      if (command === "supervisor_status") return snapshot;
+      if (command === "core_status") return snapshot;
       return { kind: "repositories", page: { repositories: [], next: null } };
     }),
   );
@@ -106,12 +106,12 @@ function replies(
   handler: (request: RepositoryRequest) => Promise<RepositoryReply>,
 ) {
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (command, args) => {
+    incarnationBound(async (command, args) => {
       if (command.startsWith("observation_")) return;
       if (command === "workspace_request")
         return { kind: "workspaces", page: { workspaces: [], next: null } };
       if (command === "desktop_pid") return 42;
-      if (command === "supervisor_status") return snapshot;
+      if (command === "core_status") return snapshot;
       return handler(
         (object(args) ? args.request : undefined) as RepositoryRequest,
       );
@@ -572,10 +572,10 @@ test("cursor paging retains selection and previous returns to the original page"
 
 test("malformed repository payloads stay visible rather than becoming empty navigation", async () => {
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (command) =>
+    incarnationBound(async (command) =>
       command === "desktop_pid"
         ? 42
-        : command === "supervisor_status"
+        : command === "core_status"
           ? snapshot
           : {
               kind: "repositories",
@@ -627,9 +627,11 @@ test("a missing action lookup preserves the storage failure that blocked intent"
 });
 
 test.each(["success", "failure"])(
-  "reconnect ignores the previous owner's late observation without repeating actions (%s)",
+  "reconnect ignores the previous incarnation's late observation without repeating actions (%s)",
   async (outcome) => {
-    const initialProps: { owner: string | undefined } = { owner: "owner-a" };
+    const initialProps: { incarnation: string | undefined } = {
+      incarnation: "incarnation-a",
+    };
     const fresh: Repository = { ...repository, name: "fresh observation" };
     let stage: "initial" | "old" | "new" = "initial";
     let rejectOld!: (error: unknown) => void;
@@ -656,21 +658,22 @@ test.each(["success", "failure"])(
       };
     });
     const { result, rerender } = renderHook(
-      ({ owner }: { owner: string | undefined }) => useRepositories(owner),
+      ({ incarnation }: { incarnation: string | undefined }) =>
+        useRepositories(incarnation),
       { initialProps },
     );
     await waitFor(() => expect(result.current.selected?.name).toBe("one"));
-    rerender({ owner: "owner-a" });
+    rerender({ incarnation: "incarnation-a" });
     expect(requests.filter((r) => r.operation === "list")).toHaveLength(1);
 
-    rerender({ owner: undefined });
+    rerender({ incarnation: undefined });
     stage = "old";
-    rerender({ owner: "owner-a" });
+    rerender({ incarnation: "incarnation-a" });
     await waitFor(() =>
       expect(requests.filter((r) => r.operation === "list")).toHaveLength(2),
     );
     stage = "new";
-    rerender({ owner: "owner-b" });
+    rerender({ incarnation: "incarnation-b" });
     await waitFor(() => expect(result.current.selected?.name).toBe(fresh.name));
     await act(async () => {
       if (outcome === "success") {
@@ -678,7 +681,7 @@ test.each(["success", "failure"])(
           kind: "repositories",
           page: { repositories: [repository], next: null },
         });
-      } else rejectOld(new Error("old owner disconnected"));
+      } else rejectOld(new Error("old incarnation disconnected"));
     });
     expect(result.current.selected?.name).toBe(fresh.name);
     expect(result.current.error).toBeUndefined();
@@ -689,7 +692,9 @@ test.each(["success", "failure"])(
 );
 
 test("reconnect retrieves a retained registration result without resubmitting", async () => {
-  const initialProps: { owner: string | undefined } = { owner: "owner-a" };
+  const initialProps: { incarnation: string | undefined } = {
+    incarnation: "incarnation-a",
+  };
   const action_id = "00000000-0000-4000-8000-000000000010";
   localStorage.setItem(
     PENDING_KEY,
@@ -704,7 +709,7 @@ test("reconnect retrieves a retained registration result without resubmitting", 
     if (request.operation === "action") {
       actions.push(request.action_id);
       if (!connected)
-        throw { code: "connection", message: "Owner unavailable" };
+        throw { code: "connection", message: "Incarnation unavailable" };
       return {
         kind: "action",
         registration: {
@@ -724,15 +729,16 @@ test("reconnect retrieves a retained registration result without resubmitting", 
     };
   });
   const { result, rerender } = renderHook(
-    ({ owner }: { owner: string | undefined }) => useRepositories(owner),
+    ({ incarnation }: { incarnation: string | undefined }) =>
+      useRepositories(incarnation),
     { initialProps },
   );
   await waitFor(() => expect(result.current.loading).toBe(false));
   expect(result.current.actionError?.code).toBe("connection");
   expect(result.current.pending?.request.action_id).toBe(action_id);
-  rerender({ owner: undefined });
+  rerender({ incarnation: undefined });
   connected = true;
-  rerender({ owner: "owner-b" });
+  rerender({ incarnation: "incarnation-b" });
   await waitFor(() => expect(result.current.pending).toBeNull());
   expect(result.current.selected?.id).toBe(id);
   expect(result.current.actionError).toBeUndefined();
@@ -755,7 +761,7 @@ test("explicit repository refresh reports loading while retaining the last obser
       page: { repositories: [repository], next: null },
     };
   });
-  const { result } = renderHook(() => useRepositories("owner-a"));
+  const { result } = renderHook(() => useRepositories("incarnation-a"));
   await waitFor(() => expect(result.current.loading).toBe(false));
   defer = true;
   let refreshing!: Promise<void>;
@@ -789,9 +795,9 @@ test("Refresh status retains explicit reprobe through a delayed connection check
   let resolveStatus: ((value: unknown) => void) | undefined;
   const refreshes: boolean[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound((command, args) => {
+    incarnationBound((command, args) => {
       if (command === "desktop_pid") return 42;
-      if (command === "supervisor_status") {
+      if (command === "core_status") {
         if (++statusReads === 1) return snapshot;
         return new Promise((resolve) => {
           resolveStatus = resolve;

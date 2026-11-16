@@ -84,6 +84,19 @@ pub struct StateLease {
     #[cfg(test)]
     released: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
 }
+impl StateLease {
+    /// Acquire the same lease inode as the incumbent host without touching sockets.
+    pub fn acquire(state: &Path) -> io::Result<Self> {
+        prepare_state(state)?;
+        let lock = owner_lock(state)?;
+        LocalOwner.acquire(&lock).map_err(|error| io::Error::new(error.kind(), format!("Another native core may own this state. Close its app and check status; never remove owner.lock: {error}")))?;
+        Ok(Self {
+            _file: Some(lock),
+            #[cfg(test)]
+            released: None,
+        })
+    }
+}
 #[cfg(test)]
 impl StateLease {
     pub(crate) fn controlled(released: std::sync::Arc<std::sync::atomic::AtomicBool>) -> Self {

@@ -5,7 +5,7 @@ import { FeatureFreshness } from "./feature-freshness";
 import { ObservationCoordinator } from "./observation-coordinator";
 import { object } from "./observation-contracts";
 import { invoke } from "@tauri-apps/api/core";
-import { ownerBound } from "../test-support/owner-bound-invoke";
+import { incarnationBound } from "../test-support/incarnation-bound-invoke";
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const flush = async () => {
   for (let i = 0; i < 25; i++) await Promise.resolve();
@@ -17,10 +17,10 @@ test("baseline precedes repository reads, and hints during initial and follow-up
     new ObservationCoordinator(),
     freshness,
   );
-  freshness.connect("owner");
+  freshness.connect("incarnation");
   const completions: (() => void)[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           completions.push(() =>
@@ -33,20 +33,23 @@ test("baseline precedes repository reads, and hints during initial and follow-up
     ),
   );
   const unlisten = feature.subscribe(() => {});
-  const release = feature.observe("owner", { operation: "list", after: null });
+  const release = feature.observe("incarnation", {
+    operation: "list",
+    after: null,
+  });
   await flush();
   expect(invoke).not.toHaveBeenCalled();
   feature.invalidate({ kind: "repositories" });
-  freshness.accept("owner");
+  freshness.accept("incarnation");
   await flush();
   expect(invoke).toHaveBeenCalledTimes(1);
   feature.invalidate({ kind: "repositories" });
-  freshness.accept("owner");
+  freshness.accept("incarnation");
   completions[0]();
   await flush();
   expect(invoke).toHaveBeenCalledTimes(2);
   feature.invalidate({ kind: "repositories" });
-  freshness.accept("owner");
+  freshness.accept("incarnation");
   completions[1]();
   await flush();
   expect(invoke).toHaveBeenCalledTimes(3);
@@ -70,14 +73,14 @@ const repository: Repository = {
 const listRequest = { operation: "list", after: null } as const;
 function fixture() {
   const app = new AppObservations();
-  app.connect("owner");
+  app.connect("incarnation");
   let sequence = 0;
   const send = (targets?: import("./observation-feed").DirtyTarget[]) => {
     sequence++;
     app.accept({
       subscription_id: "fixture",
       batch_id: sequence,
-      cursor: { owner: "owner", sequence },
+      cursor: { incarnation: "incarnation", sequence },
       sample: targets
         ? { kind: "hints", watermark: sequence, targets }
         : { kind: "resync_required", watermark: sequence },
@@ -95,7 +98,7 @@ test("Query cancellation and remount retain physical identity and the original c
   const { app, feature, send } = fixture();
   const completions: (() => void)[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           completions.push(() =>
@@ -108,13 +111,13 @@ test("Query cancellation and remount retain physical identity and the original c
     ),
   );
   send();
-  const release = feature.observe("owner", listRequest);
+  const release = feature.observe("incarnation", listRequest);
   await flush();
   expect(invoke).toHaveBeenCalledTimes(1);
   await app.client.cancelQueries();
   release();
   send([{ kind: "repositories" }]);
-  const remount = feature.observe("owner", listRequest);
+  const remount = feature.observe("incarnation", listRequest);
   await flush();
   expect(invoke).toHaveBeenCalledTimes(1);
   completions[0]();
@@ -122,7 +125,7 @@ test("Query cancellation and remount retain physical identity and the original c
   expect(invoke).toHaveBeenCalledTimes(2);
   completions[1]();
   await flush();
-  expect(feature.peek("owner", listRequest)?.data?.value).toMatchObject({
+  expect(feature.peek("incarnation", listRequest)?.data?.value).toMatchObject({
     kind: "repositories",
     page: { repositories: [repository] },
   });
@@ -135,7 +138,7 @@ test("hidden details do not fan out; overflow and resync remain owed separately 
   const other = { ...repository, id: "00000000-0000-4000-8000-000000000002" };
   const requests: RepositoryRequest[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound((_, args) => {
+    incarnationBound((_, args) => {
       const request = object(args) ? args.request : undefined;
       if (!request || typeof request !== "object" || !("operation" in request))
         throw new Error("fixture request");
@@ -156,8 +159,8 @@ test("hidden details do not fan out; overflow and resync remain owed separately 
   send();
   const a = { operation: "get", id: repository.id } as const;
   const b = { operation: "get", id: other.id } as const;
-  const hideA = feature.observe("owner", a);
-  const hideB = feature.observe("owner", b);
+  const hideA = feature.observe("incarnation", a);
+  const hideB = feature.observe("incarnation", b);
   await flush();
   hideA();
   hideB();
@@ -172,11 +175,11 @@ test("hidden details do not fan out; overflow and resync remain owed separately 
   expect(app.freshness["identities"].size).toBeLessThanOrEqual(256);
   await flush();
   expect(requests).toHaveLength(2);
-  const showA = feature.observe("owner", a);
+  const showA = feature.observe("incarnation", a);
   await flush();
   expect(requests).toHaveLength(3);
   // Satisfying A cannot clear B's sampled global obligation.
-  const showB = feature.observe("owner", b);
+  const showB = feature.observe("incarnation", b);
   await flush();
   expect(requests).toHaveLength(4);
   send();
@@ -191,7 +194,7 @@ test("errors retain last-good data without retries and a new hint permits recove
   const { app, feature, send } = fixture();
   let fail = false;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(() => {
+    incarnationBound(() => {
       if (fail) throw new Error("controlled lost reply");
       return {
         kind: "repositories",
@@ -200,21 +203,21 @@ test("errors retain last-good data without retries and a new hint permits recove
     }),
   );
   send();
-  const release = feature.observe("owner", listRequest);
+  const release = feature.observe("incarnation", listRequest);
   await flush();
-  const good = feature.peek("owner", listRequest)?.data;
+  const good = feature.peek("incarnation", listRequest)?.data;
   fail = true;
   send([{ kind: "repositories" }]);
   await flush();
-  expect(feature.peek("owner", listRequest)?.status).toBe("error");
-  expect(feature.peek("owner", listRequest)?.data).toBe(good);
+  expect(feature.peek("incarnation", listRequest)?.status).toBe("error");
+  expect(feature.peek("incarnation", listRequest)?.data).toBe(good);
   await flush();
   expect(invoke).toHaveBeenCalledTimes(2);
   fail = false;
   send([{ kind: "repositories" }]);
   await flush();
   expect(invoke).toHaveBeenCalledTimes(3);
-  expect(feature.peek("owner", listRequest)?.status).toBe("success");
+  expect(feature.peek("incarnation", listRequest)?.status).toBe("success");
   release();
   app.client.clear();
 });
@@ -222,7 +225,7 @@ test("errors retain last-good data without retries and a new hint permits recove
 test("feed records feature dirtiness before ack and starts reads only after synchronous acceptance", async () => {
   const { app, feature } = fixture();
   vi.mocked(invoke).mockImplementation(
-    ownerBound(() => ({
+    incarnationBound(() => ({
       kind: "repositories",
       page: { repositories: [], next: null },
     })),
@@ -235,22 +238,22 @@ test("feed records feature dirtiness before ack and starts reads only after sync
       deliver = receive;
     }),
     acknowledge: vi.fn(async () => {
-      expect(app.freshness.ready("owner")).toBe(true);
+      expect(app.freshness.ready("incarnation")).toBe(true);
       expect(app.freshness.version(["repositories"])).toBeGreaterThan(0);
       expect(invoke).not.toHaveBeenCalled();
     }),
     stop: vi.fn(async () => {}),
   };
   const feed = new ObservationFeed(transport, app);
-  const release = feature.observe("owner", listRequest);
-  feed.connect("owner");
+  const release = feature.observe("incarnation", listRequest);
+  feed.connect("incarnation");
   await flush();
   deliver?.({
     kind: "batch",
     batch: {
       subscription_id: subscription,
       batch_id: 1,
-      cursor: { owner: "owner", sequence: 2 },
+      cursor: { incarnation: "incarnation", sequence: 2 },
       sample: {
         kind: "hints",
         watermark: 2,
@@ -273,7 +276,7 @@ test("hint-driven reads observe availability; explicit reprobe has a distinct ph
   let fault = false;
   const refreshes: boolean[] = [];
   vi.mocked(invoke).mockImplementation(
-    ownerBound((_, args) => {
+    incarnationBound((_, args) => {
       const request = object(args) ? args.request : undefined;
       const refresh =
         typeof request === "object" &&
@@ -303,9 +306,9 @@ test("hint-driven reads observe availability; explicit reprobe has a distinct ph
     }),
   );
   send();
-  const release = feature.observe("owner", listRequest);
+  const release = feature.observe("incarnation", listRequest);
   await flush();
-  await feature.refresh("owner", true);
+  await feature.refresh("incarnation", true);
   await flush();
   expect(refreshes).toEqual([false, true]);
   fault = true;
@@ -314,7 +317,7 @@ test("hint-driven reads observe availability; explicit reprobe has a distinct ph
   expect(refreshes).toEqual([false, true, false]);
   await vi.advanceTimersByTimeAsync(1000);
   expect(refreshes).toHaveLength(3);
-  expect(feature.peek("owner", listRequest)?.data?.value).toMatchObject({
+  expect(feature.peek("incarnation", listRequest)?.data?.value).toMatchObject({
     kind: "repositories",
     page: { repositories: [{ availability: { state: "unavailable" } }] },
   });
@@ -329,13 +332,13 @@ test("local observations ignore browser offline/focus events and inactive Query 
   app.client.mount();
   onlineManager.setOnline(false);
   vi.mocked(invoke).mockImplementation(
-    ownerBound(() => ({
+    incarnationBound(() => ({
       kind: "repositories",
       page: { repositories: [], next: null },
     })),
   );
   send();
-  const release = feature.observe("owner", listRequest);
+  const release = feature.observe("incarnation", listRequest);
   await flush();
   expect(invoke).toHaveBeenCalledOnce();
   focusManager.setFocused(false);
@@ -358,22 +361,22 @@ test("a failed detail stays paused across hide/remount until a new hint or expli
   const { app, feature, send } = fixture();
   const target = { operation: "get", id: repository.id } as const;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(() => {
+    incarnationBound(() => {
       throw new Error("detail unavailable");
     }),
   );
   send();
-  const hide = feature.observe("owner", target);
+  const hide = feature.observe("incarnation", target);
   await flush();
   expect(invoke).toHaveBeenCalledOnce();
   hide();
-  const hideAgain = feature.observe("owner", target);
+  const hideAgain = feature.observe("incarnation", target);
   await flush();
   expect(invoke).toHaveBeenCalledOnce();
   send([{ kind: "repository", repository_id: repository.id }]);
   await flush();
   expect(invoke).toHaveBeenCalledTimes(2);
-  await feature.refresh("owner");
+  await feature.refresh("incarnation");
   await flush();
   expect(invoke).toHaveBeenCalledTimes(3);
   hideAgain();
@@ -400,12 +403,12 @@ test("a hint while queued is captured by the eventual failed physical read and c
       }),
   );
   vi.mocked(invoke).mockImplementation(
-    ownerBound(() => {
+    incarnationBound(() => {
       throw new Error("controlled detail fault");
     }),
   );
   send();
-  const hide = feature.observe("owner", {
+  const hide = feature.observe("incarnation", {
     operation: "get",
     id: repository.id,
   });
@@ -423,4 +426,32 @@ test("a hint while queued is captured by the eventual failed physical read and c
   hide();
   scope.dispose();
   app.client.clear();
+});
+
+test("Query count eviction preserves observed bodies and independent freshness obligations", async () => {
+  const client = createObservationQueryClient();
+  const { QueryObserver } = await import("@tanstack/react-query");
+  client.setQueryData(["visible"], "last good");
+  const observer = new QueryObserver(client, {
+    queryKey: ["visible"],
+    enabled: false,
+  });
+  const release = observer.subscribe(() => {});
+  const freshness = new FeatureFreshness();
+  freshness.connect("current");
+  freshness.resync();
+  for (let index = 0; index < 160; index++)
+    client.setQueryData(["history", index], index);
+  await flush();
+  expect(
+    client
+      .getQueryCache()
+      .getAll()
+      .filter((query) => query.getObserversCount() === 0).length,
+  ).toBe(128);
+  expect(client.getQueryData(["visible"])).toBe("last good");
+  expect(freshness.ready("current")).toBe(false);
+  release();
+  observer.destroy();
+  client.clear();
 });

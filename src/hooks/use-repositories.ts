@@ -22,7 +22,7 @@ import {
 } from "@/lib/repositories";
 
 export function useRepositories(
-  owner: string | undefined,
+  incarnation: string | undefined,
   app: AppObservations,
   selectedId: string | null,
   navigation: Navigation,
@@ -41,13 +41,13 @@ export function useRepositories(
   const actionEpoch = useRef(0);
   const pendingNavigation = useRef<number | undefined>(undefined);
   const sending = useRef(false);
-  const shownOwner = owner ?? feature.retainedOwner();
-  const list = shownOwner
-    ? feature.peek(shownOwner, { operation: "list", after })
+  const shownIncarnation = incarnation ?? feature.retainedIncarnation();
+  const list = shownIncarnation
+    ? feature.peek(shownIncarnation, { operation: "list", after })
     : undefined;
   const detail =
-    shownOwner && selectedId
-      ? feature.peek(shownOwner, { operation: "get", id: selectedId })
+    shownIncarnation && selectedId
+      ? feature.peek(shownIncarnation, { operation: "get", id: selectedId })
       : undefined;
   const page =
     list?.data?.value.kind === "repositories"
@@ -57,10 +57,10 @@ export function useRepositories(
     detail?.data?.value.kind === "repository"
       ? (detail.data.value.repository ?? undefined)
       : page?.repositories.find((item) => item.id === selectedId);
-  const observedOwner =
+  const observedIncarnation =
     (selectedId
-      ? (detail?.data?.owner ?? list?.data?.owner)
-      : list?.data?.owner) ?? owner;
+      ? (detail?.data?.incarnation ?? list?.data?.incarnation)
+      : list?.data?.incarnation) ?? incarnation;
   const actionId = pending?.request.action_id;
   const error = list?.error ?? detail?.error;
   const loading =
@@ -74,19 +74,22 @@ export function useRepositories(
       actionEpoch.current += 1;
       pendingNavigation.current = undefined;
     };
-  }, [owner]);
+  }, [incarnation]);
   useEffect(() => {
-    if (!owner || !visible) return;
-    return feature.observe(owner, { operation: "list", after });
-  }, [feature, owner, after, visible]);
+    if (!incarnation || !visible) return;
+    return feature.observe(incarnation, { operation: "list", after });
+  }, [feature, incarnation, after, visible]);
   useEffect(() => {
-    if (!owner || !visible || !selectedId) return;
-    return feature.observe(owner, { operation: "get", id: selectedId });
-  }, [feature, owner, selectedId, visible]);
+    if (!incarnation || !visible || !selectedId) return;
+    return feature.observe(incarnation, { operation: "get", id: selectedId });
+  }, [feature, incarnation, selectedId, visible]);
   useEffect(() => {
-    if (!owner || !actionId) return;
-    return feature.observe(owner, { operation: "action", action_id: actionId });
-  }, [feature, owner, actionId]);
+    if (!incarnation || !actionId) return;
+    return feature.observe(incarnation, {
+      operation: "action",
+      action_id: actionId,
+    });
+  }, [feature, incarnation, actionId]);
   const finish = useCallback(
     (action: Registration) => {
       const retained = currentPending.current;
@@ -128,8 +131,8 @@ export function useRepositories(
   useEffect(
     () =>
       feature.subscribe(() => {
-        if (!owner || !actionId || !currentPending.current) return;
-        const action = feature.peek(owner, {
+        if (!incarnation || !actionId || !currentPending.current) return;
+        const action = feature.peek(incarnation, {
           operation: "action",
           action_id: actionId,
         });
@@ -147,7 +150,7 @@ export function useRepositories(
                 last ?? {
                   code: "not_found",
                   message:
-                    "The supervisor has no recorded registration for this action. Submit the same request explicitly to try again.",
+                    "The core has no recorded registration for this action. Submit the same request explicitly to try again.",
                 },
             );
         } else {
@@ -165,15 +168,21 @@ export function useRepositories(
           else finish(result.registration);
         }
       }),
-    [feature, owner, actionId, finish],
+    [feature, incarnation, actionId, finish],
   );
   function refresh(recheck = true) {
-    return owner
-      ? feature.refreshSelection(owner, after, selectedId, actionId, recheck)
+    return incarnation
+      ? feature.refreshSelection(
+          incarnation,
+          after,
+          selectedId,
+          actionId,
+          recheck,
+        )
       : Promise.resolve();
   }
   async function register(path: string): Promise<boolean> {
-    if (!owner || !observedOwner || sending.current) return false;
+    if (!incarnation || !observedIncarnation || sending.current) return false;
     const old = currentPending.current;
     if (old && old.request.path !== path) {
       setActionError({
@@ -214,14 +223,14 @@ export function useRepositories(
     const generation = actionEpoch.current;
     return completeOperation(
       async () => {
-        const result = await repositoryRequest(observedOwner, {
+        const result = await repositoryRequest(observedIncarnation, {
           operation: "register",
           request: intent.request,
         });
         if (
           mounted.current &&
           actionEpoch.current === generation &&
-          app.freshness.matches(observedOwner) &&
+          app.freshness.matches(observedIncarnation) &&
           result.kind === "registration"
         )
           finish(result.registration);
@@ -231,7 +240,7 @@ export function useRepositories(
         if (
           mounted.current &&
           actionEpoch.current === generation &&
-          app.freshness.matches(observedOwner) &&
+          app.freshness.matches(observedIncarnation) &&
           currentPending.current?.request.action_id === intent.request.action_id
         ) {
           const failure = repositoryError(error);

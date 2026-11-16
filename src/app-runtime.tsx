@@ -10,7 +10,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useObservationFeed } from "@/hooks/use-observation-feed";
-import { useSupervisorConnection } from "@/hooks/use-supervisor-connection";
+import { useCoreConnection } from "@/hooks/use-core-connection";
 import { useRepositories } from "@/hooks/use-repositories";
 import { useWorkspaces } from "@/hooks/use-workspaces";
 import { RepositorySidebar } from "@/components/blocks/repository-sidebar";
@@ -25,21 +25,21 @@ import { useProviderProgress } from "@/hooks/use-provider-progress";
 
 export function targetStatus(
   app: AppObservations,
-  owner: string | undefined,
+  incarnation: string | undefined,
   target: MainDestination | undefined,
 ) {
   if (!target || target.kind === "home") return "valid";
-  if (!owner) return "unavailable";
+  if (!incarnation) return "unavailable";
   const repository = { operation: "get", id: target.repositoryId } as const;
-  const repo = app.repositories.peek(owner, repository);
-  if (!app.repositories.isCurrent(owner, repository)) return "pending";
+  const repo = app.repositories.peek(incarnation, repository);
+  if (!app.repositories.isCurrent(incarnation, repository)) return "pending";
   if (repo?.error) return "unavailable";
   if (repo?.data?.value.kind !== "repository" || !repo.data.value.repository)
     return "missing";
   if (target.kind === "repository") return "valid";
   const workspace = { operation: "get", id: target.workspaceId } as const;
-  const state = app.workspaces.peek(owner, workspace);
-  if (!app.workspaces.isCurrent(owner, workspace)) return "pending";
+  const state = app.workspaces.peek(incarnation, workspace);
+  if (!app.workspaces.isCurrent(incarnation, workspace)) return "pending";
   if (state?.error) return "unavailable";
   return state?.data?.value.kind === "workspace" &&
     state.data.value.workspace?.repository_id === target.repositoryId
@@ -51,24 +51,24 @@ function useRuntime() {
   const location = useLocation();
   const mainVisible = !isSettingsPath(location.pathname);
   const target = mainDestination(location.href);
-  const { connection, refreshStatus } = useSupervisorConnection();
-  const owner =
+  const { connection, refreshStatus } = useCoreConnection();
+  const incarnation =
     connection.state === "connected"
-      ? connection.observation.snapshot.cursor.owner
+      ? connection.observation.snapshot.cursor.incarnation
       : undefined;
-  const feed = useObservationFeed(owner, app);
+  const feed = useObservationFeed(incarnation, app);
   const observedConnection = { ...connection, feed };
   const repositoryId =
     target && target.kind !== "home" ? target.repositoryId : undefined;
   const repositories = useRepositories(
-    owner,
+    incarnation,
     app,
     repositoryId ?? null,
     navigation,
     mainVisible,
   );
   const workspaces = useWorkspaces(
-    owner,
+    incarnation,
     repositoryId,
     repositories.page?.repositories.map((r) => r.id).join(",") ?? "",
     target?.kind === "workspace" ? target.workspaceId : undefined,
@@ -76,7 +76,7 @@ function useRuntime() {
     navigation,
     mainVisible,
   );
-  const status = targetStatus(app, owner, target);
+  const status = targetStatus(app, incarnation, target);
   useEffect(() => {
     navigation.restoreOnce(app.presentation.getState().rememberedMain);
     if (navigation.history.location.href !== location.href) return;
@@ -116,7 +116,7 @@ export function AppRuntime() {
   const providerProgress = useProviderProgress(
     runtime.app,
     runtime.connection.state === "connected"
-      ? runtime.connection.observation.snapshot.cursor.owner
+      ? runtime.connection.observation.snapshot.cursor.incarnation
       : undefined,
     runtime.connection.observation?.snapshot.provider_login_pending === true,
   );
@@ -128,7 +128,7 @@ export function AppRuntime() {
       if (
         !disposed &&
         typeof event.payload === "string" &&
-        event.payload.length <= 512
+        event.payload.length <= 4096
       )
         setShutdown(event.payload);
     })

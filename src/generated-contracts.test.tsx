@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
-import corpus from "../contracts/observations-v15.json";
+import corpus from "../contracts/observations-native.json";
 import {
   validateRegistration,
   validateWorkspace,
-  validateSupervisorSnapshot,
+  validateCoreSnapshot,
 } from "./generated/contracts/validators.js";
 import { decodeWorkspaceReply } from "./lib/workspaces";
 import { decodeSnapshot } from "./lib/observation-contracts";
@@ -58,21 +58,24 @@ test("structurally valid workspace paths still require normalized absolute locat
 test("schema-valid numeric and multibyte payloads still require contextual budgets", () => {
   const unsafe = {
     ...corpus.snapshot,
-    cursor: { owner: corpus.owner, revision: Number.MAX_SAFE_INTEGER + 1 },
+    cursor: {
+      incarnation: corpus.incarnation,
+      revision: Number.MAX_SAFE_INTEGER + 1,
+    },
   };
-  expect(validateSupervisorSnapshot(unsafe)).toBe(true);
+  expect(validateCoreSnapshot(unsafe)).toBe(true);
   expect(() => decodeSnapshot(unsafe)).toThrow();
   const largePid = {
     ...corpus.snapshot,
-    status: { ...corpus.snapshot.status, supervisor_pid: 2 ** 32 },
+    status: { ...corpus.snapshot.status, native_pid: 2 ** 32 },
   };
-  expect(validateSupervisorSnapshot(largePid)).toBe(true);
+  expect(validateCoreSnapshot(largePid)).toBe(true);
   expect(() => decodeSnapshot(largePid)).toThrow();
   const multibyte = {
     ...corpus.snapshot,
     status: { ...corpus.snapshot.status, application_version: "🌍".repeat(40) },
   };
-  expect(validateSupervisorSnapshot(multibyte)).toBe(true);
+  expect(validateCoreSnapshot(multibyte)).toBe(true);
   expect(() => decodeSnapshot(multibyte)).toThrow();
 });
 
@@ -97,9 +100,8 @@ import { decodeRepositoryReply } from "./lib/repositories";
 import { decodeFeedBatch } from "./lib/observation-feed";
 
 test("every current synthetic corpus root passes its generated serialization validator", () => {
-  expect(corpus.protocol).toBe(15);
   expect(validateDesktopPid(corpus.desktop_pid)).toBe(true);
-  expect(validateSupervisorSnapshot(corpus.snapshot)).toBe(true);
+  expect(validateCoreSnapshot(corpus.snapshot)).toBe(true);
   for (const entry of corpus.repositories) {
     expect(validateRepositoryRequest(entry.request)).toBe(true);
     expect(validateOwnedRepositoryReply(entry.reply)).toBe(true);
@@ -167,11 +169,14 @@ test("flattened schemas allow additional properties while contextual assertions 
   ).toThrow();
 });
 
-test("structurally valid owner, delivery, target and feed relationships still fail contextual assertions", () => {
-  const envelope = { ...corpus.repositories[0].reply, owner: "wrong-owner" };
+test("structurally valid incarnation, delivery, target and feed relationships still fail contextual assertions", () => {
+  const envelope = {
+    ...corpus.repositories[0].reply,
+    incarnation: "wrong-incarnation",
+  };
   expect(validateOwnedObservation(envelope)).toBe(true);
   expect(() =>
-    decodeOwnedReply(corpus.owner, envelope, () => undefined),
+    decodeOwnedReply(corpus.incarnation, envelope, () => undefined),
   ).toThrow();
   const failure = {
     kind: "transport",
@@ -188,7 +193,7 @@ test("structurally valid owner, delivery, target and feed relationships still fa
   });
   const batch = corpus.feed[0];
   for (const value of [
-    { ...batch, cursor: { ...batch.cursor, owner: "wrong-owner" } },
+    { ...batch, cursor: { ...batch.cursor, incarnation: "wrong-incarnation" } },
     { ...batch, batch_id: 10 },
     {
       ...batch,
@@ -202,7 +207,7 @@ test("structurally valid owner, delivery, target and feed relationships still fa
   ]) {
     expect(validateFeedBatch(value)).toBe(true);
     expect(() =>
-      decodeFeedBatch(value, corpus.owner, batch.subscription_id, 0),
+      decodeFeedBatch(value, corpus.incarnation, batch.subscription_id, 0),
     ).toThrow();
   }
 });
@@ -221,9 +226,9 @@ test("malformed fields, variants, results and noncanonical UUIDs fail generated 
     { Ok: {}, Err: { code: "storage", message: "Both" } },
     { Err: { code: "invented", message: "Invalid" } },
   ])
-    expect(validateOwnedObservation({ owner: corpus.owner, result })).toBe(
-      false,
-    );
+    expect(
+      validateOwnedObservation({ incarnation: corpus.incarnation, result }),
+    ).toBe(false);
   const workspace = corpus.workspaces[0].reply.result.Ok.workspace;
   if (!workspace) throw new Error("Missing workspace fixture");
   expect(

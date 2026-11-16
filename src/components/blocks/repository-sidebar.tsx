@@ -36,8 +36,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { workspaceStatus } from "@/lib/workspaces";
 import type { Repositories } from "@/hooks/use-repositories";
 import { RepositoryRegistration } from "./repository-registration";
-import type { Connection } from "@/hooks/use-supervisor-connection";
-import { SupervisorConnection } from "./supervisor-connection";
+import type { Connection } from "@/hooks/use-core-connection";
+import { CoreConnection } from "./core-connection";
 
 export function RepositorySidebar({
   connection,
@@ -264,7 +264,7 @@ export function RepositorySidebar({
           repositories={repositories}
           connected={connection.state === "connected"}
         />
-        <SupervisorConnection connection={connection} />
+        <CoreConnection connection={connection} />
         <Button
           id="settings-entry"
           variant="ghost"

@@ -1,7 +1,6 @@
-// Development/build launcher. Rust owns supervisor discovery and lifetime.
+// Native launcher. Tauri owns core startup and completed shutdown.
 import { spawn } from "node:child_process";
 import path from "node:path";
-import { readFileSync } from "node:fs";
 import { developmentEnvironment } from "./development-state.mjs";
 import { cargoMetadata, root } from "./cargo.mjs";
 import { prepareGenerated } from "./prepare-generated.mjs";
@@ -48,17 +47,19 @@ async function stop(code) {
   if (stopping) return;
   stopping = true;
   for (const child of children) signalGroup(child, "SIGTERM");
-  // Supervisor is started by Rust in its own process group and is not in this set.
+  // Native signal handling routes ordinary stop through the same owned Quit.
   await Promise.all(
     [...children].map(async (child) => {
       const exited = waitForExit(child);
-      const deadline = setTimeout(() => {
-        signalGroup(child, "SIGKILL");
+      const pending = setTimeout(() => {
+        console.error(
+          "Native shutdown is still pending; no forced termination was sent. A manual force-kill requires recovery and is not a completed drain.",
+        );
       }, 3000);
       try {
         await exited;
       } finally {
-        clearTimeout(deadline);
+        clearTimeout(pending);
       }
     }),
   );
@@ -71,26 +72,20 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
 
 try {
   prepareGenerated("--check");
-  if (mode === "dev") {
+  // Ticket 07 removes the still-declared bundle resource. Preparation only
+  // stages that unreachable resource; native startup never executes it.
+  if (mode === "dev")
     await waitForExit(
       launch("node", ["scripts/prepare-supervisor.mjs", "debug"]),
     );
-  }
   if (!stopping) {
     let env = {
       ...process.env,
       CARGO_TARGET_DIR: cargoMetadata().target_directory,
     };
     if (mode === "dev") {
-      const provenance = JSON.parse(
-        readFileSync(
-          path.join(root, "src-tauri/gen/sidecar/provenance.json"),
-          "utf8",
-        ),
-      );
-      env = developmentEnvironment(provenance, { env });
-      console.log(`Dev supervisor: ${env.AGENT_WORKSPACE_SUPERVISOR}`);
-      console.log(`Dev state: ${env.AGENT_WORKSPACE_STATE_DIR}`);
+      env = developmentEnvironment({ env });
+      console.log(`Native dev state: ${env.AGENT_WORKSPACE_STATE_DIR}`);
     }
     const desktop =
       mode === "dev"

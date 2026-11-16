@@ -69,7 +69,7 @@ export function isSettingsPath(pathname: string) {
   return pathname === "/settings" || pathname.startsWith("/settings/");
 }
 
-// History supplies the current destination. This owner retains eligibility and
+// History supplies the current destination. This incarnation retains eligibility and
 // ephemeral Settings return metadata, never another current selection or body.
 export class Navigation {
   private generation = 0;

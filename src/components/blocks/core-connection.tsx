@@ -9,16 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import type {
-  Connection,
-  Observation,
-} from "@/hooks/use-supervisor-connection";
+import type { Connection, Observation } from "@/hooks/use-core-connection";
 
-export function SupervisorConnection({
-  connection,
-}: {
-  connection: Connection;
-}) {
+export function CoreConnection({ connection }: { connection: Connection }) {
   const feedStopped =
     connection.state === "connected" &&
     (connection.feed?.state === "stopped" || !!connection.feed?.message);
@@ -55,9 +48,9 @@ export function SupervisorConnection({
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-3rem)] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Supervisor connection</DialogTitle>
+            <DialogTitle>Native core diagnostics</DialogTitle>
             <DialogDescription>
-              Local connection and process diagnostics.
+              Native startup, storage, runtime and observation diagnostics.
             </DialogDescription>
           </DialogHeader>
           <Badge
@@ -99,10 +92,10 @@ function ConnectionDetails({
   current: boolean;
 }) {
   const fields = [
-    ["Supervisor process", snapshot.status.supervisor_pid],
+    ["Native process", snapshot.status.native_pid],
     ["Desktop process", desktopPid],
     ["Application version", snapshot.status.application_version],
-    ["Owner identity", snapshot.cursor.owner],
+    ["Core incarnation", snapshot.cursor.incarnation],
     ["Snapshot revision", snapshot.cursor.revision],
   ];
   return (

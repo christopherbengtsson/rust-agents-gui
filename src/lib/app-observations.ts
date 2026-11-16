@@ -39,11 +39,11 @@ export class AppObservations {
       this.presentation,
     );
   }
-  connect = (owner: string | undefined) => {
-    this.freshness.connect(owner);
+  connect = (incarnation: string | undefined) => {
+    this.freshness.connect(incarnation);
   };
   accept = (batch: FeedBatch) => {
-    if (!this.freshness.matches(batch.cursor.owner)) return;
+    if (!this.freshness.matches(batch.cursor.incarnation)) return;
     if (batch.sample.kind === "resync_required") this.freshness.resync();
     if (batch.sample.kind === "hints")
       for (const target of batch.sample.targets) {
@@ -52,6 +52,6 @@ export class AppObservations {
         this.workspaces.invalidate(target);
         this.inspection.invalidate(target);
       }
-    this.freshness.accept(batch.cursor.owner);
+    this.freshness.accept(batch.cursor.incarnation);
   };
 }

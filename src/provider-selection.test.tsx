@@ -4,7 +4,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { useProviderSelection } from "./hooks/use-provider-selection";
 import { AppObservations } from "./lib/app-observations";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { object } from "./lib/observation-contracts";
 import { validateProviderRequest } from "./generated/contracts/validators";
 import type {
@@ -38,15 +38,15 @@ const observation: ProviderObservation = {
 };
 function app() {
   const app = new AppObservations();
-  app.connect("owner");
-  app.freshness.accept("owner");
+  app.connect("incarnation");
+  app.freshness.accept("incarnation");
   return app;
 }
 
 test("chooser cancellation leaves the runtime and saved selection untouched", async () => {
   vi.mocked(open).mockResolvedValue(null);
   const { result } = renderHook(() =>
-    useProviderSelection(app(), "owner", observation),
+    useProviderSelection(app(), "incarnation", observation),
   );
   await act(() => result.current.locate());
   expect(invoke).not.toHaveBeenCalled();
@@ -66,7 +66,7 @@ test("a chooser result arriving after navigation has no selection effect", async
   );
   const feature = app();
   const { result, unmount } = renderHook(() =>
-    useProviderSelection(feature, "owner", observation),
+    useProviderSelection(feature, "incarnation", observation),
   );
   let pending: Promise<void> | undefined;
   act(() => {
@@ -85,7 +85,7 @@ test("lost selection reply reconciles the same action and never repeats validati
   const requests: ProviderRequest[] = [];
   let current = observation;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_command, args) => {
+    incarnationBound(async (_command, args) => {
       if (!object(args) || !validateProviderRequest(args.request))
         throw new Error("Unexpected request");
       const request = args.request;
@@ -107,13 +107,13 @@ test("lost selection reply reconciles the same action and never repeats validati
     }),
   );
   await feature.providers.selectExecutable(
-    "owner",
+    "incarnation",
     observation,
     "/chosen/codex",
   );
   await waitFor(() =>
     expect(
-      feature.providers.action("owner", observation.target.id),
+      feature.providers.action("incarnation", observation.target.id),
     ).toBeUndefined(),
   );
   expect(
@@ -136,7 +136,7 @@ test("lost selection reply reconciles the same action and never repeats validati
 });
 
 test.each(["replacement", undefined])(
-  "owner detachment/replacement during a chooser does not fence later locating: %s",
+  "incarnation detachment/replacement during a chooser does not fence later locating: %s",
   async (replacement) => {
     let resolve: (path: string) => void = () => {};
     vi.mocked(open).mockReturnValue(
@@ -145,10 +145,12 @@ test.each(["replacement", undefined])(
       }),
     );
     const feature = app();
-    const initialProps: { owner: string | undefined } = { owner: "owner" };
+    const initialProps: { incarnation: string | undefined } = {
+      incarnation: "incarnation",
+    };
     const { result, rerender } = renderHook(
-      ({ owner }: { owner: string | undefined }) =>
-        useProviderSelection(feature, owner, observation),
+      ({ incarnation }: { incarnation: string | undefined }) =>
+        useProviderSelection(feature, incarnation, observation),
       { initialProps },
     );
     let pending: Promise<void> | undefined;
@@ -156,8 +158,8 @@ test.each(["replacement", undefined])(
       pending = result.current.locate();
     });
     expect(result.current.picking).toBe(true);
-    rerender({ owner: replacement });
-    if (!replacement) rerender({ owner: "owner" });
+    rerender({ incarnation: replacement });
+    if (!replacement) rerender({ incarnation: "incarnation" });
     await act(async () => {
       resolve("/chosen/codex");
       await pending;

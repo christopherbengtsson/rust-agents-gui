@@ -1,0 +1,9 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0063]: missing field `diagnostic` in initializer of `CoreSnapshot`
+  --> crates/core/src/native.rs:73:98
+   |
+73 |         let mut snapshot = state.core.as_ref().map(|core| core.snapshot(None)).unwrap_or_else(|| CoreSnapshot {
+   |                                                                                                  ^^^^^^^^^^^^ missing `diagnostic`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `workspace-core` (lib test) due to 1 previous error

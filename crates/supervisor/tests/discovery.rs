@@ -45,7 +45,7 @@ fn concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot() {
             .collect();
         let clients: Vec<_> = clients.into_iter().map(|t| t.join().unwrap()).collect();
         let first = clients[0].snapshot(None).await.unwrap();
-        let _owner = Owner(first.status.supervisor_pid);
+        let _owner = Owner(first.status.native_pid);
         for client in &clients {
             assert_eq!(client.snapshot(None).await.unwrap().cursor, first.cursor);
         }
@@ -57,7 +57,7 @@ fn concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot() {
             .await
             .unwrap();
         let caught_up = reopened.snapshot(Some(first.cursor.clone())).await.unwrap();
-        assert_eq!(caught_up.status.supervisor_pid, first.status.supervisor_pid);
+        assert_eq!(caught_up.status.native_pid, first.status.native_pid);
         assert_eq!(caught_up.cursor, first.cursor);
         assert!(!caught_up.reset);
     });
@@ -76,7 +76,7 @@ fn private_endpoint_rejects_incompatible_versions_and_unbounded_frames() {
             .await
             .unwrap();
         let first = client.snapshot(None).await.unwrap();
-        let _owner = Owner(first.status.supervisor_pid);
+        let _owner = Owner(first.status.native_pid);
         let socket = state.path().join("supervisor.sock");
         assert_eq!(
             std::fs::metadata(state.path()).unwrap().mode() & 0o777,
@@ -99,8 +99,8 @@ fn private_endpoint_rejects_incompatible_versions_and_unbounded_frames() {
         let _ = peer.write_all(&[0, 0, 255, 253]);
         assert!(matches!(peer.read(&mut [0]), Ok(0) | Err(_)));
         assert_eq!(
-            client.status().await.unwrap().supervisor_pid,
-            first.status.supervisor_pid
+            client.status().await.unwrap().native_pid,
+            first.status.native_pid
         );
         std::fs::set_permissions(&socket, std::fs::Permissions::from_mode(0o666)).unwrap();
         assert_eq!(
@@ -167,7 +167,7 @@ fn killed_desktop_process_leaves_owner_and_reopening_catches_up() {
             .snapshot(Some(before.cursor.clone()))
             .await
             .unwrap();
-        assert_eq!(after.status.supervisor_pid, owner.0);
+        assert_eq!(after.status.native_pid, owner.0);
         assert_eq!(after.cursor, before.cursor);
         assert!(!after.reset);
     });
@@ -184,7 +184,7 @@ fn desktop_process() {
         )
         .await
         .unwrap();
-        println!("OWNER={}", client.status().await.unwrap().supervisor_pid);
+        println!("OWNER={}", client.status().await.unwrap().native_pid);
         std::io::stdout().flush().unwrap();
         loop {
             std::thread::park();
@@ -200,7 +200,7 @@ fn lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status() 
         std::fs::set_permissions(state.path(), std::fs::Permissions::from_mode(0o700)).unwrap();
         let desktop = SupervisorConnection::new(state.path().to_owned(), executable().to_owned());
         let before = desktop.snapshot().await.unwrap();
-        let owner = Owner(before.status.supervisor_pid);
+        let owner = Owner(before.status.native_pid);
         drop(owner);
         let deadline = std::time::Instant::now() + Duration::from_secs(5);
         while SupervisorClient::new(state.path().to_owned())
@@ -219,8 +219,8 @@ fn lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status() 
             .snapshot(Some(before.cursor.clone()))
             .await
             .unwrap();
-        let _owner = Owner(after.status.supervisor_pid);
-        assert_ne!(after.cursor.owner, before.cursor.owner);
+        let _owner = Owner(after.status.native_pid);
+        assert_ne!(after.cursor.incarnation, before.cursor.incarnation);
         assert!(after.reset);
     });
 }
@@ -245,7 +245,7 @@ fn cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work() 
         let connection =
             SupervisorConnection::new(state.path().to_owned(), executable().to_owned());
         let snapshot = connection.snapshot().await.unwrap();
-        let owner = Owner(snapshot.status.supervisor_pid);
+        let owner = Owner(snapshot.status.native_pid);
         // This is the exact disposable owner launched by this check. Pausing it
         // supplies a real stopped peer without altering provider/user processes.
         assert!(
@@ -266,7 +266,7 @@ fn cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work() 
         let _resume = Resume(owner.0);
         let read = || {
             connection.prepare_repository_request(
-                snapshot.cursor.owner.clone(),
+                snapshot.cursor.incarnation.clone(),
                 RepositoryRequest::List {
                     after: None,
                     refresh: false,
@@ -280,7 +280,7 @@ fn cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work() 
         );
         let intent = || {
             connection.prepare_workspace_request(
-                snapshot.cursor.owner.clone(),
+                snapshot.cursor.incarnation.clone(),
                 workspace_core::workspaces::WorkspaceRequest::Create {
                     action_id: workspace_core::workspaces::ActionId(Default::default()),
                     repository_id: workspace_core::workspaces::RepositoryId(Default::default()),
@@ -297,14 +297,14 @@ fn cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work() 
         );
         connection
             .start_subscription(
-                snapshot.cursor.owner.clone(),
+                snapshot.cursor.incarnation.clone(),
                 "stopped-peer".into(),
                 None,
                 |_| Ok(()),
             )
             .unwrap();
         assert!(
-            matches!(connection.start_subscription(snapshot.cursor.owner.clone(), "blocked-replacement".into(), None, |_| Ok(())), Err(RequestFailure::Transport { error }) if error.code == TransportCode::Busy)
+            matches!(connection.start_subscription(snapshot.cursor.incarnation.clone(), "blocked-replacement".into(), None, |_| Ok(())), Err(RequestFailure::Transport { error }) if error.code == TransportCode::Busy)
         );
         // Drive physical opens/writes while their result receivers are abandoned.
         tokio::time::sleep(Duration::from_millis(100)).await;
@@ -322,7 +322,7 @@ fn cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work() 
                 .status()
                 .await
                 .unwrap()
-                .supervisor_pid,
+                .native_pid,
             owner.0
         );
     });
@@ -339,19 +339,19 @@ fn actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats() {
         let connection =
             SupervisorConnection::new(state.path().to_owned(), executable().to_owned());
         let snapshot = connection.snapshot().await.unwrap();
-        let _owner = Owner(snapshot.status.supervisor_pid);
+        let _owner = Owner(snapshot.status.native_pid);
         let (send, mut events) = tokio::sync::mpsc::unbounded_channel();
         let deliver = move |event| send.send(event).map_err(std::io::Error::other);
         connection
             .start_subscription(
-                snapshot.cursor.owner.clone(),
+                snapshot.cursor.incarnation.clone(),
                 "late-setup".into(),
                 None,
                 deliver.clone(),
             )
             .unwrap();
         assert!(
-            matches!(connection.start_subscription(snapshot.cursor.owner.clone(), "competitor".into(), None, deliver.clone()), Err(RequestFailure::Transport { error }) if error.code == TransportCode::Busy)
+            matches!(connection.start_subscription(snapshot.cursor.incarnation.clone(), "competitor".into(), None, deliver.clone()), Err(RequestFailure::Transport { error }) if error.code == TransportCode::Busy)
         );
         // Stop before the runtime polls the registered setup worker.
         connection.stop_subscription("late-setup").await.unwrap();
@@ -359,7 +359,7 @@ fn actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats() {
         while events.try_recv().is_ok() {}
         connection
             .start_subscription(
-                snapshot.cursor.owner.clone(),
+                snapshot.cursor.incarnation.clone(),
                 "replacement".into(),
                 None,
                 deliver,
@@ -410,7 +410,7 @@ fn replacement_owner_rejects_a_retained_desktop_target_before_status_refresh() {
         std::fs::set_permissions(state.path(), std::fs::Permissions::from_mode(0o700)).unwrap();
         let desktop = SupervisorConnection::new(state.path().to_owned(), executable().to_owned());
         let before = desktop.snapshot().await.unwrap();
-        drop(Owner(before.status.supervisor_pid));
+        drop(Owner(before.status.native_pid));
         let deadline = std::time::Instant::now() + Duration::from_secs(5);
         while SupervisorClient::new(state.path().to_owned())
             .status()
@@ -426,11 +426,11 @@ fn replacement_owner_rejects_a_retained_desktop_target_before_status_refresh() {
             .await
             .unwrap();
         let after = replacement.snapshot(None).await.unwrap();
-        let _owner = Owner(after.status.supervisor_pid);
-        assert_ne!(after.cursor.owner, before.cursor.owner);
+        let _owner = Owner(after.status.native_pid);
+        assert_ne!(after.cursor.incarnation, before.cursor.incarnation);
         let error = desktop
             .prepare_workspace_request(
-                before.cursor.owner,
+                before.cursor.incarnation,
                 WorkspaceRequest::Create {
                     action_id: ActionId(Default::default()),
                     repository_id: RepositoryId(Default::default()),
@@ -441,11 +441,11 @@ fn replacement_owner_rejects_a_retained_desktop_target_before_status_refresh() {
             .await
             .unwrap_err();
         assert!(
-            matches!(error, RequestFailure::Transport { error } if error.code == TransportCode::OwnerChanged && error.delivery == Delivery::Rejected)
+            matches!(error, RequestFailure::Transport { error } if error.code == TransportCode::IncarnationChanged && error.delivery == Delivery::Rejected)
         );
         assert_eq!(
-            desktop.snapshot().await.unwrap().cursor.owner,
-            after.cursor.owner
+            desktop.snapshot().await.unwrap().cursor.incarnation,
+            after.cursor.incarnation
         );
         desktop.stop_observations().await.unwrap();
     });

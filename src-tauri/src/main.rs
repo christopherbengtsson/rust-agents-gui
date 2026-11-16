@@ -1,139 +1,89 @@
-use std::{path::PathBuf, sync::Mutex};
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
 use tauri::{Emitter, Manager};
-use workspace_core::connection::{Delivery, OwnedReply, RequestFailure, TransportCode};
-use workspace_core::workspaces::{RepositoryReply, RepositoryRequest};
-use workspace_core::{SupervisorSnapshot, connection::SupervisorConnection};
-
-struct QuitFence(std::sync::Arc<std::sync::atomic::AtomicBool>);
-
-#[tauri::command]
-async fn provider_request(
-    expected_owner: String,
-    request: workspace_core::runtimes::ProviderRequest,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<OwnedReply<workspace_core::runtimes::ProviderReply>, RequestFailure> {
-    connected(&connection)?
-        .prepare_provider_request(expected_owner, request)?
-        .run()
-        .await
-}
+use workspace_core::{
+    connection::RequestFailure,
+    native::{NativeHost, NativeReply},
+};
+type Host = Arc<NativeHost>;
+struct ExitSignals(std::sync::Mutex<Option<tauri::async_runtime::JoinHandle<()>>>);
+#[cfg(feature = "qualification")]
+mod qualification;
 
 #[tauri::command]
-async fn repository_request(
-    expected_owner: String,
-    request: RepositoryRequest,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<OwnedReply<RepositoryReply>, RequestFailure> {
-    let admitted = connected(&connection)?.prepare_repository_request(expected_owner, request)?;
-    admitted.run().await
+fn core_status(host: tauri::State<'_, Host>) -> workspace_core::CoreSnapshot {
+    host.snapshot()
 }
-
-#[tauri::command]
-async fn workspace_request(
-    expected_owner: String,
-    request: workspace_core::workspaces::WorkspaceRequest,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<OwnedReply<workspace_core::workspaces::WorkspaceReply>, RequestFailure> {
-    let admitted = connected(&connection)?.prepare_workspace_request(expected_owner, request)?;
-    admitted.run().await
-}
-
-fn connected(
-    connection: &Mutex<Option<SupervisorConnection>>,
-) -> Result<SupervisorConnection, RequestFailure> {
-    connection
-        .lock()
-        .map_err(|e| repository_connection_error(e.to_string()))?
-        .clone()
-        .ok_or_else(|| repository_connection_error("Connect to the supervisor first".into()))
-}
-
-fn repository_connection_error(message: String) -> RequestFailure {
-    RequestFailure::transport(TransportCode::NotConnected, Delivery::NotSent, message)
-}
-
-#[tauri::command]
-async fn supervisor_status(
-    app: tauri::AppHandle,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-    quit: tauri::State<'_, QuitFence>,
-) -> Result<SupervisorSnapshot, RequestFailure> {
-    let state = std::env::var_os("AGENT_WORKSPACE_STATE_DIR")
-        .map(PathBuf::from)
-        .map(Ok)
-        .unwrap_or_else(|| app.path().data_dir().map(|p| p.join("AgentWorkspace")))
-        .map_err(|e| repository_connection_error(e.to_string()))?;
-    let executable = std::env::var_os("AGENT_WORKSPACE_SUPERVISOR")
-        .map(PathBuf::from)
-        .map(Ok)
-        .unwrap_or_else(|| {
-            app.path()
-                .resolve("workspace-supervisor", tauri::path::BaseDirectory::Resource)
-        })
-        .map_err(|e| repository_connection_error(e.to_string()))?;
-    let client = {
-        let mut connection = connection
-            .lock()
-            .map_err(|e| repository_connection_error(e.to_string()))?;
-        if quit.0.load(std::sync::atomic::Ordering::SeqCst) {
-            return Err(RequestFailure::transport(
-                TransportCode::Busy,
-                Delivery::NotSent,
-                "Owned Quit is reconciling startup; no new supervisor will be started.",
-            ));
-        }
-        connection
-            .get_or_insert_with(|| SupervisorConnection::new(state, executable))
-            .clone()
-    };
-    let admitted = client.prepare_snapshot()?;
-    admitted.run().await
-}
-
-#[tauri::command]
-async fn observation_subscribe(
-    expected_owner: String,
-    subscription_id: String,
-    after: Option<workspace_core::observations::FeedCursor>,
-    on_event: tauri::ipc::Channel<workspace_core::connection::FeedEvent>,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<(), RequestFailure> {
-    connected(&connection)?
-        .replace_subscription(expected_owner, subscription_id, after, move |event| {
-            on_event
-                .send(event)
-                .map_err(|error| std::io::Error::other(error.to_string()))
-        })
-        .await
-}
-
-#[tauri::command]
-fn observation_acknowledge(
-    acknowledgement: workspace_core::connection::FeedAck,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<(), RequestFailure> {
-    connected(&connection)?.acknowledge_subscription(acknowledgement)
-}
-
-#[tauri::command]
-async fn observation_stop(
-    subscription_id: String,
-    connection: tauri::State<'_, std::sync::Arc<Mutex<Option<SupervisorConnection>>>>,
-) -> Result<(), RequestFailure> {
-    let client = connected(&connection)?;
-    client.stop_subscription(&subscription_id).await
-}
-
 #[tauri::command]
 fn desktop_pid() -> workspace_core::DesktopPid {
     std::process::id()
 }
+#[tauri::command]
+async fn repository_request(
+    expected_incarnation: String,
+    request: workspace_core::workspaces::RepositoryRequest,
+    host: tauri::State<'_, Host>,
+) -> Result<NativeReply<workspace_core::workspaces::RepositoryReply>, RequestFailure> {
+    host.repository_request(expected_incarnation, request).await
+}
+#[tauri::command]
+async fn workspace_request(
+    expected_incarnation: String,
+    request: workspace_core::workspaces::WorkspaceRequest,
+    host: tauri::State<'_, Host>,
+) -> Result<NativeReply<workspace_core::workspaces::WorkspaceReply>, RequestFailure> {
+    host.workspace_request(expected_incarnation, request).await
+}
+#[tauri::command]
+async fn provider_request(
+    expected_incarnation: String,
+    request: workspace_core::runtimes::ProviderRequest,
+    host: tauri::State<'_, Host>,
+) -> Result<NativeReply<workspace_core::runtimes::ProviderReply>, RequestFailure> {
+    host.provider_request(expected_incarnation, request).await
+}
+#[tauri::command]
+async fn observation_subscribe(
+    expected_incarnation: String,
+    subscription_id: String,
+    after: Option<workspace_core::observations::FeedCursor>,
+    on_event: tauri::ipc::Channel<workspace_core::connection::FeedEvent>,
+    host: tauri::State<'_, Host>,
+) -> Result<(), RequestFailure> {
+    host.replace_subscription(expected_incarnation, subscription_id, after, move |event| {
+        on_event
+            .send(event)
+            .map_err(|error| std::io::Error::other(error.to_string()))
+    })
+    .await
+}
+#[tauri::command]
+fn observation_acknowledge(
+    acknowledgement: workspace_core::connection::FeedAck,
+    host: tauri::State<'_, Host>,
+) -> Result<(), RequestFailure> {
+    host.acknowledge_subscription(acknowledgement)
+}
+#[tauri::command]
+async fn observation_stop(
+    subscription_id: String,
+    host: tauri::State<'_, Host>,
+) -> Result<(), RequestFailure> {
+    host.stop_subscription(&subscription_id).await
+}
 
+// All ordinary exits, including launcher signals, use this completed-drain rule.
+// Future restart/update callers must await host.finished(), check quit_status(),
+// and only then request framework restart; framework restart bypasses ExitRequested.
 fn main() {
-    let connection = std::sync::Arc::new(Mutex::new(None::<SupervisorConnection>));
-    let quit_running = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
-    let quit_complete = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
-    let quit_requested = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    tracing_subscriber::fmt()
+        .with_ansi(false)
+        .with_writer(std::io::stderr)
+        .init();
+    let monitoring = Arc::new(AtomicBool::new(false));
+    let completed = Arc::new(AtomicBool::new(false));
     tauri::Builder::default()
         .menu(|app| {
             let menu = tauri::menu::Menu::default(app)?;
@@ -145,14 +95,22 @@ fn main() {
                 let items = application.items()?;
                 if let Some(position) = items.len().checked_sub(1) {
                     application.remove_at(position)?;
-                    let quit = tauri::menu::MenuItem::with_id(app, "quit-owned", "Quit Agent Workspace", true, Some("CmdOrCtrl+Q"))?;
+                    let quit = tauri::menu::MenuItem::with_id(
+                        app,
+                        "quit-owned",
+                        "Quit Agent Workspace",
+                        true,
+                        Some("CmdOrCtrl+Q"),
+                    )?;
                     application.insert(&quit, position)?;
                 }
             }
             Ok(menu)
         })
         .on_menu_event(|app, event| {
-            if event.id().as_ref() == "quit-owned" { app.exit(0); }
+            if event.id().as_ref() == "quit-owned" {
+                app.exit(0);
+            }
         })
         .plugin(
             tauri_plugin_opener::Builder::new()
@@ -166,53 +124,112 @@ fn main() {
                 let _ = window.hide();
             }
         })
-        .manage(connection.clone())
-        .manage(QuitFence(quit_requested.clone()))
+        .on_page_load(|webview, payload| {
+            #[cfg(feature = "qualification")]
+            qualification::loaded(webview, payload);
+            #[cfg(not(feature = "qualification"))]
+            let _ = (webview, payload);
+        })
+        .setup(|app| {
+            let directory = std::env::var_os("AGENT_WORKSPACE_STATE_DIR")
+                .map(std::path::PathBuf::from)
+                .unwrap_or(
+                    app.path()
+                        .data_dir()?
+                        .join("AgentWorkspace/native-schema-4"),
+                );
+            let runtime = tauri::async_runtime::handle();
+            let _entered = runtime.inner().enter();
+            use tokio::signal::unix::{SignalKind, signal};
+            let mut terminate = signal(SignalKind::terminate())?;
+            let mut interrupt = signal(SignalKind::interrupt())?;
+            let host = NativeHost::start(directory);
+            #[cfg(feature = "qualification")]
+            if std::env::var_os("AW_NATIVE_QUIT_ON_START").is_some() {
+                qualification::record(serde_json::json!({ "stage": "quit-during-startup", "snapshot": host.snapshot() }))?;
+                host.begin_quit();
+                app.handle().exit(0);
+            }
+            app.manage(host);
+            let app_handle = app.handle().clone();
+            let signals = tauri::async_runtime::spawn(async move {
+                loop {
+                    tokio::select! { _ = terminate.recv() => {}, _ = interrupt.recv() => {} }
+                    app_handle.exit(0);
+                }
+            });
+            app.manage(ExitSignals(std::sync::Mutex::new(Some(signals))));
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
-            supervisor_status,
+            core_status,
             desktop_pid,
             repository_request,
             provider_request,
             workspace_request,
             observation_subscribe,
             observation_acknowledge,
-            observation_stop
+            observation_stop,
+            #[cfg(feature = "qualification")]
+            qualification::record,
+            #[cfg(feature = "qualification")]
+            qualification::replace_webview
         ])
         .build(tauri::generate_context!())
         .expect("failed to build desktop")
-        .run({
-            let connection = connection.clone();
-            move |app, event| {
-                if let tauri::RunEvent::Reopen { has_visible_windows: false, .. } = event
-                    && let Some(window) = app.get_webview_window("main") {
-                    let _ = window.show(); let _ = window.set_focus();
+        .run(move |app, event| {
+            if let tauri::RunEvent::Reopen {
+                has_visible_windows: false,
+                ..
+            } = event
+                && let Some(window) = app.get_webview_window("main")
+            {
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+            if let tauri::RunEvent::ExitRequested { api, .. } = event {
+                if completed.load(Ordering::Acquire) {
+                    return;
                 }
-                if let tauri::RunEvent::ExitRequested { api, .. } = event {
-                    if quit_complete.load(std::sync::atomic::Ordering::SeqCst) { return; }
-                    api.prevent_exit();
-                    quit_requested.store(true, std::sync::atomic::Ordering::SeqCst);
-                    if quit_running.swap(true, std::sync::atomic::Ordering::SeqCst) { return; }
-                    let client = connection.lock().ok().and_then(|connection| connection.clone());
-                    let app = app.clone();
-                    let running = quit_running.clone();
-                    let complete = quit_complete.clone();
-                    let _ = app.emit("owned-shutdown", "Stopping owned Codex activity…");
-                    tauri::async_runtime::spawn(async move {
-                        let result = if let Some(client) = client { client.quit_owned().await } else { Ok(()) };
-                        if result.is_ok() {
-                            complete.store(true, std::sync::atomic::Ordering::SeqCst);
-                            app.exit(0);
-                        } else {
-                            running.store(false, std::sync::atomic::Ordering::SeqCst);
-                            if let Some(window) = app.get_webview_window("main") { let _ = window.show(); let _ = window.set_focus(); }
-                            let _ = app.emit("owned-shutdown", "Quit could not finish: owned shutdown or its result remains unconfirmed. Keep the app open; choose Quit again to reconcile. No replacement work was started.");
+                api.prevent_exit();
+                let host = app.state::<Host>().inner().clone();
+                host.begin_quit();
+                if monitoring.swap(true, Ordering::AcqRel) {
+                    return;
+                }
+                let app = app.clone();
+                let completed = completed.clone();
+                let monitoring = monitoring.clone();
+                let _ = app.emit("owned-shutdown", "Stopping native core activity…");
+                tauri::async_runtime::spawn(async move {
+                    if tokio::time::timeout(std::time::Duration::from_secs(10), host.finished()).await.is_err() {
+                        let _ = app.emit("owned-shutdown", "Native shutdown is still pending. Ownership and cleanup handles are retained; keep the app open. Repeated Quit observes this same drain.");
+                        host.finished().await;
+                    }
+                    if host.quit_status().complete {
+                        let signals = app
+                            .state::<ExitSignals>()
+                            .0
+                            .lock()
+                            .unwrap_or_else(|e| e.into_inner())
+                            .take();
+                        if let Some(signals) = signals {
+                            signals.abort();
+                            let _ = signals.await;
                         }
-                    });
-                }
+                        host.release_lease();
+                        completed.store(true, Ordering::Release);
+                        app.exit(0);
+                    } else {
+                        monitoring.store(false, Ordering::Release);
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                        let message = host.snapshot().diagnostic.unwrap_or_else(|| "Native cleanup remains unconfirmed; keep the app open.".into());
+                        let _ = app.emit("owned-shutdown", message);
+                    }
+                });
             }
         });
-    // The event loop has finished; shutdown/join never blocks rendering.
-    if let Ok(client) = connected(&connection) {
-        let _ = tauri::async_runtime::block_on(client.stop_observations());
-    }
 }

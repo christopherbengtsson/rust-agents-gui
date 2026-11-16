@@ -102,19 +102,19 @@ export function decodeProviderReply(
   );
 }
 export async function providerRequest(
-  expectedOwner: string,
+  expectedIncarnation: string,
   request: ProviderRequest,
 ): Promise<ProviderReply> {
   let value: unknown;
   try {
     value = await invoke<unknown>("provider_request", {
-      expectedOwner,
+      expectedIncarnation,
       request,
     });
   } catch (error) {
     throw decodeRequestFailure(error);
   }
-  return decodeOwnedReply(expectedOwner, value, (reply) =>
+  return decodeOwnedReply(expectedIncarnation, value, (reply) =>
     decodeProviderReply(request, reply),
   );
 }

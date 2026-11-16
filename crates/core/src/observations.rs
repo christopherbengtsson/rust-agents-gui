@@ -28,7 +28,7 @@ pub enum Target {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct FeedCursor {
-    pub owner: String,
+    pub incarnation: String,
     pub sequence: u64,
 }
 
@@ -91,7 +91,7 @@ impl Journal {
             targets.clear();
         }
         if state.sequence == MAX_SEQUENCE {
-            // No cursor aliasing: every subsequent observation must reconnect to a new owner.
+            // No cursor aliasing: every subsequent observation must reconnect to a new incarnation.
             state.entries.clear();
             return;
         }
@@ -168,7 +168,7 @@ impl Journal {
                     .map_err(|e| io::Error::other(e.to_string()))?;
                 if state.sequence == MAX_SEQUENCE {
                     return Err(io::Error::other(
-                        "Observation sequence exhausted; reconnect to a new supervisor owner",
+                        "Observation sequence exhausted; reconnect to a new supervisor incarnation",
                     ));
                 }
                 if after != Some(state.sequence) || tokio::time::Instant::now() >= deadline {

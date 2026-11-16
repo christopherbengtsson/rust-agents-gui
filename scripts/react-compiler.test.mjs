@@ -4,7 +4,7 @@ import test from "node:test";
 import { transformSync } from "oxc-transform-react";
 
 for (const file of [
-  "src/hooks/use-supervisor-connection.ts",
+  "src/hooks/use-core-connection.ts",
   "src/hooks/use-repositories.ts",
   "src/hooks/use-workspaces.ts",
   "src/components/blocks/repository-registration.tsx",

@@ -69,28 +69,28 @@ function workspaceSemantics(value: Workspace): boolean {
 }
 export function readWorkspace(
   scope: ObservationScope,
-  expectedOwner: string,
+  expectedIncarnation: string,
   request: Exclude<WorkspaceRequest, WorkspaceAction>,
 ) {
-  return scope.read(["workspace", expectedOwner, request], () =>
-    workspaceRequest(expectedOwner, request),
+  return scope.read(["workspace", expectedIncarnation, request], () =>
+    workspaceRequest(expectedIncarnation, request),
   );
 }
 
 export async function workspaceRequest(
-  expectedOwner: string,
+  expectedIncarnation: string,
   request: WorkspaceRequest,
 ): Promise<WorkspaceReply> {
   let value: unknown;
   try {
     value = await invoke<unknown>("workspace_request", {
-      expectedOwner,
+      expectedIncarnation,
       request,
     });
   } catch (error) {
     throw decodeRequestFailure(error);
   }
-  return decodeOwnedReply(expectedOwner, value, (reply) =>
+  return decodeOwnedReply(expectedIncarnation, value, (reply) =>
     decodeWorkspaceReply(request, reply),
   );
 }
@@ -145,7 +145,7 @@ export function decodeWorkspaceReply(
     if (valid) return value;
   }
   throw replyUnavailable(
-    "Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/supervisor build.",
+    "Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/core build.",
   );
 }
 export const WORKSPACE_SELECTION = "agent-workspace.selected-workspace";

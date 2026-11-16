@@ -12,14 +12,14 @@ export function loginActive(observation: ProviderObservation | undefined) {
 /** App-lifetime status interest. Reads never admit a runtime probe or login. */
 export function useProviderProgress(
   app: AppObservations,
-  owner: string | undefined,
+  incarnation: string | undefined,
   recover = false,
 ) {
   const feature = app.providers;
-  const shownOwner = owner ?? feature.retainedOwner();
+  const shownIncarnation = incarnation ?? feature.retainedIncarnation();
   const targetState = useSyncExternalStore(feature.subscribe, () =>
-    shownOwner
-      ? feature.snapshot(shownOwner, { operation: "target" })
+    shownIncarnation
+      ? feature.snapshot(shownIncarnation, { operation: "target" })
       : undefined,
   );
   const target =
@@ -28,15 +28,15 @@ export function useProviderProgress(
       : undefined;
   const targetId = target?.id;
   const action = useSyncExternalStore(feature.subscribeActions, () =>
-    shownOwner &&
+    shownIncarnation &&
     targetId &&
-    feature.action(shownOwner, targetId)?.kind === "login"
-      ? feature.action(shownOwner, targetId)
+    feature.action(shownIncarnation, targetId)?.kind === "login"
+      ? feature.action(shownIncarnation, targetId)
       : undefined,
   );
   const state = useSyncExternalStore(feature.subscribe, () =>
-    shownOwner && targetId
-      ? feature.snapshot(shownOwner, {
+    shownIncarnation && targetId
+      ? feature.snapshot(shownIncarnation, {
           operation: "observe",
           target_id: targetId,
         })
@@ -53,24 +53,24 @@ export function useProviderProgress(
     action?.state === "uncertain";
   useEffect(
     () =>
-      shownOwner && retain
-        ? feature.observe(shownOwner, { operation: "target" })
+      shownIncarnation && retain
+        ? feature.observe(shownIncarnation, { operation: "target" })
         : undefined,
-    [feature, shownOwner, retain],
+    [feature, shownIncarnation, retain],
   );
   useEffect(
     () =>
-      retain && shownOwner && targetId
-        ? feature.observe(shownOwner, {
+      retain && shownIncarnation && targetId
+        ? feature.observe(shownIncarnation, {
             operation: "observe",
             target_id: targetId,
           })
         : undefined,
-    [feature, shownOwner, targetId, retain],
+    [feature, shownIncarnation, targetId, retain],
   );
   return {
     observation,
-    stale: !owner || !!state?.error || action?.state === "uncertain",
+    stale: !incarnation || !!state?.error || action?.state === "uncertain",
     active:
       loginActive(observation) ||
       action?.state === "pending" ||
@@ -80,13 +80,15 @@ export function useProviderProgress(
 
 export function useProviderLogin(
   app: AppObservations,
-  owner: string | undefined,
+  incarnation: string | undefined,
   observation: ProviderObservation | undefined,
 ) {
   const target = observation?.target.id;
   const action = useSyncExternalStore(app.providers.subscribeActions, () =>
-    owner && target && app.providers.action(owner, target)?.kind === "login"
-      ? app.providers.action(owner, target)
+    incarnation &&
+    target &&
+    app.providers.action(incarnation, target)?.kind === "login"
+      ? app.providers.action(incarnation, target)
       : undefined,
   );
   const attempt = observation?.login?.id;
@@ -95,26 +97,31 @@ export function useProviderLogin(
     uncertain: action?.state === "uncertain",
     message: action?.message,
     start: () => {
-      if (owner && observation)
-        void app.providers.startBrowser(owner, observation);
+      if (incarnation && observation)
+        void app.providers.startBrowser(incarnation, observation);
     },
     cancel: () => {
-      if (owner && target && attempt)
-        void app.providers.loginAction(owner, target, attempt, "cancel_login");
+      if (incarnation && target && attempt)
+        void app.providers.loginAction(
+          incarnation,
+          target,
+          attempt,
+          "cancel_login",
+        );
     },
     reopen: () => {
-      if (owner && target && attempt)
+      if (incarnation && target && attempt)
         void app.providers.loginAction(
-          owner,
+          incarnation,
           target,
           attempt,
           "reopen_browser",
         );
     },
     reconcile: () => {
-      if (owner && target && (action?.attempt ?? attempt))
+      if (incarnation && target && (action?.attempt ?? attempt))
         void app.providers.loginAction(
-          owner,
+          incarnation,
           target,
           action?.attempt ?? attempt ?? "",
           "reconcile_login",

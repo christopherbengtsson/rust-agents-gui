@@ -1,7 +1,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import corpusText from "../contracts/observations-v15.json?raw";
+import corpusText from "../contracts/observations-native.json?raw";
 import {
   decodeOwnedReply,
   decodeRequestFailure,
@@ -18,7 +18,7 @@ import {
   type WorkspaceRequest,
 } from "./lib/workspaces";
 import { useRepositories } from "./test-support/feature-hooks";
-import { useSupervisorConnection } from "./hooks/use-supervisor-connection";
+import { useCoreConnection } from "./hooks/use-core-connection";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 afterEach(() => {
@@ -28,24 +28,24 @@ afterEach(() => {
 });
 const corpus: {
   protocol: number;
-  owner: string;
+  incarnation: string;
   snapshot: unknown;
   desktop_pid: unknown;
   repositories: {
     request: RepositoryRequest;
-    reply: { owner: string; result: Record<string, unknown> };
+    reply: { incarnation: string; result: Record<string, unknown> };
   }[];
   workspaces: {
     request: WorkspaceRequest;
-    reply: { owner: string; result: Record<string, unknown> };
+    reply: { incarnation: string; result: Record<string, unknown> };
   }[];
   failures: unknown[];
 } = JSON.parse(corpusText);
 import { decodeDesktopPid, decodeSnapshot } from "./lib/observation-contracts";
 
 const snapshot = {
-  status: { state: "ready", supervisor_pid: 41, application_version: "0.1.0" },
-  cursor: { owner: "owner-41", revision: 1 },
+  status: { state: "ready", native_pid: 41, application_version: "0.1.0" },
+  cursor: { incarnation: "incarnation-41", revision: 1 },
   reset: true,
 };
 
@@ -57,28 +57,32 @@ test("connection observations are decoded before they become presentation truth"
     [],
     {},
     { ...snapshot, reset: "true" },
-    { ...snapshot, cursor: { owner: "", revision: 1 } },
+    { ...snapshot, cursor: { incarnation: "", revision: 1 } },
     {
       ...snapshot,
-      cursor: { owner: "owner", revision: Number.MAX_SAFE_INTEGER + 1 },
+      cursor: {
+        incarnation: "incarnation",
+        revision: Number.MAX_SAFE_INTEGER + 1,
+      },
     },
-    { ...snapshot, status: { ...snapshot.status, supervisor_pid: 0 } },
+    { ...snapshot, status: { ...snapshot.status, native_pid: 0 } },
     { ...snapshot, status: { ...snapshot.status, state: "running" } },
   ]) {
-    expect(() => decodeSnapshot(value)).toThrow(/Invalid supervisor snapshot/);
+    expect(() => decodeSnapshot(value)).toThrow(/Invalid core snapshot/);
   }
   for (const value of [null, "42", 0, -1, 1.5, 2 ** 32, NaN])
     expect(() => decodeDesktopPid(value)).toThrow(/Invalid desktop identity/);
 });
 
 test("the shared application corpus passes production TypeScript decoders", () => {
-  expect(corpus.protocol).toBe(15);
-  expect(decodeSnapshot(corpus.snapshot).cursor.owner).toBe(corpus.owner);
+  expect(decodeSnapshot(corpus.snapshot).cursor.incarnation).toBe(
+    corpus.incarnation,
+  );
   expect(decodeDesktopPid(corpus.desktop_pid)).toBe(42);
   for (const { request, reply } of corpus.repositories) {
     if ("Err" in reply.result) {
       try {
-        decodeOwnedReply(corpus.owner, reply, (v) =>
+        decodeOwnedReply(corpus.incarnation, reply, (v) =>
           decodeRepositoryReply(request, v),
         );
         expect.fail("domain failure accepted");
@@ -91,14 +95,14 @@ test("the shared application corpus passes production TypeScript decoders", () =
       }
     } else
       expect(
-        decodeOwnedReply(corpus.owner, reply, (v) =>
+        decodeOwnedReply(corpus.incarnation, reply, (v) =>
           decodeRepositoryReply(request, v),
         ),
       ).toEqual(reply.result.Ok);
   }
   for (const { request, reply } of corpus.workspaces)
     expect(
-      decodeOwnedReply(corpus.owner, reply, (v) =>
+      decodeOwnedReply(corpus.incarnation, reply, (v) =>
         decodeWorkspaceReply(request, v),
       ),
     ).toEqual(reply.result.Ok);
@@ -183,19 +187,19 @@ test("provider-independent workspace observations retain allocation, recovery an
   }
 });
 
-test("owner and result-variant checks happen before feature decoding, including domain errors", () => {
+test("incarnation and result-variant checks happen before feature decoding, including domain errors", () => {
   const decode = vi.fn();
   for (const reply of [
-    { ...corpus.repositories[0].reply, owner: "owner-b" },
-    { ...corpus.repositories[3].reply, owner: "owner-b" },
+    { ...corpus.repositories[0].reply, incarnation: "incarnation-b" },
+    { ...corpus.repositories[3].reply, incarnation: "incarnation-b" },
     {
-      owner: corpus.owner,
+      incarnation: corpus.incarnation,
       result: { Ok: {}, Err: { code: "capacity", message: "Both" } },
     },
-    { owner: corpus.owner, result: {} },
-    { owner: corpus.owner, result: { Ok: "x".repeat(64 * 1024) } },
+    { incarnation: corpus.incarnation, result: {} },
+    { incarnation: corpus.incarnation, result: { Ok: "x".repeat(64 * 1024) } },
   ])
-    expect(() => decodeOwnedReply(corpus.owner, reply, decode)).toThrow();
+    expect(() => decodeOwnedReply(corpus.incarnation, reply, decode)).toThrow();
   expect(decode).not.toHaveBeenCalled();
   expect(
     decodeRequestFailure({
@@ -212,9 +216,9 @@ test("owner and result-variant checks happen before feature decoding, including 
   ).toMatchObject({ delivery: "unknown", code: "reply_unavailable" });
 });
 
-test("replacement replies before the next status refresh cannot overwrite an owner's observations", async () => {
+test("replacement replies before the next status refresh cannot overwrite an incarnation's observations", async () => {
   const fixture = corpus.repositories[0];
-  const listed = decodeOwnedReply(corpus.owner, fixture.reply, (value) =>
+  const listed = decodeOwnedReply(corpus.incarnation, fixture.reply, (value) =>
     decodeRepositoryReply(fixture.request, value),
   );
   if (listed.kind !== "repositories" || !listed.page.repositories[0])
@@ -225,14 +229,14 @@ test("replacement replies before the next status refresh cannot overwrite an own
     const reply =
       object(args) && object(args.request) && args.request.operation === "get"
         ? {
-            owner: corpus.owner,
+            incarnation: corpus.incarnation,
             result: { Ok: { kind: "repository", repository: selected } },
           }
         : fixture.reply;
-    return replacement ? { ...reply, owner: "owner-b" } : reply;
+    return replacement ? { ...reply, incarnation: "incarnation-b" } : reply;
   });
   const { result } = renderHook(() =>
-    useRepositories(corpus.owner, undefined, selected.id),
+    useRepositories(corpus.incarnation, undefined, selected.id),
   );
   await waitFor(() => expect(result.current.selected?.name).toBe("one"));
   replacement = true;
@@ -246,7 +250,7 @@ test("replacement replies before the next status refresh cannot overwrite an own
   );
   for (const [command, args] of vi.mocked(invoke).mock.calls) {
     expect(command).toBe("repository_request");
-    expect(args).toMatchObject({ expectedOwner: corpus.owner });
+    expect(args).toMatchObject({ expectedIncarnation: corpus.incarnation });
   }
 });
 
@@ -301,15 +305,18 @@ test("feature decoders reject wrong kind, full payload mismatch and impossible v
   ).toThrow();
   vi.mocked(invoke).mockResolvedValue(registration.reply);
   await expect(
-    repositoryRequest(corpus.owner, {
+    repositoryRequest(corpus.incarnation, {
       operation: "action",
       action_id: "00000000-0000-0000-0000-000000000002",
     }),
   ).rejects.toThrow();
-  vi.mocked(invoke).mockResolvedValue({ ...workspace.reply, owner: "owner-b" });
+  vi.mocked(invoke).mockResolvedValue({
+    ...workspace.reply,
+    incarnation: "incarnation-b",
+  });
   await expect(
-    workspaceRequest(corpus.owner, workspace.request),
-  ).rejects.toThrow(/serving owner/);
+    workspaceRequest(corpus.incarnation, workspace.request),
+  ).rejects.toThrow(/serving incarnation/);
 });
 
 test.each(["snapshot", "desktop"])(
@@ -317,7 +324,7 @@ test.each(["snapshot", "desktop"])(
   async (malformed) => {
     let invalid = false;
     vi.mocked(invoke).mockImplementation(async (command) =>
-      command === "supervisor_status"
+      command === "core_status"
         ? invalid && malformed === "snapshot"
           ? { ...snapshot, reset: "true" }
           : snapshot
@@ -325,7 +332,7 @@ test.each(["snapshot", "desktop"])(
           ? "42"
           : 42,
     );
-    const { result } = renderHook(useSupervisorConnection);
+    const { result } = renderHook(useCoreConnection);
     await waitFor(() =>
       expect(result.current.connection.state).toBe("connected"),
     );
@@ -337,9 +344,9 @@ test.each(["snapshot", "desktop"])(
     expect(result.current.connection.state).toBe("error");
     expect(result.current.connection.observation).toBe(previous);
     expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
-      "supervisor_status",
+      "core_status",
       "desktop_pid",
     ]);
   },

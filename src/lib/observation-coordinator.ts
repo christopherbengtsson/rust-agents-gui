@@ -44,7 +44,7 @@ export class ObservationCoordinator {
     signal: AbortSignal,
   ): Promise<T> {
     if (signal.aborted) return Promise.reject(new ObsoleteRead());
-    // Complete feature keys include owner and all request flags; object order is irrelevant.
+    // Complete feature keys include incarnation and all request flags; object order is irrelevant.
     const key = JSON.stringify(target, (_, value) =>
       value !== null && typeof value === "object" && !Array.isArray(value)
         ? Object.fromEntries(

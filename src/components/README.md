@@ -138,9 +138,9 @@ This guide does not authorize regenerating or relocating the foundation.
   preserves selection. Unavailable records remain selectable. Cursor buttons page
   the bounded list. Add repository sits above the connection summary. Ticket 04
   adds workspace children to these groups.
-- **SupervisorConnection** (`blocks/supervisor-connection.tsx`): owns connection
-  summary and diagnostics. Use for supervisor observations, not conversation or
-  runtime status. Receives `Connection`; dialog disclosure stays local and stale
+- **CoreConnection** (`blocks/core-connection.tsx`): owns native core
+  summary and diagnostics. Use for startup/storage/runtime ownership observations;
+  provider readiness and conversation status retain their separate owners. Receives `Connection`; dialog disclosure stays local and stale
   observations remain explicitly labeled. Its sidebar parent owns external
   padding and the divider. `ConnectionDetails` remains private to this block.
 - **WorkspacePanel** (`blocks/workspace-panel.tsx`): owns the main landmark,
@@ -354,7 +354,7 @@ interest while its app-lifetime owner drains work and retains validated context.
   behavior without claiming focus return for the current window.
 - **SettingsLayout** (`blocks/settings-layout.tsx`) owns the Settings header,
   Back control, navigation and main landmark. Use it for routed app settings;
-  use WorkspacePanel for repository/workspace presentation and SupervisorConnection
+  use WorkspacePanel for repository/workspace presentation and CoreConnection
   for transport diagnostics. It receives `onBack: () => void` and route content;
   the General content supplies `settings-general-heading` for the main landmark.
   At the F07 checkpoint, General is the only section and uses Empty with honest
@@ -397,7 +397,7 @@ interest while its app-lifetime owner drains work and retains validated context.
 
 - **ProviderSetup** (`blocks/provider-setup.tsx`) presents one exact Codex/user
   configuration's current/retained evidence, contextual Check again, recovery guidance and secondary
-  technical details. Use it for provider setup; SupervisorConnection remains
+  technical details. Use it for provider setup; CoreConnection remains
   transport diagnostics and WorkspaceDetails remains workspace identity/recovery.
   It receives the cohesive `useProviderSetup` view and callback, owns no IPC,
   cache, retry or process policy, and renders runtime strings as bounded text.
@@ -499,3 +499,12 @@ selection delivery feedback and observation interests; Rust validates, persists
 and reconciles selection. No extra cache or toolkit dependency is added. A saved
 location becoming unavailable never silently selects another runtime. Native
 chooser cancellation changes nothing; selected path and resolved launch are distinct.
+
+### Native core host (SQLx 06)
+
+CoreConnection replaces supervisor diagnostics with native startup/storage/runtime
+status. The persistent runtime attaches only when ready, retains last-good data
+when unavailable, and exposes the existing status refresh control. Provider setup
+and browser progress remain separate. WebView replacement observes the same core
+incarnation; native failure creates a new one and restores interrupted/unknown
+evidence. Explicit Quit uses whole-core drain; hide/navigation release no work.

@@ -492,6 +492,7 @@ impl Storage {
             sequence: state.next_write,
             action: identity,
         };
+        tracing::info!(action = %identity, sequence = receipt.sequence, queued = self.jobs.max_capacity() - self.jobs.capacity(), "storage write admitted");
         let (reply, result) = oneshot::channel();
         self.jobs
             .try_send(Job {
@@ -683,6 +684,7 @@ async fn complete_job(
         control.fault(action.map(|receipt| receipt.action), error.clone());
     }
     if let Some(action) = action {
+        tracing::info!(action = %action.action, sequence = action.sequence, succeeded = outcome.is_ok(), "storage writer settled");
         control.settle(action);
     }
     let _ = reply.send(Delivery {

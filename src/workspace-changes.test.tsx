@@ -1,4 +1,4 @@
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import {
   act,
   cleanup,
@@ -24,7 +24,7 @@ import type { Workspaces } from "./hooks/use-workspaces";
 import type { Workspace } from "./lib/workspaces";
 import type { ChangePage, FilePreview, InspectionRequest } from "./lib/changes";
 
-// This fixture is the route owner for existing isolated inspection presentation cases.
+// This fixture is the route incarnation for existing isolated inspection presentation cases.
 function WorkspaceInspection(
   props: Omit<
     ComponentProps<typeof ControlledInspection>,
@@ -55,15 +55,18 @@ class WorkspaceChangesReader extends InspectionReader {
     fixtureReaders.add(this);
   }
   override configure(context: Parameters<InspectionReader["configure"]>[0]) {
-    if (context.owner && !this.fixtureFreshness.ready(context.owner)) {
-      this.fixtureFreshness.connect(context.owner);
-      this.fixtureFreshness.accept(context.owner);
+    if (
+      context.incarnation &&
+      !this.fixtureFreshness.ready(context.incarnation)
+    ) {
+      this.fixtureFreshness.connect(context.incarnation);
+      this.fixtureFreshness.accept(context.incarnation);
     }
     super.configure(context);
   }
 }
 function useWorkspaceChanges(
-  owner: string | undefined,
+  incarnation: string | undefined,
   workspaceId: string,
   active: boolean,
   visible = true,
@@ -71,7 +74,7 @@ function useWorkspaceChanges(
 ) {
   const [reader] = useState(() => new WorkspaceChangesReader());
   return useInspection(
-    owner,
+    incarnation,
     workspaceId,
     active,
     visible,
@@ -82,7 +85,7 @@ function inspectionHint() {
   for (const reader of fixtureReaders) {
     reader.fixtureFreshness.mark(`inspection:${workspace_id}`);
     reader.fixtureFreshness.accept(
-      reader.fixtureFreshness.currentOwner() ?? "owner",
+      reader.fixtureFreshness.currentIncarnation() ?? "incarnation",
     );
   }
 }
@@ -184,7 +187,7 @@ beforeEach(() => {
     })),
   });
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       return r.operation === "changes"
         ? changes()
@@ -219,22 +222,22 @@ test("inspection validates exact workspace/comparison/file targets and display b
   };
   await act(async () => {});
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       ...changes(),
       observation: { ...changes().observation, workspace_id: other },
     })),
   );
-  await expect(workspaceRequest("owner", r)).rejects.toThrow(
+  await expect(workspaceRequest("incarnation", r)).rejects.toThrow(
     "Invalid workspace observation",
   );
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () =>
+    incarnationBound(async () =>
       changes("ready", { ...page, files: Array(33).fill(page.files[0]) }),
     ),
   );
-  await expect(workspaceRequest("owner", r)).rejects.toThrow();
+  await expect(workspaceRequest("incarnation", r)).rejects.toThrow();
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       kind: "change_preview",
       observation: {
         target: { ...target, file_id: other },
@@ -245,14 +248,14 @@ test("inspection validates exact workspace/comparison/file targets and display b
     })),
   );
   await expect(
-    workspaceRequest("owner", {
+    workspaceRequest("incarnation", {
       operation: "change_preview",
       target,
       load: true,
     }),
   ).rejects.toThrow();
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       kind: "change_preview",
       observation: {
         target,
@@ -263,7 +266,7 @@ test("inspection validates exact workspace/comparison/file targets and display b
     })),
   );
   await expect(
-    workspaceRequest("owner", {
+    workspaceRequest("incarnation", {
       operation: "change_preview",
       target,
       load: true,
@@ -276,7 +279,7 @@ test("manual refresh submits once; push progress does not requeue work", async (
   let submitted = 0;
   let observed = 0;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation !== "changes") throw new Error("unexpected preview");
       if (r.refresh) {
@@ -292,7 +295,7 @@ test("manual refresh submits once; push progress does not requeue work", async (
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, false),
+    useWorkspaceChanges("incarnation", workspace_id, false),
   );
   await act(async () => {});
   await act(async () => {
@@ -310,10 +313,10 @@ test("manual refresh submits once; push progress does not requeue work", async (
   expect(result.current.observation?.phase).toBe("ready");
 });
 
-test("changed owner discards late observations and reconnect only reads", async () => {
+test("changed incarnation discards late observations and reconnect only reads", async () => {
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           finish = resolve;
@@ -321,11 +324,11 @@ test("changed owner discards late observations and reconnect only reads", async 
     ),
   );
   const { result, rerender } = renderHook(
-    ({ owner }) => useWorkspaceChanges(owner, workspace_id, false),
-    { initialProps: { owner: "old" } },
+    ({ incarnation }) => useWorkspaceChanges(incarnation, workspace_id, false),
+    { initialProps: { incarnation: "old" } },
   );
   await act(async () => {});
-  rerender({ owner: "new" });
+  rerender({ incarnation: "new" });
   expect(invoke).toHaveBeenCalledTimes(1); // The obsolete physical read still owns the lane.
   await act(async () => finish?.(changes("idle", null)));
   await waitFor(() => expect(result.current.observation?.phase).toBe("ready"));
@@ -345,7 +348,7 @@ test("failed refresh retains the comparison and preview; tab switching unmounts 
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Workspace details remain reachable</p>
@@ -370,7 +373,7 @@ test("failed refresh retains the comparison and preview; tab switching unmounts 
       .closest("[data-slot=scroll-area-viewport]")?.scrollTop,
   ).toBe(37);
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) =>
+    incarnationBound(async (_, args) =>
       request(args).operation === "changes"
         ? changes("failed", page, {
             code: "git",
@@ -400,7 +403,7 @@ test("narrow-window Sheet selects the single Changes tab and returns focus", asy
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Workspace details</p>
@@ -424,13 +427,13 @@ test("narrow-window Sheet selects the single Changes tab and returns focus", asy
 
 test("a removed selection remains named and an old preview is never replaced by another file", async () => {
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, true),
+    useWorkspaceChanges("incarnation", workspace_id, true),
   );
   await waitFor(() => expect(result.current.observation?.phase).toBe("ready"));
   await act(async () => result.current.select(page.files[0]));
   await waitFor(() => expect(result.current.preview?.phase).toBe("ready"));
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       if (request(args).operation === "changes")
         return changes("ready", {
           ...page,
@@ -456,11 +459,11 @@ test("visible summaries refresh every two seconds without overlapping a slow seq
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, false),
+    useWorkspaceChanges("incarnation", workspace_id, false),
   );
   await act(async () => {});
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           finish = resolve;
@@ -501,7 +504,7 @@ test("collapsed changes surfaces pause automatic reads until shown again", async
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -533,8 +536,8 @@ test("collapsed changes surfaces pause automatic reads until shown again", async
 test("document visibility, disconnect and unmount stop timers; reconnect only observes", async () => {
   vi.useFakeTimers();
   const { rerender, unmount } = renderHook(
-    ({ owner }) => useWorkspaceChanges(owner, workspace_id, false),
-    { initialProps: { owner: "owner" as string | undefined } },
+    ({ incarnation }) => useWorkspaceChanges(incarnation, workspace_id, false),
+    { initialProps: { incarnation: "incarnation" as string | undefined } },
   );
   await act(async () => {});
   Object.defineProperty(document, "visibilityState", {
@@ -556,12 +559,12 @@ test("document visibility, disconnect and unmount stop timers; reconnect only ob
   expect(request(vi.mocked(invoke).mock.calls[1][1])).toMatchObject({
     refresh: false,
   });
-  rerender({ owner: undefined });
+  rerender({ incarnation: undefined });
   await act(async () => {
     await vi.advanceTimersByTimeAsync(10000);
   });
   expect(invoke).toHaveBeenCalledTimes(2);
-  rerender({ owner: "new-owner" });
+  rerender({ incarnation: "new-incarnation" });
   await act(async () => {});
   expect(invoke).toHaveBeenCalledTimes(3);
   unmount();
@@ -573,7 +576,7 @@ test("same-status edits refresh the selected preview only while Changes is activ
   vi.useFakeTimers();
   let comparison = comparison_id;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation === "changes") {
         if (r.refresh) comparison = other;
@@ -600,7 +603,7 @@ test("same-status edits refresh the selected preview only while Changes is activ
     }),
   );
   const { result, rerender } = renderHook(
-    ({ active }) => useWorkspaceChanges("owner", workspace_id, active),
+    ({ active }) => useWorkspaceChanges("incarnation", workspace_id, active),
     { initialProps: { active: true } },
   );
   await act(async () => {});
@@ -633,7 +636,7 @@ test("tab changes drain an old read and preserve a queued manual refresh", async
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           finish = resolve;
@@ -641,7 +644,7 @@ test("tab changes drain an old read and preserve a queued manual refresh", async
     ),
   );
   const { result, rerender } = renderHook(
-    ({ active }) => useWorkspaceChanges("owner", workspace_id, active),
+    ({ active }) => useWorkspaceChanges("incarnation", workspace_id, active),
     { initialProps: { active: false } },
   );
   await act(async () => {});
@@ -665,11 +668,11 @@ test("late selected-file replies cannot replace a new selection, including A to 
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, true),
+    useWorkspaceChanges("incarnation", workspace_id, true),
   );
   await act(async () => {});
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation === "changes") return changes();
       return new Promise((resolve) => {
@@ -683,7 +686,7 @@ test("late selected-file replies cannot replace a new selection, including A to 
     result.current.select(page.files[0]);
   });
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       return r.operation === "changes"
         ? changes()
@@ -717,11 +720,11 @@ test("late selected-file replies cannot replace a new selection, including A to 
 test("inspection failures retain last-good data, pause timers and recover with manual Refresh", async () => {
   vi.useFakeTimers();
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, false),
+    useWorkspaceChanges("incarnation", workspace_id, false),
   );
   await act(async () => {});
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () =>
+    incarnationBound(async () =>
       changes("failed", page, { code: "git", message: "Git unavailable" }),
     ),
   );
@@ -735,7 +738,7 @@ test("inspection failures retain last-good data, pause timers and recover with m
     await vi.advanceTimersByTimeAsync(10000);
   });
   expect(invoke).toHaveBeenCalledTimes(calls);
-  vi.mocked(invoke).mockImplementation(ownerBound(async () => changes()));
+  vi.mocked(invoke).mockImplementation(incarnationBound(async () => changes()));
   await act(async () => result.current.refresh());
   expect(result.current.observation?.error).toBeNull();
   await act(async () => {
@@ -749,7 +752,7 @@ test("manual Refresh settles a queued comparison after a failed preview", async 
   let recovering = false;
   let requested = false;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation === "changes") {
         if (r.refresh) {
@@ -774,7 +777,7 @@ test("manual Refresh settles a queued comparison after a failed preview", async 
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, true),
+    useWorkspaceChanges("incarnation", workspace_id, true),
   );
   await act(async () => {});
   await act(async () => result.current.select(page.files[0]));
@@ -793,7 +796,7 @@ test("pending previews follow push observations without repeated loads or summar
   vi.useFakeTimers();
   let previewReads = 0;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation === "changes") return changes();
       previewReads++;
@@ -814,7 +817,7 @@ test("pending previews follow push observations without repeated loads or summar
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, true),
+    useWorkspaceChanges("incarnation", workspace_id, true),
   );
   await act(async () => {});
   await act(async () => result.current.select(page.files[0]));
@@ -842,7 +845,7 @@ test("workspace changes isolate retained data and drain late replies before read
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           finish = resolve;
@@ -850,12 +853,12 @@ test("workspace changes isolate retained data and drain late replies before read
     ),
   );
   const { result, rerender, unmount } = renderHook(
-    ({ workspace }) => useWorkspaceChanges("owner", workspace, true),
+    ({ workspace }) => useWorkspaceChanges("incarnation", workspace, true),
     { initialProps: { workspace: workspace_id } },
   );
   await act(async () => {});
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       ...changes(),
       observation: { ...changes().observation, workspace_id: other },
     })),
@@ -882,7 +885,7 @@ test("transport failure during a pending job keeps manual Refresh usable", async
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -890,7 +893,7 @@ test("transport failure during a pending job keeps manual Refresh usable", async
   );
   await screen.findByText(/Compared with HEAD/);
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(async () => changes("queued")),
+    incarnationBound(async () => changes("queued")),
   );
   fireEvent.click(screen.getByRole("button", { name: "Refresh changes" }));
   await act(async () => {});
@@ -914,7 +917,7 @@ test("maximum preview rendering stays bounded, keeps long paths accessible and r
     path: `src/${"long-directory/".repeat(25)}other.txt`,
   };
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation === "changes")
         return changes("ready", {
@@ -945,7 +948,7 @@ test("maximum preview rendering stays bounded, keeps long paths accessible and r
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -988,7 +991,7 @@ test("keyboard tab activation and Sheet dismissal preserve selection and restore
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -1029,7 +1032,7 @@ test("unmount while IPC is pending ignores its rejection and schedules no reads"
   vi.useFakeTimers();
   let reject: ((error: Error) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((_, fail) => {
           reject = fail;
@@ -1037,7 +1040,7 @@ test("unmount while IPC is pending ignores its rejection and schedules no reads"
     ),
   );
   const { unmount } = renderHook(() =>
-    useWorkspaceChanges("owner", workspace_id, true),
+    useWorkspaceChanges("incarnation", workspace_id, true),
   );
   await act(async () => {});
   unmount();
@@ -1056,7 +1059,7 @@ test("the resize separator remains keyboard reachable and changes the panel allo
   render(
     <WorkspaceInspection
       reader={new WorkspaceChangesReader()}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -1094,7 +1097,7 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
   vi.useFakeTimers();
   let finish: ((value: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(
+    incarnationBound(
       () =>
         new Promise((resolve) => {
           finish = resolve;
@@ -1102,7 +1105,7 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
     ),
   );
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       if (r.operation !== "changes") throw new Error("No preview selected");
       return {
@@ -1170,10 +1173,10 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
           snapshot: {
             status: {
               state: "ready",
-              supervisor_pid: 1,
+              native_pid: 1,
               application_version: "fixture",
             },
-            cursor: { owner: "owner", revision: 1 },
+            cursor: { incarnation: "incarnation", revision: 1 },
             reset: false,
           },
         },
@@ -1208,7 +1211,7 @@ test("reopening inspection restores remembered view and reading position after S
   const mount = (reader: InspectionReader) => (
     <WorkspaceInspection
       reader={reader}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -1249,7 +1252,7 @@ test("remembered collapsed layout starts no hidden reads and expands using its r
   render(
     <WorkspaceInspection
       reader={reader}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>
@@ -1284,7 +1287,7 @@ test("desktop panel remount uses the latest retained layout after a narrow-windo
   render(
     <WorkspaceInspection
       reader={reader}
-      owner="owner"
+      incarnation="incarnation"
       workspaceId={workspace_id}
     >
       <p>Details</p>

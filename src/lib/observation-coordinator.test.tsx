@@ -79,20 +79,23 @@ test("64 queued targets retain admission and reject only the newest distinct tar
   expect(start).toHaveBeenCalledTimes(64);
 });
 
-test("owner, page and behavior flags distinguish reads; equivalent object keys coalesce", async () => {
+test("incarnation, page and behavior flags distinguish reads; equivalent object keys coalesce", async () => {
   const scope = new ObservationCoordinator().scope();
   const held = deferred<number>();
   const start = vi.fn(() => held.promise);
-  const first = scope.read(["owner-a", { id: "one", refresh: false }], start);
+  const first = scope.read(
+    ["incarnation-a", { id: "one", refresh: false }],
+    start,
+  );
   const duplicate = scope.read(
-    ["owner-a", { refresh: false, id: "one" }],
+    ["incarnation-a", { refresh: false, id: "one" }],
     start,
   );
   const requests = [
-    scope.read(["owner-b", { id: "one", refresh: false }], start),
-    scope.read(["owner-a", { id: "one", refresh: true }], start),
+    scope.read(["incarnation-b", { id: "one", refresh: false }], start),
+    scope.read(["incarnation-a", { id: "one", refresh: true }], start),
     scope.read(
-      ["owner-a", { id: "one", refresh: false, after: "page-2" }],
+      ["incarnation-a", { id: "one", refresh: false, after: "page-2" }],
       start,
     ),
   ];

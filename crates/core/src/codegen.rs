@@ -88,10 +88,10 @@ pub fn render() -> ContractExport {
         schemas: BTreeMap::new(),
     };
     crate::runtimes::export_contracts(&mut exports);
-    exports.add::<crate::SupervisorState>();
-    exports.add::<crate::SupervisorStatus>();
+    exports.add::<crate::CoreState>();
+    exports.add::<crate::CoreStatus>();
     exports.add::<crate::SnapshotCursor>();
-    exports.add::<crate::SupervisorSnapshot>();
+    exports.add::<crate::CoreSnapshot>();
     exports.alias("DesktopPid", &crate::DesktopPid::inline(&exports.config));
     exports.schema::<crate::DesktopPid>("DesktopPid");
     crate::connection::export_contracts(&mut exports);
@@ -151,7 +151,7 @@ mod parity_tests {
         assert!(first.declarations.contains("sequence: number"));
         assert!(first.declarations.contains("OwnedReply<T>"));
         assert_eq!(
-            first.schemas["SupervisorSnapshot"]["$schema"],
+            first.schemas["CoreSnapshot"]["$schema"],
             "https://json-schema.org/draft/2020-12/schema"
         );
     }

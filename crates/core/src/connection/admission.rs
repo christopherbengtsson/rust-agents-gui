@@ -17,7 +17,7 @@ impl ConnectionSlots {
     }
 }
 pub type ConnectionPermit = OwnedSemaphorePermit;
-/// An unstarted request owns admission; run transfers it to the connection's task owner.
+/// An unstarted request owns admission; run transfers it to the connection's task incarnation.
 pub struct Admitted<T> {
     permit: ConnectionPermit,
     tasks: Arc<Tasks>,

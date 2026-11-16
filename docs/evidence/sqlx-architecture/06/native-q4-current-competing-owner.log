@@ -1,0 +1,3 @@
+2026-11-16T18:20:43.589813Z  INFO workspace_core::native: native startup settled incarnation=2c20ed18-d9b9-48b6-b5a3-0465ec47ddf8 phase=None
+2026-11-16T18:20:43.714490Z  INFO workspace_core::native: native shutdown fenced incarnation=2c20ed18-d9b9-48b6-b5a3-0465ec47ddf8
+2026-11-16T18:20:43.714552Z  INFO workspace_core::native: native shutdown settled incarnation=2c20ed18-d9b9-48b6-b5a3-0465ec47ddf8 failures=0

@@ -14,7 +14,7 @@ import {
 import { WorkspaceDetails } from "./workspace-details";
 import { WorkspaceInspection } from "./workspace-changes";
 import type { Workspaces } from "@/hooks/use-workspaces";
-import type { Connection } from "@/hooks/use-supervisor-connection";
+import type { Connection } from "@/hooks/use-core-connection";
 import type { Repositories } from "@/hooks/use-repositories";
 
 export function WorkspacePanel({
@@ -131,7 +131,7 @@ export function WorkspacePanel({
         {connection.state === "error" && (
           <Alert variant="destructive" className="connection-error">
             <CircleAlert aria-hidden="true" />
-            <AlertTitle>Cannot reach the supervisor</AlertTitle>
+            <AlertTitle>Cannot reach the core</AlertTitle>
             <AlertDescription>
               <p className="error-detail">{connection.error}</p>
               <p>
@@ -178,9 +178,9 @@ export function WorkspacePanel({
               key={workspaces.selected.id}
               workspaceId={workspaces.selected.id}
               reader={changeReader}
-              owner={
+              incarnation={
                 connection.state === "connected"
-                  ? connection.observation.snapshot.cursor.owner
+                  ? connection.observation.snapshot.cursor.incarnation
                   : undefined
               }
             >

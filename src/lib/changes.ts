@@ -40,7 +40,7 @@ function statusSemantics(
   return (
     (value.error === null || domainError(value.error)) &&
     (value.phase !== "failed" || value.error !== null) &&
-    // The Rust owner retains the previous error while a retry is queued/running.
+    // The Rust incarnation retains the previous error while a retry is queued/running.
     ((value.phase !== "idle" && value.phase !== "ready") ||
       value.error === null)
   );

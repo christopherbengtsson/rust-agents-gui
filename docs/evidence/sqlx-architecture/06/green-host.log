@@ -1,0 +1,10 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.80s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-c078123eaf5e7aa3)
+
+running 2 tests
+test native::tests::quit_during_startup_retains_one_drain_and_never_publishes_ready ... ok
+test native::tests::stale_incarnation_rejects_before_domain_dispatch ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 223 filtered out; finished in 0.01s
+

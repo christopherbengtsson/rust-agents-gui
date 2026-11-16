@@ -1,4 +1,4 @@
-// Async settlement belongs outside React's compiler lowering. Owners supply all
+// Async settlement belongs outside React's compiler lowering. Incarnations supply all
 // lifecycle/identity guards; this helper makes no retry or presentation decisions.
 export async function completeOperation<T>(
   operation: () => Promise<T>,

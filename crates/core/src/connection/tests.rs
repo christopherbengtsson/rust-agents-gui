@@ -10,12 +10,12 @@ pub(super) fn run<T>(future: impl Future<Output = T>) -> T {
         .unwrap()
         .block_on(future)
 }
-fn snapshot() -> SupervisorSnapshot {
+fn snapshot() -> CoreSnapshot {
     Core {
         keepalive: Mutex::new(None),
         lifetime: Arc::default(),
         exit_requested: std::sync::atomic::AtomicBool::new(false),
-        owner: "owner-a".into(),
+        incarnation: "incarnation-a".into(),
         pid: 42,
         workspaces: None,
         storage: None,
@@ -33,14 +33,14 @@ fn quit_before_first_snapshot_reconciles_existing_owner_or_proves_absence_withou
             let connection =
                 SupervisorConnection::new("/private/state".into(), "/missing/supervisor".into());
             let mut effects = DiscoveryScenario::new(vec![Err(io::ErrorKind::NotFound.into())]);
-            effects.owner = Ok(present);
+            effects.incarnation = Ok(present);
             let result = connection.quit_target_with(&mut effects).await;
             if present {
                 assert!(result.is_err());
             } else {
                 assert_eq!(result.unwrap(), None);
             }
-            assert_eq!(effects.calls, ["snapshot", "owner"]);
+            assert_eq!(effects.calls, ["snapshot", "incarnation"]);
             assert!(connection.prepare_snapshot().is_err());
         }
         let connection =
@@ -48,10 +48,10 @@ fn quit_before_first_snapshot_reconciles_existing_owner_or_proves_absence_withou
         let mut effects = DiscoveryScenario::new(vec![Ok(snapshot())]);
         assert_eq!(
             connection.quit_target_with(&mut effects).await.unwrap(),
-            Some("owner-a".into())
+            Some("incarnation-a".into())
         );
         assert_eq!(effects.calls, ["snapshot"]);
-        assert!(connection.require_connection("owner-a").is_ok());
+        assert!(connection.require_connection("incarnation-a").is_ok());
     });
 }
 
@@ -75,9 +75,9 @@ fn quit_does_not_prove_absence_before_admitted_startup_physically_settles() {
 }
 
 struct DiscoveryScenario {
-    observations: VecDeque<io::Result<SupervisorSnapshot>>,
+    observations: VecDeque<io::Result<CoreSnapshot>>,
     prepared: io::Result<()>,
-    owner: io::Result<bool>,
+    incarnation: io::Result<bool>,
     launch: io::Result<()>,
     calls: Vec<&'static str>,
     cursors: Vec<Option<SnapshotCursor>>,
@@ -85,11 +85,11 @@ struct DiscoveryScenario {
     wait_step: Duration,
 }
 impl DiscoveryScenario {
-    fn new(observations: Vec<io::Result<SupervisorSnapshot>>) -> Self {
+    fn new(observations: Vec<io::Result<CoreSnapshot>>) -> Self {
         Self {
             observations: observations.into(),
             prepared: Ok(()),
-            owner: Ok(false),
+            incarnation: Ok(false),
             launch: Ok(()),
             calls: vec![],
             cursors: vec![],
@@ -108,7 +108,7 @@ impl Discovery for DiscoveryScenario {
         &mut self,
         state: &Path,
         after: Option<SnapshotCursor>,
-    ) -> io::Result<SupervisorSnapshot> {
+    ) -> io::Result<CoreSnapshot> {
         assert_eq!(state, Path::new("/private/state"));
         self.calls.push("snapshot");
         self.cursors.push(after);
@@ -117,8 +117,8 @@ impl Discovery for DiscoveryScenario {
             .expect("unexpected observation/retry")
     }
     async fn owner_present(&mut self, _: &Path) -> io::Result<bool> {
-        self.calls.push("owner");
-        std::mem::replace(&mut self.owner, Ok(false))
+        self.calls.push("incarnation");
+        std::mem::replace(&mut self.incarnation, Ok(false))
     }
     async fn start(&mut self, executable: &Path, state: &Path) -> io::Result<()> {
         assert_eq!(executable, Path::new("/app/supervisor"));
@@ -135,7 +135,7 @@ impl Discovery for DiscoveryScenario {
         self.time += self.wait_step;
     }
 }
-fn failure(kind: io::ErrorKind) -> io::Result<SupervisorSnapshot> {
+fn failure(kind: io::ErrorKind) -> io::Result<CoreSnapshot> {
     Err(io::Error::from(kind))
 }
 async fn discover_scenario(scenario: &mut DiscoveryScenario) -> io::Result<()> {
@@ -169,7 +169,14 @@ fn absent_owner_starts_once_and_waits_for_readiness() {
         assert_eq!(
             scenario.calls,
             [
-                "prepare", "snapshot", "owner", "start", "snapshot", "wait", "snapshot", "wait",
+                "prepare",
+                "snapshot",
+                "incarnation",
+                "start",
+                "snapshot",
+                "wait",
+                "snapshot",
+                "wait",
                 "snapshot"
             ]
         );
@@ -184,12 +191,17 @@ fn concurrent_owner_startup_is_waited_for_without_starting_a_competitor() {
             failure(io::ErrorKind::NotFound),
             Ok(snapshot()),
         ]);
-        scenario.owner = Ok(true);
+        scenario.incarnation = Ok(true);
         discover_scenario(&mut scenario).await.unwrap();
         assert_eq!(
             scenario.calls,
             [
-                "prepare", "snapshot", "owner", "snapshot", "wait", "snapshot"
+                "prepare",
+                "snapshot",
+                "incarnation",
+                "snapshot",
+                "wait",
+                "snapshot"
             ]
         );
     });
@@ -225,13 +237,16 @@ fn unsafe_state_or_incompatible_endpoint_never_starts_an_owner() {
 fn lock_probe_and_spawn_failures_remain_failures_without_retry() {
     run(async {
         let mut scenario = DiscoveryScenario::new(vec![failure(io::ErrorKind::NotFound)]);
-        scenario.owner = Err(io::ErrorKind::PermissionDenied.into());
+        scenario.incarnation = Err(io::ErrorKind::PermissionDenied.into());
         assert!(discover_scenario(&mut scenario).await.is_err());
-        assert_eq!(scenario.calls, ["prepare", "snapshot", "owner"]);
+        assert_eq!(scenario.calls, ["prepare", "snapshot", "incarnation"]);
         let mut scenario = DiscoveryScenario::new(vec![failure(io::ErrorKind::NotFound)]);
         scenario.launch = Err(io::ErrorKind::NotFound.into());
         assert!(discover_scenario(&mut scenario).await.is_err());
-        assert_eq!(scenario.calls, ["prepare", "snapshot", "owner", "start"]);
+        assert_eq!(
+            scenario.calls,
+            ["prepare", "snapshot", "incarnation", "start"]
+        );
     });
 }
 
@@ -246,7 +261,11 @@ fn startup_timeout_is_controlled_and_does_not_launch_again() {
         scenario.wait_step = Duration::from_secs(5);
         let error = discover_scenario(&mut scenario).await.unwrap_err();
         assert_eq!(error.kind(), io::ErrorKind::TimedOut);
-        assert!(error.to_string().contains("Do not remove the owner lock"));
+        assert!(
+            error
+                .to_string()
+                .contains("Do not remove the incarnation lock")
+        );
         assert_eq!(
             scenario
                 .calls
@@ -368,7 +387,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
             keepalive: Mutex::new(None),
             lifetime: Arc::default(),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
-            owner: "owner-b".into(),
+            incarnation: "incarnation-b".into(),
             pid: 43,
             workspaces: None,
             storage: None,
@@ -421,7 +440,7 @@ fn oversized_registration_is_a_definite_capacity_rejection_before_transport() {
                 },
             };
             let error = client
-                .repository_request_with("owner-a", request, async |_, _| {
+                .repository_request_with("incarnation-a", request, async |_, _| {
                     panic!("oversized input must not access state, connect, or send")
                 })
                 .await
@@ -458,21 +477,25 @@ fn bounded_registration_uses_transport_and_preserves_uncertain_failures() {
                 io::ErrorKind::TimedOut,
             ] {
                 let error = client
-                    .repository_request_with("owner-a", request.clone(), async |state, envelope| {
-                        calls += 1;
-                        assert_eq!(state, Path::new("/unused-private-state"));
-                        let Some(RepositoryRequest::Register { request: sent }) =
-                            &envelope.repository
-                        else {
-                            panic!("expected the targeted registration request")
-                        };
-                        let RepositoryRequest::Register { request: expected } = &request else {
-                            unreachable!()
-                        };
-                        assert_eq!(sent, expected);
-                        assert!(encode_payload(envelope).unwrap().len() <= 65_532);
-                        Err(unavailable(io::Error::from(kind)))
-                    })
+                    .repository_request_with(
+                        "incarnation-a",
+                        request.clone(),
+                        async |state, envelope| {
+                            calls += 1;
+                            assert_eq!(state, Path::new("/unused-private-state"));
+                            let Some(RepositoryRequest::Register { request: sent }) =
+                                &envelope.repository
+                            else {
+                                panic!("expected the targeted registration request")
+                            };
+                            let RepositoryRequest::Register { request: expected } = &request else {
+                                unreachable!()
+                            };
+                            assert_eq!(sent, expected);
+                            assert!(encode_payload(envelope).unwrap().len() <= 65_532);
+                            Err(unavailable(io::Error::from(kind)))
+                        },
+                    )
                     .await
                     .unwrap_err();
                 let RequestFailure::Transport { error } = error else {
@@ -493,18 +516,18 @@ fn targeted_client_rejects_replacement_kind_and_target_without_another_exchange(
         let id = crate::workspaces::ActionId(uuid::Uuid::from_u128(1));
         for response in [
             Response::Repository {
-                owner: "owner-b".into(),
+                incarnation: "incarnation-b".into(),
                 result: Ok(RepositoryReply::Action { registration: None }),
             },
             Response::Workspace {
-                owner: "owner-a".into(),
+                incarnation: "incarnation-a".into(),
                 result: Ok(crate::workspaces::WorkspaceReply::Action {
                     action: None,
                     workspace: None,
                 }),
             },
             Response::Repository {
-                owner: "owner-a".into(),
+                incarnation: "incarnation-a".into(),
                 result: Ok(RepositoryReply::Action {
                     registration: Some(crate::workspaces::Registration {
                         action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(2)),
@@ -518,10 +541,10 @@ fn targeted_client_rejects_replacement_kind_and_target_without_another_exchange(
         ] {
             let failure = client
                 .repository_request_with(
-                    "owner-a",
+                    "incarnation-a",
                     RepositoryRequest::Action { action_id: id },
                     async |_, request| {
-                        assert_eq!(request.expected_owner.as_deref(), Some("owner-a"));
+                        assert_eq!(request.expected_owner.as_deref(), Some("incarnation-a"));
                         Ok(response)
                     },
                 )
@@ -542,7 +565,10 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
         use crate::runtimes::*;
         let client = SupervisorClient::new("/unused-private-state".into());
         let id = uuid::Uuid::from_u128(1);
-        for (owner, target_id) in [("owner-b", id), ("owner-a", uuid::Uuid::from_u128(2))] {
+        for (incarnation, target_id) in [
+            ("incarnation-b", id),
+            ("incarnation-a", uuid::Uuid::from_u128(2)),
+        ] {
             let target = ProviderTarget {
                 id: target_id,
                 provider: "codex".into(),
@@ -556,7 +582,7 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
             let mut calls = 0;
             let result = client
                 .provider_request_with(
-                    "owner-a",
+                    "incarnation-a",
                     ProviderRequest::Observe {
                         target_id: id,
                         refresh: false,
@@ -565,7 +591,7 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
                         calls += 1;
                         assert!(request.repository.is_none() && request.workspace.is_none());
                         Ok(Response::Provider {
-                            owner: owner.into(),
+                            incarnation: incarnation.into(),
                             result: Ok(ProviderReply::Observation {
                                 observation: ProviderObservation {
                                     selection: None,
@@ -587,18 +613,18 @@ fn provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_b
         }
         let mut request = envelope();
         request.provider = Some(ProviderRequest::Target);
-        request.expected_owner = Some("old-owner".into());
+        request.expected_owner = Some("old-incarnation".into());
         assert!(matches!(
-            reject_request(&request, "owner-a").unwrap(),
+            reject_request(&request, "incarnation-a").unwrap(),
             Some(Response::Transport { .. })
         ));
-        request.expected_owner = Some("owner-a".into());
-        assert!(reject_request(&request, "owner-a").unwrap().is_none());
+        request.expected_owner = Some("incarnation-a".into());
+        assert!(reject_request(&request, "incarnation-a").unwrap().is_none());
         request.repository = Some(RepositoryRequest::List {
             after: None,
             refresh: false,
         });
-        assert!(reject_request(&request, "owner-a").is_err());
+        assert!(reject_request(&request, "incarnation-a").is_err());
     });
 }
 
@@ -607,26 +633,26 @@ fn invalid_snapshot_cannot_replace_the_connections_observed_owner() {
     run(async {
         let first = snapshot();
         for invalid in [
-            SupervisorSnapshot {
+            CoreSnapshot {
                 provider_login_pending: None,
                 cursor: SnapshotCursor {
-                    owner: "".into(),
+                    incarnation: "".into(),
                     revision: 1,
                 },
                 ..first.clone()
             },
-            SupervisorSnapshot {
+            CoreSnapshot {
                 provider_login_pending: None,
                 cursor: SnapshotCursor {
-                    owner: "owner-b".into(),
+                    incarnation: "incarnation-b".into(),
                     revision: u64::MAX,
                 },
                 ..first.clone()
             },
-            SupervisorSnapshot {
+            CoreSnapshot {
                 provider_login_pending: None,
-                status: SupervisorStatus {
-                    supervisor_pid: 0,
+                status: CoreStatus {
+                    native_pid: 0,
                     ..first.status.clone()
                 },
                 ..first.clone()
@@ -658,10 +684,11 @@ fn application_corpus_matches_pure_rust_serialization() {
     run(async {
         use crate::workspaces::*;
         use serde_json::{Value, json};
-        let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v15.json"))
-                .unwrap();
-        let owner = "owner-a";
+        let corpus: Value = serde_json::from_str(include_str!(
+            "../../../../contracts/observations-native.json"
+        ))
+        .unwrap();
+        let incarnation = "incarnation-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));
         let action_id = ActionId(uuid::Uuid::from_u128(2));
         let workspace_id = WorkspaceId(uuid::Uuid::from_u128(3));
@@ -671,7 +698,7 @@ fn application_corpus_matches_pure_rust_serialization() {
             keepalive: Mutex::new(None),
             lifetime: Arc::default(),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
-            owner: owner.into(),
+            incarnation: incarnation.into(),
             pid: 41,
             workspaces: None,
             storage: None,
@@ -679,7 +706,6 @@ fn application_corpus_matches_pure_rust_serialization() {
             providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         });
-        assert_eq!(corpus["protocol"], PROTOCOL_VERSION);
         assert_eq!(
             corpus["snapshot"],
             serde_json::to_value(core.snapshot(None)).unwrap()
@@ -689,7 +715,7 @@ fn application_corpus_matches_pure_rust_serialization() {
             |request: RepositoryRequest,
              result: std::result::Result<RepositoryReply, RepositoryError>| {
                 json!({
-                    "request": request, "reply": OwnedReply { owner: owner.into(), result }
+                    "request": request, "reply": OwnedReply { incarnation: incarnation.into(), result }
                 })
             };
         let register = RegisterRepository {
@@ -763,7 +789,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         };
         let workspace_case = |request: WorkspaceRequest, reply: WorkspaceReply| {
             json!({
-                "request": request, "reply": OwnedReply { owner: owner.into(), result: Ok(reply) }
+                "request": request, "reply": OwnedReply { incarnation: incarnation.into(), result: Ok(reply) }
             })
         };
         let target = PreviewTarget {
@@ -858,7 +884,7 @@ fn application_corpus_matches_pure_rust_serialization() {
                 "Not connected",
             ),
             (
-                TransportCode::OwnerChanged,
+                TransportCode::IncarnationChanged,
                 Delivery::Rejected,
                 "Owner changed",
             ),
@@ -888,13 +914,13 @@ fn desktop_admission_leaves_status_and_intent_independent_of_stalled_observation
         refresh: false,
     };
     let first = connection
-        .prepare_repository_request("owner-a".into(), read())
+        .prepare_repository_request("incarnation-a".into(), read())
         .unwrap();
     let second = connection
-        .prepare_repository_request("owner-a".into(), read())
+        .prepare_repository_request("incarnation-a".into(), read())
         .unwrap();
     let Err(RequestFailure::Transport { error }) =
-        connection.prepare_repository_request("owner-a".into(), read())
+        connection.prepare_repository_request("incarnation-a".into(), read())
     else {
         panic!("third observation must fail before spawn")
     };
@@ -903,7 +929,7 @@ fn desktop_admission_leaves_status_and_intent_independent_of_stalled_observation
     let status = connection.prepare_snapshot().unwrap();
     let intent = connection
         .prepare_repository_request(
-            "owner-a".into(),
+            "incarnation-a".into(),
             RepositoryRequest::Register {
                 request: crate::workspaces::RegisterRepository {
                     action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
@@ -917,7 +943,7 @@ fn desktop_admission_leaves_status_and_intent_independent_of_stalled_observation
     drop((status, intent, first));
     assert!(
         connection
-            .prepare_repository_request("owner-a".into(), read())
+            .prepare_repository_request("incarnation-a".into(), read())
             .is_ok()
     );
     drop(second);
@@ -939,11 +965,11 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
     for value in observations {
         let request = serde_json::from_value(value).unwrap();
         let first = connection
-            .prepare_workspace_request("owner-a".into(), request)
+            .prepare_workspace_request("incarnation-a".into(), request)
             .unwrap();
         let second = connection
             .prepare_repository_request(
-                "owner-a".into(),
+                "incarnation-a".into(),
                 RepositoryRequest::Action {
                     action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
                 },
@@ -952,7 +978,7 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
         assert!(
             connection
                 .prepare_workspace_request(
-                    "owner-a".into(),
+                    "incarnation-a".into(),
                     crate::workspaces::WorkspaceRequest::Get {
                         id: crate::workspaces::WorkspaceId(uuid::Uuid::nil())
                     }
@@ -967,12 +993,12 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
     ] {
         let request = serde_json::from_value(value).unwrap();
         let first = connection
-            .prepare_workspace_request("owner-a".into(), request)
+            .prepare_workspace_request("incarnation-a".into(), request)
             .unwrap();
         assert!(
             connection
                 .prepare_workspace_request(
-                    "owner-a".into(),
+                    "incarnation-a".into(),
                     crate::workspaces::WorkspaceRequest::Create {
                         action_id: crate::workspaces::ActionId(uuid::Uuid::nil()),
                         repository_id: crate::workspaces::RepositoryId(uuid::Uuid::nil())
@@ -983,7 +1009,7 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
         assert!(
             connection
                 .prepare_repository_request(
-                    "owner-a".into(),
+                    "incarnation-a".into(),
                     RepositoryRequest::List {
                         after: None,
                         refresh: true
@@ -997,7 +1023,7 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
         SupervisorConnection::new("/private/state".into(), "/app/supervisor".into());
     for _ in 0..4 {
         let Err(RequestFailure::Transport { error }) = uninitialized.prepare_repository_request(
-            "owner-a".into(),
+            "incarnation-a".into(),
             RepositoryRequest::List {
                 after: None,
                 refresh: false,
@@ -1042,7 +1068,7 @@ impl ClientScenario {
             cancel: CancellationToken::new(),
         }
     }
-    async fn snapshot(&mut self) -> io::Result<SupervisorSnapshot> {
+    async fn snapshot(&mut self) -> io::Result<CoreSnapshot> {
         SupervisorClient::new("/private/state".into())
             .snapshot_with(None, PROTOCOL_VERSION, env!("CARGO_PKG_VERSION"), self)
             .await
@@ -1097,7 +1123,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers_without_domai
             let calls = Mutex::new(0);
             serve_stream(
                 stream,
-                "owner-a",
+                "incarnation-a",
                 Arc::default(),
                 &CancellationToken::new(),
                 async |request| {
@@ -1135,7 +1161,7 @@ fn wrong_owner_every_target_and_mixed_context_are_rejected_before_effects() {
             serde_json::json!({"subscribe":{"subscription_id":"feed-1","after":null}}),
         ] {
             let mut value = serde_json::to_value(envelope()).unwrap();
-            value["expected_owner"] = "old-owner".into();
+            value["expected_owner"] = "old-incarnation".into();
             value
                 .as_object_mut()
                 .unwrap()
@@ -1145,10 +1171,10 @@ fn wrong_owner_every_target_and_mixed_context_are_rejected_before_effects() {
             let trace = stream.0.clone();
             serve_stream(
                 stream,
-                "owner-a",
+                "incarnation-a",
                 Arc::default(),
                 &CancellationToken::new(),
-                async |_| panic!("wrong owner routed"),
+                async |_| panic!("wrong incarnation routed"),
             )
             .await
             .unwrap();
@@ -1156,7 +1182,7 @@ fn wrong_owner_every_target_and_mixed_context_are_rejected_before_effects() {
                 &frames::<Response>(&trace.output())[0],
                 Response::Transport {
                     error: TransportFailure {
-                        code: TransportCode::OwnerChanged,
+                        code: TransportCode::IncarnationChanged,
                         delivery: Delivery::Rejected,
                         ..
                     }
@@ -1172,14 +1198,14 @@ fn wrong_owner_every_target_and_mixed_context_are_rejected_before_effects() {
             subscription_id: "feed-1".into(),
             after: None,
         });
-        assert!(reject_request(&request, "owner-a").is_err());
+        assert!(reject_request(&request, "incarnation-a").is_err());
         request.subscribe = None;
         request.after = Some(snapshot().cursor);
-        assert!(reject_request(&request, "owner-a").is_err());
+        assert!(reject_request(&request, "incarnation-a").is_err());
         request.repository = None;
         request.after = None;
-        request.expected_owner = Some("owner-a".into());
-        assert!(reject_request(&request, "owner-a").is_err());
+        request.expected_owner = Some("incarnation-a".into());
+        assert!(reject_request(&request, "incarnation-a").is_err());
     });
 }
 #[test]
@@ -1199,7 +1225,7 @@ fn malformed_oversized_and_legacy_framing_close_without_dispatch_or_output() {
             assert!(
                 serve_stream(
                     stream,
-                    "owner-a",
+                    "incarnation-a",
                     Arc::default(),
                     &CancellationToken::new(),
                     async |_| panic!("invalid request dispatched")
@@ -1279,7 +1305,7 @@ fn targeted_exchange_reports_delivery_at_physical_boundary_without_replay() {
         let request = Request {
             quit: None,
             provider: None,
-            expected_owner: Some("owner-a".into()),
+            expected_owner: Some("incarnation-a".into()),
             repository: Some(RepositoryRequest::List {
                 after: None,
                 refresh: false,
@@ -1353,7 +1379,7 @@ fn client_bad_lost_or_stalled_replies_never_reconnect_or_repeat() {
             vec![0, 0, 0, 1, b'x'],
             vec![0, 0, 255, 253],
             wire(&Response::Repository {
-                owner: "owner-a".into(),
+                incarnation: "incarnation-a".into(),
                 result: Ok(RepositoryReply::Action { registration: None }),
             }),
         ] {
@@ -1394,7 +1420,7 @@ fn admitted_waiter_drop_retains_capacity_and_allows_status_and_control() {
         drop(waiter);
         let second = connection
             .prepare_repository_request(
-                "owner-a".into(),
+                "incarnation-a".into(),
                 RepositoryRequest::List {
                     after: None,
                     refresh: false,
@@ -1404,7 +1430,7 @@ fn admitted_waiter_drop_retains_capacity_and_allows_status_and_control() {
         assert!(
             connection
                 .prepare_repository_request(
-                    "owner-a".into(),
+                    "incarnation-a".into(),
                     RepositoryRequest::List {
                         after: None,
                         refresh: false
@@ -1471,7 +1497,7 @@ fn only_one_discovery_is_admitted_and_no_state_lock_spans_effects() {
                 &mut self,
                 state: &Path,
                 after: Option<SnapshotCursor>,
-            ) -> io::Result<SupervisorSnapshot> {
+            ) -> io::Result<CoreSnapshot> {
                 assert!(self.connection.observed.try_lock().is_ok());
                 self.effects.snapshot(state, after).await
             }
@@ -1578,7 +1604,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
             keepalive: Mutex::new(None),
             lifetime: Arc::default(),
             exit_requested: std::sync::atomic::AtomicBool::new(false),
-            owner: "owner-a".into(),
+            incarnation: "incarnation-a".into(),
             pid: 42,
             workspaces: None,
             storage: None,
@@ -1588,7 +1614,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
         });
         for workspace in [false, true] {
             let mut request = envelope();
-            request.expected_owner = Some("owner-a".into());
+            request.expected_owner = Some("incarnation-a".into());
             if workspace {
                 request.workspace = Some(crate::workspaces::WorkspaceRequest::Changes {
                     workspace_id: crate::workspaces::WorkspaceId(uuid::Uuid::from_u128(7)),
@@ -1606,7 +1632,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
             let trace = stream.0.clone();
             serve_stream(
                 stream,
-                &core.owner,
+                &core.incarnation,
                 core.journal.clone(),
                 &CancellationToken::new(),
                 async |request| Ok(route_request(&core, request).await),
@@ -1615,16 +1641,16 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
             .unwrap();
             match &frames::<Response>(&trace.output())[0] {
                 Response::Repository {
-                    owner,
+                    incarnation,
                     result: Err(error),
                 }
                 | Response::Workspace {
-                    owner,
+                    incarnation,
                     result: Err(error),
                 } => {
-                    assert_eq!(owner, "owner-a");
+                    assert_eq!(incarnation, "incarnation-a");
                     assert_eq!(error.code, ErrorCode::Storage);
-                    assert!(error.message.contains("execution owner"));
+                    assert!(error.message.contains("execution incarnation"));
                 }
                 _ => panic!("typed storage failure required"),
             }
@@ -1637,9 +1663,13 @@ fn cancellation_closes_pending_request_and_server_handlers_without_effects() {
         let stream = Stream::pending();
         let trace = stream.0.clone();
         let cancel = CancellationToken::new();
-        let future = serve_stream(stream, "owner-a", Arc::default(), &cancel, async |_| {
-            panic!("cancelled request dispatched")
-        });
+        let future = serve_stream(
+            stream,
+            "incarnation-a",
+            Arc::default(),
+            &cancel,
+            async |_| panic!("cancelled request dispatched"),
+        );
         let mut future = Box::pin(future);
         assert!(
             std::future::poll_fn(|cx| std::task::Poll::Ready(
@@ -1653,7 +1683,7 @@ fn cancellation_closes_pending_request_and_server_handlers_without_effects() {
         let request = Request {
             quit: None,
             provider: None,
-            expected_owner: Some("owner-a".into()),
+            expected_owner: Some("incarnation-a".into()),
             repository: Some(RepositoryRequest::List {
                 after: None,
                 refresh: false,
@@ -1690,7 +1720,7 @@ fn oversized_request_rejects_before_private_checks_or_socket_access() {
             SupervisorClient::new("/private/state".into())
                 .snapshot_with(
                     Some(SnapshotCursor {
-                        owner: "x".repeat(65_536),
+                        incarnation: "x".repeat(65_536),
                         revision: 1
                     }),
                     8,

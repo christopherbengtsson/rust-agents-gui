@@ -43,8 +43,9 @@ struct NativeSubscription {
     worker: tokio::task::JoinHandle<()>,
 }
 #[derive(Default)]
-pub(super) struct FeedOwner {
+pub(crate) struct FeedOwner {
     current: Mutex<Option<NativeSubscription>>,
+    failure: Mutex<Option<String>>,
     // A new WebView document has no old subscription ID. Admit at most one
     // replacement while its predecessor is physically draining.
     replacement: tokio::sync::Mutex<()>,
@@ -158,13 +159,17 @@ impl FeedOwner {
                 std::task::Poll::Pending => std::task::Poll::Pending,
                 std::task::Poll::Ready(result) => {
                     current.take();
+                    if let Err(error) = &result {
+                        *self.failure.lock().unwrap_or_else(|e| e.into_inner()) =
+                            Some(format!("Native subscription completion failed: {error}"));
+                    }
                     std::task::Poll::Ready(result.map_err(unavailable))
                 }
             }
         })
         .await
     }
-    pub(super) async fn stop_all(&self) -> Result<(), RequestFailure> {
+    pub(crate) async fn stop_all(&self) -> Result<(), RequestFailure> {
         let id = self
             .current
             .lock()
@@ -173,6 +178,14 @@ impl FeedOwner {
             .map(|s| s.id.clone());
         if let Some(id) = id {
             self.stop(&id).await?;
+        }
+        if let Some(error) = self
+            .failure
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
+        {
+            return Err(unavailable(error));
         }
         Ok(())
     }
@@ -193,8 +206,8 @@ impl SupervisorConnection {
             subscription_id,
             after,
             deliver,
-            async move |owner, id, after, control, deliver| {
-                run_client(&client, &owner, &id, after, &control, &*deliver).await
+            async move |incarnation, id, after, control, deliver| {
+                run_client(&client, &incarnation, &id, after, &control, &*deliver).await
             },
         )
         .await
@@ -222,7 +235,7 @@ impl SupervisorConnection {
             )
         })?;
         self.feed.stop_all().await?;
-        // Revalidate owner and shutdown state after awaiting physical cleanup.
+        // Revalidate incarnation and shutdown state after awaiting physical cleanup.
         self.start_subscription_with(expected_owner, subscription_id, after, deliver, run)
     }
     pub fn start_subscription(
@@ -238,8 +251,8 @@ impl SupervisorConnection {
             subscription_id,
             after,
             deliver,
-            async move |owner, id, after, control, deliver| {
-                run_client(&client, &owner, &id, after, &control, &*deliver).await
+            async move |incarnation, id, after, control, deliver| {
+                run_client(&client, &incarnation, &id, after, &control, &*deliver).await
             },
         )
     }
@@ -320,6 +333,107 @@ impl SupervisorConnection {
         self.feed.stop(id).await
     }
 }
+impl crate::native::NativeHost {
+    pub async fn replace_subscription(
+        &self,
+        expected: String,
+        subscription_id: String,
+        after: Option<FeedCursor>,
+        deliver: impl Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
+    ) -> Result<(), RequestFailure> {
+        validate_subscription_id(&subscription_id).map_err(unavailable)?;
+        self.core(&expected)?;
+        let _replacement = self.feed.replacement.try_lock().map_err(|_| {
+            RequestFailure::transport(
+                TransportCode::Busy,
+                Delivery::NotSent,
+                "Previous native subscription is draining",
+            )
+        })?;
+        self.feed.stop_all().await?;
+        let mut current = self.feed.current.lock().map_err(unavailable)?;
+        let core = self.core(&expected)?;
+        let control = Arc::new(Control::default());
+        let owned = control.clone();
+        let id = subscription_id.clone();
+        let worker = tokio::spawn(async move {
+            let result = run_direct(&core.journal, &expected, &id, after, &owned, &deliver).await;
+            owned.stop();
+            let message = match result {
+                Ok(()) => "Observation delivery stopped".into(),
+                Err(error) => {
+                    format!("Observation delivery stopped: {error}. Refresh core status.")
+                }
+            };
+            let _ = deliver(FeedEvent::Stopped {
+                subscription_id: id,
+                message,
+            });
+        });
+        *current = Some(NativeSubscription {
+            id: subscription_id,
+            control,
+            worker,
+        });
+        Ok(())
+    }
+    pub fn acknowledge_subscription(&self, acknowledgement: FeedAck) -> Result<(), RequestFailure> {
+        let current = self.feed.current.lock().map_err(unavailable)?;
+        current
+            .as_ref()
+            .filter(|s| s.id == acknowledgement.subscription_id)
+            .ok_or_else(|| unavailable("Unknown native subscription"))?
+            .control
+            .acknowledge(&acknowledgement)
+            .map_err(unavailable)
+    }
+    pub async fn stop_subscription(&self, id: &str) -> Result<(), RequestFailure> {
+        self.feed.stop(id).await
+    }
+    pub(crate) async fn stop_delivery(&self) -> Result<(), RequestFailure> {
+        let _replacement = self.feed.replacement.lock().await;
+        self.feed.stop_all().await
+    }
+}
+async fn run_direct(
+    journal: &crate::observations::Journal,
+    incarnation: &str,
+    id: &str,
+    after: Option<FeedCursor>,
+    control: &Control,
+    deliver: &(impl Fn(FeedEvent) -> io::Result<()> + Sync),
+) -> io::Result<()> {
+    let mut after = after
+        .filter(|cursor| cursor.incarnation == incarnation)
+        .map(|cursor| cursor.sequence);
+    let mut batch_id = 0u64;
+    loop {
+        let sample = journal
+            .wait_async(after, HEARTBEAT, &control.cancel)
+            .await?;
+        batch_id = batch_id
+            .checked_add(1)
+            .filter(|id| *id <= MAX_SEQUENCE)
+            .ok_or_else(|| io::Error::other("Batch sequence exhausted"))?;
+        let acknowledgement = FeedAck {
+            subscription_id: id.into(),
+            batch_id,
+            cursor: FeedCursor {
+                incarnation: incarnation.into(),
+                sequence: sample.watermark(),
+            },
+        };
+        let batch = FeedBatch {
+            acknowledgement: acknowledgement.clone(),
+            sample,
+        };
+        validate_batch(&batch, incarnation, id, batch_id - 1, after)?;
+        control.offer(acknowledgement.clone())?;
+        deliver(FeedEvent::Batch { batch })?;
+        control.wait_accepted(Instant::now() + ACK_TIMEOUT).await?;
+        after = Some(acknowledgement.cursor.sequence);
+    }
+}
 fn validate_subscription_id(id: &str) -> io::Result<()> {
     if id.is_empty()
         || id.len() > 128
@@ -335,14 +449,14 @@ fn validate_subscription_id(id: &str) -> io::Result<()> {
         Ok(())
     }
 }
-fn request(owner: String, subscription_id: String, after: Option<FeedCursor>) -> Request {
+fn request(incarnation: String, subscription_id: String, after: Option<FeedCursor>) -> Request {
     Request {
         quit: None,
         provider: None,
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
         after: None,
-        expected_owner: Some(owner),
+        expected_owner: Some(incarnation),
         repository: None,
         workspace: None,
         subscribe: Some(Subscribe {
@@ -353,7 +467,7 @@ fn request(owner: String, subscription_id: String, after: Option<FeedCursor>) ->
 }
 async fn run_client(
     client: &SupervisorClient,
-    owner: &str,
+    incarnation: &str,
     id: &str,
     after: Option<FeedCursor>,
     control: &Control,
@@ -363,16 +477,16 @@ async fn run_client(
     let mut exchange = FramedExchange::new(socket);
     write_json(
         &mut exchange,
-        &request(owner.into(), id.into(), after.clone()),
+        &request(incarnation.into(), id.into(), after.clone()),
         Instant::now() + IO_TIMEOUT,
         &control.cancel,
     )
     .await?;
-    run_subscribed(&mut exchange, owner, id, after, control, deliver).await
+    run_subscribed(&mut exchange, incarnation, id, after, control, deliver).await
 }
 async fn run_subscribed<S: AsyncRead + AsyncWrite + Unpin + 'static>(
     exchange: &mut FramedExchange<S>,
-    owner: &str,
+    incarnation: &str,
     id: &str,
     after: Option<FeedCursor>,
     control: &Control,
@@ -380,7 +494,7 @@ async fn run_subscribed<S: AsyncRead + AsyncWrite + Unpin + 'static>(
 ) -> io::Result<()> {
     let mut previous_batch = 0;
     let mut previous_cursor = after
-        .filter(|cursor| cursor.owner == owner)
+        .filter(|cursor| cursor.incarnation == incarnation)
         .map(|cursor| cursor.sequence);
     loop {
         let response: Response = read_json(
@@ -392,7 +506,7 @@ async fn run_subscribed<S: AsyncRead + AsyncWrite + Unpin + 'static>(
         let Response::Feed { batch } = response else {
             return Err(io::Error::other("Subscription rejected or incompatible"));
         };
-        validate_batch(&batch, owner, id, previous_batch, previous_cursor)?;
+        validate_batch(&batch, incarnation, id, previous_batch, previous_cursor)?;
         let deadline = Instant::now() + ACK_TIMEOUT;
         let acknowledgement = batch.acknowledgement.clone();
         control.offer(acknowledgement.clone())?;
@@ -405,7 +519,7 @@ async fn run_subscribed<S: AsyncRead + AsyncWrite + Unpin + 'static>(
 }
 fn validate_batch(
     batch: &FeedBatch,
-    owner: &str,
+    incarnation: &str,
     id: &str,
     previous: u64,
     cursor: Option<u64>,
@@ -422,7 +536,7 @@ fn validate_batch(
         Sample::ResyncRequired { .. } => true,
     };
     if ack.subscription_id != id
-        || ack.cursor.owner != owner
+        || ack.cursor.incarnation != incarnation
         || Some(ack.batch_id) != previous.checked_add(1)
         || ack.batch_id > MAX_SEQUENCE
         || sequence == 0
@@ -440,7 +554,7 @@ fn validate_batch(
 }
 
 pub(super) async fn serve<S: AsyncRead + AsyncWrite + Unpin + 'static>(
-    owner: &str,
+    incarnation: &str,
     journal: &crate::observations::Journal,
     subscribe: Subscribe,
     exchange: &mut FramedExchange<S>,
@@ -449,7 +563,7 @@ pub(super) async fn serve<S: AsyncRead + AsyncWrite + Unpin + 'static>(
     validate_subscription_id(&subscribe.subscription_id)?;
     let mut after = subscribe
         .after
-        .filter(|cursor| cursor.owner == owner)
+        .filter(|cursor| cursor.incarnation == incarnation)
         .map(|cursor| cursor.sequence);
     let mut batch_id: u64 = 0;
     loop {
@@ -462,7 +576,7 @@ pub(super) async fn serve<S: AsyncRead + AsyncWrite + Unpin + 'static>(
             subscription_id: subscribe.subscription_id.clone(),
             batch_id,
             cursor: FeedCursor {
-                owner: owner.into(),
+                incarnation: incarnation.into(),
                 sequence: sample.watermark(),
             },
         };

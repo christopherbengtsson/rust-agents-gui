@@ -5,7 +5,11 @@ import {
   setup,
   type ActorOptions,
 } from "xstate";
-import { bounded, owner as validOwner, text } from "./observation-contracts";
+import {
+  bounded,
+  incarnation as validIncarnation,
+  text,
+} from "./observation-contracts";
 
 import type {
   FeedCursor,
@@ -28,7 +32,7 @@ function sequence(value: number): boolean {
 }
 export function decodeFeedBatch(
   value: unknown,
-  owner: string,
+  incarnation: string,
   id: string,
   previous: number,
   cursor?: FeedCursor,
@@ -39,8 +43,8 @@ export function decodeFeedBatch(
     value.subscription_id !== id ||
     !sequence(value.batch_id) ||
     value.batch_id !== previous + 1 ||
-    !validOwner(value.cursor.owner) ||
-    value.cursor.owner !== owner ||
+    !validIncarnation(value.cursor.incarnation) ||
+    value.cursor.incarnation !== incarnation ||
     !sequence(value.cursor.sequence) ||
     value.sample.watermark !== value.cursor.sequence
   )
@@ -55,7 +59,7 @@ export function decodeFeedBatch(
     return {
       subscription_id: id,
       batch_id: value.batch_id,
-      cursor: { owner, sequence: value.cursor.sequence },
+      cursor: { incarnation, sequence: value.cursor.sequence },
       sample: {
         kind: "hints",
         watermark: value.cursor.sequence,
@@ -69,14 +73,14 @@ export function decodeFeedBatch(
     return {
       subscription_id: id,
       batch_id: value.batch_id,
-      cursor: { owner, sequence: value.cursor.sequence },
+      cursor: { incarnation, sequence: value.cursor.sequence },
       sample: { kind: sample.kind, watermark: value.cursor.sequence },
     };
   throw new Error("Invalid observation delivery sample");
 }
 
 export type FeedAcceptance = {
-  connect(owner: string | undefined): void;
+  connect(incarnation: string | undefined): void;
   accept(batch: FeedBatch): void;
 };
 export type FeedState = {
@@ -86,7 +90,7 @@ export type FeedState = {
 };
 export type FeedTransport = {
   subscribe: (
-    owner: string,
+    incarnation: string,
     id: string,
     after: FeedCursor | undefined,
     receive: (value: unknown) => void,
@@ -94,7 +98,7 @@ export type FeedTransport = {
   acknowledge: (acknowledgement: FeedAck) => Promise<unknown>;
   stop: (id: string) => Promise<unknown>;
 };
-type Session = { id: string; owner: string; setup: Promise<void> };
+type Session = { id: string; incarnation: string; setup: Promise<void> };
 type FeedContext = {
   desired?: string;
   session?: Session;
@@ -103,7 +107,7 @@ type FeedContext = {
   message?: string;
 };
 type FeedEvent =
-  | { type: "configure"; owner?: string }
+  | { type: "configure"; incarnation?: string }
   | { type: "delivery"; id: string; value: unknown }
   | { type: "failed"; id: string; error: unknown }
   | { type: "acknowledge"; batch: FeedBatch };
@@ -138,17 +142,19 @@ function feedMachine(transport: FeedTransport, acceptance?: FeedAcceptance) {
     },
     actions: {
       configure: assign(({ event }) =>
-        event.type === "configure" ? { desired: event.owner } : {},
+        event.type === "configure" ? { desired: event.incarnation } : {},
       ),
       begin: assign(({ context, self }) => {
-        const owner = context.desired;
-        if (!owner) return {};
+        const incarnation = context.desired;
+        if (!incarnation) return {};
         const id = crypto.randomUUID();
         const accepted =
-          context.accepted?.owner === owner ? context.accepted : undefined;
+          context.accepted?.incarnation === incarnation
+            ? context.accepted
+            : undefined;
         // Defer setup until the session handle is installed in actor context.
         const registration = Promise.resolve().then(() =>
-          transport.subscribe(owner, id, accepted, (value) =>
+          transport.subscribe(incarnation, id, accepted, (value) =>
             self.send({ type: "delivery", id, value }),
           ),
         );
@@ -156,7 +162,7 @@ function feedMachine(transport: FeedTransport, acceptance?: FeedAcceptance) {
           self.send({ type: "failed", id, error }),
         );
         return {
-          session: { id, owner, setup: registration },
+          session: { id, incarnation, setup: registration },
           previous: 0,
           accepted,
           message: undefined,
@@ -164,7 +170,7 @@ function feedMachine(transport: FeedTransport, acceptance?: FeedAcceptance) {
       }),
       accept: assign(({ context, event, self }) => {
         if (event.type !== "delivery" || !context.session) return {};
-        const { id, owner } = context.session;
+        const { id, incarnation } = context.session;
         try {
           const value = event.value;
           if (!validateFeedEvent(value))
@@ -179,7 +185,7 @@ function feedMachine(transport: FeedTransport, acceptance?: FeedAcceptance) {
             throw new Error("Unexpected observation delivery");
           const batch = decodeFeedBatch(
             value.batch,
-            owner,
+            incarnation,
             id,
             context.previous,
             context.accepted,
@@ -320,8 +326,8 @@ export class ObservationFeed {
       accepted: snapshot.context.accepted,
     };
   };
-  connect(owner: string | undefined) {
-    this.acceptance?.connect(owner);
-    this.actor.send({ type: "configure", owner });
+  connect(incarnation: string | undefined) {
+    this.acceptance?.connect(incarnation);
+    this.actor.send({ type: "configure", incarnation });
   }
 }
