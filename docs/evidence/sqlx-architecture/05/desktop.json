@@ -1,0 +1,65 @@
+{
+  "root": "/private/tmp/aw-sqlx05-8bik1y60",
+  "bundle": "/private/tmp/aw-sqlx05-8bik1y60/SQLx05.app",
+  "repository": "/private/tmp/aw-sqlx05-8bik1y60/repository",
+  "runtime": "/private/tmp/aw-sqlx05-8bik1y60/synthetic-codex",
+  "protocol": 15,
+  "mode": "fixture-desktop",
+  "checks": ["actual desktop owned Quit exits desktop and host 0"],
+  "captures": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/05/desktop-workspace.json",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/05/desktop-ready.json"
+  ],
+  "binary_hashes": {
+    "/private/tmp/aw-sqlx05-8bik1y60/SQLx05.app/Contents/Resources/workspace-supervisor": "6167f67de5f34a1816c90c457209af1eaf437dfca9490a6ff6cfb78531e55f83",
+    "/private/tmp/aw-sqlx05-8bik1y60/SQLx05.app/Contents/MacOS/workspace-desktop": "4a24fcdd43d7e1409912b0c1f88f8421f838679076c8d7febe9feede70d34dc6",
+    "/private/tmp/aw-sqlx05-8bik1y60/synthetic-codex": "cfeb46bd02d2cdae024197874c7dfd26a2d1117d4e18075c152cc4748703cf30"
+  },
+  "schema_source": "Codex 0.169.0 / d32063f96c2dff1dc96af839b3952abb6acfeda4; all peer messages synthetic",
+  "desktop_pid": 81215,
+  "result": "passed",
+  "host_exits": [0],
+  "events": [
+    {
+      "pid": 81933,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 81934,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 81934,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 81934,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 81934,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 81934,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 81934,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 81934,
+      "event": "exit"
+    }
+  ],
+  "forbidden_methods": [],
+  "remaining_fixture_pids": []
+}

@@ -1,0 +1,125 @@
+   Compiling workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.93s
+     Running `target/debug/qualify-workspaces /private/tmp/aw-workspace05-final`
+{
+  "checks": [
+    "concurrent-registration-and-first-continuations",
+    "global-app-folder-collision",
+    "same-repository-distinct-permanent-names",
+    "concurrent-disposable-git-worktrees",
+    "pinned-base-and-original-checkout-protection",
+    "concurrent-sqlx-claim-winner-and-settled-conflict",
+    "explicit-reconcile-retains-pinned-location-and-original-action",
+    "nil-action-identity-creation"
+  ],
+  "desktop": "not run: combined provider conversion remains ticket 04",
+  "providers": "not run",
+  "root": "/private/tmp/aw-workspace05-final",
+  "workspaces": [
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "c505736fa4f5d60c909977e8f4a4b49c26af956e",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/andrea-belotti",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "bfda3505-f8a6-4c19-8ad2-3d02326642ac",
+      "id": "9ccaa371-8b6c-44b3-8446-fc9a20dd40a9",
+      "legacy": false,
+      "name": "andrea-belotti",
+      "path": "/private/tmp/aw-workspace05-final/state/workspaces/app/andrea-belotti/checkout",
+      "repository_id": "3e128747-6261-4c26-a0ab-05b663958940",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "c505736fa4f5d60c909977e8f4a4b49c26af956e",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/bettina-wiegmann",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "de2f47bc-35f8-40fd-a435-435db155cb15",
+      "id": "6468c97f-554e-426f-bed2-ceed3445f659",
+      "legacy": false,
+      "name": "bettina-wiegmann",
+      "path": "/private/tmp/aw-workspace05-final/state/workspaces/app-2/bettina-wiegmann/checkout",
+      "repository_id": "67acd097-824f-4580-81a8-61dc0893a9a9",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "c505736fa4f5d60c909977e8f4a4b49c26af956e",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/michelle-akers",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "a3fde1d8-4e2b-4ced-8ad4-bc70f16ac5a0",
+      "id": "a86157ac-610b-4dc7-8400-089da25206b6",
+      "legacy": false,
+      "name": "michelle-akers",
+      "path": "/private/tmp/aw-workspace05-final/state/workspaces/app/michelle-akers/checkout",
+      "repository_id": "3e128747-6261-4c26-a0ab-05b663958940",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "c505736fa4f5d60c909977e8f4a4b49c26af956e",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/peter-shilton",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "e62ec500-da11-457b-b65a-736fb5ea6a80",
+      "id": "5940a86d-dcd6-4489-a015-5e9db9050f9e",
+      "legacy": false,
+      "name": "peter-shilton",
+      "path": "/private/tmp/aw-workspace05-final/state/workspaces/app/peter-shilton/checkout",
+      "repository_id": "3e128747-6261-4c26-a0ab-05b663958940",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "c505736fa4f5d60c909977e8f4a4b49c26af956e",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/andre-pierre-gignac",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "00000000-0000-0000-0000-000000000000",
+      "id": "5e67502a-a867-4bfb-8799-798fb86f554f",
+      "legacy": false,
+      "name": "andre-pierre-gignac",
+      "path": "/private/tmp/aw-workspace05-final/state/workspaces/app/andre-pierre-gignac/checkout",
+      "repository_id": "3e128747-6261-4c26-a0ab-05b663958940",
+      "status": {
+        "state": "ready"
+      }
+    }
+  ]
+}

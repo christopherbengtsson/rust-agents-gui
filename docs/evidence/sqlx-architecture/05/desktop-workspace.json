@@ -1,0 +1,40 @@
+{
+  "label": "workspace",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 81214,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "81214-1794850209286926000",
+        "revision": 29
+      },
+      "reset": true
+    }
+  },
+  "provider": {
+    "selection": null,
+    "target": {
+      "id": "e3c384c5-a289-4d4f-aad1-ca8b796290a1",
+      "provider": "codex",
+      "executable": null,
+      "selected_executable": null,
+      "discovery_source": null,
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-e3c384c5-a289-4d4f-aad1-ca8b796290a1",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 0,
+    "phase": "unknown",
+    "evidence": null,
+    "problem": null,
+    "diagnostic": null,
+    "login": null
+  },
+  "events": [],
+  "host_exit": null,
+  "desktop_exit": null
+}

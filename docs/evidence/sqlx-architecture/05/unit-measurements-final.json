@@ -1,0 +1,45 @@
+{
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-c1516d2e50257971",
+  "sha256": "82469e27b89cefe886abdb634b1498bd11cc5a43c625f8fd45c259da918169b7",
+  "profile": "warm default target, test profile, one harness thread",
+  "runs": [
+    {
+      "warmup": true,
+      "exit": 0,
+      "seconds": 0.3633556249551475,
+      "result": "test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s"
+    },
+    {
+      "warmup": false,
+      "exit": 0,
+      "seconds": 0.36275145900435746,
+      "result": "test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s"
+    },
+    {
+      "warmup": false,
+      "exit": 0,
+      "seconds": 0.36326991696842015,
+      "result": "test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s"
+    },
+    {
+      "warmup": false,
+      "exit": 0,
+      "seconds": 0.3647652920335531,
+      "result": "test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s"
+    },
+    {
+      "warmup": false,
+      "exit": 0,
+      "seconds": 0.36735591711476445,
+      "result": "test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s"
+    },
+    {
+      "warmup": false,
+      "exit": 0,
+      "seconds": 0.36512387497350574,
+      "result": "test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s"
+    }
+  ],
+  "median": 0.3647652920335531,
+  "range": [0.36275145900435746, 0.36735591711476445]
+}

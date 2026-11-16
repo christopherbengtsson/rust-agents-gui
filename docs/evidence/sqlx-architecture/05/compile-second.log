@@ -1,0 +1,97 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0027]: pattern does not mention field `blocking`
+   --> crates/core/src/workspaces/coordinator.rs:649:9
+    |
+649 |       let WorkspaceExecution {
+    |  _________^
+650 | |         shared,
+651 | |         decision,
+652 | |         store,
+653 | |         effects: _,
+654 | |         action,
+655 | |     } = execution.clone();
+    | |_____^ missing field `blocking`
+    |
+help: include the missing field in the pattern
+    |
+654 -         action,
+655 -     } = execution.clone();
+654 +         action, blocking } = execution.clone();
+    |
+help: if you don't care about this missing field, you can explicitly ignore it
+    |
+654 -         action,
+655 -     } = execution.clone();
+654 +         action, blocking: _ } = execution.clone();
+    |
+help: or always ignore missing fields here
+    |
+654 -         action,
+655 -     } = execution.clone();
+654 +         action, .. } = execution.clone();
+    |
+
+For more information about this error, try `rustc --explain E0027`.
+error: could not compile `workspace-core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `workspace-core` (lib test) due to 1 previous error

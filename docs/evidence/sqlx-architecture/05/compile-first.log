@@ -1,0 +1,164 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0061]: this function takes 3 arguments but 2 arguments were supplied
+   --> crates/core/src/workspaces/qualification.rs:140:17
+    |
+140 |     let owner = Workspaces::open(state, storage.clone());
+    |                 ^^^^^^^^^^^^^^^^------------------------ argument #3 of type `process_effects::Processes` is missing
+    |
+note: associated function defined here
+   --> crates/core/src/workspaces.rs:338:19
+    |
+338 |     pub(crate) fn open(directory: PathBuf, storage: crate::storage::Storage, processes: crate::process_effects::Processes) -> Self {
+    |                   ^^^^                                                       --------------------------------------------
+help: provide the argument
+    |
+140 |     let owner = Workspaces::open(state, storage.clone(), /* Processes */);
+    |                                                        +++++++++++++++++
+
+error[E0063]: missing field `processes` in initializer of `Core`
+  --> crates/core/src/connection/tests.rs:14:5
+   |
+14 |     Core {
+   |     ^^^^ missing `processes`
+
+error[E0063]: missing field `processes` in initializer of `Core`
+   --> crates/core/src/connection/tests.rs:366:21
+    |
+366 |         let after = Core {
+    |                     ^^^^ missing `processes`
+
+error[E0063]: missing field `processes` in initializer of `Core`
+   --> crates/core/src/connection/tests.rs:668:29
+    |
+668 |         let core = Arc::new(Core {
+    |                             ^^^^ missing `processes`
+
+error[E0063]: missing field `processes` in initializer of `Core`
+    --> crates/core/src/connection/tests.rs:1574:29
+     |
+1574 |         let core = Arc::new(Core {
+     |                             ^^^^ missing `processes`
+
+error[E0593]: closure is expected to take 0 arguments, but it takes 2 arguments
+   --> crates/core/src/lib.rs:388:28
+    |
+388 |                   let core = Core::start_with(
+    |  ____________________________^
+389 | |                     lifetime,
+390 | |                     move || async move {
+391 | |                         Ok(workspaces::tests::controlled_completion(async move {
+...   |
+396 | |                     |_, _| async {
+    | |                     ------ takes 2 arguments
+...   |
+400 | |                     },
+401 | |                 )
+    | |_________________^ expected closure that takes 0 arguments
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+   --> crates/core/src/lib.rs:388:28
+    |
+388 |                   let core = Core::start_with(
+    |                              ^^^^^^^^^^^^^^^^
+389 |                       lifetime,
+390 | /                     move || async move {
+391 | |                         Ok(workspaces::tests::controlled_completion(async move {
+392 | |                             marker.store(true, Ordering::SeqCst);
+393 | |                             Ok(())
+394 | |                         }))
+395 | |                     },
+    | |_____________________- argument #2 of type `std::option::Option<process_effects::Processes>` is missing
+    |
+note: associated function defined here
+   --> crates/core/src/lib.rs:149:14
+    |
+149 |     async fn start_with<F, P>(
+    |              ^^^^^^^^^^
+150 |         lifetime: std::sync::Arc<lifetime::Lifetime>,
+151 |         processes: Option<process_effects::Processes>,
+    |         ---------------------------------------------
+help: provide the argument
+    |
+388 ~                 let core = Core::start_with(
+389 +                     lifetime,
+390 +                     /* Option<Processes> */,
+391 +                     |_, _| async {
+392 +                         Err(workspaces::RepositoryError::storage(
+393 +                             "controlled provider startup failure",
+394 +                         ))
+395 +                     },
+396 +                     move || async move {
+397 +                         Ok(workspaces::tests::controlled_completion(async move {
+398 +                             marker.store(true, Ordering::SeqCst);
+399 +                             Ok(())
+400 +                         }))
+401 +                     },
+402 +                 )
+    |
+
+For more information about this error, try `rustc --explain E0061`.
+error: could not compile `workspace-core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+Some errors have detailed explanations: E0061, E0063, E0593.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `workspace-core` (lib test) due to 7 previous errors

@@ -1,0 +1,38 @@
+[
+  {
+    "marker": "/private/tmp/aw-process05-first/parent-loss.pid",
+    "pid": 70237,
+    "alive": false,
+    "action": "signal zero observation only; no signaling from saved PID"
+  },
+  {
+    "marker": "/private/tmp/aw-process05-first/descendant.pid",
+    "pid": 70225,
+    "alive": false,
+    "action": "signal zero observation only; no signaling from saved PID"
+  },
+  {
+    "marker": "/private/tmp/aw-process05-first/escaped.pid",
+    "pid": 70235,
+    "alive": false,
+    "action": "signal zero observation only; no signaling from saved PID"
+  },
+  {
+    "marker": "/private/tmp/aw-process05-final/parent-loss.pid",
+    "pid": 79163,
+    "alive": false,
+    "action": "signal zero observation only; no signaling from saved PID"
+  },
+  {
+    "marker": "/private/tmp/aw-process05-final/descendant.pid",
+    "pid": 79159,
+    "alive": false,
+    "action": "signal zero observation only; no signaling from saved PID"
+  },
+  {
+    "marker": "/private/tmp/aw-process05-final/escaped.pid",
+    "pid": 79161,
+    "alive": false,
+    "action": "signal zero observation only; no signaling from saved PID"
+  }
+]
