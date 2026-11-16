@@ -1,15 +1,8 @@
 # Agent Workspace
 
-Local macOS desktop workspace with a Tauri presentation connected to a separate
-Rust supervisor. The completed baseline is Milestone 01 tickets 01–02: startup, private
-supervisor discovery, status and reconnect. Ticket 02a established the React/shadcn shell; its completed
-[desktop cohort](docs/evidence/milestone-01-ui-foundation.md#desktop-qualification-follow-up--2026-11-12)
-is preserved. The current [Sidebar refactor and branding fix](docs/evidence/milestone-01-sidebar-refactor.md#actual-tauri-requalification--2026-11-1213)
-passed actual Tauri requalification on 2026-11-12–13.
-Ticket 03 adds existing-repository registration, durable identity, per-repository
-details and restored navigation. Ticket 04 adds immediate isolated-workspace creation and explicit recovery.
-Change inspection, Codex setup, chat and the remaining milestone tickets remain
-unimplemented.
+Local macOS desktop workspace with one UI-independent Rust core hosted inside native Tauri. The core owns SQLx storage, workspace actions, provider setup and whole-app Quit. WebView replacement observes the same core; native failure requires durable interrupted/uncertain recovery. No application supervisor, discovery socket or peer protocol is shipped.
+
+Repository/workspace navigation, change inspection and fixture-qualified Codex setup are implemented. Durable streamed chat and cumulative foundation qualification remain later tickets. Historical milestone evidence remains under `docs/evidence`; the current native cutover starts with [ticket 06](docs/evidence/sqlx-architecture/06/README.md).
 
 ## Development
 
@@ -28,27 +21,9 @@ to that setup. Otherwise, enable the repository hook with
 `git config --local core.hooksPath .githooks`; an existing `.githooks` setting needs
 no change.
 
-Development logs its freshly built supervisor executable and persistent state:
-`~/.agent-workspace/dev/<canonical-worktree hash>/p<protocol>-<app-version hash>`.
-Compatible restarts reuse it; other worktrees/protocols/versions are isolated.
-An explicit `AGENT_WORKSPACE_STATE_DIR` selects that location, including its existing
-owner/version checks. The supervisor resolves it to an absolute canonical root before
-storage or workspace creation; relative paths resolve against its startup directory.
-Malformed saved relative or traversal-containing workspace paths are incompatible
-development data: use fresh private state rather than moving or adopting artifacts.
-Release state is unchanged. Rebuilding does not stop an old
-supervisor; default dev no longer connects to an incompatible release owner.
+Development prints its exact private state root, defaults to `~/.agent-workspace/dev/<canonical-worktree hash>/native-schema-4`, and honors `AGENT_WORKSPACE_STATE_DIR` exactly. Vite provides frontend HMR. Rust edits require completed Quit and an explicit `pnpm dev` restart; the launcher owns the native executable directly so a rebuild watcher cannot terminate the execution owner. Stop waits for native drain, reports pending cleanup and never escalates automatically.
 
-Workspace labels come from a [curated catalog of 500 footballers](docs/research/footballer-catalog.md).
-Unused plain names are preferred per repository, then numbered variants. Saved
-names stay reserved with their history. New branches and folder components are
-readable; internal UUID identities remain stable. Existing branches and folders
-are preserved, with clean legacy labels and explicit location details.
-
-The supervisor is the execution owner. Refresh retrieves observations; desktop
-crash/disconnection leaves the supervisor alive, and reconnect does not replay
-actions. Explicit Quit with owned cleanup is future ticket 09. Use private disposable
-application state for qualification and never remove an active owner's lock.
+See [private development state and reset](docs/development-state.md) before changing state. Old metadata/preferences need no migration; preserve every worktree/branch, provider home/native history and evidence set. Never remove `owner.lock` to bypass ownership.
 
 ## Testing and build
 
@@ -59,30 +34,27 @@ The current default test gate is unit-only, with controlled filesystem, process,
 transport and time outcomes. The tooling gate also runs bounded native Oxlint CLI configuration checks
 against disposable source fixtures.
 
-| Command                         | Purpose                                                                                                                                                                                    |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `corepack pnpm test`            | Compile the Rust core library unit harness, then execute Rust, tooling and mocked-IPC presentation unit tests; report compilation and execution separately. No staged sidecar is required. |
-| `corepack pnpm test:measure`    | Compile once; measure one warm-up and five warm executions of each unit harness.                                                                                                           |
-| `corepack pnpm compile`         | Check workspace compilation independently.                                                                                                                                                 |
-| `corepack pnpm check`           | TypeScript and Clippy, including retained qualification targets; no test execution.                                                                                                        |
-| `corepack pnpm format:check`    | Oxfmt and rustfmt checks.                                                                                                                                                                  |
-| `corepack pnpm lint`            | Frontend Hook/compiler and JSX accessibility lint; toolkit Tauri dependency restrictions.                                                                                                  |
-| `corepack pnpm verify`          | Formatting, frontend lint, static checks and unit tests, each once; excludes packaging and process qualification.                                                                          |
-| `corepack pnpm qualify:process` | Opt in to inherited supervisor-process qualification using disposable private state.                                                                                                       |
-| `corepack pnpm build`           | Prepare the release sidecar and package the macOS app separately.                                                                                                                          |
+| Command                                                             | Purpose                                                                                                                                                                                    |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `corepack pnpm test`                                                | Compile the Rust core library unit harness, then execute Rust, tooling and mocked-IPC presentation unit tests; report compilation and execution separately. No staged sidecar is required. |
+| `corepack pnpm test:measure`                                        | Compile once; measure one warm-up and five warm executions of each unit harness.                                                                                                           |
+| `corepack pnpm compile`                                             | Check workspace compilation independently.                                                                                                                                                 |
+| `corepack pnpm check`                                               | TypeScript and Clippy, including retained qualification targets; no test execution.                                                                                                        |
+| `corepack pnpm format:check`                                        | Oxfmt and rustfmt checks.                                                                                                                                                                  |
+| `corepack pnpm lint`                                                | Frontend Hook/compiler and JSX accessibility lint; toolkit Tauri dependency restrictions.                                                                                                  |
+| `corepack pnpm verify`                                              | Formatting, frontend lint, static checks and unit tests, each once; excludes packaging and process qualification.                                                                          |
+| `corepack pnpm qualify:storage -- <new-report.json>`                | Bounded actual SQLx/storage qualification in new disposable state.                                                                                                                         |
+| `corepack pnpm qualify:effects -- <new-report.json>`                | Bounded synthetic process/descendant qualification.                                                                                                                                        |
+| `corepack pnpm qualify:native -- <qualified.app> <new-report.json>` | Actual native/WebView/login-fixture lifecycle qualification, with a 180-second bound.                                                                                                      |
+| `corepack pnpm build`                                               | Package the normal native macOS app separately; no sidecar preparation.                                                                                                                    |
 
-Sidecar preparation stages Cargo's reported supervisor executable under
-`src-tauri/gen/sidecar`, alongside `provenance.json` with source revision, dirty
-state, target directory, profile and SHA-256. Private `CARGO_TARGET_DIR` values
-are supported. Run the isolated staging regression tests with
-`node --test --test-concurrency=1 scripts/prepare-supervisor.test.mjs`.
 Build, static-check and unit scripts reject symlinked Cargo targets and targets
 claimed by another worktree. Each target retains `.agent-workspace-owner.json`;
 choose a fresh private target when moving between worktrees. Run one verification
 or build command at a time per worktree; share download caches rather than targets.
 
 The Vite server stays on `127.0.0.1:1420` with a strict port and excludes Rust
-sources, sidecar staging and Cargo output from its watcher. The frontend targets
+sources and Cargo output from its watcher. The frontend targets
 Safari 16.4 to match Tailwind 4; the macOS bundle minimum is 13.3. These are
 compatibility settings, not qualification of every supported OS.
 
@@ -91,14 +63,13 @@ compatibility settings, not qualification of every supported OS.
 [GitHub Actions CI](.github/workflows/ci.yml) runs on pull requests targeting
 `main`, pushes to `main`, and manual dispatch. One `macos-15` Apple Silicon job
 uses the repository's Node, pnpm and Rust versions. It installs frozen frontend
-dependencies, prepares the debug supervisor resource for Tauri's static checks,
-runs `corepack pnpm verify`, then builds frontend assets without repeating the
-TypeScript check. Resource preparation builds the supervisor without launching it.
+dependencies and runs `corepack pnpm verify:ci`: generated drift, formatting, lint,
+TypeScript, frontend bundling, Clippy and isolated units, each selected once.
 
-CI does not package/sign the app, launch desktop or supervisor processes, run
+CI does not package/sign the app, launch desktop processes, run
 provider sessions, or qualify native behavior. Those checks retain their separate
 milestone gates. Actions are pinned to release commits. Rust dependency downloads and selected
-compiled artifacts are cached; the target ownership marker, staged sidecars and
+compiled artifacts are cached; the target ownership marker and
 frontend outputs are excluded. Every cache hit still runs the full checks. pnpm
 caching is deferred. See [cache research](docs/research/github-actions-caching.md)
 for cache boundaries and validation. See the [CI research](docs/research/github-actions-ci.md)
@@ -107,8 +78,7 @@ is pushed and a matching GitHub event runs.
 
 ## Ownership
 
-- `crates/core`: Tauri-independent actions, observations and connection decisions.
-- `crates/supervisor`: process hosting the core and owning execution/storage.
+- `crates/core`: UI-independent actions, observations, native lifetime and SQLx storage.
 - `src-tauri`: forwards targeted requests and presents observations.
 - `src`: React/TypeScript presentation with shadcn Base UI components and Tailwind.
 
@@ -121,8 +91,8 @@ and registration performs read-only Git inspection without starting agents.
 Desktop preferences remember the last selection and an uncertain registration's
 action ID. Refresh retrieves authoritative status; edited paths are separate explicit
 requests after the pending action is resolved. No repository relocation or removal
-workflow is implemented. Protocol 4 requires matching desktop/supervisor builds. SQLite schema 3 migrates
-existing registrations/workspaces without changing internal identities or physical locations.
+workflow is implemented. Current metadata uses schema 4. Incompatible metadata is rejected;
+select fresh private development state deliberately rather than migrating retired builds.
 
 Adding a new repository records its first-workspace continuation atomically with
 registration. The repository's + creates another immediately. Generated footballer

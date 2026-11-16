@@ -211,7 +211,7 @@ fn check_workspace_ancestors(workspace: &Workspace) -> Result<()> {
         .ok_or_else(|| failure("Invalid managed workspace root"))?;
     for path in [root, repository_dir, parent] {
         if location(path)?.is_some() {
-            crate::supervisor::check_private(path, true).map_err(failure)?;
+            crate::private_state::check_private(path).map_err(failure)?;
         }
     }
     Ok(())
@@ -447,7 +447,7 @@ impl CreationEffects for LocalCreation {
             match std::fs::DirBuilder::new().mode(0o700).create(directory) {
                 Ok(()) => {}
                 Err(e) if e.kind() == ErrorKind::AlreadyExists && directory != parent => {
-                    crate::supervisor::check_private(directory, true).map_err(failure)?
+                    crate::private_state::check_private(directory).map_err(failure)?
                 }
                 Err(e) => return Err(failure(e)),
             }
@@ -566,7 +566,7 @@ fn run_leased(
     let descriptor = lease.as_raw_fd();
     // SAFETY: lease outlives spawn and execution. The child callback uses only
     // async-signal-safe fcntl, with no allocation, environment access or mutexes.
-    // Inheritance retains the kernel lease even if the supervisor crashes.
+    // Inheritance retains the kernel lease even if the native owner crashes.
     unsafe {
         command.pre_exec(move || {
             let flags = libc::fcntl(descriptor, libc::F_GETFD);

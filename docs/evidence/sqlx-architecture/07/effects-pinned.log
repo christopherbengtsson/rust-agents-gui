@@ -1,0 +1,4 @@
+$ node scripts/qualify.mjs effects -- /Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/07/effects-pinned.json
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.43s
+Qualification effects: passed; retained /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-effects-56Z1mw

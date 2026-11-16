@@ -20,14 +20,16 @@
     "test": "node scripts/test-unit.mjs",
     "test:workspaces": "node scripts/test-unit.mjs --workspace-checkpoint",
     "test:measure": "node scripts/test-unit.mjs --measure",
-    "qualify:process": "node scripts/cargo.mjs test --locked -p workspace-supervisor --features process-qualification --test startup --test discovery -- --test-threads=1",
     "verify": "node scripts/check.mjs verify",
     "tauri": "tauri",
     "test:ui": "vitest run --maxWorkers=1",
     "lint": "oxlint src --max-warnings 0 --report-unused-disable-directives-severity warn",
     "generated:write": "node scripts/prepare-generated.mjs --write",
     "generated:check": "node scripts/prepare-generated.mjs --check",
-    "verify:ci": "node scripts/check.mjs ci"
+    "verify:ci": "node scripts/check.mjs ci",
+    "qualify:storage": "node scripts/qualify.mjs storage",
+    "qualify:effects": "node scripts/qualify.mjs effects",
+    "qualify:native": "node scripts/qualify.mjs native"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",

@@ -1,0 +1,7 @@
+2026-11-16T19:10:52.883107Z  INFO workspace_core::native: native startup settled incarnation=421ee66a-3b5c-4c43-9feb-08cc65af3094 phase=Some(Ready)
+2026-11-16T19:10:53.048197Z  INFO workspace_core::native: repository request incarnation=421ee66a-3b5c-4c43-9feb-08cc65af3094 action=None
+2026-11-16T19:10:53.048245Z  INFO workspace_core::native: native request admitted incarnation=421ee66a-3b5c-4c43-9feb-08cc65af3094 control=false
+2026-11-16T19:10:53.048839Z  INFO workspace_core::native: native request settled incarnation=421ee66a-3b5c-4c43-9feb-08cc65af3094 succeeded=true
+2026-11-16T19:10:53.128920Z  INFO workspace_core::native: native shutdown fenced incarnation=421ee66a-3b5c-4c43-9feb-08cc65af3094
+Storage close checkpoint: {"busy":0,"log_frames":33,"checkpointed_frames":33,"wal_bytes":135992,"elapsed":{"secs":0,"nanos":9765500}}
+2026-11-16T19:10:53.139356Z  INFO workspace_core::native: native shutdown settled incarnation=421ee66a-3b5c-4c43-9feb-08cc65af3094 failures=0

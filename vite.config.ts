@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => ({
     host: "127.0.0.1",
     port: 1420,
     strictPort: true,
-    // Tauri owns Rust rebuilds; sidecar/target writes must not reload the UI.
+    // Tauri owns Rust rebuilds; target writes must not reload the UI.
     watch: { ignored: ["**/src-tauri/**", "**/crates/**", "**/target/**"] },
   },
   build: {

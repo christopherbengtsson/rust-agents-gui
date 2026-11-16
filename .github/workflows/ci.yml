@@ -103,6 +103,6 @@ jobs:
           fi
 
       # Generated-input drift and TypeScript run before Vite can repair the route tree.
-      # Resource compilation, bundling, static checks and units remain distinct.
+      # Frontend bundling, static checks and units remain distinct.
       - name: Verify and build assets
         run: corepack pnpm verify:ci

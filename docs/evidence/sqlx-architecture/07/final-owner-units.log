@@ -1,0 +1,42 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.93s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-5bebefa315110a41)
+
+running 4 tests
+test state_lease::tests::native_lease_admission_stops_at_failure_and_preserves_lock_errors ... ok
+test state_lease::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test state_lease::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test state_lease::tests::state_privacy_rejects_wrong_owner_public_modes_and_symlinks ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 168 filtered out; finished in 0.00s
+

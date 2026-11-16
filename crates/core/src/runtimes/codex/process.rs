@@ -254,7 +254,7 @@ async fn probe_inner(
             Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {}
             Err(error) => return Err(error),
         }
-        crate::supervisor::check_private(&directory, true)
+        crate::private_state::check_private(&directory)
     })
     .await
     .map_err(|_| {
@@ -268,7 +268,7 @@ async fn probe_inner(
     if cancel.is_cancelled() {
         return Err(SetupFailure::at(
             SetupProblem::StatusReadFailed,
-            "Setup cancelled during supervisor shutdown",
+            "Setup cancelled during native core shutdown",
         ));
     }
     let mut child = spawn(&launch, "app-server")?;
@@ -286,7 +286,7 @@ async fn probe_inner(
         .unwrap_or_else(|| {
             Err(SetupFailure::at(
                 SetupProblem::StatusReadFailed,
-                "Setup cancelled during supervisor shutdown",
+                "Setup cancelled during native core shutdown",
             ))
         });
     child
@@ -309,7 +309,7 @@ pub(in crate::runtimes) async fn browser_login(
             Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {}
             Err(error) => return Err(error),
         }
-        crate::supervisor::check_private(&directory, true)
+        crate::private_state::check_private(&directory)
     })
     .await
     .map_err(|_| {

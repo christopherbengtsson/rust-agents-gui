@@ -12,9 +12,6 @@ mod process_effects;
 mod storage;
 #[path = "../../core/src/workspaces.rs"]
 mod workspaces;
-mod supervisor {
-    pub(crate) use crate::private_state::check_private;
-}
 
 #[cfg(feature = "qualification")]
 pub async fn qualify(root: &std::path::Path) -> Result<serde_json::Value, String> {

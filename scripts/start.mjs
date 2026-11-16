@@ -1,109 +1,202 @@
-// Native launcher. Tauri owns core startup and completed shutdown.
+// Retained native child ownership. Ordinary stop waits for the core's completed Quit.
 import { spawn } from "node:child_process";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { developmentEnvironment } from "./development-state.mjs";
-import { cargoMetadata, root } from "./cargo.mjs";
+import { cargoMetadata, claimTarget, root } from "./cargo.mjs";
 import { prepareGenerated } from "./prepare-generated.mjs";
 
-const mode = process.argv[2];
-if (!["dev", "release"].includes(mode)) {
-  throw new Error("usage: node scripts/start.mjs <dev|release>");
-}
-const children = new Set();
-let stopping = false;
-
-function launch(command, args, options = {}) {
-  const child = spawn(command, args, {
-    cwd: root,
-    stdio: "inherit",
-    detached: true,
-    ...options,
-  });
-  children.add(child);
-  child.once("exit", () => children.delete(child));
-  child.once("error", () => children.delete(child));
-  return child;
-}
-
-async function waitForExit(child) {
-  return new Promise((resolve, reject) => {
-    child.once("error", reject);
-    child.once("exit", (code, signal) => {
-      if (code === 0 || stopping) resolve();
-      else reject(new Error(`Process exited with ${signal ?? code}`));
+export function createLauncher({
+  spawn: launchProcess = spawn,
+  warn = console.error,
+  schedule = setTimeout,
+  unschedule = clearTimeout,
+} = {}) {
+  const active = new Set();
+  const records = new WeakMap();
+  let stopping;
+  function launch(command, args, options = {}, kind = "native") {
+    if (stopping) throw new Error("Launcher is stopping");
+    // Direct children, without a CLI process group that can kill the native owner.
+    const child = launchProcess(command, args, {
+      cwd: root,
+      stdio: "inherit",
+      ...options,
     });
-  });
-}
-
-function signalGroup(child, signal) {
-  try {
-    process.kill(-child.pid, signal);
-  } catch (error) {
-    if (error.code !== "ESRCH") console.error(error);
+    const record = { child, kind, done: false, requested: false };
+    records.set(child, record);
+    active.add(record);
+    record.exited = new Promise((resolve, reject) => {
+      child.once("error", (error) => {
+        record.done = true;
+        active.delete(record);
+        reject(error);
+      });
+      child.once("exit", (code, signal) => {
+        record.done = true;
+        active.delete(record);
+        if (
+          code === 0 ||
+          (kind === "service" &&
+            record.requested &&
+            (signal === "SIGTERM" || code === 143))
+        )
+          resolve();
+        else
+          reject(
+            new Error(
+              `Process exited with ${signal ?? code}; native termination requires recovery, not a completed drain`,
+            ),
+          );
+      });
+    });
+    // A service can fail before its owner starts awaiting it. Retain the rejection.
+    record.exited.catch(() => {});
+    return child;
   }
-}
-
-async function stop(code) {
-  if (stopping) return;
-  stopping = true;
-  for (const child of children) signalGroup(child, "SIGTERM");
-  // Native signal handling routes ordinary stop through the same owned Quit.
-  await Promise.all(
-    [...children].map(async (child) => {
-      const exited = waitForExit(child);
-      const pending = setTimeout(() => {
-        console.error(
-          "Native shutdown is still pending; no forced termination was sent. A manual force-kill requires recovery and is not a completed drain.",
-        );
-      }, 3000);
-      try {
-        await exited;
-      } finally {
-        clearTimeout(pending);
+  const wait = (child) => records.get(child).exited;
+  function stop() {
+    if (stopping) return stopping;
+    stopping = (async () => {
+      const failures = [];
+      // Keep presentation available while native cleanup is pending or failed.
+      for (const kind of ["native", "service"]) {
+        const retained = [...active].filter((record) => record.kind === kind);
+        for (const record of retained) {
+          if (!record.done) {
+            record.requested = true;
+            record.child.kill("SIGTERM");
+          }
+        }
+        const timer = retained.length
+          ? schedule(
+              () =>
+                warn(
+                  "Native shutdown is pending; keep the app open. No forced termination was sent; a force-kill requires recovery and is not success.",
+                ),
+              3000,
+            )
+          : undefined;
+        try {
+          const results = await Promise.allSettled(
+            retained.map((record) => record.exited),
+          );
+          failures.push(
+            ...results
+              .filter((result) => result.status === "rejected")
+              .map((result) => result.reason),
+          );
+        } finally {
+          if (timer !== undefined) unschedule(timer);
+        }
       }
-    }),
-  );
-  process.exitCode = code;
+      if (failures.length)
+        throw new AggregateError(
+          failures,
+          "Shutdown failed; native recovery is required",
+        );
+    })();
+    return stopping;
+  }
+  return {
+    launch,
+    wait,
+    stop,
+    get stopping() {
+      return Boolean(stopping);
+    },
+  };
 }
 
-for (const signal of ["SIGINT", "SIGTERM"]) {
-  process.once(signal, () => void stop(0));
-}
-
-try {
-  prepareGenerated("--check");
-  // Ticket 07 removes the still-declared bundle resource. Preparation only
-  // stages that unreachable resource; native startup never executes it.
-  if (mode === "dev")
-    await waitForExit(
-      launch("node", ["scripts/prepare-supervisor.mjs", "debug"]),
-    );
-  if (!stopping) {
-    let env = {
-      ...process.env,
-      CARGO_TARGET_DIR: cargoMetadata().target_directory,
-    };
+export async function start(mode) {
+  if (!["dev", "release"].includes(mode))
+    throw new Error("usage: node scripts/start.mjs <dev|release>");
+  const launcher = createLauncher();
+  const stop = () =>
+    launcher.stop().catch((error) => {
+      console.error(error);
+      process.exitCode = 1;
+    });
+  for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, stop);
+  try {
+    prepareGenerated("--check");
+    const target = cargoMetadata().target_directory;
+    claimTarget(target);
+    let env = { ...process.env, CARGO_TARGET_DIR: target };
     if (mode === "dev") {
       env = developmentEnvironment({ env });
       console.log(`Native dev state: ${env.AGENT_WORKSPACE_STATE_DIR}`);
+      // Native edits require completed Quit and an explicit restart. Vite retains HMR.
+      await launcher.wait(
+        launcher.launch(
+          "cargo",
+          ["build", "--locked", "-p", "workspace-desktop"],
+          { env },
+        ),
+      );
+      if (launcher.stopping) return;
+      const frontend = launcher.launch(
+        process.execPath,
+        ["node_modules/vite/bin/vite.js"],
+        { env, stdio: ["inherit", "pipe", "inherit"] },
+        "service",
+      );
+      frontend.stdout.on("data", (bytes) => process.stdout.write(bytes));
+      // A failed strict-port server must not leave a native owner behind.
+      launcher.wait(frontend).then(stop, (error) => {
+        console.error(error);
+        process.exitCode = 1;
+        void stop();
+      });
+      let ready;
+      let timer;
+      try {
+        await Promise.race([
+          new Promise((resolve, reject) => {
+            ready = (bytes) => {
+              if (bytes.toString().includes("http://127.0.0.1:1420/"))
+                resolve();
+            };
+            frontend.stdout.on("data", ready);
+            timer = setTimeout(
+              () =>
+                reject(
+                  new Error(
+                    "Development server did not become ready within 15 seconds",
+                  ),
+                ),
+              15000,
+            );
+          }),
+          launcher.wait(frontend).then(() => {
+            throw new Error("Development server exited before native launch");
+          }),
+        ]);
+      } finally {
+        clearTimeout(timer);
+        frontend.stdout.off("data", ready);
+      }
     }
-    const desktop =
-      mode === "dev"
-        ? launch("corepack", ["pnpm", "tauri", "dev"], { env })
-        : launch(
-            path.join(
-              cargoMetadata().target_directory,
+    if (!launcher.stopping) {
+      const executable =
+        mode === "dev"
+          ? path.join(target, "debug/workspace-desktop")
+          : path.join(
+              target,
               "release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop",
-            ),
-            [],
-            {
-              env,
-            },
-          );
-    await waitForExit(desktop);
-    await stop(0);
+            );
+      await launcher.wait(launcher.launch(executable, [], { env }));
+    }
+  } catch (error) {
+    console.error(error);
+    process.exitCode = 1;
+  } finally {
+    await stop();
+    for (const signal of ["SIGINT", "SIGTERM"]) process.off(signal, stop);
   }
-} catch (error) {
-  console.error(error.message);
-  await stop(1);
 }
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+)
+  await start(process.argv[2]);

@@ -36,7 +36,6 @@ test("CI checks preparation once, builds assets separately, then selects every r
     ["corepack", ["pnpm", "format:check"]],
     ["corepack", ["pnpm", "lint"]],
     ["corepack", ["pnpm", "exec", "tsc", "--noEmit"]],
-    ["node", ["scripts/prepare-supervisor.mjs", "debug"]],
     ["corepack", ["pnpm", "exec", "vite", "build"]],
     [
       "node",
@@ -142,4 +141,29 @@ test("stale route output fails CI before TypeScript or bundling can repair it", 
       }),
     /route drift/,
   );
+});
+
+test("packaging claims the selected Cargo target without a staged executable", () => {
+  const calls = [];
+  assert.equal(
+    build({
+      generated: (mode) => calls.push(["generated", mode]),
+      metadata: () => ({ target_directory: "/private/owned-target" }),
+      claim: (target) => calls.push(["claim", target]),
+      run(command, args, options) {
+        calls.push([command, args]);
+        assert.equal(options.env.CARGO_TARGET_DIR, "/private/owned-target");
+        return { status: 0 };
+      },
+    }),
+    0,
+  );
+  assert.deepEqual(calls, [
+    ["generated", "--check"],
+    ["claim", "/private/owned-target"],
+    [
+      "corepack",
+      ["pnpm", "tauri", "build", "--bundles", "app", "--", "--locked"],
+    ],
+  ]);
 });

@@ -1,0 +1,40 @@
+2026-11-16T19:14:34.117910Z  INFO workspace_core::native: native startup settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 phase=Some(Ready)
+2026-11-16T19:14:34.247831Z  INFO workspace_core::native: provider request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.247860Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.247881Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.264876Z  INFO workspace_core::native: provider request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.264912Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.264923Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.275014Z  INFO workspace_core::native: provider request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=Some(e4e5473a-c96a-4458-a77b-a866ce3a7353)
+2026-11-16T19:14:34.275078Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.275100Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=false
+2026-11-16T19:14:34.280641Z  INFO workspace_core::native: provider request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.280670Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.280679Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.282762Z  INFO workspace_core::native: repository request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.282784Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.283335Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.283574Z  INFO workspace_core::native: repository request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.283583Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.284032Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.285291Z  INFO workspace_core::native: provider request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.285314Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.285322Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.292761Z  INFO workspace_core::native: repository request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.292813Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.293911Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.295604Z  INFO workspace_core::native: workspace request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.295626Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.295934Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.303007Z  INFO workspace_core::native: repository request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.303058Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.303273Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.307039Z  INFO workspace_core::native: workspace request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.307063Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.307336Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.308165Z  INFO workspace_core::native: repository request incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 action=None
+2026-11-16T19:14:34.308182Z  INFO workspace_core::native: native request admitted incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 control=false
+2026-11-16T19:14:34.308339Z  INFO workspace_core::native: native request settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 succeeded=true
+2026-11-16T19:14:34.334662Z  INFO workspace_core::native: native shutdown fenced incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042
+Storage close checkpoint: {"busy":0,"log_frames":7,"checkpointed_frames":7,"wal_bytes":28872,"elapsed":{"secs":0,"nanos":13341500}}
+2026-11-16T19:14:34.350104Z  INFO workspace_core::native: native shutdown settled incarnation=043736c0-adc5-4f7f-b6cb-f3dfcb7e8042 failures=1

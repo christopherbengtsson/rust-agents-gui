@@ -1,0 +1,3 @@
+2026-11-16T19:10:53.534264Z  INFO workspace_core::native: native startup settled incarnation=9500e124-cccc-4433-a339-684a0e797392 phase=Some(Failed)
+2026-11-16T19:10:53.558462Z  INFO workspace_core::native: native shutdown fenced incarnation=9500e124-cccc-4433-a339-684a0e797392
+2026-11-16T19:10:53.558524Z  INFO workspace_core::native: native shutdown settled incarnation=9500e124-cccc-4433-a339-684a0e797392 failures=1

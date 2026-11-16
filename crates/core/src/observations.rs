@@ -168,7 +168,7 @@ impl Journal {
                     .map_err(|e| io::Error::other(e.to_string()))?;
                 if state.sequence == MAX_SEQUENCE {
                     return Err(io::Error::other(
-                        "Observation sequence exhausted; reconnect to a new supervisor incarnation",
+                        "Observation sequence exhausted; restart with a new native core incarnation",
                     ));
                 }
                 if after != Some(state.sequence) || tokio::time::Instant::now() >= deadline {

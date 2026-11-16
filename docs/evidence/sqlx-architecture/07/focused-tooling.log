@@ -1,0 +1,31 @@
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.591334ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.32225ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.086083ms)
+✔ a failed static gate prevents later application units (0.100875ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.227375ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.090541ms)
+✔ packaging claims the selected Cargo target without a staged executable (0.166333ms)
+✔ native dev namespace is stable per canonical worktree and current schema (0.793583ms)
+✔ explicit native state override remains exact (0.081291ms)
+✔ ordinary stop awaits retained native completion, reports pending and never escalates (0.724166ms)
+✔ already exited children are never signalled and force termination is failure (0.235792ms)
+✔ native child shutdown completes before the development server stops (1.160166ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.965666

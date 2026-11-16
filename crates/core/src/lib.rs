@@ -10,8 +10,8 @@ pub mod observations;
 mod private_state;
 mod process_effects;
 pub mod runtimes;
+mod state_lease;
 mod storage;
-pub mod supervisor;
 pub mod workspaces;
 
 use serde::{Deserialize, Serialize};
@@ -70,7 +70,7 @@ pub struct QuitStatus {
 pub struct Core {
     keepalive: std::sync::Mutex<Option<std::sync::Arc<Self>>>,
     lifetime: std::sync::Arc<lifetime::Lifetime>,
-    exit_requested: std::sync::atomic::AtomicBool,
+
     incarnation: String,
     pid: u32,
     providers: Option<std::sync::Arc<runtimes::ProviderConnections>>,
@@ -91,7 +91,7 @@ impl Core {
         Self {
             keepalive: std::sync::Mutex::new(None),
             lifetime: std::sync::Arc::default(),
-            exit_requested: std::sync::atomic::AtomicBool::new(false),
+
             incarnation: format!(
                 "{}-{}",
                 std::process::id(),
@@ -109,17 +109,6 @@ impl Core {
         }
     }
 
-    /// Startup and any partial cleanup are retained independently of the requesting host.
-    pub async fn start(
-        directory: std::path::PathBuf,
-        lease: supervisor::StateLease,
-    ) -> std::sync::Arc<Self> {
-        Self::start_native(
-            directory,
-            std::sync::Arc::new(lifetime::Lifetime::starting(lease)),
-        )
-        .await
-    }
     async fn start_native(
         directory: std::path::PathBuf,
         lifetime: std::sync::Arc<lifetime::Lifetime>,
@@ -133,7 +122,7 @@ impl Core {
             Some(processes),
             move || async move {
                 let directory = tokio::task::spawn_blocking(move || {
-                    supervisor::check_private(&workspace_directory, true)?;
+                    private_state::check_private(&workspace_directory)?;
                     std::fs::canonicalize(workspace_directory)
                 })
                 .await
@@ -417,7 +406,7 @@ mod tests {
         Core {
             keepalive: std::sync::Mutex::new(None),
             lifetime: std::sync::Arc::default(),
-            exit_requested: std::sync::atomic::AtomicBool::new(false),
+
             incarnation: "test-incarnation".into(),
             pid: 42,
             workspaces: None,
@@ -443,7 +432,7 @@ mod tests {
                 let completed = Arc::new(AtomicBool::new(false));
                 let marker = completed.clone();
                 let lifetime = Arc::new(lifetime::Lifetime::starting(
-                    supervisor::StateLease::controlled(released.clone()),
+                    state_lease::StateLease::controlled(released.clone()),
                 ));
                 let core = Core::start_with(
                     lifetime,
@@ -489,7 +478,7 @@ mod tests {
                 };
                 let released = Arc::new(AtomicBool::new(false));
                 let lifetime = Arc::new(lifetime::Lifetime::starting(
-                    supervisor::StateLease::controlled(released.clone()),
+                    state_lease::StateLease::controlled(released.clone()),
                 ));
                 lifetime.ready();
                 let (finish, finished) = tokio::sync::oneshot::channel();

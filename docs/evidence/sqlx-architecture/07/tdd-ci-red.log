@@ -1,0 +1,69 @@
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/prepare-supervisor.mjs debug
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.595667ms)
+✖ CI checks preparation once, builds assets separately, then selects every retained check once (0.920708ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.090292ms)
+✔ a failed static gate prevents later application units (0.123ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.245084ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.101042ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 58.610292
+
+✖ failing tests:
+
+test at scripts/check.test.mjs:23:1
+✖ CI checks preparation once, builds assets separately, then selects every retained check once (0.920708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      [
+        'prepare',
+        '--check'
+      ],
+  ...
+      [
+  +     'node',
+  +     [
+  +       'scripts/prepare-supervisor.mjs',
+  +       'debug'
+  +     ]
+  +   ],
+  +   [
+        'corepack',
+        [
+          'pnpm',
+          'exec',
+          'vite',
+  
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.test.mjs:34:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 'prepare', '--check' ], [ 'corepack', [Array] ], [ 'corepack', [Array] ], [ 'corepack', [Array] ], [ 'node', [Array] ], [ 'corepack', [Array] ], [ 'node', [Array] ], [ 'node', [Array] ] ],
+    expected: [ [ 'prepare', '--check' ], [ 'corepack', [Array] ], [ 'corepack', [Array] ], [ 'corepack', [Array] ], [ 'corepack', [Array] ], [ 'node', [Array] ], [ 'node', [Array] ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

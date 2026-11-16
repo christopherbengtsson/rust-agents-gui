@@ -1,0 +1,484 @@
+{
+  "baseline": "423c1fd5323a43a52eda6c82bd7f030145a4871c",
+  "assertions": [
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "quit_before_first_snapshot_reconciles_existing_owner_or_proves_absence_without_starting",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "quit_does_not_prove_absence_before_admitted_startup_physically_settles",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "existing_owner_is_discovered_without_lock_probe_or_start",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "absent_owner_starts_once_and_waits_for_readiness",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "concurrent_owner_startup_is_waited_for_without_starting_a_competitor",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "unsafe_state_or_incompatible_endpoint_never_starts_an_owner",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "lock_probe_and_spawn_failures_remain_failures_without_retry",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "startup_timeout_is_controlled_and_does_not_launch_again",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "non_transient_readiness_failure_is_not_retried",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "refresh_after_disconnect_retrieves_cursor_without_restart_or_replay",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "spawn_command_preserves_executable_and_single_state_argument",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "dropping_desktop_and_reopening_observes_the_same_owner_without_starting",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "oversized_registration_is_a_definite_capacity_rejection_before_transport",
+      "disposition": "NativeHost oversized_registration_is_rejected_before_domain_dispatch; workspaces UTF-8 path budget/action mismatch/no duplicate effects tests; native lost requester and domain current-build recovery. Socket encoding/transmission assertions retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "bounded_registration_uses_transport_and_preserves_uncertain_failures",
+      "disposition": "NativeHost oversized_registration_is_rejected_before_domain_dispatch; workspaces UTF-8 path budget/action mismatch/no duplicate effects tests; native lost requester and domain current-build recovery. Socket encoding/transmission assertions retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "targeted_client_rejects_replacement_kind_and_target_without_another_exchange",
+      "disposition": "Native stale incarnation rejection; typed direct action/reply APIs; current generated Rust corpus and frontend exact kind/target/revision/membership/context validators. Mixed peer envelopes retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_before_dispatch",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "invalid_snapshot_cannot_replace_the_connections_observed_owner",
+      "disposition": "Native stale incarnation rejection; typed direct action/reply APIs; current generated Rust corpus and frontend exact kind/target/revision/membership/context validators. Mixed peer envelopes retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "application_corpus_matches_pure_rust_serialization",
+      "disposition": "Retained under the same name; only obsolete peer incompatible variant removed from current corpus. Generated validator/contextual frontend tests retained."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "desktop_admission_leaves_status_and_intent_independent_of_stalled_observations",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "workspace_variants_share_observation_and_intent_budgets_with_repository_requests",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "status_exchange_and_version_rejection_use_real_protocol_parsers_without_domain_effects",
+      "disposition": "Retire application socket/version/framing mechanisms; native pre-admission byte budget and generated structural/contextual validators remain. Direct no-replay/lost-reply tests retain action uncertainty; exact provider framing untouched."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "wrong_owner_every_target_and_mixed_context_are_rejected_before_effects",
+      "disposition": "Native stale incarnation rejection; typed direct action/reply APIs; current generated Rust corpus and frontend exact kind/target/revision/membership/context validators. Mixed peer envelopes retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "malformed_oversized_and_legacy_framing_close_without_dispatch_or_output",
+      "disposition": "Retire application socket/version/framing mechanisms; native pre-admission byte budget and generated structural/contextual validators remain. Direct no-replay/lost-reply tests retain action uncertainty; exact provider framing untouched."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "client_preserves_versions_cursor_chunked_reply_and_incompatibility_without_retry",
+      "disposition": "Retire application socket/version/framing mechanisms; native pre-admission byte budget and generated structural/contextual validators remain. Direct no-replay/lost-reply tests retain action uncertainty; exact provider framing untouched."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "client_private_access_and_connect_failure_precede_io_and_never_retry",
+      "disposition": "Retire application socket/version/framing mechanisms; native pre-admission byte budget and generated structural/contextual validators remain. Direct no-replay/lost-reply tests retain action uncertainty; exact provider framing untouched."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "targeted_exchange_reports_delivery_at_physical_boundary_without_replay",
+      "disposition": "Native stale incarnation rejection; typed direct action/reply APIs; current generated Rust corpus and frontend exact kind/target/revision/membership/context validators. Mixed peer envelopes retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "client_bad_lost_or_stalled_replies_never_reconnect_or_repeat",
+      "disposition": "NativeHost request/result budget, lost requester and current action status/uncertainty; concrete direct callbacks never reconnect/repeat a request. Removed application send-byte boundary has no native equivalent; provider send/framing semantics remain owned there."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "admitted_waiter_drop_retains_capacity_and_allows_status_and_control",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "admitted_error_unwind_unstarted_drop_and_server_ceiling_release_capacity",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "only_one_discovery_is_admitted_and_no_state_lock_spans_effects",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "blocking_workers_keep_permits_after_waiter_drop_and_cleanup_awaits_completion",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "server_routes_workspace_and_repository_errors_without_fabricating_empty_records",
+      "disposition": "Native stale incarnation rejection; typed direct action/reply APIs; current generated Rust corpus and frontend exact kind/target/revision/membership/context validators. Mixed peer envelopes retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "cancellation_closes_pending_request_and_server_handlers_without_effects",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "oversized_request_rejects_before_private_checks_or_socket_access",
+      "disposition": "NativeHost request/result budget, lost requester and current action status/uncertainty; concrete direct callbacks never reconnect/repeat a request. Removed application send-byte boundary has no native equivalent; provider send/framing semantics remain owned there."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "large_chunked_reply_survives_eof_after_payload_and_preserves_buffered_next_frame",
+      "disposition": "Retire application socket/version/framing mechanisms; native pre-admission byte budget and generated structural/contextual validators remain. Direct no-replay/lost-reply tests retain action uncertainty; exact provider framing untouched."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "two_running_observations_leave_status_and_intent_effects_responsive",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "discovery_cancellation_wakes_startup_delay_without_waiting",
+      "disposition": "Native startup/lifetime/lease-last and startup-Quit tests; actual native Q4 competing owner, WebView replacement, native restart and no-replay cohort. Discovery/spawn/socket-specific assertions retire; new native startup does not launch a secondary owner."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "whole_core_finish_collects_host_panic_and_domain_failure",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/tests.rs",
+      "test": "discovering_a_completed_panic_fences_the_same_dispatch",
+      "disposition": "NativeHost abandoned requester/control slots/result guard and collect-all-errors tests; connection::tasks panic-fence/abandoned cleanup tests; process_effects retained blocking/permit/reap tests. Old server/discovery lane numbers retire."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "complete_nonzero_header_without_body_is_truncated_even_after_decode_consumes_it",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "codec_bounds_encoding_and_rejects_advertised_oversize_before_body_reservation",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "codec_preserves_split_and_coalesced_frames_and_empty_payloads",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "codec_distinguishes_partial_header_and_body_from_clean_boundary_eof",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "exchange_returns_complete_frames_and_keeps_prefetched_next_frame",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "first_byte_starts_one_transfer_budget_and_slow_fragments_cannot_extend_it",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "read_caps_idle_ack_and_buffered_transfer_without_extending_cancelled_polling",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "cancellation_wakes_idle_or_partial_read_and_closes_terminally",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "writes_encode_once_across_partial_progress_and_wait_for_flush",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "write_deadline_covers_partial_header_body_and_flush_without_fragment_renewal",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "cancelled_or_abandoned_write_closes_without_restarting_partial_io",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "eof_decode_and_read_errors_close_the_exchange_once_without_more_io",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "write_errors_and_oversize_close_without_retry_or_queued_output",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "already_cancelled_or_expired_operations_do_no_physical_io",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "dropped_read_polling_retains_transfer_progress_and_can_finish_before_original_deadline",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "handshake_write_preserves_buffered_next_read_and_write_uses_operation_cap",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "write_rejects_progress_after_absolute_cap_even_between_timer_ticks",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/framed_exchange/tests.rs",
+      "test": "deadline_timer_wakes_pending_reads_and_writes",
+      "disposition": "Retire application length-prefix codec/exchange mechanics; provider newline framed tests remain in runtimes/codex/framed.rs."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "acknowledgements_match_subscription_batch_and_cursor_exactly",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "native_delivery_waits_for_frontend_acceptance_before_acknowledging",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "sink_failure_and_frontend_stall_close_without_acknowledgement",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "server_stops_on_wrong_ack_and_preserves_changes_during_resync",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "completed_error_and_panic_workers_are_joined_before_replacement",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "shared_corpus_matches_rust_feed_serialization_and_delivery_bounds",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "stopped_before_delivery_cannot_offer_or_acknowledge",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_replacements",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "invalid_reload_replacement_cannot_stop_the_current_feed",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/connection/subscription/tests.rs",
+      "test": "cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_it",
+      "disposition": "connection::subscription::tests retain exact Control/batch/corpus checks and direct-journal acceptance, changes-during-resync, heartbeat, deadline, sink/cancel tests; native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss and abandoned_stop_keeps_worker_owned_and_collects_its_completion preserve cleanup. NativeHost direct-feed panic test and actual WebView replacement qualify host attachment; socket bytes retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "state_creation_always_validates_existing_or_new_directories",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "owner_lock_must_be_private_owned_regular_and_have_one_link",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "competing_owner_is_rejected_before_touching_the_endpoint",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "admitted_owner_alone_may_replace_a_private_stale_socket",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "unsafe_or_unreadable_socket_is_retained_and_not_replaced",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "admission_stops_on_each_filesystem_failure",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/core/src/supervisor/tests.rs",
+      "test": "owner_probe_distinguishes_held_lock_from_access_failure",
+      "disposition": "state_lease::tests preserve directory/lock validation and admission failure ordering; native Q4 and normal package probes establish actual same-root ownership. Socket-only replacement/probe mechanics retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "concurrent_desktops_discover_one_owner_and_reconnect_to_its_snapshot",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "private_endpoint_rejects_incompatible_versions_and_unbounded_frames",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "public_or_symlinked_state_is_rejected_without_starting_an_owner",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "killed_desktop_process_leaves_owner_and_reopening_catches_up",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "desktop_process",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "lost_owner_does_not_restart_on_refresh_but_explicit_reopen_recovers_status",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "cancelled_native_waiters_retain_lanes_and_cleanup_joins_actual_socket_work",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "actual_subscription_stop_joins_late_setup_and_replacement_then_heartbeats",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/discovery.rs",
+      "test": "replacement_owner_rejects_a_retained_desktop_target_before_status_refresh",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    },
+    {
+      "source": "crates/supervisor/tests/startup.rs",
+      "test": "desktop_client_receives_status_from_a_separate_supervisor_process",
+      "disposition": "Native Q4/normal package: PID equality, WebView replacement versus native failure/reopen, competing same-root exclusion, repeated/failed/startup Quit; native admission and feed physical-completion units. Peer-version/endpoint and separate supervisor PID/survival claims retire."
+    }
+  ],
+  "retired_qualification_scripts": [
+    {
+      "source": "scripts/qualify-observations.py",
+      "named_cases": [
+        "private_directory_and_endpoint",
+        "fragmented_header_and_body",
+        "exact_payload_limit_and_oversized_header",
+        "incompatible_versions_and_owner_before_dispatch",
+        "absolute_transfer_deadline_not_renewed_by_fragments",
+        "eight_server_clients_then_handler_recovery",
+        "baseline_exact_ack_and_five_second_heartbeat",
+        "mismatched_ack_closes_subscription",
+        "repository_workspace_push_progress_and_accepted_cursor_reconnect",
+        "repeating_exact_action_returns_status_without_duplicate_workspace",
+        "started_blocking_work_keeps_physical_admission_after_peer_close",
+        "inspection_push_result_large_preview_and_absolute_partial_write",
+        "availability_failure_retains_identity_and_explicit_reprobe_recovers",
+        "one_inflight_and_256_entry_overflow_resync",
+        "unacknowledged_delivery_closes_at_15_seconds",
+        "owner_alive_after_fault_cohort"
+      ],
+      "disposition": "Application Unix framing/peer timing/backpressure retire; direct feed/journal tests retain 256-entry gap/resync, exact ack, 32-target/4KiB delivery bounds and deadlines. Registration continuation/no duplicate workspace, availability recovery and bounded inspection retain current owning-module units and prior source-aligned workspace/storage evidence. Current native/storage/process commands replace socket hosts. Actual sustained read/write/inspection pressure remains cumulative ticket08 qualification; no ticket08 pass claimed."
+    },
+    {
+      "source": "scripts/qualify-core-lifecycle.py",
+      "named_cases": [],
+      "disposition": "Application Unix framing/peer timing/backpressure retire; direct feed/journal tests retain 256-entry gap/resync, exact ack, 32-target/4KiB delivery bounds and deadlines. Registration continuation/no duplicate workspace, availability recovery and bounded inspection retain current owning-module units and prior source-aligned workspace/storage evidence. Current native/storage/process commands replace socket hosts. Actual sustained read/write/inspection pressure remains cumulative ticket08 qualification; no ticket08 pass claimed."
+    }
+  ]
+}

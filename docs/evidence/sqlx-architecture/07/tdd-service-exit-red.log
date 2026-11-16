@@ -1,0 +1,31 @@
+✔ ordinary stop awaits retained native completion, reports pending and never escalates (0.67475ms)
+✔ already exited children are never signalled and force termination is failure (0.218375ms)
+✖ native child shutdown completes before the development server stops (1.107041ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.471167
+
+✖ failing tests:
+
+test at scripts/start.test.mjs:65:1
+✖ native child shutdown completes before the development server stops (1.107041ms)
+  AggregateError [Error]: Shutdown failed; native recovery is required
+      at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:92:15
+      at async TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.test.mjs:75:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    [errors]: [
+      Error: Process exited with 143; native termination requires recovery, not a completed drain
+          at EventEmitter.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:45:13)
+          at EventEmitter.wrapper (node:events:639:12)
+          at EventEmitter.emit (node:events:514:20)
+          at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.test.mjs:74:12)
+          at async Test.run (node:internal/test_runner/test:1409:7)
+          at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+    ]
+  }

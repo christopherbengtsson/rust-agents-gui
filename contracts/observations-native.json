@@ -289,14 +289,6 @@
         "delivery": "unknown",
         "message": "Reply unavailable"
       }
-    },
-    {
-      "kind": "transport",
-      "error": {
-        "code": "incompatible",
-        "delivery": "rejected",
-        "message": "Incompatible versions"
-      }
     }
   ],
   "feed": [

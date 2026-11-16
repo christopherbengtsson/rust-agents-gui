@@ -1,0 +1,14 @@
+{
+  "kind": "effects",
+  "directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-effects-56Z1mw",
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-process-effects",
+  "command": [
+    "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-effects-56Z1mw/fresh",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/process-effects/runtime.py"
+  ],
+  "seconds": 14.145942792,
+  "exit": 0,
+  "signal": null,
+  "stdout": "{\n  \"authentication\": \"none\",\n  \"checks\": [\n    {\n      \"passed\": true,\n      \"scenario\": \"finite\"\n    },\n    {\n      \"passed\": true,\n      \"scenario\": \"nonzero\"\n    },\n    {\n      \"passed\": true,\n      \"scenario\": \"stdin\"\n    },\n    {\n      \"passed\": true,\n      \"scenario\": \"saturate\"\n    },\n    {\n      \"passed\": true,\n      \"scenario\": \"natural-exit-timeout-with-zero-term-exit\"\n    },\n    {\n      \"abandoned_waiter\": false,\n      \"descendant_pid\": 22469,\n      \"passed\": true,\n      \"scenario\": \"leader-exit-with-descendant\"\n    },\n    {\n      \"abandoned_waiter\": true,\n      \"descendant_pid\": 22477,\n      \"passed\": true,\n      \"scenario\": \"leader-exit-with-descendant\"\n    },\n    {\n      \"passed\": true,\n      \"scenario\": \"owned-process-drain\"\n    },\n    {\n      \"limit\": \"group quiescence did not stop escaped work; release file ended it voluntarily; cleanup stayed unknown\",\n      \"passed\": true,\n      \"pid\": 22479,\n      \"scenario\": \"escaped-descendant-pipe\"\n    },\n    {\n      \"limit\": \"survival observed; no signaling from saved PID; fixture stopped voluntarily\",\n      \"passed\": true,\n      \"scenario\": \"native-parent-loss\",\n      \"survivor_pid\": 22481\n    }\n  ],\n  \"containment\": \"macOS owned groups only; escaped descendants and native parent loss are recovery cases\",\n  \"fixture\": \"/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/process-effects/runtime.py\",\n  \"provider\": \"none\",\n  \"root\": \"/private/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-effects-56Z1mw/fresh\"\n}\n",
+  "stderr": ""
+}

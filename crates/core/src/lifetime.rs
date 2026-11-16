@@ -13,7 +13,7 @@ struct State {
     starts: usize,
     attempted: bool,
     errors: Vec<String>,
-    lease: Option<crate::supervisor::StateLease>,
+    lease: Option<crate::state_lease::StateLease>,
 }
 pub(crate) struct StartGuard(Arc<Lifetime>);
 impl Drop for StartGuard {
@@ -42,7 +42,7 @@ impl Default for Lifetime {
     }
 }
 impl Lifetime {
-    pub(crate) fn starting(lease: crate::supervisor::StateLease) -> Self {
+    pub(crate) fn starting(lease: crate::state_lease::StateLease) -> Self {
         let owner = Self::default();
         {
             let mut state = owner.state.lock().unwrap();
@@ -105,18 +105,6 @@ impl Lifetime {
         state.errors = errors;
         self.settled.notify_waiters();
     }
-    pub(crate) async fn finished(&self) -> crate::QuitStatus {
-        loop {
-            let notified = self.settled.notified();
-            tokio::pin!(notified);
-            notified.as_mut().enable();
-            let status = self.report();
-            if status.complete || status.diagnostic.is_some() {
-                return status;
-            }
-            notified.await;
-        }
-    }
     pub(crate) fn report(&self) -> crate::QuitStatus {
         let state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         crate::QuitStatus {
@@ -148,7 +136,7 @@ mod tests {
         for fail in [false, true] {
             let released = Arc::new(AtomicBool::new(false));
             let owner =
-                Lifetime::starting(crate::supervisor::StateLease::controlled(released.clone()));
+                Lifetime::starting(crate::state_lease::StateLease::controlled(released.clone()));
             owner.ready();
             owner.fence();
             owner.release();

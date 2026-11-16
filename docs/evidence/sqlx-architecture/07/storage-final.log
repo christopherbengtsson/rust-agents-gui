@@ -1,0 +1,3 @@
+$ node scripts/qualify.mjs storage -- /Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/07/storage-final.json
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+Qualification storage: passed; retained /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-storage-QcGkQC

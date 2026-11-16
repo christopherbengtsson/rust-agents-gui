@@ -1,0 +1,25 @@
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.5715ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.308375ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.081125ms)
+✔ a failed static gate prevents later application units (0.09575ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.249583ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.106667ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.373334

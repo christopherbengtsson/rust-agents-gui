@@ -72,12 +72,18 @@ fn within_budget(value: &impl serde::Serialize) -> bool {
     serde_json::to_writer(Budget(64 * 1024), value).is_ok()
 }
 impl NativeHost {
+    #[cfg(test)]
+    pub(crate) async fn controlled() -> Arc<Self> {
+        let host = Self::start_with(|_| async { Ok(Arc::new(Core::new())) });
+        host.initialized().await;
+        host
+    }
     /// Must be called inside the host's driven runtime; it never constructs a runtime.
     pub fn start(directory: PathBuf) -> Arc<Self> {
         Self::start_with(move |host| async move {
             let lease = tokio::task::spawn_blocking({
                 let directory = directory.clone();
-                move || crate::supervisor::StateLease::acquire(&directory)
+                move || crate::state_lease::StateLease::acquire(&directory)
             })
             .await
             .map_err(|e| e.to_string())?
@@ -289,6 +295,10 @@ impl NativeHost {
         expected: String,
         request: RepositoryRequest,
     ) -> Result<NativeReply<RepositoryReply>, RequestFailure> {
+        if let RepositoryRequest::Register { request } = &request {
+            crate::workspaces::check_registration_path_budget(&request.path)
+                .map_err(|error| RequestFailure::Rejected { error })?;
+        }
         let action = match &request {
             RepositoryRequest::Register { request } => Some(request.action_id.0),
             RepositoryRequest::Action { action_id } => Some(action_id.0),
@@ -482,6 +492,56 @@ impl NativeHost {
 mod tests {
     use super::*;
     #[tokio::test]
+    async fn native_quit_collects_request_panic_and_domain_failure() {
+        let host = NativeHost::start_with(|_| async {
+            Ok(Arc::new(Core {
+                workspaces: Some(crate::workspaces::tests::controlled_completion(async {
+                    Err(RepositoryError::storage("controlled domain failure"))
+                })),
+                ..Core::new()
+            }))
+        });
+        host.initialized().await;
+        let failed = host
+            .tasks
+            .spawn::<()>(async { panic!("controlled host panic") })
+            .unwrap();
+        assert!(failed.await.is_err());
+        host.begin_quit();
+        host.finished().await;
+        assert!(!host.quit_status().complete);
+        let diagnostic = host.quit_status().diagnostic.unwrap();
+        assert!(diagnostic.contains("controlled domain failure"));
+        assert!(diagnostic.contains("Native request cleanup"));
+    }
+    #[tokio::test]
+    async fn oversized_registration_is_rejected_before_domain_dispatch() {
+        let host = NativeHost::start_with(|_| async { Ok(Arc::new(Core::new())) });
+        host.initialized().await;
+        for path in [
+            format!("/{}", "a".repeat(4096)),
+            format!("/{}", "é".repeat(2048)),
+        ] {
+            let result = host
+                .repository_request(
+                    host.incarnation.clone(),
+                    RepositoryRequest::Register {
+                        request: crate::workspaces::RegisterRepository {
+                            action_id: crate::workspaces::ActionId(uuid::Uuid::from_u128(1)),
+                            path,
+                            create_initial_workspace: false,
+                        },
+                    },
+                )
+                .await;
+            assert!(
+                matches!(result, Err(RequestFailure::Rejected { error }) if error.code == crate::workspaces::ErrorCode::Capacity)
+            );
+        }
+        host.begin_quit();
+        host.finished().await;
+    }
+    #[tokio::test]
     async fn quit_during_startup_retains_one_drain_and_never_publishes_ready() {
         let (release, pending) = tokio::sync::oneshot::channel();
         let host = NativeHost::start_with(|_| async move {
@@ -664,7 +724,7 @@ mod tests {
         use std::sync::atomic::{AtomicBool, Ordering};
         let released = Arc::new(AtomicBool::new(false));
         let lifetime = Arc::new(crate::lifetime::Lifetime::starting(
-            crate::supervisor::StateLease::controlled(released.clone()),
+            crate::state_lease::StateLease::controlled(released.clone()),
         ));
         lifetime.ready();
         let host = NativeHost::start_with(move |_| async move {

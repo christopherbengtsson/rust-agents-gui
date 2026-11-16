@@ -5434,8 +5434,7 @@
           "busy",
           "not_connected",
           "incarnation_changed",
-          "reply_unavailable",
-          "incompatible"
+          "reply_unavailable"
         ],
         "type": "string"
       },
@@ -6012,8 +6011,7 @@
       "busy",
       "not_connected",
       "incarnation_changed",
-      "reply_unavailable",
-      "incompatible"
+      "reply_unavailable"
     ],
     "title": "TransportCode",
     "type": "string"
@@ -6034,8 +6032,7 @@
           "busy",
           "not_connected",
           "incarnation_changed",
-          "reply_unavailable",
-          "incompatible"
+          "reply_unavailable"
         ],
         "type": "string"
       }

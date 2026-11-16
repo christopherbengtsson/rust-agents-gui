@@ -1,4 +1,4 @@
-use super::super::tests::{run, support::*};
+use super::super::tests::run;
 use super::*;
 fn batch(id: u64, sequence: u64, sample: Sample) -> FeedBatch {
     FeedBatch {
@@ -75,97 +75,6 @@ fn acknowledgements_match_subscription_batch_and_cursor_exactly() {
     });
 }
 #[test]
-fn native_delivery_waits_for_frontend_acceptance_before_acknowledging() {
-    run(async {
-        let control = Control::default();
-        let first = batch(1, 7, Sample::ResyncRequired { watermark: 7 });
-        let second = batch(
-            2,
-            8,
-            Sample::Hints {
-                watermark: 8,
-                targets: vec![crate::observations::Target::Repositories],
-            },
-        );
-        let mut bytes = wire(&Response::Feed {
-            batch: first.clone(),
-        });
-        bytes.extend(wire(&Response::Feed {
-            batch: second.clone(),
-        }));
-        let stream = Stream::new(bytes);
-        let trace = stream.0.clone();
-        let accepted = Mutex::new(Vec::new());
-        let result = run_subscribed(
-            &mut FramedExchange::new(stream),
-            "incarnation-a",
-            "feed-1",
-            Some(FeedCursor {
-                incarnation: "incarnation-a".into(),
-                sequence: 7,
-            }),
-            &control,
-            &|event| {
-                let FeedEvent::Batch { batch } = event else {
-                    panic!()
-                };
-                assert_eq!(
-                    frames::<FeedAck>(&trace.output()).len(),
-                    accepted.lock().unwrap().len()
-                );
-                accepted.lock().unwrap().push(batch.acknowledgement.clone());
-                control.acknowledge(&batch.acknowledgement)
-            },
-        )
-        .await;
-        assert_eq!(result.unwrap_err().kind(), io::ErrorKind::UnexpectedEof);
-        assert_eq!(
-            *accepted.lock().unwrap(),
-            [first.acknowledgement, second.acknowledgement]
-        );
-        assert_eq!(
-            frames::<FeedAck>(&trace.output()),
-            *accepted.lock().unwrap()
-        );
-    });
-}
-#[test]
-fn sink_failure_and_frontend_stall_close_without_acknowledgement() {
-    run(async {
-        for fail in [false, true] {
-            let stream = Stream::new(wire(&Response::Feed {
-                batch: batch(1, 1, Sample::ResyncRequired { watermark: 1 }),
-            }));
-            let trace = stream.0.clone();
-            let result = run_subscribed(
-                &mut FramedExchange::new(stream),
-                "incarnation-a",
-                "feed-1",
-                None,
-                &Control::default(),
-                &|_| {
-                    if fail {
-                        Err(io::ErrorKind::BrokenPipe.into())
-                    } else {
-                        Ok(())
-                    }
-                },
-            )
-            .await;
-            assert_eq!(
-                result.unwrap_err().kind(),
-                if fail {
-                    io::ErrorKind::BrokenPipe
-                } else {
-                    io::ErrorKind::TimedOut
-                }
-            );
-            assert!(trace.output().is_empty());
-            assert_eq!(trace.0.lock().unwrap().drops, 1);
-        }
-    });
-}
-#[test]
 fn owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery() {
     let good = batch(
         1,
@@ -204,186 +113,6 @@ fn owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery() {
     );
 }
 #[test]
-fn server_stops_on_wrong_ack_and_preserves_changes_during_resync() {
-    run(async {
-        for wrong in [false, true] {
-            let journal = Arc::new(crate::observations::Journal::default());
-            let mut ack = batch(1, 1, Sample::ResyncRequired { watermark: 1 }).acknowledgement;
-            if wrong {
-                ack.batch_id += 1;
-            }
-            let stream = Stream::pending();
-            stream.0.feed(&wire(&ack));
-            let trace = stream.0.clone();
-            let cancel = CancellationToken::new();
-            let mut exchange = FramedExchange::new(stream);
-            let future = serve(
-                "incarnation-a",
-                &journal,
-                Subscribe {
-                    subscription_id: "feed-1".into(),
-                    after: None,
-                },
-                &mut exchange,
-                &cancel,
-            );
-            tokio::pin!(future);
-            if wrong {
-                assert_eq!(future.await.unwrap_err().kind(), io::ErrorKind::InvalidData);
-            } else {
-                assert!(pending(future.as_mut()).await);
-                journal.publish(vec![crate::observations::Target::Repositories]);
-                journal.wake();
-                assert!(pending(future.as_mut()).await);
-                let output = frames::<Response>(&trace.output());
-                assert_eq!(output.len(), 2);
-                assert!(matches!(
-                    &output[1],
-                    Response::Feed {
-                        batch: FeedBatch {
-                            sample: Sample::Hints { watermark: 2, .. },
-                            ..
-                        }
-                    }
-                ));
-                cancel.cancel();
-                assert_eq!(future.await.unwrap_err().kind(), io::ErrorKind::Interrupted);
-            }
-        }
-    });
-}
-#[test]
-fn idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute() {
-    run(async {
-        let control = Control::default();
-        control
-            .offer(batch(1, 1, Sample::ResyncRequired { watermark: 1 }).acknowledgement)
-            .unwrap();
-        let future = control.wait_accepted(Instant::now() + ACK_TIMEOUT);
-        tokio::pin!(future);
-        assert!(pending(future.as_mut()).await);
-        control.stop();
-        assert_eq!(future.await.unwrap_err().kind(), io::ErrorKind::Interrupted);
-        let journal = crate::observations::Journal::default();
-        let cancel = CancellationToken::new();
-        let mut exchange = FramedExchange::new(Stream::pending());
-        let future = serve(
-            "incarnation-a",
-            &journal,
-            Subscribe {
-                subscription_id: "feed-1".into(),
-                after: Some(FeedCursor {
-                    incarnation: "incarnation-a".into(),
-                    sequence: 1,
-                }),
-            },
-            &mut exchange,
-            &cancel,
-        );
-        tokio::pin!(future);
-        assert!(pending(future.as_mut()).await);
-        cancel.cancel();
-        assert_eq!(future.await.unwrap_err().kind(), io::ErrorKind::Interrupted);
-        let mut exchange = FramedExchange::new(Stream::pending());
-        assert_eq!(
-            serve(
-                "incarnation-a",
-                &journal,
-                Subscribe {
-                    subscription_id: "feed-1".into(),
-                    after: None
-                },
-                &mut exchange,
-                &CancellationToken::new()
-            )
-            .await
-            .unwrap_err()
-            .kind(),
-            io::ErrorKind::TimedOut
-        );
-    });
-}
-#[test]
-fn stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement() {
-    run(async {
-        let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
-        initialize(&connection);
-        let (started, entered) = tokio::sync::oneshot::channel();
-        let (release, finish) = tokio::sync::oneshot::channel();
-        connection
-            .start_subscription_with(
-                "incarnation-a".into(),
-                "feed-1".into(),
-                Some(FeedCursor {
-                    incarnation: "incarnation-a".into(),
-                    sequence: 7,
-                }),
-                |_| Ok(()),
-                async move |incarnation, id, after, control, _| {
-                    assert_eq!(incarnation, "incarnation-a");
-                    assert_eq!(id, "feed-1");
-                    assert_eq!(after.unwrap().sequence, 7);
-                    started.send(()).unwrap();
-                    finish.await.unwrap();
-                    assert!(control.cancel.is_cancelled());
-                    Ok(())
-                },
-            )
-            .unwrap();
-        entered.await.unwrap();
-        assert!(connection.subscription.try_acquire().is_none());
-        assert!(connection.prepare_snapshot().is_ok());
-        assert!(connection.observations.try_acquire().is_some());
-        connection
-            .stop_subscription("old-generation")
-            .await
-            .unwrap();
-        {
-            let stop = connection.stop_subscription("feed-1");
-            tokio::pin!(stop);
-            assert!(pending(stop.as_mut()).await);
-            assert!(
-                connection
-                    .start_subscription("incarnation-a".into(), "feed-2".into(), None, |_| Ok(()))
-                    .is_err()
-            );
-        }
-        assert!(connection.subscription.try_acquire().is_none());
-        release.send(()).unwrap();
-        connection.stop_subscription("feed-1").await.unwrap();
-        connection.stop_subscription("feed-1").await.unwrap();
-        assert!(connection.subscription.try_acquire().is_some());
-        assert!(connection.feed.current.lock().unwrap().is_none());
-    });
-}
-#[test]
-fn completed_error_and_panic_workers_are_joined_before_replacement() {
-    run(async {
-        for panic in [false, true] {
-            let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
-            initialize(&connection);
-            let (started, entered) = tokio::sync::oneshot::channel();
-            connection
-                .start_subscription_with(
-                    "incarnation-a".into(),
-                    "feed-1".into(),
-                    None,
-                    |_| Ok(()),
-                    async move |_, _, _, _, _| {
-                        started.send(()).unwrap();
-                        assert!(!panic, "controlled feed panic");
-                        Err(io::ErrorKind::ConnectionReset.into())
-                    },
-                )
-                .unwrap();
-            entered.await.unwrap();
-            assert_eq!(connection.stop_subscription("feed-1").await.is_err(), panic);
-            assert!(connection.feed.current.lock().unwrap().is_none());
-            assert!(connection.subscription.try_acquire().is_some());
-        }
-    });
-}
-#[test]
 fn shared_corpus_matches_rust_feed_serialization_and_delivery_bounds() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../../contracts/observations-native.json"
@@ -392,7 +121,7 @@ fn shared_corpus_matches_rust_feed_serialization_and_delivery_bounds() {
     for value in corpus["feed"].as_array().unwrap() {
         let batch: FeedBatch = serde_json::from_value(value.clone()).unwrap();
         assert_eq!(serde_json::to_value(&batch).unwrap(), *value);
-        assert!(encode_payload(&Response::Feed { batch }).unwrap().len() + 4 <= DELIVERY_BYTES);
+        assert!(serde_json::to_vec(&batch).unwrap().len() <= DELIVERY_BYTES);
     }
 }
 #[test]
@@ -405,178 +134,191 @@ fn stopped_before_delivery_cannot_offer_or_acknowledge() {
 }
 
 #[test]
-fn reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_replacements() {
+fn direct_delivery_waits_for_acceptance_and_preserves_changes_during_resync() {
     run(async {
-        let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
-        initialize(&connection);
-        let (started, entered) = tokio::sync::oneshot::channel();
-        let (release, finish) = tokio::sync::oneshot::channel();
-        connection
-            .start_subscription_with(
-                "incarnation-a".into(),
-                "old-page".into(),
-                None,
-                |_| Ok(()),
-                async move |_, _, _, control, _| {
-                    started.send(()).unwrap();
-                    finish.await.unwrap();
-                    assert!(control.cancel.is_cancelled());
-                    Ok(())
-                },
-            )
-            .unwrap();
-        entered.await.unwrap();
-        let (replacement_started, replacement_entered) = tokio::sync::oneshot::channel();
-        let replacement = connection.replace_subscription_with(
-            "incarnation-a".into(),
-            "new-page".into(),
+        let journal = crate::observations::Journal::default();
+        let control = Control::default();
+        let (send, mut receive) = tokio::sync::mpsc::unbounded_channel();
+        let deliver = |event| {
+            send.send(event).unwrap();
+            Ok(())
+        };
+        let delivery = run_direct(
+            &journal,
+            "incarnation-a",
+            "feed-1",
             None,
-            |_| Ok(()),
-            async move |incarnation, id, after, control, _| {
-                assert_eq!(incarnation, "incarnation-a");
-                assert_eq!(id, "new-page");
-                assert!(after.is_none());
-                replacement_started.send(()).unwrap();
-                control.cancel.cancelled().await;
-                Ok(())
-            },
+            &control,
+            &deliver,
         );
-        tokio::pin!(replacement);
-        assert!(pending(replacement.as_mut()).await);
-        assert!(connection.subscription.try_acquire().is_none());
+        tokio::pin!(delivery);
+        assert!(pending(delivery.as_mut()).await);
+        let FeedEvent::Batch { batch } = receive.try_recv().unwrap() else {
+            panic!()
+        };
+        journal.publish(vec![crate::observations::Target::Repositories]);
+        journal.wake();
+        assert!(pending(delivery.as_mut()).await);
+        assert!(receive.try_recv().is_err());
+        control.acknowledge(&batch.acknowledgement).unwrap();
+        assert!(pending(delivery.as_mut()).await);
+        let FeedEvent::Batch { batch } = receive.try_recv().unwrap() else {
+            panic!()
+        };
+        assert!(matches!(batch.sample, Sample::Hints { watermark: 2, .. }));
+        control.acknowledge(&batch.acknowledgement).unwrap();
+        assert!(pending(delivery.as_mut()).await);
+        tokio::time::advance(HEARTBEAT).await;
+        assert!(pending(delivery.as_mut()).await);
+        let FeedEvent::Batch { batch } = receive.try_recv().unwrap() else {
+            panic!()
+        };
+        assert!(matches!(batch.sample, Sample::Heartbeat { watermark: 2 }));
+        control.stop();
         assert_eq!(
-            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
-            "old-page"
+            delivery.await.unwrap_err().kind(),
+            io::ErrorKind::Interrupted
         );
-        let competing = connection.replace_subscription_with(
-            "incarnation-a".into(),
-            "competing-page".into(),
-            None,
-            |_| Ok(()),
-            async |_, _, _, _, _| -> io::Result<()> {
-                panic!("competing replacement must not start")
-            },
-        );
-        assert!(matches!(
-            competing.await.unwrap_err(),
-            RequestFailure::Transport {
-                error: TransportFailure {
-                    code: TransportCode::Busy,
-                    ..
-                }
-            }
-        ));
-        release.send(()).unwrap();
-        replacement.await.unwrap();
-        replacement_entered.await.unwrap();
-        connection.stop_subscription("old-page").await.unwrap();
-        assert_eq!(
-            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
-            "new-page"
-        );
-        connection.stop_subscription("new-page").await.unwrap();
-        assert!(connection.subscription.try_acquire().is_some());
     });
 }
 
 #[test]
-fn invalid_reload_replacement_cannot_stop_the_current_feed() {
+fn direct_sink_failure_and_absolute_ack_deadline_stop_delivery() {
     run(async {
-        for (incarnation, id) in [
-            ("other-incarnation", "new-page"),
-            ("incarnation-a", "invalid id"),
+        for fail in [false, true] {
+            let journal = crate::observations::Journal::default();
+            let control = Control::default();
+            let result = run_direct(&journal, "incarnation-a", "feed-1", None, &control, &|_| {
+                if fail {
+                    Err(io::ErrorKind::BrokenPipe.into())
+                } else {
+                    Ok(())
+                }
+            })
+            .await;
+            assert_eq!(
+                result.unwrap_err().kind(),
+                if fail {
+                    io::ErrorKind::BrokenPipe
+                } else {
+                    io::ErrorKind::TimedOut
+                }
+            );
+        }
+        let journal = crate::observations::Journal::default();
+        let control = Control::default();
+        let deliver = |_| Ok(());
+        let idle = run_direct(
+            &journal,
+            "incarnation-a",
+            "feed-1",
+            Some(FeedCursor {
+                incarnation: "incarnation-a".into(),
+                sequence: 1,
+            }),
+            &control,
+            &deliver,
+        );
+        tokio::pin!(idle);
+        assert!(pending(idle.as_mut()).await);
+        control.stop();
+        assert_eq!(idle.await.unwrap_err().kind(), io::ErrorKind::Interrupted);
+    });
+}
+
+#[test]
+fn abandoned_stop_keeps_worker_owned_and_collects_its_completion() {
+    run(async {
+        for panics in [false, true] {
+            let owner = FeedOwner::default();
+            let control = Arc::new(Control::default());
+            let (release, finish) = tokio::sync::oneshot::channel();
+            let retained = control.clone();
+            *owner.current.lock().unwrap() = Some(NativeSubscription {
+                id: "old-page".into(),
+                control: control.clone(),
+                worker: tokio::spawn(async move {
+                    finish.await.unwrap();
+                    assert!(retained.cancel.is_cancelled());
+                    assert!(!panics, "controlled feed panic");
+                }),
+            });
+            owner.stop("unrelated-page").await.unwrap();
+            assert!(!control.cancel.is_cancelled());
+            {
+                let stop = owner.stop("old-page");
+                tokio::pin!(stop);
+                assert!(pending(stop.as_mut()).await);
+            }
+            assert!(control.cancel.is_cancelled());
+            assert!(owner.current.lock().unwrap().is_some());
+            release.send(()).unwrap();
+            assert_eq!(owner.stop_all().await.is_err(), panics);
+            assert!(owner.current.lock().unwrap().is_none());
+            assert_eq!(owner.stop_all().await.is_err(), panics);
+        }
+    });
+}
+
+#[test]
+fn native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss() {
+    run(async {
+        let host = crate::native::NativeHost::controlled().await;
+        let incarnation = host.snapshot().cursor.incarnation;
+        let control = Arc::new(Control::default());
+        let (release, finish) = tokio::sync::oneshot::channel();
+        *host.feed.current.lock().unwrap() = Some(NativeSubscription {
+            id: "old-page".into(),
+            control: control.clone(),
+            worker: tokio::spawn(async {
+                finish.await.unwrap();
+            }),
+        });
+        for (owner, id) in [
+            ("retired", "new-page"),
+            (incarnation.as_str(), "invalid id"),
         ] {
-            let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
-            initialize(&connection);
-            let (started, entered) = tokio::sync::oneshot::channel();
-            connection
-                .start_subscription_with(
-                    "incarnation-a".into(),
-                    "current-page".into(),
-                    None,
-                    |_| Ok(()),
-                    async move |_, _, _, control, _| {
-                        assert!(started.send(control.clone()).is_ok());
-                        control.cancel.cancelled().await;
-                        Ok(())
-                    },
-                )
-                .unwrap();
-            let control = entered.await.unwrap();
             assert!(
-                connection
-                    .replace_subscription_with(
-                        incarnation.into(),
-                        id.into(),
-                        None,
-                        |_| Ok(()),
-                        async |_, _, _, _, _| -> io::Result<()> {
-                            panic!("invalid replacement must not start")
-                        }
-                    )
+                host.replace_subscription(owner.into(), id.into(), None, |_| Ok(()))
                     .await
                     .is_err()
             );
             assert!(!control.cancel.is_cancelled());
-            connection.stop_subscription("current-page").await.unwrap();
         }
-    });
-}
-
-#[test]
-fn cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_it() {
-    run(async {
-        let connection = SupervisorConnection::new("/state".into(), "/supervisor".into());
-        initialize(&connection);
-        let (release, finish) = tokio::sync::oneshot::channel();
-        connection
-            .start_subscription_with(
-                "incarnation-a".into(),
-                "old-page".into(),
-                None,
-                |_| Ok(()),
-                async move |_, _, _, _, _| {
-                    finish.await.unwrap();
-                    Ok(())
-                },
-            )
-            .unwrap();
         {
-            let replacement = connection.replace_subscription_with(
-                "incarnation-a".into(),
-                "abandoned-page".into(),
-                None,
-                |_| Ok(()),
-                async |_, _, _, _, _| -> io::Result<()> {
-                    panic!("cancelled replacement must not start")
-                },
+            let replace =
+                host.replace_subscription(incarnation.clone(), "new-page".into(), None, |_| Ok(()));
+            tokio::pin!(replace);
+            assert!(pending(replace.as_mut()).await);
+            assert!(
+                matches!(host.replace_subscription(incarnation.clone(), "competitor".into(), None, |_| Ok(())).await,
+                Err(RequestFailure::Transport { error }) if error.code == TransportCode::Busy)
             );
-            tokio::pin!(replacement);
-            assert!(pending(replacement.as_mut()).await);
         }
-        assert!(connection.subscription.try_acquire().is_none());
+        assert!(control.cancel.is_cancelled());
         assert_eq!(
-            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
+            host.feed.current.lock().unwrap().as_ref().unwrap().id,
             "old-page"
         );
-        let replacement = connection.replace_subscription_with(
-            "incarnation-a".into(),
-            "latest-page".into(),
-            None,
-            |_| Ok(()),
-            async |_, _, _, control, _| {
-                control.cancel.cancelled().await;
-                Ok(())
-            },
-        );
-        tokio::pin!(replacement);
-        assert!(pending(replacement.as_mut()).await);
         release.send(()).unwrap();
-        replacement.await.unwrap();
+        let (send, mut receive) = tokio::sync::mpsc::unbounded_channel();
+        host.replace_subscription(incarnation, "new-page".into(), None, move |event| {
+            send.send(event).unwrap();
+            Ok(())
+        })
+        .await
+        .unwrap();
+        host.stop_subscription("old-page").await.unwrap();
         assert_eq!(
-            connection.feed.current.lock().unwrap().as_ref().unwrap().id,
-            "latest-page"
+            host.feed.current.lock().unwrap().as_ref().unwrap().id,
+            "new-page"
         );
-        connection.stop_subscription("latest-page").await.unwrap();
+        host.stop_subscription("new-page").await.unwrap();
+        while receive.try_recv().is_ok() {}
+        tokio::task::yield_now().await;
+        assert!(receive.try_recv().is_err());
+        host.begin_quit();
+        host.finished().await;
+        assert!(host.quit_status().complete);
     });
 }

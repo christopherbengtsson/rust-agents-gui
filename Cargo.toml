@@ -1,6 +1,6 @@
 [workspace]
-members = ["crates/core", "crates/supervisor", "src-tauri", "crates/storage-checkpoint", "crates/workspace-checkpoint"]
-default-members = ["crates/core", "crates/supervisor"]
+members = ["crates/core", "src-tauri", "crates/storage-checkpoint", "crates/workspace-checkpoint"]
+default-members = ["crates/core"]
 resolver = "2"
 
 [workspace.package]

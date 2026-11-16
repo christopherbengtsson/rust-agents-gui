@@ -96,7 +96,6 @@ export function decodeRequestFailure(value: unknown): ObservationError {
         not_connected: "not_sent",
         incarnation_changed: "rejected",
         reply_unavailable: "unknown",
-        incompatible: "rejected",
       }[error.code];
       if (error.delivery === delivery && text(error.message, 2051))
         return { ...error, source: "transport" };

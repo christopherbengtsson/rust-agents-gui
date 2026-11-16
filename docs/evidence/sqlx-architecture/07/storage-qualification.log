@@ -1,0 +1,9 @@
+$ node scripts/qualify.mjs storage -- /Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/07/storage-qualification.json
+   Compiling tokio v1.54.1
+   Compiling tokio-stream v0.1.19
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.59s
+Qualification storage: passed; retained /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-storage-8oCluS

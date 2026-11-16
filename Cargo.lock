@@ -4256,7 +4256,6 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "futures-util",
- "libc",
  "pin-project-lite",
  "tokio",
 ]
@@ -5139,9 +5138,6 @@ dependencies = [
 name = "workspace-core"
 version = "0.1.0"
 dependencies = [
- "bytes",
- "futures-core",
- "futures-sink",
  "futures-util",
  "libc",
  "schemars 1.2.3",
@@ -5168,17 +5164,6 @@ dependencies = [
  "tauri-plugin-opener",
  "tokio",
  "tracing-subscriber",
- "workspace-core",
-]
-
-[[package]]
-name = "workspace-supervisor"
-version = "0.1.0"
-dependencies = [
- "futures-util",
- "tempfile",
- "tokio",
- "tokio-util",
  "workspace-core",
 ]
 

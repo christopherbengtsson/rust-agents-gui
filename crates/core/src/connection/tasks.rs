@@ -41,50 +41,13 @@ impl Tasks {
                 .unwrap_or_else(|e| e.into_inner())
                 .is_empty()
         {
-            return Err(io::Error::other("Connection cleanup has begun"));
+            return Err(io::Error::other("Native request cleanup has begun"));
         }
         let (send, receive) = oneshot::channel();
         set.spawn(async move {
             let _ = send.send(work.await);
         });
         Ok(receive)
-    }
-    pub(crate) async fn blocking<T: Send + 'static>(
-        &self,
-        slots: &ConnectionSlots,
-        work: impl FnOnce() -> io::Result<T> + Send + 'static,
-    ) -> io::Result<T> {
-        let permit = slots.try_acquire().ok_or_else(|| {
-            io::Error::new(io::ErrorKind::WouldBlock, "Blocking dispatch is busy")
-        })?;
-        let receive = {
-            let mut set = self.set.lock().unwrap_or_else(|e| e.into_inner());
-            self.reap(&mut set);
-            if self.closed.load(Ordering::Acquire)
-                || !self
-                    .failure
-                    .lock()
-                    .unwrap_or_else(|e| e.into_inner())
-                    .is_empty()
-            {
-                return Err(io::Error::other("Connection cleanup has begun"));
-            }
-            let (send, receive) = oneshot::channel();
-            let failure = self.failure.clone();
-            set.spawn_blocking(move || {
-                let _permit = permit;
-                if let Err(Err(error)) = send.send(work()) {
-                    failure
-                        .lock()
-                        .unwrap_or_else(|e| e.into_inner())
-                        .push(format!("Undelivered blocking failure: {error}"));
-                }
-            });
-            receive
-        };
-        receive
-            .await
-            .map_err(|error| io::Error::other(error.to_string()))?
     }
     pub(crate) async fn close_and_wait(&self) -> io::Result<()> {
         self.cancel.cancel();
@@ -112,5 +75,40 @@ impl Tasks {
         } else {
             Err(io::Error::other(failures.join("; ")))
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn discovered_panic_fences_next_dispatch_and_stays_in_cleanup_report() {
+        let tasks = Tasks::default();
+        let receiver = tasks
+            .spawn::<()>(async { panic!("controlled previous panic") })
+            .unwrap();
+        assert!(receiver.await.is_err());
+        assert!(tasks.spawn(async {}).is_err());
+        assert!(tasks.diagnostic().is_some());
+        assert!(tasks.close_and_wait().await.is_err());
+    }
+    #[tokio::test]
+    async fn abandoned_cleanup_keeps_actual_work_until_it_finishes() {
+        let tasks = Tasks::default();
+        let (release, finish) = oneshot::channel();
+        drop(tasks.spawn(async { finish.await.unwrap() }).unwrap());
+        {
+            let cleanup = tasks.close_and_wait();
+            tokio::pin!(cleanup);
+            assert!(
+                std::future::poll_fn(|cx| std::task::Poll::Ready(
+                    cleanup.as_mut().poll(cx).is_pending()
+                ))
+                .await
+            );
+        }
+        assert!(tasks.spawn(async {}).is_err());
+        release.send(()).unwrap();
+        tasks.close_and_wait().await.unwrap();
     }
 }

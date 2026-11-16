@@ -406,7 +406,7 @@ impl ProviderConnections {
             .map(|entry| entry.snapshot.clone())
             .ok_or_else(|| {
                 invalid_target(
-                    "Provider configuration changed. Refresh setup using the current supervisor.",
+                    "Provider configuration changed. Refresh setup using the current native core.",
                 )
             })
     }
@@ -516,7 +516,7 @@ impl ProviderConnections {
             .checked_add(1)
             .filter(|revision| *revision < u32::MAX)
             .ok_or_else(|| {
-                invalid_target("Provider revision exhausted; restart the supervisor.")
+                invalid_target("Provider revision exhausted; restart the native core.")
             })?;
         entry.snapshot.revision = revision;
         entry.snapshot.phase = SetupPhase::Checking;
