@@ -42,7 +42,9 @@ export function WorkspacePanel({
         workspace={workspaces.selected}
         connected={connection.state === "connected"}
         stale={connection.state !== "connected" || !!workspaces.error}
-        pending={workspaces.submitting || !!workspaces.pending}
+        pending={
+          workspaces.blocked || workspaces.submitting || !!workspaces.pending
+        }
         onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
       />
       {workspaces.selected.status.state === "ready" && setupLink}

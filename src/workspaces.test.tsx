@@ -43,9 +43,12 @@ test("a restored uncertain action is read without replaying creation", async () 
   localStorage.setItem(
     WORKSPACE_PENDING,
     JSON.stringify({
-      operation: "create",
-      action_id: creation_action_id,
-      repository_id,
+      request: {
+        operation: "create",
+        action_id: creation_action_id,
+        repository_id,
+      },
+      uncertain: true,
     }),
   );
   vi.mocked(invoke).mockImplementation(
@@ -73,7 +76,22 @@ test("a restored uncertain action is read without replaying creation", async () 
       null,
     ),
   );
+  await waitFor(() =>
+    expect(
+      vi
+        .mocked(invoke)
+        .mock.calls.some(
+          ([command, args]) =>
+            command === "workspace_request" &&
+            object(args) &&
+            object(args.request) &&
+            args.request.operation === "action" &&
+            args.request.action_id === creation_action_id,
+        ),
+    ).toBe(true),
+  );
   await waitFor(() => expect(result.current.pending).toBeNull());
+  expect(localStorage.getItem(WORKSPACE_PENDING)).toBeNull();
   expect(
     vi
       .mocked(invoke)

@@ -1,5 +1,11 @@
 # Codex readiness fixture provenance
 
+Current native-host qualification uses `corepack pnpm qualify:native`; see
+[development-state instructions](../../docs/development-state.md#separate-qualification-commands).
+`runtime.py` and the official schemas remain current provider fixtures. The
+unselected `qualify.py` supervisor driver and its instructions below are retained
+historical checkpoint material, not an alternate supported qualification path.
+
 Selected 2026-11-15, before adapter implementation: installed `codex-cli 0.169.0`,
 Apple Silicon standalone executable SHA-256
 `739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002`.

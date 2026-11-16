@@ -294,7 +294,6 @@ test("retained repository and workspace lookups reject conflicting payloads with
       path: "/original",
       create_initial_workspace: true,
     },
-    selection: null,
     uncertain: true,
   };
   localStorage.setItem(PENDING_KEY, JSON.stringify(retained));
@@ -369,3 +368,87 @@ test("retained repository and workspace lookups reject conflicting payloads with
       ),
   ).toBe(true);
 });
+
+test.each([
+  "{",
+  JSON.stringify({
+    request: {
+      action_id: workspaceId,
+      path: "/fixture",
+      create_initial_workspace: true,
+    },
+    uncertain: "corrupt",
+  }),
+])(
+  "unreadable registration evidence blocks submission and preserves bytes: %s",
+  async (raw) => {
+    localStorage.setItem(PENDING_KEY, raw);
+    vi.mocked(invoke).mockImplementation(
+      incarnationBound(async () => ({
+        kind: "repositories",
+        page: { repositories: [], next: null },
+      })),
+    );
+    const { result } = renderHook(() => useRepositories("incarnation-a"));
+    expect(result.current.preferenceError).toMatch(
+      /fresh private development state/,
+    );
+    await act(async () => {
+      await result.current.register("/fixture");
+    });
+    expect(localStorage.getItem(PENDING_KEY)).toBe(raw);
+    expect(
+      vi
+        .mocked(invoke)
+        .mock.calls.some(
+          ([, args]) =>
+            object(args) &&
+            object(args.request) &&
+            args.request.operation === "register",
+        ),
+    ).toBe(false);
+  },
+);
+
+test.each([
+  "{",
+  JSON.stringify({
+    request: {
+      operation: "create",
+      action_id: workspaceId,
+      repository_id: repositoryId,
+    },
+    uncertain: "corrupt",
+  }),
+])(
+  "unreadable workspace evidence blocks submission and preserves bytes: %s",
+  async (raw) => {
+    localStorage.setItem(WORKSPACE_PENDING, raw);
+    vi.mocked(invoke).mockImplementation(
+      incarnationBound(async () => ({
+        kind: "workspaces",
+        page: { workspaces: [], next: null },
+      })),
+    );
+    const { result } = renderHook(() =>
+      useWorkspaces("incarnation-a", repositoryId, repositoryId, null),
+    );
+    expect(result.current.preferenceError).toMatch(
+      /fresh private development state/,
+    );
+    await act(async () => {
+      await result.current.create(repositoryId);
+    });
+    expect(localStorage.getItem(WORKSPACE_PENDING)).toBe(raw);
+    expect(
+      vi
+        .mocked(invoke)
+        .mock.calls.some(
+          ([, args]) =>
+            object(args) &&
+            object(args.request) &&
+            args.request.operation === "create",
+        ),
+    ).toBe(false);
+  },
+);

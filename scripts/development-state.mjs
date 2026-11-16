@@ -22,7 +22,7 @@ export function developmentEnvironment({
         home,
         ".agent-workspace/dev",
         hash(canonical(checkout), 12),
-        "native-schema-4",
+        "native-schema-1",
       ),
   };
 }

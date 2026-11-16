@@ -75,11 +75,7 @@ function selection(value: unknown): InspectionSelection | undefined {
 // Decode fields explicitly on both hydration and serialization. Unknown payloads
 // cannot introduce observations, executable actions or middleware methods.
 function preferences(value: unknown): Preferences {
-  if (
-    !object(value) ||
-    !object(value.inspection) ||
-    (value.contexts !== undefined && !object(value.contexts))
-  )
+  if (!object(value) || !object(value.inspection) || !object(value.contexts))
     throw new Error("Invalid presentation preferences");
   const inspection: Preferences["inspection"] = {};
   for (const [workspace, saved] of Object.entries(value.inspection)) {
@@ -91,7 +87,7 @@ function preferences(value: unknown): Preferences {
     inspection[workspace] = file;
   }
   const contexts: Preferences["contexts"] = {};
-  for (const [workspace, saved] of Object.entries(value.contexts ?? {})) {
+  for (const [workspace, saved] of Object.entries(value.contexts)) {
     if (!identity(workspace))
       throw new Error("Invalid saved workspace identity");
     if (saved === undefined) continue;
@@ -130,11 +126,11 @@ export function createPresentationStore(
     getItem: (key) => {
       const raw = getStorage().getItem(key);
       if (raw === null)
-        return { version: 2, state: { inspection: {}, contexts: {} } };
+        return { version: 1, state: { inspection: {}, contexts: {} } };
       const envelope: unknown = JSON.parse(raw);
       if (
         !object(envelope) ||
-        envelope.version !== 2 ||
+        envelope.version !== 1 ||
         !object(envelope.state)
       )
         throw new Error("Invalid presentation record");
@@ -244,7 +240,7 @@ export function createPresentationStore(
     }),
     {
       name: PRESENTATION_KEY,
-      version: 2,
+      version: 1,
       storage,
       skipHydration: true,
       partialize: (state) =>

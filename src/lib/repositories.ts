@@ -1,8 +1,8 @@
+import { readPendingRecord } from "./pending-record";
 import { invoke } from "@tauri-apps/api/core";
 
 import {
   object,
-  identity,
   bounded,
   absent,
   text,
@@ -30,7 +30,10 @@ import type {
   RepositoryRequest,
   RepositoryReply,
 } from "@/generated/contracts/types";
-import { validateRepositoryReply } from "@/generated/contracts/validators.js";
+import {
+  validateRegisterRepository,
+  validateRepositoryReply,
+} from "@/generated/contracts/validators.js";
 
 function repositorySemantics(value: Repository): boolean {
   return (
@@ -122,7 +125,7 @@ export function decodeRepositoryReply(
       (request.operation === "register" &&
         (value.registration.path !== request.request.path ||
           value.registration.create_initial_workspace !==
-            (request.request.create_initial_workspace ?? false)))
+            request.request.create_initial_workspace))
     )
       throw replyUnavailable(
         "Repository action observation has the wrong identity. Refresh its recorded status.",
@@ -151,36 +154,20 @@ export function repositoryError(value: unknown): RepositoryError {
 export const PENDING_KEY = "agent-workspace.pending-registration";
 export type PendingRegistration = {
   request: RegistrationRequest;
-  selection: string | null;
-  uncertain?: boolean;
+  uncertain: boolean;
 };
-export function readPending(): PendingRegistration | null {
-  try {
-    const stored = localStorage.getItem(PENDING_KEY);
-    const value: unknown = stored ? JSON.parse(stored) : null;
+export function readPending() {
+  return readPendingRecord<PendingRegistration>(PENDING_KEY, (value) => {
     if (
       object(value) &&
-      object(value.request) &&
-      identity(value.request.action_id) &&
-      typeof value.request.path === "string" &&
-      (value.request.create_initial_workspace === undefined ||
-        typeof value.request.create_initial_workspace === "boolean") &&
-      (value.selection === null || identity(value.selection))
+      validateRegisterRepository(value.request) &&
+      typeof value.uncertain === "boolean"
     ) {
       return {
-        request: {
-          action_id: value.request.action_id,
-          path: value.request.path,
-          create_initial_workspace:
-            value.request.create_initial_workspace === true,
-        },
-        selection: value.selection,
-        // Legacy records may already have crossed IPC. An over-budget path could never be sent.
-        uncertain: value.uncertain !== false && text(value.request.path, 4096),
+        request: value.request,
+        uncertain: value.uncertain,
       };
     }
-  } catch {
-    /* A malformed presentation preference grants no execution authority. */
-  }
-  return null;
+    return null;
+  });
 }

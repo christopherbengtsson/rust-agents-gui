@@ -50,7 +50,7 @@ test("reopening restores only allowlisted workspace presentation context", () =>
     storage.getItem(PRESENTATION_KEY) ?? "null",
   );
   expect(written).toEqual({
-    version: 2,
+    version: 1,
     state: {
       inspection: {
         [workspace]: {
@@ -72,13 +72,13 @@ test.each([
   JSON.stringify({ version: 9, state: { inspection: {}, contexts: {} } }),
   JSON.stringify({ state: { inspection: {} } }),
   JSON.stringify({
-    version: 2,
+    version: 1,
     state: {
       inspection: { [workspace]: { id: "bad", path: "a", comparison } },
     },
   }),
   JSON.stringify({
-    version: 2,
+    version: 1,
     state: {
       inspection: {
         [workspace]: {
@@ -91,7 +91,7 @@ test.each([
     },
   }),
   JSON.stringify({
-    version: 2,
+    version: 1,
     state: {
       inspection: {},
       contexts: {
@@ -100,7 +100,7 @@ test.each([
     },
   }),
   JSON.stringify({
-    version: 2,
+    version: 1,
     state: {
       inspection: {},
       contexts: {
@@ -197,7 +197,6 @@ test.each(["current", "unreadable"])(
         path: "/fixture/repository",
         create_initial_workspace: true,
       },
-      selection: null,
       uncertain: true,
     };
     const creation = {
@@ -215,14 +214,14 @@ test.each(["current", "unreadable"])(
       scenario === "unreadable"
         ? "{"
         : JSON.stringify({
-            version: 2,
+            version: 1,
             state: { inspection: {}, contexts: {} },
           }),
     );
     const store = createPresentationStore();
     store.getState().rememberView(workspace, "changes");
-    expect(readPending()).toEqual(registration);
-    expect(readWorkspacePending()).toEqual(creation);
+    expect(readPending()).toEqual({ pending: registration });
+    expect(readWorkspacePending()).toEqual({ pending: creation });
     expect(localStorage.getItem(PENDING_KEY)).toBe(
       JSON.stringify(registration),
     );

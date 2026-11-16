@@ -230,8 +230,12 @@ test("reopening with a retained action retrieves its result without resubmitting
   localStorage.setItem(
     PENDING_KEY,
     JSON.stringify({
-      request: { action_id, path: "/projects/one" },
-      selection: null,
+      request: {
+        action_id,
+        path: "/projects/one",
+        create_initial_workspace: false,
+      },
+      uncertain: true,
     }),
   );
   replies(async (request) => {
@@ -411,8 +415,12 @@ test.each([false, true])(
       localStorage.setItem(
         PENDING_KEY,
         JSON.stringify({
-          request: { action_id, path: oversized },
-          selection: null,
+          request: {
+            action_id,
+            path: oversized,
+            create_initial_workspace: true,
+          },
+          uncertain: false,
         }),
       );
     }
@@ -707,8 +715,12 @@ test("reconnect retrieves a retained registration result without resubmitting", 
   localStorage.setItem(
     PENDING_KEY,
     JSON.stringify({
-      request: { action_id, path: repository.path },
-      selection: null,
+      request: {
+        action_id,
+        path: repository.path,
+        create_initial_workspace: false,
+      },
+      uncertain: true,
     }),
   );
   let connected = false;

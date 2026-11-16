@@ -1710,21 +1710,22 @@ Sources: [Base UI CSP Provider](https://base-ui.com/react/utils/csp-provider),
 
 Validate evolving preferences while preserving uncertain-action identity.
 
-Impact: HIGH — Keeps schema migration from erasing uncertain work.
+Impact: HIGH — Preserves current-build recovery evidence.
 
 Source: [rules/presentation-records.md](rules/presentation-records.md)
 
-#### Validate and evolve presentation records without losing action identity
+#### Validate current presentation records without losing action identity
 
 Apply when reading/writing desktop preferences or changing their shape. Keep
-records small, validate decoded data, and choose migration/version behavior for
-the actual compatibility need. Distinguish discardable preferences from retained
-identities needed to retrieve authoritative action status.
+records small and validate the current format. The MVP development compatibility
+policy requires fresh state for incompatible changes; remove retired-format
+readers and migrations. Distinguish discardable preferences from retained
+identities needed to retrieve authoritative current-build action status.
 
-**Incorrect (every decode/migration failure deletes recovery identity):**
+**Incorrect (a read failure silently discards recovery evidence):**
 
 ```ts
-try { return migrate(JSON.parse(localStorage.getItem(key) ?? "null")); }
+try { return decode(JSON.parse(localStorage.getItem(key) ?? "null")); }
 catch { localStorage.removeItem(key); return null; }
 ```
 
@@ -1740,8 +1741,9 @@ function readRecord<T>(key: string, decode: (raw: unknown) => T): Decoded<T> {
 ```
 
 The caller selects visible recovery for unreadable records; successful decoding is
-not authoritative execution evidence. Preserve original action IDs/payloads across
-migration and handle read/write failure according to the workflow. A cache miss
+not authoritative execution evidence. Preserve original action IDs/payloads through same-build recovery and handle
+read/write failure according to the workflow. Unreadable action evidence must
+remain visible and block submission until deliberately resolved. A cache miss
 cannot prove non-admission. Presentation storage does not replace Rust-owned
 durable transcripts/metadata. Avoid repeated synchronous reads during render;
 initialize or subscribe through an explicit owner.

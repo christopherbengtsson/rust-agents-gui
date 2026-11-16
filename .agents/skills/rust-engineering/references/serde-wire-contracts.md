@@ -10,8 +10,9 @@ owns this application's generators, schema settings and preparation interfaces.
 Review what Serde actually reads and writes, not just the Rust field types. Choose
 names and enum tagging to match the existing protocol. Treat absent, null and empty
 values as distinct where callers do; changing between them changes the contract.
-Use defaults for intended input compatibility rather than to conceal a missing
-required response field.
+Use defaults for intentional optional inputs in the current contract. Require
+current persisted fields rather than supplying values for retired application
+formats; incompatible changes use fresh state under the MVP policy.
 
 `default` supplies a value during deserialization. `skip_serializing_if` controls
 output omission independently. For example, these fields serialize differently:

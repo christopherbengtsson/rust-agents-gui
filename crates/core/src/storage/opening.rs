@@ -6,7 +6,7 @@ use std::{
 };
 
 pub(super) const DATABASE: &str = "metadata.sqlite3";
-const SCHEMA_VERSION: i64 = 4;
+const SCHEMA_VERSION: i64 = 1;
 const APPLICATION_ID: i64 = 0x41575332;
 const SCHEMA: &str = "
 CREATE TABLE storage_revision(id INTEGER PRIMARY KEY CHECK(id=1), revision INTEGER NOT NULL CHECK(revision>=0));
@@ -29,7 +29,7 @@ CREATE TABLE provider_actions(id TEXT PRIMARY KEY NOT NULL, payload TEXT NOT NUL
 CREATE UNIQUE INDEX pending_provider_scope ON provider_actions(scope) WHERE completed=0;
 CREATE TABLE action_identities(id TEXT PRIMARY KEY NOT NULL, kind TEXT NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152));
 PRAGMA application_id=1096241970;
-PRAGMA user_version=4;";
+PRAGMA user_version=1;";
 
 pub(super) fn inspect(state: &Path, create: bool) -> Result<PathBuf> {
     let canonical = fs::canonicalize(state)?;
@@ -55,10 +55,14 @@ pub(super) fn inspect(state: &Path, create: bool) -> Result<PathBuf> {
         }
     }
     if create {
-        if state.join("workspace.sqlite3").try_exists()? {
-            return Err(Error::Invalid(
-                "Retired metadata found. Stop its owner and deliberately select fresh private development state; preserve repositories, worktrees and runtime credentials. No files were reset",
-            ));
+        if !path.try_exists()? {
+            for entry in fs::read_dir(state)? {
+                if entry?.file_name() != "owner.lock" {
+                    return Err(Error::Invalid(
+                        "Metadata is missing from a nonempty state directory. Stop its owner and select fresh private development state; preserve repositories, worktrees and runtime credentials. No files were reset",
+                    ));
+                }
+            }
         }
         OpenOptions::new()
             .read(true)

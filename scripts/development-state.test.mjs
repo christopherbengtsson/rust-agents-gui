@@ -14,9 +14,8 @@ test("native dev namespace is stable per canonical worktree and current schema",
   assert.notEqual(state, environment("/other").AGENT_WORKSPACE_STATE_DIR);
   assert.match(
     state,
-    /\/.agent-workspace\/dev\/[a-f0-9]{12}\/native-schema-4$/,
+    /\/.agent-workspace\/dev\/[a-f0-9]{12}\/native-schema-1$/,
   );
-  assert.equal(environment().AGENT_WORKSPACE_SUPERVISOR, undefined);
 });
 test("explicit native state override remains exact", () => {
   assert.equal(

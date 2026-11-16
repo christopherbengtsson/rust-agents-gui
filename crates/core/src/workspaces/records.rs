@@ -76,7 +76,6 @@ pub(crate) type Result<T> = std::result::Result<T, RepositoryError>;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct RegisterRepository {
-    #[serde(default)]
     pub create_initial_workspace: bool,
     pub action_id: ActionId,
     pub path: String,
@@ -92,14 +91,24 @@ pub enum RegistrationState {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 pub struct Registration {
-    #[serde(default)]
     pub create_initial_workspace: bool,
-    #[serde(default)]
+    #[serde(deserialize_with = "deserialize_initial_workspace")]
     pub initial_workspace_id: Option<WorkspaceId>,
     pub action_id: ActionId,
     pub path: String,
     #[serde(flatten)]
     pub state: RegistrationState,
+}
+
+// A current registration always serializes this nullable field. Require its
+// presence instead of interpreting a missing field as no initial workspace.
+fn deserialize_initial_workspace<'de, D>(
+    deserializer: D,
+) -> std::result::Result<Option<WorkspaceId>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    Option::<WorkspaceId>::deserialize(deserializer)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

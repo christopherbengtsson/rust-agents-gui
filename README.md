@@ -21,7 +21,7 @@ to that setup. Otherwise, enable the repository hook with
 `git config --local core.hooksPath .githooks`; an existing `.githooks` setting needs
 no change.
 
-Development prints its exact private state root, defaults to `~/.agent-workspace/dev/<canonical-worktree hash>/native-schema-4`, and honors `AGENT_WORKSPACE_STATE_DIR` exactly. Vite provides frontend HMR. Rust edits require completed Quit and an explicit `pnpm dev` restart; the launcher owns the native executable directly so a rebuild watcher cannot terminate the execution owner. Stop waits for native drain, reports pending cleanup and never escalates automatically.
+Development prints its exact private state root, defaults to `~/.agent-workspace/dev/<canonical-worktree hash>/native-schema-1`, and honors `AGENT_WORKSPACE_STATE_DIR` exactly. Vite provides frontend HMR. Rust edits require completed Quit and an explicit `pnpm dev` restart; the launcher owns the native executable directly so a rebuild watcher cannot terminate the execution owner. Stop waits for native drain, reports pending cleanup and never escalates automatically.
 
 See [private development state and reset](docs/development-state.md) before changing state. Old metadata/preferences need no migration; preserve every worktree/branch, provider home/native history and evidence set. Never remove `owner.lock` to bypass ownership.
 

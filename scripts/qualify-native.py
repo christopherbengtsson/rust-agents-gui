@@ -27,7 +27,6 @@ server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Landing); threading.Threa
 control=root/'control.json'; control.write_text(json.dumps({'scenario':'browser_pending','browser_url':f'http://127.0.0.1:{server.server_port}/fixture'}))
 script=root/'driver.js'; raw= (REPO/'fixtures/native-lifecycle/driver.js').read_text(); records=root/'webview.jsonl'
 base_env={**os.environ,'AGENT_WORKSPACE_STATE_DIR':str(state),'AGENT_WORKSPACE_CODEX_FIXTURE':str(runtime),'AW_FIXTURE_CONTROL':str(control),'CODEX_HOME':str(home),'AW_NATIVE_SCRIPT':str(script),'AW_NATIVE_REPORT':str(records)}
-base_env.pop('AGENT_WORKSPACE_SUPERVISOR',None)
 report={'root':str(root),'bundle':str(bundle),'repository':str(repository),'source':subprocess.check_output(['git','rev-parse','HEAD'],cwd=REPO,text=True).strip(),'binary_sha256':hashlib.sha256(executable.read_bytes()).hexdigest(),'fixture_sha256':hashlib.sha256(runtime.read_bytes()).hexdigest(),'checks':[],'processes':[],'records':str(records),'limits':['Synthetic Codex protocol; no real authentication/agent calls','SIGKILL establishes process-crash recovery, not power loss','No live provider compatibility or authentication is established']}
 def expired(*_): raise TimeoutError('Native qualification exceeded 180 seconds')
 signal.signal(signal.SIGALRM, expired)

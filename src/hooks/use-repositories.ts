@@ -32,11 +32,14 @@ export function useRepositories(
   useSyncExternalStore(feature.subscribe, feature.getSnapshot);
   const [after, setAfter] = useState<string | null>(null);
   const [previous, setPrevious] = useState<(string | null)[]>([]);
-  const [pending, setPending] = useState(readPending);
+  const [restored] = useState(readPending);
+  const [pending, setPending] = useState(restored.pending);
   const currentPending = useRef(pending);
   const [actionError, setActionError] = useState<RepositoryError>();
   const [submitting, setSubmitting] = useState(false);
-  const [preferenceError, setPreferenceError] = useState<string>();
+  const [preferenceError, setPreferenceError] = useState<string | undefined>(
+    restored.error,
+  );
   const mounted = useRef(false);
   const actionEpoch = useRef(0);
   const pendingNavigation = useRef<number | undefined>(undefined);
@@ -98,7 +101,7 @@ export function useRepositories(
         action.action_id !== retained.request.action_id ||
         action.path !== retained.request.path ||
         action.create_initial_workspace !==
-          (retained.request.create_initial_workspace ?? false) ||
+          retained.request.create_initial_workspace ||
         action.state === "pending"
       )
         return;
@@ -158,7 +161,7 @@ export function useRepositories(
           if (
             result.registration.path !== request.path ||
             result.registration.create_initial_workspace !==
-              (request.create_initial_workspace ?? false)
+              request.create_initial_workspace
           )
             setActionError({
               code: "conflict",
@@ -182,7 +185,13 @@ export function useRepositories(
       : Promise.resolve();
   }
   async function register(path: string): Promise<boolean> {
-    if (!incarnation || !observedIncarnation || sending.current) return false;
+    if (
+      restored.error ||
+      !incarnation ||
+      !observedIncarnation ||
+      sending.current
+    )
+      return false;
     const old = currentPending.current;
     if (old && old.request.path !== path) {
       setActionError({
@@ -192,16 +201,15 @@ export function useRepositories(
       });
       return false;
     }
-    const target = navigation.current();
     const intent: PendingRegistration = old ?? {
       request: {
         action_id: crypto.randomUUID(),
         path,
         create_initial_workspace: true,
       },
-      selection: target && target.kind !== "home" ? target.repositoryId : null,
+      uncertain: false,
     };
-    const earlierUncertain = intent.uncertain === true;
+    const earlierUncertain = intent.uncertain;
     // Persist before IPC so a desktop crash cannot turn a transmission into "not sent".
     const transmitted = { ...intent, uncertain: true };
     try {
@@ -307,6 +315,7 @@ export function useRepositories(
     submitting,
     actionError,
     preferenceError,
+    blocked: !!restored.error,
     register,
     refresh,
     select,

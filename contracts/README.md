@@ -1,5 +1,10 @@
 # Application observation corpus
 
+`observations-native.json` is the only current application corpus. The numbered
+protocol sections below document retained historical checkpoints; their launch,
+peer-version and state-layout instructions do not apply to current builds. See
+[current development state](../docs/development-state.md) for the native namespace.
+
 `observations-v6.json` is a small synthetic application-owned protocol-6 corpus,
 introduced by F02 against application version 0.1.0. It is not captured provider
 traffic and establishes no native runtime behavior. Native request framing and

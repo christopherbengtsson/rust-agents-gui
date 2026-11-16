@@ -136,7 +136,7 @@ fn main() {
                 .unwrap_or(
                     app.path()
                         .data_dir()?
-                        .join("AgentWorkspace/native-schema-4"),
+                        .join("AgentWorkspace/native-schema-1"),
                 );
             let runtime = tauri::async_runtime::handle();
             let _entered = runtime.inner().enter();

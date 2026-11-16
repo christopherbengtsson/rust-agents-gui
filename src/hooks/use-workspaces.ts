@@ -32,12 +32,16 @@ export function useWorkspaces(
   const feature = app.workspaces;
   useSyncExternalStore(feature.subscribe, feature.getSnapshot);
   const [restoredPending] = useState(readWorkspacePending);
-  const [pending, setPending] = useState(restoredPending?.request ?? null);
-  const uncertain = useRef(restoredPending?.uncertain ?? false);
+  const [pending, setPending] = useState(
+    restoredPending.pending?.request ?? null,
+  );
+  const uncertain = useRef(restoredPending.pending?.uncertain ?? false);
   const intent = useRef(pending);
   const [actionError, setActionError] = useState<RepositoryError>();
   const [submitting, setSubmitting] = useState(false);
-  const [preferenceError, setPreferenceError] = useState<string>();
+  const [preferenceError, setPreferenceError] = useState<string | undefined>(
+    restoredPending.error,
+  );
   const mounted = useRef(false);
   const actionEpoch = useRef(0);
   const pendingNavigation = useRef<number | undefined>(undefined);
@@ -189,7 +193,13 @@ export function useWorkspaces(
     [incarnation, actionId, feature, settleAction],
   );
   async function submit(request: WorkspaceAction) {
-    if (!incarnation || !observedIncarnation || sending.current) return;
+    if (
+      restoredPending.error ||
+      !incarnation ||
+      !observedIncarnation ||
+      sending.current
+    )
+      return;
     if (
       intent.current &&
       JSON.stringify(intent.current) !== JSON.stringify(request)
@@ -346,6 +356,7 @@ export function useWorkspaces(
     loading,
     submitting,
     preferenceError,
+    blocked: !!restoredPending.error,
     select,
     selectRepository,
     create,

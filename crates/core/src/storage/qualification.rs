@@ -63,6 +63,23 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         return Err(std::io::Error::last_os_error().into());
     }
     let mut checks = Vec::new();
+    let incomplete = directory(&root, "missing-metadata")?;
+    OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o600)
+        .open(incomplete.join("unrecognized-state"))?;
+    ensure(
+        owner(&incomplete).await.is_err(),
+        "Nonempty root without metadata was initialized",
+    )?;
+    ensure(
+        !incomplete.join(opening::DATABASE).exists(),
+        "Missing metadata was silently recreated",
+    )?;
+    checks.push(
+        json!({"case":"nonempty-state-without-metadata-rejects-initialization", "status":"passed"}),
+    );
     let path = directory(&root, "fresh")?;
     let store = owner(&path).await?;
     let mut connection = store.shared.writer.acquire().await?;

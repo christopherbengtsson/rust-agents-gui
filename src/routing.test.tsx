@@ -197,7 +197,7 @@ function remember(view: "workspace" | "changes" = "workspace") {
   localStorage.setItem(
     PRESENTATION_KEY,
     JSON.stringify({
-      version: 2,
+      version: 1,
       state: {
         inspection: {},
         contexts: {},
@@ -677,7 +677,7 @@ test.each([false, true])(
     localStorage.setItem(
       PRESENTATION_KEY,
       JSON.stringify({
-        version: 2,
+        version: 1,
         state: {
           contexts: {
             [workspaceId]: {
@@ -1152,7 +1152,7 @@ test("direct Settings keeps retained action status interested without reading hi
   };
   localStorage.setItem(
     "agent-workspace.pending-registration",
-    JSON.stringify({ request, selection: null, uncertain: true }),
+    JSON.stringify({ request, uncertain: true }),
   );
   let complete = false;
   repositoryRead = async (operation) =>

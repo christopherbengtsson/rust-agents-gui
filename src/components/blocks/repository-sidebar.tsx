@@ -129,6 +129,7 @@ export function RepositorySidebar({
                           aria-label={`Create workspace in ${repository.name}`}
                           disabled={
                             connection.state !== "connected" ||
+                            workspaces.blocked ||
                             workspaces.submitting ||
                             !!workspaces.pending ||
                             repository.availability.state !== "available"

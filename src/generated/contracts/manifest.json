@@ -12,7 +12,7 @@
     "Cargo.lock": "8ea62787c6637a9c7371144184d1c5c1af977b9c45cba415fdb8b7fdc2fc9cf1",
     "crates/core/Cargo.toml": "0b41d07b91d32bcec656b061f2f48d679b57105db4f2f452800692ea091dcdef",
     "crates/core/src/lib.rs": "3e21fe84a479e779d9fbb92dadde4b0ef18a87abec0fd3116f56112f14a8ea07",
-    "crates/core/src/codegen.rs": "0379a80dc63fec6d4a33b6da24c8c7d94d847d7762084828b666aa9e6711f77b",
+    "crates/core/src/codegen.rs": "170e8aaa87e2ed8092437b27a71ff6c0addfb66804a6f653178d0f222c2734c4",
     "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
     "crates/core/src/connection.rs": "3968288460e7c1722c851f2a7ac5cae8c88ae7e3f4dccf4d005152da6c98e77e",
     "crates/core/src/connection/subscription.rs": "ced466f5264274730e39cc9a0a9459326f20f7b3673db9c7d5abaa37c5607542",
@@ -29,8 +29,8 @@
   },
   "artifacts": {
     "types.ts": "03839c7a9de9c1cb91a08750efa1757bd84a89aad8bf328971172ffad03e03aa",
-    "schemas.json": "d9c7c10a25f7ded8fe671b374c3c8650374e838db26116a25ebf02c0e4dbaf2a",
-    "validators.js": "eb2950d9aa9c7d337a7736e385c24eca6987d0d54f4a1999e80b5afe2ab85f89",
+    "schemas.json": "b436e6ba45f95e4134db8d743c9c55c67f3b11c11a3a80e9425352ffb60b6a41",
+    "validators.js": "862d2061d8e5999bf653c847f728dc070ea0e2845998a4ed5a8269599adccf2a",
     "validators.d.ts": "68fb249cb415b33d86f842e7f32dbbf82d943a6646d6df90b2683be2aefe9099"
   }
 }

@@ -7,10 +7,10 @@ The global [MVP development compatibility policy](MVP.md#development-compatibili
 `corepack pnpm dev` prints its state root and uses:
 
 ```text
-~/.agent-workspace/dev/<SHA-256(canonical checkout path), first 12 hex>/native-schema-4
+~/.agent-workspace/dev/<SHA-256(canonical checkout path), first 12 hex>/native-schema-1
 ```
 
-The schema namespace is independent of application binary hashes and retired peer protocols. `corepack pnpm start` starts the normal package built by `corepack pnpm build`; its default root is the macOS data directory plus `AgentWorkspace/native-schema-4` (normally `~/Library/Application Support/AgentWorkspace/native-schema-4`).
+The schema namespace is independent of application binary hashes and retired peer protocols. `corepack pnpm start` starts the normal package built by `corepack pnpm build`; its default root is the macOS data directory plus `AgentWorkspace/native-schema-1` (normally `~/Library/Application Support/AgentWorkspace/native-schema-1`).
 
 `AGENT_WORKSPACE_STATE_DIR` overrides either root exactly, without a suffix. Relative overrides resolve against the launcher checkout working directory; use an absolute path for deliberate handover. `CARGO_TARGET_DIR` selects a real private Cargo target; symlinked or other-worktree-owned targets are rejected. Vite binds strictly to `127.0.0.1:1420`.
 
@@ -25,7 +25,7 @@ Provider homes remain runtime-owned (`CODEX_HOME`/normal runtime configuration).
    ```sh
    rehearsal_root=$(mktemp -d /private/tmp/agent-workspace-fresh.XXXXXX)
    chmod 700 "$rehearsal_root"
-   AGENT_WORKSPACE_STATE_DIR="$rehearsal_root/native-schema-4" corepack pnpm dev
+   AGENT_WORKSPACE_STATE_DIR="$rehearsal_root/native-schema-1" corepack pnpm dev
    ```
 
 4. Confirm the printed override and ready core diagnostics. Register repositories explicitly. New managed locations must be fresh; do not adopt old worktrees. Native Quit must finish before restarting after Rust edits. Frontend edits retain Vite HMR. Foreground Ctrl-C reaches the launcher; its native/Vite children use isolated process groups and ignored terminal stdin so the launcher can finish native cleanup before stopping Vite.
@@ -33,7 +33,28 @@ Provider homes remain runtime-owned (`CODEX_HOME`/normal runtime configuration).
 
 For intentional reuse of a current-schema root, keep `owner.lock` at its existing inode. A competing owner must fail before opening storage/effects. Never unlink, replace or rename an active lease to bypass exclusion. A stopped-owner handover reacquires that same file. Incompatible or unrecognized metadata fails visibly; the app never silently initializes over it. Selecting a new root is the reset mechanism, not an automatic fallback.
 
-WebView preferences use the `agent-workspace.presentation` key. They are disposable under the policy; when deliberately resetting presentation, remove that key through the app's WebView storage inspector. Do not clear provider browser profiles, credentials or unrelated local storage. Pending action IDs from old metadata must not authorize replay in fresh state.
+The current persistence revision is 1. Its default roots initialize fresh metadata;
+there is no reader, migration or automatic fallback to earlier roots. Preserve old
+roots because they can contain managed worktrees. Exact overrides do not acquire
+a namespace suffix: deliberately choose a new absent root when changing formats.
+
+Before the first start against fresh metadata, complete owned shutdown and use the
+app's WebView storage inspector to remove only these app-owned local-storage keys:
+
+```js
+localStorage.removeItem("agent-workspace.presentation");
+localStorage.removeItem("agent-workspace.pending-registration");
+localStorage.removeItem("agent-workspace.pending-workspace");
+```
+
+Perform this in each app origin you use (development and packaged WebViews have
+separate storage). Reload/reopen against the fresh root, confirm empty navigation,
+then register repositories explicitly. Do not clear provider browser profiles,
+credentials or unrelated local storage. Pending action IDs from old metadata must
+not authorize replay in fresh state. This is a deliberate one-time development
+procedure, not startup code. Unreadable current pending records preserve their
+bytes and fence the affected submission flow until deliberately resolved and
+reopened; clearing a record alone does not reconcile owned external work.
 
 ## Separate qualification commands
 

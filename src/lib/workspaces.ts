@@ -1,3 +1,4 @@
+import { readPendingRecord } from "./pending-record";
 import type { ObservationScope } from "./observation-coordinator";
 import { invoke } from "@tauri-apps/api/core";
 import {
@@ -149,17 +150,16 @@ export function decodeWorkspaceReply(
 }
 export const WORKSPACE_PENDING = "agent-workspace.pending-workspace";
 export type PendingWorkspace = { request: WorkspaceAction; uncertain: boolean };
-export function readWorkspacePending(): PendingWorkspace | null {
-  try {
-    const v: unknown = JSON.parse(
-      localStorage.getItem(WORKSPACE_PENDING) ?? "null",
-    );
-    if (object(v) && validateWorkspaceAction(v.request))
-      return { request: v.request, uncertain: v.uncertain !== false };
-  } catch {
-    /* Reconnect never invents a request or removes stored recovery evidence. */
-  }
-  return null;
+export function readWorkspacePending() {
+  return readPendingRecord<PendingWorkspace>(WORKSPACE_PENDING, (value) => {
+    if (
+      object(value) &&
+      validateWorkspaceAction(value.request) &&
+      typeof value.uncertain === "boolean"
+    )
+      return { request: value.request, uncertain: value.uncertain };
+    return null;
+  });
 }
 export function workspaceStatus(status: WorkspaceStatus): string {
   switch (status.state) {

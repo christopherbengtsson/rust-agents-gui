@@ -47,7 +47,10 @@ export function RepositoryRegistration({
     },
     [],
   );
-  const error = pickerError ?? repositories.actionError?.message;
+  const error =
+    pickerError ??
+    repositories.actionError?.message ??
+    repositories.preferenceError;
   const pending =
     repositories.submitting ||
     (!!repositories.pending && !repositories.actionError);
@@ -160,7 +163,13 @@ export function RepositoryRegistration({
             <Button
               type="submit"
               size="sm"
-              disabled={!connected || !path || pending || picking}
+              disabled={
+                repositories.blocked ||
+                !connected ||
+                !path ||
+                pending ||
+                picking
+              }
             >
               {pending && (
                 <Spinner data-icon="inline-start" aria-hidden="true" />

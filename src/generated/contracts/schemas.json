@@ -2328,7 +2328,6 @@
             "$ref": "#/$defs/ActionId"
           },
           "create_initial_workspace": {
-            "default": false,
             "type": "boolean"
           },
           "initial_workspace_id": {
@@ -2339,8 +2338,7 @@
               {
                 "type": "null"
               }
-            ],
-            "default": null
+            ]
           },
           "path": {
             "type": "string"
@@ -4463,7 +4461,6 @@
         "$ref": "#/$defs/ActionId"
       },
       "create_initial_workspace": {
-        "default": false,
         "type": "boolean"
       },
       "path": {
@@ -4577,7 +4574,6 @@
         "$ref": "#/$defs/ActionId"
       },
       "create_initial_workspace": {
-        "default": false,
         "type": "boolean"
       },
       "initial_workspace_id": {
@@ -4588,8 +4584,7 @@
           {
             "type": "null"
           }
-        ],
-        "default": null
+        ]
       },
       "path": {
         "type": "string"
@@ -5082,7 +5077,6 @@
             "$ref": "#/$defs/ActionId"
           },
           "create_initial_workspace": {
-            "default": false,
             "type": "boolean"
           },
           "initial_workspace_id": {
@@ -5093,8 +5087,7 @@
               {
                 "type": "null"
               }
-            ],
-            "default": null
+            ]
           },
           "path": {
             "type": "string"
@@ -5278,7 +5271,6 @@
             "$ref": "#/$defs/ActionId"
           },
           "create_initial_workspace": {
-            "default": false,
             "type": "boolean"
           },
           "path": {

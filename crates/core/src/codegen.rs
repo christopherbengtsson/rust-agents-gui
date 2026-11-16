@@ -113,7 +113,7 @@ pub fn render() -> ContractExport {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn serialized_registration_defaults_are_required_and_flattened() {
+    fn serialized_registration_fields_are_required_and_flattened() {
         let exported = super::render();
         let schema = &exported.schemas["Registration"];
         let required = schema["required"].as_array().unwrap();
@@ -157,10 +157,17 @@ mod parity_tests {
     }
 
     #[test]
-    fn input_defaults_do_not_omit_serialized_response_fields() {
+    fn current_registration_serializes_explicit_initial_workspace_fields() {
         let registration: Registration = serde_json::from_value(json!({
-            "action_id": "00000000-0000-0000-0000-000000000001", "path": "/projects/one", "state": "pending"
+            "action_id": "00000000-0000-0000-0000-000000000001", "path": "/projects/one", "state": "pending",
+            "create_initial_workspace": false, "initial_workspace_id": null
         })).unwrap();
+        let mut corrupt = serde_json::to_value(&registration).unwrap();
+        corrupt
+            .as_object_mut()
+            .unwrap()
+            .remove("initial_workspace_id");
+        assert!(serde_json::from_value::<Registration>(corrupt).is_err());
         assert_eq!(
             serde_json::to_value(registration).unwrap(),
             json!({
