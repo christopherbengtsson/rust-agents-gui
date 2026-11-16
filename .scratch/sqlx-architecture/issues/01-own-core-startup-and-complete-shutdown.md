@@ -25,13 +25,13 @@ incumbent supervisor solely to exercise this seam; do not add a generic host ada
 
 ## Acceptance
 
-- [ ] One UI-independent lifetime owner holds state lease, phase, admitted-start guards and domain completion handles on the existing driven runtime; no runtime per request.
-- [ ] Implement root fence/guard transfer and domain fence ordering from the spec. Cover a start paused at every transfer point while Quit begins; it is either drained or rejected without escaped effects.
-- [ ] Domain-owned operation sets continuously consume success/failure/panic with exact identities and settle outcomes independently of reply delivery. Remove failed-reply result loss; retain bounded compact faults when persistence fails.
-- [ ] Whole-core Quit replaces provider-only success and workspace Drop/join as the normal path. Remove whole-app provider shutdown actions as lifetime assumes their responsibility; retain provider-local stop/join. Collect all errors, including task panic, rather than skipping later cleanup after the first failure.
-- [ ] Partial startup visits every acquired resource; repeated Quit/deadline observes one retained attempt. Root shutdown coordination is outside drained sets. Lease release follows actual workspace/provider/blocking completion and final persistence; a failed/pending cleanup retains ownership.
-- [ ] Publish an old-to-new coverage map for intent-before-effect, duplicate actions, owner exclusion, cleanup, reservations and observations, identifying future replacements and retired-format-only checks. Do not delete useful assertions without passing replacements.
-- [ ] Preserve current desktop behavior on the incumbent host with focused fixture startup/status/Quit evidence and separate actual lease/process exclusion evidence. This is not qualification of the future native host.
+- [x] One UI-independent lifetime owner holds state lease, phase, admitted-start guards and domain completion handles on the existing driven runtime; no runtime per request.
+- [x] Implement root fence/guard transfer and domain fence ordering from the spec. Cover a start paused at every transfer point while Quit begins; it is either drained or rejected without escaped effects.
+- [x] Domain-owned operation sets continuously consume success/failure/panic with exact identities and settle outcomes independently of reply delivery. Remove failed-reply result loss; retain bounded compact faults when persistence fails.
+- [x] Whole-core Quit replaces provider-only success and workspace Drop/join as the normal path. Remove whole-app provider shutdown actions as lifetime assumes their responsibility; retain provider-local stop/join. Collect all errors, including task panic, rather than skipping later cleanup after the first failure.
+- [x] Partial startup visits every acquired resource; repeated Quit/deadline observes one retained attempt. Root shutdown coordination is outside drained sets. Lease release follows actual workspace/provider/blocking completion and final persistence; a failed/pending cleanup retains ownership.
+- [x] Publish an old-to-new coverage map for intent-before-effect, duplicate actions, owner exclusion, cleanup, reservations and observations, identifying future replacements and retired-format-only checks. Do not delete useful assertions without passing replacements.
+- [x] Preserve current desktop behavior on the incumbent host with focused fixture startup/status/Quit evidence and separate actual lease/process exclusion evidence. This is not qualification of the future native host.
 
 ## Verification and limits
 
@@ -45,3 +45,6 @@ commands/results, failures and limits in dated evidence.
 ## Comments
 
 2026-11-16: Published from the reconciled spec; all implementation acceptance is unchecked.
+
+
+2026-11-16: Implemented ticket 01 on the incumbent host. [Verification evidence and coverage map](../../../docs/evidence/sqlx-architecture/01/README.md) record substituted units, static gates, release packaging, separate actual lease/process exclusion and fixture desktop startup/status/owned Quit. Final full gate: 219 Rust, 51 tooling and 260 UI tests; both fresh GPT-6.1 (`gpt-6.1-sol`) High reviewers report no unresolved findings after fixes. Failed attempts and qualification limits are retained. No live-provider/authentication action or user-state reset occurred. Ticket 02 and future native-host qualification remain untouched.

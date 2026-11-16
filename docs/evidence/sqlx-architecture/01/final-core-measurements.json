@@ -1,0 +1,15 @@
+{
+  "revision": "c27122d",
+  "command": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-f254d87852bf6363",
+    "--test-threads=1"
+  ],
+  "warm_runs_seconds": [
+    0.4400594170438126, 0.44090679194778204, 0.44020095793530345,
+    0.43850770802237093, 0.43963424989487976
+  ],
+  "median_seconds": 0.4400594170438126,
+  "range_seconds": [0.43850770802237093, 0.44090679194778204],
+  "count": 219,
+  "result": "passed"
+}
