@@ -264,6 +264,7 @@ fn state(store: Store) -> Mutex<OwnerState> {
         cache: VecDeque::new(),
         probes: VecDeque::new(),
         fault: None,
+        cleanup_faults: BTreeMap::new(),
         fenced: false,
         storage_closed: false,
         revision: 1,
@@ -1617,5 +1618,36 @@ fn registration_panic_retains_exact_action_after_durable_failure_settlement() {
             .unwrap()
             .message
             .contains(&request.action_id.0.to_string())
+    );
+}
+
+#[test]
+fn registration_panic_survives_failed_persistence_without_replaying_effects() {
+    let mut store = Store {
+        finish_fault: Some(false),
+        ..Store::default()
+    };
+    let request = RegisterRepository {
+        action_id: ActionId(Uuid::new_v4()),
+        path: "/repo".into(),
+        create_initial_workspace: false,
+    };
+    admit(&mut store, &request).unwrap();
+    let shared = state(store);
+    assert!(!process_one(&shared, |_| panic!(
+        "controlled registration panic"
+    )));
+    let identity = format!("registration {}", request.action_id.0);
+    assert_eq!(
+        shared.lock().unwrap().cleanup_faults[&identity].code,
+        ErrorCode::CleanupUnconfirmed
+    );
+    assert!(!process_one(&shared, |_| panic!("must not replay")));
+    assert!(
+        shared
+            .lock()
+            .unwrap()
+            .cleanup_faults
+            .contains_key(&identity)
     );
 }

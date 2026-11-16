@@ -27,6 +27,7 @@ fn shared() -> Mutex<OwnerState> {
         cache: VecDeque::new(),
         probes: VecDeque::new(),
         fault: None,
+        cleanup_faults: BTreeMap::new(),
         fenced: false,
         storage_closed: false,
         revision: 1,

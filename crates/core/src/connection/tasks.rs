@@ -8,14 +8,18 @@ pub(super) struct Tasks {
     set: Mutex<JoinSet<()>>,
     cleanup: tokio::sync::Mutex<()>,
     closed: AtomicBool,
-    failure: Mutex<Option<String>>,
+    failure: Arc<Mutex<Vec<String>>>,
     pub(super) cancel: CancellationToken,
 }
 impl Tasks {
     fn reap(&self, set: &mut JoinSet<()>) {
         while let Some(result) = set.try_join_next() {
             if let Err(error) = result {
-                *self.failure.lock().unwrap_or_else(|e| e.into_inner()) = Some(error.to_string());
+                self.failure
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .push(error.to_string());
+                self.closed.store(true, Ordering::Release);
             }
         }
     }
@@ -49,9 +53,15 @@ impl Tasks {
             }
             self.reap(&mut set);
             let (send, receive) = oneshot::channel();
+            let failure = self.failure.clone();
             set.spawn_blocking(move || {
                 let _permit = permit;
-                let _ = send.send(work());
+                if let Err(Err(error)) = send.send(work()) {
+                    failure
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .push(format!("Undelivered blocking failure: {error}"));
+                }
             });
             receive
         };
@@ -67,10 +77,11 @@ impl Tasks {
             let mut set = self.set.lock().unwrap_or_else(|e| e.into_inner());
             loop {
                 match set.poll_join_next(cx) {
-                    std::task::Poll::Ready(Some(Err(error))) => {
-                        *self.failure.lock().unwrap_or_else(|e| e.into_inner()) =
-                            Some(error.to_string())
-                    }
+                    std::task::Poll::Ready(Some(Err(error))) => self
+                        .failure
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .push(error.to_string()),
                     std::task::Poll::Ready(Some(Ok(()))) => {}
                     std::task::Poll::Ready(None) => return std::task::Poll::Ready(()),
                     std::task::Poll::Pending => return std::task::Poll::Pending,
@@ -78,14 +89,11 @@ impl Tasks {
             }
         })
         .await;
-        match self
-            .failure
-            .lock()
-            .unwrap_or_else(|e| e.into_inner())
-            .as_ref()
-        {
-            Some(error) => Err(io::Error::other(error.clone())),
-            None => Ok(()),
+        let failures = self.failure.lock().unwrap_or_else(|e| e.into_inner());
+        if failures.is_empty() {
+            Ok(())
+        } else {
+            Err(io::Error::other(failures.join("; ")))
         }
     }
 }

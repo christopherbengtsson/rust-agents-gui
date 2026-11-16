@@ -324,6 +324,7 @@ struct OwnerState {
     cache: VecDeque<(RepositoryId, Availability)>,
     probes: VecDeque<RepositoryRecord>,
     fault: Option<RepositoryError>,
+    cleanup_faults: BTreeMap<String, RepositoryError>,
     fenced: bool,
     storage_closed: bool,
     revision: u64,
@@ -350,6 +351,7 @@ impl OwnerState {
             cache: VecDeque::new(),
             probes: VecDeque::new(),
             fault: None,
+            cleanup_faults: BTreeMap::new(),
             fenced: false,
             storage_closed: false,
             revision: 1,
@@ -578,6 +580,12 @@ impl Workspaces {
                 }
                 errors.extend(
                     state
+                        .cleanup_faults
+                        .iter()
+                        .map(|(identity, error)| format!("{identity}: {}", error.message)),
+                );
+                errors.extend(
+                    state
                         .workspace_faults
                         .iter()
                         .map(|(id, error)| format!("Workspace {}: {}", id.0, error.message)),
@@ -724,7 +732,15 @@ fn process_one(
             return false;
         };
         match state.store().and_then(|store| store.pending()) {
-            Ok(Some(action)) => Work::Register(action),
+            Ok(Some(action)) => {
+                if state
+                    .cleanup_faults
+                    .contains_key(&format!("registration {}", action.action_id.0))
+                {
+                    return false;
+                }
+                Work::Register(action)
+            }
             Ok(None) => {
                 if state.fault.is_some() {
                     state.publish(vec![crate::observations::Target::Repositories]);
@@ -759,6 +775,7 @@ fn process_one(
         && error.code == ErrorCode::CleanupUnconfirmed
     {
         state.fenced = true;
+        state.cleanup_faults.insert(identity.clone(), error.clone());
         state.fault = Some(RepositoryError::new(
             ErrorCode::CleanupUnconfirmed,
             format!("{identity}: {}", error.message),

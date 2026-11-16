@@ -655,7 +655,7 @@ fn application_corpus_matches_pure_rust_serialization() {
         use crate::workspaces::*;
         use serde_json::{Value, json};
         let corpus: Value =
-            serde_json::from_str(include_str!("../../../../contracts/observations-v14.json"))
+            serde_json::from_str(include_str!("../../../../contracts/observations-v15.json"))
                 .unwrap();
         let owner = "owner-a";
         let repository_id = RepositoryId(uuid::Uuid::from_u128(1));

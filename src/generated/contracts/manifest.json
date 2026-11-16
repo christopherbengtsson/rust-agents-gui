@@ -17,7 +17,7 @@
     "crates/core/src/connection.rs": "9609dbad0db6d7e95cfebad5d302e44e73fa2c825a96d664c84693afda07e65f",
     "crates/core/src/connection/subscription.rs": "39daad90c39a245df9c6842aa2c09106a8b0251a9cd2869f92027809783e3be7",
     "crates/core/src/observations.rs": "a3c41684ce06dd447d3493d9794bef6da4fcc1adabb99bfab67709da756968ee",
-    "crates/core/src/workspaces.rs": "73ef3eb69611b60ee45199716b3ddf27b70a5175145cef6b21bec8a571fb2a5f",
+    "crates/core/src/workspaces.rs": "619d3b059f196f1b5adaff7fd71381902891e75dd92bc0b53f7db6235d601f19",
     "crates/core/src/runtimes/provider_connection.rs": "8bc8d5f93f45b39e6074a45961003df12a4bb4dc862ccf86d12f1700f7793476",
     "crates/core/src/runtimes/provider_connection/login.rs": "c6865428f927be7766761328637c4fbcfa8bc77be537b3ccf740a27f539e8163",
     "crates/core/src/runtimes/provider_connection/selection.rs": "c83c8f575d82fa2454a9c5b531463d58a0916d7524a0a257cecbe219dc1274c4",
