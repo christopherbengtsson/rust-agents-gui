@@ -8,10 +8,11 @@ function scenario() {
   const warnings = [];
   let deadline;
   const launcher = createLauncher({
-    spawn(command, args) {
+    spawn(command, args, options) {
       const child = new EventEmitter();
       child.command = command;
       child.args = args;
+      child.options = options;
       child.signals = [];
       child.kill = (signal) => {
         child.signals.push(signal);
@@ -78,4 +79,16 @@ test("native child shutdown completes before the development server stops", asyn
   assert.deepEqual(frontend.signals, ["SIGTERM"]);
   frontend.emit("exit", 143, null);
   await stopped;
+});
+
+test("retained children isolate terminal signals and never read the foreground terminal", () => {
+  const s = scenario();
+  const native = s.launcher.launch("native", []);
+  const service = s.launcher.launch("vite", [], {}, "service");
+  for (const child of [native, service]) {
+    assert.equal(child.options.detached, true);
+    assert.equal(child.options.stdio[0], "ignore");
+  }
+  native.emit("exit", 0, null);
+  service.emit("exit", 0, null);
 });

@@ -1,0 +1,37 @@
+✔ ordinary stop awaits retained native completion, reports pending and never escalates (0.72675ms)
+✔ already exited children are never signalled and force termination is failure (0.367375ms)
+✔ native child shutdown completes before the development server stops (1.3095ms)
+✖ retained children isolate terminal signals and never read the foreground terminal (0.640125ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.650042
+
+✖ failing tests:
+
+test at scripts/start.test.mjs:84:1
+✖ retained children isolate terminal signals and never read the foreground terminal (0.640125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - true
+  
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.test.mjs:89:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -17,10 +17,12 @@ export function createLauncher({
   let stopping;
   function launch(command, args, options = {}, kind = "native") {
     if (stopping) throw new Error("Launcher is stopping");
-    // Direct children, without a CLI process group that can kill the native owner.
+    // Isolate retained children from foreground Ctrl-C. Only this owner requests
+    // their shutdown; ignored stdin prevents background terminal reads.
     const child = launchProcess(command, args, {
       cwd: root,
-      stdio: "inherit",
+      stdio: ["ignore", "inherit", "inherit"],
+      detached: true,
       ...options,
     });
     const record = { child, kind, done: false, requested: false };
@@ -138,7 +140,7 @@ export async function start(mode) {
       const frontend = launcher.launch(
         process.execPath,
         ["node_modules/vite/bin/vite.js"],
-        { env, stdio: ["inherit", "pipe", "inherit"] },
+        { env, stdio: ["ignore", "pipe", "inherit"] },
         "service",
       );
       frontend.stdout.on("data", (bytes) => process.stdout.write(bytes));
@@ -150,12 +152,13 @@ export async function start(mode) {
       });
       let ready;
       let timer;
+      let readiness = "";
       try {
         await Promise.race([
           new Promise((resolve, reject) => {
             ready = (bytes) => {
-              if (bytes.toString().includes("http://127.0.0.1:1420/"))
-                resolve();
+              readiness = (readiness + bytes.toString()).slice(-1024);
+              if (readiness.includes("http://127.0.0.1:1420/")) resolve();
             };
             frontend.stdout.on("data", ready);
             timer = setTimeout(

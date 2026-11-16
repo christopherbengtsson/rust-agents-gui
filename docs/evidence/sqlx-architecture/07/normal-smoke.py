@@ -21,7 +21,7 @@ children=[]
 def save(): (OUT/(prefix+'-smoke.json')).write_text(json.dumps(report,indent=2)+'\n')
 def launch(label,state,command=None):
  state.mkdir(mode=0o700,exist_ok=True)
- log=root/(label+'.log');p=subprocess.Popen(command or [str(binary)],cwd=REPO,env={**base,'AGENT_WORKSPACE_STATE_DIR':str(state)},stdout=log.open('w'),stderr=subprocess.STDOUT);children.append((label,p,log));report['processes'].append({'label':label,'pid':p.pid,'state':str(state)});return p,log
+ log=root/(label+'.log');p=subprocess.Popen(command or [str(binary)],cwd=REPO,env={**base,'AGENT_WORKSPACE_STATE_DIR':str(state)},stdout=log.open('w'),stderr=subprocess.STDOUT,start_new_session=True);children.append((label,p,log));report['processes'].append({'label':label,'pid':p.pid,'state':str(state)});return p,log
 def wait(log,text,child,seconds=25):
  end=time.monotonic()+seconds
  while time.monotonic()<end:
@@ -29,8 +29,10 @@ def wait(log,text,child,seconds=25):
   assert child.poll() is None,(child.returncode,log.read_text())
   time.sleep(.05)
  raise TimeoutError((text,log.read_text()))
-def quit(p,log):
- p.send_signal(signal.SIGTERM);assert p.wait(25)==0,log.read_text();assert 'failures=0' in log.read_text(),log.read_text()
+def quit(p,log,group=False):
+ if group:os.killpg(p.pid,signal.SIGINT)
+ else:p.send_signal(signal.SIGTERM)
+ assert p.wait(25)==0,log.read_text();assert 'failures=0' in log.read_text(),log.read_text()
 def unlocked(state):
  with (state/'owner.lock').open('r') as lock:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
 try:
@@ -60,8 +62,8 @@ try:
  assert db.exists();report['checks'].append('deliberate fresh-root reset initializes schema 4 without deleting prior metadata or worktrees')
  # The real launcher owns Vite and native directly, builds debug once, and drains on signal.
  dev=root/'dev-override';host,log=launch('dev-launcher',dev,['node','scripts/start.mjs','dev']);wait(log,'phase=Some(Ready)',host,120)
- assert 'Native dev state: '+str(dev) in log.read_text();assert not (dev/'supervisor.sock').exists();quit(host,log);unlocked(dev)
- report['checks'].append('actual dev launcher with exact override starts Vite/native and awaits signal-driven completed drain')
+ assert 'Native dev state: '+str(dev) in log.read_text();assert not (dev/'supervisor.sock').exists();quit(host,log,group=True);unlocked(dev)
+ report['checks'].append('actual dev launcher with exact override starts Vite/native and awaits foreground process-group Ctrl-C completed drain')
  report['outcome']='passed'
 except BaseException as error:report['outcome']='failed';report['error']=repr(error);raise
 finally:

@@ -1,0 +1,12 @@
+✔ ordinary stop awaits retained native completion, reports pending and never escalates (0.644666ms)
+✔ already exited children are never signalled and force termination is failure (0.251958ms)
+✔ native child shutdown completes before the development server stops (1.052375ms)
+✔ retained children isolate terminal signals and never read the foreground terminal (0.092166ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.911083

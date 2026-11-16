@@ -28,7 +28,7 @@ Provider homes remain runtime-owned (`CODEX_HOME`/normal runtime configuration).
    AGENT_WORKSPACE_STATE_DIR="$rehearsal_root/native-schema-4" corepack pnpm dev
    ```
 
-4. Confirm the printed override and ready core diagnostics. Register repositories explicitly. New managed locations must be fresh; do not adopt old worktrees. Native Quit must finish before restarting after Rust edits. Frontend edits retain Vite HMR.
+4. Confirm the printed override and ready core diagnostics. Register repositories explicitly. New managed locations must be fresh; do not adopt old worktrees. Native Quit must finish before restarting after Rust edits. Frontend edits retain Vite HMR. Foreground Ctrl-C reaches the launcher; its native/Vite children use isolated process groups and ignored terminal stdin so the launcher can finish native cleanup before stopping Vite.
 5. Preserve old evidence, checkouts, all worktrees/branches and provider credentials/native history. An optional investigation copy of `metadata.sqlite3`, `metadata.sqlite3-wal` and `metadata.sqlite3-shm` must be made only after the old owner has stopped, as one set. Preserving the whole stopped root also retains managed worktrees.
 
 For intentional reuse of a current-schema root, keep `owner.lock` at its existing inode. A competing owner must fail before opening storage/effects. Never unlink, replace or rename an active lease to bypass exclusion. A stopped-owner handover reacquires that same file. Incompatible or unrecognized metadata fails visibly; the app never silently initializes over it. Selecting a new root is the reset mechanism, not an automatic fallback.

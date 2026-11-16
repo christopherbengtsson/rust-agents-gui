@@ -62,3 +62,13 @@ The complete gate passes **172 Rust / 47 tooling / 261 mocked-IPC UI tests**. It
 Already compiled Rust units, one warm-up/five warm executions, one harness thread: **median 0.359884 s**, range **0.358982–0.364855 s**, all 172 pass each time. No build overlapped these measurements. No throughput/performance winner is inferred.
 
 Normal package content totals: **26,007,895 → 18,266,727 bytes**, delta **-7,741,168 bytes**. `package-delta.json` lists per-file sizes/hashes. Ticket 06 recorded 48.720 s for its normal package; the final ticket 07 normal package takes 12.378 s in this warm cohort. These differing source/cache/build paths do not isolate a build-speed improvement. Normal and qualification builds are separate: the former excludes all injected WebView/frontend instrumentation.
+
+## Review correction: foreground Ctrl-C
+
+Initial implementation `dbebd8a` received Standards **0 findings** and Spec **1 P2 finding**: foreground terminal Ctrl-C could signal Vite/native directly before launcher-mediated native-first drain. The launcher now creates isolated direct-child process groups and ignores their terminal stdin, while continuing to signal only retained child handles. Bounded Vite readiness accumulation also handles split stdout chunks.
+
+A failing/passing launcher unit locks this policy. `launcher-process.json` separately qualifies actual process groups with controlled synthetic children: terminal-style group SIGINT reaches only the launcher, native receives SIGTERM, service remains alive beyond the three-second pending report, no force escalation occurs, repeated Ctrl-C observes one attempt, and service exits only after native completion. This fixture tests the launcher under OS signals; it is not a Tauri core drain substitute. `ctrlc-smoke.json` reruns the normal package/reset cohort and the actual dev launcher with process-group SIGINT; all ordinary exits are 0. Native Q4's actual pending/failed ownership remains separately qualified.
+
+The final complete gate after this correction selects **172 Rust / 48 tooling / 261 UI tests**. Previous successful full gates describe their respective earlier source cohorts; review correction changes only launcher/tooling/evidence, so the final packaged Rust binary, generated contracts and native/storage/process qualification remain source aligned.
+
+Post-review complete gate: exit 0, 17.815 seconds. The initial Spec finding and correction are preserved in [review.md](review.md).
