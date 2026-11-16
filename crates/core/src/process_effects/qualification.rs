@@ -93,6 +93,26 @@ pub(crate) async fn run(root: &Path, fixture: &Path) -> io::Result<Value> {
         }
         checks.push(json!({"scenario":mode,"passed":true}));
     }
+    let mut linger = std::process::Command::new("/usr/bin/python3");
+    use std::os::unix::process::CommandExt;
+    linger
+        .arg(&fixture)
+        .arg("linger-zero")
+        .arg(&root)
+        .env_clear()
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .process_group(0);
+    let processes = owner.clone();
+    let outcome = tokio::task::spawn_blocking(move || processes.git(linger, None))
+        .await
+        .map_err(io::Error::other)?;
+    require(
+        matches!(outcome, Err(GitFailure::Effect(error)) if error.kind() == io::ErrorKind::TimedOut),
+        "zero-exit cleanup must retain the natural-exit timeout",
+    )?;
+    checks.push(json!({"scenario":"natural-exit-timeout-with-zero-term-exit", "passed":true}));
     for abandoned in [false, true] {
         let pid_file = root.join("descendant.pid");
         if pid_file.exists() {

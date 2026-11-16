@@ -196,6 +196,7 @@ impl Processes {
             let report = || {
                 if !uncertain.send_replace(true) { record("physical cleanup uncertain; ownership retained".into()); }
             };
+            let deadline_expired = std::sync::atomic::AtomicBool::new(false);
             let physical = async {
                 let (cleaning, cleanup_started) = oneshot::channel();
                 let drain = async {
@@ -216,8 +217,8 @@ impl Processes {
                 };
                 let lifecycle = async {
                     let _ = stopped.await;
-                        let _cleanup = owner.cleanup.clone().acquire_owned().await.expect("cleanup reserve stays open");
-                    settle_group(&mut child, exit_deadline, &report, &record).await;
+                    let expired = settle_group(&mut child, &owner.cleanup, exit_deadline, &report, &record).await;
+                    deadline_expired.store(expired, std::sync::atomic::Ordering::SeqCst);
                     let _ = cleaning.send(());
                 };
                 let ((), drained) = tokio::join!(lifecycle, drain);
@@ -233,14 +234,15 @@ impl Processes {
                 Err(_) => {
                     report();
                     owner.faults.lock().unwrap().record(format!("Process {id:?} lifecycle panicked"));
-                    settle_group(&mut child, exit_deadline, &report, &record).await;
+                    let expired = settle_group(&mut child, &owner.cleanup, exit_deadline, &report, &record).await;
+                    deadline_expired.fetch_or(expired, std::sync::atomic::Ordering::SeqCst);
                     reap(&mut child, &report, &record).await
                 }
             };
             if let Err(error) = &status { owner.faults.lock().unwrap().record(format!("Process {id:?}: {error}")); }
             if *uncertain.borrow() { owner.faults.lock().unwrap().record(format!("Process {id:?} cleanup was uncertain")); }
             drop(permit); // child and pipe completion, independent of the result receiver
-            let _ = done.send(status);
+            let _ = done.send(status.map(|status| ProcessExit { status, deadline_expired: deadline_expired.load(std::sync::atomic::Ordering::SeqCst) }));
             owner.changed.notify_waiters();
         });
         self.0.changed.notify_one();
@@ -285,7 +287,6 @@ impl Processes {
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .spawn(async move {
-                let deadline = Instant::now() + Duration::from_secs(2);
                 let output = std::panic::AssertUnwindSafe(finite_output(
                     stdout, stderr, stdin, input, deadline,
                 ))
@@ -305,6 +306,12 @@ impl Processes {
                     })
                 } else {
                     match status {
+                        Ok(status) if status.deadline_expired => {
+                            Err(GitFailure::Effect(io::Error::new(
+                                io::ErrorKind::TimedOut,
+                                "Git natural-exit deadline expired; cleanup completed separately",
+                            )))
+                        }
                         Ok(status) => output
                             .map(|(out, err)| {
                                 (status.success(), if status.success() { out } else { err })
@@ -400,6 +407,19 @@ impl<T: tokio::io::AsyncWrite + Unpin> tokio::io::AsyncWrite for Pipe<T> {
     }
 }
 
+pub(crate) struct ProcessExit {
+    status: std::process::ExitStatus,
+    deadline_expired: bool,
+}
+impl ProcessExit {
+    pub(crate) fn success(&self) -> bool {
+        !self.deadline_expired && self.status.success()
+    }
+    pub(crate) fn code(&self) -> Option<i32> {
+        self.status.code()
+    }
+}
+
 pub(crate) struct Process {
     pub(crate) stdin: Option<Pipe<ChildStdin>>,
     pub(crate) stdout: Option<Pipe<ChildStdout>>,
@@ -408,21 +428,18 @@ pub(crate) struct Process {
 }
 struct Completion {
     stop: Option<oneshot::Sender<()>>,
-    result: oneshot::Receiver<io::Result<std::process::ExitStatus>>,
+    result: oneshot::Receiver<io::Result<ProcessExit>>,
     uncertainty: tokio::sync::watch::Receiver<bool>,
 }
 impl Process {
-    pub(crate) async fn finish(
-        mut self,
-        uncertain: &impl Fn(),
-    ) -> io::Result<std::process::ExitStatus> {
+    pub(crate) async fn finish(mut self, uncertain: &impl Fn()) -> io::Result<ProcessExit> {
         drop(self.stdin.take());
         drop(self.stdout.take());
         self.completion.finish(uncertain).await
     }
 }
 impl Completion {
-    async fn finish(mut self, uncertain: &impl Fn()) -> io::Result<std::process::ExitStatus> {
+    async fn finish(mut self, uncertain: &impl Fn()) -> io::Result<ProcessExit> {
         self.stop.take();
         loop {
             if *self.uncertainty.borrow_and_update() {
@@ -469,11 +486,20 @@ async fn reap(
 
 async fn settle_group(
     child: &mut (impl Cleanup + Send),
+    reserve: &Arc<Semaphore>,
     exit_deadline: Option<Instant>,
     uncertain: &impl Fn(),
     record: &impl Fn(String),
-) {
-    let report = cleanup(child, exit_deadline).await;
+) -> bool {
+    let report = {
+        let _cleanup = reserve
+            .clone()
+            .acquire_owned()
+            .await
+            .expect("cleanup reserve stays open");
+        cleanup(child, exit_deadline).await
+    }; // Unknown observation retains ordinary ownership, not escalation reserve.
+
     for error in &report.errors {
         record(error.clone());
     }
@@ -491,6 +517,7 @@ async fn settle_group(
             tokio::time::sleep(Duration::from_millis(100)).await;
         }
     }
+    report.deadline_expired
 }
 
 async fn finite_output<R, E, W>(
@@ -505,6 +532,12 @@ where
     E: AsyncRead + Unpin,
     W: tokio::io::AsyncWrite + Unpin,
 {
+    if Instant::now() >= deadline {
+        return Err(io::Error::new(
+            io::ErrorKind::TimedOut,
+            "Git dispatch exceeded its absolute deadline",
+        ));
+    }
     let write = async {
         if let (Some(mut stdin), Some(input)) = (stdin, input) {
             tokio::time::timeout_at(deadline, async {
@@ -603,11 +636,13 @@ impl Cleanup for Child {
 }
 struct CleanupReport {
     quiescent: bool,
+    deadline_expired: bool,
     errors: Vec<String>,
 }
 async fn cleanup(child: &mut impl Cleanup, exit_deadline: Option<Instant>) -> CleanupReport {
     let mut report = CleanupReport {
         quiescent: false,
+        deadline_expired: exit_deadline.is_some_and(|deadline| Instant::now() >= deadline),
         errors: Vec::new(),
     };
     for signal in [None, Some(libc::SIGTERM), Some(libc::SIGKILL)] {
@@ -630,7 +665,11 @@ async fn cleanup(child: &mut impl Cleanup, exit_deadline: Option<Instant>) -> Cl
                 report.quiescent = true;
                 break;
             }
-            Ok(false) => {}
+            Ok(false) => {
+                if signal.is_none() && exit_deadline.is_some() {
+                    report.deadline_expired = true;
+                }
+            }
             Err(error) => report.errors.push(format!("group quiescence: {error}")),
         }
     }
@@ -838,6 +877,127 @@ mod tests {
         );
         (completion, entered, release)
     }
+    impl OwnedGroup for Fake {
+        async fn wait(&mut self) -> io::Result<std::process::ExitStatus> {
+            use std::os::unix::process::ExitStatusExt;
+            Ok(std::process::ExitStatus::from_raw(0))
+        }
+    }
+    #[tokio::test(start_paused = true)]
+    async fn natural_exit_deadline_is_failure_even_when_term_cleanup_exits_zero() {
+        let owner = Processes::new();
+        let permit = owner.0.ordinary.clone().try_acquire_owned().unwrap();
+        let permit = Arc::new(PhysicalLease {
+            _permit: Some(permit),
+            changed: owner.0.changed.clone(),
+        });
+        let completion = owner.retain(
+            Some(43),
+            Fake {
+                waits: [Ok(false), Ok(true)].into(),
+                signals: Vec::new(),
+                fail_signal: false,
+            },
+            None::<tokio::io::Empty>,
+            permit,
+            Some(Instant::now() + Duration::from_secs(2)),
+        );
+        let exit = completion.finish(&|| {}).await.unwrap();
+        assert!(
+            !exit.success(),
+            "successful cleanup cannot replace the timed-out operation outcome"
+        );
+        owner.finish().await.unwrap();
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn dispatch_delay_does_not_renew_the_finite_deadline() {
+        let deadline = Instant::now() + Duration::from_secs(2);
+        tokio::time::advance(Duration::from_secs(3)).await;
+        let result = finite_output(
+            tokio::io::empty(),
+            tokio::io::empty(),
+            None::<tokio::io::Sink>,
+            None,
+            deadline,
+        )
+        .await;
+        assert_eq!(result.unwrap_err().kind(), io::ErrorKind::TimedOut);
+    }
+
+    struct UnknownGroup {
+        calls: usize,
+        entered: Option<oneshot::Sender<()>>,
+        release: Option<oneshot::Receiver<()>>,
+    }
+    impl Cleanup for UnknownGroup {
+        fn signal(&mut self, _: i32) -> io::Result<()> {
+            Ok(())
+        }
+        async fn quiescent(&mut self, _: Duration) -> io::Result<bool> {
+            self.calls += 1;
+            if self.calls <= 3 {
+                return Ok(false);
+            }
+            if let Some(entered) = self.entered.take() {
+                let _ = entered.send(());
+            }
+            if let Some(release) = self.release.take() {
+                let _ = release.await;
+            }
+            Ok(true)
+        }
+    }
+    impl OwnedGroup for UnknownGroup {
+        async fn wait(&mut self) -> io::Result<std::process::ExitStatus> {
+            use std::os::unix::process::ExitStatusExt;
+            Ok(std::process::ExitStatus::from_raw(0))
+        }
+    }
+    #[tokio::test(start_paused = true)]
+    async fn unknown_groups_retain_ownership_without_starving_other_cleanup_attempts() {
+        let owner = Processes::new();
+        let mut releases = Vec::new();
+        for id in 1..=3 {
+            let permit = owner.0.ordinary.clone().try_acquire_owned().unwrap();
+            let permit = Arc::new(PhysicalLease {
+                _permit: Some(permit),
+                changed: owner.0.changed.clone(),
+            });
+            let (entered, started) = oneshot::channel();
+            let (release, released) = oneshot::channel();
+            releases.push(release);
+            let completion = owner.retain(
+                Some(id),
+                UnknownGroup {
+                    calls: 0,
+                    entered: Some(entered),
+                    release: Some(released),
+                },
+                None::<tokio::io::Empty>,
+                permit,
+                None,
+            );
+            drop(completion);
+            tokio::time::timeout(Duration::from_secs(1), started)
+                .await
+                .expect("each cleanup attempt must reach retained unknown observation")
+                .unwrap();
+        }
+        assert_eq!(owner.0.ordinary.available_permits(), 5);
+        for release in releases {
+            release.send(()).unwrap();
+        }
+        assert!(
+            owner
+                .finish()
+                .await
+                .unwrap_err()
+                .to_string()
+                .contains("uncertain")
+        );
+    }
+
     #[tokio::test(start_paused = true)]
     async fn abandoned_waiter_keeps_capacity_until_physical_completion_and_reaper_observes_errors()
     {
