@@ -102,17 +102,13 @@ async fn apply(tx: &mut Transaction<'_, Sqlite>, write: Write) -> Result<()> {
             if action.state == RegistrationState::Pending {
                 return Err(conflict());
             }
-            if let Some(repo) = &repository {
-                if action.state
+            if let Some(repo) = &repository
+                && action.state
                     != (RegistrationState::Completed {
                         repository_id: repo.id,
                     })
-                {
-                    return Err(conflict());
-                }
-                if action.create_initial_workspace && initial.is_none() {
-                    return Err(conflict());
-                }
+            {
+                return Err(conflict());
             }
             if let Some(repo) = repository {
                 let record = encode(&repo, PAGE_BYTES)?;
@@ -125,6 +121,9 @@ async fn apply(tx: &mut Transaction<'_, Sqlite>, write: Write) -> Result<()> {
                     Some(old) if old != record => return Err(conflict()),
                     Some(_) => {}
                     None => {
+                        if action.create_initial_workspace && initial.is_none() {
+                            return Err(conflict());
+                        }
                         sqlx::query("INSERT INTO repositories VALUES(?,?,?)")
                             .bind(id(repo.id.0))
                             .bind(&repo.common_dir)
@@ -428,6 +427,14 @@ macro_rules! records_sql {
     };
 }
 
+enum RecordShape {
+    Registration,
+    Repository,
+    Workspace,
+    WorkspaceAction,
+    Scalar,
+}
+
 pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
     let mut connection = shared.readers.acquire().await?;
     let result = async {
@@ -435,11 +442,11 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
         // This SELECT establishes the snapshot shared by every following query.
         let revision: i64 = sqlx::query_scalar("SELECT revision FROM storage_revision WHERE id=1").fetch_one(&mut *tx).await?;
         let validation = match &read {
-            Read::Registration(_) | Read::PendingRegistrations { .. } => 1,
-            Read::Repository(_) | Read::CommonDirectory(_) | Read::Repositories { .. } => 2,
-            Read::Workspace(_) | Read::Workspaces { .. } | Read::PendingWorkspaces { .. } | Read::Name { .. } => 3,
-            Read::WorkspaceAction(_) => 4,
-            _ => 0,
+            Read::Registration(_) | Read::PendingRegistrations { .. } => RecordShape::Registration,
+            Read::Repository(_) | Read::CommonDirectory(_) | Read::Repositories { .. } => RecordShape::Repository,
+            Read::Workspace(_) | Read::Workspaces { .. } | Read::PendingWorkspaces { .. } | Read::Name { .. } => RecordShape::Workspace,
+            Read::WorkspaceAction(_) => RecordShape::WorkspaceAction,
+            Read::Folder { .. } | Read::AllocationCursor(_) | Read::CleanupBlocked(_) | Read::ProviderSelection(_) | Read::ProviderLogin(_) | Read::ProviderAction(_) => RecordShape::Scalar,
         };
         let (sql, arguments): (&'static str, Vec<String>) = match read {
             Read::Registration(a) => (records_sql!("registration_actions", " WHERE id=?"), vec![id(a.0)]),
@@ -481,11 +488,11 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
         drop(rows);
         for record in &records {
             match validation {
-                1 => { let _: Registration = json(record)?; },
-                2 => { let _: RepositoryRecord = json(record)?; },
-                3 => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
-                4 => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
-                _ => { let _: serde_json::Value = json(record)?; },
+                RecordShape::Registration => { let _: Registration = json(record)?; },
+                RecordShape::Repository => { let _: RepositoryRecord = json(record)?; },
+                RecordShape::Workspace => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+                RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+                RecordShape::Scalar => { let _: serde_json::Value = json(record)?; },
             }
         }
         tx.commit().await?;

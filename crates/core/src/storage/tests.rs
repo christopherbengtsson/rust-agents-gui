@@ -1,6 +1,13 @@
 use super::*;
-fn tracked(control: &Control, id: uuid::Uuid) {
-    control.admission.lock().unwrap().writes.insert(id, 1);
+fn tracked(control: &Control, action: uuid::Uuid) -> WriteReceipt {
+    let mut state = control.admission.lock().unwrap();
+    state.next_write += 1;
+    let receipt = WriteReceipt {
+        sequence: state.next_write,
+        action,
+    };
+    state.writes.insert(receipt.sequence, action);
+    receipt
 }
 fn slot() -> OwnedSemaphorePermit {
     Arc::new(Semaphore::new(1)).try_acquire_owned().unwrap()
@@ -10,14 +17,14 @@ fn slot() -> OwnedSemaphorePermit {
 async fn lost_requester_keeps_completion_and_status_pending_until_physical_settlement() {
     let control = Arc::new(Control::new());
     let action = uuid::Uuid::nil();
-    tracked(&control, action);
+    let receipt = tracked(&control, action);
     let (reply, receiver) = oneshot::channel();
     drop(receiver);
     let (finish, physical) = oneshot::channel();
     let owner = control.clone();
     let task = tokio::spawn(complete_job(
         owner,
-        Some(action),
+        Some(receipt),
         reply,
         slot(),
         async move {
@@ -74,10 +81,10 @@ async fn failed_commit_receipt_waits_for_retirement_and_preserves_both_failures(
 async fn retirement_unknown_fences_fresh_observation_and_retains_exact_action_after_reply_loss() {
     let control = Arc::new(Control::new());
     let action = uuid::Uuid::from_u128(42);
-    tracked(&control, action);
+    let receipt = tracked(&control, action);
     let (reply, receiver) = oneshot::channel();
     drop(receiver);
-    complete_job(control.clone(), Some(action), reply, slot(), async {
+    complete_job(control.clone(), Some(receipt), reply, slot(), async {
         Err(retire_failed(
             Arc::new(Control::new()),
             Error::Invalid("commit failed"),
@@ -101,9 +108,9 @@ async fn retirement_unknown_fences_fresh_observation_and_retains_exact_action_af
 async fn known_retirement_allows_fresh_reconciliation_but_never_grants_write_replay() {
     let control = Arc::new(Control::new());
     let action = uuid::Uuid::nil();
-    tracked(&control, action);
+    let receipt = tracked(&control, action);
     let (reply, receiver) = oneshot::channel();
-    complete_job(control.clone(), Some(action), reply, slot(), async {
+    complete_job(control.clone(), Some(receipt), reply, slot(), async {
         Err(retire_failed(
             Arc::new(Control::new()),
             Error::Invalid("commit acknowledgment lost"),
@@ -131,9 +138,9 @@ async fn known_retirement_allows_fresh_reconciliation_but_never_grants_write_rep
 async fn task_panic_is_owned_attributed_and_fenced() {
     let control = Arc::new(Control::new());
     let action = uuid::Uuid::from_u128(7);
-    tracked(&control, action);
+    let receipt = tracked(&control, action);
     let (reply, receiver) = oneshot::channel();
-    complete_job(control.clone(), Some(action), reply, slot(), async {
+    complete_job(control.clone(), Some(receipt), reply, slot(), async {
         panic!("controlled storage panic")
     })
     .await;
@@ -273,4 +280,29 @@ async fn checkpoint_failure_does_not_skip_either_close_barrier_or_erase_prior_er
     assert_eq!(report.faults.len(), 2);
     assert_eq!(report.faults[0].action, Some(uuid::Uuid::nil()));
     assert!(report.checkpoint.is_none());
+}
+
+#[tokio::test]
+async fn later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait() {
+    for same_action in [false, true] {
+        for exact in [false, true] {
+            let control = Control::new();
+            let first = uuid::Uuid::from_u128(1);
+            let later = if same_action {
+                first
+            } else {
+                uuid::Uuid::from_u128(2)
+            };
+            let receipt = tracked(&control, first);
+            let admitted_read = control.settled(exact.then_some(first));
+            tracked(&control, later);
+            control.settle(receipt);
+            assert!(
+                tokio::time::timeout(Duration::ZERO, admitted_read)
+                    .await
+                    .is_ok(),
+                "A later write extended the admitted read barrier"
+            );
+        }
+    }
 }

@@ -2,6 +2,7 @@
 #![allow(dead_code)] // Consumers convert in 03/04; compile the complete private owner here.
 #[path = "../../core/src/storage.rs"]
 mod storage;
+#[allow(unused_imports)] // The macro re-export is consumed by core inspection, absent here.
 #[path = "../../core/src/workspaces/records.rs"]
 mod workspaces;
 

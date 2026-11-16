@@ -334,3 +334,46 @@ mod return_tests {
         }
     }
 }
+
+pub(super) fn failure(control: &Control, original: Error) -> Error {
+    let state = control
+        .admission
+        .lock()
+        .expect("storage admission poisoned");
+    Error::Opening {
+        original: Box::new(original),
+        faults: state.faults.clone(),
+        retirement_unknown: state.retirement_unknown,
+    }
+}
+#[cfg(test)]
+mod failure_tests {
+    use super::*;
+    #[test]
+    fn startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup() {
+        let control = Control::new();
+        let _ = observe_hook(
+            &control.admission,
+            Err(Error::Invalid("Owner/settings validation failed")),
+        );
+        let result = failure(&control, sqlx::Error::PoolTimedOut.into());
+        match result {
+            Error::Opening {
+                original,
+                faults,
+                retirement_unknown,
+            } => {
+                assert!(
+                    matches!(*original, Error::Sql(ref error) if matches!(error.as_ref(), sqlx::Error::PoolTimedOut))
+                );
+                assert!(retirement_unknown);
+                assert_eq!(faults.len(), 1);
+                assert!(matches!(
+                    faults[0].error,
+                    Error::Invalid("Owner/settings validation failed")
+                ));
+            }
+            other => panic!("Startup lost original hook evidence: {other:?}"),
+        }
+    }
+}

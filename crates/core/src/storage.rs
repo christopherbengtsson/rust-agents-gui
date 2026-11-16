@@ -38,6 +38,11 @@ pub(crate) enum Error {
     Closed,
     Fenced,
     Panic,
+    Opening {
+        original: Box<Error>,
+        faults: Vec<Fault>,
+        retirement_unknown: bool,
+    },
     Write {
         original: Box<Error>,
         retirement: Option<Box<Error>>,
@@ -68,7 +73,9 @@ impl std::error::Error for Error {
         match self {
             Self::Sql(e) | Self::Conflict(e) => Some(e.as_ref()),
             Self::Io(e) => Some(e.as_ref()),
-            Self::Write { original, .. } => Some(original.as_ref()),
+            Self::Write { original, .. } | Self::Opening { original, .. } => {
+                Some(original.as_ref())
+            }
             _ => None,
         }
     }
@@ -257,7 +264,8 @@ struct Admission {
     fenced: bool,
     retirement_unknown: bool,
     retiring: usize,
-    writes: std::collections::BTreeMap<uuid::Uuid, usize>,
+    writes: std::collections::BTreeMap<u64, uuid::Uuid>,
+    next_write: u64,
     faults: Vec<Fault>,
 }
 struct Shared {
@@ -281,6 +289,7 @@ impl Control {
                 retirement_unknown: false,
                 retiring: 0,
                 writes: Default::default(),
+                next_write: 0,
                 faults: vec![],
             })),
         }
@@ -299,19 +308,28 @@ impl Control {
         // At most 72 admitted operations can fail after the first failure fences admission.
         state.faults.push(Fault { action, error });
     }
-    fn settle(&self, action: uuid::Uuid) {
+    fn settle(&self, receipt: WriteReceipt) {
         let mut state = self.admission.lock().expect("storage admission poisoned");
-        let count = state
-            .writes
-            .get_mut(&action)
-            .expect("admitted write tracked");
-        *count -= 1;
-        if *count == 0 {
-            state.writes.remove(&action);
-        }
+        assert_eq!(
+            state.writes.remove(&receipt.sequence),
+            Some(receipt.action),
+            "admitted write tracked"
+        );
         self.changes.send_modify(|n| *n = n.wrapping_add(1));
     }
-    async fn settled(&self, action: Option<uuid::Uuid>) -> Result<()> {
+    #[cfg(test)]
+    fn settled(
+        &self,
+        action: Option<uuid::Uuid>,
+    ) -> impl std::future::Future<Output = Result<()>> + '_ {
+        let pending = self
+            .admission
+            .lock()
+            .expect("storage admission poisoned")
+            .frontier(action);
+        async move { self.wait_settled(&pending).await }
+    }
+    async fn wait_settled(&self, pending: &[u64]) -> Result<()> {
         let mut changes = self.changes.subscribe();
         loop {
             {
@@ -319,10 +337,10 @@ impl Control {
                 if state.retirement_unknown {
                     return Err(Error::Fenced);
                 }
-                let pending = action.map_or(!state.writes.is_empty(), |id| {
-                    state.writes.contains_key(&id)
-                });
-                if !pending {
+                if !pending
+                    .iter()
+                    .any(|sequence| state.writes.contains_key(sequence))
+                {
                     return Ok(());
                 }
             }
@@ -330,9 +348,30 @@ impl Control {
         }
     }
 }
+impl Admission {
+    fn frontier(&self, action: Option<uuid::Uuid>) -> Vec<u64> {
+        self.writes
+            .iter()
+            .filter(|(_, id)| action.is_none_or(|action| **id == action))
+            .map(|(sequence, _)| *sequence)
+            .collect()
+    }
+}
+#[derive(Debug, Clone, Copy)]
+struct WriteReceipt {
+    sequence: u64,
+    action: uuid::Uuid,
+}
+
 enum Operation {
-    Write { action: uuid::Uuid, payload: String },
-    Read(Read),
+    Write {
+        receipt: WriteReceipt,
+        payload: String,
+    },
+    Read {
+        read: Read,
+        pending: Vec<u64>,
+    },
 }
 struct Job {
     operation: Operation,
@@ -373,7 +412,9 @@ impl Storage {
     /// Called by retained core startup while it holds the state lease. No per-call runtime.
     async fn open(state: &Path) -> Result<Self> {
         let control = Arc::new(Control::new());
-        let (writer, readers, path) = opening::open(state, control.clone()).await?;
+        let (writer, readers, path) = opening::open(state, control.clone())
+            .await
+            .map_err(|error| opening::failure(&control, error))?;
         let shared = Arc::new(Shared {
             writer,
             readers,
@@ -412,18 +453,20 @@ impl Storage {
         if state.fenced {
             return Err(Error::Fenced);
         }
+        state.next_write = state.next_write.checked_add(1).ok_or(Error::Capacity)?;
+        let receipt = WriteReceipt {
+            sequence: state.next_write,
+            action: identity,
+        };
         let (reply, result) = oneshot::channel();
         self.jobs
             .try_send(Job {
-                operation: Operation::Write {
-                    action: identity,
-                    payload,
-                },
+                operation: Operation::Write { receipt, payload },
                 reply,
                 slot,
             })
             .map_err(|_| Error::Capacity)?;
-        *state.writes.entry(identity).or_default() += 1;
+        state.writes.insert(receipt.sequence, identity);
         Ok(result)
     }
     pub(crate) fn read(&self, read: Read) -> Result<oneshot::Receiver<Delivery>> {
@@ -445,10 +488,16 @@ impl Storage {
         if state.retirement_unknown || state.faults.len() >= 80 {
             return Err(Error::Fenced);
         }
+        let target = match &read {
+            Read::Registration(id) | Read::WorkspaceAction(id) => Some(id.0),
+            Read::ProviderAction(id) => Some(*id),
+            _ => None,
+        };
+        let pending = state.frontier(target);
         let (reply, result) = oneshot::channel();
         self.jobs
             .try_send(Job {
-                operation: Operation::Read(read),
+                operation: Operation::Read { read, pending },
                 reply,
                 slot,
             })
@@ -522,17 +571,16 @@ async fn run(
                 let Some(Job { operation, reply, slot }) = job else { break; };
                 let shared = shared.clone();
                 tasks.spawn(async move {
-                    let action = match &operation { Operation::Write { action, .. } => Some(*action), _ => None };
+                    let action = match &operation { Operation::Write { receipt, .. } => Some(*receipt), _ => None };
                     let effect = async {
                         match operation {
                             Operation::Write { payload, .. } => {
                                 let write = serde_json::from_str(&payload).map_err(|_| Error::Invalid("Invalid internal command"))?;
                                 operations::write(&shared, write).await.map(|revision| Outcome::Written { revision })
                             },
-                            Operation::Read(r) => {
-                                let target = match &r { Read::Registration(id) | Read::WorkspaceAction(id) => Some(id.0), _ => None };
-                                shared.control.settled(target).await?;
-                                operations::read(&shared, r).await.map(Outcome::Snapshot)
+                            Operation::Read { read, pending } => {
+                                shared.control.wait_settled(&pending).await?;
+                                operations::read(&shared, read).await.map(Outcome::Snapshot)
                             }
                         }
                     };
@@ -584,7 +632,7 @@ fn encode(value: &impl Serialize, max: usize) -> Result<String> {
 
 async fn complete_job(
     control: Arc<Control>,
-    action: Option<uuid::Uuid>,
+    action: Option<WriteReceipt>,
     reply: oneshot::Sender<Delivery>,
     slot: OwnedSemaphorePermit,
     effect: impl std::future::Future<Output = Result<Outcome>>,
@@ -597,7 +645,7 @@ async fn complete_job(
     if let Err(error) = &outcome
         && !error.is_domain_rejection()
     {
-        control.fault(action, error.clone());
+        control.fault(action.map(|receipt| receipt.action), error.clone());
     }
     if let Some(action) = action {
         control.settle(action);

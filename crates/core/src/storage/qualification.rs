@@ -329,6 +329,103 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         "Changed action payload accepted",
     )?;
     checks.push(json!({"case":"atomic-registration/initial-continuation/reservation/immutable-location/identity", "status":"passed"}));
+    // A second registration of the already saved repository observes that repository;
+    // only a newly registered repository requests the first-creation continuation.
+    let mut duplicate = request(11);
+    duplicate.create_initial_workspace = true;
+    written(&store, Write::RegistrationIntent(duplicate.clone())).await?;
+    let action = Registration {
+        create_initial_workspace: true,
+        initial_workspace_id: None,
+        action_id: duplicate.action_id,
+        path: duplicate.path,
+        state: RegistrationState::Completed {
+            repository_id: repository.id,
+        },
+    };
+    written(
+        &store,
+        Write::RegistrationFinish {
+            action,
+            repository: Some(repository.clone()),
+            initial: None,
+        },
+    )
+    .await?;
+
+    let mut other = repository.clone();
+    other.id = RepositoryId(uuid::Uuid::from_u128(21));
+    other.common_dir = "/disposable/other/.git".into();
+    let registration = request(12);
+    written(&store, Write::RegistrationIntent(registration.clone())).await?;
+    let action = Registration {
+        create_initial_workspace: false,
+        initial_workspace_id: None,
+        action_id: registration.action_id,
+        path: registration.path,
+        state: RegistrationState::Completed {
+            repository_id: other.id,
+        },
+    };
+    written(
+        &store,
+        Write::RegistrationFinish {
+            action,
+            repository: Some(other.clone()),
+            initial: None,
+        },
+    )
+    .await?;
+    let mut other_workspace = workspace.clone();
+    other_workspace.id = WorkspaceId(uuid::Uuid::from_u128(31));
+    other_workspace.repository_id = other.id;
+    other_workspace.creation_action_id = ActionId(uuid::Uuid::from_u128(41));
+    other_workspace.name = None;
+    other_workspace.branch = None;
+    other_workspace.path = None;
+    let create = WorkspaceAction::Create {
+        action_id: other_workspace.creation_action_id,
+        repository_id: other.id,
+    };
+    written(
+        &store,
+        Write::WorkspaceSave {
+            workspace: other_workspace.clone(),
+            action: Some(create),
+        },
+    )
+    .await?;
+    other_workspace.name = Some("pele".into());
+    other_workspace.branch = Some("workspace/pele".into());
+    other_workspace.path = Some(
+        path.join("workspaces/app-2/pele/checkout")
+            .to_string_lossy()
+            .into_owned(),
+    );
+    let collision = store
+        .write(Write::Reservation(Reservation {
+            workspace: other_workspace.clone(),
+            folder: "app".into(),
+            continuation: 1,
+        }))?
+        .await
+        .map_err(|_| Error::Panic)?
+        .outcome;
+    ensure(
+        matches!(collision, Err(Error::Write { original, retirement: None, uncertain: false }) if matches!(*original, Error::Conflict(_))),
+        "Global folder collision lost typed settled rejection",
+    )?;
+    written(
+        &store,
+        Write::Reservation(Reservation {
+            workspace: other_workspace,
+            folder: "app-2".into(),
+            continuation: 2,
+        }),
+    )
+    .await?;
+    checks.push(json!({"case":"cross-repository-folder-constraint/settled-next-candidate", "status":"passed"}));
+
     let selection = uuid::Uuid::from_u128(50);
     written(
         &store,

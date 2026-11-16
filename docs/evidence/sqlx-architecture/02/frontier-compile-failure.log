@@ -1,0 +1,75 @@
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+warning: unused import: `identity`
+  --> crates/storage-checkpoint/src/../../core/src/workspaces/records.rs:22:16
+   |
+22 | pub(crate) use identity;
+   |                ^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/tests.rs:87:40
+    |
+ 87 |     complete_job(control.clone(), Some(action), reply, slot(), async {
+    |                                   ---- ^^^^^^ expected `WriteReceipt`, found `Uuid`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `Uuid` due to the type of the argument passed
+   --> crates/storage-checkpoint/src/../../core/src/storage/tests.rs:87:35
+    |
+ 87 |     complete_job(control.clone(), Some(action), reply, slot(), async {
+    |                                   ^^^^^------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/option.rs:606:5
+    |
+606 |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/tests.rs:113:40
+    |
+113 |     complete_job(control.clone(), Some(action), reply, slot(), async {
+    |                                   ---- ^^^^^^ expected `WriteReceipt`, found `Uuid`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `Uuid` due to the type of the argument passed
+   --> crates/storage-checkpoint/src/../../core/src/storage/tests.rs:113:35
+    |
+113 |     complete_job(control.clone(), Some(action), reply, slot(), async {
+    |                                   ^^^^^------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/option.rs:606:5
+    |
+606 |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     ^^^^
+
+error[E0308]: mismatched types
+   --> crates/storage-checkpoint/src/../../core/src/storage/tests.rs:143:40
+    |
+143 |     complete_job(control.clone(), Some(action), reply, slot(), async {
+    |                                   ---- ^^^^^^ expected `WriteReceipt`, found `Uuid`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `Uuid` due to the type of the argument passed
+   --> crates/storage-checkpoint/src/../../core/src/storage/tests.rs:143:35
+    |
+143 |     complete_job(control.clone(), Some(action), reply, slot(), async {
+    |                                   ^^^^^------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/option.rs:606:5
+    |
+606 |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     ^^^^
+
+For more information about this error, try `rustc --explain E0308`.
+warning: `storage-checkpoint` (lib test) generated 1 warning
+error: could not compile `storage-checkpoint` (lib test) due to 3 previous errors; 1 warning emitted

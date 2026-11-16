@@ -10,7 +10,7 @@ Core startup must retain `Storage::start`'s opening receipt while holding the st
 
 Writes are typed for current registration, initial creation, workspace/reservation/cursor and existing provider records. Domain owners retain retry, credential-scope and external-effect decisions. Provider qualification below only writes synthetic non-secret records; it invokes no provider, authentication or configuration effect.
 
-Failed statement/commit/rollback scope cleanup precedes explicit acquired-connection retirement. A retirement guard blocks establishment/reuse until acknowledgment and fences unknown/panicked retirement. Return hooks order queued cleanup with ping before checking tracked transaction depth, retain hook failures and reject unhealthy connections. Known retirement permits fresh reconciliation snapshots; a storage health fault conservatively fences new writes for that owner. Neither absence nor error authorizes replay.
+Failed statement/commit/rollback scope cleanup precedes explicit acquired-connection retirement. A retirement guard blocks establishment/reuse until acknowledgment and fences unknown/panicked retirement. Return hooks order queued cleanup with ping before checking tracked transaction depth, retain hook failures and reject unhealthy connections. Read admission captures a finite settlement frontier (exact action for action lookups); later writes cannot extend it. Known retirement permits fresh reconciliation snapshots; a storage health fault conservatively fences new writes for that owner. Neither absence nor error authorizes replay.
 
 Fresh metadata is `metadata.sqlite3`, application ID `0x41575332`, schema version 1. Retired `workspace.sqlite3` or incompatible metadata produces fresh-state guidance. No reset occurs. To reset deliberately: stop and drain the owning build, retain owner exclusion, select a new canonical private state root and fresh managed locations, and preserve repositories/worktrees, runtime credentials/native history and evidence. Treat stopped database/WAL/SHM as one set. No migration/import/old-worktree takeover is supplied.
 
@@ -46,4 +46,14 @@ No physical disk-full/I/O fault, physical rollback/close acknowledgment fault, k
 
 ## Final review and verification
 
-Pending final review and final-source checks. Only verified acceptance items will be checked; intermediate workspace compilation and combined cutover remain explicitly open.
+Both initial reviewers ran in fresh contexts with explicit `model: gpt-6.1-sol` and `reasoning_effort: high`; both settings were accepted. Fixed diff: `git diff f6ac1ddd7c8aba50ad643cb4d45b93777b512887...HEAD`, starting implementation commit `c85add8`.
+
+### Standards
+
+Initial report: one P2 violation — status reads waited for the live global write set to empty and could starve under continuous writes. The fix captures bounded per-operation settlement sequences at read admission, so later writes (including duplicate action IDs) cannot extend the barrier. `frontier-red.log` reproduces the defect; `review-regressions-green.log` passes the replacement. One discretionary numeric validation-tag smell was addressed with a named, exhaustive record-shape enum. No tooling findings were counted as review findings.
+
+### Spec
+
+Initial report: one P2 finding — opening-hook validation/unknown-retirement evidence could be discarded behind an acquisition timeout after partial-open cleanup. Startup now returns the acquisition error and retained structured hook faults/uncertainty together. `startup-fault-red.log` reproduces the loss; `review-regressions-green.log` passes the replacement. No scope creep was found. A harness failure/deadline is a failed probe; it does not claim a successful clean drain.
+
+Final-source checks and follow-up review are recorded after the corrective checkpoint. Intermediate workspace compilation and combined cutover remain explicitly open.

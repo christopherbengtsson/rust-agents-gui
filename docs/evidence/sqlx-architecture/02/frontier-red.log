@@ -1,0 +1,31 @@
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+warning: unused import: `identity`
+  --> crates/storage-checkpoint/src/../../core/src/workspaces/records.rs:22:16
+   |
+22 | pub(crate) use identity;
+   |                ^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `storage-checkpoint` (lib test) generated 1 warning (run `cargo fix --lib -p storage-checkpoint --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.89s
+     Running unittests src/lib.rs (target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7)
+
+running 1 test
+test storage::tests::later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait ... FAILED
+
+failures:
+
+---- storage::tests::later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait stdout ----
+
+thread 'storage::tests::later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait' (35397724) panicked at crates/storage-checkpoint/src/../../core/src/storage/tests.rs:287:5:
+A later unrelated write extended the read barrier
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    storage::tests::later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p storage-checkpoint --lib`

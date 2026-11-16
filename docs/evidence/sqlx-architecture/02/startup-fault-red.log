@@ -1,0 +1,22 @@
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.83s
+     Running unittests src/lib.rs (target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7)
+
+running 1 test
+test storage::opening::failure_tests::startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup ... FAILED
+
+failures:
+
+---- storage::opening::failure_tests::startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup stdout ----
+
+thread 'storage::opening::failure_tests::startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup' (35402224) panicked at crates/storage-checkpoint/src/../../core/src/storage/opening.rs:354:22:
+Startup lost original hook evidence: Sql(PoolTimedOut)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    storage::opening::failure_tests::startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p storage-checkpoint --lib`
