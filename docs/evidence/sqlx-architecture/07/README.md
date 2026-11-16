@@ -40,7 +40,7 @@ Complete gates select each retained check once. Failed gates stopped before appl
 
 ## Independent review
 
-The implementation commit and fresh-context Standards/Spec reports are recorded in `review.md` after review. Both reviewers must use explicit `gpt-6.1-sol` and `high` selectors. Completion checks and commit identity are appended after final results.
+Implementation commits: `dbebd8a` and `5f217e2`. [Fresh-context Standards/Spec reports](review.md) finish with **0 findings on each axis**. Both final reviewers accepted explicit `gpt-6.1-sol` / `high` selectors; engine identity is not independently observable beyond those selectors. The initial Spec P2 and its verified correction remain recorded.
 
 ## Final measurements
 
@@ -72,3 +72,5 @@ A failing/passing launcher unit locks this policy. `launcher-process.json` separ
 The final complete gate after this correction selects **172 Rust / 48 tooling / 261 UI tests**. Previous successful full gates describe their respective earlier source cohorts; review correction changes only launcher/tooling/evidence, so the final packaged Rust binary, generated contracts and native/storage/process qualification remain source aligned.
 
 Post-review complete gate: exit 0, 17.815 seconds. The initial Spec finding and correction are preserved in [review.md](review.md).
+
+Ticket 07 is complete. Final implementation and actual qualification pass within the limits above. The final follow-up commit records review/completion evidence only. Stop before ticket 08; no parent spec or milestone completion is claimed.
