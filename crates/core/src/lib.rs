@@ -117,6 +117,7 @@ impl Core {
             .await;
             let failure = match opened {
                 Ok(Ok(workspaces)) => {
+                    core.lifetime.recovering();
                     core.journal = workspaces.journal();
                     core.workspaces = Some(workspaces);
                     let journal = core.journal.clone();

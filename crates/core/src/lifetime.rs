@@ -6,6 +6,7 @@ use tokio::sync::Notify;
 pub(crate) struct Lifetime {
     state: Mutex<State>,
     changed: Notify,
+    settled: Notify,
 }
 struct State {
     phase: SupervisorState,
@@ -36,6 +37,7 @@ impl Default for Lifetime {
                 lease: None,
             }),
             changed: Notify::new(),
+            settled: Notify::new(),
         }
     }
 }
@@ -55,6 +57,9 @@ impl Lifetime {
             .unwrap_or_else(|e| e.into_inner())
             .phase
             .clone()
+    }
+    pub(crate) fn recovering(&self) {
+        self.state.lock().unwrap_or_else(|e| e.into_inner()).phase = SupervisorState::Recovering;
     }
     pub(crate) fn ready(&self) {
         self.state.lock().unwrap_or_else(|e| e.into_inner()).phase = SupervisorState::Ready;
@@ -98,7 +103,19 @@ impl Lifetime {
             SupervisorState::Failed
         };
         state.errors = errors;
-        self.changed.notify_one();
+        self.settled.notify_waiters();
+    }
+    pub(crate) async fn finished(&self) -> crate::QuitStatus {
+        loop {
+            let notified = self.settled.notified();
+            tokio::pin!(notified);
+            notified.as_mut().enable();
+            let status = self.report();
+            if status.complete || status.diagnostic.is_some() {
+                return status;
+            }
+            notified.await;
+        }
     }
     pub(crate) fn report(&self) -> crate::QuitStatus {
         let state = self.state.lock().unwrap_or_else(|e| e.into_inner());
@@ -106,6 +123,12 @@ impl Lifetime {
             complete: state.phase == SupervisorState::Stopped,
             diagnostic: (!state.errors.is_empty()).then(|| state.errors.join("; ")),
         }
+    }
+    pub(crate) fn cleanup_failed(&self, error: String) {
+        let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
+        state.phase = SupervisorState::Failed;
+        state.errors.push(error);
+        self.settled.notify_waiters();
     }
     pub(crate) fn release(&self) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());

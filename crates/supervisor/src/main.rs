@@ -46,8 +46,12 @@ async fn run(listener: std::os::unix::net::UnixListener, core: Arc<Core>) -> io:
     let cancel = tokio_util::sync::CancellationToken::new();
     let slots = ConnectionSlots::new(8);
     let mut handlers = tokio::task::JoinSet::new();
-    println!("ready");
-    io::stdout().flush()?;
+    if server.is_ready() {
+        println!("ready");
+        io::stdout().flush()?;
+    } else {
+        eprintln!("Core startup failed; state ownership retained. Retrieve startup status.");
+    }
     let outcome = 'accept: loop {
         if server.shutdown_complete() {
             break Ok(());

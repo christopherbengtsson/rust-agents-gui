@@ -265,6 +265,7 @@ fn state(store: Store) -> Mutex<OwnerState> {
         probes: VecDeque::new(),
         fault: None,
         fenced: false,
+        storage_closed: false,
         revision: 1,
         journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
@@ -1573,4 +1574,19 @@ pub(crate) fn controlled_completion(
         wake: Mutex::new(None),
         worker: tokio::sync::Mutex::new(Some(tokio::spawn(work))),
     }
+}
+
+#[test]
+fn fenced_status_cannot_queue_a_probe_or_reopen_closed_storage() {
+    let shared = state(Store::default());
+    let mut owner = shared.lock().unwrap();
+    owner.fenced = true;
+    assert!(owner.queue(&record(1), false).is_err());
+    assert!(owner.probes.is_empty());
+    owner.storage_closed = true;
+    owner.store = Err(RepositoryError::storage("closed"));
+    assert_eq!(
+        owner.store().err().unwrap().message,
+        "Workspace storage is closed"
+    );
 }

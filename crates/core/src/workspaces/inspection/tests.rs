@@ -28,6 +28,7 @@ fn shared() -> Mutex<OwnerState> {
         probes: VecDeque::new(),
         fault: None,
         fenced: false,
+        storage_closed: false,
         revision: 1,
         journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
@@ -40,6 +41,7 @@ struct Effects<'a> {
     contents: Vec<u8>,
     patch: Vec<u8>,
     fail: bool,
+    panic: bool,
     reads: usize,
     file: FileEvidence,
     heads: VecDeque<Result<String>>,
@@ -57,6 +59,7 @@ impl<'a> Effects<'a> {
             contents: b"new\n".to_vec(),
             patch: b"@@ -1 +1 @@\n-old\n+new\n".to_vec(),
             fail: false,
+            panic: false,
             reads: 0,
             heads: VecDeque::new(),
             statuses: VecDeque::new(),
@@ -76,6 +79,7 @@ impl<'a> Effects<'a> {
 }
 impl InspectionEffects for Effects<'_> {
     fn validate(&mut self, workspace: &Workspace, repository: &RepositoryRecord) -> Result<()> {
+        assert!(!self.panic, "controlled inspection panic");
         assert_eq!(workspace.repository_id, repository.id);
         assert_eq!(workspace.path()?, "/private/workspace/checkout");
         let state = self
@@ -1265,5 +1269,28 @@ fn acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows
         .unwrap()
         .len()
             <= RESPONSE_BYTES
+    );
+}
+
+#[test]
+fn inspection_panic_is_retained_for_whole_core_quit() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    effects.panic = true;
+    shared
+        .lock()
+        .unwrap()
+        .inspections
+        .pending
+        .push_back(Job::Refresh {
+            workspace: workspace.clone(),
+            repository,
+        });
+    assert!(process_inspection(&shared, &mut effects));
+    let state = shared.lock().unwrap();
+    assert_eq!(
+        state.workspace_faults[&workspace.id].code,
+        ErrorCode::CleanupUnconfirmed
     );
 }

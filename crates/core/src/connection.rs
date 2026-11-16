@@ -1164,6 +1164,9 @@ pub struct ConnectionServer {
     blocking: ConnectionSlots,
 }
 impl ConnectionServer {
+    pub fn is_ready(&self) -> bool {
+        self.core.status().state == crate::SupervisorState::Ready
+    }
     pub fn shutdown_complete(&self) -> bool {
         self.core
             .exit_requested
@@ -1197,17 +1200,16 @@ impl ConnectionServer {
     pub async fn finish(&self) -> io::Result<()> {
         self.core.begin_quit();
         let requests = self.tasks.close_and_wait().await;
-        loop {
-            let status = self.core.quit_status();
-            if let Some(error) = status.diagnostic {
-                return Err(io::Error::other(error));
-            }
-            if status.complete {
-                break;
-            }
-            tokio::task::yield_now().await;
+        let status = self.core.lifetime.finished().await;
+        if let Some(error) = status.diagnostic {
+            return Err(io::Error::other(error));
         }
-        requests?;
+        if let Err(error) = requests {
+            self.core
+                .lifetime
+                .cleanup_failed(format!("Host request cleanup: {error}"));
+            return Err(error);
+        }
         self.core.release_lease();
         Ok(())
     }

@@ -325,6 +325,7 @@ struct OwnerState {
     probes: VecDeque<RepositoryRecord>,
     fault: Option<RepositoryError>,
     fenced: bool,
+    storage_closed: bool,
     revision: u64,
     active_workspace: Option<WorkspaceId>,
     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
@@ -350,6 +351,7 @@ impl OwnerState {
             probes: VecDeque::new(),
             fault: None,
             fenced: false,
+            storage_closed: false,
             revision: 1,
             journal: Arc::new(crate::observations::Journal::default()),
             active_workspace: None,
@@ -357,6 +359,9 @@ impl OwnerState {
         })
     }
     fn store(&mut self) -> Result<&mut (dyn RepositoryStore + 'static)> {
+        if self.storage_closed {
+            return Err(RepositoryError::storage("Workspace storage is closed"));
+        }
         if self.store.is_err() {
             self.store = crate::storage::SqliteStore::open(&self.directory)
                 .map(|s| Box::new(s) as Box<dyn RepositoryStore>);
@@ -408,6 +413,11 @@ impl OwnerState {
         self.change()
     }
     fn queue(&mut self, record: &RepositoryRecord, refresh: bool) -> Result<Availability> {
+        if self.fenced {
+            return self
+                .availability(record.id)
+                .ok_or_else(|| RepositoryError::storage("Workspace probes are fenced"));
+        }
         if !refresh && let Some(value) = self.availability(record.id) {
             return Ok(value);
         }
@@ -520,6 +530,7 @@ impl Workspaces {
                     .map(|s| Box::new(s) as Box<dyn RepositoryStore>)
             },
         )?;
+        state.store.as_ref().map_err(Clone::clone)?;
         let shared = Arc::new(Mutex::new(state));
         let (wake, mut receiver) = tokio::sync::mpsc::channel(1);
         let worker_state = shared.clone();
@@ -551,7 +562,7 @@ impl Workspaces {
                         let mut state = worker_state.lock().unwrap_or_else(|e| e.into_inner());
                         state.fenced = true;
                         state.fault = Some(failure.clone());
-                        return Err(failure);
+                        break;
                     }
                     None => unreachable!("one owned workspace cycle"),
                 }
@@ -560,7 +571,7 @@ impl Workspaces {
                 }
             }
             tokio::task::spawn_blocking(move || {
-                let mut state = lock_state(&worker_state)?;
+                let mut state = worker_state.lock().unwrap_or_else(|e| e.into_inner());
                 let mut errors = Vec::new();
                 if let Some(error) = &state.fault {
                     errors.push(error.message.clone());
@@ -571,15 +582,19 @@ impl Workspaces {
                         .iter()
                         .map(|(id, error)| format!("Workspace {}: {}", id.0, error.message)),
                 );
+                state.storage_closed = true;
                 let store = std::mem::replace(
                     &mut state.store,
                     Err(RepositoryError::storage("Workspace storage is closed")),
                 );
-                if let Ok(store) = store
-                    && let Err((store, error)) = store.close()
-                {
-                    errors.push(error.message.clone());
-                    state.store = Ok(store);
+                match store {
+                    Ok(store) => {
+                        if let Err((store, error)) = store.close() {
+                            errors.push(error.message.clone());
+                            state.store = Ok(store);
+                        }
+                    }
+                    Err(error) => errors.push(error.message),
                 }
                 if errors.is_empty() {
                     Ok(())
@@ -832,7 +847,8 @@ pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
 /// A panic means uncertain effects, never an invitation to retry.
 fn catch_effect<T>(work: impl FnOnce() -> Result<T>) -> Result<T> {
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(work)).unwrap_or_else(|_| {
-        Err(RepositoryError::storage(
+        Err(RepositoryError::new(
+            ErrorCode::CleanupUnconfirmed,
             "Owned effect panicked; reconcile physical cleanup",
         ))
     })

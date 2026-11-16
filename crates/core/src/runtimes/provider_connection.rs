@@ -797,6 +797,29 @@ mod tests {
     use std::sync::Arc;
 
     #[test]
+    fn panic_is_settled_with_exact_target_without_a_later_request() {
+        run(async {
+            let owner = Arc::new(ProviderConnections::test_owner());
+            let target = owner.test_target("codex");
+            owner
+                .observe_with(target, true, || async {
+                    panic!("controlled provider panic")
+                })
+                .unwrap();
+            assert!(owner.join().await.is_err());
+            let observation = owner.read(target).unwrap();
+            assert_eq!(observation.phase, SetupPhase::CleanupUncertain);
+            assert!(
+                observation
+                    .diagnostic
+                    .unwrap()
+                    .contains(&target.to_string())
+            );
+            assert!(owner.finish().await.is_err());
+            assert!(owner.finish().await.is_err());
+        });
+    }
+    #[test]
     fn login_admission_is_exact_and_fences_checks_and_competing_attempts() {
         run(async {
             let owner = Arc::new(ProviderConnections::test_owner());

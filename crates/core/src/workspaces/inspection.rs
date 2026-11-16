@@ -874,6 +874,11 @@ pub(super) fn process_inspection(
         } => {
             let result = catch_effect(|| capture(workspace, repository, effects));
             if let Ok(mut state) = lock_state(shared) {
+                if let Err(error) = &result
+                    && error.code == ErrorCode::CleanupUnconfirmed
+                {
+                    state.workspace_faults.insert(workspace.id, error.clone());
+                }
                 if result.is_ok() {
                     state.inspections.pending.retain(|pending| {
                         !matches!(pending, Job::Preview { workspace: queued, .. } if queued.id == workspace.id)
@@ -943,6 +948,11 @@ pub(super) fn process_inspection(
                 acquire_preview(workspace, repository, target, comparison, file, effects)
             });
             if let Ok(mut state) = lock_state(shared) {
+                if let Err(error) = &result
+                    && error.code == ErrorCode::CleanupUnconfirmed
+                {
+                    state.workspace_faults.insert(workspace.id, error.clone());
+                }
                 if let Ok(record) = state.inspections.record(workspace.id)
                     && record
                         .comparison
@@ -973,6 +983,9 @@ pub(super) fn process_inspection(
 impl Workspaces {
     pub(super) fn inspection_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
         let mut state = self.state()?;
+        if state.fenced {
+            return Err(RepositoryError::storage("Workspace inspection is fenced"));
+        }
         let id = match &request {
             WorkspaceRequest::Changes { workspace_id, .. } => *workspace_id,
             WorkspaceRequest::ChangePreview { target, .. } => target.workspace_id,
