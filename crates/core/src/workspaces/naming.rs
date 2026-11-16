@@ -106,27 +106,6 @@ fn choose_name(
     ))
 }
 
-// Only the exact historical '-<this workspace UUID>' suffix is hidden. Branches
-// and physical folders are retained byte-for-byte; migration persists labels.
-pub(crate) fn legacy_label(workspace: &Workspace, used: &HashSet<String>) -> Result<String> {
-    let old = workspace.name.as_deref().unwrap_or("workspace");
-    let suffix = format!("-{}", workspace.id.0);
-    repository_folder(old.strip_suffix(&suffix).unwrap_or(old), used)
-}
-
-pub(crate) fn migrate_labels(mut records: Vec<Workspace>) -> Result<Vec<Workspace>> {
-    records.sort_by_key(|w| (w.repository_id, w.id));
-    let mut used: std::collections::HashMap<RepositoryId, HashSet<String>> = Default::default();
-    for workspace in &mut records {
-        let names = used.entry(workspace.repository_id).or_default();
-        let label = legacy_label(workspace, names)?;
-        names.insert(label.clone());
-        workspace.name = Some(label);
-        workspace.legacy = true;
-    }
-    Ok(records)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -151,40 +130,10 @@ mod tests {
         }
     }
     #[test]
-    fn full_catalog_reservations_use_numbers_and_legacy_migration_preserves_artifacts() {
+    fn full_catalog_reservations_use_numbers() {
         let used: HashSet<String> = catalog::PLAYERS.iter().map(|v| (*v).into()).collect();
         let name = workspace_name(&used, &Occupied::default(), Path::new("/repo"), 499).unwrap();
         assert_eq!(name, format!("{}-2", catalog::PLAYERS[499]));
-        let repository = RepositoryId(Uuid::nil());
-        let records: Vec<Workspace> = (0..3)
-            .map(|i| {
-                let mut w =
-                    allocate(repository, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
-                w.id = WorkspaceId(Uuid::from_u128(i));
-                w.name = Some(format!("kyoto-{}", w.id.0));
-                w.branch = Some(format!("workspace/{}", w.name.as_deref().unwrap()));
-                w.path = Some(format!(
-                    "/state/workspaces/{}/{}",
-                    repository.0,
-                    w.name.as_deref().unwrap()
-                ));
-                w
-            })
-            .collect();
-        let migrated = migrate_labels(records.clone()).unwrap();
-        assert_eq!(
-            migrated
-                .iter()
-                .map(|w| w.name.as_deref().unwrap())
-                .collect::<Vec<_>>(),
-            ["kyoto", "kyoto-2", "kyoto-3"]
-        );
-        for (old, new) in records.iter().zip(&migrated) {
-            assert_eq!(old.id, new.id);
-            assert_eq!(old.branch, new.branch);
-            assert_eq!(old.path, new.path);
-            assert!(new.legacy);
-        }
     }
     #[test]
     fn lowest_tier_and_permanent_history_reservations_precede_numbering() {

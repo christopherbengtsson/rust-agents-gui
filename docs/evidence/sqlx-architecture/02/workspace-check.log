@@ -1,0 +1,69 @@
+    Checking tokio v1.54.1
+    Checking tokio-stream v0.1.19
+    Checking tauri v2.12.5
+    Checking tokio-util v0.7.20
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+error[E0432]: unresolved imports `inspection::ComparisonId`, `inspection::FileId`
+  --> crates/core/src/workspaces.rs:17:50
+   |
+17 |     ChangePage, ChangedFile, ChangesObservation, ComparisonId, DiffRow, FileId, FilePreview,
+   |                                                  ^^^^^^^^^^^^           ^^^^^^ no `FileId` in `workspaces::inspection`
+   |                                                  |
+   |                                                  no `ComparisonId` in `workspaces::inspection`
+   |
+help: a similar name exists in the module
+   |
+17 -     ChangePage, ChangedFile, ChangesObservation, ComparisonId, DiffRow, FileId, FilePreview,
+17 +     ChangePage, ChangedFile, ChangesObservation, Comparison, DiffRow, FileId, FilePreview,
+   |
+
+error: cannot find macro `identity` in this scope
+ --> crates/core/src/workspaces/inspection.rs:4:1
+  |
+4 | identity!(ComparisonId);
+  | ^^^^^^^^
+  |
+  = help: have you added the `#[macro_use]` on the module/import?
+
+error: cannot find macro `identity` in this scope
+ --> crates/core/src/workspaces/inspection.rs:5:1
+  |
+5 | identity!(FileId);
+  | ^^^^^^^^
+  |
+  = help: have you added the `#[macro_use]` on the module/import?
+
+error[E0433]: cannot find `ProviderSelectionStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:231:56
+    |
+231 |         let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^ could not find `ProviderSelectionStore` in `storage`
+
+error[E0433]: cannot find `ProviderLoginStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:239:52
+    |
+239 |         let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
+    |                                                    ^^^^^^^^^^^^^^^^^^ could not find `ProviderLoginStore` in `storage`
+
+error[E0433]: cannot find `SqliteStore` in `storage`
+   --> crates/core/src/workspaces.rs:270:42
+    |
+270 |             self.store = crate::storage::SqliteStore::open(&self.directory)
+    |                                          ^^^^^^^^^^^ could not find `SqliteStore` in `storage`
+
+error[E0433]: cannot find `SqliteStore` in `storage`
+   --> crates/core/src/workspaces.rs:446:33
+    |
+446 |                 crate::storage::SqliteStore::open(path)
+    |                                 ^^^^^^^^^^^ could not find `SqliteStore` in `storage`
+
+    Checking tauri-plugin-fs v2.7.1
+    Checking tauri-plugin-opener v2.7.3
+    Checking tauri-plugin-dialog v2.8.4
+Some errors have detailed explanations: E0432, E0433.
+For more information about an error, try `rustc --explain E0432`.
+error: could not compile `workspace-core` (lib) due to 7 previous errors

@@ -1,0 +1,30 @@
+     Locking 21 packages to highest compatible versions
+      Adding allocator-api2 v0.2.21
+      Adding atoi v2.0.0
+      Adding base64 v0.22.1
+      Adding crc v3.4.0
+      Adding crc-catalog v2.5.0
+      Adding crossbeam-queue v0.3.14
+      Adding dotenvy v0.15.7
+      Adding either v1.19.0
+      Adding flume v0.12.0
+      Adding futures-intrusive v0.5.0
+      Adding hashbrown v0.16.1
+ Downgrading hashlink v0.12.2 -> v0.11.1
+ Downgrading libsqlite3-sys v0.40.0 -> v0.37.0
+      Adding spin v0.9.9
+      Adding sqlx v0.9.0
+      Adding sqlx-core v0.9.0
+      Adding sqlx-macros v0.9.0
+      Adding sqlx-macros-core v0.9.0
+      Adding sqlx-sqlite v0.9.0
+      Adding tokio-macros v2.7.2
+      Adding tokio-stream v0.1.19
+    Checking tokio v1.54.1
+   Compiling libsqlite3-sys v0.37.0
+    Checking tokio-stream v0.1.19
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.78s

@@ -1,0 +1,69 @@
+    Checking futures-sink v0.3.34
+   Compiling syn v2.0.119
+   Compiling tokio-macros v2.7.2
+   Compiling thiserror v2.0.21
+    Checking serde v1.0.229
+    Checking serde_json v1.0.154
+    Checking url v2.5.8
+    Checking futures-util v0.3.34
+    Checking flume v0.12.0
+    Checking futures-channel v0.3.34
+    Checking tokio v1.54.1
+    Checking futures-executor v0.3.34
+   Compiling tracing-attributes v0.1.31
+    Checking tracing v0.1.44
+    Checking tokio-stream v0.1.19
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+error[E0583]: file not found for module `policy`
+ --> crates/storage-checkpoint/src/../../core/src/storage.rs:8:1
+  |
+8 | mod policy;
+  | ^^^^^^^^^^^
+  |
+  = help: to create the module `policy`, create file "crates/storage-checkpoint/src/../../core/src/policy.rs" or "crates/storage-checkpoint/src/../../core/src/policy/mod.rs"
+  = note: if there is a `mod policy` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `opening`
+ --> crates/storage-checkpoint/src/../../core/src/storage.rs:9:1
+  |
+9 | mod opening;
+  | ^^^^^^^^^^^^
+  |
+  = help: to create the module `opening`, create file "crates/storage-checkpoint/src/../../core/src/opening.rs" or "crates/storage-checkpoint/src/../../core/src/opening/mod.rs"
+  = note: if there is a `mod opening` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `operations`
+  --> crates/storage-checkpoint/src/../../core/src/storage.rs:10:1
+   |
+10 | mod operations;
+   | ^^^^^^^^^^^^^^^
+   |
+   = help: to create the module `operations`, create file "crates/storage-checkpoint/src/../../core/src/operations.rs" or "crates/storage-checkpoint/src/../../core/src/operations/mod.rs"
+   = note: if there is a `mod operations` elsewhere in the crate already, import it with `use crate::...` instead
+
+warning: unused imports: `SqliteConnection`, `Sqlite`, and `Transaction`
+ --> crates/storage-checkpoint/src/../../core/src/storage.rs:5:29
+  |
+5 | use sqlx::{Connection, Row, Sqlite, SqliteConnection, SqlitePool, Transaction};
+  |                             ^^^^^^  ^^^^^^^^^^^^^^^^              ^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Row`
+ --> crates/storage-checkpoint/src/../../core/src/storage.rs:5:24
+  |
+5 | use sqlx::{Connection, Row, Sqlite, SqliteConnection, SqlitePool, Transaction};
+  |                        ^^^
+
+warning: unused import: `Connection`
+ --> crates/storage-checkpoint/src/../../core/src/storage.rs:5:12
+  |
+5 | use sqlx::{Connection, Row, Sqlite, SqliteConnection, SqlitePool, Transaction};
+  |            ^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0583`.
+warning: `storage-checkpoint` (lib) generated 3 warnings
+error: could not compile `storage-checkpoint` (lib) due to 3 previous errors; 3 warnings emitted

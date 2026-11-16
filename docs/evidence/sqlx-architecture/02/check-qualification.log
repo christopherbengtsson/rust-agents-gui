@@ -1,0 +1,54 @@
+   Compiling syn v2.0.119
+    Checking tokio v1.54.1
+    Checking serde_json v1.0.154
+    Checking schemars v1.2.3
+    Checking tokio-stream v0.1.19
+   Compiling tracing-attributes v0.1.31
+   Compiling ts-rs-macros v12.0.1
+    Checking tracing v0.1.44
+    Checking ts-rs v12.0.1
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+warning: failed to parse serde attribute
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.31s

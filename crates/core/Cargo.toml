@@ -6,6 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 
 [features]
+qualification = []
 codegen = ["dep:ts-rs", "dep:schemars"]
 
 [[bin]]
@@ -17,13 +18,13 @@ test = false
 [dependencies]
 semver = "=1.0.28"
 libc = "0.2.191"
-rusqlite = { version = "0.42.0", features = ["bundled"] }
+sqlx.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 uuid = { version = "1.29.2", features = ["v4", "serde"] }
 ts-rs = { version = "=12.0.1", features = ["uuid-impl"], optional = true }
 schemars = { version = "=1.2.3", features = ["uuid1"], optional = true }
-tokio = { version = "=1.54.1", default-features = false, features = ["io-util", "sync", "time", "net", "rt", "process"] }
+tokio = { version = "=1.54.1", default-features = false, features = ["io-util", "sync", "time", "net", "rt", "process", "macros"] }
 tokio-util = { version = "=0.7.20", default-features = false, features = ["codec", "rt"] }
 bytes = { version = "1.12.1", default-features = false }
 url = "=2.5.8"

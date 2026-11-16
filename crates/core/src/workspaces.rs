@@ -1,6 +1,5 @@
 //! Repository policy. Read-only validation and durable registration belong here.
 use serde::{Deserialize, Serialize};
-use std::fmt;
 use std::{
     collections::{BTreeMap, VecDeque},
     path::{Path, PathBuf},
@@ -8,21 +7,9 @@ use std::{
 };
 use uuid::Uuid;
 
-macro_rules! identity {
-    ($name:ident) => {
-        #[derive(
-            Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize,
-        )]
-        #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-        #[serde(transparent)]
-        pub struct $name(
-            #[cfg_attr(feature = "codegen", schemars(regex(pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")))]
-            pub Uuid,
-        );
-    };
-}
-identity!(RepositoryId);
-identity!(ActionId);
+mod records;
+pub use records::*;
+pub(crate) use records::{RepositoryRecord, Result, identity, validate_workspace_path};
 mod creation;
 mod inspection;
 pub(crate) use inspection::{CONTENT_BYTES, FileEvidence, InspectionEffects};
@@ -33,93 +20,6 @@ pub use inspection::{
 pub(crate) mod naming;
 pub use creation::*;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-#[serde(rename_all = "snake_case")]
-pub enum ErrorCode {
-    InvalidPath,
-    Git,
-    Storage,
-    Conflict,
-    Capacity,
-    NotFound,
-    Unavailable,
-    Connection,
-    CleanupUnconfirmed,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-pub struct RepositoryError {
-    pub code: ErrorCode,
-    pub message: String,
-}
-impl RepositoryError {
-    pub(crate) fn new(code: ErrorCode, message: impl Into<String>) -> Self {
-        let mut message = message.into();
-        if message.len() > 2048 {
-            let mut end = 2048;
-            while !message.is_char_boundary(end) {
-                end -= 1;
-            }
-            message.truncate(end);
-            message.push('…');
-        }
-        Self { code, message }
-    }
-    pub(crate) fn storage(message: impl fmt::Display) -> Self {
-        Self::new(
-            ErrorCode::Storage,
-            format!(
-                "Application storage failed: {message}. Check the private state directory and free disk space, then refresh to reconcile this action."
-            ),
-        )
-    }
-}
-impl fmt::Display for RepositoryError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.message)
-    }
-}
-impl std::error::Error for RepositoryError {}
-pub(crate) type Result<T> = std::result::Result<T, RepositoryError>;
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-pub struct RegisterRepository {
-    #[serde(default)]
-    pub create_initial_workspace: bool,
-    pub action_id: ActionId,
-    pub path: String,
-}
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-#[serde(tag = "state", rename_all = "snake_case")]
-pub enum RegistrationState {
-    Pending,
-    Completed { repository_id: RepositoryId },
-    Failed { error: RepositoryError },
-}
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
-pub struct Registration {
-    #[serde(default)]
-    pub create_initial_workspace: bool,
-    #[serde(default)]
-    pub initial_workspace_id: Option<WorkspaceId>,
-    pub action_id: ActionId,
-    pub path: String,
-    #[serde(flatten)]
-    pub state: RegistrationState,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub(crate) struct RepositoryRecord {
-    pub id: RepositoryId,
-    pub name: String,
-    pub path: String,
-    pub common_dir: String,
-}
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "state", rename_all = "snake_case")]

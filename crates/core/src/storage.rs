@@ -1,694 +1,725 @@
-//! Supervisor-owned SQLite metadata. No project files or provider history are used.
+//! One private SQLx owner. Domain owners decide recovery; storage reports settlement.
+//! The source-linked checkpoint compiles this exact module while 03/04 convert callers.
 use crate::workspaces::*;
-use rusqlite::{Connection, OpenFlags, OptionalExtension, params};
-use serde::{Serialize, de::DeserializeOwned};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
+use sqlx::{Connection, Row, Sqlite, SqliteConnection, SqlitePool, Transaction};
 use std::{
-    fs::{self, OpenOptions},
-    os::unix::fs::{MetadataExt, OpenOptionsExt, PermissionsExt},
     path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+    time::Duration,
 };
+use tokio::sync::{OwnedSemaphorePermit, Semaphore, mpsc, oneshot, watch};
+#[path = "storage/opening.rs"]
+mod opening;
+#[path = "storage/operations.rs"]
+mod operations;
+#[path = "storage/policy.rs"]
+mod policy;
+use policy::{ITEM_BYTES, PAGE_BYTES, PAGE_ROWS};
 
-pub(crate) struct SqliteStore {
-    connection: Connection,
-    path: PathBuf,
-}
-
-/// Only non-secret intent/cleanup evidence. Never a provider URL, token or PID.
+// Retained decision seams for provider units; 04 replaces their synchronous consumers.
 pub(crate) trait ProviderLoginPersistence: Send + Sync {
-    fn record(&self, attempt: uuid::Uuid, pending: bool) -> Result<()>;
+    fn record(&self, attempt: uuid::Uuid, pending: bool) -> crate::workspaces::Result<()>;
 }
-pub(crate) struct ProviderLoginStore {
-    path: PathBuf,
-    scope: String,
-}
-impl ProviderLoginStore {
-    pub(crate) fn open(state: &Path, scope: String) -> Result<Self> {
-        let store = SqliteStore::open(state)?;
-        store.connection.execute_batch("CREATE TABLE IF NOT EXISTS provider_login_fences (scope TEXT PRIMARY KEY NOT NULL, attempt TEXT NOT NULL, pending INTEGER NOT NULL)").map_err(storage)?;
-        Ok(Self {
-            path: store.path,
-            scope,
-        })
-    }
-    pub(crate) fn pending(&self) -> Result<Option<uuid::Uuid>> {
-        let connection = SqliteStore::connect(&self.path)?;
-        let value: Option<String> = connection
-            .query_row(
-                "SELECT attempt FROM provider_login_fences WHERE scope=?1 AND pending=1",
-                [&self.scope],
-                |row| row.get(0),
-            )
-            .optional()
-            .map_err(storage)?;
-        value
-            .map(|value| uuid::Uuid::parse_str(&value).map_err(storage))
-            .transpose()
-    }
-}
-impl ProviderLoginPersistence for ProviderLoginStore {
-    fn record(&self, attempt: uuid::Uuid, pending: bool) -> Result<()> {
-        let connection = SqliteStore::connect(&self.path)?;
-        connection.execute("INSERT INTO provider_login_fences(scope,attempt,pending) VALUES(?1,?2,?3) ON CONFLICT(scope) DO UPDATE SET attempt=excluded.attempt,pending=excluded.pending", params![self.scope, attempt.to_string(), pending]).map_err(storage)?;
-        Ok(())
-    }
-}
-/// Application-owned non-secret executable preference; runtime credentials stay external.
 pub(crate) trait ProviderSelectionPersistence: Send + Sync {
-    fn remember(&self, id: uuid::Uuid, path: &str) -> Result<()>;
-}
-pub(crate) struct ProviderSelectionStore {
-    path: PathBuf,
-    scope: String,
-}
-impl ProviderSelectionStore {
-    pub(crate) fn open(state: &Path, scope: String) -> Result<Self> {
-        let store = SqliteStore::open(state)?;
-        store.connection.execute_batch("CREATE TABLE IF NOT EXISTS provider_executables (scope TEXT PRIMARY KEY NOT NULL, action TEXT NOT NULL, path TEXT NOT NULL)").map_err(storage)?;
-        Ok(Self {
-            path: store.path,
-            scope,
-        })
-    }
-    pub(crate) fn selected(&self) -> Result<Option<(uuid::Uuid, String)>> {
-        let connection = SqliteStore::connect(&self.path)?;
-        let row: Option<(String, String)> = connection
-            .query_row(
-                "SELECT action,path FROM provider_executables WHERE scope=?1",
-                [&self.scope],
-                |row| Ok((row.get(0)?, row.get(1)?)),
-            )
-            .optional()
-            .map_err(storage)?;
-        row.map(|(id, path)| Ok((uuid::Uuid::parse_str(&id).map_err(storage)?, path)))
-            .transpose()
-    }
-}
-impl ProviderSelectionPersistence for ProviderSelectionStore {
-    fn remember(&self, id: uuid::Uuid, path: &str) -> Result<()> {
-        let connection = SqliteStore::connect(&self.path)?;
-        connection.execute("INSERT INTO provider_executables(scope,action,path) VALUES(?1,?2,?3) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path", params![self.scope, id.to_string(), path]).map_err(storage)?;
-        Ok(())
-    }
-}
-fn storage(error: impl std::fmt::Display) -> RepositoryError {
-    RepositoryError::storage(error)
-}
-fn encode(value: &impl Serialize) -> Result<String> {
-    serde_json::to_string(value).map_err(storage)
-}
-fn decode<T: DeserializeOwned>(value: String) -> Result<T> {
-    serde_json::from_str(&value).map_err(storage)
+    fn remember(&self, id: uuid::Uuid, path: &str) -> crate::workspaces::Result<()>;
 }
 
-impl SqliteStore {
-    pub(crate) fn open(state: &Path) -> Result<Self> {
-        let path = state.join("workspace.sqlite3");
-        // Refuse aliases before SQLite opens its database and journal files.
-        for candidate in [
-            path.clone(),
-            state.join("workspace.sqlite3-journal"),
-            state.join("workspace.sqlite3-wal"),
-            state.join("workspace.sqlite3-shm"),
-        ] {
-            match fs::symlink_metadata(&candidate) {
-                Ok(metadata)
-                    if !metadata.is_file()
-                        || metadata.nlink() != 1
-                        || metadata.permissions().mode() & 0o077 != 0 =>
-                {
-                    return Err(storage(
-                        "Metadata files must be private regular files, not aliases. Preserve the state directory and restore its permissions.",
-                    ));
-                }
-                Ok(_) => {}
-                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-                Err(error) => return Err(storage(error)),
-            }
+type Result<T> = std::result::Result<T, Error>;
+#[derive(Debug, Clone)]
+pub(crate) enum Error {
+    Sql(Arc<sqlx::Error>),
+    Conflict(Arc<sqlx::Error>),
+    Corrupt,
+    Io(Arc<std::io::Error>),
+    Invalid(&'static str),
+    Capacity,
+    Oversized,
+    Closed,
+    Fenced,
+    Panic,
+    Write {
+        original: Box<Error>,
+        retirement: Option<Box<Error>>,
+        uncertain: bool,
+    },
+}
+impl From<sqlx::Error> for Error {
+    fn from(e: sqlx::Error) -> Self {
+        if matches!(&e, sqlx::Error::Database(db) if db.is_unique_violation()) {
+            Self::Conflict(Arc::new(e))
+        } else {
+            Self::Sql(Arc::new(e))
         }
-        // Creation permissions do not depend solely on a caller's process-wide mask.
-        OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .truncate(false)
-            .mode(0o600)
-            .custom_flags(libc::O_NOFOLLOW)
-            .open(&path)
-            .map_err(storage)?;
-        let connection = Self::connect(&path)?;
-        let version: u32 = connection
-            .pragma_query_value(None, "user_version", |row| row.get(0))
-            .map_err(storage)?;
-        if version > 3 {
-            return Err(storage(
-                "This database belongs to a newer application. Open it with a compatible build; do not delete it.",
-            ));
-        }
-        if version == 0 {
-            connection.execute_batch("BEGIN IMMEDIATE;
-                CREATE TABLE repositories (id TEXT PRIMARY KEY NOT NULL, common_dir TEXT UNIQUE NOT NULL, record TEXT NOT NULL);
-                CREATE TABLE registration_actions (id TEXT PRIMARY KEY NOT NULL, pending INTEGER NOT NULL, record TEXT NOT NULL);
-                CREATE INDEX pending_registrations ON registration_actions(pending, id);
-                PRAGMA user_version=1;
-                COMMIT;").map_err(storage)?;
-        }
-        if version < 2 {
-            connection.execute_batch("BEGIN IMMEDIATE;
-                CREATE TABLE workspaces (id TEXT PRIMARY KEY NOT NULL, repository_id TEXT NOT NULL REFERENCES repositories(id), queued INTEGER NOT NULL, record TEXT NOT NULL);
-                CREATE INDEX workspace_navigation ON workspaces(repository_id,id);
-                CREATE INDEX queued_workspaces ON workspaces(queued,id);
-                CREATE TABLE workspace_actions (id TEXT PRIMARY KEY NOT NULL, workspace_id TEXT NOT NULL REFERENCES workspaces(id), record TEXT NOT NULL);
-                PRAGMA user_version=2; COMMIT;").map_err(storage)?;
-        }
-        if version < 3 {
-            transaction(&SqliteTransaction(&connection), || {
-                connection.execute_batch("ALTER TABLE workspaces ADD COLUMN name TEXT; ALTER TABLE workspaces ADD COLUMN branch TEXT; ALTER TABLE workspaces ADD COLUMN path TEXT;
-                    CREATE TABLE repository_folders(repository_id TEXT PRIMARY KEY NOT NULL REFERENCES repositories(id), folder TEXT UNIQUE NOT NULL);") .map_err(storage)?;
-                let mut query = connection
-                    .prepare("SELECT record FROM workspaces ORDER BY repository_id,id")
-                    .map_err(storage)?;
-                let records: Vec<Workspace> = query
-                    .query_map([], |r| r.get::<_, String>(0))
-                    .map_err(storage)?
-                    .map(|r| decode(r.map_err(storage)?))
-                    .collect::<Result<_>>()?;
-                for workspace in crate::workspaces::naming::migrate_labels(records)? {
-                    connection
-                        .execute(
-                            "UPDATE workspaces SET record=?2,name=?3,branch=?4,path=?5 WHERE id=?1",
-                            params![
-                                workspace.id.0.to_string(),
-                                encode(&workspace)?,
-                                workspace.name,
-                                workspace.branch,
-                                workspace.path
-                            ],
-                        )
-                        .map_err(storage)?;
-                }
-                connection.execute_batch("CREATE UNIQUE INDEX reserved_workspace_names ON workspaces(repository_id,name);
-                    CREATE UNIQUE INDEX reserved_workspace_branches ON workspaces(repository_id,branch);
-                    CREATE UNIQUE INDEX reserved_workspace_paths ON workspaces(path);
-                    PRAGMA user_version=3;").map_err(storage)
-            })?;
-        }
-        Ok(Self { connection, path })
     }
-    fn connect(path: &Path) -> Result<Connection> {
-        let connection = Connection::open_with_flags(
-            path,
-            OpenFlags::SQLITE_OPEN_READ_WRITE
-                | OpenFlags::SQLITE_OPEN_NO_MUTEX
-                | OpenFlags::SQLITE_OPEN_NOFOLLOW,
-        )
-        .map_err(storage)?;
-        connection
-            .busy_timeout(std::time::Duration::from_millis(100))
-            .map_err(storage)?;
-        connection.execute_batch("PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA fullfsync=ON; PRAGMA foreign_keys=ON;").map_err(storage)?;
-        Ok(connection)
+}
+impl From<std::io::Error> for Error {
+    fn from(e: std::io::Error) -> Self {
+        Self::Io(Arc::new(e))
     }
-    fn read<T: DeserializeOwned>(&self, sql: &str, value: &str) -> Result<Option<T>> {
-        self.connection
-            .query_row(sql, [value], |row| row.get::<_, String>(0))
-            .optional()
-            .map_err(storage)?
-            .map(decode)
-            .transpose()
+}
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
     }
-    fn write<T>(&mut self, body: impl FnOnce(&Connection) -> Result<T>) -> Result<T> {
-        transaction(&SqliteTransaction(&self.connection), || {
-            body(&self.connection)
-        })
-    }
-    fn ensure_committed(&mut self) -> Result<()> {
-        if !self.connection.is_autocommit() {
-            self.connection = Self::connect(&self.path)?;
+}
+impl std::error::Error for Error {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Sql(e) | Self::Conflict(e) => Some(e.as_ref()),
+            Self::Io(e) => Some(e.as_ref()),
+            Self::Write { original, .. } => Some(original.as_ref()),
+            _ => None,
         }
-        Ok(())
     }
 }
 
-// This seam supplies SQLite transaction outcomes, not application registration policy.
-trait TransactionControl {
-    fn begin(&self) -> Result<()>;
-    fn commit(&self) -> Result<()>;
-    fn rollback(&self) -> Result<()>;
-    fn active(&self) -> bool;
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub(crate) struct Reservation {
+    pub workspace: Workspace,
+    pub folder: String,
+    pub continuation: u64,
 }
-struct SqliteTransaction<'a>(&'a Connection);
-impl TransactionControl for SqliteTransaction<'_> {
-    fn begin(&self) -> Result<()> {
-        self.0.execute_batch("BEGIN IMMEDIATE").map_err(storage)
-    }
-    fn commit(&self) -> Result<()> {
-        self.0.execute_batch("COMMIT").map_err(storage)
-    }
-    fn rollback(&self) -> Result<()> {
-        self.0.execute_batch("ROLLBACK").map_err(storage)
-    }
-    fn active(&self) -> bool {
-        !self.0.is_autocommit()
-    }
+#[derive(Debug, Serialize, Deserialize)]
+pub(crate) enum Write {
+    RegistrationIntent(RegisterRepository),
+    RegistrationFinish {
+        action: Registration,
+        repository: Option<RepositoryRecord>,
+        initial: Option<Workspace>,
+    },
+    WorkspaceSave {
+        workspace: Workspace,
+        action: Option<WorkspaceAction>,
+    },
+    Reservation(Reservation),
+    AllocationCursor {
+        workspace_id: WorkspaceId,
+        cursor: u64,
+    },
+    ProviderSelection {
+        scope: String,
+        action: uuid::Uuid,
+        path: String,
+    },
+    ProviderLogin {
+        scope: String,
+        attempt: uuid::Uuid,
+        pending: bool,
+    },
 }
-fn transaction<T>(
-    control: &impl TransactionControl,
-    body: impl FnOnce() -> Result<T>,
-) -> Result<T> {
-    control.begin()?;
-    let result = body().and_then(|value| {
-        control.commit()?;
-        Ok(value)
-    });
-    if result.is_err()
-        && control.active()
-        && let Err(rollback) = control.rollback()
-    {
-        return Err(storage(format!(
-            "Transaction cleanup failed: {rollback}. Restart the supervisor before further registration."
-        )));
-    }
-    result
-}
-
-impl RepositoryStore for SqliteStore {
-    fn close(self: Box<Self>) -> crate::workspaces::StoreClose {
-        let Self { connection, path } = *self;
-        match connection.close() {
-            Ok(()) => Ok(()),
-            Err((connection, error)) => Err((Box::new(Self { connection, path }), storage(error))),
+impl Write {
+    fn identity(&self) -> uuid::Uuid {
+        match self {
+            Self::RegistrationIntent(r) => r.action_id.0,
+            Self::RegistrationFinish { action, .. } => action.action_id.0,
+            Self::WorkspaceSave { workspace, action } => action
+                .as_ref()
+                .map_or(workspace.creation_action_id.0, |a| a.id().0),
+            Self::Reservation(r) => r.workspace.creation_action_id.0,
+            Self::AllocationCursor { workspace_id, .. } => workspace_id.0,
+            Self::ProviderSelection { action, .. } => *action,
+            Self::ProviderLogin { attempt, .. } => *attempt,
         }
     }
-    fn action(&mut self, id: ActionId) -> Result<Option<Registration>> {
-        self.ensure_committed()?;
-        self.read(
-            "SELECT record FROM registration_actions WHERE id=?1",
-            &id.0.to_string(),
-        )
-    }
-    fn intent(&mut self, req: &RegisterRepository) -> Result<Registration> {
-        let action = Registration {
-            create_initial_workspace: req.create_initial_workspace,
-            initial_workspace_id: None,
-            action_id: req.action_id,
-            path: req.path.clone(),
-            state: RegistrationState::Pending,
-        };
-        let record = encode(&action)?;
-        self.ensure_committed()?;
-        self.write(|db| {
-            db.execute(
-                "INSERT INTO registration_actions (id,pending,record) VALUES (?1,1,?2)",
-                params![req.action_id.0.to_string(), record],
-            )
-            .map_err(storage)?;
-            Ok(action)
-        })
-    }
-    fn pending(&mut self) -> Result<Option<Registration>> {
-        self.ensure_committed()?;
-        self.connection
-            .query_row(
-                "SELECT record FROM registration_actions WHERE pending=1 ORDER BY id LIMIT 1",
-                [],
-                |r| r.get::<_, String>(0),
-            )
-            .optional()
-            .map_err(storage)?
-            .map(decode)
-            .transpose()
-    }
-    fn pending_count(&mut self) -> Result<usize> {
-        self.ensure_committed()?;
-        let count: i64 = self
-            .connection
-            .query_row(
-                "SELECT COUNT(*) FROM registration_actions WHERE pending=1",
-                [],
-                |r| r.get(0),
-            )
-            .map_err(storage)?;
-        usize::try_from(count).map_err(storage)
-    }
-    fn find_common(&mut self, common: &str) -> Result<Option<RepositoryRecord>> {
-        self.ensure_committed()?;
-        self.read(
-            "SELECT record FROM repositories WHERE common_dir=?1",
-            common,
-        )
-    }
-    fn finish(
-        &mut self,
-        action: &Registration,
-        repository: Option<&RepositoryRecord>,
-        status: &RegistrationState,
-        initial: Option<&Workspace>,
-    ) -> Result<Registration> {
-        let action = Registration {
-            state: status.clone(),
-            ..action.clone()
-        };
-        let encoded = encode(&action)?;
-        let repository = repository.map(|r| Ok((r, encode(r)?))).transpose()?;
-        self.ensure_committed()?;
-        self.write(|db| {
-            if let Some((repo, json)) = repository {
-                db.execute("INSERT INTO repositories (id,common_dir,record) VALUES (?1,?2,?3) ON CONFLICT(id) DO NOTHING", params![repo.id.0.to_string(), repo.common_dir, json]).map_err(storage)?;
-            }
-            if let Some(workspace) = initial {
-                write_workspace(db, workspace, Some(&WorkspaceAction::Create { action_id: workspace.creation_action_id, repository_id: workspace.repository_id }))?;
-            }
-            let changed = db.execute("UPDATE registration_actions SET pending=0,record=?2 WHERE id=?1 AND pending=1", params![action.action_id.0.to_string(), encoded]).map_err(storage)?;
-            if changed != 1 { return Err(storage("Registration no longer has pending intent")); }
-            Ok(action)
-        })
-    }
-    fn repository(&mut self, id: RepositoryId) -> Result<Option<RepositoryRecord>> {
-        self.ensure_committed()?;
-        self.read(
-            "SELECT record FROM repositories WHERE id=?1",
-            &id.0.to_string(),
-        )
-    }
-    fn list(&mut self, after: Option<RepositoryId>, limit: usize) -> Result<Vec<RepositoryRecord>> {
-        self.ensure_committed()?;
-        let mut query = self
-            .connection
-            .prepare("SELECT record FROM repositories WHERE id>?1 ORDER BY id LIMIT ?2")
-            .map_err(storage)?;
-        let rows = query
-            .query_map(
-                params![
-                    after.map(|id| id.0.to_string()).unwrap_or_default(),
-                    i64::try_from(limit).map_err(storage)?
-                ],
-                |r| r.get::<_, String>(0),
-            )
-            .map_err(storage)?;
-        rows.map(|r| decode(r.map_err(storage)?)).collect()
-    }
 }
-
-fn write_workspace(
-    db: &Connection,
-    workspace: &Workspace,
-    action: Option<&WorkspaceAction>,
-) -> Result<()> {
-    // A final location is immutable, including on recovery or failed creation.
-    let saved: Option<String> = db
-        .query_row(
-            "SELECT record FROM workspaces WHERE id=?1",
-            [workspace.id.0.to_string()],
-            |r| r.get(0),
-        )
-        .optional()
-        .map_err(storage)?;
-    if let Some(saved) = saved {
-        let saved: Workspace = decode(saved)?;
-        if saved.name.is_some()
-            && (saved.name != workspace.name
-                || saved.branch != workspace.branch
-                || saved.path != workspace.path)
-        {
-            return Err(storage("A reserved workspace location cannot be changed"));
-        }
-    }
-    db.execute("INSERT INTO workspaces(id,repository_id,queued,record,name,branch,path) VALUES (?1,?2,?3,?4,?5,?6,?7) ON CONFLICT(id) DO UPDATE SET queued=excluded.queued,record=excluded.record,name=excluded.name,branch=excluded.branch,path=excluded.path", params![workspace.id.0.to_string(), workspace.repository_id.0.to_string(), i64::from(workspace.status == CreationStatus::Queued), encode(workspace)?,workspace.name,workspace.branch,workspace.path]).map_err(storage)?;
-    if let Some(action) = action {
-        db.execute(
-            "INSERT INTO workspace_actions(id,workspace_id,record) VALUES (?1,?2,?3)",
-            params![
-                action.id().0.to_string(),
-                workspace.id.0.to_string(),
-                encode(action)?
-            ],
-        )
-        .map_err(storage)?;
-    }
-    Ok(())
-}
-impl CreationStore for SqliteStore {
-    fn naming(&mut self, repository: RepositoryId) -> Result<crate::workspaces::naming::Naming> {
-        self.ensure_committed()?;
-        let folder = self
-            .connection
-            .query_row(
-                "SELECT folder FROM repository_folders WHERE repository_id=?1",
-                [repository.0.to_string()],
-                |r| r.get(0),
-            )
-            .optional()
-            .map_err(storage)?;
-        let mut query = self
-            .connection
-            .prepare("SELECT folder FROM repository_folders")
-            .map_err(storage)?;
-        let folders = query
-            .query_map([], |r| r.get::<_, String>(0))
-            .map_err(storage)?
-            .map(|r| r.map_err(storage))
-            .collect::<Result<_>>()?;
-        let mut query = self
-            .connection
-            .prepare("SELECT name FROM workspaces WHERE repository_id=?1 AND name IS NOT NULL")
-            .map_err(storage)?;
-        let names = query
-            .query_map([repository.0.to_string()], |r| r.get::<_, String>(0))
-            .map_err(storage)?
-            .map(|r| r.map_err(storage))
-            .collect::<Result<_>>()?;
-        Ok(crate::workspaces::naming::Naming {
-            folder,
-            folders,
-            names,
-        })
-    }
-    fn reserve_name(&mut self, workspace: &Workspace, folder: &str) -> Result<()> {
-        self.ensure_committed()?;
-        self.write(|db| {
-            db.execute("INSERT INTO repository_folders(repository_id,folder) VALUES (?1,?2) ON CONFLICT(repository_id) DO NOTHING", params![workspace.repository_id.0.to_string(), folder]).map_err(storage)?;
-            let saved: String = db.query_row("SELECT folder FROM repository_folders WHERE repository_id=?1", [workspace.repository_id.0.to_string()], |r| r.get(0)).map_err(storage)?;
-            if saved != folder { return Err(storage("Repository folder reservation conflicts with saved identity")); }
-            write_workspace(db, workspace, None)
-        })
-    }
-    fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>> {
-        self.ensure_committed()?;
-        self.read(
-            "SELECT record FROM workspaces WHERE id=?1",
-            &id.0.to_string(),
-        )
-    }
-    fn workspace_action(&mut self, id: ActionId) -> Result<Option<(WorkspaceAction, WorkspaceId)>> {
-        self.ensure_committed()?;
-        self.connection
-            .query_row(
-                "SELECT record,workspace_id FROM workspace_actions WHERE id=?1",
-                [id.0.to_string()],
-                |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
-            )
-            .optional()
-            .map_err(storage)?
-            .map(|(a, w)| {
-                Ok((
-                    decode(a)?,
-                    WorkspaceId(uuid::Uuid::parse_str(&w).map_err(storage)?),
-                ))
-            })
-            .transpose()
-    }
-    fn save_workspace(
-        &mut self,
-        workspace: &Workspace,
-        action: Option<&WorkspaceAction>,
-    ) -> Result<()> {
-        self.ensure_committed()?;
-        self.write(|db| write_workspace(db, workspace, action))
-    }
-    fn workspace_pending(&mut self, after: Option<WorkspaceId>) -> Result<Option<Workspace>> {
-        self.ensure_committed()?;
-        self.connection
-            .query_row(
-                "SELECT record FROM workspaces WHERE queued=1 AND id>?1 ORDER BY id LIMIT 1",
-                [after.map(|id| id.0.to_string()).unwrap_or_default()],
-                |r| r.get::<_, String>(0),
-            )
-            .optional()
-            .map_err(storage)?
-            .map(decode)
-            .transpose()
-    }
-    fn workspace_cleanup_blocked(&mut self, repository: RepositoryId) -> Result<bool> {
-        self.ensure_committed()?;
-        self.connection.query_row("SELECT EXISTS(SELECT 1 FROM workspaces WHERE repository_id=?1 AND json_extract(record,'$.cleanup_unconfirmed')=1)", [repository.0.to_string()], |r| r.get(0)).map_err(storage)
-    }
-    fn workspace_count_pending(&mut self) -> Result<usize> {
-        self.ensure_committed()?;
-        let count: i64 = self.connection.query_row("SELECT COUNT(*) FROM workspaces WHERE queued=1 OR json_extract(record,'$.status.state')='running'", [], |r| r.get(0)).map_err(storage)?;
-        usize::try_from(count).map_err(storage)
-    }
-    fn workspace_list(
-        &mut self,
+#[derive(Debug)]
+pub(crate) enum Read {
+    Registration(ActionId),
+    Repository(RepositoryId),
+    CommonDirectory(String),
+    Repositories {
+        after: Option<RepositoryId>,
+    },
+    PendingRegistrations {
+        after: Option<ActionId>,
+    },
+    Workspace(WorkspaceId),
+    WorkspaceAction(ActionId),
+    Workspaces {
         repository: RepositoryId,
         after: Option<WorkspaceId>,
-        limit: usize,
-    ) -> Result<Vec<Workspace>> {
-        self.ensure_committed()?;
-        let mut query = self.connection.prepare("SELECT record FROM workspaces WHERE repository_id=?1 AND id>?2 ORDER BY id LIMIT ?3").map_err(storage)?;
-        query
-            .query_map(
-                params![
-                    repository.0.to_string(),
-                    after.map(|id| id.0.to_string()).unwrap_or_default(),
-                    i64::try_from(limit).map_err(storage)?
-                ],
-                |r| r.get::<_, String>(0),
-            )
-            .map_err(storage)?
-            .map(|r| decode(r.map_err(storage)?))
+    },
+    PendingWorkspaces {
+        after: Option<WorkspaceId>,
+    },
+    Folder {
+        repository: RepositoryId,
+        candidate: String,
+    },
+    Name {
+        repository: RepositoryId,
+        candidate: String,
+    },
+    AllocationCursor(WorkspaceId),
+    CleanupBlocked(RepositoryId),
+    ProviderSelection(String),
+    ProviderLogin(String),
+    ProviderAction(uuid::Uuid),
+}
+impl Read {
+    fn validate(&self) -> Result<()> {
+        let text = match self {
+            Self::CommonDirectory(s) | Self::ProviderSelection(s) | Self::ProviderLogin(s) => {
+                Some(s)
+            }
+            Self::Folder { candidate, .. } | Self::Name { candidate, .. } => Some(candidate),
+            _ => None,
+        };
+        if text.is_some_and(|s| s.len() > 4096) {
+            return Err(Error::Oversized);
+        }
+        Ok(())
+    }
+}
+#[derive(Debug)]
+pub(crate) struct Snapshot {
+    pub revision: u64,
+    /// Bounded current domain records, decoded by the typed helpers below.
+    records: Vec<String>,
+    pub next: Option<String>,
+}
+impl Snapshot {
+    fn records<T: DeserializeOwned>(&self) -> Result<Vec<T>> {
+        self.records
+            .iter()
+            .map(|r| serde_json::from_str(r).map_err(|_| Error::Corrupt))
             .collect()
+    }
+}
+#[derive(Debug)]
+pub(crate) enum Outcome {
+    Written { revision: u64 },
+    Snapshot(Snapshot),
+}
+#[derive(Debug)]
+pub(crate) struct Delivery {
+    outcome: Result<Outcome>,
+    // Capacity covers completed but undelivered results as well as physical work.
+    _slot: OwnedSemaphorePermit,
+}
+/// A decoded page retains its read interest through consumption, including decoded copies.
+#[derive(Debug)]
+pub(crate) struct Records<T> {
+    pub revision: u64,
+    pub next: Option<String>,
+    records: Vec<T>,
+    _slot: OwnedSemaphorePermit,
+}
+impl<T> Records<T> {
+    pub(crate) fn items(&self) -> &[T] {
+        &self.records
+    }
+}
+impl Delivery {
+    pub(crate) fn revision(&self) -> Result<u64> {
+        match &self.outcome {
+            Ok(Outcome::Written { revision }) => Ok(*revision),
+            Ok(Outcome::Snapshot(snapshot)) => Ok(snapshot.revision),
+            Err(error) => Err(error.clone()),
+        }
+    }
+    pub(crate) fn into_records<T: DeserializeOwned>(self) -> Result<Records<T>> {
+        let snapshot = match self.outcome? {
+            Outcome::Snapshot(snapshot) => snapshot,
+            _ => return Err(Error::Invalid("Expected a metadata page")),
+        };
+        let records = snapshot.records()?;
+        Ok(Records {
+            revision: snapshot.revision,
+            next: snapshot.next,
+            records,
+            _slot: self._slot,
+        })
+    }
+}
+#[derive(Debug, Clone)]
+pub(crate) struct Fault {
+    pub action: Option<uuid::Uuid>,
+    pub error: Error,
+}
+#[derive(Debug, Clone, Default)]
+pub(crate) struct Checkpoint {
+    pub busy: i64,
+    pub log_frames: i64,
+    pub checkpointed_frames: i64,
+    pub wal_bytes: u64,
+    pub elapsed: Duration,
+}
+#[derive(Debug, Clone, Default)]
+pub(crate) struct CloseReport {
+    pub faults: Vec<Fault>,
+    pub checkpoint: Option<Checkpoint>,
+}
+
+struct Admission {
+    closed: bool,
+    fenced: bool,
+    retirement_unknown: bool,
+    retiring: usize,
+    writes: std::collections::BTreeMap<uuid::Uuid, usize>,
+    faults: Vec<Fault>,
+}
+struct Shared {
+    writer: SqlitePool,
+    readers: SqlitePool,
+    path: PathBuf,
+    control: Arc<Control>,
+}
+struct Control {
+    admission: Arc<Mutex<Admission>>,
+    changes: watch::Sender<u64>,
+}
+impl Control {
+    fn new() -> Self {
+        let (changes, _) = watch::channel(0);
+        Self {
+            changes,
+            admission: Arc::new(Mutex::new(Admission {
+                closed: false,
+                fenced: false,
+                retirement_unknown: false,
+                retiring: 0,
+                writes: Default::default(),
+                faults: vec![],
+            })),
+        }
+    }
+    fn fault(&self, action: Option<uuid::Uuid>, error: Error) {
+        let mut state = self.admission.lock().expect("storage admission poisoned");
+        state.fenced = true;
+        state.retirement_unknown |= matches!(
+            &error,
+            Error::Panic
+                | Error::Write {
+                    retirement: Some(_),
+                    ..
+                }
+        );
+        // At most 72 admitted operations can fail after the first failure fences admission.
+        state.faults.push(Fault { action, error });
+    }
+    fn settle(&self, action: uuid::Uuid) {
+        let mut state = self.admission.lock().expect("storage admission poisoned");
+        let count = state
+            .writes
+            .get_mut(&action)
+            .expect("admitted write tracked");
+        *count -= 1;
+        if *count == 0 {
+            state.writes.remove(&action);
+        }
+        self.changes.send_modify(|n| *n = n.wrapping_add(1));
+    }
+    async fn settled(&self, action: Option<uuid::Uuid>) -> Result<()> {
+        let mut changes = self.changes.subscribe();
+        loop {
+            {
+                let state = self.admission.lock().expect("storage admission poisoned");
+                if state.retirement_unknown {
+                    return Err(Error::Fenced);
+                }
+                let pending = action.map_or(!state.writes.is_empty(), |id| {
+                    state.writes.contains_key(&id)
+                });
+                if !pending {
+                    return Ok(());
+                }
+            }
+            changes.changed().await.map_err(|_| Error::Closed)?;
+        }
+    }
+}
+enum Operation {
+    Write { action: uuid::Uuid, payload: String },
+    Read(Read),
+}
+struct Job {
+    operation: Operation,
+    reply: oneshot::Sender<Delivery>,
+    slot: OwnedSemaphorePermit,
+}
+#[derive(Clone)]
+pub(crate) struct Storage {
+    shared: Arc<Shared>,
+    jobs: mpsc::Sender<Job>,
+    write_slots: Arc<Semaphore>,
+    read_slots: Arc<Semaphore>,
+    done: watch::Receiver<Option<CloseReport>>,
+}
+pub(crate) struct Opening {
+    result: watch::Receiver<Option<Result<Storage>>>,
+}
+impl Opening {
+    pub(crate) async fn wait(&mut self) -> Result<Storage> {
+        loop {
+            if let Some(result) = self.result.borrow_and_update().clone() {
+                return result;
+            }
+            self.result.changed().await.map_err(|_| Error::Panic)?;
+        }
+    }
+}
+impl Storage {
+    /// Retain this receipt with core startup until observed; cancelling wait never cancels open/cleanup.
+    pub(crate) fn start(state: PathBuf) -> Opening {
+        let (result, receiver) = watch::channel(None);
+        tokio::spawn(async move {
+            result.send_replace(Some(Self::open(&state).await));
+        });
+        Opening { result: receiver }
+    }
+
+    /// Called by retained core startup while it holds the state lease. No per-call runtime.
+    async fn open(state: &Path) -> Result<Self> {
+        let control = Arc::new(Control::new());
+        let (writer, readers, path) = opening::open(state, control.clone()).await?;
+        let shared = Arc::new(Shared {
+            writer,
+            readers,
+            path,
+            control,
+        });
+        let (jobs, receive) = mpsc::channel(72);
+        let (done, completion) = watch::channel(None);
+        tokio::spawn(run(shared.clone(), receive, done));
+        Ok(Self {
+            shared,
+            jobs,
+            write_slots: Arc::new(Semaphore::new(64)),
+            read_slots: Arc::new(Semaphore::new(8)),
+            done: completion,
+        })
+    }
+    /// Synchronous admission prevents an unbounded semaphore waiter/task queue.
+    pub(crate) fn write(&self, write: Write) -> Result<oneshot::Receiver<Delivery>> {
+        let slot = self
+            .write_slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)?;
+        let payload = encode(&write, ITEM_BYTES)?;
+        let identity = write.identity();
+        let mut state = self
+            .shared
+            .control
+            .admission
+            .lock()
+            .expect("storage admission poisoned");
+        if state.closed {
+            return Err(Error::Closed);
+        }
+        if state.fenced {
+            return Err(Error::Fenced);
+        }
+        let (reply, result) = oneshot::channel();
+        self.jobs
+            .try_send(Job {
+                operation: Operation::Write {
+                    action: identity,
+                    payload,
+                },
+                reply,
+                slot,
+            })
+            .map_err(|_| Error::Capacity)?;
+        *state.writes.entry(identity).or_default() += 1;
+        Ok(result)
+    }
+    pub(crate) fn read(&self, read: Read) -> Result<oneshot::Receiver<Delivery>> {
+        read.validate()?;
+        let slot = self
+            .read_slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)?;
+        let state = self
+            .shared
+            .control
+            .admission
+            .lock()
+            .expect("storage admission poisoned");
+        if state.closed {
+            return Err(Error::Closed);
+        }
+        if state.retirement_unknown || state.faults.len() >= 80 {
+            return Err(Error::Fenced);
+        }
+        let (reply, result) = oneshot::channel();
+        self.jobs
+            .try_send(Job {
+                operation: Operation::Read(read),
+                reply,
+                slot,
+            })
+            .map_err(|_| Error::Capacity)?;
+        Ok(result)
+    }
+    pub(crate) fn faults(&self) -> Vec<Fault> {
+        self.shared
+            .control
+            .admission
+            .lock()
+            .expect("storage admission poisoned")
+            .faults
+            .clone()
+    }
+    /// Closing a requester never cancels this retained drain. Repeated calls observe it.
+    pub(crate) async fn close(&self) -> CloseReport {
+        {
+            let mut state = self
+                .shared
+                .control
+                .admission
+                .lock()
+                .expect("storage admission poisoned");
+            state.closed = true;
+            self.shared
+                .control
+                .changes
+                .send_modify(|n| *n = n.wrapping_add(1));
+        }
+        let mut done = self.done.clone();
+        loop {
+            if let Some(report) = done.borrow_and_update().clone() {
+                return report;
+            }
+            if done.changed().await.is_err() {
+                return CloseReport {
+                    faults: vec![Fault {
+                        action: None,
+                        error: Error::Panic,
+                    }],
+                    checkpoint: None,
+                };
+            }
+        }
+    }
+}
+async fn run(
+    shared: Arc<Shared>,
+    mut receive: mpsc::Receiver<Job>,
+    done: watch::Sender<Option<CloseReport>>,
+) {
+    let mut tasks = tokio::task::JoinSet::new();
+    let mut changes = shared.control.changes.subscribe();
+    loop {
+        if shared
+            .control
+            .admission
+            .lock()
+            .expect("storage admission poisoned")
+            .closed
+        {
+            receive.close();
+        }
+        tokio::select! {
+            biased;
+            Some(joined) = tasks.join_next(), if !tasks.is_empty() => {
+                if joined.is_err() { shared.control.fault(None, Error::Panic); }
+            }
+            job = receive.recv() => {
+                let Some(Job { operation, reply, slot }) = job else { break; };
+                let shared = shared.clone();
+                tasks.spawn(async move {
+                    let action = match &operation { Operation::Write { action, .. } => Some(*action), _ => None };
+                    let effect = async {
+                        match operation {
+                            Operation::Write { payload, .. } => {
+                                let write = serde_json::from_str(&payload).map_err(|_| Error::Invalid("Invalid internal command"))?;
+                                operations::write(&shared, write).await.map(|revision| Outcome::Written { revision })
+                            },
+                            Operation::Read(r) => {
+                                let target = match &r { Read::Registration(id) | Read::WorkspaceAction(id) => Some(id.0), _ => None };
+                                shared.control.settled(target).await?;
+                                operations::read(&shared, r).await.map(Outcome::Snapshot)
+                            }
+                        }
+                    };
+                    complete_job(shared.control.clone(), action, reply, slot, effect).await;
+                });
+            }
+            _ = changes.changed() => {}
+        }
+    }
+    while let Some(joined) = tasks.join_next().await {
+        if joined.is_err() {
+            shared.control.fault(None, Error::Panic);
+        }
+    }
+    let report = close_barriers(
+        &shared.control,
+        async { operations::checkpoint(&shared).await.map(Some) },
+        shared.readers.close(),
+        shared.writer.close(),
+    )
+    .await;
+    done.send_replace(Some(report));
+}
+
+fn encode(value: &impl Serialize, max: usize) -> Result<String> {
+    struct Bounded {
+        bytes: Vec<u8>,
+        max: usize,
+    }
+    impl std::io::Write for Bounded {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            if bytes.len() > self.max - self.bytes.len() {
+                return Err(std::io::Error::other("metadata limit"));
+            }
+            self.bytes.extend_from_slice(bytes);
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+    let mut writer = Bounded {
+        bytes: Vec::with_capacity(max),
+        max,
+    };
+    serde_json::to_writer(&mut writer, value).map_err(|_| Error::Oversized)?;
+    String::from_utf8(writer.bytes).map_err(|_| Error::Invalid("Invalid metadata encoding"))
+}
+
+async fn complete_job(
+    control: Arc<Control>,
+    action: Option<uuid::Uuid>,
+    reply: oneshot::Sender<Delivery>,
+    slot: OwnedSemaphorePermit,
+    effect: impl std::future::Future<Output = Result<Outcome>>,
+) {
+    use futures_util::FutureExt;
+    let outcome = std::panic::AssertUnwindSafe(effect)
+        .catch_unwind()
+        .await
+        .unwrap_or(Err(Error::Panic));
+    if let Err(error) = &outcome
+        && !error.is_domain_rejection()
+    {
+        control.fault(action, error.clone());
+    }
+    if let Some(action) = action {
+        control.settle(action);
+    }
+    let _ = reply.send(Delivery {
+        outcome,
+        _slot: slot,
+    });
+}
+impl Error {
+    fn is_domain_rejection(&self) -> bool {
+        match self {
+            Self::Invalid(_)
+            | Self::Conflict(_)
+            | Self::Oversized
+            | Self::Capacity
+            | Self::Fenced => true,
+            Self::Write {
+                original,
+                retirement: None,
+                uncertain: false,
+            } => original.is_domain_rejection(),
+            _ => false,
+        }
+    }
+}
+struct Retirement {
+    control: Arc<Control>,
+    confirmed: bool,
+}
+impl Retirement {
+    fn begin(control: Arc<Control>) -> Self {
+        control
+            .admission
+            .lock()
+            .expect("storage admission poisoned")
+            .retiring += 1;
+        Self {
+            control,
+            confirmed: false,
+        }
+    }
+}
+impl Drop for Retirement {
+    fn drop(&mut self) {
+        let mut state = self
+            .control
+            .admission
+            .lock()
+            .expect("storage admission poisoned");
+        state.retiring -= 1;
+        if !self.confirmed {
+            state.retirement_unknown = true;
+            state.fenced = true;
+        }
+        self.control.changes.send_modify(|n| *n = n.wrapping_add(1));
+    }
+}
+impl Control {
+    async fn ready_connection(&self) -> Result<()> {
+        let mut changes = self.changes.subscribe();
+        loop {
+            {
+                let state = self.admission.lock().expect("storage admission poisoned");
+                if state.retirement_unknown {
+                    return Err(Error::Fenced);
+                }
+                if state.retiring == 0 {
+                    return Ok(());
+                }
+            }
+            changes.changed().await.map_err(|_| Error::Closed)?;
+        }
+    }
+}
+async fn retire_failed(
+    control: Arc<Control>,
+    original: Error,
+    uncertain: bool,
+    retirement: impl std::future::Future<Output = Result<()>>,
+) -> Error {
+    let mut guard = Retirement::begin(control);
+    let retirement = retirement.await.err().map(Box::new);
+    guard.confirmed = retirement.is_none();
+    drop(guard);
+    Error::Write {
+        original: Box::new(original),
+        retirement,
+        uncertain,
     }
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use std::cell::{Cell, RefCell};
-    struct Control {
-        calls: RefCell<Vec<&'static str>>,
-        fail_begin: bool,
-        fail_commit: bool,
-        fail_rollback: bool,
-        active: Cell<bool>,
-    }
-    impl TransactionControl for Control {
-        fn begin(&self) -> Result<()> {
-            self.calls.borrow_mut().push("begin");
-            if self.fail_begin {
-                Err(storage("read-only database"))
-            } else {
-                self.active.set(true);
-                Ok(())
-            }
-        }
-        fn commit(&self) -> Result<()> {
-            self.calls.borrow_mut().push("commit");
-            if self.fail_commit {
-                Err(storage("commit outcome unavailable"))
-            } else {
-                self.active.set(false);
-                Ok(())
-            }
-        }
-        fn rollback(&self) -> Result<()> {
-            self.calls.borrow_mut().push("rollback");
-            if self.fail_rollback {
-                Err(storage("rollback failed"))
-            } else {
-                self.active.set(false);
-                Ok(())
-            }
-        }
-        fn active(&self) -> bool {
-            self.active.get()
-        }
-    }
-    #[test]
-    fn success_requires_commit_and_begin_failure_blocks_the_write() {
-        for fail_begin in [true, false] {
-            let control = Control {
-                calls: RefCell::new(vec![]),
-                fail_begin,
-                fail_commit: false,
-                fail_rollback: false,
-                active: Cell::new(false),
-            };
-            let result = transaction(&control, || {
-                control.calls.borrow_mut().push("write");
-                Ok(42)
-            });
-            if fail_begin {
-                assert!(result.is_err());
-                assert_eq!(*control.calls.borrow(), ["begin"]);
-            } else {
-                assert_eq!(result.unwrap(), 42);
-                assert_eq!(*control.calls.borrow(), ["begin", "write", "commit"]);
-            }
-        }
-    }
-    #[test]
-    fn failed_commit_attempts_rollback_and_keeps_uncertain_cleanup_visible() {
-        for fail_rollback in [true, false] {
-            let control = Control {
-                calls: RefCell::new(vec![]),
-                fail_begin: false,
-                fail_commit: true,
-                fail_rollback,
-                active: Cell::new(false),
-            };
-            let error = transaction(&control, || Ok(42)).unwrap_err();
-            assert_eq!(*control.calls.borrow(), ["begin", "commit", "rollback"]);
-            assert_eq!(error.code, ErrorCode::Storage);
-            assert_eq!(control.active.get(), fail_rollback);
-            assert!(error.message.contains(if fail_rollback {
-                "cleanup failed"
-            } else {
-                "commit outcome"
-            }));
-        }
-    }
-    #[test]
-    fn current_workspace_records_reopen_without_provider_and_retain_recovery_facts() {
-        use serde_json::json;
-        let pending = json!({
-            "id": "00000000-0000-0000-0000-000000000001",
-            "repository_id": "00000000-0000-0000-0000-000000000002",
-            "creation_action_id": "00000000-0000-0000-0000-000000000003",
-            "name": null, "branch": null, "path": null, "legacy": false,
-            "base": null,
-            "artifacts": { "branch": "unknown", "folder": "unknown" },
-            "status": { "state": "queued" }, "cleanup_unconfirmed": false
-        });
-        let allocated = json!({
-            "name": "kyoto", "branch": "workspace/kyoto",
-            "path": "/private/state/workspaces/repo/kyoto/checkout",
-            "base": { "reference": "refs/heads/main", "commit": "a".repeat(40) },
-            "artifacts": { "branch": "owned", "folder": "worktree" }
-        });
-        let error = json!({ "code": "git", "message": "Worktree creation failed; files retained" });
-        for status in [
-            json!({ "state": "queued" }),
-            json!({ "state": "running", "stage": "creating_worktree" }),
-            json!({ "state": "ready" }),
-            json!({ "state": "failed", "error": error }),
-            json!({ "state": "uncertain", "error": error }),
-        ] {
-            let mut record = pending.clone();
-            if status["state"] != "queued" {
-                for (key, value) in allocated.as_object().unwrap() {
-                    record[key] = value.clone();
-                }
-            }
-            if status["state"] == "failed" || status["state"] == "uncertain" {
-                record["artifacts"]["folder"] = json!("partial");
-                record["cleanup_unconfirmed"] = json!(true);
-            }
-            record["status"] = status;
-            let restored: Workspace = decode(record.to_string()).unwrap();
-            let written: serde_json::Value =
-                serde_json::from_str(&encode(&restored).unwrap()).unwrap();
-            assert_eq!(written, record);
-            assert!(written.get("provider").is_none());
-        }
-    }
+#[path = "storage/tests.rs"]
+mod tests;
 
-    #[test]
-    fn corrupt_saved_metadata_is_a_storage_failure_instead_of_an_empty_result() {
-        assert_eq!(
-            decode::<RepositoryRecord>("{\"id\":\"wrong\"}".into())
-                .unwrap_err()
-                .code,
-            ErrorCode::Storage
-        );
-    }
+#[cfg(feature = "qualification")]
+#[path = "storage/qualification.rs"]
+pub(crate) mod qualification;
+
+// Pool barriers have no returned error inventory. Retain checkpoint/operation faults
+// separately and always visit both barriers, including after earlier failure.
+async fn close_barriers(
+    control: &Control,
+    checkpoint: impl std::future::Future<Output = Result<Option<Checkpoint>>>,
+    readers: impl std::future::Future<Output = ()>,
+    writer: impl std::future::Future<Output = ()>,
+) -> CloseReport {
+    let checkpoint = match checkpoint.await {
+        Ok(value) => value,
+        Err(error) => {
+            control.fault(None, error);
+            None
+        }
+    };
+    readers.await;
+    writer.await;
+    let faults = control
+        .admission
+        .lock()
+        .expect("storage admission poisoned")
+        .faults
+        .clone();
+    CloseReport { faults, checkpoint }
 }
