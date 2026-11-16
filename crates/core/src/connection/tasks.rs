@@ -28,6 +28,7 @@ impl Tasks {
         work: impl Future<Output = T> + Send + 'static,
     ) -> io::Result<oneshot::Receiver<T>> {
         let mut set = self.set.lock().unwrap_or_else(|e| e.into_inner());
+        self.reap(&mut set);
         if self.closed.load(Ordering::Acquire)
             || !self
                 .failure
@@ -37,7 +38,6 @@ impl Tasks {
         {
             return Err(io::Error::other("Connection cleanup has begun"));
         }
-        self.reap(&mut set);
         let (send, receive) = oneshot::channel();
         set.spawn(async move {
             let _ = send.send(work.await);
@@ -54,6 +54,7 @@ impl Tasks {
         })?;
         let receive = {
             let mut set = self.set.lock().unwrap_or_else(|e| e.into_inner());
+            self.reap(&mut set);
             if self.closed.load(Ordering::Acquire)
                 || !self
                     .failure
@@ -63,7 +64,6 @@ impl Tasks {
             {
                 return Err(io::Error::other("Connection cleanup has begun"));
             }
-            self.reap(&mut set);
             let (send, receive) = oneshot::channel();
             let failure = self.failure.clone();
             set.spawn_blocking(move || {

@@ -1810,3 +1810,33 @@ fn whole_core_finish_collects_host_panic_and_domain_failure() {
         assert!(diagnostic.contains("Host request cleanup"));
     });
 }
+
+#[test]
+fn discovering_a_completed_panic_fences_the_same_dispatch() {
+    run(async {
+        for blocking in [false, true] {
+            let tasks = Tasks::default();
+            let reply = tasks
+                .spawn::<()>(async { panic!("controlled previous panic") })
+                .unwrap();
+            assert!(reply.await.is_err());
+            if blocking {
+                let called = Arc::new(std::sync::atomic::AtomicBool::new(false));
+                let marker = called.clone();
+                assert!(
+                    tasks
+                        .blocking(&ConnectionSlots::new(1), move || {
+                            marker.store(true, std::sync::atomic::Ordering::SeqCst);
+                            Ok(())
+                        })
+                        .await
+                        .is_err()
+                );
+                assert!(!called.load(std::sync::atomic::Ordering::SeqCst));
+            } else {
+                assert!(tasks.spawn(async {}).is_err());
+            }
+            assert!(tasks.close_and_wait().await.is_err());
+        }
+    });
+}
