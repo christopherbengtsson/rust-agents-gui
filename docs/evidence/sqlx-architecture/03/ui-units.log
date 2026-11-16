@@ -1,0 +1,29 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+3:37:21 PM [vite] (client) warning: (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts:60:6]
+ 59 |         });
+ 60 |     } finally {
+    :      ^^^^^^^^^
+ 61 |       if (generation.current === current)
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts
+
+ Test Files  22 passed (22)
+      Tests  260 passed (260)
+   Start at  15:37:20
+   Duration  14.31s (tests 48%, environment 28%, import 18%, transform 5%, setup 1%)
+
+Environment  jsdom was created 22 times · 3.63s total, 28% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

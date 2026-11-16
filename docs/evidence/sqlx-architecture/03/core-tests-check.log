@@ -1,0 +1,76 @@
+    Checking tokio v1.54.1
+    Checking tokio-stream v0.1.19
+    Checking tokio-util v0.7.20
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0433]: cannot find `ProviderSelectionStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:231:56
+    |
+231 |         let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^ could not find `ProviderSelectionStore` in `storage`
+
+error[E0433]: cannot find `ProviderLoginStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:239:52
+    |
+239 |         let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
+    |                                                    ^^^^^^^^^^^^^^^^^^ could not find `ProviderLoginStore` in `storage`
+
+error[E0063]: missing field `storage` in initializer of `Core`
+  --> crates/core/src/connection/tests.rs:14:5
+   |
+14 |     Core {
+   |     ^^^^ missing `storage`
+
+error[E0063]: missing field `storage` in initializer of `Core`
+   --> crates/core/src/connection/tests.rs:365:21
+    |
+365 |         let after = Core {
+    |                     ^^^^ missing `storage`
+
+error[E0063]: missing field `storage` in initializer of `Core`
+   --> crates/core/src/connection/tests.rs:666:29
+    |
+666 |         let core = Arc::new(Core {
+    |                             ^^^^ missing `storage`
+
+error[E0063]: missing field `storage` in initializer of `Core`
+    --> crates/core/src/connection/tests.rs:1571:29
+     |
+1571 |         let core = Arc::new(Core {
+     |                             ^^^^ missing `storage`
+
+Some errors have detailed explanations: E0063, E0433.
+For more information about an error, try `rustc --explain E0063`.
+error: could not compile `workspace-core` (lib test) due to 6 previous errors

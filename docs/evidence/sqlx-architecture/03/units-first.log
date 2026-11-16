@@ -1,0 +1,41 @@
+   Compiling tokio-util v0.7.20
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+error[E0407]: method `repository_folders` is not a member of trait `CreationEffects`
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/creation.rs:296:9
+    |
+296 | /         fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
+297 | |             self.calls.borrow_mut().push("folders");
+298 | |             Ok(Default::default())
+299 | |         }
+    | |_________^ not a member of trait `CreationEffects`
+
+error[E0407]: method `occupied` is not a member of trait `CreationEffects`
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/creation.rs:300:9
+    |
+300 | /         fn occupied(
+301 | |             &mut self,
+302 | |             _: &RepositoryRecord,
+303 | |             _: &Path,
+...   |
+312 | |             Ok(Default::default())
+313 | |         }
+    | |_________^ not a member of trait `CreationEffects`
+
+error[E0425]: cannot find function `worker_cycle` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/inspection/tests.rs:370:17
+    |
+370 |         assert!(worker_cycle(&mut next, |kind| {
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `worker_cycle` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/inspection/tests.rs:376:13
+    |
+376 |     assert!(worker_cycle(&mut next, |kind| kind == 2));
+    |             ^^^^^^^^^^^^ not found in this scope
+
+Some errors have detailed explanations: E0407, E0425.
+For more information about an error, try `rustc --explain E0407`.
+error: could not compile `workspace-checkpoint` (lib test) due to 4 previous errors

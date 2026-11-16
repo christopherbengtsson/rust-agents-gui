@@ -1,0 +1,45 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0433]: cannot find `ProviderSelectionStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:231:56
+    |
+231 |         let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^ could not find `ProviderSelectionStore` in `storage`
+
+error[E0433]: cannot find `ProviderLoginStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:239:52
+    |
+239 |         let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
+    |                                                    ^^^^^^^^^^^^^^^^^^ could not find `ProviderLoginStore` in `storage`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `workspace-core` (lib test) due to 2 previous errors

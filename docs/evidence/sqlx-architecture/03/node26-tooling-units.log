@@ -1,0 +1,71 @@
+✔ claims an unclaimed target exclusively for this worktree (1.203584ms)
+✔ permits a target already claimed by this worktree (0.115792ms)
+✔ rejects another worktree's target without changing its ownership (0.184583ms)
+✔ rejects a symlinked target before creating or claiming it (0.073792ms)
+✔ rejects a target under a symlinked parent before claiming it (0.072666ms)
+✔ rejects a symlinked ownership marker without following it (0.068959ms)
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/prepare-supervisor.mjs debug
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.625083ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.3495ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.081041ms)
+✔ a failed static gate prevents later application units (0.113542ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.231916ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.101ms)
+✔ dev state is persistent, canonical-worktree and compatibility specific (2.671334ms)
+✔ an explicit state override is honored exactly and stale supervisor overrides are replaced (0.186125ms)
+✔ frontend lint accepts typed composition and direct UI imports (34.778709ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (59.460208ms)
+✔ frontend lint surfaces compiler and accessible-name defects (59.650916ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (329.718875ms)
+✔ native boundary rules cover nested paths, type and namespace exports (31.245292ms)
+✔ warnings fail and native suppression names remain checked (100.420333ms)
+✔ native table-cell compatibility preserves other redundancy checks (30.7255ms)
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.744584ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.244083ms)
+✔ explicit write mode repairs expected files and removes only obsolete managed outputs (0.068584ms)
+✔ clean checkout checking accepts the complete committed artifact set without writes (0.056041ms)
+✔ preparation build failure cannot reconcile or repair committed files (0.092458ms)
+✔ preparation export failure cannot reconcile or repair committed files (0.048416ms)
+✔ preparation render failure cannot reconcile or repair committed files (0.070209ms)
+✔ preparation missing failure cannot reconcile or repair committed files (0.05025ms)
+✔ preparation ambiguous failure cannot reconcile or repair committed files (0.047917ms)
+✔ preparation test-artifact failure cannot reconcile or repair committed files (0.06775ms)
+✔ preparation foreign-artifact failure cannot reconcile or repair committed files (0.043459ms)
+✔ route checking rejects stale output without writes and explicit write repairs it (0.16825ms)
+✔ route rendering invokes the pinned CLI only in an isolated source mirror and cleans it (1.951875ms)
+✔ route rendering cleans its isolated mirror after copy failure (0.151ms)
+✔ route rendering cleans its isolated mirror after process failure (0.335167ms)
+✔ route rendering cleans its isolated mirror after timeout failure (0.10025ms)
+✔ route rendering cleans its isolated mirror after read failure (0.11075ms)
+✔ generated preparation reconciles contracts before routes with one explicit mode (0.075875ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (2.266708ms)
+✔ debug staging records the dev profile and a clean source tree (0.1115ms)
+✔ rejects missing executable without touching staged resources (0.167ms)
+✔ rejects test executable without touching staged resources (0.061125ms)
+✔ rejects ambiguous executables without touching staged resources (0.067458ms)
+✔ a failed build cannot stage a previously available executable (0.065959ms)
+✔ failCopy preserves the previous published executable and removes temporary bytes (0.087416ms)
+✔ failPublish preserves the previous published executable and removes temporary bytes (0.059166ms)
+✔ installed React compiler accepts lifecycle control flow in src/hooks/use-supervisor-connection.ts (8.232125ms)
+✔ installed React compiler accepts lifecycle control flow in src/hooks/use-repositories.ts (4.42025ms)
+✔ installed React compiler accepts lifecycle control flow in src/hooks/use-workspaces.ts (6.448458ms)
+✔ installed React compiler accepts lifecycle control flow in src/components/blocks/repository-registration.tsx (2.052167ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 939.787417

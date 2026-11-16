@@ -1,0 +1,64 @@
+    Checking futures-util v0.3.34
+    Checking tokio v1.54.1
+    Checking futures-executor v0.3.34
+    Checking tokio-stream v0.1.19
+    Checking tokio-util v0.7.20
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0433]: cannot find `ProviderSelectionStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:231:56
+    |
+231 |         let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^ could not find `ProviderSelectionStore` in `storage`
+
+error[E0433]: cannot find `ProviderLoginStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:239:52
+    |
+239 |         let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
+    |                                                    ^^^^^^^^^^^^^^^^^^ could not find `ProviderLoginStore` in `storage`
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/core/src/workspaces/coordinator.rs:175:15
+    |
+175 |     validate(&lock_state(&shared)?, action.action_id, generation)?;
+    |               ^^^^^^^^^^^^^^^^^^^^ expected `OwnerState`, found `OwnerGuard<'_>`
+    |
+    = note: `?` operator cannot convert from `OwnerGuard<'_>` to `workspaces::OwnerState`
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/core/src/workspaces/coordinator.rs:215:19
+    |
+215 |         validate(&lock_state(&shared)?, workspace.creation_action_id, generation)?;
+    |                   ^^^^^^^^^^^^^^^^^^^^ expected `OwnerState`, found `OwnerGuard<'_>`
+    |
+    = note: `?` operator cannot convert from `OwnerGuard<'_>` to `workspaces::OwnerState`
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/core/src/workspaces/coordinator.rs:224:56
+    |
+224 |         { let _gate = decision.lock().await; validate(&lock_state(shared)?, id, generation)?; }
+    |                                                        ^^^^^^^^^^^^^^^^^^^ expected `OwnerState`, found `OwnerGuard<'_>`
+    |
+    = note: `?` operator cannot convert from `OwnerGuard<'_>` to `workspaces::OwnerState`
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/core/src/workspaces/coordinator.rs:243:19
+    |
+243 |         validate(&lock_state(shared)?, id, generation)?;
+    |                   ^^^^^^^^^^^^^^^^^^^ expected `OwnerState`, found `OwnerGuard<'_>`
+    |
+    = note: `?` operator cannot convert from `OwnerGuard<'_>` to `workspaces::OwnerState`
+
+error[E0308]: `?` operator has incompatible types
+   --> crates/core/src/workspaces/coordinator.rs:284:58
+    |
+284 |                     if request.before_effect { validate(&lock_state(&shared)?, request.workspace.creation_action_id, generation)?; }
+    |                                                          ^^^^^^^^^^^^^^^^^^^^ expected `OwnerState`, found `OwnerGuard<'_>`
+    |
+    = note: `?` operator cannot convert from `OwnerGuard<'_>` to `workspaces::OwnerState`
+
+Some errors have detailed explanations: E0308, E0433.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `workspace-core` (lib) due to 7 previous errors

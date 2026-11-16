@@ -1,0 +1,99 @@
+{
+  "checks": [
+    "concurrent-registration-and-first-continuations",
+    "global-app-folder-collision",
+    "same-repository-distinct-permanent-names",
+    "concurrent-disposable-git-worktrees",
+    "pinned-base-and-original-checkout-protection",
+    "concurrent-sqlx-claim-winner-and-settled-conflict"
+  ],
+  "desktop": "not run: combined provider conversion remains ticket 04",
+  "providers": "not run",
+  "root": "/private/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4",
+  "workspaces": [
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "ced0243b5a3e7cc8e7da659a8cfadd173a3f889f",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/roberto-baggio",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "65d4b461-20bf-47e5-bd29-3339ab2c988b",
+      "id": "97698be9-7942-449d-b556-dd57ba186362",
+      "legacy": false,
+      "name": "roberto-baggio",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4/state/workspaces/app/roberto-baggio/checkout",
+      "repository_id": "4dd2e03d-f0ae-4f9b-bf09-16d18b73e969",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "ced0243b5a3e7cc8e7da659a8cfadd173a3f889f",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/emmanuel-adebayor",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "c2f9c288-7588-4982-880d-9e6c36e4c7ae",
+      "id": "23f18a0e-1a19-4878-b8fe-bdbc0f4940c7",
+      "legacy": false,
+      "name": "emmanuel-adebayor",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4/state/workspaces/app-2/emmanuel-adebayor/checkout",
+      "repository_id": "b4bfc511-85a3-4f44-84ad-ba94782ef494",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "ced0243b5a3e7cc8e7da659a8cfadd173a3f889f",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/corentin-tolisso",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "d076b232-7ccb-4e38-89c0-135d882bb4f9",
+      "id": "31495fe5-ef97-4496-9cc5-90346edd03dd",
+      "legacy": false,
+      "name": "corentin-tolisso",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4/state/workspaces/app/corentin-tolisso/checkout",
+      "repository_id": "4dd2e03d-f0ae-4f9b-bf09-16d18b73e969",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "ced0243b5a3e7cc8e7da659a8cfadd173a3f889f",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/benjamin-pavard",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "a18f7ebc-fbdf-4f6a-84af-4914fe3aab76",
+      "id": "fa1c37c4-9ee7-4d20-ac85-5dce0df383d1",
+      "legacy": false,
+      "name": "benjamin-pavard",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4/state/workspaces/app/benjamin-pavard/checkout",
+      "repository_id": "4dd2e03d-f0ae-4f9b-bf09-16d18b73e969",
+      "status": {
+        "state": "ready"
+      }
+    }
+  ]
+}

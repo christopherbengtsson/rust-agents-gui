@@ -1,0 +1,106 @@
+   Compiling tokio-util v0.7.20
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.94s
+     Running `target/debug/qualify-workspaces /tmp/workspace-ticket03-qualification-01`
+{
+  "checks": [
+    "concurrent-registration-and-first-continuations",
+    "global-app-folder-collision",
+    "same-repository-distinct-permanent-names",
+    "concurrent-disposable-git-worktrees",
+    "pinned-base-and-original-checkout-protection",
+    "concurrent-sqlx-claim-winner-and-settled-conflict"
+  ],
+  "desktop": "not run: combined provider conversion remains ticket 04",
+  "providers": "not run",
+  "root": "/private/tmp/workspace-ticket03-qualification-01",
+  "workspaces": [
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "f1da3bf3bd7182e19791cc6a0e5f8e56d78ff0d1",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/rivaldo",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "c6be54c9-4b4e-419a-aec1-9f8024a9bc36",
+      "id": "9e7aa644-6757-4039-868e-aa622d112237",
+      "legacy": false,
+      "name": "rivaldo",
+      "path": "/private/tmp/workspace-ticket03-qualification-01/state/workspaces/app/rivaldo/checkout",
+      "repository_id": "a3446ee4-42ba-430b-8a75-415c329c87a9",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "f1da3bf3bd7182e19791cc6a0e5f8e56d78ff0d1",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/andre-onana",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "e8fd53d4-2b6a-4443-b41f-57ce3c74fa93",
+      "id": "c81345dd-05de-4c54-aa76-9c7511c23b39",
+      "legacy": false,
+      "name": "andre-onana",
+      "path": "/private/tmp/workspace-ticket03-qualification-01/state/workspaces/app-2/andre-onana/checkout",
+      "repository_id": "04ff8836-59e8-4b51-8fe4-310d6db59577",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "f1da3bf3bd7182e19791cc6a0e5f8e56d78ff0d1",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/mousa-dembele",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "006e7ba0-1105-4d05-b1e9-fdf5092d7563",
+      "id": "0bc06a9a-6cf4-4e0d-be66-e695c1134e68",
+      "legacy": false,
+      "name": "mousa-dembele",
+      "path": "/private/tmp/workspace-ticket03-qualification-01/state/workspaces/app/mousa-dembele/checkout",
+      "repository_id": "a3446ee4-42ba-430b-8a75-415c329c87a9",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "f1da3bf3bd7182e19791cc6a0e5f8e56d78ff0d1",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/leah-williamson",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "16d5393f-2ae4-4860-ad7c-e700d5f5efcc",
+      "id": "d93bf752-51c5-48d2-be21-114f0e10333d",
+      "legacy": false,
+      "name": "leah-williamson",
+      "path": "/private/tmp/workspace-ticket03-qualification-01/state/workspaces/app/leah-williamson/checkout",
+      "repository_id": "a3446ee4-42ba-430b-8a75-415c329c87a9",
+      "status": {
+        "state": "ready"
+      }
+    }
+  ]
+}

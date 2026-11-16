@@ -1,0 +1,43 @@
+    Checking tokio-util v0.7.20
+    Checking sqlx-core v0.9.0
+    Checking sqlx-sqlite v0.9.0
+    Checking sqlx v0.9.0
+    Checking workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+error: this function has too many arguments (8/7)
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/coordinator.rs:228:1
+    |
+228 | async fn creation(shared: Arc<Mutex<OwnerState>>, decision: Gate, store: Arc<dyn Metadata>, workspace: Workspace, repository: RepositoryRecord, repository_gate: Gate, generation: u64, effects: Arc<dyn Effects>) -> Result<()> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#too_many_arguments
+    = note: `-D clippy::too-many-arguments` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::too_many_arguments)]`
+
+error: this function has too many arguments (8/7)
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/coordinator.rs:242:1
+    |
+242 | async fn creation_inner(shared: Arc<Mutex<OwnerState>>, decision: Gate, store: Arc<dyn Metadata>, mut workspace: Workspace, repository: RepositoryRecord, repository_gate: Gate, generation: u64, effects: Arc<dyn Effects>) -> Result<()> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#too_many_arguments
+
+error: this `if` statement can be collapsed
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces/qualification.rs:30:9
+   |
+30 | /         if let Some(action) = owner.action(id).await? {
+31 | |             if action.state != RegistrationState::Pending { return Ok(action); }
+32 | |         }
+   | |_________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+   = note: `-D clippy::collapsible-if` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+   |
+30 ~         if let Some(action) = owner.action(id).await?
+31 ~             && action.state != RegistrationState::Pending { return Ok(action); }
+   |
+
+error: could not compile `workspace-checkpoint` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `workspace-checkpoint` (lib test) due to 3 previous errors
