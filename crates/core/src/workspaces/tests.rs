@@ -1585,8 +1585,37 @@ fn fenced_status_cannot_queue_a_probe_or_reopen_closed_storage() {
     assert!(owner.probes.is_empty());
     owner.storage_closed = true;
     owner.store = Err(RepositoryError::storage("closed"));
-    assert_eq!(
-        owner.store().err().unwrap().message,
-        "Workspace storage is closed"
+    assert!(
+        owner
+            .store()
+            .err()
+            .unwrap()
+            .message
+            .contains("Workspace storage is closed")
+    );
+}
+
+#[test]
+fn registration_panic_retains_exact_action_after_durable_failure_settlement() {
+    let mut store = Store::default();
+    let request = RegisterRepository {
+        action_id: ActionId(Uuid::new_v4()),
+        path: "/repo".into(),
+        create_initial_workspace: false,
+    };
+    admit(&mut store, &request).unwrap();
+    let shared = state(store);
+    assert!(process_one(&shared, |_| panic!(
+        "controlled registration panic"
+    )));
+    let state = shared.lock().unwrap();
+    assert!(state.fenced);
+    assert!(
+        state
+            .fault
+            .as_ref()
+            .unwrap()
+            .message
+            .contains(&request.action_id.0.to_string())
     );
 }

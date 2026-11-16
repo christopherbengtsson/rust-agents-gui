@@ -742,6 +742,10 @@ fn process_one(
         }
     };
     // Never hold storage/observation locks during filesystem or Git execution.
+    let identity = match &work {
+        Work::Register(action) => format!("registration {}", action.action_id.0),
+        Work::Probe(record) => format!("repository {}", record.id.0),
+    };
     let validation = catch_effect(|| {
         inspect(match &work {
             Work::Register(action) => &action.path,
@@ -751,6 +755,15 @@ fn process_one(
     let Ok(mut state) = lock_state(shared) else {
         return false;
     };
+    if let Err(error) = &validation
+        && error.code == ErrorCode::CleanupUnconfirmed
+    {
+        state.fenced = true;
+        state.fault = Some(RepositoryError::new(
+            ErrorCode::CleanupUnconfirmed,
+            format!("{identity}: {}", error.message),
+        ));
+    }
     let result = match work {
         Work::Register(action) => {
             state.publish(vec![
@@ -810,7 +823,12 @@ fn process_one(
     };
     match result {
         Ok(()) => {
-            if state.fault.take().is_some() {
+            if state
+                .fault
+                .as_ref()
+                .is_some_and(|error| error.code != ErrorCode::CleanupUnconfirmed)
+                && state.fault.take().is_some()
+            {
                 state.publish(vec![crate::observations::Target::Repositories]);
             }
             true

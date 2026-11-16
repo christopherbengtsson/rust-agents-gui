@@ -1787,3 +1787,26 @@ fn discovery_cancellation_wakes_startup_delay_without_waiting() {
         );
     });
 }
+
+#[test]
+fn whole_core_finish_collects_host_panic_and_domain_failure() {
+    run(async {
+        let core = Arc::new(Core {
+            workspaces: Some(crate::workspaces::tests::controlled_completion(async {
+                Err(RepositoryError::storage("controlled domain failure"))
+            })),
+            ..Core::new()
+        });
+        let server = ConnectionServer::new(core.clone());
+        drop(
+            server
+                .tasks
+                .spawn::<()>(async { panic!("controlled host panic") })
+                .unwrap(),
+        );
+        assert!(server.finish().await.is_err());
+        let diagnostic = core.quit_status().diagnostic.unwrap();
+        assert!(diagnostic.contains("controlled domain failure"));
+        assert!(diagnostic.contains("Host request cleanup"));
+    });
+}

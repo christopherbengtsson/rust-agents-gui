@@ -1200,15 +1200,14 @@ impl ConnectionServer {
     pub async fn finish(&self) -> io::Result<()> {
         self.core.begin_quit();
         let requests = self.tasks.close_and_wait().await;
-        let status = self.core.lifetime.finished().await;
-        if let Some(error) = status.diagnostic {
-            return Err(io::Error::other(error));
-        }
+        self.core.lifetime.finished().await;
         if let Err(error) = requests {
             self.core
                 .lifetime
                 .cleanup_failed(format!("Host request cleanup: {error}"));
-            return Err(error);
+        }
+        if let Some(error) = self.core.quit_status().diagnostic {
+            return Err(io::Error::other(error));
         }
         self.core.release_lease();
         Ok(())

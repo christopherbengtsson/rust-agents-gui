@@ -105,27 +105,39 @@ impl Core {
         lease: supervisor::StateLease,
     ) -> std::sync::Arc<Self> {
         let lifetime = std::sync::Arc::new(lifetime::Lifetime::starting(lease));
+        let workspace_directory = directory.clone();
+        Self::start_with(
+            lifetime,
+            move || workspaces::Workspaces::open(&workspace_directory),
+            move |journal| runtimes::ProviderConnections::open(journal, &directory),
+        )
+        .await
+    }
+    async fn start_with(
+        lifetime: std::sync::Arc<lifetime::Lifetime>,
+        open_workspace: impl FnOnce() -> Result<workspaces::Workspaces, workspaces::RepositoryError>
+        + Send
+        + 'static,
+        open_provider: impl FnOnce(
+            std::sync::Arc<observations::Journal>,
+        )
+            -> Result<runtimes::ProviderConnections, workspaces::RepositoryError>
+        + Send
+        + 'static,
+    ) -> std::sync::Arc<Self> {
         let task = tokio::spawn(async move {
             let mut core = Self {
                 lifetime,
                 ..Self::new()
             };
-            let workspace_directory = directory.clone();
-            let opened = tokio::task::spawn_blocking(move || {
-                workspaces::Workspaces::open(&workspace_directory)
-            })
-            .await;
+            let opened = tokio::task::spawn_blocking(open_workspace).await;
             let failure = match opened {
                 Ok(Ok(workspaces)) => {
                     core.lifetime.recovering();
                     core.journal = workspaces.journal();
                     core.workspaces = Some(workspaces);
                     let journal = core.journal.clone();
-                    match tokio::task::spawn_blocking(move || {
-                        runtimes::ProviderConnections::open(journal, &directory)
-                    })
-                    .await
-                    {
+                    match tokio::task::spawn_blocking(move || open_provider(journal)).await {
                         Ok(Ok(providers)) => {
                             core.providers = Some(std::sync::Arc::new(providers));
                             None
@@ -292,6 +304,52 @@ mod tests {
         }
     }
 
+    #[test]
+    fn partial_startup_drains_acquired_workspace_and_retains_failed_lease() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(async {
+                use std::sync::{
+                    Arc,
+                    atomic::{AtomicBool, Ordering},
+                };
+                let released = Arc::new(AtomicBool::new(false));
+                let completed = Arc::new(AtomicBool::new(false));
+                let marker = completed.clone();
+                let lifetime = Arc::new(lifetime::Lifetime::starting(
+                    supervisor::StateLease::controlled(released.clone()),
+                ));
+                let core = Core::start_with(
+                    lifetime,
+                    move || {
+                        Ok(workspaces::tests::controlled_completion(async move {
+                            marker.store(true, Ordering::SeqCst);
+                            Ok(())
+                        }))
+                    },
+                    |_| {
+                        Err(workspaces::RepositoryError::storage(
+                            "controlled provider startup failure",
+                        ))
+                    },
+                )
+                .await;
+                assert!(completed.load(Ordering::SeqCst));
+                assert_eq!(core.status().state, SupervisorState::Failed);
+                assert!(
+                    core.quit_status()
+                        .diagnostic
+                        .unwrap()
+                        .contains("controlled provider startup failure")
+                );
+                core.release_lease();
+                assert!(!released.load(Ordering::SeqCst));
+                // Test-only teardown of the deliberately retained failed owner.
+                core.keepalive.lock().unwrap().take();
+            });
+    }
     #[test]
     fn quit_deadline_and_lost_request_keep_the_same_drain_and_lease() {
         tokio::runtime::Builder::new_current_thread()
