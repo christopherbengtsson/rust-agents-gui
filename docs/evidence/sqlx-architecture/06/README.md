@@ -56,3 +56,9 @@ The current storage graph is unchanged: SQLx/sqlx-sqlite 0.9.0 and libsqlite3-sy
 React/shadcn review preparation includes the repository skills, installed Base UI 1.9.0 components, CLI 4.23.0 project context (Base UI/base-nova), and official Base Button/Dialog/Alert documentation. No toolkit components, dependency versions, tokens or primitive APIs were changed. The current frontend/native source adds no TypeScript `any`, double assertion, suppression, declaration shim or weakened checking coverage; existing assertions retain their prior scope.
 
 Remaining limits: no live provider/authentication/agent work; no real provider compatibility claim; no JavaScript heap byte measurement; no fresh-target compilation or full accessibility/user trial; no unimplemented chat continuity/stream-pressure claim. Actual fixture, units, normal package and historical evidence remain distinct. Future restart/update must share the native completion path: fence, await core/request/storage/feed completion, join native adapter resources, release the lease last, and only then invoke framework restart. No restart/update implementation is added here.
+
+## Completion and review
+
+Implementation commit: `1cb8f5a`. [Independent reviews](review.md) report **Standards 0 / Spec 0**, with both fresh agents accepting explicit GPT-6.1 (`gpt-6.1-sol`) / High selectors. React and shadcn were explicitly applied. [Source alignment](source-alignment.json) confirms that current Q4, complete verification and normal-package checks used the reviewed production/tooling source hashes. Subsequent changes record evidence only.
+
+The qualification processes and local HTTP servers have exited. CUA closed only remaining browser fixture tabs whose loopback ports matched this ticket's retained controls; unrelated tabs were left alone. Private fixture roots/worktrees and all prior evidence remain available. No ticket 07 implementation or parent/milestone closure is claimed.
