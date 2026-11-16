@@ -15,13 +15,17 @@ if (kind === "native") {
   });
   if (result.error) throw result.error;
   process.exitCode = result.status ?? 1;
-} else if (["storage", "effects"].includes(kind)) {
+} else if (["storage", "effects", "foundation"].includes(kind)) {
   if (args.length !== 1 || existsSync(args[0]))
     throw new Error("Expected one new report.json path");
   const target = cargoMetadata().target_directory;
   claimTarget(target);
   const name =
-    kind === "storage" ? "qualify-storage" : "qualify-process-effects";
+    kind === "storage"
+      ? "qualify-storage"
+      : kind === "foundation"
+        ? "qualify-foundation"
+        : "qualify-process-effects";
   const pkg = kind === "storage" ? "storage-checkpoint" : "workspace-core";
   const messages = runCommand("cargo", [
     "build",
@@ -59,7 +63,7 @@ if (kind === "native") {
   const result = spawnSync(artifacts[0].executable, invocation, {
     cwd: root,
     encoding: "utf8",
-    timeout: 90000,
+    timeout: kind === "foundation" ? 180000 : 90000,
     maxBuffer: 16 * 1024 * 1024,
   });
   const report = {
@@ -81,4 +85,7 @@ if (kind === "native") {
     `Qualification ${kind}: ${result.status === 0 ? "passed" : "failed"}; retained ${directory}`,
   );
   process.exitCode = result.status ?? 1;
-} else throw new Error("Expected storage, effects or native qualification");
+} else
+  throw new Error(
+    "Expected storage, effects, foundation or native qualification",
+  );

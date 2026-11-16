@@ -1,8 +1,3 @@
-import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent,
-} from "@/components/ui/collapsible";
 import { GitBranch, Folder, Check, CircleAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -65,7 +60,7 @@ export function WorkspaceDetails({
       </h2>
       <p className="repository-path">{workspace.name ?? "New workspace"}</p>
       <dl className="workspace-facts flex flex-col gap-4">
-        {workspace.path && !workspace.legacy && <>{locationFacts}</>}
+        {workspace.path && <>{locationFacts}</>}
         <div>
           <dt>Local base</dt>
           <dd>
@@ -107,18 +102,6 @@ export function WorkspaceDetails({
         <p className="muted-copy">
           A name and folder have not been reserved yet.
         </p>
-      )}
-      {workspace.legacy && workspace.path && (
-        <Collapsible>
-          <CollapsibleTrigger render={<Button variant="outline" size="sm" />}>
-            Show saved branch and folder
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <dl className="workspace-facts flex flex-col gap-4 pt-3">
-              {locationFacts}
-            </dl>
-          </CollapsibleContent>
-        </Collapsible>
       )}
       {busy && (
         <p role="status" className="flex items-center gap-2">

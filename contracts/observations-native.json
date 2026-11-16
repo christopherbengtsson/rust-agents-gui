@@ -124,7 +124,6 @@
               "name": null,
               "branch": null,
               "path": null,
-              "legacy": false,
               "base": null,
               "artifacts": {
                 "branch": "unknown",
@@ -159,7 +158,6 @@
                   "name": null,
                   "branch": null,
                   "path": null,
-                  "legacy": false,
                   "base": null,
                   "artifacts": {
                     "branch": "unknown",

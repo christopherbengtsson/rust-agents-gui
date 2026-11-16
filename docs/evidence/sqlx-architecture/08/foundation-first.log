@@ -1,0 +1,4 @@
+$ node scripts/qualify.mjs foundation docs/evidence/sqlx-architecture/08/foundation-first.json
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+Qualification foundation: failed; retained /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-foundation-RaGUxq
+[ELIFECYCLE] Command failed with exit code 1.

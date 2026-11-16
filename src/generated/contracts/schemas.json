@@ -3075,10 +3075,6 @@
           "id": {
             "$ref": "#/$defs/WorkspaceId"
           },
-          "legacy": {
-            "default": false,
-            "type": "boolean"
-          },
           "name": {
             "type": [
               "string",
@@ -3105,7 +3101,6 @@
           "name",
           "branch",
           "path",
-          "legacy",
           "base",
           "artifacts",
           "status",
@@ -6285,10 +6280,6 @@
       "id": {
         "$ref": "#/$defs/WorkspaceId"
       },
-      "legacy": {
-        "default": false,
-        "type": "boolean"
-      },
       "name": {
         "type": [
           "string",
@@ -6315,7 +6306,6 @@
       "name",
       "branch",
       "path",
-      "legacy",
       "base",
       "artifacts",
       "status",
@@ -6601,10 +6591,6 @@
           "id": {
             "$ref": "#/$defs/WorkspaceId"
           },
-          "legacy": {
-            "default": false,
-            "type": "boolean"
-          },
           "name": {
             "type": [
               "string",
@@ -6631,7 +6617,6 @@
           "name",
           "branch",
           "path",
-          "legacy",
           "base",
           "artifacts",
           "status",
@@ -7167,10 +7152,6 @@
           "id": {
             "$ref": "#/$defs/WorkspaceId"
           },
-          "legacy": {
-            "default": false,
-            "type": "boolean"
-          },
           "name": {
             "type": [
               "string",
@@ -7197,7 +7178,6 @@
           "name",
           "branch",
           "path",
-          "legacy",
           "base",
           "artifacts",
           "status",

@@ -353,11 +353,6 @@ async fn save_workspace(
     action: Option<&WorkspaceAction>,
     reservation: bool,
 ) -> Result<()> {
-    if workspace.legacy {
-        return Err(Error::Invalid(
-            "Retired workspace metadata is unsupported; use fresh private development state",
-        ));
-    }
     if let Some(path) = &workspace.path {
         validate_workspace_path(path).map_err(|_| conflict())?;
     }
@@ -491,8 +486,8 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
             match validation {
                 RecordShape::Registration => { let _: Registration = json(record)?; },
                 RecordShape::Repository => { let _: RepositoryRecord = json(record)?; },
-                RecordShape::Workspace => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
-                RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+                RecordShape::Workspace => { let _: Workspace = json(record)?; },
+                RecordShape::WorkspaceAction => { let _: (WorkspaceAction, Workspace) = json(record)?; },
                 RecordShape::Scalar => { let _: serde_json::Value = json(record)?; },
             }
         }

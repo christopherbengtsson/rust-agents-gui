@@ -241,9 +241,9 @@ Use meaningful human names for navigation, headings, badges and ordinary status.
 Keep internal UUIDs in keys, action targets and persistence; display them only in
 explicit troubleshooting details when needed. Do not append raw IDs to labels or
 show them as a fallback for missing names. Pending allocation displays “New
-workspace” and states that no name/folder is reserved. Newly allocated locations
-are readable; WorkspaceDetails discloses retained legacy branches/folders through
-an explicit keyboard-accessible Collapsible. No new toolkit component is needed.
+workspace” and states that no name/folder is reserved. Workspace locations
+are readable; WorkspaceDetails shows the current branch and folder in its facts
+list. Retired-build location disclosure was removed in SQLx ticket 08. No new toolkit component is needed.
 Connection failure replaces initial navigation skeletons with unavailable guidance;
 retained observations remain readable and marked stale.
 

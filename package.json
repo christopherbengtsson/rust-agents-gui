@@ -27,6 +27,7 @@
     "generated:write": "node scripts/prepare-generated.mjs --write",
     "generated:check": "node scripts/prepare-generated.mjs --check",
     "verify:ci": "node scripts/check.mjs ci",
+    "qualify:foundation": "node scripts/qualify.mjs foundation",
     "qualify:storage": "node scripts/qualify.mjs storage",
     "qualify:effects": "node scripts/qualify.mjs effects",
     "qualify:native": "node scripts/qualify.mjs native"

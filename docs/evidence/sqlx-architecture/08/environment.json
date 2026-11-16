@@ -1,0 +1,16 @@
+{
+  "source": "614606d69d04d238c9bf8e969ba048cd8972bca5",
+  "system": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "versions": {
+    "rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "node": "v26.13.1",
+    "pnpm": "12.18.0",
+    "hardware": "Mac16,8\n12\n51539607552",
+    "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56"
+  },
+  "target": "default claimed worktree target; no CARGO_TARGET_DIR override",
+  "cache": "warm dev/test/release; no fresh-private-target compile claim",
+  "threads": "one compiled Rust unit harness thread; one Vitest worker",
+  "provider": "no real runtime/authentication/agent actions; synthetic fixtures only"
+}

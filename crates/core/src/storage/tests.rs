@@ -190,7 +190,7 @@ fn current_records_retain_recovery_evidence_and_corruption_is_not_absence() {
     let record = serde_json::json!({
         "id": uuid::Uuid::nil(), "repository_id": uuid::Uuid::from_u128(1),
         "creation_action_id": uuid::Uuid::from_u128(2), "name":"marta", "branch":"workspace/marta",
-        "path":"/state/workspaces/repo/marta/checkout", "legacy":false, "base":null,
+        "path":"/state/workspaces/repo/marta/checkout", "base":null,
         "artifacts":{"branch":"owned","folder":"partial"},
         "status":{"state":"uncertain","error":{"code":"git","message":"Effect acknowledgment lost"}},
         "cleanup_unconfirmed":true

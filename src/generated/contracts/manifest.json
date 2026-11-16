@@ -10,7 +10,7 @@
   "sources": {
     "Cargo.toml": "0caac175e85bc14a4b451b5de04419f25b43673351c67b35c74952b0636b82a0",
     "Cargo.lock": "8ea62787c6637a9c7371144184d1c5c1af977b9c45cba415fdb8b7fdc2fc9cf1",
-    "crates/core/Cargo.toml": "7488e5c1a59aa59b9f0f55e6c54df80f973e9ad721c073f9c2eb78bdb0cf4649",
+    "crates/core/Cargo.toml": "0b41d07b91d32bcec656b061f2f48d679b57105db4f2f452800692ea091dcdef",
     "crates/core/src/lib.rs": "3e21fe84a479e779d9fbb92dadde4b0ef18a87abec0fd3116f56112f14a8ea07",
     "crates/core/src/codegen.rs": "0379a80dc63fec6d4a33b6da24c8c7d94d847d7762084828b666aa9e6711f77b",
     "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
@@ -21,16 +21,16 @@
     "crates/core/src/runtimes/provider_connection.rs": "c3cfd58f97e9d8701d04816efac24c180bb3e22058b49aedb667d104834e053d",
     "crates/core/src/runtimes/provider_connection/login.rs": "7df510e32177be582095d48b76f3999ae2f339cb8242f66d8805ffacfcb3bec2",
     "crates/core/src/runtimes/provider_connection/selection.rs": "df990645a22da3f67dc21de50d935161e2d62a7ac94a045c657e2f74f90cda0c",
-    "crates/core/src/workspaces/creation.rs": "1b8f2e0b3b59ac10dc1b9f654cde6c026398922a2100e12e1c89cfa442416239",
+    "crates/core/src/workspaces/creation.rs": "1b9cb06add151263ae5cf23496dadfd1aca91aa5c6d3680c2d0e708ab499aa43",
     "crates/core/src/workspaces/inspection.rs": "9743fc2f42c0f2368938392fb523e427c20ad6482b22715a4470abbc5a44d216",
-    "package.json": "0bcea432b8b8f664e93e1cb977dd0cd1b21aa254b2490327bf56acb3b3b2ee7f",
+    "package.json": "d8b3b0bddab027b7445f23939d272588db23074b5b9b49091d9be30e94a2c294",
     "pnpm-lock.yaml": "4e9e8b73ebb988a1f67d329a55dd93638089ebbb9cee03bf8599af0ce2f5b44c",
     "scripts/prepare-generated.mjs": "5e98f71efa28250437c7bcc0643eff2d85e40a36409f5dc83d0f6eb58e6cc6af"
   },
   "artifacts": {
-    "types.ts": "12415ba6832ffb027b2a86d4c846dcd9a99c92caa341ccbd34cd68eec24927f3",
-    "schemas.json": "a189f4963a0220c3ccdd05cefa424263998edb70cdffb8925f7dbb7973d8174c",
-    "validators.js": "03e7791ec07829a18090d27f8ff09aab786633657bdee6f4784692cd3bd4710b",
+    "types.ts": "03839c7a9de9c1cb91a08750efa1757bd84a89aad8bf328971172ffad03e03aa",
+    "schemas.json": "d9c7c10a25f7ded8fe671b374c3c8650374e838db26116a25ebf02c0e4dbaf2a",
+    "validators.js": "eb2950d9aa9c7d337a7736e385c24eca6987d0d54f4a1999e80b5afe2ab85f89",
     "validators.d.ts": "68fb249cb415b33d86f842e7f32dbbf82d943a6646d6df90b2683be2aefe9099"
   }
 }

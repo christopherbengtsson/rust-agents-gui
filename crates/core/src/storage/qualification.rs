@@ -233,7 +233,7 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         name: None,
         branch: None,
         path: None,
-        legacy: false,
+
         base: None,
         artifacts: Artifacts {
             branch: BranchArtifact::Unknown,
@@ -625,6 +625,7 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         )?;
         checks.push(json!({"case":kind,"status":"passed"}));
     }
+    checks.push(pressure(&root).await?);
     drop(lease); // All owners/drains above have physically completed their pool barriers.
     Ok(json!({
         "root":root, "sqlite_version":version,"sqlite_source_id":source,
@@ -632,4 +633,115 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         "not_performed":["physical disk-full/I/O fault", "physical rollback/close-ack failure", "process kill points", "power-loss durability", "same-user path-replacement races (excluded contract)", "native host and provider qualification"],
         "limits":"SQL fixture establishes commit-failure retirement, not disk-fault durability; pool barriers are not literal OS-thread joins"
     }))
+}
+
+// Actual queued work and undelivered results, through the production storage owner.
+async fn pressure(root: &Path) -> Result<Value> {
+    let path = directory(root, "pressure")?;
+    let store = owner(&path).await?;
+    let started = std::time::Instant::now();
+    let mut writes = Vec::new();
+    for number in 1_000..1_064 {
+        let mut write = request(number);
+        write.path = format!("/{}", "p".repeat(3_400));
+        writes.push(store.write(Write::RegistrationIntent(write))?);
+    }
+    ensure(
+        matches!(
+            store.write(Write::RegistrationIntent(request(1_064))),
+            Err(Error::Capacity)
+        ),
+        "Writer saturation created an unbounded waiter",
+    )?;
+    let mut retained = Vec::new();
+    for write in writes {
+        let delivery = write.await.map_err(|_| Error::Panic)?;
+        delivery.revision()?;
+        retained.push(delivery);
+    }
+    ensure(
+        matches!(
+            store.write(Write::RegistrationIntent(request(1_064))),
+            Err(Error::Capacity)
+        ),
+        "Undelivered writes released physical/result capacity",
+    )?;
+    // Completed writer results remain retained while the independent read reserve works.
+    let mut reads = Vec::new();
+    for _ in 0..8 {
+        reads.push(store.read(Read::Registration(ActionId(uuid::Uuid::from_u128(1_000))))?);
+    }
+    ensure(
+        matches!(
+            store.read(Read::Repositories { after: None }),
+            Err(Error::Capacity)
+        ),
+        "Read saturation created an unbounded waiter",
+    )?;
+    let mut read_results = Vec::new();
+    for read in reads {
+        let delivery = read.await.map_err(|_| Error::Panic)?;
+        delivery.revision()?;
+        read_results.push(delivery);
+    }
+    ensure(
+        matches!(
+            store.read(Read::Repositories { after: None }),
+            Err(Error::Capacity)
+        ),
+        "Undelivered reads released their capacity",
+    )?;
+    drop(read_results);
+    drop(retained);
+    written(&store, Write::RegistrationIntent(request(1_064))).await?;
+    let mut oversized = request(1_065);
+    oversized.path = "x".repeat(65_536);
+    ensure(
+        matches!(
+            store.write(Write::RegistrationIntent(oversized)),
+            Err(Error::Oversized)
+        ),
+        "Oversized input was admitted",
+    )?;
+    ensure(
+        matches!(
+            store.read(Read::CommonDirectory("x".repeat(4_097))),
+            Err(Error::Oversized)
+        ),
+        "Oversized read was admitted",
+    )?;
+    let mut after = None;
+    let (mut count, mut pages, mut bytes) = (0, 0, 0);
+    loop {
+        let page = snapshot(&store, Read::PendingRegistrations { after }).await?;
+        let retained_bytes = page.records.iter().map(String::len).sum::<usize>();
+        ensure(
+            page.records.len() <= 32 && retained_bytes <= 48 * 1024,
+            "Pressure page exceeded row/byte budget",
+        )?;
+        count += page.records.len();
+        pages += 1;
+        bytes += retained_bytes;
+        after = page
+            .next
+            .map(|next| uuid::Uuid::parse_str(&next).map(ActionId))
+            .transpose()
+            .map_err(|_| Error::Corrupt)?;
+        if after.is_none() {
+            break;
+        }
+    }
+    ensure(
+        count == 65 && pages > 2,
+        "Large retained metadata lost continuation",
+    )?;
+    let close = store.close().await;
+    ensure(close.faults.is_empty(), "Pressure close retained faults")?;
+    Ok(
+        json!({"case":"ordinary-saturation/read-reserve/retained-results/large-byte-pages",
+        "status":"passed", "admitted_writes":65, "retained_write_results":64,
+        "retained_read_results":8, "records":count, "pages":pages, "record_bytes":bytes,
+        "elapsed_ms":started.elapsed().as_secs_f64()*1000.0, "checkpoint":close.checkpoint,
+        "limits":"Actual SQLx fixture; no streamed output, end-to-end status latency or JS heap guarantee"}),
+    )
 }

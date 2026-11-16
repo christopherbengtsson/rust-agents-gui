@@ -148,21 +148,12 @@ export function repositoryError(value: unknown): RepositoryError {
       };
 }
 
-export const SELECTION_KEY = "agent-workspace.selected-repository";
 export const PENDING_KEY = "agent-workspace.pending-registration";
 export type PendingRegistration = {
   request: RegistrationRequest;
   selection: string | null;
   uncertain?: boolean;
 };
-export function readSelection(): string | null {
-  try {
-    const value = localStorage.getItem(SELECTION_KEY);
-    return identity(value) ? value : null;
-  } catch {
-    return null;
-  }
-}
 export function readPending(): PendingRegistration | null {
   try {
     const stored = localStorage.getItem(PENDING_KEY);

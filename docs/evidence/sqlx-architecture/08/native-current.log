@@ -1,0 +1,2 @@
+$ node scripts/qualify.mjs native 'target/release/bundle/macos/Agent Workspace.app' docs/evidence/sqlx-architecture/08/native-current.json
+{"report": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-current.json", "outcome": "passed", "root": "/private/tmp/aw-native07-i94kn4ge"}

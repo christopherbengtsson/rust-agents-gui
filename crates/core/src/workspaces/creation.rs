@@ -91,7 +91,7 @@ pub(crate) fn allocate(
         branch: None,
         name: None,
         path: None,
-        legacy: false,
+
         base: None,
         artifacts: Artifacts {
             branch: BranchArtifact::Unknown,

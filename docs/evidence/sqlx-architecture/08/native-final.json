@@ -1,0 +1,889 @@
+{
+  "root": "/private/tmp/aw-native07-16jaum2g",
+  "bundle": "/private/tmp/aw-native07-16jaum2g/Native07.app",
+  "repository": "/private/tmp/aw-native07-16jaum2g/repository",
+  "source": "614606d69d04d238c9bf8e969ba048cd8972bca5",
+  "binary_sha256": "6a17d43b97013a4fb56f37dc15c6a5cefa31bd176576ffd9b2fa20740d3ab617",
+  "fixture_sha256": "cfeb46bd02d2cdae024197874c7dfd26a2d1117d4e18075c152cc4748703cf30",
+  "checks": [
+    "registration plus first creation",
+    "two concurrent creations with inspection",
+    "synthetic readiness/login across navigation",
+    "actual WebView destruction/recreation preserves incarnation and exact login; cancellation settles",
+    "no application supervisor socket created",
+    "same-root competitor rejected before storage/effects and can quit",
+    "repeated native Quit after cancelled login completes with exit 0",
+    "same-root handover retains owner.lock inode",
+    "actual repeated Quit during active synthetic login cancels/joins work and exits 0",
+    "native kill/reopen changes incarnation, retains exact interrupted login and saved work, fences replacement without replay",
+    "failed cleanup retains native process and actual OS state lease through repeated Quit",
+    "explicit recovery kill after failed drain; not successful Quit",
+    "actual Quit during native startup retains initialization and exits after drain"
+  ],
+  "processes": [
+    {
+      "label": "initial",
+      "pid": 61905
+    },
+    {
+      "label": "competing-owner",
+      "pid": 63227
+    },
+    {
+      "label": "active-quit",
+      "pid": 63234
+    },
+    {
+      "label": "before-crash",
+      "pid": 63247
+    },
+    {
+      "label": "reopen",
+      "pid": 63307
+    },
+    {
+      "label": "startup-quit",
+      "pid": 63392
+    }
+  ],
+  "records": "/private/tmp/aw-native07-16jaum2g/webview.jsonl",
+  "limits": [
+    "Synthetic Codex protocol; no real authentication/agent calls",
+    "SIGKILL establishes process-crash recovery, not power loss",
+    "No live provider compatibility or authentication is established"
+  ],
+  "package_files": ["Contents/Info.plist", "Contents/MacOS/workspace-desktop"],
+  "driver_sha256": "f48da80f27d4f6d163cafaed586100a4e62fe517f8368d127c6ca5de489b6358",
+  "lock_sha256": "8ea62787c6637a9c7371144184d1c5c1af977b9c45cba415fdb8b7fdc2fc9cf1",
+  "fixture_provenance": "Codex 0.169.0 / d32063f96c2dff1dc96af839b3952abb6acfeda4; synthetic readiness/login only",
+  "outcome": "passed",
+  "fixture_events": [
+    {
+      "pid": 63161,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63218,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63218,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63218,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63218,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63218,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 63218,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 63218,
+      "event": "exit"
+    },
+    {
+      "pid": 63219,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63220,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63220,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63220,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63220,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63220,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 63220,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 63220,
+      "event": "login_cancelled",
+      "login_id": "bafffdcc-303f-4db4-b483-715009c71100"
+    },
+    {
+      "pid": 63220,
+      "event": "exit"
+    },
+    {
+      "pid": 63225,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63226,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63226,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63226,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63226,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63226,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 63226,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 63226,
+      "event": "exit"
+    },
+    {
+      "pid": 63239,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63240,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63240,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63240,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63240,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63240,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 63240,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 63240,
+      "event": "exit"
+    },
+    {
+      "pid": 63241,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63242,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63242,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63242,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63242,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63242,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 63242,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 63242,
+      "event": "login_cancelled",
+      "login_id": "a4336550-206f-4338-bf72-ba287deacc24"
+    },
+    {
+      "pid": 63242,
+      "event": "exit"
+    },
+    {
+      "pid": 63302,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63303,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63303,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63303,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63303,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63303,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 63303,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 63303,
+      "event": "exit"
+    },
+    {
+      "pid": 63304,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 63305,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 63305,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 63305,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 63305,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 63305,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 63305,
+      "event": "exit"
+    }
+  ],
+  "webview_records": [
+    {
+      "pid": 61905,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "6ee12f24-ed41-4be4-9c3f-0ed29312704d",
+          "revision": 1
+        },
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 61905,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "heap": null,
+      "heapLimit": "WebKit heap API unavailable when null; count is not a byte guarantee",
+      "retained": {
+        "entries": 129,
+        "fetching": 0,
+        "inactive": 128,
+        "observed": 1,
+        "offeredBodyBytesPerEntry": 49152,
+        "offeredEntries": 160,
+        "retainedFixtureJsonBytes": 6294332
+      },
+      "stage": "retention"
+    },
+    {
+      "concurrent": [
+        {
+          "action": {
+            "action_id": "1c44e32e-995a-4ca1-bb5f-38759532255e",
+            "operation": "create",
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "base": null,
+            "branch": null,
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "1c44e32e-995a-4ca1-bb5f-38759532255e",
+            "id": "938fb271-6d54-4cbb-954c-17ba3d3eb29f",
+            "name": null,
+            "path": null,
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+            "status": {
+              "state": "queued"
+            }
+          }
+        },
+        {
+          "action": {
+            "action_id": "88c10227-ea19-404e-844d-b394523e1e3f",
+            "operation": "create",
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "base": null,
+            "branch": null,
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "88c10227-ea19-404e-844d-b394523e1e3f",
+            "id": "e8c7445f-8f18-4575-aabe-c6e1a3069422",
+            "name": null,
+            "path": null,
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+            "status": {
+              "state": "queued"
+            }
+          }
+        },
+        {
+          "kind": "changes",
+          "observation": {
+            "error": null,
+            "page": null,
+            "phase": "queued",
+            "workspace_id": "faf9bd1d-7106-4f21-b2e4-612d5f98e2ae"
+          }
+        }
+      ],
+      "created": [
+        {
+          "action": {
+            "action_id": "1c44e32e-995a-4ca1-bb5f-38759532255e",
+            "operation": "create",
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "owned",
+              "folder": "worktree"
+            },
+            "base": {
+              "commit": "fdbbfea5c2693d1663759d266605e923c98c67ae",
+              "reference": "refs/heads/main"
+            },
+            "branch": "workspace/ruud-gullit",
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "1c44e32e-995a-4ca1-bb5f-38759532255e",
+            "id": "938fb271-6d54-4cbb-954c-17ba3d3eb29f",
+            "name": "ruud-gullit",
+            "path": "/private/tmp/aw-native07-16jaum2g/state/workspaces/repository/ruud-gullit/checkout",
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+            "status": {
+              "state": "ready"
+            }
+          }
+        },
+        {
+          "action": {
+            "action_id": "88c10227-ea19-404e-844d-b394523e1e3f",
+            "operation": "create",
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "owned",
+              "folder": "worktree"
+            },
+            "base": {
+              "commit": "fdbbfea5c2693d1663759d266605e923c98c67ae",
+              "reference": "refs/heads/main"
+            },
+            "branch": "workspace/ricardo-quaresma",
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "88c10227-ea19-404e-844d-b394523e1e3f",
+            "id": "e8c7445f-8f18-4575-aabe-c6e1a3069422",
+            "name": "ricardo-quaresma",
+            "path": "/private/tmp/aw-native07-16jaum2g/state/workspaces/repository/ricardo-quaresma/checkout",
+            "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+            "status": {
+              "state": "ready"
+            }
+          }
+        }
+      ],
+      "initial": {
+        "kind": "workspace",
+        "workspace": {
+          "artifacts": {
+            "branch": "owned",
+            "folder": "worktree"
+          },
+          "base": {
+            "commit": "fdbbfea5c2693d1663759d266605e923c98c67ae",
+            "reference": "refs/heads/main"
+          },
+          "branch": "workspace/vivianne-miedema",
+          "cleanup_unconfirmed": false,
+          "creation_action_id": "e2336197-6f9d-4709-8942-378894ff9a99",
+          "id": "faf9bd1d-7106-4f21-b2e4-612d5f98e2ae",
+          "name": "vivianne-miedema",
+          "path": "/private/tmp/aw-native07-16jaum2g/state/workspaces/repository/vivianne-miedema/checkout",
+          "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+          "status": {
+            "state": "ready"
+          }
+        }
+      },
+      "registration": {
+        "action_id": "342317a4-1d7d-44fe-90d5-ff08e71a787a",
+        "create_initial_workspace": true,
+        "initial_workspace_id": "faf9bd1d-7106-4f21-b2e4-612d5f98e2ae",
+        "path": "/private/tmp/aw-native07-16jaum2g/repository",
+        "repository_id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+        "state": "completed"
+      },
+      "stage": "workspaces"
+    },
+    {
+      "facts": "Workspace readyYour workspace is readyvivianne-miedemaBranchworkspace/vivianne-miedemaWorkspace folder/private/tmp/aw-native07-16jaum2g/state/workspaces/repository/vivianne-miedema/checkoutLocal baserefs/heads/main \u00b7 fdbbfea5c2693d1663759d266605e923c98c67aeBranch artifactCreated by this actionFolder artifactWorktree createdIsolated checkout createdYour workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.",
+      "stage": "current-workspace-facts"
+    },
+    {
+      "attempt": "5029f4f2-9027-46bb-b9e8-649c013f457c",
+      "incarnation": "6ee12f24-ed41-4be4-9c3f-0ed29312704d",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "5029f4f2-9027-46bb-b9e8-649c013f457c",
+          "outcome": null,
+          "phase": "pending"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 4,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native07-16jaum2g/synthetic-codex",
+          "id": "76989f58-2b99-41e3-93c4-e3ac2755932a",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-76989f58-2b99-41e3-93c4-e3ac2755932a"
+        }
+      },
+      "stage": "replace-ready",
+      "text": "Skip to settings\nCodex sign-in in progress\nBack\nSettings\nGeneral\nProviders\nGeneral\nGeneral settings will be available here."
+    },
+    {
+      "pid": 61905,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "6ee12f24-ed41-4be4-9c3f-0ed29312704d",
+          "revision": 42
+        },
+        "provider_login_pending": true,
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 61905,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "incarnation": "6ee12f24-ed41-4be4-9c3f-0ed29312704d",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "5029f4f2-9027-46bb-b9e8-649c013f457c",
+          "outcome": null,
+          "phase": "pending"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 5,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native07-16jaum2g/synthetic-codex",
+          "id": "76989f58-2b99-41e3-93c4-e3ac2755932a",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-76989f58-2b99-41e3-93c4-e3ac2755932a"
+        }
+      },
+      "stage": "reattached",
+      "text": "Skip to workspace\nAgent Workspace\nRepositories\nAdd repository\nConnected\nConnection details\nLoading destination\u2026\nThe exact destination has not been confirmed. Retry its observations when the core is available.\nRetry destination"
+    },
+    {
+      "incarnation": "6ee12f24-ed41-4be4-9c3f-0ed29312704d",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "5029f4f2-9027-46bb-b9e8-649c013f457c",
+          "outcome": "cancelled",
+          "phase": "cancelled"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 8,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native07-16jaum2g/synthetic-codex",
+          "id": "76989f58-2b99-41e3-93c4-e3ac2755932a",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-76989f58-2b99-41e3-93c4-e3ac2755932a"
+        }
+      },
+      "stage": "cancelled",
+      "text": "Skip to settings\nBack\nSettings\nGeneral\nProviders\nProviders\nCodex\nClaude Code\nNot connected\nSign in with ChatGPT in your browser. Codex manages your credentials.\nBrowser sign-in cancelled\nSign in\nTechnical details"
+    },
+    {
+      "pid": 63227,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "0d1a8c5e-2f9a-4782-80e9-a76f8db3932d",
+          "revision": 1
+        },
+        "diagnostic": "Another native core may own this state. Close its app and check status; never remove owner.lock: operation would block",
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 63227,
+          "state": "failed"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "snapshot": {
+        "cursor": {
+          "incarnation": "0d1a8c5e-2f9a-4782-80e9-a76f8db3932d",
+          "revision": 1
+        },
+        "diagnostic": "Another native core may own this state. Close its app and check status; never remove owner.lock: operation would block",
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 63227,
+          "state": "failed"
+        }
+      },
+      "stage": "excluded"
+    },
+    {
+      "pid": 63234,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "17db53e3-80d5-457d-b63f-95568087c386",
+          "revision": 1
+        },
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 63234,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "attempt": "bd310ae8-678d-4287-9c00-6f8551246243",
+      "incarnation": "17db53e3-80d5-457d-b63f-95568087c386",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "bd310ae8-678d-4287-9c00-6f8551246243",
+          "outcome": null,
+          "phase": "pending"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 4,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native07-16jaum2g/synthetic-codex",
+          "id": "adaad5e0-4c29-4a04-889e-01077ae2aaba",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-adaad5e0-4c29-4a04-889e-01077ae2aaba"
+        }
+      },
+      "stage": "active-quit-ready"
+    },
+    {
+      "pid": 63247,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "ae32378e-2685-4d20-be1d-3853e359acd3",
+          "revision": 1
+        },
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 63247,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "attempt": "e2fa0b1a-2609-45d6-b108-d3d68c1fa509",
+      "incarnation": "ae32378e-2685-4d20-be1d-3853e359acd3",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "e2fa0b1a-2609-45d6-b108-d3d68c1fa509",
+          "outcome": null,
+          "phase": "pending"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 4,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native07-16jaum2g/synthetic-codex",
+          "id": "af87b871-9754-4562-bbed-fa5aa2a7bb2c",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-af87b871-9754-4562-bbed-fa5aa2a7bb2c"
+        }
+      },
+      "stage": "kill-ready"
+    },
+    {
+      "pid": 63307,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "7d9d2895-5980-4359-8439-a248af1bd5a2",
+          "revision": 1
+        },
+        "provider_login_pending": true,
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 63307,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "incarnation": "7d9d2895-5980-4359-8439-a248af1bd5a2",
+      "observation": {
+        "diagnostic": "Provider action e2fa0b1a-2609-45d6-b108-d3d68c1fa509 was interrupted before durable settlement. This credential scope remains fenced; no action was replayed.",
+        "evidence": null,
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": "The previous core lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped.",
+          "id": "e2fa0b1a-2609-45d6-b108-d3d68c1fa509",
+          "outcome": null,
+          "phase": "cleanup_uncertain"
+        },
+        "phase": "cleanup_uncertain",
+        "problem": "cleanup_uncertain",
+        "revision": 0,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": null,
+          "executable": null,
+          "id": "dafaac74-7302-40fe-93df-245d2086a3b4",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-dafaac74-7302-40fe-93df-245d2086a3b4"
+        }
+      },
+      "rejected": {
+        "incarnation": "7d9d2895-5980-4359-8439-a248af1bd5a2",
+        "result": {
+          "Err": {
+            "code": "connection",
+            "message": "Check and validate Codex before signing in"
+          }
+        }
+      },
+      "repositories": {
+        "kind": "repositories",
+        "page": {
+          "next": null,
+          "repositories": [
+            {
+              "availability": {
+                "state": "checking"
+              },
+              "id": "a805d0b5-dd10-4907-bc9b-403586d7ea96",
+              "name": "repository",
+              "path": "/private/tmp/aw-native07-16jaum2g/repository"
+            }
+          ]
+        }
+      },
+      "stage": "recovered"
+    }
+  ],
+  "exit_codes": {
+    "61905": 0,
+    "63227": 0,
+    "63234": 0,
+    "63247": -9,
+    "63307": -9,
+    "63392": 0
+  },
+  "native_logs": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-final-initial.log",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-final-competing-owner.log",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-final-active-quit.log",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-final-before-crash.log",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-final-reopen.log",
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/08/native-final-startup-quit.log"
+  ]
+}

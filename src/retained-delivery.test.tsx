@@ -142,7 +142,7 @@ test.each(rejection)(
             name: null,
             branch: null,
             path: null,
-            legacy: false,
+
             base: null,
             artifacts: { branch: "unknown", folder: "unknown" },
             status: { state: "queued" },
@@ -257,7 +257,7 @@ test("a callback captured before incarnation replacement cannot select its old-i
             name: null,
             branch: null,
             path: null,
-            legacy: false,
+
             base: null,
             artifacts: { branch: "unknown", folder: "unknown" },
             status: { state: "queued" },
@@ -336,7 +336,7 @@ test("retained repository and workspace lookups reject conflicting payloads with
             name: null,
             branch: null,
             path: null,
-            legacy: false,
+
             base: null,
             artifacts: { branch: "unknown", folder: "unknown" },
             status: { state: "queued" },

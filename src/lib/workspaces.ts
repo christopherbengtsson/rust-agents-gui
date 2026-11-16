@@ -1,7 +1,6 @@
 import type { ObservationScope } from "./observation-coordinator";
 import { invoke } from "@tauri-apps/api/core";
 import {
-  identity,
   object,
   bounded,
   domainError,
@@ -148,23 +147,7 @@ export function decodeWorkspaceReply(
     "Invalid workspace observation or target identity. Refresh recorded status using a matching desktop/core build.",
   );
 }
-export const WORKSPACE_SELECTION = "agent-workspace.selected-workspace";
 export const WORKSPACE_PENDING = "agent-workspace.pending-workspace";
-export function readWorkspaceSelection(): {
-  repository_id: string;
-  workspace_id: string;
-} | null {
-  try {
-    const v: unknown = JSON.parse(
-      localStorage.getItem(WORKSPACE_SELECTION) ?? "null",
-    );
-    if (object(v) && identity(v.repository_id) && identity(v.workspace_id))
-      return { repository_id: v.repository_id, workspace_id: v.workspace_id };
-  } catch {
-    /* Preferences grant no execution authority. */
-  }
-  return null;
-}
 export type PendingWorkspace = { request: WorkspaceAction; uncertain: boolean };
 export function readWorkspacePending(): PendingWorkspace | null {
   try {
@@ -173,7 +156,6 @@ export function readWorkspacePending(): PendingWorkspace | null {
     );
     if (object(v) && validateWorkspaceAction(v.request))
       return { request: v.request, uncertain: v.uncertain !== false };
-    if (validateWorkspaceAction(v)) return { request: v, uncertain: true };
   } catch {
     /* Reconnect never invents a request or removes stored recovery evidence. */
   }

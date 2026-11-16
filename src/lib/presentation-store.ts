@@ -1,7 +1,5 @@
 import { createStore, type StateCreator } from "zustand/vanilla";
 import { persist, type PersistStorage } from "zustand/middleware";
-import { SELECTION_KEY } from "./repositories";
-import { WORKSPACE_SELECTION } from "./workspaces";
 import { savedDestination, type MainDestination } from "./navigation";
 import { identity, object } from "./observation-contracts";
 import type { ChangedFile } from "./changes";
@@ -131,55 +129,16 @@ export function createPresentationStore(
   const storage: PersistStorage<Preferences> = {
     getItem: (key) => {
       const raw = getStorage().getItem(key);
-      const legacy = () => {
-        const repositoryId = getStorage().getItem(SELECTION_KEY);
-        if (!identity(repositoryId)) return;
-        const rawWorkspace = getStorage().getItem(WORKSPACE_SELECTION);
-        let workspace: unknown;
-        try {
-          workspace = rawWorkspace ? JSON.parse(rawWorkspace) : null;
-        } catch {
-          /* Discardable legacy selection. */
-        }
-        const view = "workspace";
-        return object(workspace) &&
-          workspace.repository_id === repositoryId &&
-          identity(workspace.workspace_id)
-          ? savedDestination({
-              kind: "workspace",
-              repositoryId,
-              workspaceId: workspace.workspace_id,
-              view,
-            })
-          : savedDestination({ kind: "repository", repositoryId });
-      };
-      if (raw === null) {
-        const rememberedMain = legacy();
-        return {
-          version: rememberedMain ? 1 : 2,
-          state: {
-            inspection: {},
-            contexts: {},
-            ...(rememberedMain ? { rememberedMain } : {}),
-          },
-        };
-      }
+      if (raw === null)
+        return { version: 2, state: { inspection: {}, contexts: {} } };
       const envelope: unknown = JSON.parse(raw);
       if (
         !object(envelope) ||
-        !Number.isSafeInteger(envelope.version) ||
-        typeof envelope.version !== "number" ||
+        envelope.version !== 2 ||
         !object(envelope.state)
       )
         throw new Error("Invalid presentation record");
       const decoded = preferences(envelope.state);
-      if (envelope.version < 2 && !decoded.rememberedMain) {
-        const target = legacy();
-        if (target?.kind === "workspace")
-          target.view =
-            decoded.contexts[target.workspaceId]?.view ?? "workspace";
-        decoded.rememberedMain = target;
-      }
       return { version: envelope.version, state: decoded };
     },
     setItem: (key, value) => {
@@ -300,20 +259,13 @@ export function createPresentationStore(
             ? { rememberedMain: state.rememberedMain }
             : {}),
         }),
-      // Version 0 accepts the prior lightweight selection shape, defaulting new
-      // fields. This is a synthetic compatibility contract, never a shipped key.
-      migrate: (state, version) => {
-        if (version !== 0 && version !== 1)
-          throw new Error("Unsupported presentation preference version");
-        return preferences(state);
-      },
       merge: (saved, current) =>
         saved === undefined ? current : { ...current, ...preferences(saved) },
       onRehydrateStorage: () => (_state, error) => {
         if (error) {
           writable = false; // Preserve unreadable/future data instead of overwriting it.
           reportError(
-            "The desktop could not read or migrate presentation preferences. Using defaults in this window; the saved record has been preserved.",
+            "The desktop could not read presentation preferences. Use fresh private development state. Using defaults in this window; the saved record has been preserved.",
           );
         }
       },

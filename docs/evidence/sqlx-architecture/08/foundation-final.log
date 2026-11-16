@@ -1,0 +1,4 @@
+$ node scripts/qualify.mjs foundation docs/evidence/sqlx-architecture/08/foundation-final.json
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.89s
+Qualification foundation: passed; retained /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-foundation-yREeD4

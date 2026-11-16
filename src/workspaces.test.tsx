@@ -25,7 +25,6 @@ const w: Workspace = {
   artifacts: { branch: "owned", folder: "worktree" },
   status: { state: "ready" },
   cleanup_unconfirmed: false,
-  legacy: false,
 };
 beforeEach(() => {
   localStorage.clear();

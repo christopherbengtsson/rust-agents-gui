@@ -107,7 +107,7 @@ fn application_corpus_matches_pure_rust_serialization() {
             name: None,
             branch: None,
             path: None,
-            legacy: false,
+
             base: None,
             artifacts: Artifacts {
                 branch: BranchArtifact::Unknown,

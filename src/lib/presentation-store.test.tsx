@@ -67,46 +67,6 @@ test("reopening restores only allowlisted workspace presentation context", () =>
   });
 });
 
-test("version-zero presentation migrates without touching pending identities or old navigation keys", () => {
-  const storage = memory();
-  storage.setItem(
-    "agent-workspace.pending-registration",
-    '{"action_id":"keep-registration","uncertain":true}',
-  );
-  storage.setItem(
-    "agent-workspace.pending-workspace",
-    '{"action_id":"keep-workspace","uncertain":true}',
-  );
-  storage.setItem("agent-workspace.selected-repository", file);
-  storage.setItem(
-    PRESENTATION_KEY,
-    JSON.stringify({
-      version: 0,
-      state: {
-        inspection: { [workspace]: { id: file, path: "a.ts", comparison } },
-        credentials: "excluded",
-        preview: { rows: ["excluded"] },
-        pending: { uncertain: false },
-      },
-    }),
-  );
-  const before = new Map(storage.values);
-  const store = createPresentationStore(() => storage);
-  expect(store.getState().inspection[workspace]?.id).toBe(file);
-  expect(store.getState().contexts).toEqual({});
-  expect(store.getState().storageError).toBeUndefined();
-  for (const [key, value] of before)
-    if (key !== PRESENTATION_KEY) expect(storage.getItem(key)).toBe(value);
-  expect(JSON.parse(storage.getItem(PRESENTATION_KEY) ?? "null")).toEqual({
-    version: 2,
-    state: {
-      inspection: { [workspace]: { id: file, path: "a.ts", comparison } },
-      contexts: {},
-      rememberedMain: { kind: "repository", repositoryId: file },
-    },
-  });
-});
-
 test.each([
   "{",
   JSON.stringify({ version: 9, state: { inspection: {}, contexts: {} } }),
@@ -154,7 +114,7 @@ test.each([
     const storage = memory();
     storage.setItem(PRESENTATION_KEY, raw);
     const store = createPresentationStore(() => storage);
-    expect(store.getState().storageError).toMatch(/read or migrate/);
+    expect(store.getState().storageError).toMatch(/read presentation/);
     expect(store.getState().inspection).toEqual({});
     store.getState().rememberView(workspace, "changes");
     expect(store.getState().contexts[workspace]?.view).toBe("changes");
@@ -166,7 +126,7 @@ test("storage acquisition/read/write failures are visible and cannot recurse or 
   const unavailable = createPresentationStore(() => {
     throw new Error("denied");
   });
-  expect(unavailable.getState().storageError).toMatch(/read or migrate/);
+  expect(unavailable.getState().storageError).toMatch(/read presentation/);
   const denied = createPresentationStore(() => ({
     getItem: () => {
       throw new Error("read denied");
@@ -178,7 +138,7 @@ test("storage acquisition/read/write failures are visible and cannot recurse or 
       throw new Error("must not remove");
     },
   }));
-  expect(denied.getState().storageError).toMatch(/read or migrate/);
+  expect(denied.getState().storageError).toMatch(/read presentation/);
   let writes = 0;
   const full = createPresentationStore(() => ({
     getItem: () => null,
@@ -224,9 +184,9 @@ test("reselecting the same comparison and file preserves reading context", () =>
   });
 });
 
-test.each([0, 9])(
-  "preference migration version %i preserves usable pending action payloads and sticky uncertainty",
-  async (version) => {
+test.each(["current", "unreadable"])(
+  "%s preferences preserve usable pending action payloads and sticky uncertainty",
+  async (scenario) => {
     const { readPending, PENDING_KEY } = await import("./repositories");
     const { readWorkspacePending, WORKSPACE_PENDING } =
       await import("./workspaces");
@@ -252,7 +212,12 @@ test.each([0, 9])(
     localStorage.setItem(WORKSPACE_PENDING, JSON.stringify(creation));
     localStorage.setItem(
       PRESENTATION_KEY,
-      JSON.stringify({ version, state: { inspection: {} } }),
+      scenario === "unreadable"
+        ? "{"
+        : JSON.stringify({
+            version: 2,
+            state: { inspection: {}, contexts: {} },
+          }),
     );
     const store = createPresentationStore();
     store.getState().rememberView(workspace, "changes");
@@ -267,27 +232,3 @@ test.each([0, 9])(
     localStorage.clear();
   },
 );
-
-test("legacy selection becomes a restoration default and preserves pending bytes", () => {
-  const storage = memory();
-  storage.setItem("agent-workspace.selected-repository", file);
-  storage.setItem(
-    "agent-workspace.selected-workspace",
-    JSON.stringify({ repository_id: file, workspace_id: workspace }),
-  );
-  storage.setItem("agent-workspace.pending-workspace", "retained bytes");
-  const store = createPresentationStore(() => storage);
-  expect(store.getState().rememberedMain).toEqual({
-    kind: "workspace",
-    repositoryId: file,
-    workspaceId: workspace,
-    view: "workspace",
-  });
-  store.getState().rememberMain({ kind: "repository", repositoryId: file });
-  expect(
-    createPresentationStore(() => storage).getState().rememberedMain,
-  ).toEqual({ kind: "repository", repositoryId: file });
-  expect(storage.getItem("agent-workspace.pending-workspace")).toBe(
-    "retained bytes",
-  );
-});

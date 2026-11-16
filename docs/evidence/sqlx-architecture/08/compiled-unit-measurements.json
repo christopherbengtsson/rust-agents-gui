@@ -1,0 +1,41 @@
+{
+  "command": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-5bebefa315110a41",
+    "--test-threads=1"
+  ],
+  "profile": "already compiled test; warm target; no concurrent build/check",
+  "runs": [
+    {
+      "run": "warm-up",
+      "seconds": 0.3515172499464825,
+      "exit": 0
+    },
+    {
+      "run": 1,
+      "seconds": 0.3536920000333339,
+      "exit": 0
+    },
+    {
+      "run": 2,
+      "seconds": 0.35545699996873736,
+      "exit": 0
+    },
+    {
+      "run": 3,
+      "seconds": 0.3603075839346275,
+      "exit": 0
+    },
+    {
+      "run": 4,
+      "seconds": 0.3538718749769032,
+      "exit": 0
+    },
+    {
+      "run": 5,
+      "seconds": 0.35485750006046146,
+      "exit": 0
+    }
+  ],
+  "median": 0.35485750006046146,
+  "range": [0.3536920000333339, 0.3603075839346275]
+}

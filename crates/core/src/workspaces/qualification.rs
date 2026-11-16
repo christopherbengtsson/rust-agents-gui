@@ -283,6 +283,8 @@ async fn cohort(
             "Original file changed",
         )?;
     }
+    let allocation = allocation_continuation(owner, storage, &wa, root).await?;
+    let pressure = pressure(owner, storage, &wa, &wb).await?;
     // Exercise two concurrent raw typed claims on one candidate, separately from
     // the domain decision gate. One must lose without poisoning writer admission.
     owner.fence().await;
@@ -350,6 +352,213 @@ async fn cohort(
     // either pending record. Fencing prevents their later dispatch during close.
     owner.fence().await;
     Ok(
-        json!({"root":root,"checks":["concurrent-registration-and-first-continuations","global-app-folder-collision","same-repository-distinct-permanent-names","concurrent-disposable-git-worktrees","pinned-base-and-original-checkout-protection","concurrent-sqlx-claim-winner-and-settled-conflict","explicit-reconcile-retains-pinned-location-and-original-action","nil-action-identity-creation"],"workspaces":[wa,wb,first,second,nil],"desktop":"not run: combined provider conversion remains ticket 04","providers":"not run"}),
+        json!({"root":root,"checks":["concurrent-registration-and-first-continuations","global-app-folder-collision","same-repository-distinct-permanent-names","concurrent-disposable-git-worktrees","pinned-base-and-original-checkout-protection","concurrent-sqlx-claim-winner-and-settled-conflict","explicit-reconcile-retains-pinned-location-and-original-action","nil-action-identity-creation"],"workspaces":[wa,wb,first,second,nil],"allocation":allocation,"pressure":pressure,"desktop":"separate native fixture cohort","providers":"synthetic connection evidence separate; no live provider"}),
+    )
+}
+
+async fn inspected(owner: &Workspaces, workspace: WorkspaceId) -> Result<()> {
+    owner
+        .workspace_request(WorkspaceRequest::Changes {
+            workspace_id: workspace,
+            refresh: true,
+            comparison_id: None,
+            after: None,
+        })
+        .await?;
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(20);
+    loop {
+        let reply = owner
+            .workspace_request(WorkspaceRequest::Changes {
+                workspace_id: workspace,
+                refresh: false,
+                comparison_id: None,
+                after: None,
+            })
+            .await?;
+        if let WorkspaceReply::Changes { observation } = reply {
+            ensure(
+                observation.phase != InspectionPhase::Failed,
+                "Read-only inspection failed",
+            )?;
+            if observation.phase == InspectionPhase::Ready {
+                return Ok(());
+            }
+        }
+        ensure(
+            tokio::time::Instant::now() < deadline,
+            "Inspection deadline expired",
+        )?;
+        tokio::time::sleep(Duration::from_millis(5)).await;
+    }
+}
+
+// Fixed offered fixture trace: 512 large metadata commits and 16 read-only Git
+// inspections in A, while one independent creation in B must finish before both
+// noisy producers finish. This is foundation progress, never chat stream fairness.
+async fn pressure(
+    owner: &Workspaces,
+    storage: &crate::storage::Storage,
+    noisy: &Workspace,
+    quiet: &Workspace,
+) -> Result<Value> {
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    let writes = AtomicUsize::new(0);
+    let inspections = AtomicUsize::new(0);
+    let started = std::time::Instant::now();
+    let noise_actions: Vec<_> = (0..512).map(|_| Uuid::new_v4()).collect();
+    let writer = async {
+        for (number, id) in noise_actions.iter().enumerate() {
+            save(
+                storage,
+                Write::ProviderIntent(crate::storage::ProviderAction {
+                    id: *id,
+                    scope: format!("synthetic-foundation-pressure-{number}"),
+                    provider: "codex".into(),
+                    target: Uuid::nil(),
+                    revision: 0,
+                    executable: None,
+                    operation: crate::storage::ProviderOperation::Selection(format!(
+                        "/synthetic/{}",
+                        "p".repeat(3_400)
+                    )),
+                }),
+            )
+            .await?;
+            writes.fetch_add(1, Ordering::SeqCst);
+            tokio::time::sleep(Duration::from_millis(1)).await;
+        }
+        Ok::<_, RepositoryError>(())
+    };
+    let effects = async {
+        for _ in 0..16 {
+            inspected(owner, noisy.id).await?;
+            inspections.fetch_add(1, Ordering::SeqCst);
+        }
+        Ok::<_, RepositoryError>(())
+    };
+    let quiet_work = async {
+        // Start after both producers have made observable progress.
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(20);
+        while writes.load(Ordering::SeqCst) == 0 || inspections.load(Ordering::SeqCst) == 0 {
+            ensure(
+                tokio::time::Instant::now() < deadline,
+                "Noisy fixture failed to start",
+            )?;
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+        let reply = owner
+            .workspace_request(WorkspaceRequest::Create {
+                action_id: ActionId(Uuid::new_v4()),
+                repository_id: quiet.repository_id,
+            })
+            .await?;
+        let WorkspaceReply::Action {
+            workspace: Some(workspace),
+            ..
+        } = reply
+        else {
+            return Err(RepositoryError::storage("Missing quiet creation"));
+        };
+        let completed = ready(owner, workspace.id).await?;
+        let progress = (
+            writes.load(Ordering::SeqCst),
+            inspections.load(Ordering::SeqCst),
+        );
+        ensure(
+            progress.0 < 512 && progress.1 < 16,
+            "Quiet creation only completed after noisy producers finished",
+        )?;
+        Ok::<_, RepositoryError>((
+            completed,
+            progress,
+            started.elapsed().as_secs_f64() * 1000.0,
+        ))
+    };
+    let (writer, effects, quiet_result) = tokio::join!(writer, effects, quiet_work);
+    writer?;
+    effects?;
+    let (completed, progress, quiet_ms) = quiet_result?;
+    let mut retained = 0;
+    for id in noise_actions {
+        let saved =
+            one::<(crate::storage::ProviderAction, i64)>(storage, Read::ProviderAction(id)).await?;
+        ensure(
+            saved.is_some_and(|(action, completed)| action.id == id && completed == 0),
+            "Pressure lost exact retained synthetic metadata",
+        )?;
+        retained += 1;
+    }
+    Ok(
+        json!({"case":"quiet-creation-during-large-storage-and-read-only-effect-pressure",
+        "status":"passed", "offered_commits":512,"settled_commits":writes.load(Ordering::SeqCst),
+        "retained_synthetic_action_records":retained, "completed_inspections":inspections.load(Ordering::SeqCst),
+        "quiet_workspace":completed.id, "quiet_completion_ms":quiet_ms,
+        "commits_at_quiet_completion":progress.0,"inspections_at_quiet_completion":progress.1,
+        "elapsed_ms":started.elapsed().as_secs_f64()*1000.0,
+        "limits":"No chat producer, sustained-load guarantee or provider execution is qualified"}),
+    )
+}
+
+async fn allocation_continuation(
+    owner: &Workspaces,
+    storage: &crate::storage::Storage,
+    existing: &Workspace,
+    root: &Path,
+) -> Result<Value> {
+    let workspace = allocate(existing.repository_id, ActionId(Uuid::new_v4()), root)?;
+    let folder = Path::new(existing.path()?)
+        .parent()
+        .and_then(Path::parent)
+        .ok_or_else(|| RepositoryError::storage("Missing managed folder"))?;
+    let mut occupied = Vec::new();
+    for cursor in 0..40 {
+        let name = naming::candidate(cursor, workspace.id.0.as_u128())?;
+        let path = folder.join(&name);
+        // Existing real workspaces already occupy their names. New fixture folders
+        // have a sentinel and are never adopted, overwritten or removed.
+        if !path.exists() {
+            directory(&path)?;
+        }
+        let sentinel = path.join("qualification-sentinel");
+        fs::write(&sentinel, "external collision\n").map_err(RepositoryError::storage)?;
+        occupied.push(sentinel);
+    }
+    save(
+        storage,
+        Write::WorkspaceSave {
+            workspace: workspace.clone(),
+            action: Some(WorkspaceAction::Create {
+                action_id: workspace.creation_action_id,
+                repository_id: workspace.repository_id,
+            }),
+        },
+    )
+    .await?;
+    owner.notify();
+    let completed = ready(owner, workspace.id).await?;
+    let cursor =
+        one::<crate::storage::CandidateCursor>(storage, Read::AllocationCursor(workspace.id))
+            .await?
+            .ok_or_else(|| RepositoryError::storage("Missing durable allocation continuation"))?;
+    ensure(
+        cursor.name >= 32,
+        "Allocation did not persist a bounded turn",
+    )?;
+    ensure(
+        cursor.name >= 40
+            && completed.name.as_deref()
+                == Some(naming::candidate(cursor.name, workspace.id.0.as_u128())?.as_str()),
+        "Allocation did not resume past exact external collisions",
+    )?;
+    for sentinel in occupied {
+        ensure(
+            fs::read_to_string(sentinel).map_err(RepositoryError::storage)?
+                == "external collision\n",
+            "Allocation modified an external collision",
+        )?;
+    }
+    Ok(
+        json!({"case":"forty-actual-folder-collisions/durable-32-candidate-continuation",
+        "status":"passed","workspace":completed.id,"cursor":cursor,"external_collisions":40}),
     )
 }

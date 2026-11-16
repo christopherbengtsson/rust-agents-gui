@@ -173,8 +173,6 @@ pub struct Workspace {
     pub branch: Option<String>,
     #[serde(deserialize_with = "deserialize_workspace_path")]
     pub path: Option<String>,
-    #[serde(default)]
-    pub legacy: bool,
     pub base: Option<PinnedBase>,
     pub artifacts: Artifacts,
     pub status: CreationStatus,

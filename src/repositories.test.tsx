@@ -1,3 +1,4 @@
+import { createPresentationStore } from "./lib/presentation-store";
 import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import {
   act,
@@ -18,7 +19,6 @@ import { StrictMode } from "react";
 import { useRepositories } from "./test-support/feature-hooks";
 import {
   PENDING_KEY,
-  SELECTION_KEY,
   object,
   type Repository,
   type RepositoryRequest,
@@ -151,7 +151,9 @@ test("picker cancellation preserves the draft and picker failure allows manual e
 
 test("restored selection remains selected while its details are collapsed", async () => {
   const user = userEvent.setup();
-  localStorage.setItem(SELECTION_KEY, id);
+  createPresentationStore()
+    .getState()
+    .rememberMain({ kind: "repository", repositoryId: id });
   replies(async (request) =>
     request.operation === "get"
       ? { kind: "repository", repository }
@@ -261,7 +263,9 @@ test("reopening with a retained action retrieves its result without resubmitting
 });
 
 test("unavailable repositories stay selected and storage failures retain the last observation", async () => {
-  localStorage.setItem(SELECTION_KEY, id);
+  createPresentationStore()
+    .getState()
+    .rememberMain({ kind: "repository", repositoryId: id });
   const user = userEvent.setup();
   const missing: Repository = {
     ...repository,
@@ -477,7 +481,9 @@ test.each([false, true])(
 );
 
 test("selection during registration is not retargeted by its late completion", async () => {
-  localStorage.setItem(SELECTION_KEY, id);
+  createPresentationStore()
+    .getState()
+    .rememberMain({ kind: "repository", repositoryId: id });
   const user = userEvent.setup();
   const two: Repository = {
     ...repository,
@@ -540,7 +546,9 @@ test("selection during registration is not retargeted by its late completion", a
 });
 
 test("cursor paging retains selection and previous returns to the original page", async () => {
-  localStorage.setItem(SELECTION_KEY, id);
+  createPresentationStore()
+    .getState()
+    .rememberMain({ kind: "repository", repositoryId: id });
   const user = userEvent.setup();
   const two: Repository = {
     ...repository,
@@ -783,7 +791,9 @@ test("explicit repository refresh reports loading while retaining the last obser
 });
 
 test("Refresh status retains explicit reprobe through a delayed connection check", async () => {
-  localStorage.setItem(SELECTION_KEY, id);
+  createPresentationStore()
+    .getState()
+    .rememberMain({ kind: "repository", repositoryId: id });
   const unavailable: Repository = {
     ...repository,
     availability: {

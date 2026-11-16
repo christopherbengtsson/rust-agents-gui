@@ -70,7 +70,6 @@ const workspace: Workspace = {
   artifacts: { branch: "owned", folder: "worktree" },
   status: { state: "ready" },
   cleanup_unconfirmed: false,
-  legacy: false,
 };
 const repositoryPath = `/repository/${repositoryId}`;
 const workspacePath = `${repositoryPath}/workspace/${workspaceId}`;

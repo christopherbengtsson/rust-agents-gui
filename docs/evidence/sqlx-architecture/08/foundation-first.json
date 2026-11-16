@@ -1,0 +1,13 @@
+{
+  "kind": "foundation",
+  "directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-foundation-RaGUxq",
+  "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-foundation",
+  "command": [
+    "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-foundation-RaGUxq/fresh"
+  ],
+  "seconds": 10.3776185,
+  "exit": 1,
+  "signal": null,
+  "stdout": "",
+  "stderr": "Foundation qualification failed: Application storage failed: Pressure continuation lost retained registration metadata. Check the private state directory and free disk space, then refresh to reconcile this action.; retained root \"/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-foundation-RaGUxq/fresh\"\n"
+}

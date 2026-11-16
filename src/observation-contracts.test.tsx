@@ -137,7 +137,7 @@ test("provider-independent workspace observations retain allocation, recovery an
       name: "kyoto",
       branch: "workspace/kyoto",
       path: "/private/state/workspaces/repo/kyoto/checkout",
-      legacy: false,
+
       base: { reference: "refs/heads/main", commit: "a".repeat(40) },
       artifacts: { branch: "owned", folder: "reserved" },
       status,

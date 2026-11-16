@@ -1127,7 +1127,6 @@ test("WorkspacePanel navigation keeps one physical read lane across keyed inspec
     artifacts: { branch: "owned", folder: "worktree" },
     status: { state: "ready" },
     cleanup_unconfirmed: false,
-    legacy: false,
   };
   const repositories: Repositories = {
     loading: false,

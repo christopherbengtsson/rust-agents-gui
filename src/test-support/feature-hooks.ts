@@ -1,7 +1,5 @@
 import { createMemoryHistory } from "@tanstack/react-router";
 import { Navigation, mainDestination } from "../lib/navigation";
-import { readSelection } from "../lib/repositories";
-import { readWorkspaceSelection } from "../lib/workspaces";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AppObservations } from "../lib/app-observations";
 import type { ObservationCoordinator } from "../lib/observation-coordinator";
@@ -64,8 +62,7 @@ function useFixtureNavigation(repository: string | null, workspace?: string) {
 export function useRepositories(
   incarnation: string | undefined,
   reads?: ObservationCoordinator | AppObservations,
-  repositoryTarget: string | null = readSelection() ??
-    "00000000-0000-4000-8000-000000000001",
+  repositoryTarget: string | null = "00000000-0000-4000-8000-000000000001",
 ) {
   const app = useFixtureApp(incarnation, reads);
   const { navigation, target } = useFixtureNavigation(repositoryTarget);
@@ -84,10 +81,9 @@ export function useWorkspaces(
   reads?: ObservationCoordinator | AppObservations,
 ) {
   const app = useFixtureApp(incarnation, reads);
-  const saved = readWorkspaceSelection();
   const { navigation, target } = useFixtureNavigation(
     repositoryId ?? "fixture",
-    saved?.workspace_id ?? initial?.workspace_id,
+    initial?.workspace_id,
   );
   return useWorkspaceFeature(
     incarnation,

@@ -1,0 +1,18 @@
+{
+  "baseline_ticket07_bytes": 18266727,
+  "current_normal_bytes": 18277991,
+  "delta_bytes": 11264,
+  "files": [
+    {
+      "path": "Contents/Info.plist",
+      "bytes": 951,
+      "sha256": "8138f27a6a1b774fdbf441f5de4e169ccf5a7d2bb88a8c8892c441cbfbf66019"
+    },
+    {
+      "path": "Contents/MacOS/workspace-desktop",
+      "bytes": 18277040,
+      "sha256": "bade50a650f655477ed1ee13a07bb4b232039e82ace69212621b6d7ac11c3a51"
+    }
+  ],
+  "limit": "Source/cache cohorts differ. No build-speed comparison or performance winner is inferred."
+}

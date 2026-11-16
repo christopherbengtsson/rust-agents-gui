@@ -38,3 +38,9 @@ name = "qualify-process-effects"
 path = "src/bin/qualify-process-effects.rs"
 required-features = ["qualification"]
 test = false
+
+[[bin]]
+name = "qualify-foundation"
+path = "src/bin/qualify-foundation.rs"
+required-features = ["qualification"]
+test = false

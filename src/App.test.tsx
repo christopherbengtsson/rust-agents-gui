@@ -499,9 +499,7 @@ test("presentation storage failure stays visible without a mounted inspection vi
   );
   render(<App />);
   expect(
-    await screen.findByText(
-      /could not read or migrate presentation preferences/,
-    ),
+    await screen.findByText(/could not read presentation preferences/),
   ).toBeDefined();
   expect(screen.queryByLabelText("Selected file changes")).toBeNull();
   expect(localStorage.getItem("agent-workspace.presentation")).toBe("{invalid");
