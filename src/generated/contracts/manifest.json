@@ -19,7 +19,7 @@
     "crates/core/src/observations.rs": "a3c41684ce06dd447d3493d9794bef6da4fcc1adabb99bfab67709da756968ee",
     "crates/core/src/workspaces.rs": "619d3b059f196f1b5adaff7fd71381902891e75dd92bc0b53f7db6235d601f19",
     "crates/core/src/runtimes/provider_connection.rs": "8bc8d5f93f45b39e6074a45961003df12a4bb4dc862ccf86d12f1700f7793476",
-    "crates/core/src/runtimes/provider_connection/login.rs": "c6865428f927be7766761328637c4fbcfa8bc77be537b3ccf740a27f539e8163",
+    "crates/core/src/runtimes/provider_connection/login.rs": "1fa370ee80521374da17e9434c2996c6f7baa95bb2aa298f0c1e64fd5e40fd82",
     "crates/core/src/runtimes/provider_connection/selection.rs": "c83c8f575d82fa2454a9c5b531463d58a0916d7524a0a257cecbe219dc1274c4",
     "crates/core/src/workspaces/creation.rs": "f87a57300edc4766d9ce06e3e91f9d36a98339292f3003c43c0b7dcbcf76e9f8",
     "crates/core/src/workspaces/inspection.rs": "13e5f4486f167a658a2d737be972a739e36e67faf95034fa0799a31b16a7c0d4",

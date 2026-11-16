@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import corpus from "../contracts/observations-v14.json";
+import corpus from "../contracts/observations-v15.json";
 import {
   validateRegistration,
   validateWorkspace,
@@ -97,7 +97,7 @@ import { decodeRepositoryReply } from "./lib/repositories";
 import { decodeFeedBatch } from "./lib/observation-feed";
 
 test("every current synthetic corpus root passes its generated serialization validator", () => {
-  expect(corpus.protocol).toBe(14);
+  expect(corpus.protocol).toBe(15);
   expect(validateDesktopPid(corpus.desktop_pid)).toBe(true);
   expect(validateSupervisorSnapshot(corpus.snapshot)).toBe(true);
   for (const entry of corpus.repositories) {

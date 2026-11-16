@@ -301,7 +301,10 @@ impl ProviderConnections {
         effects: impl BrowserEffects,
     ) {
         if let Err(failure) = self.persist_attempt(attempt, true).await {
-            self.finish_login(target, attempt, LoginOutcome::Failed, Err(failure));
+            self.update_login(target, attempt, |login| {
+                login.phase = LoginPhase::CleanupUncertain;
+                login.diagnostic = Some(failure.diagnostic);
+            });
             return;
         }
         let notice_owner = self.clone();
@@ -581,7 +584,12 @@ mod tests {
                 let snapshot = owner.read(target).unwrap();
                 if fail == Some(true) {
                     assert_eq!(*calls.lock().unwrap(), ["intent"]);
-                    assert_eq!(snapshot.login.unwrap().phase, LoginPhase::Failed);
+                    assert_eq!(snapshot.login.unwrap().phase, LoginPhase::CleanupUncertain);
+                    assert!(
+                        owner
+                            .admit_login(target, uuid::Uuid::new_v4(), snapshot.revision)
+                            .is_err()
+                    );
                 } else {
                     assert_eq!(
                         *calls.lock().unwrap(),

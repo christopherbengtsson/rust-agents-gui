@@ -138,7 +138,7 @@ test("late setup is stopped and joined before the replacement is subscribed", as
   s.feed.connect(undefined);
   await flush();
 });
-import corpus from "../contracts/observations-v14.json";
+import corpus from "../contracts/observations-v15.json";
 test("the shared protocol corpus passes production feed decoding", () => {
   let previous = 0;
   for (const value of corpus.feed) {

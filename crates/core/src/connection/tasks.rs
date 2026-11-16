@@ -28,7 +28,13 @@ impl Tasks {
         work: impl Future<Output = T> + Send + 'static,
     ) -> io::Result<oneshot::Receiver<T>> {
         let mut set = self.set.lock().unwrap_or_else(|e| e.into_inner());
-        if self.closed.load(Ordering::Acquire) {
+        if self.closed.load(Ordering::Acquire)
+            || !self
+                .failure
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .is_empty()
+        {
             return Err(io::Error::other("Connection cleanup has begun"));
         }
         self.reap(&mut set);
@@ -48,7 +54,13 @@ impl Tasks {
         })?;
         let receive = {
             let mut set = self.set.lock().unwrap_or_else(|e| e.into_inner());
-            if self.closed.load(Ordering::Acquire) {
+            if self.closed.load(Ordering::Acquire)
+                || !self
+                    .failure
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .is_empty()
+            {
                 return Err(io::Error::other("Connection cleanup has begun"));
             }
             self.reap(&mut set);
