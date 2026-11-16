@@ -16,11 +16,12 @@ pub(super) trait Effects: Send + Sync {
         folder_saved: bool,
     ) -> Result<naming::Occupancy>;
     fn creation(&self) -> Box<dyn CreationEffects + Send>;
+    fn inspection(&self) -> Box<dyn InspectionEffects + Send>;
 }
-pub(super) struct LocalEffects;
+pub(super) struct LocalEffects(pub(super) crate::process_effects::Processes);
 impl Effects for LocalEffects {
     fn inspect(&self, path: &str) -> Result<ValidatedRepository> {
-        crate::git::inspect(path)
+        crate::git::inspect(&self.0, path)
     }
     fn candidate(
         &self,
@@ -31,10 +32,21 @@ impl Effects for LocalEffects {
         name: &str,
         folder_saved: bool,
     ) -> Result<naming::Occupancy> {
-        crate::git::candidate_occupied(repository, root, directory, folder, name, folder_saved)
+        crate::git::candidate_occupied(
+            &self.0,
+            repository,
+            root,
+            directory,
+            folder,
+            name,
+            folder_saved,
+        )
     }
     fn creation(&self) -> Box<dyn CreationEffects + Send> {
-        Box::new(crate::git::LocalCreation)
+        Box::new(crate::git::LocalCreation(self.0.clone()))
+    }
+    fn inspection(&self) -> Box<dyn InspectionEffects + Send> {
+        Box::new(crate::git::LocalInspection(self.0.clone()))
     }
 }
 
@@ -45,6 +57,7 @@ struct WorkspaceExecution {
     store: Arc<dyn Metadata>,
     effects: Arc<dyn Effects>,
     action: ActionId,
+    blocking: Arc<tokio::sync::Semaphore>,
 }
 type Gate = Arc<AsyncMutex<()>>;
 #[derive(Default)]
@@ -125,6 +138,7 @@ pub(super) async fn run(
     effects: Arc<dyn Effects>,
 ) -> Result<()> {
     let mut tasks = tokio::task::JoinSet::new();
+    let blocking = Arc::new(tokio::sync::Semaphore::new(8));
     let mut gates = RepositoryGates::default();
     let (mut registration_after, mut workspace_after) = (None, None);
     let mut inspection_active = false;
@@ -169,9 +183,10 @@ pub(super) async fn run(
                             effects.clone(),
                         );
                         let id = action.action_id;
+                        let blocking = blocking.clone();
                         tasks.spawn(async move {
                             let result = std::panic::AssertUnwindSafe(registration(
-                                state, gate, storage, action, generation, effects,
+                                state, gate, storage, action, generation, effects, blocking,
                             ))
                             .catch_unwind()
                             .await
@@ -252,6 +267,7 @@ pub(super) async fn run(
                             effects.clone(),
                         );
                         let workspace_id = workspace.id;
+                        let blocking = blocking.clone();
                         tasks.spawn(async move {
                             let result = std::panic::AssertUnwindSafe(creation(
                                 WorkspaceExecution {
@@ -260,6 +276,7 @@ pub(super) async fn run(
                                     store: storage,
                                     effects,
                                     action: id,
+                                    blocking,
                                 },
                                 workspace,
                                 repository,
@@ -292,15 +309,20 @@ pub(super) async fn run(
         }
         // Read-only inspection keeps its existing bounded queue and one physical
         // slot; it no longer blocks independent registration/creation work.
-        if !fenced && !inspection_active {
+        if !fenced
+            && !inspection_active
+            && let Ok(physical) = blocking.clone().try_acquire_owned()
+        {
             let _gate = decision.lock().await;
             let mut state = lock_state(&shared)?;
             if !state.fenced && state.inspections.has_pending() {
                 inspection_active = true;
                 let shared = shared.clone();
+                let effects = effects.clone();
                 tasks.spawn_blocking(move || {
+                    let _physical = physical;
                     let result = catch_effect(|| {
-                        inspection::process_inspection(&shared, &mut crate::git::LocalInspection);
+                        inspection::process_inspection(&shared, effects.inspection().as_mut());
                         Ok(())
                     });
                     Completion {
@@ -316,6 +338,7 @@ pub(super) async fn run(
                 let shared = shared.clone();
                 let effects = effects.clone();
                 tasks.spawn_blocking(move || {
+                    let _physical = physical;
                     let result = probe(&shared, record, effects.as_ref());
                     Completion {
                         work: CompletedWork::ReadOnly,
@@ -475,11 +498,19 @@ async fn registration(
     mut action: Registration,
     generation: u64,
     effects: Arc<dyn Effects>,
+    blocking: Arc<tokio::sync::Semaphore>,
 ) -> Result<()> {
-    let path = action.path.clone();
-    let validation = tokio::task::spawn_blocking(move || catch_effect(|| effects.inspect(&path)))
+    let physical = blocking
+        .acquire_owned()
         .await
         .map_err(RepositoryError::storage)?;
+    let path = action.path.clone();
+    let validation = tokio::task::spawn_blocking(move || {
+        let _physical = physical;
+        catch_effect(|| effects.inspect(&path))
+    })
+    .await
+    .map_err(RepositoryError::storage)?;
     let cleanup_fault = validation
         .as_ref()
         .err()
@@ -637,6 +668,7 @@ async fn creation_inner(
         store,
         effects: _,
         action,
+        ..
     } = execution.clone();
     while workspace.name.is_none() {
         workspace =
@@ -767,7 +799,14 @@ async fn allocate_turn(
             folder.clone(),
         );
         let effects = execution.effects.clone();
+        let physical = execution
+            .blocking
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(RepositoryError::storage)?;
         let occupied = tokio::task::spawn_blocking(move || {
+            let _physical = physical;
             catch_effect(|| {
                 effects.candidate(
                     &repo,
@@ -876,11 +915,17 @@ async fn drive_owned(
         store,
         effects,
         action,
+        blocking,
     } = execution;
     let (send, mut receive) = mpsc::channel::<Persist>(1);
     // This worker keeps its physical completion handle, repository guard (in the
     // caller), and capacity until joined. There is no per-request runtime/block_on.
+    let physical = blocking
+        .acquire_owned()
+        .await
+        .map_err(RepositoryError::storage)?;
     let mut worker = tokio::task::spawn_blocking(move || {
+        let _physical = physical;
         let _repository_guard = repository_guard;
         let mut effects = effects.creation();
         catch_effect(|| {

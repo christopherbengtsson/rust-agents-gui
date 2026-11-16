@@ -335,13 +335,18 @@ pub struct Workspaces {
     finish_result: Mutex<Option<Result<()>>>,
 }
 impl Workspaces {
-    pub(crate) fn open(directory: PathBuf, storage: crate::storage::Storage) -> Self {
-        let mut owner = Self::with_store(directory, Arc::new(storage.clone()));
+    pub(crate) fn open(
+        directory: PathBuf,
+        storage: crate::storage::Storage,
+        processes: crate::process_effects::Processes,
+    ) -> Self {
+        let mut owner = Self::with_dependencies(
+            directory,
+            Arc::new(storage.clone()),
+            Arc::new(coordinator::LocalEffects(processes)),
+        );
         owner.storage = Some(storage);
         owner
-    }
-    fn with_store(directory: PathBuf, store: Arc<dyn Metadata>) -> Self {
-        Self::with_dependencies(directory, store, Arc::new(coordinator::LocalEffects))
     }
     fn with_dependencies(
         directory: PathBuf,

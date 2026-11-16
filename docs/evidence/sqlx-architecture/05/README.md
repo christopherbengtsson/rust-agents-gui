@@ -1,0 +1,33 @@
+# Ticket 05 — bounded async process effects
+
+Implementation based on `6bdb1f2` on `sqlx-storage-cutover`. Only ticket 05 is in scope; the incumbent supervisor remains the host. No live-provider, sign-in, authentication, RAT or user-state actions are performed.
+
+## Interfaces and settings
+
+One core-local `Processes` owner is shared by Git and the captured Codex launch. It retains child cleanup tasks independently of protocol/IPC waiters and continuously reaps outcomes. Domain interpretation, command construction, persistence and reconciliation stay local. Git uses bounded blocking workers and a finite async bridge; provider stdio retains its separate long-lived protocol interface. No runtime-per-call, process-wrap dependency or native-host cutover is introduced.
+
+Effective initial bounds: eight process admissions shared by Git/readiness/browser-opener work, two independent group-cleanup slots, eight workspace blocking submissions, existing eight pending workspace activities plus the bounded inspection queue. Process admission is nonwaiting and precedes child/task creation. Blocking permits move into workers. Child permits are shared with taken pipes and are released only after child/reader/pipe ownership completes. Cleanup/status do not acquire ordinary process slots.
+
+Finite Git: 1,024-byte stdin; 262,144 bytes each stdout/stderr; 2,048-byte read scratch per stream; one two-second absolute input/output/natural-exit deadline. TERM/KILL receive separate two-second cleanup windows. Provider frame limits, parsing, exact IDs and absolute protocol deadlines are unchanged. Browser opener keeps its five-second natural-exit budget. Stderr drains to a sink without accumulating provider output. Physical diagnostics retain at most 32 messages plus an omitted count; process/pipe task populations are bounded by admission. Child RSS is external to these app-buffer bounds.
+
+Group quiescence retains the existing macOS WNOWAIT/group-enumeration evidence. The leader is reaped only after owned group and retained stderr completion. Signal/quiescence/wait failures retain diagnostics; a failed wait keeps physical ownership and retries observation without replaying domain actions. Unknown groups and escaped pipes retain ownership beyond their deadline. Saved PIDs are never signaling authority. Finite pipe cancellation closes its reader; neither that closure nor observed group quiescence establishes universal descendant containment.
+
+## Coverage replacement
+
+| Previous assertion/mechanism                                                                                    | Current owning-module replacement                                                                                                                                                                |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Git `output_budget_fails_instead_of_parsing_truncated_output` using synchronous Cursor                          | `exact_limit_is_complete_only_at_eof_and_overflow_is_not_truncated`, controlled async streams; separate actual saturation qualifier                                                              |
+| Git `timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup` using manual elapsed/tick fake | `partial_output_requires_eof_and_keeps_one_absolute_deadline`, `partial_input_timeout_preserves_uncertainty_without_replaying_bytes`, shared escalation/error-retention and physical-owner units |
+| Provider `cleanup_escalates_only_while_owned_and_retains_uncertainty`                                           | Moved into shared process units, extended to retain signal/quiescence failures and attempt both escalation signals                                                                               |
+| Process waiter/panic completion                                                                                 | `abandoned_waiter_keeps_capacity_until_physical_completion_and_reaper_observes_errors`, `panic_runs_cleanup_and_preserves_failure_after_recovery` use typed group events, no OS processes        |
+| Physical pipe ownership/unknown cleanup                                                                         | `pipe_outliving_quiescent_group_retains_capacity_and_reports_unknown`, `taken_pipe_keeps_capacity_after_leader_and_async_waiter_complete`                                                        |
+| Pressure/admission                                                                                              | `saturated_ordinary_capacity_leaves_cleanup_reserve_and_rejects_before_spawn`, plus retained workspace request-loss/fence/independent-effect tests                                               |
+| Workspace wake thread                                                                                           | Already replaced in ticket 03/04; retained bounded Tokio wake channel, no duplicate replacement                                                                                                  |
+
+Provider protocol units remain unchanged: split/coalesced frames, strict EOF, malformed/oversized input, exact response/attempt matching, timeout/cancellation and no automatic replay. Existing workspace creation, pinned base, immutable reservation, original checkout, repository gate and provider-scope tests remain. Units establish application decisions only.
+
+## Qualification and verification
+
+Results and review are appended after their exact checks complete. `verification.json` records sequential commands, exit status, elapsed time and dirty Rust source hashes; original failed attempts remain in separate logs. Actual process/Git/desktop cohorts are distinct from substituted units. New private roots retain their artifacts; no previous application state is reset.
+
+Sources: repository spec/amendments, ticket 04 handoff, selected Tokio 1.54.1 registry source (`process/mod.rs`, `Child::wait`, std-command conversion), [official Codex stdio source](https://github.com/openai/codex/blob/d32063f96c2dff1dc96af839b3952abb6acfeda4/codex-rs/app-server-transport/src/transport/stdio.rs), retained unmodified readiness schemas/provenance and [Rust design principles](https://rust-unofficial.github.io/patterns/additional_resources/design-principles.html). The docs.rs version URL was unavailable through web lookup; selected local dependency source was inspected instead.

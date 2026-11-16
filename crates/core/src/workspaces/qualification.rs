@@ -137,10 +137,13 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         .wait()
         .await
         .map_err(RepositoryError::storage)?;
-    let owner = Workspaces::open(state, storage.clone());
+    let processes = crate::process_effects::Processes::new();
+    let owner = Workspaces::open(state, storage.clone(), processes.clone());
     let result = cohort(&owner, &storage, &root, &a, &b).await;
     let completion = owner.finish().await;
+    let physical = processes.finish().await;
     let close = storage.close().await;
+    physical.map_err(RepositoryError::storage)?;
     completion?;
     ensure(
         close.faults.is_empty(),

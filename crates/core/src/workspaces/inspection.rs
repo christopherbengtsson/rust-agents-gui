@@ -623,7 +623,7 @@ fn display_path(path: &[u8]) -> String {
 fn capture(
     workspace: &Workspace,
     repository: &RepositoryRecord,
-    effects: &mut impl InspectionEffects,
+    effects: &mut (impl InspectionEffects + ?Sized),
 ) -> Result<Comparison> {
     effects.validate(workspace, repository)?;
     let root = Path::new(workspace.path()?);
@@ -655,7 +655,7 @@ fn acquire_preview(
     target: &PreviewTarget,
     comparison: &Comparison,
     file: &FileEntry,
-    effects: &mut impl InspectionEffects,
+    effects: &mut (impl InspectionEffects + ?Sized),
 ) -> Result<PreviewObservation> {
     effects.validate(workspace, repository)?;
     let root = Path::new(workspace.path()?);
@@ -843,7 +843,7 @@ fn bound_failed_preview(observation: &mut PreviewObservation) {
 
 pub(super) fn process_inspection(
     shared: &Mutex<OwnerState>,
-    effects: &mut impl InspectionEffects,
+    effects: &mut (impl InspectionEffects + ?Sized),
 ) -> bool {
     let job = {
         let Ok(mut state) = lock_state(shared) else {

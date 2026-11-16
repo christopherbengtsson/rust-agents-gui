@@ -7,6 +7,7 @@ mod git;
 mod lifetime;
 pub mod observations;
 mod private_state;
+mod process_effects;
 pub mod runtimes;
 mod storage;
 pub mod supervisor;
@@ -71,6 +72,7 @@ pub struct Core {
     providers: Option<std::sync::Arc<runtimes::ProviderConnections>>,
     workspaces: Option<workspaces::Workspaces>,
     storage: Option<storage::Storage>,
+    processes: Option<process_effects::Processes>,
     journal: std::sync::Arc<observations::Journal>,
 }
 
@@ -98,6 +100,7 @@ impl Core {
             providers: None,
             workspaces: None,
             storage: None,
+            processes: None,
             journal: std::sync::Arc::new(observations::Journal::default()),
         }
     }
@@ -109,8 +112,12 @@ impl Core {
     ) -> std::sync::Arc<Self> {
         let lifetime = std::sync::Arc::new(lifetime::Lifetime::starting(lease));
         let workspace_directory = directory.clone();
+        let processes = process_effects::Processes::new();
+        let workspace_processes = processes.clone();
+        let provider_processes = processes.clone();
         Self::start_with(
             lifetime,
+            Some(processes),
             move || async move {
                 let directory = tokio::task::spawn_blocking(move || {
                     supervisor::check_private(&workspace_directory, true)?;
@@ -124,11 +131,16 @@ impl Core {
                     .wait()
                     .await
                     .map_err(workspaces::RepositoryError::storage)?;
-                Ok(workspaces::Workspaces::open(directory, storage))
+                Ok(workspaces::Workspaces::open(
+                    directory,
+                    storage,
+                    workspace_processes,
+                ))
             },
             move |journal, storage| async move {
                 runtimes::ProviderConnections::open(
                     journal,
+                    provider_processes,
                     storage.ok_or_else(|| {
                         workspaces::RepositoryError::storage("Shared storage is unavailable")
                     })?,
@@ -140,6 +152,7 @@ impl Core {
     }
     async fn start_with<F, P>(
         lifetime: std::sync::Arc<lifetime::Lifetime>,
+        processes: Option<process_effects::Processes>,
         open_workspace: impl FnOnce() -> F + Send + 'static,
         open_provider: impl FnOnce(std::sync::Arc<observations::Journal>, Option<storage::Storage>) -> P
         + Send
@@ -158,6 +171,7 @@ impl Core {
         let task = tokio::spawn(async move {
             let mut core = Self {
                 lifetime,
+                processes,
                 ..Self::new()
             };
             let opened = tokio::spawn(open_workspace()).await;
@@ -232,6 +246,11 @@ impl Core {
                 Err(_) => errors.push("Provider completion panicked; ownership retained".into()),
             }
         }
+        if let Some(processes) = &self.processes
+            && let Err(error) = processes.finish().await
+        {
+            errors.push(format!("Processes: {error}"));
+        }
         if let Some(storage) = &self.storage {
             let report = storage.close().await;
             if let Some(checkpoint) = &report.checkpoint {
@@ -251,7 +270,19 @@ impl Core {
         self.journal.wake();
     }
     pub fn quit_status(&self) -> QuitStatus {
-        self.lifetime.report()
+        let mut report = self.lifetime.report();
+        if !report.complete
+            && let Some(diagnostic) = self
+                .processes
+                .as_ref()
+                .and_then(process_effects::Processes::diagnostic)
+        {
+            report.diagnostic = Some(match report.diagnostic {
+                Some(prior) => format!("{prior}; {diagnostic}"),
+                None => diagnostic,
+            });
+        }
+        report
     }
     pub fn release_lease(&self) {
         if self.quit_status().complete {
@@ -349,6 +380,7 @@ mod tests {
             pid: 42,
             workspaces: None,
             storage: None,
+            processes: None,
             providers: None,
             journal: std::sync::Arc::new(observations::Journal::default()),
         }
@@ -373,6 +405,7 @@ mod tests {
                 ));
                 let core = Core::start_with(
                     lifetime,
+                    None,
                     move || async move {
                         Ok(workspaces::tests::controlled_completion(async move {
                             marker.store(true, Ordering::SeqCst);
@@ -528,4 +561,24 @@ pub mod qualification {
             .await
             .map_err(|error| error.to_string())
     }
+}
+
+/// Explicit disposable process qualification; never called by the product or units.
+#[cfg(feature = "qualification")]
+pub async fn qualify_process_effects(
+    root: &std::path::Path,
+    fixture: &std::path::Path,
+) -> Result<serde_json::Value, String> {
+    process_effects::qualification::run(root, fixture)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[cfg(feature = "qualification")]
+#[doc(hidden)]
+pub async fn qualify_process_parent_loss(
+    root: &std::path::Path,
+    fixture: &std::path::Path,
+) -> std::io::Result<()> {
+    process_effects::qualification::parent_loss_owner(root, fixture).await
 }

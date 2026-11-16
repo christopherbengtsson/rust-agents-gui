@@ -5,12 +5,9 @@ use std::{
     os::{fd::AsRawFd, unix::process::CommandExt},
     path::{Path, PathBuf},
     process::{Command, Stdio},
-    time::{Duration, Instant},
 };
 
-// Batch ref/worktree inventories share the bounded command runner.
-const OUTPUT_LIMIT: usize = 256 * 1024;
-const DEADLINE: Duration = Duration::from_secs(2);
+use crate::process_effects::Processes;
 #[path = "git/inspection.rs"]
 mod inspection;
 pub(crate) use inspection::LocalInspection;
@@ -66,8 +63,8 @@ trait GitEffects {
     fn directory(&mut self, path: &Path) -> Result<PathBuf>;
     fn query(&mut self, path: &Path, query: Query) -> Result<String>;
 }
-struct LocalGit;
-impl GitEffects for LocalGit {
+struct LocalGit<'a>(&'a Processes);
+impl GitEffects for LocalGit<'_> {
     fn directory(&mut self, path: &Path) -> Result<PathBuf> {
         let canonical = std::fs::canonicalize(path).map_err(|e| {
             RepositoryError::new(
@@ -87,12 +84,12 @@ impl GitEffects for LocalGit {
         Ok(canonical)
     }
     fn query(&mut self, path: &Path, query: Query) -> Result<String> {
-        run(command(path, query))
+        run(self.0, command(path, query))
     }
 }
 
-pub(crate) fn inspect(path: &str) -> Result<ValidatedRepository> {
-    inspect_with(path, &mut LocalGit)
+pub(crate) fn inspect(processes: &Processes, path: &str) -> Result<ValidatedRepository> {
+    inspect_with(path, &mut LocalGit(processes))
 }
 fn inspect_with(path: &str, effects: &mut impl GitEffects) -> Result<ValidatedRepository> {
     let directory = effects.directory(Path::new(path))?;
@@ -126,191 +123,28 @@ fn inspect_with(path: &str, effects: &mut impl GitEffects) -> Result<ValidatedRe
     })
 }
 
-fn nonblocking(pipe: &impl AsRawFd) -> Result<()> {
-    // SAFETY: a live pipe supplies the descriptor; fcntl changes only its I/O flags.
-    let flags = unsafe { libc::fcntl(pipe.as_raw_fd(), libc::F_GETFL) };
-    if flags == -1
-        || unsafe { libc::fcntl(pipe.as_raw_fd(), libc::F_SETFL, flags | libc::O_NONBLOCK) } == -1
-    {
-        return Err(failure(std::io::Error::last_os_error()));
-    }
-    Ok(())
-}
-fn drain(pipe: &mut impl Read, bytes: &mut Vec<u8>) -> Result<()> {
-    let mut buffer = [0; 2048];
-    loop {
-        match pipe.read(&mut buffer) {
-            Ok(0) => return Ok(()),
-            Ok(count) => {
-                if bytes.len() + count > OUTPUT_LIMIT {
-                    return Err(failure("Git output exceeded its bounded read budget"));
-                }
-                bytes.extend_from_slice(&buffer[..count]);
-            }
-            Err(e) if e.kind() == ErrorKind::WouldBlock => return Ok(()),
-            Err(e) if e.kind() == ErrorKind::Interrupted => continue,
-            Err(e) => return Err(failure(e)),
-        }
-    }
-}
-fn run(command: Command) -> Result<String> {
-    let (success, bytes) = run_output(command, None)?;
+fn run(processes: &Processes, command: Command) -> Result<String> {
+    let (success, bytes) = run_output(processes, command, None)?;
     if !success {
         return Err(failure(String::from_utf8_lossy(&bytes)));
     }
     let text = String::from_utf8(bytes).map_err(failure)?;
     Ok(text.strip_suffix('\n').unwrap_or(&text).to_owned())
 }
-fn run_output(mut command: Command, input: Option<&[u8]>) -> Result<(bool, Vec<u8>)> {
-    if input.is_some_and(|bytes| bytes.len() > 1024) {
-        return Err(failure("Git command input exceeds its bounded budget"));
-    }
-    if input.is_some() {
-        command.stdin(Stdio::piped());
-    }
-    let mut child = command.spawn().map_err(failure)?;
-    let setup = (|| {
-        if let Some(input) = input {
-            if input.len() > 1024 {
-                return Err(failure("Git command input exceeds its bounded budget"));
-            }
-            child
-                .stdin
-                .take()
-                .ok_or_else(|| failure("Git stdin unavailable"))?
-                .write_all(input)
-                .map_err(failure)?;
-        }
-        let stdout = child
-            .stdout
-            .take()
-            .ok_or_else(|| failure("Git stdout unavailable"))?;
-        let stderr = child
-            .stderr
-            .take()
-            .ok_or_else(|| failure("Git stderr unavailable"))?;
-        nonblocking(&stdout)?;
-        nonblocking(&stderr)?;
-        Ok((stdout, stderr))
-    })();
-    let (stdout, stderr) = match setup {
-        Ok(pipes) => pipes,
-        Err(error) => {
-            stop_child(&mut child)?;
-            return Err(error);
-        }
-    };
-    run_process_output(&mut LocalProcess {
-        child,
-        stdout,
-        stderr,
-        start: Instant::now(),
-        reaped: false,
+fn run_output(
+    processes: &Processes,
+    command: Command,
+    input: Option<&[u8]>,
+) -> Result<(bool, Vec<u8>)> {
+    processes.git(command, input).map_err(|error| match error {
+        crate::process_effects::GitFailure::Cleanup { original, cleanup } => RepositoryError::new(ErrorCode::CleanupUnconfirmed, format!("Git cleanup unconfirmed; effect: {original:?}; cleanup: {cleanup:?}. Preserve the workspace and reconcile.")),
+        crate::process_effects::GitFailure::Effect(error) if error.kind() == ErrorKind::WouldBlock => RepositoryError::new(ErrorCode::Capacity, error.to_string()),
+        crate::process_effects::GitFailure::Effect(error) => failure(error),
     })
 }
 
-trait GitProcess {
-    fn output(&mut self, stdout: &mut Vec<u8>, stderr: &mut Vec<u8>) -> Result<()>;
-    fn exited(&mut self) -> Result<Option<bool>>;
-    fn elapsed(&self) -> Duration;
-    fn wait_tick(&mut self);
-    fn stop_and_wait(&mut self) -> Result<()>;
-}
-struct LocalProcess {
-    child: std::process::Child,
-    stdout: std::process::ChildStdout,
-    stderr: std::process::ChildStderr,
-    start: Instant,
-    reaped: bool,
-}
-impl GitProcess for LocalProcess {
-    fn output(&mut self, stdout: &mut Vec<u8>, stderr: &mut Vec<u8>) -> Result<()> {
-        drain(&mut self.stdout, stdout)?;
-        drain(&mut self.stderr, stderr)
-    }
-    fn exited(&mut self) -> Result<Option<bool>> {
-        let status = self.child.try_wait().map_err(failure)?;
-        if status.is_some() {
-            self.reaped = true;
-        }
-        Ok(status.map(|s| s.success()))
-    }
-    fn elapsed(&self) -> Duration {
-        self.start.elapsed()
-    }
-    fn wait_tick(&mut self) {
-        std::thread::sleep(Duration::from_millis(5));
-    }
-    fn stop_and_wait(&mut self) -> Result<()> {
-        if self.reaped {
-            return Err(RepositoryError::new(
-                ErrorCode::CleanupUnconfirmed,
-                "Git exited before its output/descendant cleanup could be confirmed. Preserve its workspace and reconcile; a reaped PID was not signaled.",
-            ));
-        }
-        stop_child(&mut self.child)
-    }
-}
-fn stop_child(child: &mut std::process::Child) -> Result<()> {
-    let group = i32::try_from(child.id()).map_err(failure)?;
-    // SAFETY: the live child was launched into its own process group; no saved PID is used.
-    let signal = unsafe { libc::kill(-group, libc::SIGKILL) };
-    if signal != 0 && std::io::Error::last_os_error().raw_os_error() != Some(libc::ESRCH) {
-        return Err(RepositoryError::new(
-            ErrorCode::CleanupUnconfirmed,
-            "Git process-group stop could not be confirmed. Preserve its workspace and investigate before continuing.",
-        ));
-    }
-    let start = Instant::now();
-    loop {
-        if child.try_wait().map_err(failure)?.is_some() {
-            // SAFETY: signal 0 observes this owned process group without signaling it.
-            if unsafe { libc::kill(-group, 0) } == -1
-                && std::io::Error::last_os_error().raw_os_error() == Some(libc::ESRCH)
-            {
-                return Ok(());
-            }
-        }
-        if start.elapsed() >= Duration::from_millis(500) {
-            return Err(RepositoryError::new(
-                ErrorCode::CleanupUnconfirmed,
-                "Git cleanup could not be confirmed within its bounded stop window. Preserve the workspace; do not repeat creation.",
-            ));
-        }
-        std::thread::sleep(Duration::from_millis(5));
-    }
-}
-#[cfg(test)]
-fn run_process(process: &mut impl GitProcess) -> Result<String> {
-    let (success, bytes) = run_process_output(process)?;
-    if !success {
-        return Err(failure(String::from_utf8_lossy(&bytes)));
-    }
-    String::from_utf8(bytes).map_err(failure)
-}
-fn run_process_output(process: &mut impl GitProcess) -> Result<(bool, Vec<u8>)> {
-    let result = (|| {
-        let (mut out, mut err) = (Vec::new(), Vec::new());
-        loop {
-            process.output(&mut out, &mut err)?;
-            if let Some(success) = process.exited()? {
-                process.output(&mut out, &mut err)?;
-                return Ok((success, if success { out } else { err }));
-            }
-            if process.elapsed() >= DEADLINE {
-                return Err(failure("Git inspection timed out"));
-            }
-            process.wait_tick();
-        }
-    })();
-    if result.is_err() {
-        process.stop_and_wait()?;
-    }
-    result
-}
-
 /// Production Git/filesystem mechanics. Creation/recovery decisions remain in workspaces.
-pub(crate) struct LocalCreation;
+pub(crate) struct LocalCreation(pub(crate) Processes);
 use crate::workspaces::{
     Artifacts, BranchArtifact, CreationEffects, FolderArtifact, PinnedBase, Workspace,
 };
@@ -328,8 +162,13 @@ fn creation_command(repository: &Path, args: &[&str]) -> Command {
         .args(args);
     command
 }
-fn query_optional(repository: &Path, reference: &str) -> Result<Option<String>> {
+fn query_optional(
+    processes: &Processes,
+    repository: &Path,
+    reference: &str,
+) -> Result<Option<String>> {
     let output = run_output(
+        processes,
         creation_command(
             repository,
             &[
@@ -392,8 +231,11 @@ fn location(path: &Path) -> Result<Option<std::fs::Metadata>> {
         Err(e) => Err(failure(e)),
     }
 }
-fn validate_repository(repository: &crate::workspaces::RepositoryRecord) -> Result<()> {
-    let actual = inspect(&repository.path)?;
+fn validate_repository(
+    processes: &Processes,
+    repository: &crate::workspaces::RepositoryRecord,
+) -> Result<()> {
+    let actual = inspect(processes, &repository.path)?;
     if actual.path != repository.path || actual.common_dir != repository.common_dir {
         return Err(failure(
             "The registered location now identifies a different repository. Restore its original location",
@@ -432,6 +274,7 @@ fn occupied_inventory(
 /// Candidate-specific probes avoid enumerating managed folders or retained names.
 /// Git inventory remains subject to the shared runner's byte/deadline bounds.
 pub(crate) fn candidate_occupied(
+    processes: &Processes,
     repository: &crate::workspaces::RepositoryRecord,
     root: &Path,
     directory: &Path,
@@ -439,7 +282,7 @@ pub(crate) fn candidate_occupied(
     name: &str,
     folder_saved: bool,
 ) -> Result<crate::workspaces::naming::Occupancy> {
-    validate_repository(repository)?;
+    validate_repository(processes, repository)?;
     if !folder_saved && location(&root.join(folder))?.is_some() {
         return Ok(crate::workspaces::naming::Occupancy::RepositoryFolder);
     }
@@ -448,19 +291,19 @@ pub(crate) fn candidate_occupied(
     }
     let path = Path::new(&repository.path);
     let reference = format!("refs/heads/workspace/{name}");
-    if query_optional(path, "refs/heads/workspace")?.is_some() {
+    if query_optional(processes, path, "refs/heads/workspace")?.is_some() {
         return Err(failure(
             "An existing workspace branch blocks the workspace/ namespace; rename it before reconciling",
         ));
     }
-    let refs = run(creation_command(
-        path,
-        &["for-each-ref", "--format=%(refname)", &reference],
-    ))?;
-    let worktrees = run(creation_command(
-        path,
-        &["worktree", "list", "--porcelain", "-z"],
-    ))?;
+    let refs = run(
+        processes,
+        creation_command(path, &["for-each-ref", "--format=%(refname)", &reference]),
+    )?;
+    let worktrees = run(
+        processes,
+        creation_command(path, &["worktree", "list", "--porcelain", "-z"]),
+    )?;
     let occupied = occupied_inventory(&refs, &worktrees, Default::default())?;
     if occupied.worktrees.iter().any(|p| directory.starts_with(p)) {
         return Err(failure(
@@ -496,11 +339,11 @@ impl CreationEffects for LocalCreation {
         }
     }
     fn base(&mut self, repository: &crate::workspaces::RepositoryRecord) -> Result<PinnedBase> {
-        validate_repository(repository)?;
+        validate_repository(&self.0, repository)?;
         let path = Path::new(&repository.path);
-        let origin = query_optional(path, "refs/remotes/origin/HEAD")?;
-        let main = query_optional(path, "refs/heads/main")?;
-        let master = query_optional(path, "refs/heads/master")?;
+        let origin = query_optional(&self.0, path, "refs/remotes/origin/HEAD")?;
+        let main = query_optional(&self.0, path, "refs/heads/main")?;
+        let master = query_optional(&self.0, path, "refs/heads/master")?;
         let (reference, commit) =
             crate::workspaces::choose_base(origin.as_deref(), main.as_deref(), master.as_deref())?;
         Ok(PinnedBase {
@@ -513,14 +356,18 @@ impl CreationEffects for LocalCreation {
         repository: &crate::workspaces::RepositoryRecord,
         workspace: &Workspace,
     ) -> Result<Artifacts> {
-        validate_repository(repository)?;
+        validate_repository(&self.0, repository)?;
         let path = Path::new(&repository.path);
         let base = workspace
             .base
             .as_ref()
             .ok_or_else(|| failure("Workspace has no pinned commit"))?;
-        let branch = query_optional(path, &format!("refs/heads/{}", workspace.branch()?))?;
-        let owner = query_optional(path, &ownership_ref(workspace))?;
+        let branch = query_optional(
+            &self.0,
+            path,
+            &format!("refs/heads/{}", workspace.branch()?),
+        )?;
+        let owner = query_optional(&self.0, path, &ownership_ref(workspace))?;
         let branch = match (branch, owner) {
             (None, None) => BranchArtifact::Absent,
             (Some(actual), Some(owner)) if actual == base.commit && owner == base.commit => {
@@ -545,18 +392,20 @@ impl CreationEffects for LocalCreation {
                 } else if location(Path::new(workspace.path()?))?.is_none() {
                     FolderArtifact::Reserved
                 } else {
-                    let inspected = inspect(workspace.path()?);
+                    let inspected = inspect(&self.0, workspace.path()?);
                     if let Ok(actual) = inspected {
                         if actual.path == workspace.path()?
                             && actual.common_dir == repository.common_dir
                         {
                             let target = Path::new(workspace.path()?);
-                            let head = query_optional(target, "HEAD")?;
+                            let head = query_optional(&self.0, target, "HEAD")?;
                             let symbolic = run_output(
+                                &self.0,
                                 creation_command(target, &["symbolic-ref", "--quiet", "HEAD"]),
                                 None,
                             )?;
                             let clean = run_output(
+                                &self.0,
                                 creation_command(
                                     target,
                                     &["status", "--porcelain=v1", "-z", "--untracked-files=normal"],
@@ -631,7 +480,7 @@ impl CreationEffects for LocalCreation {
         repository: &crate::workspaces::RepositoryRecord,
         workspace: &Workspace,
     ) -> Result<()> {
-        validate_repository(repository)?;
+        validate_repository(&self.0, repository)?;
         let base = workspace
             .base
             .as_ref()
@@ -644,6 +493,7 @@ impl CreationEffects for LocalCreation {
             base.commit
         );
         let (success, output) = run_leased(
+            &self.0,
             workspace,
             creation_command(Path::new(&repository.path), &["update-ref", "--stdin"]),
             Some(input.as_bytes()),
@@ -659,8 +509,9 @@ impl CreationEffects for LocalCreation {
         repository: &crate::workspaces::RepositoryRecord,
         workspace: &Workspace,
     ) -> Result<()> {
-        validate_repository(repository)?;
+        validate_repository(&self.0, repository)?;
         let (success, output) = run_leased(
+            &self.0,
             workspace,
             creation_command(
                 Path::new(&repository.path),
@@ -705,6 +556,7 @@ fn open_execution_lock(workspace: &Workspace) -> Result<std::fs::File> {
     Ok(file)
 }
 fn run_leased(
+    processes: &Processes,
     workspace: &Workspace,
     mut command: Command,
     input: Option<&[u8]>,
@@ -726,9 +578,9 @@ fn run_leased(
             Ok(())
         });
     }
-    let outcome = run_output(command, input);
+    let outcome = run_output(processes, command, input);
     drop(lease);
-    if !LocalCreation.quiescent(workspace)? {
+    if !LocalCreation(processes.clone()).quiescent(workspace)? {
         return Err(RepositoryError::new(
             ErrorCode::CleanupUnconfirmed,
             "Git exited while owned descendant work still holds the execution lease. Reconcile after that work exits; no further creation was performed.",
@@ -821,59 +673,5 @@ mod tests {
             ErrorCode::InvalidPath
         );
         assert_eq!(effects.calls, [Query::Inside]);
-    }
-    #[test]
-    fn output_budget_fails_instead_of_parsing_truncated_output() {
-        assert!(
-            drain(
-                &mut std::io::Cursor::new(vec![b'x'; OUTPUT_LIMIT + 1]),
-                &mut vec![]
-            )
-            .is_err()
-        );
-    }
-    struct Process {
-        elapsed: Duration,
-        stopped: bool,
-        cleanup_failed: bool,
-    }
-    impl GitProcess for Process {
-        fn output(&mut self, _: &mut Vec<u8>, _: &mut Vec<u8>) -> Result<()> {
-            Ok(())
-        }
-        fn exited(&mut self) -> Result<Option<bool>> {
-            Ok(None)
-        }
-        fn elapsed(&self) -> Duration {
-            self.elapsed
-        }
-        fn wait_tick(&mut self) {
-            self.elapsed += DEADLINE;
-        }
-        fn stop_and_wait(&mut self) -> Result<()> {
-            self.stopped = true;
-            if self.cleanup_failed {
-                Err(failure("cleanup could not be confirmed"))
-            } else {
-                Ok(())
-            }
-        }
-    }
-    #[test]
-    fn timeout_stops_owned_git_without_real_waits_and_retains_unconfirmed_cleanup() {
-        for cleanup_failed in [false, true] {
-            let mut process = Process {
-                elapsed: Duration::ZERO,
-                stopped: false,
-                cleanup_failed,
-            };
-            let result = run_process(&mut process).unwrap_err();
-            assert!(process.stopped);
-            assert!(result.message.contains(if cleanup_failed {
-                "cleanup could not be confirmed"
-            } else {
-                "timed out"
-            }));
-        }
     }
 }

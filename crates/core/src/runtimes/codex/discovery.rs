@@ -127,6 +127,7 @@ mod tests {
     }
     fn launch() -> Launch {
         Launch {
+            processes: crate::process_effects::Processes::new(),
             program: "codex".into(),
             directory: "/neutral".into(),
             environment: vec![

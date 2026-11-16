@@ -6,7 +6,7 @@ use std::{
 };
 use tokio::{
     io::AsyncReadExt,
-    process::{Child, Command},
+    process::Command,
     time::{Instant, timeout},
 };
 use tokio_util::sync::CancellationToken;
@@ -17,6 +17,7 @@ pub(in crate::runtimes) struct Launch {
     pub(super) directory: PathBuf,
     pub(super) environment: Vec<(OsString, OsString)>,
     pub(super) fixture: bool,
+    pub(super) processes: crate::process_effects::Processes,
 }
 impl Launch {
     pub(in crate::runtimes) fn credential_scope(&self) -> String {
@@ -26,7 +27,9 @@ impl Launch {
             .map(|(_, value)| value.to_string_lossy().into_owned())
             .unwrap_or_else(|| self.directory.to_string_lossy().into_owned())
     }
-    pub(in crate::runtimes) fn capture() -> (Self, ProviderTarget) {
+    pub(in crate::runtimes) fn capture(
+        processes: crate::process_effects::Processes,
+    ) -> (Self, ProviderTarget) {
         let id = uuid::Uuid::new_v4();
         let directory = std::env::temp_dir().join(format!("agent-workspace-setup-{id}"));
         let fixture = std::env::var_os("AGENT_WORKSPACE_CODEX_FIXTURE");
@@ -83,6 +86,7 @@ impl Launch {
         };
         (
             Self {
+                processes,
                 program,
                 directory,
                 environment,
@@ -176,15 +180,7 @@ impl<F: Fn() + Sync> super::discovery::Search for NativeSearch<'_, F> {
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .process_group(0);
-        let mut child = command.spawn().ok()?;
-        let stderr = child.stderr.take()?;
-        let drain = tokio::spawn(async move {
-            tokio::io::copy(
-                &mut tokio::io::BufReader::new(stderr),
-                &mut tokio::io::sink(),
-            )
-            .await
-        });
+        let mut child = self.launch.processes.spawn(command).ok()?;
         let mut stdout = child.stdout.take()?.take(65537);
         let mut bytes = Vec::new();
         let read = self
@@ -195,7 +191,7 @@ impl<F: Fn() + Sync> super::discovery::Search for NativeSearch<'_, F> {
             ))
             .await;
         drop(stdout);
-        let status = finish(&mut child, drain, self.uncertain).await.ok()?;
+        let status = child.finish(self.uncertain).await.ok()?;
         if !status.success() || !matches!(read, Some(Ok(Ok(_)))) || bytes.len() > 65536 {
             return None;
         }
@@ -212,79 +208,18 @@ fn shell_path_bytes(bytes: &[u8]) -> Option<Vec<u8>> {
     (!path.contains(&0)).then(|| path.to_vec())
 }
 
-fn spawn(launch: &Launch, argument: &str) -> Result<Child, SetupFailure> {
-    launch.command(argument).spawn().map_err(|error| {
-        let missing = error.kind() == io::ErrorKind::NotFound;
-        let mut failure = SetupFailure::io(argument, error);
-        if missing {
-            failure.problem = SetupProblem::MissingExecutable;
-        }
-        failure
-    })
-}
-
-trait Cleanup {
-    fn signal(&mut self, signal: i32) -> io::Result<()>;
-    async fn quiescent(&mut self, budget: Duration) -> io::Result<bool>;
-}
-impl Cleanup for Child {
-    fn signal(&mut self, signal: i32) -> io::Result<()> {
-        let pid = self
-            .id()
-            .and_then(|pid| i32::try_from(pid).ok())
-            .ok_or_else(|| io::Error::other("owned child identity unavailable"))?;
-        // SAFETY: process_group(0) created this group, and the unreaped child
-        // handle still owns its identity. Never signal from a stored/reaped PID.
-        if unsafe { libc::kill(-pid, signal) } == 0 {
-            Ok(())
-        } else {
-            let error = io::Error::last_os_error();
-            if error.raw_os_error() == Some(libc::ESRCH) {
-                Ok(())
-            } else {
-                Err(error)
+fn spawn(launch: &Launch, argument: &str) -> Result<crate::process_effects::Process, SetupFailure> {
+    launch
+        .processes
+        .spawn(launch.command(argument))
+        .map_err(|error| {
+            let missing = error.kind() == io::ErrorKind::NotFound;
+            let mut failure = SetupFailure::io(argument, error);
+            if missing {
+                failure.problem = SetupProblem::MissingExecutable;
             }
-        }
-    }
-    async fn quiescent(&mut self, budget: Duration) -> io::Result<bool> {
-        let pid = self
-            .id()
-            .and_then(|pid| i32::try_from(pid).ok())
-            .ok_or_else(|| io::Error::other("owned group leader unavailable"))?;
-        let deadline = Instant::now() + budget;
-        loop {
-            if group_quiescent(pid)? {
-                return Ok(true);
-            }
-            if Instant::now() >= deadline {
-                return Ok(false);
-            }
-            tokio::time::sleep_until((Instant::now() + Duration::from_millis(20)).min(deadline))
-                .await;
-        }
-    }
-}
-async fn cleanup(child: &mut impl Cleanup) -> bool {
-    if child
-        .quiescent(Duration::from_secs(2))
-        .await
-        .unwrap_or(false)
-    {
-        return true;
-    }
-    if child.signal(libc::SIGTERM).is_ok()
-        && child
-            .quiescent(Duration::from_secs(2))
-            .await
-            .unwrap_or(false)
-    {
-        return true;
-    }
-    child.signal(libc::SIGKILL).is_ok()
-        && child
-            .quiescent(Duration::from_secs(2))
-            .await
-            .unwrap_or(false)
+            failure
+        })
 }
 
 pub(in crate::runtimes) async fn probe(
@@ -337,14 +272,6 @@ async fn probe_inner(
         ));
     }
     let mut child = spawn(&launch, "app-server")?;
-    let stderr = child.stderr.take().expect("piped stderr");
-    let drain = tokio::spawn(async move {
-        tokio::io::copy(
-            &mut tokio::io::BufReader::new(stderr),
-            &mut tokio::io::sink(),
-        )
-        .await
-    });
     let stdout = child.stdout.take().expect("piped stdout");
     let stdin = child.stdin.take().expect("piped stdin");
     let result = cancel
@@ -362,7 +289,8 @@ async fn probe_inner(
                 "Setup cancelled during supervisor shutdown",
             ))
         });
-    finish(&mut child, drain, &uncertain)
+    child
+        .finish(&uncertain)
         .await
         .map_err(|error| SetupFailure::io("owned process cleanup", error))?;
     result
@@ -400,32 +328,31 @@ pub(in crate::runtimes) async fn browser_login(
         return Ok(crate::runtimes::LoginOutcome::Cancelled);
     }
     let mut child = spawn(&launch, "app-server")?;
-    let stderr = child.stderr.take().expect("piped stderr");
-    let drain = tokio::spawn(async move {
-        tokio::io::copy(
-            &mut tokio::io::BufReader::new(stderr),
-            &mut tokio::io::sink(),
-        )
-        .await
-    });
     let stdout = child.stdout.take().expect("piped stdout");
     let stdin = child.stdin.take().expect("piped stdin");
     let fixture = launch
         .environment
         .iter()
         .any(|(key, _)| key == "AW_FIXTURE_CONTROL");
+    let processes = &launch.processes;
     let result = protocol::login(stdout, stdin, cancel, reopen, &event, |url| {
         let uncertain = &uncertain;
-        async move { open_browser(&url, fixture, uncertain).await }
+        async move { open_browser(&url, fixture, processes, uncertain).await }
     })
     .await;
-    finish(&mut child, drain, &uncertain)
+    child
+        .finish(&uncertain)
         .await
         .map_err(|error| SetupFailure::io("login physical cleanup", error))?;
     result
 }
 
-async fn open_browser(url: &str, fixture: bool, uncertain: &impl Fn()) -> bool {
+async fn open_browser(
+    url: &str,
+    fixture: bool,
+    processes: &crate::process_effects::Processes,
+    uncertain: &impl Fn(),
+) -> bool {
     if !protocol::browser_url(url, fixture) {
         return false;
     }
@@ -436,30 +363,15 @@ async fn open_browser(url: &str, fixture: bool, uncertain: &impl Fn()) -> bool {
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .process_group(0);
-    let Ok(mut child) = command.spawn() else {
+    let Ok(child) = processes.spawn_until(command, Instant::now() + Duration::from_secs(5)) else {
         return false;
     };
-    // Keep the unreaped identity until the same physical group cleanup used by
-    // provider children completes. The user's browser is not an owned resource.
-    let success = child
-        .quiescent(Duration::from_secs(5))
-        .await
-        .unwrap_or(false);
-    if !cleanup(&mut child).await {
-        uncertain();
-        while !child
-            .quiescent(Duration::from_millis(100))
-            .await
-            .unwrap_or(false)
-        {
-            tokio::time::sleep(Duration::from_millis(100)).await;
-        }
-    }
     child
-        .wait()
+        .finish(uncertain)
         .await
-        .is_ok_and(|status| success && status.success())
+        .is_ok_and(|status| status.success())
 }
+
 async fn version(
     launch: &Launch,
     cancel: &CancellationToken,
@@ -467,14 +379,6 @@ async fn version(
 ) -> Result<String, SetupFailure> {
     let mut child = spawn(launch, "--version")?;
     drop(child.stdin.take());
-    let stderr = child.stderr.take().expect("piped stderr");
-    let drain = tokio::spawn(async move {
-        tokio::io::copy(
-            &mut tokio::io::BufReader::new(stderr),
-            &mut tokio::io::sink(),
-        )
-        .await
-    });
     let mut stdout = child.stdout.take().expect("piped stdout").take(1025);
     let mut bytes = Vec::new();
     let result = match cancel
@@ -500,7 +404,8 @@ async fn version(
         )),
     };
     drop(stdout);
-    let status = finish(&mut child, drain, uncertain)
+    let status = child
+        .finish(uncertain)
         .await
         .map_err(|error| SetupFailure::io("version cleanup", error))?;
     result?;
@@ -515,153 +420,9 @@ async fn version(
         )
     })
 }
-async fn finish(
-    child: &mut Child,
-    drain: tokio::task::JoinHandle<io::Result<u64>>,
-    uncertain: &impl Fn(),
-) -> io::Result<std::process::ExitStatus> {
-    if !cleanup(child).await {
-        uncertain();
-        // Never reap the group leader while a live member or an unknown group
-        // remains. Its unreaped PID prevents process-group identity reuse.
-        while !child
-            .quiescent(Duration::from_millis(100))
-            .await
-            .unwrap_or(false)
-        {
-            tokio::time::sleep(Duration::from_millis(100)).await;
-        }
-    }
-    let mut drain = drain;
-    let drained = match timeout(Duration::from_secs(2), &mut drain).await {
-        Ok(result) => result,
-        Err(_) => {
-            uncertain();
-            drain.await
-        }
-    };
-    // A pipe that outlives the quiescent group may belong to escaped work.
-    // Keep ownership/fencing until its physical reader actually completes.
-    if !matches!(drained, Ok(Ok(_))) {
-        uncertain();
-        std::future::pending::<()>().await;
-    }
-    child.wait().await
-}
-
-#[cfg(target_os = "macos")]
-fn group_quiescent(group: i32) -> io::Result<bool> {
-    let group_id = u32::try_from(group).map_err(io::Error::other)?;
-    let mut status = std::mem::MaybeUninit::<libc::siginfo_t>::zeroed();
-    // SAFETY: correctly aligned initialized storage; P_PID targets the retained
-    // direct child only. WNOWAIT observes exit without relinquishing its identity.
-    if unsafe {
-        libc::waitid(
-            libc::P_PID,
-            group_id,
-            status.as_mut_ptr(),
-            libc::WEXITED | libc::WNOHANG | libc::WNOWAIT,
-        )
-    } != 0
-    {
-        return Err(io::Error::last_os_error());
-    }
-    // SAFETY: successful waitid initialized this record; si_pid is its PID field.
-    let exited = unsafe { status.assume_init().si_pid() } == group;
-    if !exited {
-        return Ok(false);
-    }
-    let mut pids = [0i32; 512];
-    let capacity = i32::try_from(std::mem::size_of_val(&pids)).expect("bounded PID array");
-    // SAFETY: initialized writable array with the exact supplied byte capacity.
-    // PROC_PGRP_ONLY=2 comes from the selected macOS SDK sys/proc_info.h.
-    let bytes = unsafe {
-        libc::proc_listpids(
-            2,
-            u32::try_from(group).map_err(io::Error::other)?,
-            pids.as_mut_ptr().cast(),
-            capacity,
-        )
-    };
-    if bytes <= 0 || bytes >= capacity || bytes % 4 != 0 {
-        return Err(io::Error::other("owned group enumeration incomplete"));
-    }
-    let count = usize::try_from(bytes / 4).map_err(io::Error::other)?;
-    let mut leader_seen = false;
-    for pid in &pids[..count] {
-        if *pid == group {
-            leader_seen = true;
-            continue;
-        }
-        let mut info = std::mem::MaybeUninit::<libc::proc_bsdinfo>::uninit();
-        let size =
-            i32::try_from(std::mem::size_of::<libc::proc_bsdinfo>()).expect("fixed OS record");
-        // SAFETY: aligned storage of exactly the structure size required by this
-        // SDK flavor. Initialized fields are read only after exact byte success.
-        let read = unsafe {
-            libc::proc_pidinfo(
-                *pid,
-                libc::PROC_PIDTBSDINFO,
-                0,
-                info.as_mut_ptr().cast(),
-                size,
-            )
-        };
-        if read != size {
-            let error = io::Error::last_os_error();
-            // macOS hides zombies from proc_pidinfo (ESRCH), even though they
-            // remain in proc_listpids. They own no running work or open pipes.
-            if error.raw_os_error() == Some(libc::ESRCH) {
-                continue;
-            }
-            return Err(error);
-        }
-        // SAFETY: proc_pidinfo returned the entire initialized proc_bsdinfo.
-        let info = unsafe { info.assume_init() };
-        if info.pbi_pgid != u32::try_from(group).map_err(io::Error::other)? {
-            return Err(io::Error::other(
-                "owned group membership changed during inspection",
-            ));
-        }
-        leader_seen |= *pid == group;
-        if info.pbi_status != libc::SZOMB {
-            return Ok(false);
-        }
-    }
-    if !leader_seen {
-        return Err(io::Error::other("unreaped owned group leader missing"));
-    }
-    Ok(true)
-}
-#[cfg(not(target_os = "macos"))]
-fn group_quiescent(_group: i32) -> io::Result<bool> {
-    Err(io::Error::new(
-        io::ErrorKind::Unsupported,
-        "process-group qualification currently supports macOS only",
-    ))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    struct Fake {
-        waits: std::collections::VecDeque<io::Result<bool>>,
-        signals: Vec<i32>,
-        fail_signal: bool,
-    }
-    impl Cleanup for Fake {
-        fn signal(&mut self, signal: i32) -> io::Result<()> {
-            self.signals.push(signal);
-            if self.fail_signal {
-                Err(io::Error::other("synthetic"))
-            } else {
-                Ok(())
-            }
-        }
-        async fn quiescent(&mut self, _: Duration) -> io::Result<bool> {
-            self.waits.pop_front().unwrap()
-        }
-    }
     #[test]
     fn shell_path_requires_bounded_framed_path_and_ignores_startup_noise() {
         assert_eq!(
@@ -674,9 +435,11 @@ mod tests {
             None
         );
     }
-    #[test]
-    fn launch_uses_the_captured_executable_environment_and_neutral_directory_without_a_shell() {
+    #[tokio::test]
+    async fn launch_uses_the_captured_executable_environment_and_neutral_directory_without_a_shell()
+    {
         let launch = Launch {
+            processes: crate::process_effects::Processes::new(),
             program: PathBuf::from("/fixture/codex"),
             directory: PathBuf::from("/fixture/neutral"),
             environment: vec![("CODEX_HOME".into(), "/fixture/home".into())],
@@ -697,28 +460,5 @@ mod tests {
                 Some(std::ffi::OsStr::new("/fixture/home"))
             )]
         );
-    }
-    #[test]
-    fn cleanup_escalates_only_while_owned_and_retains_uncertainty() {
-        tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .start_paused(true)
-            .build()
-            .unwrap()
-            .block_on(async {
-                let mut fake = Fake {
-                    waits: [Ok(false), Ok(false), Ok(true)].into(),
-                    signals: vec![],
-                    fail_signal: false,
-                };
-                assert!(cleanup(&mut fake).await);
-                assert_eq!(fake.signals, [libc::SIGTERM, libc::SIGKILL]);
-                let mut fake = Fake {
-                    waits: [Ok(false)].into(),
-                    signals: vec![],
-                    fail_signal: true,
-                };
-                assert!(!cleanup(&mut fake).await);
-            });
     }
 }

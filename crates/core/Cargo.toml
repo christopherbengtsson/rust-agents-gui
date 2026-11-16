@@ -34,3 +34,9 @@ futures-util = { version = "0.3.34", default-features = false, features = ["std"
 
 [dev-dependencies]
 tokio = { version = "=1.54.1", default-features = false, features = ["rt", "test-util"] }
+
+[[bin]]
+name = "qualify-process-effects"
+path = "src/bin/qualify-process-effects.rs"
+required-features = ["qualification"]
+test = false

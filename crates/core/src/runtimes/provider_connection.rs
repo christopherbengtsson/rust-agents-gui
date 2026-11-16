@@ -229,13 +229,15 @@ pub struct ProviderConnections {
 impl ProviderConnections {
     pub(crate) async fn open(
         journal: Arc<Journal>,
+        processes: crate::process_effects::Processes,
         storage: crate::storage::Storage,
     ) -> Result<Self, RepositoryError> {
         // Startup retains this join through completion; launch capture includes
         // canonical filesystem inspection, unlike async SQLx restoration below.
-        let (launch, mut target) = tokio::task::spawn_blocking(codex::Launch::capture)
-            .await
-            .map_err(RepositoryError::storage)?;
+        let (launch, mut target) =
+            tokio::task::spawn_blocking(move || codex::Launch::capture(processes))
+                .await
+                .map_err(RepositoryError::storage)?;
         let (selected, recovered) = persistence::restore(&storage, &launch.credential_scope())
             .await
             .map_err(RepositoryError::storage)?;

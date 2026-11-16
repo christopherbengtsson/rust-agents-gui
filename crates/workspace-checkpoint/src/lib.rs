@@ -6,6 +6,8 @@ mod git;
 mod observations;
 #[path = "../../core/src/private_state.rs"]
 mod private_state;
+#[path = "../../core/src/process_effects.rs"]
+mod process_effects;
 #[path = "../../core/src/storage.rs"]
 mod storage;
 #[path = "../../core/src/workspaces.rs"]

@@ -19,6 +19,7 @@ fn snapshot() -> SupervisorSnapshot {
         pid: 42,
         workspaces: None,
         storage: None,
+        processes: None,
         providers: None,
         journal: Arc::new(crate::observations::Journal::default()),
     }
@@ -371,6 +372,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
             pid: 43,
             workspaces: None,
             storage: None,
+            processes: None,
             providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         }
@@ -673,6 +675,7 @@ fn application_corpus_matches_pure_rust_serialization() {
             pid: 41,
             workspaces: None,
             storage: None,
+            processes: None,
             providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         });
@@ -1579,6 +1582,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
             pid: 42,
             workspaces: None,
             storage: None,
+            processes: None,
             providers: None,
             journal: Arc::default(),
         });

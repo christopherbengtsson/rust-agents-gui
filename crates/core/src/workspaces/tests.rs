@@ -248,6 +248,9 @@ struct Effects {
     occupied: bool,
 }
 impl coordinator::Effects for Effects {
+    fn inspection(&self) -> Box<dyn InspectionEffects + Send> {
+        panic!("This scenario does not request file inspection")
+    }
     fn inspect(&self, path: &str) -> Result<ValidatedRepository> {
         self.probes.fetch_add(1, Ordering::SeqCst);
         if let Some(block) = &self.validation_block {
