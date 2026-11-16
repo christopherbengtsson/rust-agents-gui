@@ -382,6 +382,9 @@ fn expired() -> RepositoryError {
     )
 }
 impl Inspections {
+    pub(super) fn has_pending(&self) -> bool {
+        !self.pending.is_empty()
+    }
     fn record(&mut self, id: WorkspaceId) -> Result<&mut Inspection> {
         if !self.records.iter().any(|r| r.workspace_id == id) {
             if self.records.len() >= RETAINED_WORKSPACES {
@@ -878,6 +881,10 @@ pub(super) fn process_inspection(
                     && error.code == ErrorCode::CleanupUnconfirmed
                 {
                     state.workspace_faults.insert(workspace.id, error.clone());
+                    state.fenced = true;
+                    state
+                        .cleanup_faults
+                        .insert(format!("inspection {}", workspace.id.0), error.clone());
                 }
                 if result.is_ok() {
                     state.inspections.pending.retain(|pending| {
@@ -952,6 +959,10 @@ pub(super) fn process_inspection(
                     && error.code == ErrorCode::CleanupUnconfirmed
                 {
                     state.workspace_faults.insert(workspace.id, error.clone());
+                    state.fenced = true;
+                    state
+                        .cleanup_faults
+                        .insert(format!("inspection {}", workspace.id.0), error.clone());
                 }
                 if let Ok(record) = state.inspections.record(workspace.id)
                     && record
@@ -981,30 +992,40 @@ pub(super) fn process_inspection(
 }
 
 impl Workspaces {
-    pub(super) fn inspection_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
-        let mut state = self.state()?;
-        if state.fenced {
-            return Err(RepositoryError::storage("Workspace inspection is fenced"));
+    pub(super) async fn inspection_request(
+        &self,
+        request: WorkspaceRequest,
+    ) -> Result<WorkspaceReply> {
+        let _gate = self.decision.lock().await;
+        if self.state()?.fenced {
+            return Err(fenced());
         }
         let id = match &request {
             WorkspaceRequest::Changes { workspace_id, .. } => *workspace_id,
             WorkspaceRequest::ChangePreview { target, .. } => target.workspace_id,
             _ => unreachable!(),
         };
-        let workspace = state
-            .store()?
-            .workspace(id)?
-            .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found."))?;
-        if state.workspace_observation(workspace.clone()).status != CreationStatus::Ready {
+        let workspace = one::<Workspace>(self.store.as_ref(), Read::Workspace(id))
+            .await?
+            .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+        if self
+            .state()?
+            .workspace_observation(workspace.clone())
+            .status
+            != CreationStatus::Ready
+        {
             return Err(RepositoryError::new(
                 ErrorCode::Unavailable,
-                "Inspect changes after the workspace is ready.",
+                "Inspect changes after the workspace is ready",
             ));
         }
-        let repository = state
-            .store()?
-            .repository(workspace.repository_id)?
-            .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Repository not found."))?;
+        let repository = one::<RepositoryRecord>(
+            self.store.as_ref(),
+            Read::Repository(workspace.repository_id),
+        )
+        .await?
+        .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Repository not found"))?;
+        let mut state = self.state()?;
         let before = state.inspections.generation;
         let reply = match request {
             WorkspaceRequest::Changes {
@@ -1037,6 +1058,7 @@ impl Workspaces {
 }
 
 #[cfg(test)]
+#[path = "inspection/tests.rs"]
 mod tests;
 
 #[cfg(feature = "codegen")]

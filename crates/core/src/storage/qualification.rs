@@ -412,7 +412,7 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         .map_err(|_| Error::Panic)?
         .outcome;
     ensure(
-        matches!(collision, Err(Error::Write { original, retirement: None, uncertain: false }) if matches!(*original, Error::Conflict(_))),
+        matches!(collision, Err(Error::CandidateConflict)),
         "Global folder collision lost typed settled rejection",
     )?;
     written(

@@ -1187,12 +1187,17 @@ impl ConnectionServer {
             core.journal.clone(),
             cancel,
             async |request| {
-                if request.provider.is_some() || request.quit.is_some() {
-                    return Ok(route_request(&core, request));
-                }
+                let permit = self.blocking.try_acquire().ok_or_else(|| {
+                    io::Error::new(io::ErrorKind::WouldBlock, "Request dispatch is busy")
+                })?;
+                let core = core.clone();
                 self.tasks
-                    .blocking(&self.blocking, move || Ok(route_request(&core, request)))
+                    .spawn(async move {
+                        let _permit = permit;
+                        route_request(&core, request).await
+                    })?
                     .await
+                    .map_err(io::Error::other)
             },
         )
         .await
@@ -1213,7 +1218,7 @@ impl ConnectionServer {
         Ok(())
     }
 }
-fn route_request(core: &Arc<Core>, request: Request) -> Response {
+async fn route_request(core: &Arc<Core>, request: Request) -> Response {
     if let Some(action) = request.quit {
         let status = match action {
             QuitRequest::Begin => core.begin_quit(),
@@ -1256,12 +1261,12 @@ fn route_request(core: &Arc<Core>, request: Request) -> Response {
     } else if let Some(request) = request.workspace {
         Response::Workspace {
             owner: core.owner.clone(),
-            result: core.workspace_request(request),
+            result: core.workspace_request(request).await,
         }
     } else if let Some(request) = request.repository {
         Response::Repository {
             owner: core.owner.clone(),
-            result: core.repository_request(request),
+            result: core.repository_request(request).await,
         }
     } else {
         Response::Snapshot {

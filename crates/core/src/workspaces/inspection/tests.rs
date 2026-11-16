@@ -20,22 +20,7 @@ fn fixture() -> (Workspace, RepositoryRecord) {
     (workspace, repository)
 }
 fn shared() -> Mutex<OwnerState> {
-    Mutex::new(OwnerState {
-        inspections: Inspections::default(),
-        directory: "/unused".into(),
-        store: Err(RepositoryError::storage("No real storage in units")),
-        cache: VecDeque::new(),
-        probes: VecDeque::new(),
-        fault: None,
-        cleanup_faults: BTreeMap::new(),
-        fenced: false,
-        storage_closed: false,
-        revision: 1,
-        journal: Arc::new(crate::observations::Journal::default()),
-        active_workspace: None,
-        active_registration: None,
-        workspace_faults: BTreeMap::new(),
-    })
+    Mutex::new(OwnerState::new("/unused".into()))
 }
 struct Effects<'a> {
     shared: &'a Mutex<OwnerState>,
@@ -375,21 +360,6 @@ fn unsupported_content_is_not_read_and_failed_diff_is_not_a_prefix() {
     process_inspection(&shared, &mut effects);
     assert_eq!(effects.reads, 0);
     assert!(parse_diff(b"@@ -1,2 +1,2 @@\n-old\n+new\n").is_err());
-}
-
-#[test]
-fn existing_jobs_and_inspection_take_fair_turns() {
-    let mut next = 0;
-    let mut order = Vec::new();
-    for _ in 0..9 {
-        assert!(worker_cycle(&mut next, |kind| {
-            order.push(kind);
-            true
-        }));
-    }
-    assert_eq!(order, vec![0, 1, 2, 0, 1, 2, 0, 1, 2]);
-    assert!(worker_cycle(&mut next, |kind| kind == 2));
-    assert_eq!(next, 0);
 }
 
 #[test]

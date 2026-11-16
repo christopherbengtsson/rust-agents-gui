@@ -18,6 +18,7 @@ fn snapshot() -> SupervisorSnapshot {
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
+        storage: None,
         providers: None,
         journal: Arc::new(crate::observations::Journal::default()),
     }
@@ -369,6 +370,7 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
             owner: "owner-b".into(),
             pid: 43,
             workspaces: None,
+            storage: None,
             providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         }
@@ -670,6 +672,7 @@ fn application_corpus_matches_pure_rust_serialization() {
             owner: owner.into(),
             pid: 41,
             workspaces: None,
+            storage: None,
             providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
         });
@@ -1575,6 +1578,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
             owner: "owner-a".into(),
             pid: 42,
             workspaces: None,
+            storage: None,
             providers: None,
             journal: Arc::default(),
         });
@@ -1601,7 +1605,7 @@ fn server_routes_workspace_and_repository_errors_without_fabricating_empty_recor
                 &core.owner,
                 core.journal.clone(),
                 &CancellationToken::new(),
-                async |request| Ok(route_request(&core, request)),
+                async |request| Ok(route_request(&core, request).await),
             )
             .await
             .unwrap();

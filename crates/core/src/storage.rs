@@ -30,6 +30,7 @@ type Result<T> = std::result::Result<T, Error>;
 pub(crate) enum Error {
     Sql(Arc<sqlx::Error>),
     Conflict(Arc<sqlx::Error>),
+    CandidateConflict,
     Corrupt,
     Io(Arc<std::io::Error>),
     Invalid(&'static str),
@@ -217,8 +218,27 @@ impl<T> Records<T> {
     pub(crate) fn items(&self) -> &[T] {
         &self.records
     }
+    pub(crate) fn into_items(self) -> Vec<T> {
+        self.records
+    }
 }
 impl Delivery {
+    #[cfg(test)]
+    pub(crate) fn controlled(
+        outcome: Result<Vec<serde_json::Value>>,
+        next: Option<String>,
+    ) -> Self {
+        Self {
+            outcome: outcome.map(|records| {
+                Outcome::Snapshot(Snapshot {
+                    revision: 1,
+                    records: records.into_iter().map(|r| r.to_string()).collect(),
+                    next,
+                })
+            }),
+            _slot: Arc::new(Semaphore::new(1)).try_acquire_owned().unwrap(),
+        }
+    }
     pub(crate) fn revision(&self) -> Result<u64> {
         match &self.outcome {
             Ok(Outcome::Written { revision }) => Ok(*revision),
@@ -658,7 +678,8 @@ async fn complete_job(
 impl Error {
     fn is_domain_rejection(&self) -> bool {
         match self {
-            Self::Invalid(_)
+            Self::CandidateConflict
+            | Self::Invalid(_)
             | Self::Conflict(_)
             | Self::Oversized
             | Self::Capacity

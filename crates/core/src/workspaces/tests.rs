@@ -1,1674 +1,950 @@
+//! Controlled storage/filesystem/Git outcomes; no real effects in application units.
 use super::*;
-use std::collections::BTreeMap;
+use crate::storage::{Delivery, Error};
+use futures_util::future::BoxFuture;
+use serde_json::{Value, json};
+use std::sync::{
+    Condvar,
+    atomic::{AtomicUsize, Ordering},
+};
 
 #[derive(Default)]
-struct Store {
-    actions: BTreeMap<ActionId, Registration>,
-    workspaces: BTreeMap<WorkspaceId, Workspace>,
-    workspace_actions: BTreeMap<ActionId, (WorkspaceAction, WorkspaceId)>,
+struct Data {
+    registrations: BTreeMap<ActionId, Registration>,
     repositories: BTreeMap<RepositoryId, RepositoryRecord>,
-    calls: Vec<&'static str>,
-    fail_intent: bool,
-    finish_fault: Option<bool>,
-    fail_workspace_stage_once: Option<(WorkspaceId, CreationStage)>,
-    fail_reconcile_once: Option<WorkspaceId>,
+    workspaces: BTreeMap<WorkspaceId, Workspace>,
+    actions: BTreeMap<ActionId, WorkspaceAction>,
+    folders: BTreeMap<RepositoryId, String>,
+    cursors: BTreeMap<WorkspaceId, u64>,
+    claims: usize,
+    claim_conflicts: usize,
+    lost_claim: bool,
+    fail_save: bool,
+    writes: Vec<&'static str>,
 }
-impl RepositoryStore for Store {
-    fn action(&mut self, id: ActionId) -> Result<Option<Registration>> {
-        self.calls.push("read_action");
-        Ok(self.actions.get(&id).cloned())
-    }
-    fn intent(&mut self, req: &RegisterRepository) -> Result<Registration> {
-        self.calls.push("intent");
-        if self.fail_intent {
-            return Err(RepositoryError::storage("disk full"));
-        }
-        let action = Registration {
-            create_initial_workspace: req.create_initial_workspace,
-            initial_workspace_id: None,
-            action_id: req.action_id,
-            path: req.path.clone(),
-            state: RegistrationState::Pending,
-        };
-        self.actions.insert(req.action_id, action.clone());
-        Ok(action)
-    }
-    fn pending(&mut self) -> Result<Option<Registration>> {
-        Ok(self
-            .actions
-            .values()
-            .find(|a| a.state == RegistrationState::Pending)
-            .cloned())
-    }
-    fn pending_count(&mut self) -> Result<usize> {
-        Ok(self
-            .actions
-            .values()
-            .filter(|a| a.state == RegistrationState::Pending)
-            .count())
-    }
-    fn find_common(&mut self, common: &str) -> Result<Option<RepositoryRecord>> {
-        Ok(self
-            .repositories
-            .values()
-            .find(|r| r.common_dir == common)
-            .cloned())
-    }
-    fn finish(
-        &mut self,
-        a: &Registration,
-        r: Option<&RepositoryRecord>,
-        state: &RegistrationState,
-        initial: Option<&Workspace>,
-    ) -> Result<Registration> {
-        self.calls.push("finish");
-        if self.finish_fault == Some(false) {
-            return Err(RepositoryError::storage("commit failed"));
-        }
-        if let Some(w) = initial {
-            self.save_workspace(
-                w,
-                Some(&WorkspaceAction::Create {
-                    action_id: w.creation_action_id,
-                    repository_id: w.repository_id,
-                }),
-            )?;
-        }
-        if let Some(r) = r {
-            self.repositories.insert(r.id, r.clone());
-        }
-        let a = Registration {
-            state: state.clone(),
-            ..a.clone()
-        };
-        self.actions.insert(a.action_id, a.clone());
-        if self.finish_fault == Some(true) {
-            return Err(RepositoryError::storage("commit reply lost"));
-        }
-        Ok(a)
-    }
-    fn repository(&mut self, id: RepositoryId) -> Result<Option<RepositoryRecord>> {
-        Ok(self.repositories.get(&id).cloned())
-    }
-    fn list(&mut self, after: Option<RepositoryId>, limit: usize) -> Result<Vec<RepositoryRecord>> {
-        Ok(self
-            .repositories
-            .values()
-            .filter(|r| after.is_none_or(|id| r.id > id))
-            .take(limit)
-            .cloned()
-            .collect())
-    }
+#[derive(Default)]
+struct Store(Mutex<Data>);
+fn values<T: Serialize>(values: impl IntoIterator<Item = T>) -> Vec<Value> {
+    values
+        .into_iter()
+        .map(|v| serde_json::to_value(v).unwrap())
+        .collect()
 }
-
-fn validation(path: &str, common: &str) -> Result<ValidatedRepository> {
-    Ok(ValidatedRepository {
-        name: "one".into(),
-        path: path.into(),
-        common_dir: common.into(),
-    })
-}
-
-#[test]
-fn conflicting_ids_invalid_paths_and_failed_intent_admit_no_repository_effect() {
-    let mut store = Store::default();
-    let req = request();
-    admit(&mut store, &req).unwrap();
-    assert_eq!(
-        admit(
-            &mut store,
-            &RegisterRepository {
-                path: "/other".into(),
-                ..req.clone()
-            }
-        )
-        .unwrap_err()
-        .code,
-        ErrorCode::Conflict
-    );
-    let mut store = Store::default();
-    for path in ["relative", "", "/nul\0path"] {
-        assert_eq!(
-            admit(
-                &mut store,
-                &RegisterRepository {
-                    path: path.into(),
-                    ..req.clone()
-                }
-            )
-            .unwrap_err()
-            .code,
-            ErrorCode::InvalidPath
-        );
-    }
-    store.fail_intent = true;
-    assert_eq!(
-        admit(&mut store, &req).unwrap_err().code,
-        ErrorCode::Storage
-    );
-    assert!(store.pending().unwrap().is_none());
-    assert!(store.repositories.is_empty());
-    assert!(!store.calls.contains(&"finish"));
-}
-
-#[test]
-fn registration_path_budget_counts_utf8_bytes_before_recording_intent() {
-    for path in [
-        format!("/{}", "a".repeat(4095)),
-        format!("/{}a", "é".repeat(2047)),
-    ] {
-        assert_eq!(path.len(), 4096);
-        let mut store = Store::default();
-        let req = RegisterRepository { path, ..request() };
-        assert_eq!(
-            admit(&mut store, &req).unwrap().state,
-            RegistrationState::Pending
-        );
-        assert_eq!(store.calls, ["read_action", "intent"]);
-    }
-    for path in [
-        format!("/{}", "a".repeat(4096)),
-        format!("/{}", "é".repeat(2048)),
-    ] {
-        assert_eq!(path.len(), 4097);
-        let mut store = Store::default();
-        let req = RegisterRepository { path, ..request() };
-        assert_eq!(
-            admit(&mut store, &req).unwrap_err().code,
-            ErrorCode::Capacity
-        );
-        assert_eq!(store.calls, ["read_action"]);
-        assert!(store.actions.is_empty());
-    }
-}
-
-#[test]
-fn invalid_validation_records_an_actionable_failure_without_a_saved_repository() {
-    let mut store = Store::default();
-    let action = admit(&mut store, &request()).unwrap();
-    let outcome = finish_registration(
-        &mut store,
-        &action,
-        Err(RepositoryError::new(
-            ErrorCode::InvalidPath,
-            "Folder unavailable; restore its location",
-        )),
-        Path::new("/private/state"),
-    )
-    .unwrap();
-    assert!(
-        matches!(outcome.state, RegistrationState::Failed { error } if error.code == ErrorCode::InvalidPath)
-    );
-    assert!(store.repositories.is_empty());
-    assert!(store.pending().unwrap().is_none());
-}
-
-#[test]
-fn separate_clones_keep_separate_identity_even_with_the_same_name() {
-    let mut store = Store::default();
-    for (number, path) in [(1, "/first"), (2, "/clone")] {
-        let action = admit(
-            &mut store,
-            &RegisterRepository {
-                create_initial_workspace: false,
-                action_id: ActionId(Uuid::from_u128(number)),
-                path: path.into(),
-            },
-        )
-        .unwrap();
-        finish_registration(
-            &mut store,
-            &action,
-            validation(path, &format!("{path}/.git")),
-            Path::new("/private/state"),
-        )
-        .unwrap();
-    }
-    assert_eq!(store.repositories.len(), 2);
-}
-
-#[test]
-fn uncertain_commit_is_resolved_from_committed_action_status_and_failure_retains_intent() {
-    for committed in [true, false] {
-        let mut store = Store::default();
-        let action = admit(&mut store, &request()).unwrap();
-        store.finish_fault = Some(committed);
-        let result = finish_registration(
-            &mut store,
-            &action,
-            validation("/projects/one", "/projects/one/.git"),
-            Path::new("/private/state"),
-        );
-        if committed {
-            assert!(matches!(
-                result.unwrap().state,
-                RegistrationState::Completed { .. }
-            ));
-            assert_eq!(store.repositories.len(), 1);
-        } else {
-            assert_eq!(result.unwrap_err().code, ErrorCode::Storage);
-            assert_eq!(
-                store.pending().unwrap().unwrap().action_id,
-                action.action_id
-            );
-            assert!(store.repositories.is_empty());
-        }
-    }
-}
-
-fn state(store: Store) -> Mutex<OwnerState> {
-    Mutex::new(OwnerState {
-        inspections: inspection::Inspections::default(),
-        directory: "/unused-private-state".into(),
-        store: Ok(Box::new(store)),
-        cache: VecDeque::new(),
-        probes: VecDeque::new(),
-        fault: None,
-        cleanup_faults: BTreeMap::new(),
-        fenced: false,
-        storage_closed: false,
-        revision: 1,
-        journal: Arc::new(crate::observations::Journal::default()),
-        active_workspace: None,
-        active_registration: None,
-        workspace_faults: BTreeMap::new(),
-    })
-}
-
-#[test]
-fn inspection_requests_admit_only_the_exact_ready_workspace_without_writes() {
-    let repository = record(1);
-    let mut workspace =
-        allocate(repository.id, ActionId(Uuid::new_v4()), Path::new("/state")).unwrap();
-    workspace.path = Some("/state/ready/checkout".into());
-    workspace.branch = Some("workspace/ready".into());
-    workspace.name = Some("ready".into());
-    workspace.status = CreationStatus::Ready;
-    let mut store = Store::default();
-    store.repositories.insert(repository.id, repository);
-    store.workspaces.insert(workspace.id, workspace.clone());
-    let service = Workspaces {
-        shared: Arc::new(state(store)),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let request = |id| WorkspaceRequest::Changes {
-        workspace_id: id,
-        refresh: true,
-        comparison_id: None,
-        after: None,
-    };
-    assert_eq!(
-        service
-            .workspace_request(request(WorkspaceId(Uuid::new_v4())))
-            .unwrap_err()
-            .code,
-        ErrorCode::NotFound
-    );
-    let before = service.journal().watermark();
-    let WorkspaceReply::Changes { observation } =
-        service.workspace_request(request(workspace.id)).unwrap()
-    else {
-        panic!()
-    };
-    assert_eq!(observation.workspace_id, workspace.id);
-    assert_eq!(observation.phase, InspectionPhase::Queued);
-    assert_eq!(
-        service.journal().sample(Some(before)),
-        crate::observations::Sample::Hints {
-            watermark: before + 1,
-            targets: vec![crate::observations::Target::Inspection {
-                workspace_id: workspace.id
-            }]
-        }
-    );
-    assert!(observation.page.is_none());
-    assert_eq!(
-        service
-            .state()
-            .unwrap()
-            .store()
-            .unwrap()
-            .workspace(workspace.id)
-            .unwrap()
-            .unwrap(),
-        workspace
-    );
-}
-
-#[test]
-fn restored_pending_intent_runs_read_only_validation_while_status_remains_readable() {
-    let mut store = Store::default();
-    admit(&mut store, &request()).unwrap();
-    let shared = state(store);
-    assert!(process_one(&shared, |path| {
-        assert_eq!(path, "/projects/one");
-        let mut state = shared
-            .try_lock()
-            .expect("Git must not hold the observation lock");
-        assert_eq!(
-            state.store().unwrap().pending().unwrap().unwrap().action_id,
-            request().action_id
-        );
-        assert!(state.page(None, false).unwrap().repositories.is_empty());
-        validation(path, "/projects/one/.git")
-    }));
-    assert!(!process_one(&shared, |_| panic!(
-        "completed registration must not repeat validation"
-    )));
-    assert!(matches!(
-        shared
-            .lock()
-            .unwrap()
-            .store()
-            .unwrap()
-            .action(request().action_id)
-            .unwrap()
-            .unwrap()
-            .state,
-        RegistrationState::Completed { .. }
-    ));
-}
-
-fn record(number: u128) -> RepositoryRecord {
-    RepositoryRecord {
-        id: RepositoryId(Uuid::from_u128(number)),
-        name: "one".into(),
-        path: format!("/project/{number}"),
-        common_dir: format!("/project/{number}/.git"),
-    }
-}
-
-#[test]
-fn unavailable_or_replaced_paths_preserve_saved_identity_and_can_recover() {
-    let mut store = Store::default();
-    let record = record(1);
-    store.repositories.insert(record.id, record.clone());
-    let shared = state(store);
-    shared.lock().unwrap().page(None, true).unwrap();
-    process_one(&shared, |_| {
-        Err(RepositoryError::new(
-            ErrorCode::InvalidPath,
-            "Restore the missing location",
-        ))
-    });
-    assert!(matches!(
-        shared
-            .lock()
-            .unwrap()
-            .page(None, false)
-            .unwrap()
-            .repositories[0]
-            .availability,
-        Availability::Unavailable { .. }
-    ));
-    shared.lock().unwrap().page(None, true).unwrap();
-    process_one(&shared, |_| validation(&record.path, "/replacement/.git"));
-    assert!(matches!(
-        shared
-            .lock()
-            .unwrap()
-            .page(None, false)
-            .unwrap()
-            .repositories[0]
-            .availability,
-        Availability::Unavailable { .. }
-    ));
-    shared.lock().unwrap().page(None, true).unwrap();
-    process_one(&shared, |_| validation(&record.path, &record.common_dir));
-    let mut state = shared.lock().unwrap();
-    let page = state.page(None, false).unwrap();
-    assert_eq!(page.repositories[0].id, record.id);
-    assert_eq!(page.repositories[0].availability, Availability::Available);
-    assert_eq!(
-        state.store().unwrap().repository(record.id).unwrap(),
-        Some(record)
-    );
-}
-
-#[test]
-fn bounded_pages_and_pending_admission_do_not_restrict_durable_repository_count() {
-    let mut store = Store::default();
-    for number in 1..=100 {
-        let r = record(number);
-        store.repositories.insert(r.id, r);
-    }
-    for number in 1..=8 {
-        admit(
-            &mut store,
-            &RegisterRepository {
-                create_initial_workspace: false,
-                action_id: ActionId(Uuid::from_u128(number)),
-                path: "/one".into(),
-            },
-        )
-        .unwrap();
-    }
-    assert_eq!(
-        admit(
-            &mut store,
-            &RegisterRepository {
-                create_initial_workspace: false,
-                action_id: ActionId(Uuid::from_u128(9)),
-                path: "/nine".into()
-            }
-        )
-        .unwrap_err()
-        .code,
-        ErrorCode::Capacity
-    );
-    assert_eq!(
-        admit(
-            &mut store,
-            &RegisterRepository {
-                create_initial_workspace: false,
-                action_id: ActionId(Uuid::from_u128(1)),
-                path: "/one".into()
-            }
-        )
-        .unwrap()
-        .state,
-        RegistrationState::Pending
-    );
-    let shared = state(store);
-    let mut state = shared.lock().unwrap();
-    let page = state.page(None, false).unwrap();
-    assert_eq!(page.repositories.len(), 32);
-    assert_eq!(page.next, Some(RepositoryId(Uuid::from_u128(32))));
-    let next = state.page(page.next, false).unwrap();
-    assert_eq!(next.repositories[0].id, RepositoryId(Uuid::from_u128(33)));
-    for number in [64, 96] {
-        state
-            .page(Some(RepositoryId(Uuid::from_u128(number))), false)
-            .unwrap();
-    }
-    assert!(state.cache.len() <= CACHE_SIZE && state.probes.len() <= CACHE_SIZE);
-    assert_eq!(state.store().unwrap().list(None, 1000).unwrap().len(), 100);
-}
-
-#[test]
-fn escaped_path_serialization_reduces_page_size_and_retains_next_cursor() {
-    let mut store = Store::default();
-    for number in 1..=20 {
-        let mut r = record(number);
-        r.path = format!("/{}", "\t".repeat(4095));
-        store.repositories.insert(r.id, r);
-    }
-    let shared = state(store);
-    let page = shared.lock().unwrap().page(None, false).unwrap();
-    assert!(page.repositories.len() < 20);
-    assert!(page.next.is_some());
-    assert!(serde_json::to_vec(&page).unwrap().len() < 64 * 1024);
-}
-fn request() -> RegisterRepository {
-    RegisterRepository {
-        create_initial_workspace: false,
-        action_id: ActionId(Uuid::from_u128(1)),
-        path: "/projects/one".into(),
-    }
-}
-
-#[test]
-fn registration_records_intent_and_replays_its_status_without_another_effect() {
-    let mut store = Store::default();
-    let req = request();
-    assert_eq!(
-        admit(&mut store, &req).unwrap().state,
-        RegistrationState::Pending
-    );
-    assert_eq!(
-        admit(&mut store, &req).unwrap().state,
-        RegistrationState::Pending
-    );
-    assert_eq!(store.calls, ["read_action", "intent", "read_action"]);
-    assert!(store.repositories.is_empty());
-}
-
-#[test]
-fn validated_aliases_and_linked_worktrees_share_identity_and_first_location() {
-    let mut store = Store::default();
-    let first = admit(&mut store, &request()).unwrap();
-    let result = finish_registration(
-        &mut store,
-        &first,
-        Ok(ValidatedRepository {
-            name: "one".into(),
-            path: "/projects/one".into(),
-            common_dir: "/projects/one/.git".into(),
-        }),
-        Path::new("/private/state"),
-    )
-    .unwrap();
-    let other = RegisterRepository {
-        create_initial_workspace: false,
-        action_id: ActionId(Uuid::from_u128(2)),
-        path: "/linked/one".into(),
-    };
-    let next = admit(&mut store, &other).unwrap();
-    let alias = finish_registration(
-        &mut store,
-        &next,
-        Ok(ValidatedRepository {
-            name: "linked".into(),
-            path: other.path.clone(),
-            common_dir: "/projects/one/.git".into(),
-        }),
-        Path::new("/private/state"),
-    )
-    .unwrap();
-    assert_eq!(alias.state, result.state);
-    assert_eq!(store.repositories.len(), 1);
-    assert_eq!(
-        store.repositories.values().next().unwrap().path,
-        "/projects/one"
-    );
-    assert_eq!(admit(&mut store, &request()).unwrap(), result);
-}
-
-impl CreationStore for Store {
-    fn naming(&mut self, r: RepositoryId) -> Result<super::naming::Naming> {
-        Ok(super::naming::Naming {
-            folder: None,
-            folders: Default::default(),
-            names: self
-                .workspaces
-                .values()
-                .filter(|w| w.repository_id == r)
-                .filter_map(|w| w.name.clone())
-                .collect(),
+impl Metadata for Store {
+    fn read(&self, read: Read) -> BoxFuture<'_, std::result::Result<Delivery, Error>> {
+        Box::pin(async move {
+            let data = self.0.lock().unwrap();
+            let (mut records, paginated) = match read {
+                Read::Registration(id) => (values(data.registrations.get(&id)), false),
+                Read::Repository(id) => (values(data.repositories.get(&id)), false),
+                Read::CommonDirectory(common) => (
+                    values(
+                        data.repositories
+                            .values()
+                            .filter(|r| r.common_dir == common),
+                    ),
+                    false,
+                ),
+                Read::Repositories { after } => (
+                    values(
+                        data.repositories
+                            .values()
+                            .filter(|r| after.is_none_or(|a| r.id > a)),
+                    ),
+                    true,
+                ),
+                Read::PendingRegistrations { after } => (
+                    values(data.registrations.values().filter(|r| {
+                        r.state == RegistrationState::Pending
+                            && after.is_none_or(|a| r.action_id > a)
+                    })),
+                    true,
+                ),
+                Read::Workspace(id) => (values(data.workspaces.get(&id)), false),
+                Read::WorkspaceAction(id) => (
+                    values(data.actions.get(&id).and_then(|a| {
+                        data.workspaces
+                            .values()
+                            .find(|w| match a {
+                                WorkspaceAction::Create { action_id, .. } => {
+                                    w.creation_action_id == *action_id
+                                }
+                                WorkspaceAction::Reconcile { workspace_id, .. } => {
+                                    w.id == *workspace_id
+                                }
+                            })
+                            .map(|w| (a, w))
+                    })),
+                    false,
+                ),
+                Read::Workspaces { repository, after } => (
+                    values(data.workspaces.values().filter(|w| {
+                        w.repository_id == repository && after.is_none_or(|a| w.id > a)
+                    })),
+                    true,
+                ),
+                Read::PendingWorkspaces { after } => (
+                    values(data.workspaces.values().filter(|w| {
+                        w.status == CreationStatus::Queued && after.is_none_or(|a| w.id > a)
+                    })),
+                    true,
+                ),
+                Read::Folder {
+                    repository,
+                    candidate,
+                } => (
+                    values(
+                        data.folders
+                            .iter()
+                            .filter(|(id, folder)| **id == repository || **folder == candidate)
+                            .map(|(id, folder)| (folder, id.0.to_string())),
+                    ),
+                    false,
+                ),
+                Read::Name {
+                    repository,
+                    candidate,
+                } => (
+                    values(data.workspaces.values().filter(|w| {
+                        w.repository_id == repository && w.name.as_deref() == Some(&candidate)
+                    })),
+                    false,
+                ),
+                Read::AllocationCursor(id) => (
+                    vec![json!(data.cursors.get(&id).copied().unwrap_or(0))],
+                    false,
+                ),
+                Read::CleanupBlocked(repository) => (
+                    vec![json!(data.workspaces.values().any(|w| w.repository_id
+                        == repository
+                        && w.cleanup_unconfirmed))],
+                    false,
+                ),
+                _ => panic!("Unrelated provider read"),
+            };
+            let next = if paginated && records.len() > 32 {
+                records.truncate(32);
+                records.last().map(|r| {
+                    r.get("id")
+                        .or_else(|| r.get("action_id"))
+                        .unwrap()
+                        .as_str()
+                        .unwrap()
+                        .to_string()
+                })
+            } else {
+                None
+            };
+            Ok(Delivery::controlled(Ok(records), next))
         })
     }
-    fn reserve_name(&mut self, w: &Workspace, _: &str) -> Result<()> {
-        self.save_workspace(w, None)
-    }
-    fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>> {
-        Ok(self.workspaces.get(&id).cloned())
-    }
-    fn workspace_action(&mut self, id: ActionId) -> Result<Option<(WorkspaceAction, WorkspaceId)>> {
-        Ok(self.workspace_actions.get(&id).cloned())
-    }
-    fn save_workspace(&mut self, w: &Workspace, a: Option<&WorkspaceAction>) -> Result<()> {
-        if self.fail_reconcile_once == Some(w.id)
-            && matches!(a, Some(WorkspaceAction::Reconcile { .. }))
-        {
-            self.fail_reconcile_once = None;
-            return Err(RepositoryError::storage(
-                "controlled failed reconciliation intent",
-            ));
-        }
-        if self
-            .fail_workspace_stage_once
-            .is_some_and(|(id, stage)| w.id == id && w.status == CreationStatus::Running { stage })
-        {
-            self.fail_workspace_stage_once = None;
-            return Err(RepositoryError::storage(
-                "controlled noncommitting status write",
-            ));
-        }
-        if self.fail_intent {
-            return Err(RepositoryError::storage("disk full"));
-        }
-        self.workspaces.insert(w.id, w.clone());
-        if let Some(a) = a {
-            self.workspace_actions.insert(a.id(), (a.clone(), w.id));
-        }
-        Ok(())
-    }
-    fn workspace_pending(&mut self, after: Option<WorkspaceId>) -> Result<Option<Workspace>> {
-        Ok(self
-            .workspaces
-            .values()
-            .find(|w| w.status == CreationStatus::Queued && after.is_none_or(|id| w.id > id))
-            .cloned())
-    }
-    fn workspace_cleanup_blocked(&mut self, r: RepositoryId) -> Result<bool> {
-        Ok(self
-            .workspaces
-            .values()
-            .any(|w| w.repository_id == r && w.cleanup_unconfirmed))
-    }
-    fn workspace_count_pending(&mut self) -> Result<usize> {
-        Ok(self
-            .workspaces
-            .values()
-            .filter(|w| {
-                matches!(
-                    w.status,
-                    CreationStatus::Queued | CreationStatus::Running { .. }
-                )
-            })
-            .count())
-    }
-    fn workspace_list(
-        &mut self,
-        r: RepositoryId,
-        after: Option<WorkspaceId>,
-        limit: usize,
-    ) -> Result<Vec<Workspace>> {
-        Ok(self
-            .workspaces
-            .values()
-            .filter(|w| w.repository_id == r && after.is_none_or(|id| w.id > id))
-            .take(limit)
-            .cloned()
-            .collect())
+    fn write(&self, write: Write) -> BoxFuture<'_, std::result::Result<Delivery, Error>> {
+        Box::pin(async move {
+            let mut data = self.0.lock().unwrap();
+            match write {
+                Write::RegistrationIntent(request) => {
+                    data.writes.push("registration-intent");
+                    data.registrations.insert(
+                        request.action_id,
+                        Registration {
+                            create_initial_workspace: request.create_initial_workspace,
+                            initial_workspace_id: None,
+                            action_id: request.action_id,
+                            path: request.path,
+                            state: RegistrationState::Pending,
+                        },
+                    );
+                }
+                Write::RegistrationFinish {
+                    action,
+                    repository,
+                    initial,
+                } => {
+                    data.writes.push("registration-finish");
+                    if let Some(repository) = repository {
+                        data.repositories.insert(repository.id, repository);
+                    }
+                    if let Some(w) = initial {
+                        data.actions.insert(
+                            w.creation_action_id,
+                            WorkspaceAction::Create {
+                                action_id: w.creation_action_id,
+                                repository_id: w.repository_id,
+                            },
+                        );
+                        data.workspaces.insert(w.id, w);
+                    }
+                    data.registrations.insert(action.action_id, action);
+                }
+                Write::WorkspaceSave { workspace, action } => {
+                    data.writes.push("workspace-save");
+                    if data.fail_save {
+                        return Ok(Delivery::controlled(Err(Error::Fenced), None));
+                    }
+                    if let Some(action) = action {
+                        data.actions.insert(action.id(), action);
+                    }
+                    data.workspaces.insert(workspace.id, workspace);
+                }
+                Write::Reservation(r) => {
+                    data.claims += 1;
+                    data.writes.push("claim");
+                    if data.claim_conflicts > 0 {
+                        data.claim_conflicts -= 1;
+                        return Ok(Delivery::controlled(Err(Error::CandidateConflict), None));
+                    }
+                    data.folders.insert(r.workspace.repository_id, r.folder);
+                    data.workspaces.insert(r.workspace.id, r.workspace);
+                    if data.lost_claim {
+                        data.lost_claim = false;
+                        return Ok(Delivery::controlled(
+                            Err(Error::Write {
+                                original: Box::new(Error::Closed),
+                                retirement: None,
+                                uncertain: true,
+                            }),
+                            None,
+                        ));
+                    }
+                }
+                Write::AllocationCursor {
+                    workspace_id,
+                    cursor,
+                } => {
+                    data.writes.push("cursor");
+                    data.cursors.insert(workspace_id, cursor);
+                }
+                _ => panic!("Unrelated provider write"),
+            }
+            // revision() accepts snapshots, allowing the unit seam to supply a
+            // committed outcome without implementing transaction policy.
+            Ok(Delivery::controlled(Ok(Vec::new()), None))
+        })
     }
 }
-
 #[derive(Default)]
-struct CreationProbe {
-    mutations: Vec<(WorkspaceId, &'static str)>,
-    artifacts: BTreeMap<WorkspaceId, Artifacts>,
+struct Block {
+    released: Mutex<bool>,
+    changed: Condvar,
 }
-impl CreationEffects for CreationProbe {
-    fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
-        Ok(Default::default())
+impl Block {
+    fn wait(&self) {
+        let mut done = self.released.lock().unwrap();
+        while !*done {
+            done = self.changed.wait(done).unwrap();
+        }
     }
-    fn occupied(&mut self, _: &RepositoryRecord, _: &Path) -> Result<naming::Occupied> {
-        Ok(Default::default())
+    fn release(&self) {
+        *self.released.lock().unwrap() = true;
+        self.changed.notify_all();
     }
+}
+struct Effects {
+    calls: Arc<AtomicUsize>,
+    probes: Arc<AtomicUsize>,
+    blocks: Arc<Mutex<BTreeMap<WorkspaceId, Arc<Block>>>>,
+    started: tokio::sync::mpsc::UnboundedSender<WorkspaceId>,
+    validation_block: Option<Arc<Block>>,
+    occupied: bool,
+}
+impl coordinator::Effects for Effects {
+    fn inspect(&self, path: &str) -> Result<ValidatedRepository> {
+        self.probes.fetch_add(1, Ordering::SeqCst);
+        if let Some(block) = &self.validation_block {
+            block.wait();
+        }
+        Ok(ValidatedRepository {
+            name: "app".into(),
+            path: path.into(),
+            common_dir: format!("{path}/.git"),
+        })
+    }
+    fn candidate(
+        &self,
+        _: &RepositoryRecord,
+        _: &Path,
+        _: &Path,
+        _: &str,
+        _: &str,
+        _: bool,
+    ) -> Result<bool> {
+        Ok(self.occupied)
+    }
+    fn creation(&self) -> Box<dyn CreationEffects + Send> {
+        Box::new(Creation {
+            calls: self.calls.clone(),
+            blocks: self.blocks.clone(),
+            started: self.started.clone(),
+            artifacts: Artifacts {
+                branch: BranchArtifact::Absent,
+                folder: FolderArtifact::Absent,
+            },
+        })
+    }
+}
+struct Creation {
+    calls: Arc<AtomicUsize>,
+    blocks: Arc<Mutex<BTreeMap<WorkspaceId, Arc<Block>>>>,
+    started: tokio::sync::mpsc::UnboundedSender<WorkspaceId>,
+    artifacts: Artifacts,
+}
+impl CreationEffects for Creation {
     fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
         Ok(true)
     }
     fn base(&mut self, _: &RepositoryRecord) -> Result<PinnedBase> {
         Ok(PinnedBase {
             reference: "refs/heads/main".into(),
-            commit: "a".repeat(40),
+            commit: "abc".into(),
         })
     }
-    fn inspect(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<Artifacts> {
-        Ok(self.artifacts.get(&w.id).cloned().unwrap_or(Artifacts {
-            branch: BranchArtifact::Absent,
-            folder: FolderArtifact::Absent,
-        }))
+    fn inspect(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<Artifacts> {
+        Ok(self.artifacts.clone())
     }
     fn reserve(&mut self, w: &Workspace) -> Result<()> {
-        self.mutations.push((w.id, "reserve"));
-        self.artifacts.insert(
-            w.id,
-            Artifacts {
-                branch: BranchArtifact::Absent,
-                folder: FolderArtifact::Reserved,
-            },
-        );
+        self.calls.fetch_add(1, Ordering::SeqCst);
+        let _ = self.started.send(w.id);
+        let block = self.blocks.lock().unwrap().get(&w.id).cloned();
+        if let Some(block) = block {
+            block.wait();
+        }
+        self.artifacts.folder = FolderArtifact::Reserved;
         Ok(())
     }
-    fn branch(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
-        self.mutations.push((w.id, "branch"));
-        self.artifacts.get_mut(&w.id).unwrap().branch = BranchArtifact::Owned;
+    fn branch(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<()> {
+        self.artifacts.branch = BranchArtifact::Owned;
         Ok(())
     }
-    fn worktree(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
-        self.mutations.push((w.id, "worktree"));
-        self.artifacts.get_mut(&w.id).unwrap().folder = FolderArtifact::Worktree;
+    fn worktree(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<()> {
+        self.artifacts.folder = FolderArtifact::Worktree;
         Ok(())
     }
 }
-
-#[test]
-fn unrelated_recovery_and_completion_preserve_a_failed_write_fence() {
-    let repository = RepositoryRecord {
-        id: RepositoryId(Uuid::from_u128(10)),
-        name: "repo".into(),
-        path: "/repo".into(),
-        common_dir: "/repo/.git".into(),
-    };
-    let mut a = allocate(
-        repository.id,
-        ActionId(Uuid::from_u128(11)),
-        Path::new("/state"),
-    )
-    .unwrap();
-    a.id = WorkspaceId(Uuid::from_u128(1));
-    let mut b = allocate(
-        repository.id,
-        ActionId(Uuid::from_u128(12)),
-        Path::new("/state"),
-    )
-    .unwrap();
-    b.id = WorkspaceId(Uuid::from_u128(2));
-    b.status = CreationStatus::Failed {
-        error: RepositoryError::storage("prior failure"),
-    };
-    let mut store = Store::default();
-    store.repositories.insert(repository.id, repository);
-    store.save_workspace(&a, None).unwrap();
-    store.save_workspace(&b, None).unwrap();
-    store.fail_workspace_stage_once = Some((a.id, CreationStage::AllocatingName));
-    store.fail_reconcile_once = Some(a.id);
-    let service = Workspaces {
-        shared: Arc::new(state(store)),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let mut effects = CreationProbe::default();
-    assert!(!process_creation(&service.shared, &mut effects));
-    service
-        .workspace_request(WorkspaceRequest::Reconcile {
-            action_id: ActionId(Uuid::from_u128(20)),
-            workspace_id: b.id,
-        })
-        .unwrap();
-    assert!(process_creation(&service.shared, &mut effects));
-    assert!(
-        effects.mutations.iter().all(|(id, _)| *id == b.id),
-        "A must not execute when only B was reconciled"
-    );
-    assert!(!process_creation(&service.shared, &mut effects));
-    let WorkspaceReply::Workspace {
-        workspace: Some(observed),
-    } = service
-        .workspace_request(WorkspaceRequest::Get { id: a.id })
-        .unwrap()
-    else {
-        panic!()
-    };
-    assert!(matches!(observed.status, CreationStatus::Uncertain { .. }));
-    assert!(
-        service
-            .workspace_request(WorkspaceRequest::Reconcile {
-                action_id: ActionId(Uuid::from_u128(21)),
-                workspace_id: a.id
-            })
-            .is_err()
-    );
-    assert!(
-        service
-            .shared
-            .lock()
-            .unwrap()
-            .workspace_faults
-            .contains_key(&a.id)
-    );
-    assert!(!process_creation(&service.shared, &mut effects));
-    service
-        .workspace_request(WorkspaceRequest::Reconcile {
-            action_id: ActionId(Uuid::from_u128(21)),
-            workspace_id: a.id,
-        })
-        .unwrap();
-    assert!(process_creation(&service.shared, &mut effects));
-    assert_eq!(
-        effects
-            .mutations
-            .iter()
-            .filter(|(id, _)| *id == a.id)
-            .count(),
-        3
-    );
-}
-
-#[test]
-fn multiple_faults_are_skipped_and_explicit_recovery_releases_only_its_target() {
-    let repository = RepositoryRecord {
-        id: RepositoryId(Uuid::from_u128(10)),
-        name: "repo".into(),
-        path: "/repo".into(),
-        common_dir: "/repo/.git".into(),
-    };
-    let mut store = Store::default();
-    store.repositories.insert(repository.id, repository.clone());
-    for n in 1..=3 {
-        let mut w = allocate(
-            repository.id,
-            ActionId(Uuid::from_u128(n + 10)),
-            Path::new("/state"),
-        )
-        .unwrap();
-        w.id = WorkspaceId(Uuid::from_u128(n));
-        store.save_workspace(&w, None).unwrap();
+fn repository(id: u128) -> RepositoryRecord {
+    RepositoryRecord {
+        id: RepositoryId(Uuid::from_u128(id)),
+        name: "app".into(),
+        path: format!("/repo-{id}"),
+        common_dir: format!("/repo-{id}/.git"),
     }
-    let shared = state(store);
-    for n in 1..=2 {
-        shared.lock().unwrap().workspace_faults.insert(
-            WorkspaceId(Uuid::from_u128(n)),
-            RepositoryError::storage("failed write"),
-        );
-    }
-    let service = Workspaces {
-        shared: Arc::new(shared),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let mut effects = CreationProbe::default();
-    assert!(process_creation(&service.shared, &mut effects));
-    assert!(
-        effects
-            .mutations
-            .iter()
-            .all(|(id, _)| id.0 == Uuid::from_u128(3))
-    );
-    assert!(!process_creation(&service.shared, &mut effects));
-    service
-        .workspace_request(WorkspaceRequest::Reconcile {
-            action_id: ActionId(Uuid::from_u128(30)),
-            workspace_id: WorkspaceId(Uuid::from_u128(1)),
-        })
-        .unwrap();
-    assert!(process_creation(&service.shared, &mut effects));
-    assert!(
-        service
-            .shared
-            .lock()
-            .unwrap()
-            .workspace_faults
-            .contains_key(&WorkspaceId(Uuid::from_u128(2)))
-    );
-    assert!(
-        !effects
-            .mutations
-            .iter()
-            .any(|(id, _)| id.0 == Uuid::from_u128(2))
-    );
 }
-
-#[test]
-fn incompatible_saved_workspace_paths_are_rejected_without_retargeting() {
-    let mut w = allocate(
-        RepositoryId(Uuid::nil()),
-        ActionId(Uuid::nil()),
-        Path::new("/state"),
+fn queued(repo: RepositoryId, action: u128) -> Workspace {
+    allocate(repo, ActionId(Uuid::from_u128(action)), Path::new("/state")).unwrap()
+}
+fn dependencies() -> (
+    Arc<Store>,
+    Arc<Effects>,
+    tokio::sync::mpsc::UnboundedReceiver<WorkspaceId>,
+) {
+    let (started, receive) = tokio::sync::mpsc::unbounded_channel();
+    (
+        Arc::default(),
+        Arc::new(Effects {
+            calls: Arc::default(),
+            probes: Arc::default(),
+            blocks: Arc::default(),
+            started,
+            validation_block: None,
+            occupied: false,
+        }),
+        receive,
     )
-    .unwrap();
-    for path in [
-        "state/workspaces/checkout",
-        "/state/../state/checkout",
-        "/state/./checkout",
-    ] {
-        w.path = Some(path.into());
-        assert!(w.path().is_err(), "invalid mutation target: {path}");
-        assert!(
-            serde_json::from_str::<Workspace>(&serde_json::to_string(&w).unwrap()).is_err(),
-            "invalid saved target: {path}"
-        );
-    }
-    w.path = Some("/state/workspaces/repo/player/checkout".into());
-    assert!(w.path().is_ok());
-    assert!(serde_json::from_str::<Workspace>(&serde_json::to_string(&w).unwrap()).is_ok());
 }
-
-#[test]
-fn state_resolution_precedes_storage_and_provides_the_only_allocation_root() {
-    for supplied in ["state", "/private/launcher/state/../state"] {
-        let owner = OwnerState::open(
-            Path::new(supplied),
-            |path| {
-                assert_eq!(path, Path::new(supplied));
-                Ok(PathBuf::from("/private/launcher/state"))
-            },
-            |path| {
-                assert_eq!(path, Path::new("/private/launcher/state"));
-                Ok(Box::<Store>::default())
-            },
-        )
-        .unwrap();
-        assert_eq!(owner.directory, Path::new("/private/launcher/state"));
-    }
-    assert!(
-        OwnerState::open(
-            Path::new("missing"),
-            |_| Err(RepositoryError::storage("cannot resolve")),
-            |_| panic!("resolution failure must not open storage")
-        )
-        .is_err()
-    );
-    assert!(
-        OwnerState::open(
-            Path::new("state"),
-            |_| Ok("relative".into()),
-            |_| panic!("invalid resolved root must not open storage")
-        )
-        .is_err()
-    );
+fn owner(store: Arc<Store>, effects: Arc<Effects>) -> Workspaces {
+    Workspaces::with_dependencies("/state".into(), store, effects)
 }
-
-#[test]
-fn initial_creation_is_linked_once_and_duplicate_registration_has_no_new_workspace() {
-    let mut store = Store::default();
-    let req = RegisterRepository {
-        create_initial_workspace: true,
-        ..request()
-    };
-    let pending = admit(&mut store, &req).unwrap();
-    let completed = finish_registration(
-        &mut store,
-        &pending,
-        validation("/repo", "/repo/.git"),
-        Path::new("/state"),
-    )
-    .unwrap();
-    assert!(completed.initial_workspace_id.is_some());
-    assert_eq!(store.workspaces.len(), 1);
-    assert_eq!(admit(&mut store, &req).unwrap(), completed);
-    let duplicate = RegisterRepository {
-        action_id: ActionId(Uuid::new_v4()),
-        ..req
-    };
-    let pending = admit(&mut store, &duplicate).unwrap();
-    let reused = finish_registration(
-        &mut store,
-        &pending,
-        validation("/repo", "/repo/.git"),
-        Path::new("/state"),
-    )
-    .unwrap();
-    assert_eq!(reused.initial_workspace_id, None);
-    assert_eq!(store.workspaces.len(), 1);
-}
-#[test]
-fn workspace_action_replay_conflicts_and_explicit_recovery_retain_exact_identity() {
-    let mut store = Store::default();
-    let req = request();
-    let pending = admit(&mut store, &req).unwrap();
-    let registration = finish_registration(
-        &mut store,
-        &pending,
-        validation("/repo", "/repo/.git"),
-        Path::new("/state"),
-    )
-    .unwrap();
-    let RegistrationState::Completed { repository_id } = registration.state else {
-        panic!()
-    };
-    let action = WorkspaceAction::Create {
-        action_id: ActionId(Uuid::new_v4()),
-        repository_id,
-    };
-    let w = admit_workspace(&mut store, Path::new("/state"), &action, None).unwrap();
-    assert_eq!(
-        admit_workspace(&mut store, Path::new("/other"), &action, None).unwrap(),
-        w
-    );
-    assert_eq!(store.workspaces.len(), 1);
-    assert!(
-        admit_workspace(
-            &mut store,
-            Path::new("/state"),
-            &WorkspaceAction::Reconcile {
-                action_id: action.id(),
-                workspace_id: w.id
-            },
-            None
-        )
-        .is_err()
-    );
-    let mut interrupted = w.clone();
-    interrupted.status = CreationStatus::Running {
-        stage: CreationStage::CreatingBranch,
-    };
-    store.save_workspace(&interrupted, None).unwrap();
-    assert_eq!(
-        admit_workspace(&mut store, Path::new("/state"), &action, None)
-            .unwrap()
-            .status,
-        interrupted.status
-    );
-    let recovered = admit_workspace(
-        &mut store,
-        Path::new("/state"),
-        &WorkspaceAction::Reconcile {
-            action_id: ActionId(Uuid::new_v4()),
-            workspace_id: w.id,
-        },
-        None,
-    )
-    .unwrap();
-    assert_eq!(recovered.id, w.id);
-    assert_eq!(recovered.path, w.path);
-    assert_eq!(recovered.status, CreationStatus::Queued);
-    assert!(
-        admit_workspace(
-            &mut store,
-            Path::new("/state"),
-            &WorkspaceAction::Create {
-                action_id: req.action_id,
-                repository_id
-            },
-            None
-        )
-        .is_err()
-    );
-}
-#[test]
-fn restored_inflight_workspace_is_uncertain_and_reads_do_not_queue_it() {
-    let mut w = allocate(
-        RepositoryId(Uuid::nil()),
-        ActionId(Uuid::nil()),
-        Path::new("/state"),
-    )
-    .unwrap();
-    w.status = CreationStatus::Running {
-        stage: CreationStage::CreatingWorktree,
-    };
-    let mut store = Store::default();
-    store.save_workspace(&w, None).unwrap();
-    let shared = state(store);
-    let mut owner = shared.lock().unwrap();
-    let restored: Workspace = serde_json::from_str(&serde_json::to_string(&w).unwrap()).unwrap();
-    assert!(matches!(
-        owner.workspace_observation(restored).status,
-        CreationStatus::Uncertain { .. }
-    ));
-    assert!(
-        owner
-            .store()
-            .unwrap()
-            .workspace_pending(None)
-            .unwrap()
-            .is_none()
-    );
-}
-#[test]
-fn recovery_reserve_is_available_at_metadata_budget_and_navigation_pages_are_bounded() {
-    let mut w = allocate(
-        RepositoryId(Uuid::nil()),
-        ActionId(Uuid::nil()),
-        Path::new("/state"),
-    )
-    .unwrap();
-    w.path = Some("\\".repeat(8500)); // JSON escaping counts toward the metadata byte budget.
-    check_workspace_budget(&w).unwrap();
-    w.status = CreationStatus::Uncertain {
-        error: RepositoryError::storage("x".repeat(10000)),
-    };
-    w.base = Some(PinnedBase {
-        reference: "refs/remotes/origin/HEAD".into(),
-        commit: "f".repeat(64),
-    });
-    assert!(
-        serde_json::to_vec(&WorkspaceReply::Workspace {
-            workspace: Some(w.clone())
-        })
-        .unwrap()
-        .len()
-            < 24 * 1024
-    );
-    w.path = Some("\\".repeat(12000));
-    assert!(check_workspace_budget(&w).is_err());
-}
-
-#[test]
-fn creation_keeps_pending_observations_readable_during_every_effect() {
-    let repository = RepositoryRecord {
-        id: RepositoryId(Uuid::new_v4()),
-        name: "repo".into(),
-        path: "/repo".into(),
-        common_dir: "/repo/.git".into(),
-    };
-    let w = allocate(repository.id, ActionId(Uuid::new_v4()), Path::new("/state")).unwrap();
-    let mut store = Store::default();
-    store.repositories.insert(repository.id, repository);
-    store.save_workspace(&w, None).unwrap();
-    let service = Workspaces {
-        shared: Arc::new(state(store)),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    struct Reading<'a> {
-        service: &'a Workspaces,
-        artifacts: Artifacts,
-        last_cursor: std::cell::Cell<u64>,
-    }
-    impl Reading<'_> {
-        fn status(&self, w: &Workspace, stage: CreationStage) {
-            let journal = self.service.journal();
-            let cursor = journal.watermark();
-            assert!(
-                cursor > self.last_cursor.get(),
-                "each effect stage must publish before the effect"
-            );
-            self.last_cursor.set(cursor);
-            let WorkspaceReply::Workspace {
-                workspace: Some(observed),
-            } = self
-                .service
-                .workspace_request(WorkspaceRequest::Get { id: w.id })
-                .unwrap()
-            else {
-                panic!()
-            };
-            assert_eq!(observed.status, CreationStatus::Running { stage });
-        }
-    }
-    impl CreationEffects for Reading<'_> {
-        fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
-            Ok(Default::default())
-        }
-        fn occupied(
-            &mut self,
-            _: &RepositoryRecord,
-            _: &Path,
-        ) -> Result<crate::workspaces::naming::Occupied> {
-            Ok(Default::default())
-        }
-        fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
-            Ok(true)
-        }
-        fn base(&mut self, _: &RepositoryRecord) -> Result<PinnedBase> {
-            Ok(PinnedBase {
-                reference: "refs/heads/main".into(),
-                commit: "a".repeat(40),
-            })
-        }
-        fn inspect(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<Artifacts> {
-            Ok(self.artifacts.clone())
-        }
-        fn reserve(&mut self, w: &Workspace) -> Result<()> {
-            self.status(w, CreationStage::ReservingFolder);
-            self.artifacts.folder = FolderArtifact::Reserved;
-            Ok(())
-        }
-        fn branch(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
-            self.status(w, CreationStage::CreatingBranch);
-            self.artifacts.branch = BranchArtifact::Owned;
-            Ok(())
-        }
-        fn worktree(&mut self, _: &RepositoryRecord, w: &Workspace) -> Result<()> {
-            self.status(w, CreationStage::CreatingWorktree);
-            self.artifacts.folder = FolderArtifact::Worktree;
-            Ok(())
-        }
-    }
-    let mut effects = Reading {
-        service: &service,
-        last_cursor: std::cell::Cell::new(service.journal().watermark()),
-        artifacts: Artifacts {
-            branch: BranchArtifact::Absent,
-            folder: FolderArtifact::Absent,
-        },
-    };
-    assert!(process_creation(&service.shared, &mut effects));
-    let WorkspaceReply::Workspace {
-        workspace: Some(ready),
-    } = service
-        .workspace_request(WorkspaceRequest::Get { id: w.id })
-        .unwrap()
-    else {
-        panic!()
-    };
-    assert_eq!(ready.status, CreationStatus::Ready);
-}
-#[test]
-fn workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit() {
-    let repository_id = RepositoryId(Uuid::new_v4());
-    let mut store = Store::default();
-    for number in 1..=70 {
-        let mut w = allocate(
-            repository_id,
-            ActionId(Uuid::from_u128(number)),
-            Path::new("/state"),
-        )
-        .unwrap();
-        w.id = WorkspaceId(Uuid::from_u128(number));
-        w.path = Some("\\".repeat(7000));
-        w.status = CreationStatus::Ready;
-        store.save_workspace(&w, None).unwrap();
-    }
-    assert_eq!(store.workspace_count_pending().unwrap(), 0);
-    let service = Workspaces {
-        shared: Arc::new(state(store)),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let mut after = None;
-    let mut seen = vec![];
+async fn ready(service: &Workspaces, id: WorkspaceId) {
     loop {
-        let reply = service
-            .workspace_request(WorkspaceRequest::List {
-                repository_id,
-                after,
-            })
-            .unwrap();
-        assert!(serde_json::to_vec(&reply).unwrap().len() < 64 * 1024);
-        let WorkspaceReply::Workspaces { page } = reply else {
-            panic!()
-        };
-        assert!(page.workspaces.len() <= 32);
-        seen.extend(page.workspaces.iter().map(|w| w.id));
-        if page.next.is_none() {
+        if let WorkspaceReply::Workspace { workspace: Some(w) } = service
+            .workspace_request(WorkspaceRequest::Get { id })
+            .await
+            .unwrap()
+        {
+            if w.status == CreationStatus::Ready {
+                break;
+            }
+            assert!(
+                !matches!(
+                    w.status,
+                    CreationStatus::Failed { .. } | CreationStatus::Uncertain { .. }
+                ),
+                "{w:?}"
+            );
+        }
+        tokio::task::yield_now().await;
+    }
+}
+
+#[tokio::test]
+async fn independent_repository_effects_progress_while_another_is_blocked() {
+    let (store, effects, mut started) = dependencies();
+    let a = repository(1);
+    let b = repository(2);
+    let wa = queued(a.id, 11);
+    let wb = queued(b.id, 12);
+    let block = Arc::new(Block::default());
+    effects.blocks.lock().unwrap().insert(wa.id, block.clone());
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(a.id, a);
+        d.repositories.insert(b.id, b);
+        d.workspaces.insert(wa.id, wa.clone());
+    }
+    let service = owner(store.clone(), effects.clone());
+    assert_eq!(started.recv().await, Some(wa.id));
+    store.0.lock().unwrap().workspaces.insert(wb.id, wb.clone());
+    service.notify();
+    assert_eq!(started.recv().await, Some(wb.id));
+    ready(&service, wb.id).await;
+    block.release();
+    ready(&service, wa.id).await;
+    service.finish().await.unwrap();
+    assert_eq!(effects.calls.load(Ordering::SeqCst), 2);
+}
+#[tokio::test]
+async fn actual_common_directory_serializes_waiters_and_retains_the_key() {
+    let (store, effects, mut started) = dependencies();
+    let a = repository(1);
+    let mut b = repository(2);
+    b.common_dir = a.common_dir.clone();
+    let wa = queued(a.id, 11);
+    let wb = queued(b.id, 12);
+    let block = Arc::new(Block::default());
+    effects.blocks.lock().unwrap().insert(wa.id, block.clone());
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(a.id, a);
+        d.repositories.insert(b.id, b);
+        d.workspaces.insert(wa.id, wa.clone());
+    }
+    let service = owner(store.clone(), effects.clone());
+    assert_eq!(started.recv().await, Some(wa.id));
+    store.0.lock().unwrap().workspaces.insert(wb.id, wb.clone());
+    service.notify();
+    loop {
+        if service.state().unwrap().activities.len() == 2 {
             break;
         }
-        after = page.next;
+        tokio::task::yield_now().await;
     }
-    assert_eq!(seen.len(), 70);
-    seen.dedup();
-    assert_eq!(seen.len(), 70);
+    assert!(started.try_recv().is_err());
+    block.release();
+    assert_eq!(started.recv().await, Some(wb.id));
+    ready(&service, wa.id).await;
+    ready(&service, wb.id).await;
+    service.finish().await.unwrap();
 }
-
-#[test]
-fn failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fault() {
-    let repository = RepositoryRecord {
-        id: RepositoryId(Uuid::new_v4()),
-        name: "repo".into(),
-        path: "/repo".into(),
-        common_dir: "/repo/.git".into(),
+#[tokio::test]
+async fn duplicate_ids_observe_exact_payload_and_cross_kind_ids_reject() {
+    let (store, effects, _) = dependencies();
+    let service = owner(store.clone(), effects);
+    let request = RegisterRepository {
+        create_initial_workspace: false,
+        action_id: ActionId(Uuid::from_u128(10)),
+        path: "/app".into(),
     };
-    let mut store = Store::default();
-    store.repositories.insert(repository.id, repository.clone());
-    store.fail_intent = true;
-    let action = WorkspaceAction::Create {
-        action_id: ActionId(Uuid::new_v4()),
-        repository_id: repository.id,
-    };
-    assert!(admit_workspace(&mut store, Path::new("/state"), &action, None).is_err());
-    assert!(store.workspaces.is_empty());
-    assert!(store.workspace_actions.is_empty());
-    store.fail_intent = false;
-    let mut w = admit_workspace(&mut store, Path::new("/state"), &action, None).unwrap();
-    w.status = CreationStatus::Failed {
-        error: RepositoryError::storage("failure"),
-    };
-    store.save_workspace(&w, None).unwrap();
-    let recovery = WorkspaceAction::Reconcile {
-        action_id: ActionId(Uuid::new_v4()),
-        workspace_id: w.id,
-    };
-    admit_workspace(&mut store, Path::new("/state"), &recovery, None).unwrap();
-    let shared = Arc::new(state(store));
-    shared.lock().unwrap().workspace_faults.insert(
-        w.id,
-        RepositoryError::storage("write failed before mutation"),
+    let first = service.register(request.clone()).await.unwrap();
+    assert_eq!(
+        first.action_id,
+        service.register(request.clone()).await.unwrap().action_id
     );
-    let service = Workspaces {
-        shared,
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let WorkspaceAction::Reconcile {
-        action_id,
-        workspace_id,
-    } = recovery
-    else {
-        panic!()
-    };
-    let WorkspaceReply::Action {
-        workspace: Some(observed),
-        ..
-    } = service
-        .workspace_request(WorkspaceRequest::Reconcile {
-            action_id,
-            workspace_id,
-        })
-        .unwrap()
-    else {
-        panic!()
-    };
-    assert!(matches!(observed.status, CreationStatus::Uncertain { .. }));
+    let mut changed = request.clone();
+    changed.path = "/other".into();
+    assert_eq!(
+        service.register(changed).await.unwrap_err().code,
+        ErrorCode::Conflict
+    );
     assert!(
         service
-            .shared
-            .lock()
-            .unwrap()
-            .workspace_faults
-            .contains_key(&w.id)
-    );
-}
-
-#[test]
-fn eight_interrupted_records_cannot_exhaust_explicit_reconciliation_admission() {
-    let mut store = Store::default();
-    let repository_id = RepositoryId(Uuid::new_v4());
-    let mut target = None;
-    for _ in 0..8 {
-        let mut w = allocate(repository_id, ActionId(Uuid::new_v4()), Path::new("/state")).unwrap();
-        w.status = CreationStatus::Running {
-            stage: CreationStage::CreatingWorktree,
-        };
-        target = Some(w.id);
-        store.save_workspace(&w, None).unwrap();
-    }
-    assert_eq!(store.workspace_count_pending().unwrap(), 8);
-    let recovered = admit_workspace(
-        &mut store,
-        Path::new("/state"),
-        &WorkspaceAction::Reconcile {
-            action_id: ActionId(Uuid::new_v4()),
-            workspace_id: target.unwrap(),
-        },
-        None,
-    )
-    .unwrap();
-    assert_eq!(recovered.status, CreationStatus::Queued);
-}
-
-#[test]
-fn admissions_and_ambiguous_failures_publish_without_claiming_action_success() {
-    use crate::observations::{Sample, Target};
-    let req = request();
-    let service = Workspaces {
-        shared: Arc::new(state(Store {
-            fail_intent: true,
-            ..Store::default()
-        })),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let journal = service.journal();
-    let before = journal.watermark();
-    assert!(service.register(req.clone()).is_err());
-    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
-        panic!()
-    };
-    assert!(targets.contains(&Target::Registration {
-        action_id: req.action_id
-    }));
-    assert!(targets.contains(&Target::Repositories));
-    let before = journal.watermark();
-    assert!(
-        service
-            .workspace_request(WorkspaceRequest::Create {
-                action_id: req.action_id,
-                repository_id: RepositoryId(Uuid::nil())
+            .admit_workspace(WorkspaceAction::Create {
+                action_id: request.action_id,
+                repository_id: repository(1).id
             })
+            .await
             .is_err()
     );
-    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
-        panic!()
+    let id = ActionId(Uuid::from_u128(20));
+    let repo = repository(1);
+    store
+        .0
+        .lock()
+        .unwrap()
+        .repositories
+        .insert(repo.id, repo.clone());
+    let action = WorkspaceAction::Create {
+        action_id: id,
+        repository_id: repo.id,
     };
-    assert!(targets.contains(&Target::WorkspaceAction {
-        action_id: req.action_id
-    }));
-    assert!(targets.contains(&Target::Workspaces {
-        repository_id: Some(RepositoryId(Uuid::nil()))
-    }));
+    service.admit_workspace(action.clone()).await.unwrap();
+    service.admit_workspace(action).await.unwrap();
+    let mut changed = request;
+    changed.action_id = id;
+    assert_eq!(
+        service.register(changed).await.unwrap_err().code,
+        ErrorCode::Conflict
+    );
+    service.finish().await.ok();
 }
-#[test]
-fn registration_completion_and_availability_publish_targeted_hints_after_owner_unlock() {
-    use crate::observations::{Sample, Target};
-    let mut store = Store::default();
-    let req = request();
-    admit(&mut store, &req).unwrap();
-    let service = Workspaces {
-        shared: Arc::new(state(store)),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
-    };
-    let journal = service.journal();
-    let before = journal.watermark();
-    assert!(process_one(&service.shared, |_| {
-        assert!(service.shared.try_lock().is_ok());
-        validation("/repo", "/repo/.git")
-    }));
-    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
-        panic!()
-    };
-    assert!(targets.contains(&Target::Registration {
-        action_id: req.action_id
-    }));
-    let id = targets
-        .iter()
-        .find_map(|target| match target {
-            Target::Repository { repository_id } => Some(*repository_id),
-            _ => None,
-        })
-        .unwrap();
-    let before = journal.watermark();
-    service.repository(id, false).unwrap();
-    assert!(matches!(journal.sample(Some(before)), Sample::Hints { .. }));
-    let before = journal.watermark();
-    assert!(process_one(&service.shared, |_| Err(
-        RepositoryError::storage("controlled probe failure")
-    )));
-    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
-        panic!()
-    };
-    assert!(targets.contains(&Target::Repository { repository_id: id }));
+#[tokio::test]
+async fn allocation_lost_ack_reconciles_the_same_saved_location_without_another_claim() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let w = queued(repo.id, 11);
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+        d.lost_claim = true;
+    }
+    let service = owner(store.clone(), effects);
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+    assert_eq!(store.0.lock().unwrap().claims, 1);
 }
-#[test]
-fn failed_creation_publishes_active_admission_write_attempt_and_fault_overlay() {
-    use crate::observations::{Sample, Target};
-    let repository = RepositoryRecord {
-        id: RepositoryId(Uuid::from_u128(1)),
-        name: "repo".into(),
-        path: "/repo".into(),
-        common_dir: "/repo/.git".into(),
+#[tokio::test]
+async fn allocation_turn_persists_cursor_and_does_not_cap_history_or_numeric_tiers() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let w = queued(repo.id, 11);
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+        d.claim_conflicts = 33;
+        d.cursors.insert(w.id, 1_000_000);
+    }
+    let service = owner(store.clone(), effects);
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+    let d = store.0.lock().unwrap();
+    assert_eq!(d.claims, 34);
+    assert!(d.writes.contains(&"cursor"));
+    assert!(d.cursors[&w.id] >= 1_000_032);
+}
+#[tokio::test]
+async fn immutable_reserved_location_skips_allocation_on_recovery() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let mut w = queued(repo.id, 11);
+    w.name = Some("marta".into());
+    w.branch = Some("workspace/marta".into());
+    w.path = Some("/state/app/marta/checkout".into());
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+    }
+    let service = owner(store.clone(), effects);
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+    let d = store.0.lock().unwrap();
+    assert_eq!(d.claims, 0);
+    assert_eq!(d.workspaces[&w.id].path, w.path);
+}
+#[tokio::test]
+async fn registration_and_first_creation_are_one_finish_and_duplicate_alias_does_not_create_again()
+{
+    let (store, effects, _) = dependencies();
+    let service = owner(store.clone(), effects);
+    let request = RegisterRepository {
+        create_initial_workspace: true,
+        action_id: ActionId(Uuid::from_u128(10)),
+        path: "/app".into(),
     };
-    let mut store = Store::default();
-    store.repositories.insert(repository.id, repository.clone());
-    let workspace = admit_workspace(
-        &mut store,
-        Path::new("/state"),
-        &WorkspaceAction::Create {
-            action_id: ActionId(Uuid::from_u128(2)),
-            repository_id: repository.id,
-        },
-        None,
-    )
-    .unwrap();
-    store.fail_workspace_stage_once = Some((workspace.id, CreationStage::AllocatingName));
-    let service = Workspaces {
-        shared: Arc::new(state(store)),
-        wake: Mutex::new(None),
-        worker: tokio::sync::Mutex::new(None),
+    service.register(request.clone()).await.unwrap();
+    let initial = loop {
+        let action = service.action(request.action_id).await.unwrap().unwrap();
+        if let Some(id) = action.initial_workspace_id {
+            break id;
+        }
+        tokio::task::yield_now().await;
     };
-    let journal = service.journal();
-    let before = journal.watermark();
-    assert!(!process_creation(
-        &service.shared,
-        &mut CreationProbe::default()
-    ));
-    let Sample::Hints { targets, .. } = journal.sample(Some(before)) else {
-        panic!()
-    };
-    assert!(targets.contains(&Target::Workspace {
-        workspace_id: workspace.id
-    }));
-    assert!(targets.contains(&Target::Workspaces {
-        repository_id: Some(repository.id)
-    }));
+    ready(&service, initial).await;
+    let mut alias = request;
+    alias.action_id = ActionId(Uuid::from_u128(20));
+    service.register(alias.clone()).await.unwrap();
+    loop {
+        if service
+            .action(alias.action_id)
+            .await
+            .unwrap()
+            .unwrap()
+            .state
+            != RegistrationState::Pending
+        {
+            break;
+        }
+        tokio::task::yield_now().await;
+    }
+    service.finish().await.unwrap();
+    let d = store.0.lock().unwrap();
+    assert_eq!(d.repositories.len(), 1);
+    assert_eq!(d.workspaces.len(), 1);
+    assert_eq!(
+        d.writes
+            .iter()
+            .filter(|w| **w == "registration-finish")
+            .count(),
+        2
+    );
+}
+#[tokio::test]
+async fn failed_intent_never_dispatches_creation_and_status_does_not_replay() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo.clone());
+        d.fail_save = true;
+    }
+    let service = owner(store.clone(), effects.clone());
     assert!(
         service
-            .shared
-            .lock()
-            .unwrap()
-            .workspace_faults
-            .contains_key(&workspace.id)
-    );
-    assert!(
-        journal.watermark() >= before + 3,
-        "active admission, write attempt and fault overlay each publish"
-    );
-}
-
-#[test]
-fn explicit_finish_awaits_physical_completion_and_retains_worker_failure() {
-    tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap()
-        .block_on(async {
-            let (complete, completed) = tokio::sync::oneshot::channel();
-            let service = Workspaces {
-                shared: Arc::new(state(Store::default())),
-                wake: Mutex::new(None),
-                worker: tokio::sync::Mutex::new(Some(tokio::spawn(async move {
-                    completed.await.unwrap();
-                    Err(RepositoryError::storage("controlled worker failure"))
-                }))),
-            };
-            let finish = service.finish();
-            tokio::pin!(finish);
-            std::future::poll_fn(|cx| {
-                use std::future::Future;
-                assert!(finish.as_mut().poll(cx).is_pending());
-                std::task::Poll::Ready(())
+            .admit_workspace(WorkspaceAction::Create {
+                action_id: ActionId(Uuid::from_u128(11)),
+                repository_id: repo.id
             })
-            .await;
-            assert!(
-                service
-                    .register(RegisterRepository {
-                        action_id: ActionId(Uuid::new_v4()),
-                        path: "/repo".into(),
-                        create_initial_workspace: false
-                    })
-                    .is_err()
-            );
-            complete.send(()).unwrap();
-            assert!(
-                finish
-                    .await
-                    .unwrap_err()
-                    .message
-                    .contains("controlled worker failure")
-            );
-        });
+            .await
+            .is_err()
+    );
+    assert!(store.0.lock().unwrap().workspaces.is_empty());
+    assert_eq!(effects.calls.load(Ordering::SeqCst), 0);
+    service.finish().await.unwrap();
 }
-#[test]
-fn panicking_creation_retains_exact_workspace_and_blocks_replay() {
-    let mut store = Store::default();
-    let repository = record(1);
-    store.repositories.insert(repository.id, repository.clone());
-    let directory = Path::new("/state");
-    let workspace = admit_workspace(
-        &mut store,
-        directory,
-        &WorkspaceAction::Create {
-            action_id: ActionId(Uuid::new_v4()),
-            repository_id: repository.id,
-        },
-        None,
-    )
-    .unwrap();
-    let shared = state(store);
-    struct PanicEffects;
-    impl CreationEffects for PanicEffects {
-        fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
-            panic!("controlled effect panic")
-        }
-        fn occupied(&mut self, _: &RepositoryRecord, _: &Path) -> Result<naming::Occupied> {
-            panic!("controlled effect panic")
-        }
-        fn base(&mut self, _: &RepositoryRecord) -> Result<PinnedBase> {
-            panic!("controlled effect panic")
-        }
-        fn inspect(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<Artifacts> {
-            panic!("controlled effect panic")
-        }
-        fn reserve(&mut self, _: &Workspace) -> Result<()> {
-            panic!("controlled effect panic")
-        }
-        fn branch(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<()> {
-            panic!("controlled effect panic")
-        }
-        fn worktree(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<()> {
-            panic!("controlled effect panic")
-        }
-        fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
-            panic!("controlled effect panic")
+#[tokio::test]
+async fn quit_fences_next_mutation_and_waits_for_physical_work_then_repeats_same_result() {
+    let (store, effects, mut started) = dependencies();
+    let repo = repository(1);
+    let w = queued(repo.id, 11);
+    let block = Arc::new(Block::default());
+    effects.blocks.lock().unwrap().insert(w.id, block.clone());
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+    }
+    let service = owner(store, effects);
+    assert_eq!(started.recv().await, Some(w.id));
+    service.fence().await;
+    assert!(
+        service
+            .register(RegisterRepository {
+                create_initial_workspace: false,
+                action_id: ActionId(Uuid::from_u128(22)),
+                path: "/other".into()
+            })
+            .await
+            .is_err()
+    );
+    let completion = service.finish();
+    tokio::pin!(completion);
+    assert!(futures_util::poll!(&mut completion).is_pending());
+    block.release();
+    let first = completion.await;
+    assert!(first.is_ok(), "{first:?}");
+    assert_eq!(first, service.finish().await);
+    assert!(service.state().unwrap().activities.is_empty());
+}
+#[tokio::test]
+async fn navigation_is_paged_and_running_restore_is_uncertain_without_requeue() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let mut w = queued(repo.id, 11);
+    w.status = CreationStatus::Running {
+        stage: CreationStage::CreatingBranch,
+    };
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo.clone());
+        for n in 0..70 {
+            let mut item = w.clone();
+            item.id = WorkspaceId(Uuid::from_u128(n + 100));
+            d.workspaces.insert(item.id, item);
         }
     }
-    assert!(!process_creation(&shared, &mut PanicEffects));
+    let service = owner(store, effects.clone());
+    let WorkspaceReply::Workspaces { page } = service
+        .workspace_request(WorkspaceRequest::List {
+            repository_id: repo.id,
+            after: None,
+        })
+        .await
+        .unwrap()
+    else {
+        panic!()
+    };
+    assert_eq!(page.workspaces.len(), 32);
+    assert!(page.next.is_some());
     assert!(
-        shared
-            .lock()
-            .unwrap()
-            .workspace_faults
-            .contains_key(&workspace.id)
+        page.workspaces
+            .iter()
+            .all(|w| matches!(w.status, CreationStatus::Uncertain { .. }))
     );
-    assert!(!process_creation(&shared, &mut PanicEffects));
+    assert_eq!(effects.calls.load(Ordering::SeqCst), 0);
+    service.finish().await.unwrap();
 }
-
+#[test]
+fn utf8_path_budget_and_invalid_locations_reject_without_retargeting() {
+    assert!(check_registration_path_budget(&"é".repeat(2049)).is_err());
+    for path in ["relative", "/a/../b", "/a//b", "/a/./b"] {
+        assert!(validate_workspace_path(path).is_err());
+    }
+}
 pub(crate) fn controlled_completion(
     work: impl std::future::Future<Output = Result<()>> + Send + 'static,
 ) -> Workspaces {
+    let (store, _, _) = dependencies();
     Workspaces {
-        shared: Arc::new(state(Store::default())),
+        shared: Arc::new(Mutex::new(OwnerState::new("/state".into()))),
+        storage: None,
+        decision: Arc::new(tokio::sync::Mutex::new(())),
+        store,
         wake: Mutex::new(None),
         worker: tokio::sync::Mutex::new(Some(tokio::spawn(work))),
+        finish_result: Mutex::new(None),
     }
 }
 
-#[test]
-fn fenced_status_cannot_queue_a_probe_or_reopen_closed_storage() {
-    let shared = state(Store::default());
-    let mut owner = shared.lock().unwrap();
-    owner.fenced = true;
-    assert!(owner.queue(&record(1), false).is_err());
-    assert!(owner.probes.is_empty());
-    owner.storage_closed = true;
-    owner.store = Err(RepositoryError::storage("closed"));
-    assert!(
-        owner
-            .store()
-            .err()
-            .unwrap()
-            .message
-            .contains("Workspace storage is closed")
-    );
+fn idle_owner(store: Arc<Store>) -> Workspaces {
+    Workspaces {
+        shared: Arc::new(Mutex::new(OwnerState::new("/state".into()))),
+        storage: None,
+        decision: Arc::new(tokio::sync::Mutex::new(())),
+        store,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
+        finish_result: Mutex::new(None),
+    }
 }
-
-#[test]
-fn registration_panic_retains_exact_action_after_durable_failure_settlement() {
-    let mut store = Store::default();
-    let request = RegisterRepository {
-        action_id: ActionId(Uuid::new_v4()),
-        path: "/repo".into(),
-        create_initial_workspace: false,
-    };
-    admit(&mut store, &request).unwrap();
-    let shared = state(store);
-    assert!(process_one(&shared, |_| panic!(
-        "controlled registration panic"
-    )));
-    let state = shared.lock().unwrap();
-    assert!(state.fenced);
-    assert!(
-        state
-            .fault
-            .as_ref()
-            .unwrap()
-            .message
-            .contains(&request.action_id.0.to_string())
-    );
-}
-
-#[test]
-fn registration_panic_survives_failed_persistence_without_replaying_effects() {
-    let mut store = Store {
-        finish_fault: Some(false),
-        ..Store::default()
-    };
-    let request = RegisterRepository {
-        action_id: ActionId(Uuid::new_v4()),
-        path: "/repo".into(),
-        create_initial_workspace: false,
-    };
-    admit(&mut store, &request).unwrap();
-    let shared = state(store);
-    assert!(!process_one(&shared, |_| panic!(
-        "controlled registration panic"
-    )));
-    let identity = format!("registration {}", request.action_id.0);
+#[tokio::test]
+async fn pending_capacity_counts_active_identity_once_and_preserves_recovery_admission() {
+    let store = Arc::new(Store::default());
+    let repo = repository(1);
+    let interrupted = queued(repo.id, 99);
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo.clone());
+        for n in 1..=8 {
+            let w = queued(repo.id, n);
+            d.workspaces.insert(w.id, w);
+        }
+        let mut w = interrupted.clone();
+        w.status = CreationStatus::Running {
+            stage: CreationStage::CreatingBranch,
+        };
+        d.workspaces.insert(w.id, w);
+    }
+    let service = idle_owner(store.clone());
     assert_eq!(
-        shared.lock().unwrap().cleanup_faults[&identity].code,
-        ErrorCode::CleanupUnconfirmed
+        service
+            .admit_workspace(WorkspaceAction::Create {
+                action_id: ActionId(Uuid::from_u128(100)),
+                repository_id: repo.id
+            })
+            .await
+            .unwrap_err()
+            .code,
+        ErrorCode::Capacity
     );
-    assert!(!process_one(&shared, |_| panic!("must not replay")));
-    assert!(
-        shared
-            .lock()
-            .unwrap()
-            .cleanup_faults
-            .contains_key(&identity)
+    service
+        .admit_workspace(WorkspaceAction::Reconcile {
+            action_id: ActionId(Uuid::from_u128(101)),
+            workspace_id: interrupted.id,
+        })
+        .await
+        .unwrap();
+    assert_eq!(
+        store.0.lock().unwrap().workspaces[&interrupted.id].creation_action_id,
+        interrupted.creation_action_id
+    );
+    assert_eq!(
+        store.0.lock().unwrap().workspaces[&interrupted.id].status,
+        CreationStatus::Queued
     );
 }
-
-#[test]
-fn poisoned_decision_owner_retains_active_identity_and_fences_reuse() {
-    let shared = state(Store::default());
-    let action = ActionId(Uuid::new_v4());
-    let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        let mut state = shared.lock().unwrap();
-        state.active_registration = Some(action);
-        panic!("controlled decision owner panic");
-    }));
-    assert!(lock_state(&shared).is_err());
-    let state = shared.lock().unwrap_or_else(|e| e.into_inner());
-    assert!(state.fenced);
-    assert!(
-        state
-            .cleanup_faults
-            .keys()
-            .any(|identity| identity.contains(&action.0.to_string()))
+#[tokio::test]
+async fn invalid_registration_and_cross_kind_payloads_do_not_write() {
+    let store = Arc::new(Store::default());
+    let service = idle_owner(store.clone());
+    for path in [
+        "relative".into(),
+        "/bad\0path".into(),
+        "/".to_owned() + &"é".repeat(2049),
+    ] {
+        assert!(
+            service
+                .register(RegisterRepository {
+                    create_initial_workspace: true,
+                    action_id: ActionId(Uuid::new_v4()),
+                    path
+                })
+                .await
+                .is_err()
+        );
+    }
+    assert!(store.0.lock().unwrap().writes.is_empty());
+}
+#[tokio::test]
+async fn changed_workspace_payload_rejects_and_completed_status_survives_unrelated_fault() {
+    let store = Arc::new(Store::default());
+    let a = repository(1);
+    let b = repository(2);
+    let service = idle_owner(store.clone());
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(a.id, a.clone());
+        d.repositories.insert(b.id, b.clone());
+    }
+    let id = ActionId(Uuid::from_u128(11));
+    service
+        .admit_workspace(WorkspaceAction::Create {
+            action_id: id,
+            repository_id: a.id,
+        })
+        .await
+        .unwrap();
+    assert_eq!(
+        service
+            .admit_workspace(WorkspaceAction::Create {
+                action_id: id,
+                repository_id: b.id
+            })
+            .await
+            .unwrap_err()
+            .code,
+        ErrorCode::Conflict
     );
+    let saved = Registration {
+        create_initial_workspace: false,
+        initial_workspace_id: None,
+        action_id: ActionId(Uuid::from_u128(22)),
+        path: "/old".into(),
+        state: RegistrationState::Completed {
+            repository_id: a.id,
+        },
+    };
+    store
+        .0
+        .lock()
+        .unwrap()
+        .registrations
+        .insert(saved.action_id, saved.clone());
+    service.state().unwrap().fault = Some(RepositoryError::storage("unrelated failure"));
+    assert_eq!(service.action(saved.action_id).await.unwrap(), Some(saved));
+}
+#[tokio::test]
+async fn byte_bounded_navigation_uses_last_delivered_cursor() {
+    let store = Arc::new(Store::default());
+    {
+        let mut d = store.0.lock().unwrap();
+        for n in 1..=20 {
+            let mut r = repository(n);
+            r.path = "/".to_owned() + &"\u{1}".repeat(2000);
+            d.repositories.insert(r.id, r);
+        }
+    }
+    let service = idle_owner(store);
+    let first = service.repositories(None, false).await.unwrap();
+    assert!(first.repositories.len() < 20);
+    assert_eq!(first.next, first.repositories.last().map(|r| r.id));
+    assert!(serde_json::to_vec(&first).unwrap().len() <= PAGE_BYTES);
+    let second = service.repositories(first.next, false).await.unwrap();
+    assert!(second.repositories[0].id > first.next.unwrap());
+}
+#[tokio::test]
+async fn requester_loss_keeps_admitted_creation_owned_until_completion() {
+    let (store, effects, mut started) = dependencies();
+    let repo = repository(1);
+    let w = queued(repo.id, 11);
+    let block = Arc::new(Block::default());
+    effects.blocks.lock().unwrap().insert(w.id, block.clone());
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+    }
+    let service = owner(store, effects);
+    assert_eq!(started.recv().await, Some(w.id));
+    let request = service.workspace_request(WorkspaceRequest::Get { id: w.id });
+    tokio::pin!(request);
+    assert!(futures_util::poll!(&mut request).is_ready());
+    // No retained request future is needed to finish the already admitted effect.
+    block.release();
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+}
+#[tokio::test]
+async fn quit_during_read_only_registration_settles_without_starting_first_creation() {
+    let (store, mut effects, _) = dependencies();
+    let block = Arc::new(Block::default());
+    Arc::get_mut(&mut effects).unwrap().validation_block = Some(block.clone());
+    let service = owner(store.clone(), effects.clone());
+    let request = RegisterRepository {
+        create_initial_workspace: true,
+        action_id: ActionId(Uuid::from_u128(10)),
+        path: "/app".into(),
+    };
+    service.register(request.clone()).await.unwrap();
+    loop {
+        if effects.probes.load(Ordering::SeqCst) > 0 {
+            break;
+        }
+        tokio::task::yield_now().await;
+    }
+    service.fence().await;
+    block.release();
+    service.finish().await.unwrap();
+    let d = store.0.lock().unwrap();
+    assert!(d.repositories.is_empty());
+    assert!(d.workspaces.is_empty());
+    assert!(matches!(
+        d.registrations[&request.action_id].state,
+        RegistrationState::Failed { .. }
+    ));
+}
+
+struct BlockedAdmission {
+    at_write: bool,
+}
+impl Metadata for BlockedAdmission {
+    fn read(&self, _: Read) -> BoxFuture<'_, std::result::Result<Delivery, Error>> {
+        Box::pin(async move {
+            if !self.at_write {
+                std::future::pending::<()>().await;
+            }
+            Ok(Delivery::controlled(Ok(Vec::new()), None))
+        })
+    }
+    fn write(&self, _: Write) -> BoxFuture<'_, std::result::Result<Delivery, Error>> {
+        Box::pin(std::future::pending())
+    }
+}
+#[tokio::test]
+async fn cancellation_unwinds_provisional_reads_and_fences_unsettled_admission_writes() {
+    for at_write in [false, true] {
+        let mut service = idle_owner(Arc::default());
+        service.store = Arc::new(BlockedAdmission { at_write });
+        let id = ActionId(Uuid::new_v4());
+        let mut request = Box::pin(service.register(RegisterRepository {
+            create_initial_workspace: false,
+            action_id: id,
+            path: "/app".into(),
+        }));
+        assert!(futures_util::poll!(&mut request).is_pending());
+        assert!(service.state().unwrap().activities.contains_key(&id));
+        drop(request);
+        let state = service.state().unwrap();
+        assert!(state.activities.is_empty());
+        assert_eq!(state.fenced, at_write);
+        if at_write {
+            assert!(
+                state
+                    .fault
+                    .as_ref()
+                    .unwrap()
+                    .message
+                    .contains(&id.0.to_string())
+            );
+        }
+    }
 }

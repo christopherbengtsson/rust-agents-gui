@@ -3,7 +3,7 @@ use std::{
     fs::{self, File, OpenOptions},
     io,
     os::unix::{
-        fs::{DirBuilderExt, FileTypeExt, MetadataExt, OpenOptionsExt, PermissionsExt},
+        fs::{DirBuilderExt, OpenOptionsExt, PermissionsExt},
         net::UnixListener,
     },
     path::{Path, PathBuf},
@@ -35,52 +35,8 @@ fn prepare_state_with(
     check(state)
 }
 
-pub(crate) fn check_private(path: &Path, directory: bool) -> io::Result<()> {
-    validate_private(
-        path,
-        &FileEvidence::from(fs::symlink_metadata(path)?),
-        directory,
-    )
-}
-
-struct FileEvidence {
-    owned_by_user: bool,
-    mode: u32,
-    directory: bool,
-    socket: bool,
-    regular: bool,
-    links: u64,
-}
-impl From<fs::Metadata> for FileEvidence {
-    fn from(metadata: fs::Metadata) -> Self {
-        Self {
-            // SAFETY: geteuid has no preconditions and does not mutate process state.
-            owned_by_user: metadata.uid() == unsafe { libc::geteuid() },
-            mode: metadata.permissions().mode(),
-            directory: metadata.is_dir(),
-            socket: metadata.file_type().is_socket(),
-            regular: metadata.is_file(),
-            links: metadata.nlink(),
-        }
-    }
-}
-
-fn validate_private(path: &Path, metadata: &FileEvidence, directory: bool) -> io::Result<()> {
-    if !metadata.owned_by_user
-        || metadata.mode & 0o077 != 0
-        || (directory && !metadata.directory)
-        || (!directory && !metadata.socket)
-    {
-        return Err(io::Error::new(
-            io::ErrorKind::PermissionDenied,
-            format!(
-                "{} must be owned by this user, private (directory 700 / socket 600), and not a symlink. Select a private application state directory.",
-                path.display()
-            ),
-        ));
-    }
-    Ok(())
-}
+use crate::private_state::validate_private;
+pub(crate) use crate::private_state::{FileEvidence, check_private};
 
 fn owner_lock(state: &Path) -> io::Result<File> {
     let file = OpenOptions::new()

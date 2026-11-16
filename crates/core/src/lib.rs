@@ -6,6 +6,7 @@ pub mod connection;
 mod git;
 mod lifetime;
 pub mod observations;
+mod private_state;
 pub mod runtimes;
 mod storage;
 pub mod supervisor;
@@ -69,6 +70,7 @@ pub struct Core {
     pid: u32,
     providers: Option<std::sync::Arc<runtimes::ProviderConnections>>,
     workspaces: Option<workspaces::Workspaces>,
+    storage: Option<storage::Storage>,
     journal: std::sync::Arc<observations::Journal>,
 }
 
@@ -95,6 +97,7 @@ impl Core {
             pid: std::process::id(),
             providers: None,
             workspaces: None,
+            storage: None,
             journal: std::sync::Arc::new(observations::Journal::default()),
         }
     }
@@ -108,33 +111,52 @@ impl Core {
         let workspace_directory = directory.clone();
         Self::start_with(
             lifetime,
-            move || workspaces::Workspaces::open(&workspace_directory),
+            move || async move {
+                let directory = tokio::task::spawn_blocking(move || {
+                    supervisor::check_private(&workspace_directory, true)?;
+                    std::fs::canonicalize(workspace_directory)
+                })
+                .await
+                .map_err(workspaces::RepositoryError::storage)?
+                .map_err(workspaces::RepositoryError::storage)?;
+                let mut opening = storage::Storage::start(directory.clone());
+                let storage = opening
+                    .wait()
+                    .await
+                    .map_err(workspaces::RepositoryError::storage)?;
+                Ok(workspaces::Workspaces::open(directory, storage))
+            },
             move |journal| runtimes::ProviderConnections::open(journal, &directory),
         )
         .await
     }
-    async fn start_with(
+    async fn start_with<F>(
         lifetime: std::sync::Arc<lifetime::Lifetime>,
-        open_workspace: impl FnOnce() -> Result<workspaces::Workspaces, workspaces::RepositoryError>
-        + Send
-        + 'static,
+        open_workspace: impl FnOnce() -> F + Send + 'static,
         open_provider: impl FnOnce(
             std::sync::Arc<observations::Journal>,
         )
             -> Result<runtimes::ProviderConnections, workspaces::RepositoryError>
         + Send
         + 'static,
-    ) -> std::sync::Arc<Self> {
+    ) -> std::sync::Arc<Self>
+    where
+        F: std::future::Future<
+                Output = Result<workspaces::Workspaces, workspaces::RepositoryError>,
+            > + Send
+            + 'static,
+    {
         let task = tokio::spawn(async move {
             let mut core = Self {
                 lifetime,
                 ..Self::new()
             };
-            let opened = tokio::task::spawn_blocking(open_workspace).await;
+            let opened = tokio::spawn(open_workspace()).await;
             let failure = match opened {
                 Ok(Ok(workspaces)) => {
                     core.lifetime.recovering();
                     core.journal = workspaces.journal();
+                    core.storage = workspaces.storage.clone();
                     core.workspaces = Some(workspaces);
                     let journal = core.journal.clone();
                     match tokio::task::spawn_blocking(move || open_provider(journal)).await {
@@ -164,9 +186,6 @@ impl Core {
     }
     pub fn begin_quit(self: &std::sync::Arc<Self>) -> QuitStatus {
         if self.lifetime.fence() {
-            if let Some(workspaces) = &self.workspaces {
-                workspaces.fence();
-            }
             if let Some(providers) = &self.providers {
                 providers.fence();
             }
@@ -178,6 +197,9 @@ impl Core {
         self.quit_status()
     }
     async fn drain(&self, mut errors: Vec<String>) {
+        if let Some(workspaces) = &self.workspaces {
+            workspaces.fence().await;
+        }
         self.lifetime.transferred().await;
         use futures_util::FutureExt;
         if let Some(workspaces) = &self.workspaces {
@@ -200,6 +222,15 @@ impl Core {
                 Err(_) => errors.push("Provider completion panicked; ownership retained".into()),
             }
         }
+        if let Some(storage) = &self.storage {
+            let report = storage.close().await;
+            errors.extend(
+                report
+                    .faults
+                    .iter()
+                    .map(|fault| format!("Storage {:?}: {}", fault.action, fault.error)),
+            );
+        }
         self.lifetime.settle(errors);
         self.journal.wake();
     }
@@ -215,7 +246,7 @@ impl Core {
                 .take();
         }
     }
-    pub fn repository_request(
+    pub async fn repository_request(
         &self,
         request: workspaces::RepositoryRequest,
     ) -> Result<workspaces::RepositoryReply, workspaces::RepositoryError> {
@@ -235,9 +266,10 @@ impl Core {
                 )
             })?
             .request(request)
+            .await
     }
 
-    pub fn workspace_request(
+    pub async fn workspace_request(
         &self,
         request: workspaces::WorkspaceRequest,
     ) -> Result<workspaces::WorkspaceReply, workspaces::RepositoryError> {
@@ -257,6 +289,7 @@ impl Core {
                 )
             })?
             .workspace_request(request)
+            .await
     }
 
     pub fn status(&self) -> SupervisorStatus {
@@ -299,6 +332,7 @@ mod tests {
             owner: "test-owner".into(),
             pid: 42,
             workspaces: None,
+            storage: None,
             providers: None,
             journal: std::sync::Arc::new(observations::Journal::default()),
         }
@@ -323,7 +357,7 @@ mod tests {
                 ));
                 let core = Core::start_with(
                     lifetime,
-                    move || {
+                    move || async move {
                         Ok(workspaces::tests::controlled_completion(async move {
                             marker.store(true, Ordering::SeqCst);
                             Ok(())

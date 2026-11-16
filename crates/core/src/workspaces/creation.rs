@@ -78,27 +78,6 @@ pub enum WorkspaceReply {
     },
 }
 
-pub(crate) trait CreationStore: Send {
-    fn naming(&mut self, repository: RepositoryId) -> Result<super::naming::Naming>;
-    fn reserve_name(&mut self, workspace: &Workspace, folder: &str) -> Result<()>;
-    fn workspace(&mut self, id: WorkspaceId) -> Result<Option<Workspace>>;
-    fn workspace_action(&mut self, id: ActionId) -> Result<Option<(WorkspaceAction, WorkspaceId)>>;
-    fn save_workspace(
-        &mut self,
-        workspace: &Workspace,
-        action: Option<&WorkspaceAction>,
-    ) -> Result<()>;
-    fn workspace_pending(&mut self, after: Option<WorkspaceId>) -> Result<Option<Workspace>>;
-    fn workspace_count_pending(&mut self) -> Result<usize>;
-    fn workspace_cleanup_blocked(&mut self, repository: RepositoryId) -> Result<bool>;
-    fn workspace_list(
-        &mut self,
-        repository: RepositoryId,
-        after: Option<WorkspaceId>,
-        limit: usize,
-    ) -> Result<Vec<Workspace>>;
-}
-
 pub(crate) fn allocate(
     repository: RepositoryId,
     action: ActionId,
@@ -140,12 +119,6 @@ pub(crate) fn check_workspace_budget(workspace: &Workspace) -> Result<()> {
 }
 
 pub(crate) trait CreationEffects {
-    fn repository_folders(&mut self, root: &Path) -> Result<std::collections::HashSet<String>>;
-    fn occupied(
-        &mut self,
-        repository: &RepositoryRecord,
-        directory: &Path,
-    ) -> Result<super::naming::Occupied>;
     fn quiescent(&mut self, workspace: &Workspace) -> Result<bool>;
     fn base(&mut self, repository: &RepositoryRecord) -> Result<PinnedBase>;
     fn inspect(
@@ -158,74 +131,11 @@ pub(crate) trait CreationEffects {
     fn worktree(&mut self, repository: &RepositoryRecord, workspace: &Workspace) -> Result<()>;
 }
 
-pub(crate) fn prepare_name(
-    mut workspace: Workspace,
-    repository: &RepositoryRecord,
-    root: &Path,
-    mut naming: super::naming::Naming,
-    effects: &mut impl CreationEffects,
-    mut persist: impl FnMut(&Workspace, Option<&str>) -> Result<()>,
-) -> Result<Workspace> {
-    if workspace.name.is_some() {
-        return Ok(workspace);
-    }
-    workspace.status = CreationStatus::Running {
-        stage: CreationStage::AllocatingName,
-    };
-    persist(&workspace, None)?;
-    let result = (|| {
-        let root = root.join("workspaces");
-        let folder = match naming.folder {
-            Some(folder) => folder,
-            None => {
-                naming.folders.extend(effects.repository_folders(&root)?);
-                super::naming::repository_folder(&repository.name, &naming.folders)?
-            }
-        };
-        let directory = root.join(&folder);
-        let occupied = effects.occupied(repository, &directory)?;
-        let name = super::naming::workspace_name(
-            &naming.names,
-            &occupied,
-            &directory,
-            workspace.id.0.as_u128(),
-        )?;
-        let path = directory
-            .join(&name)
-            .join("checkout")
-            .to_str()
-            .ok_or_else(|| {
-                RepositoryError::new(
-                    ErrorCode::InvalidPath,
-                    "Private workspace path must be UTF-8.",
-                )
-            })?
-            .to_owned();
-        Ok((folder, name, path))
-    })();
-    match result {
-        Ok((folder, name, path)) => {
-            workspace.branch = Some(format!("workspace/{name}"));
-            workspace.name = Some(name);
-            workspace.path = Some(path);
-            check_workspace_budget(&workspace)?;
-            // This single transaction reserves repository folder, name, branch
-            // and path before mkdir/update-ref can run. A failed commit stops here.
-            persist(&workspace, Some(&folder))?;
-        }
-        Err(error) => {
-            workspace.status = CreationStatus::Failed { error };
-            persist(&workspace, None)?;
-        }
-    }
-    Ok(workspace)
-}
-
 pub(crate) fn drive(
     mut workspace: Workspace,
     repository: &RepositoryRecord,
-    effects: &mut impl CreationEffects,
-    mut persist: impl FnMut(&Workspace) -> Result<()>,
+    effects: &mut (impl CreationEffects + ?Sized),
+    mut persist: impl FnMut(&Workspace, bool) -> Result<()>,
 ) -> Result<Workspace> {
     workspace.path()?;
     workspace.branch()?;
@@ -237,7 +147,7 @@ pub(crate) fn drive(
                 "An earlier Git effect still owns this workspace's execution lease. Wait for it to finish, then reconcile. No creation was repeated and no saved PID was signaled.",
             ),
         };
-        persist(&workspace)?;
+        persist(&workspace, false)?;
         return Ok(workspace);
     }
     workspace.cleanup_unconfirmed = false;
@@ -245,16 +155,17 @@ pub(crate) fn drive(
     workspace.status = CreationStatus::Running {
         stage: CreationStage::ResolvingBase,
     };
-    persist(&workspace)?;
+    persist(&workspace, false)?;
     if workspace.base.is_none() {
         match effects.base(repository) {
             Ok(base) => {
                 workspace.base = Some(base);
-                persist(&workspace)?;
+                persist(&workspace, false)?;
             }
             Err(error) => {
+                workspace.cleanup_unconfirmed = error.code == ErrorCode::CleanupUnconfirmed;
                 workspace.status = CreationStatus::Failed { error };
-                persist(&workspace)?;
+                persist(&workspace, false)?;
                 return Ok(workspace);
             }
         }
@@ -262,12 +173,13 @@ pub(crate) fn drive(
     workspace.artifacts = match effects.inspect(repository, &workspace) {
         Ok(artifacts) => artifacts,
         Err(error) => {
+            workspace.cleanup_unconfirmed = error.code == ErrorCode::CleanupUnconfirmed;
             workspace.status = CreationStatus::Uncertain { error };
-            persist(&workspace)?;
+            persist(&workspace, false)?;
             return Ok(workspace);
         }
     };
-    persist(&workspace)?;
+    persist(&workspace, false)?;
     if workspace.artifacts.branch == BranchArtifact::Conflict
         || matches!(
             workspace.artifacts.folder,
@@ -280,7 +192,7 @@ pub(crate) fn drive(
                 "Existing branch/folder artifacts cannot safely be continued. Inspect the displayed locations and restore access or move conflicting artifacts yourself, then reconcile. No work was overwritten or deleted.",
             ),
         };
-        persist(&workspace)?;
+        persist(&workspace, false)?;
         return Ok(workspace);
     }
     for stage in [
@@ -301,7 +213,7 @@ pub(crate) fn drive(
             continue;
         }
         workspace.status = CreationStatus::Running { stage };
-        persist(&workspace)?;
+        persist(&workspace, true)?;
         let outcome = match stage {
             CreationStage::ReservingFolder => effects.reserve(&workspace),
             CreationStage::CreatingBranch => effects.branch(repository, &workspace),
@@ -316,18 +228,19 @@ pub(crate) fn drive(
                 workspace.artifacts = artifacts;
             }
             workspace.status = CreationStatus::Uncertain { error };
-            persist(&workspace)?;
+            persist(&workspace, false)?;
             return Ok(workspace);
         }
         workspace.artifacts = match effects.inspect(repository, &workspace) {
             Ok(artifacts) => artifacts,
             Err(error) => {
+                workspace.cleanup_unconfirmed = error.code == ErrorCode::CleanupUnconfirmed;
                 workspace.status = CreationStatus::Uncertain { error };
-                persist(&workspace)?;
+                persist(&workspace, false)?;
                 return Ok(workspace);
             }
         };
-        persist(&workspace)?;
+        persist(&workspace, false)?;
     }
     workspace.status = if workspace.artifacts
         == (Artifacts {
@@ -343,7 +256,7 @@ pub(crate) fn drive(
             ),
         }
     };
-    persist(&workspace)?;
+    persist(&workspace, false)?;
     Ok(workspace)
 }
 
@@ -383,24 +296,6 @@ mod policy_tests {
         Ok(w)
     }
     impl CreationEffects for Effects<'_> {
-        fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
-            self.calls.borrow_mut().push("folders");
-            Ok(Default::default())
-        }
-        fn occupied(
-            &mut self,
-            _: &RepositoryRecord,
-            _: &Path,
-        ) -> Result<super::super::naming::Occupied> {
-            self.calls.borrow_mut().push("inventory");
-            if self.fail == Some(CreationStage::AllocatingName) {
-                return Err(RepositoryError::new(
-                    ErrorCode::Git,
-                    "inventory unavailable",
-                ));
-            }
-            Ok(Default::default())
-        }
         fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
             Ok(self.quiescent)
         }
@@ -453,128 +348,6 @@ mod policy_tests {
         }
     }
     #[test]
-    fn name_reservation_precedes_mutation_and_recovery_never_reallocates() {
-        let calls = RefCell::new(vec![]);
-        let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
-        assert!(w.name.is_none() && w.path.is_none() && w.branch.is_none());
-        let mut effects = Effects {
-            calls: &calls,
-            artifacts: Artifacts {
-                branch: BranchArtifact::Absent,
-                folder: FolderArtifact::Absent,
-            },
-            fail: None,
-            quiescent: true,
-        };
-        let w = prepare_name(
-            w,
-            &repo(),
-            Path::new("/state"),
-            Default::default(),
-            &mut effects,
-            |w, folder| {
-                if folder.is_none() {
-                    assert!(w.name.is_none());
-                    calls.borrow_mut().push("intent");
-                } else {
-                    assert!(w.path()?.contains(w.name.as_deref().unwrap()));
-                    calls.borrow_mut().push("reservation");
-                }
-                Ok(())
-            },
-        )
-        .unwrap();
-        assert_eq!(
-            *calls.borrow(),
-            ["intent", "folders", "inventory", "reservation"]
-        );
-        let restored: Workspace =
-            serde_json::from_str(&serde_json::to_string(&w).unwrap()).unwrap();
-        let recovered = prepare_name(
-            restored,
-            &repo(),
-            Path::new("/other"),
-            Default::default(),
-            &mut effects,
-            |_, _| panic!("must reuse exact reservation"),
-        )
-        .unwrap();
-        assert_eq!(w, recovered);
-        assert_eq!(
-            drive(recovered, &repo(), &mut effects, |_| Ok(()))
-                .unwrap()
-                .status,
-            CreationStatus::Ready
-        );
-        assert_eq!(
-            calls.borrow().iter().filter(|c| **c == "inventory").count(),
-            1
-        );
-    }
-    #[test]
-    fn failed_intent_or_reservation_stops_effects_and_inventory_failure_is_explicit() {
-        for fail_boundary in [0, 1, 2] {
-            let calls = RefCell::new(vec![]);
-            let w = allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
-            let mut effects = Effects {
-                calls: &calls,
-                artifacts: Artifacts {
-                    branch: BranchArtifact::Absent,
-                    folder: FolderArtifact::Absent,
-                },
-                fail: None,
-                quiescent: true,
-            };
-            let result = prepare_name(
-                w.clone(),
-                &repo(),
-                Path::new("/state"),
-                Default::default(),
-                &mut effects,
-                |_, folder| {
-                    if (folder.is_none() && fail_boundary == 0)
-                        || (folder.is_some() && fail_boundary == 1)
-                    {
-                        return Err(RepositoryError::storage("commit unconfirmed"));
-                    }
-                    Ok(())
-                },
-            )
-            .and_then(|w| drive(w, &repo(), &mut effects, |_| Ok(())));
-            if fail_boundary < 2 {
-                assert!(result.is_err());
-                assert!(!calls.borrow().contains(&"reserve"));
-                if fail_boundary == 0 {
-                    assert!(calls.borrow().is_empty());
-                }
-            } else {
-                assert_eq!(result.unwrap().status, CreationStatus::Ready);
-            }
-        }
-        let calls = RefCell::new(vec![]);
-        let mut effects = Effects {
-            calls: &calls,
-            artifacts: Artifacts {
-                branch: BranchArtifact::Absent,
-                folder: FolderArtifact::Absent,
-            },
-            fail: Some(CreationStage::AllocatingName),
-            quiescent: true,
-        };
-        let w = prepare_name(
-            allocate(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap(),
-            &repo(),
-            Path::new("/state"),
-            Default::default(),
-            &mut effects,
-            |_, _| Ok(()),
-        )
-        .unwrap();
-        assert!(matches!(w.status, CreationStatus::Failed { .. }));
-        assert!(w.path.is_none());
-        assert!(!calls.borrow().contains(&"reserve"));
-    }
-    #[test]
     fn pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable() {
         let calls = RefCell::new(vec![]);
         let workspace = allocated(repo().id, ActionId(Uuid::nil()), Path::new("/state")).unwrap();
@@ -587,7 +360,7 @@ mod policy_tests {
                 folder: FolderArtifact::Absent,
             },
         };
-        let result = drive(workspace, &repo(), &mut effects, |w| {
+        let result = drive(workspace, &repo(), &mut effects, |w, _| {
             calls.borrow_mut().push(match w.status {
                 CreationStatus::Running {
                     stage: CreationStage::ReservingFolder,
@@ -632,7 +405,7 @@ mod policy_tests {
             },
         };
         assert!(
-            drive(workspace, &repo(), &mut effects, |_| Err(
+            drive(workspace, &repo(), &mut effects, |_, _| Err(
                 RepositoryError::storage("full")
             ))
             .is_err()
@@ -661,14 +434,14 @@ mod policy_tests {
                     folder: FolderArtifact::Absent,
                 },
             };
-            let failed = drive(w, &repo(), &mut effects, |_| Ok(())).unwrap();
+            let failed = drive(w, &repo(), &mut effects, |_, _| Ok(())).unwrap();
             assert!(matches!(failed.status, CreationStatus::Uncertain { .. }));
             assert_eq!(calls.borrow().iter().filter(|c| **c == "branch").count(), 1);
             effects.fail = None;
             let pinned = failed.base.clone();
             let restored: Workspace =
                 serde_json::from_str(&serde_json::to_string(&failed).unwrap()).unwrap();
-            let ready = drive(restored, &repo(), &mut effects, |_| Ok(())).unwrap();
+            let ready = drive(restored, &repo(), &mut effects, |_, _| Ok(())).unwrap();
             assert_eq!(ready.status, CreationStatus::Ready);
             assert_eq!(ready.base, pinned);
             for effect in ["branch", "worktree", "resolve"] {
@@ -693,12 +466,12 @@ mod policy_tests {
                 folder: FolderArtifact::Absent,
             },
         };
-        let uncertain = drive(w, &repo(), &mut effects, |_| Ok(())).unwrap();
+        let uncertain = drive(w, &repo(), &mut effects, |_, _| Ok(())).unwrap();
         assert!(uncertain.cleanup_unconfirmed);
         assert!(calls.borrow().is_empty());
         effects.quiescent = true;
         assert_eq!(
-            drive(uncertain, &repo(), &mut effects, |_| Ok(()))
+            drive(uncertain, &repo(), &mut effects, |_, _| Ok(()))
                 .unwrap()
                 .status,
             CreationStatus::Ready
@@ -719,7 +492,9 @@ mod policy_tests {
                 },
             };
             assert!(matches!(
-                drive(w, &repo(), &mut effects, |_| Ok(())).unwrap().status,
+                drive(w, &repo(), &mut effects, |_, _| Ok(()))
+                    .unwrap()
+                    .status,
                 CreationStatus::Failed { .. }
             ));
             assert_eq!(*calls.borrow(), ["resolve"]);
@@ -741,7 +516,7 @@ mod policy_tests {
                 },
             };
             assert!(
-                drive(w, &repo(), &mut effects, |w| {
+                drive(w, &repo(), &mut effects, |w, _| {
                     if w.status
                         == (CreationStatus::Running {
                             stage: failed_stage,
@@ -762,358 +537,6 @@ mod policy_tests {
             assert!(!calls.borrow().contains(&blocked));
         }
     }
-}
-
-pub(crate) fn admit_workspace(
-    store: &mut dyn RepositoryStore,
-    directory: &Path,
-    action: &WorkspaceAction,
-    active: Option<WorkspaceId>,
-) -> Result<Workspace> {
-    if let Some((recorded, workspace)) = store.workspace_action(action.id())? {
-        if recorded != *action {
-            return Err(RepositoryError::new(
-                ErrorCode::Conflict,
-                "This action ID belongs to a different workspace operation. Retrieve its recorded status.",
-            ));
-        }
-        return store
-            .workspace(workspace)?
-            .ok_or_else(|| RepositoryError::storage("Workspace action has no saved workspace"));
-    }
-    if store.action(action.id())?.is_some() {
-        return Err(RepositoryError::new(
-            ErrorCode::Conflict,
-            "This action ID belongs to repository registration.",
-        ));
-    }
-    // Recovery reuses an existing identity and durable slot. Normal admission must
-    // never strand interrupted records by consuming their recovery capacity.
-    if matches!(action, WorkspaceAction::Create { .. })
-        && store.pending_count()? + store.workspace_count_pending()? >= 8
-    {
-        return Err(RepositoryError::new(
-            ErrorCode::Capacity,
-            "Eight operations are pending. Retrieve their status before creating another workspace.",
-        ));
-    }
-    let workspace = match action {
-        WorkspaceAction::Create {
-            action_id,
-            repository_id,
-        } => {
-            if store.repository(*repository_id)?.is_none() {
-                return Err(RepositoryError::new(
-                    ErrorCode::NotFound,
-                    "The requested repository is not registered.",
-                ));
-            }
-            if store.workspace_cleanup_blocked(*repository_id)? {
-                return Err(RepositoryError::new(
-                    ErrorCode::CleanupUnconfirmed,
-                    "A workspace in this repository has unconfirmed Git cleanup. Reconcile it before creating another.",
-                ));
-            }
-            allocate(*repository_id, *action_id, directory)?
-        }
-        WorkspaceAction::Reconcile { workspace_id, .. } => {
-            let mut workspace = store.workspace(*workspace_id)?.ok_or_else(|| {
-                RepositoryError::new(
-                    ErrorCode::NotFound,
-                    "Workspace not found; its action has not been repeated.",
-                )
-            })?;
-            if active == Some(*workspace_id)
-                || matches!(
-                    workspace.status,
-                    CreationStatus::Queued | CreationStatus::Ready
-                )
-            {
-                return Err(RepositoryError::new(
-                    ErrorCode::Conflict,
-                    "This workspace is already queued, active, or ready. Refresh its status.",
-                ));
-            }
-            workspace.status = CreationStatus::Queued;
-            workspace
-        }
-    };
-    store.save_workspace(&workspace, Some(action))?;
-    Ok(workspace)
-}
-
-impl OwnerState {
-    pub(super) fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
-        if matches!(workspace.status, CreationStatus::Running { .. })
-            && self.active_workspace != Some(workspace.id)
-        {
-            workspace.status = CreationStatus::Uncertain {
-                error: RepositoryError::new(
-                    ErrorCode::Unavailable,
-                    "Creation stopped before a durable outcome was recorded. Reconcile this workspace explicitly to inspect its saved branch and folder; reopening has not repeated creation.",
-                ),
-            };
-        }
-        if let Some(error) = self.workspace_faults.get(&workspace.id) {
-            workspace.status = CreationStatus::Uncertain {
-                error: error.clone(),
-            };
-        }
-        workspace
-    }
-}
-impl Workspaces {
-    pub fn workspace_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
-        let result = self.workspace_request_inner(request);
-        // A failed write may have committed. The owner wakes even on ambiguous admission.
-        self.notify();
-        result
-    }
-    fn workspace_request_inner(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
-        if matches!(
-            request,
-            WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. }
-        ) {
-            return self.inspection_request(request);
-        }
-        let mut state = self.state()?;
-        if state.fenced
-            && matches!(
-                request,
-                WorkspaceRequest::Create { .. } | WorkspaceRequest::Reconcile { .. }
-            )
-        {
-            return Err(RepositoryError::storage("Workspace admission is fenced"));
-        }
-        let invalidation = match &request {
-            WorkspaceRequest::Create {
-                action_id,
-                repository_id,
-            } => Some(vec![
-                crate::observations::Target::WorkspaceAction {
-                    action_id: *action_id,
-                },
-                crate::observations::Target::Workspaces {
-                    repository_id: Some(*repository_id),
-                },
-            ]),
-            WorkspaceRequest::Reconcile {
-                action_id,
-                workspace_id,
-            } => Some(vec![
-                crate::observations::Target::WorkspaceAction {
-                    action_id: *action_id,
-                },
-                crate::observations::Target::Workspace {
-                    workspace_id: *workspace_id,
-                },
-                crate::observations::Target::Workspaces {
-                    repository_id: None,
-                },
-            ]),
-            _ => None,
-        };
-        // Publish even if an admission/store call returns an ambiguous failure.
-        if let Some(targets) = invalidation {
-            state.publish(targets);
-        }
-        let reply = match request {
-            WorkspaceRequest::Create {
-                action_id,
-                repository_id,
-            } => {
-                let directory = state.directory.clone();
-                let active = state.active_workspace;
-                let action = WorkspaceAction::Create {
-                    action_id,
-                    repository_id,
-                };
-                let workspace = admit_workspace(state.store()?, &directory, &action, active)?;
-                WorkspaceReply::Action {
-                    action: Some(action),
-                    workspace: Some(state.workspace_observation(workspace)),
-                }
-            }
-            WorkspaceRequest::Reconcile {
-                action_id,
-                workspace_id,
-            } => {
-                let directory = state.directory.clone();
-                let active = state.active_workspace;
-                let action = WorkspaceAction::Reconcile {
-                    action_id,
-                    workspace_id,
-                };
-                let new_request = state.store()?.workspace_action(action_id)?.is_none();
-                // Only a new explicit recovery may re-admit a queued record whose write failed.
-                if new_request
-                    && state.workspace_faults.contains_key(&workspace_id)
-                    && let Some(mut w) = state.store()?.workspace(workspace_id)?
-                {
-                    w.status = CreationStatus::Uncertain {
-                        error: RepositoryError::storage("Explicit recovery after a failed write"),
-                    };
-                    state.store()?.save_workspace(&w, None)?;
-                }
-                let workspace = admit_workspace(state.store()?, &directory, &action, active)?;
-                if new_request {
-                    state.workspace_faults.remove(&workspace_id);
-                }
-                WorkspaceReply::Action {
-                    action: Some(action),
-                    workspace: Some(state.workspace_observation(workspace)),
-                }
-            }
-            WorkspaceRequest::Action { action_id } => {
-                let action = state.store()?.workspace_action(action_id)?;
-                let workspace = action
-                    .as_ref()
-                    .map(|(_, id)| state.store()?.workspace(*id))
-                    .transpose()?
-                    .flatten();
-                WorkspaceReply::Action {
-                    action: action.map(|(a, _)| a),
-                    workspace: workspace.map(|w| state.workspace_observation(w)),
-                }
-            }
-            WorkspaceRequest::Get { id } => {
-                let workspace = state.store()?.workspace(id)?;
-                WorkspaceReply::Workspace {
-                    workspace: workspace.map(|w| state.workspace_observation(w)),
-                }
-            }
-            WorkspaceRequest::List {
-                repository_id,
-                after,
-            } => {
-                let records = state
-                    .store()?
-                    .workspace_list(repository_id, after, PAGE_SIZE + 1)?;
-                let mut page = WorkspacePage {
-                    workspaces: vec![],
-                    next: None,
-                };
-                let total = records.len();
-                for workspace in records.into_iter().take(PAGE_SIZE) {
-                    page.workspaces.push(state.workspace_observation(workspace));
-                    if serde_json::to_vec(&page)
-                        .map_err(RepositoryError::storage)?
-                        .len()
-                        > PAGE_BYTES
-                    {
-                        page.workspaces.pop();
-                        if page.workspaces.is_empty() {
-                            return Err(RepositoryError::new(
-                                ErrorCode::Capacity,
-                                "Saved workspace exceeds the navigation budget; its record is retained.",
-                            ));
-                        }
-                        break;
-                    }
-                }
-                if total > page.workspaces.len() {
-                    page.next = page.workspaces.last().map(|w| w.id);
-                }
-                WorkspaceReply::Workspaces { page }
-            }
-            WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. } => {
-                unreachable!()
-            }
-        };
-        drop(state);
-        Ok(reply)
-    }
-}
-
-pub(super) fn process_creation(
-    shared: &Mutex<OwnerState>,
-    effects: &mut impl CreationEffects,
-) -> bool {
-    let work = (|| -> Result<Option<(Workspace, RepositoryRecord)>> {
-        let mut state = lock_state(shared)?;
-        let mut after = None;
-        let workspace = loop {
-            let Some(workspace) = state.store()?.workspace_pending(after)? else {
-                return Ok(None);
-            };
-            if !state.workspace_faults.contains_key(&workspace.id) {
-                break workspace;
-            }
-            after = Some(workspace.id);
-        };
-        let repository = state
-            .store()?
-            .repository(workspace.repository_id)?
-            .ok_or_else(|| RepositoryError::storage("Saved workspace repository is missing"))?;
-        state.active_workspace = Some(workspace.id);
-        state.workspace_changed(workspace.id, workspace.repository_id);
-        Ok(Some((workspace, repository)))
-    })();
-    let (workspace, repository) = match work {
-        Ok(Some(work)) => work,
-        _ => return false,
-    };
-    let id = workspace.id;
-    let result = catch_effect(|| {
-        let (directory, naming) = {
-            let mut state = lock_state(shared)?;
-            let directory = state.directory.clone();
-            (directory, state.store()?.naming(repository.id)?)
-        };
-        let workspace = prepare_name(
-            workspace,
-            &repository,
-            &directory,
-            naming,
-            effects,
-            |workspace, folder| {
-                let mut state = lock_state(shared)?;
-                state.workspace_changed(workspace.id, workspace.repository_id);
-                let store = state.store()?;
-                let saved = if let Some(folder) = folder {
-                    store.reserve_name(workspace, folder)
-                } else {
-                    store.save_workspace(workspace, None)
-                };
-                if let Err(error) = saved
-                    && store.workspace(workspace.id)?.as_ref() != Some(workspace)
-                {
-                    return Err(error);
-                }
-                state.change()
-            },
-        )?;
-        if matches!(workspace.status, CreationStatus::Failed { .. }) {
-            return Ok(workspace);
-        }
-        drive(workspace, &repository, effects, |workspace| {
-            let mut state = lock_state(shared)?;
-            state.workspace_changed(workspace.id, workspace.repository_id);
-            let store = state.store()?;
-            if let Err(error) = store.save_workspace(workspace, None)
-                && store.workspace(workspace.id)?.as_ref() != Some(workspace)
-            {
-                return Err(error);
-            }
-            state.change()
-        })
-    });
-    if let Ok(mut state) = lock_state(shared) {
-        state.active_workspace = None;
-        state.workspace_changed(id, repository.id);
-        if let Err(error) = result {
-            state.workspace_faults.insert(id, error);
-        } else {
-            state.workspace_faults.remove(&id);
-        }
-    }
-    // A failed persistence boundary must not spin or replay the queued record.
-    result_is_success(shared, id)
-}
-fn result_is_success(shared: &Mutex<OwnerState>, id: WorkspaceId) -> bool {
-    shared
-        .lock()
-        .is_ok_and(|s| !s.workspace_faults.contains_key(&id))
 }
 
 #[cfg(feature = "codegen")]

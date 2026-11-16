@@ -16,7 +16,10 @@ pub(super) async fn write(shared: &Shared, write: Write) -> Result<u64> {
     let mut committing = false;
     let result = async {
         let mut tx = connection.begin_with("BEGIN IMMEDIATE").await?;
-        apply(&mut tx, write).await?;
+        match apply(&mut tx, write).await {
+            Err(Error::CandidateConflict) => { tx.rollback().await?; return Err(Error::CandidateConflict); }
+            other => other?,
+        }
         let revision: i64 = sqlx::query_scalar("UPDATE storage_revision SET revision=revision+1 WHERE id=1 AND revision<9223372036854775807 RETURNING revision").fetch_one(&mut *tx).await?;
         committing = true;
         tx.commit().await?;
@@ -24,6 +27,7 @@ pub(super) async fn write(shared: &Shared, write: Write) -> Result<u64> {
     }.await;
     match result {
         Ok(revision) => Ok(revision),
+        Err(Error::CandidateConflict) => Err(Error::CandidateConflict),
         Err(original) => {
             // The transaction has dropped/enqueued cleanup. Never return the connection
             // to idle first; explicit close orders cleanup and awaits worker shutdown.
@@ -186,6 +190,21 @@ async fn apply(tx: &mut Transaction<'_, Sqlite>, write: Write) -> Result<()> {
             if folder.is_empty() || folder.len() > 4096 {
                 return Err(Error::Oversized);
             }
+            let saved_folder: Option<String> =
+                sqlx::query_scalar("SELECT folder FROM repository_folders WHERE repository_id=?")
+                    .bind(id(workspace.repository_id.0))
+                    .fetch_optional(&mut **tx)
+                    .await?;
+            if saved_folder.as_ref().is_some_and(|saved| saved != &folder) {
+                return Err(Error::CandidateConflict);
+            }
+            let folder_taken: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM repository_folders WHERE folder=? AND repository_id<>?)")
+                .bind(&folder).bind(id(workspace.repository_id.0)).fetch_one(&mut **tx).await?;
+            let name_taken: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM workspaces WHERE repository_id=? AND name=? AND id<>?)")
+                .bind(id(workspace.repository_id.0)).bind(&workspace.name).bind(id(workspace.id.0)).fetch_one(&mut **tx).await?;
+            if folder_taken || name_taken {
+                return Err(Error::CandidateConflict);
+            }
             sqlx::query("INSERT INTO repository_folders(repository_id,folder) VALUES(?,?) ON CONFLICT(repository_id) DO NOTHING").bind(id(workspace.repository_id.0)).bind(&folder).execute(&mut **tx).await?;
             let saved: String =
                 sqlx::query_scalar("SELECT folder FROM repository_folders WHERE repository_id=?")
@@ -227,7 +246,7 @@ async fn apply(tx: &mut Transaction<'_, Sqlite>, write: Write) -> Result<()> {
             {
                 return Ok(());
             }
-            sqlx::query("INSERT INTO provider_executables VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path").bind(scope).bind(id(action)).bind(path).execute(&mut **tx).await?;
+            sqlx::query("INSERT INTO provider_executables VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path,cleanup_unconfirmed=excluded.cleanup_unconfirmed").bind(scope).bind(id(action)).bind(path).execute(&mut **tx).await?;
         }
         Write::ProviderLogin {
             scope,
@@ -384,8 +403,8 @@ async fn save_workspace(
             return Err(conflict());
         }
     }
-    sqlx::query("INSERT INTO workspaces(id,repository_id,creation_action_id,queued,record,name,branch,path) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET queued=excluded.queued,record=excluded.record,name=excluded.name,branch=excluded.branch,path=excluded.path")
-        .bind(id(workspace.id.0)).bind(id(workspace.repository_id.0)).bind(id(workspace.creation_action_id.0)).bind(workspace.status == CreationStatus::Queued).bind(encode(workspace, PAGE_BYTES)?).bind(&workspace.name).bind(&workspace.branch).bind(&workspace.path).execute(&mut **tx).await?;
+    sqlx::query("INSERT INTO workspaces(id,repository_id,creation_action_id,queued,record,name,branch,path,cleanup_unconfirmed) VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET queued=excluded.queued,record=excluded.record,name=excluded.name,branch=excluded.branch,path=excluded.path,cleanup_unconfirmed=excluded.cleanup_unconfirmed")
+        .bind(id(workspace.id.0)).bind(id(workspace.repository_id.0)).bind(id(workspace.creation_action_id.0)).bind(workspace.status == CreationStatus::Queued).bind(encode(workspace, PAGE_BYTES)?).bind(&workspace.name).bind(&workspace.branch).bind(&workspace.path).bind(workspace.cleanup_unconfirmed).execute(&mut **tx).await?;
     if let Some(action) = action {
         match action {
             WorkspaceAction::Create {
@@ -461,7 +480,7 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
             Read::Folder { repository, candidate } => ("SELECT repository_id,0,json_array(folder,repository_id) FROM repository_folders WHERE repository_id=? OR folder=? LIMIT 2", vec![id(repository.0),candidate]),
             Read::Name { repository, candidate } => (records_sql!("workspaces", " WHERE repository_id=? AND name=? LIMIT 1"), vec![id(repository.0),candidate]),
             Read::AllocationCursor(a) => ("SELECT id,0,CAST(allocation_cursor AS TEXT) FROM workspaces WHERE id=?", vec![id(a.0)]),
-            Read::CleanupBlocked(a) => ("SELECT '',0,CASE WHEN EXISTS(SELECT 1 FROM workspaces WHERE repository_id=? AND json_extract(record,'$.cleanup_unconfirmed')=1) THEN 'true' ELSE 'false' END", vec![id(a.0)]),
+            Read::CleanupBlocked(a) => ("SELECT '',0,CASE WHEN EXISTS(SELECT 1 FROM workspaces WHERE repository_id=? AND cleanup_unconfirmed=1) THEN 'true' ELSE 'false' END", vec![id(a.0)]),
             Read::ProviderSelection(scope) => ("SELECT action,0,json_array(action,path) FROM provider_executables WHERE scope=?", vec![scope]),
             Read::ProviderAction(action) => ("SELECT id,length(CAST(payload AS BLOB)),CASE WHEN length(CAST(payload AS BLOB))<=48000 THEN json_array(json(payload),completed) END FROM provider_actions WHERE id=?", vec![id(action)]),
             Read::ProviderLogin(scope) => ("SELECT attempt,0,json_array(attempt,pending) FROM provider_login_fences WHERE scope=?", vec![scope]),

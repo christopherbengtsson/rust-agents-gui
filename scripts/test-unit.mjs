@@ -6,6 +6,10 @@ import path from "node:path";
 import { cargoMetadata, claimTarget, root, runCommand } from "./cargo.mjs";
 
 const measure = process.argv.includes("--measure");
+const workspaceCheckpoint = process.argv.includes("--workspace-checkpoint");
+const packageName = workspaceCheckpoint
+  ? "workspace-checkpoint"
+  : "workspace-core";
 const metadata = cargoMetadata();
 claimTarget(metadata.target_directory);
 const started = performance.now();
@@ -13,10 +17,9 @@ const output = runCommand("cargo", [
   "test",
   "--locked",
   "-p",
-  "workspace-core",
+  packageName,
   "--lib",
-  "--features",
-  "codegen",
+  ...(workspaceCheckpoint ? [] : ["--features", "codegen"]),
   "--no-run",
   "--message-format=json-render-diagnostics",
 ]);
@@ -30,24 +33,26 @@ const artifacts = output
   .filter(
     (message) =>
       message.reason === "compiler-artifact" &&
-      message.target.name === "workspace_core" &&
+      message.target.name === packageName.replaceAll("-", "_") &&
       message.profile.test &&
       message.executable,
   );
 if (artifacts.length !== 1)
-  throw new Error("Expected exactly one core unit executable");
+  throw new Error(`Expected exactly one ${packageName} unit executable`);
 const tooling = readdirSync(path.join(root, "scripts"))
   .filter((name) => name.endsWith(".test.mjs"))
   .sort()
   .map((name) => path.join("scripts", name));
-const commands = [
-  [artifacts[0].executable, ["--test-threads=1"]],
-  [process.execPath, ["--test", "--test-concurrency=1", ...tooling]],
-  [
-    process.execPath,
-    ["node_modules/vitest/vitest.mjs", "run", "--maxWorkers=1"],
-  ],
-];
+const commands = workspaceCheckpoint
+  ? [[artifacts[0].executable, ["--test-threads=1"]]]
+  : [
+      [artifacts[0].executable, ["--test-threads=1"]],
+      [process.execPath, ["--test", "--test-concurrency=1", ...tooling]],
+      [
+        process.execPath,
+        ["node_modules/vitest/vitest.mjs", "run", "--maxWorkers=1"],
+      ],
+    ];
 for (const [command, args] of commands) {
   const durations = [];
   for (let run = 0; run < (measure ? 6 : 1); run++) {

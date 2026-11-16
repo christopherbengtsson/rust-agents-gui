@@ -18,6 +18,7 @@
     "format": "oxfmt --ignore-path .prettierignore --ignore-path .gitignore --write src scripts .github/workflows/ci.yml package.json tsconfig.json tsr.config.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all",
     "format:check": "oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json tsr.config.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check",
     "test": "node scripts/test-unit.mjs",
+    "test:workspaces": "node scripts/test-unit.mjs --workspace-checkpoint",
     "test:measure": "node scripts/test-unit.mjs --measure",
     "qualify:process": "node scripts/cargo.mjs test --locked -p workspace-supervisor --features process-qualification --test startup --test discovery -- --test-threads=1",
     "verify": "node scripts/check.mjs verify",

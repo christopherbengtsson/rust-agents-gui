@@ -11,6 +11,7 @@ use std::{
 // Batch ref/worktree inventories share the bounded command runner.
 const OUTPUT_LIMIT: usize = 256 * 1024;
 const DEADLINE: Duration = Duration::from_secs(2);
+#[path = "git/inspection.rs"]
 mod inspection;
 pub(crate) use inspection::LocalInspection;
 
@@ -400,27 +401,6 @@ fn validate_repository(repository: &crate::workspaces::RepositoryRecord) -> Resu
     }
     Ok(())
 }
-fn directory_names(directory: &Path) -> Result<std::collections::HashSet<String>> {
-    let mut names = std::collections::HashSet::new();
-    if location(directory)?.is_none() {
-        return Ok(names);
-    }
-    crate::supervisor::check_private(directory, true).map_err(failure)?;
-    for entry in std::fs::read_dir(directory).map_err(failure)? {
-        let name = entry
-            .map_err(failure)?
-            .file_name()
-            .to_string_lossy()
-            .to_ascii_lowercase();
-        names.insert(name);
-        if names.len() > 100_000 {
-            return Err(failure(
-                "Managed folder inventory exceeds its safety budget",
-            ));
-        }
-    }
-    Ok(names)
-}
 fn occupied_inventory(
     refs: &str,
     worktrees: &str,
@@ -449,31 +429,52 @@ fn occupied_inventory(
     }
     Ok(result)
 }
+/// Candidate-specific probes avoid enumerating managed folders or retained names.
+/// Git inventory remains subject to the shared runner's byte/deadline bounds.
+pub(crate) fn candidate_occupied(
+    repository: &crate::workspaces::RepositoryRecord,
+    root: &Path,
+    directory: &Path,
+    folder: &str,
+    name: &str,
+    folder_saved: bool,
+) -> Result<bool> {
+    validate_repository(repository)?;
+    if !folder_saved && location(&root.join(folder))?.is_some() {
+        return Ok(true);
+    }
+    if location(&directory.join(name))?.is_some() {
+        return Ok(true);
+    }
+    let path = Path::new(&repository.path);
+    let reference = format!("refs/heads/workspace/{name}");
+    if query_optional(path, "refs/heads/workspace")?.is_some() {
+        return Err(failure(
+            "An existing workspace branch blocks the workspace/ namespace; rename it before reconciling",
+        ));
+    }
+    let refs = run(creation_command(
+        path,
+        &["for-each-ref", "--format=%(refname)", &reference],
+    ))?;
+    let worktrees = run(creation_command(
+        path,
+        &["worktree", "list", "--porcelain", "-z"],
+    ))?;
+    let occupied = occupied_inventory(&refs, &worktrees, Default::default())?;
+    if occupied.worktrees.iter().any(|p| directory.starts_with(p)) {
+        return Err(failure(
+            "A registered Git worktree occupies the managed repository folder or its ancestor; restore that location before reconciliation",
+        ));
+    }
+    let wrapper = directory.join(name);
+    Ok(occupied.names.contains(name)
+        || occupied
+            .worktrees
+            .iter()
+            .any(|p| p.starts_with(&wrapper) || wrapper.starts_with(p)))
+}
 impl CreationEffects for LocalCreation {
-    fn repository_folders(&mut self, root: &Path) -> Result<std::collections::HashSet<String>> {
-        directory_names(root)
-    }
-    fn occupied(
-        &mut self,
-        repository: &crate::workspaces::RepositoryRecord,
-        directory: &Path,
-    ) -> Result<crate::workspaces::naming::Occupied> {
-        validate_repository(repository)?;
-        let path = Path::new(&repository.path);
-        let refs = run(creation_command(
-            path,
-            &[
-                "for-each-ref",
-                "--format=%(refname)",
-                "refs/heads/workspace",
-            ],
-        ))?;
-        let worktrees = run(creation_command(
-            path,
-            &["worktree", "list", "--porcelain", "-z"],
-        ))?;
-        occupied_inventory(&refs, &worktrees, directory_names(directory)?)
-    }
     fn quiescent(&mut self, workspace: &Workspace) -> Result<bool> {
         check_workspace_ancestors(workspace)?;
         let path = wrapper(workspace)?.join("execution.lock");
