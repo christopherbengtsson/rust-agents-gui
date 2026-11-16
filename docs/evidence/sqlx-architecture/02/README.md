@@ -10,11 +10,11 @@ Core startup must retain `Storage::start`'s opening receipt while holding the st
 
 Writes are typed for current registration, initial creation, workspace/reservation/cursor and existing provider records. Domain owners retain retry, credential-scope and external-effect decisions. Provider qualification below only writes synthetic non-secret records; it invokes no provider, authentication or configuration effect.
 
-Failed statement/commit/rollback scope cleanup precedes explicit acquired-connection retirement. A retirement guard blocks establishment/reuse until acknowledgment and fences unknown/panicked retirement. Return hooks order queued cleanup with ping before checking tracked transaction depth, retain hook failures and reject unhealthy connections. Read admission captures a finite settlement frontier (exact action for action lookups); later writes cannot extend it. Known retirement permits fresh reconciliation snapshots; a storage health fault conservatively fences new writes for that owner. Neither absence nor error authorizes replay.
+Failed statement/commit/rollback paths finish the borrowed transaction scope before explicit acquired-connection retirement; queued drop rollback is ordered by the worker, without inventing a returned rollback receipt. A retirement guard blocks establishment/reuse until acknowledgment and fences unknown/panicked retirement. Return hooks order queued cleanup with ping before checking tracked transaction depth, retain hook failures and reject unhealthy connections. Read admission captures a finite settlement frontier (exact action for action lookups); later writes cannot extend it. Known retirement permits fresh reconciliation snapshots; a storage health fault conservatively fences new writes for that owner. Neither absence nor error authorizes replay.
 
 Fresh metadata is `metadata.sqlite3`, application ID `0x41575332`, schema version 1. Retired `workspace.sqlite3` or incompatible metadata produces fresh-state guidance. No reset occurs. To reset deliberately: stop and drain the owning build, retain owner exclusion, select a new canonical private state root and fresh managed locations, and preserve repositories/worktrees, runtime credentials/native history and evidence. Treat stopped database/WAL/SHM as one set. No migration/import/old-worktree takeover is supplied.
 
-Opening validates canonical root, owner/mode and regular single-link database/journal/WAL/SHM files initially and through establishment/reuse hooks. Application-created metadata uses private mode and native NOFOLLOW. SQLx opening is not atomic NOFOLLOW: same-user path replacement between validation and native open is explicitly outside the accepted contract. No umask changes, VFS, raw-handle adoption or driver fork is used.
+Opening validates canonical root, owner/mode and regular single-link database/journal/WAL/SHM files initially and through establishment/reuse hooks. Application-created metadata uses private mode and native NOFOL0.007917. SQLx opening is not atomic NOFOL0.007917: same-user path replacement between validation and native open is explicitly outside the accepted contract. No umask changes, VFS, raw-handle adoption or driver fork is used.
 
 ## Settings, bounds and engine
 
@@ -65,3 +65,29 @@ Final-source checks and follow-up review are recorded after the corrective check
 The final disk run at that checkpoint then failed normal close (`qualification-final.log`). Investigation of SQLx 0.9 source found `Pool::close()` marks its pool closed synchronously when constructing its returned future. The new collect-all helper had constructed both close futures before polling the checkpoint. The fix defers invocation with private `FnOnce` callbacks, preserving checkpoint-before-close ordering. A focused regression checks invocation itself, rather than merely future polling. `units-close-construction.log` passes **17/17** units; `qualification-close-order.log` passes all **14 actual-disk cases**, including the new cross-repository folder constraint probe. No earlier failed result was overwritten or declared passed.
 
 Both reviewers reported **zero unresolved findings** through `b4e0f4f`. The final close-order correction receives a further narrow review, with final source/provenance and corrected measurements recorded below. No frontend source changed after its passing suite; no duplicate frontend/full-gate execution is needed for this backend-only correction.
+
+### Final source and handoff
+
+Final runtime source **`e4bc30ec7d5fb95152328ede7db8fd569c48039c`**. [Corrected verification and source/binary hashes](corrected-verification.json) record the exact production source, unit executable and qualification executable. The corrected actual run used those same source contents before the source commit; the subsequent changes only record evidence and ticket completion.
+
+| Cohort                                                                                                            | Final result                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Pure storage application decisions                                                                                | **17/17 passed**, one warm-up and five warm execution runs; cached compilation recorded separately                                  |
+| Focused SQLx checkpoint static gate                                                                               | Clippy all targets/features with `-D warnings` passed; existing ts-rs attribute notices retained                                    |
+| Actual SQLx/disk                                                                                                  | **14/14 passed** on fresh disposable state; [structured report](qualification.json), [raw build/run](qualification-close-order.log) |
+| Independent TypeScript/tooling/UI                                                                                 | TypeScript exit 0; **51 tooling and 260 UI tests passed**                                                                           |
+| Complete app gate                                                                                                 | Attempted once, exit 1 during generated preparation: precisely four unconverted store references owned by 03/04                     |
+| Generated drift completion / inherited core units / workspace static gate / packaging / desktop                   | Blocked/unperformed at this accepted intermediate checkpoint; no green combined cutover or runnable desktop claim                   |
+| Disk-full/I/O, physical rollback/close-ack faults, process kill points, power loss, native/provider qualification | Unperformed; no such qualification is claimed                                                                                       |
+
+The Rust execution median is **0.008463 s**, range **0.007917–0.009090 s** (one warm-up/five runs, one harness thread, warm worktree-private target). These are execution observations, not performance comparisons. The environment record supplies Rust/toolchain, Mac model/CPU/RAM, OS and dependency/source provenance; no fresh-target compilation or packaging measurement was performed. SQLite amalgamation SHA3-256 exactly matches the official 3.51.3 release source hash.
+
+### Standards — final
+
+The final reviewer inspected through `e4bc30e`: **0 unresolved documented-standard violations or actionable smells**. The finite settlement frontier and deferred close invocation resolve the reported ordering issues. No verification was run by the reviewer.
+
+### Spec — final
+
+The final reviewer inspected through `e4bc30e`: **0 unresolved findings, no scope creep**. Opening errors retain original/hook/retirement evidence; checkpoint observation precedes both close invocations. Combined 02–04 and unperformed physical-fault qualification remain open. No verification was run by the reviewer.
+
+Final totals: **Standards 0 unresolved; Spec 0 unresolved**. Both reviewers started in fresh contexts with explicitly selected GPT-6.1 (`gpt-6.1-sol`) and High reasoning; settings were accepted and retained for follow-ups. Ticket 03/04, parent/milestone completion, merge, user-state reset, provider execution and authentication were not performed.
