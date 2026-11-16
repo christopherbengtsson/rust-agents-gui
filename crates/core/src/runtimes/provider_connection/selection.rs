@@ -83,24 +83,35 @@ impl ProviderConnections {
     ) -> Result<SetupEvidence, SetupFailure> {
         if validated {
             if let Some(path) = &selected {
-                let action = self
-                    .read(target)
-                    .ok()
-                    .filter(|snapshot| snapshot.revision == generation)
-                    .and_then(|snapshot| snapshot.selection)
-                    .map(|selection| selection.id)
+                let snapshot = self.read(target).map_err(|_| {
+                    SetupFailure::at(SetupProblem::SelectionFailed, "Selection target changed")
+                })?;
+                if snapshot.revision != generation
+                    || snapshot.phase == SetupPhase::CleanupUncertain
+                    || self.cancel.is_cancelled()
+                {
+                    return Err(SetupFailure::at(
+                        SetupProblem::CleanupUncertain,
+                        "Selection changed or cleanup was fenced before persistence",
+                    ));
+                }
+                let id = snapshot
+                    .selection
+                    .as_ref()
                     .ok_or_else(|| {
                         SetupFailure::at(
                             SetupProblem::SelectionFailed,
-                            "Selection changed before it could be remembered",
+                            "Selection changed before persistence",
                         )
-                    })?;
-                if let Some(store) = self.selection_store.clone() {
-                    let path = path.clone();
-                    tokio::task::spawn_blocking(move || store.remember(action, &path)).await
-                        .map_err(|_| SetupFailure::at(SetupProblem::SelectionFailed, "Executable preference worker failed"))?
-                        .map_err(|_| SetupFailure::at(SetupProblem::SelectionFailed, "The executable location could not be remembered. Locate Codex again to retry."))?;
-                }
+                    })?
+                    .id;
+                let action = self.action(target, id).map_err(|error| {
+                    SetupFailure::at(SetupProblem::SelectionFailed, error.to_string())
+                })?;
+                debug_assert!(
+                    matches!(&action.operation, ProviderOperation::Selection(saved) if saved == path)
+                );
+                self.finish_action(&action, true).await?;
             }
             let mut records = self.records.lock().expect("provider records poisoned");
             if let Some(entry) = records
@@ -135,16 +146,72 @@ mod tests {
         calls: AtomicUsize,
         fail: bool,
     }
-    impl crate::storage::ProviderSelectionPersistence for Store {
-        fn remember(&self, _: uuid::Uuid, path: &str) -> Result<(), RepositoryError> {
-            assert_eq!(path, "/chosen/codex");
-            self.calls.fetch_add(1, Ordering::SeqCst);
-            if self.fail {
-                Err(RepositoryError::storage("controlled"))
-            } else {
-                Ok(())
-            }
+    impl persistence::Persistence for Store {
+        fn begin<'a>(
+            &'a self,
+            _: &'a ProviderAction,
+        ) -> futures_util::future::BoxFuture<'a, Result<bool, crate::storage::Error>> {
+            Box::pin(async { Ok(true) })
         }
+        fn finish<'a>(
+            &'a self,
+            action: &'a ProviderAction,
+            _: bool,
+        ) -> futures_util::future::BoxFuture<'a, Result<(), crate::storage::Error>> {
+            Box::pin(async move {
+                assert_eq!(
+                    action.operation,
+                    ProviderOperation::Selection("/chosen/codex".into())
+                );
+                self.calls.fetch_add(1, Ordering::SeqCst);
+                if self.fail {
+                    Err(crate::storage::Error::Invalid("controlled"))
+                } else {
+                    Ok(())
+                }
+            })
+        }
+    }
+    #[test]
+    fn failed_selection_intent_never_runs_the_probe() {
+        run(async {
+            let mut raw = ProviderConnections::test_owner();
+            struct RejectedIntent;
+            impl persistence::Persistence for RejectedIntent {
+                fn begin<'a>(
+                    &'a self,
+                    _: &'a ProviderAction,
+                ) -> futures_util::future::BoxFuture<'a, Result<bool, crate::storage::Error>>
+                {
+                    Box::pin(async {
+                        Err(crate::storage::Error::Invalid("controlled intent failure"))
+                    })
+                }
+                fn finish<'a>(
+                    &'a self,
+                    _: &'a ProviderAction,
+                    _: bool,
+                ) -> futures_util::future::BoxFuture<'a, Result<(), crate::storage::Error>>
+                {
+                    panic!("no completion without intent")
+                }
+            }
+            raw.persistence = Some(Arc::new(RejectedIntent));
+            let owner = Arc::new(raw);
+            let target = owner.test_target("codex");
+            owner
+                .check_with(
+                    target,
+                    true,
+                    Some((uuid::Uuid::new_v4(), 0, "/chosen/codex".into())),
+                    || async { panic!("uncommitted selection must not execute") },
+                )
+                .unwrap();
+            owner.join().await.unwrap();
+            let observation = owner.read(target).unwrap();
+            assert_eq!(observation.problem, Some(SetupProblem::CleanupUncertain));
+            assert!(observation.diagnostic.unwrap().contains("controlled"));
+        });
     }
     #[test]
     fn selection_admission_is_exact_duplicate_safe_and_excludes_login() {
@@ -223,7 +290,7 @@ mod tests {
                 calls: AtomicUsize::new(0),
                 fail: false,
             });
-            owner.selection_store = Some(store.clone());
+            owner.persistence = Some(store.clone());
             let owner = Arc::new(owner);
             let target = owner.test_target("codex");
             let worker = owner.clone();
@@ -269,7 +336,7 @@ mod tests {
                     calls: AtomicUsize::new(0),
                     fail: true,
                 });
-                owner.selection_store = Some(store.clone());
+                owner.persistence = Some(store.clone());
                 let owner = Arc::new(owner);
                 let target = owner.test_target("codex");
                 owner
@@ -308,7 +375,7 @@ mod tests {
                     Some("/previous/codex")
                 );
                 assert_eq!(snapshot.selection.unwrap().phase, SelectionPhase::Failed);
-                assert_eq!(store.calls.load(Ordering::SeqCst), usize::from(valid));
+                assert_eq!(store.calls.load(Ordering::SeqCst), 1);
             });
         }
     }

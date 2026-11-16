@@ -230,64 +230,44 @@ async fn apply(tx: &mut Transaction<'_, Sqlite>, write: Write) -> Result<()> {
             workspace_id,
             cursor,
         } => set_cursor(tx, workspace_id, cursor).await?,
-        Write::ProviderSelection {
-            scope,
-            action,
-            path,
-        } => {
-            if provider_identity(
-                tx,
-                action,
-                &encode(&("selection", &scope, &path), PAGE_BYTES)?,
-                true,
-            )
-            .await?
-            .is_some()
-            {
-                return Ok(());
+        Write::ProviderIntent(action) => {
+            let payload = encode(&action, PAGE_BYTES)?;
+            let previous = provider_identity(tx, &action, &payload).await?;
+            if previous.is_none() && action.operation == ProviderOperation::Login {
+                sqlx::query("INSERT INTO provider_login_fences VALUES(?,?,1) ON CONFLICT(scope) DO UPDATE SET attempt=excluded.attempt,pending=1")
+                    .bind(&action.scope).bind(id(action.id)).execute(&mut **tx).await?;
             }
-            sqlx::query("INSERT INTO provider_executables VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path").bind(scope).bind(id(action)).bind(path).execute(&mut **tx).await?;
         }
-        Write::ProviderLogin {
-            scope,
-            attempt,
-            pending,
-        } => {
-            let previous =
-                provider_identity(tx, attempt, &encode(&("login", &scope), PAGE_BYTES)?, false)
+        Write::ProviderFinish { action, remember } => {
+            let saved: (String, bool) =
+                sqlx::query_as("SELECT payload,completed FROM provider_actions WHERE id=?")
+                    .bind(id(action.id))
+                    .fetch_one(&mut **tx)
                     .await?;
-            if previous == Some(true) || (pending && previous.is_some()) {
+            if saved.0 != encode(&action, PAGE_BYTES)? {
+                return Err(conflict());
+            }
+            if saved.1 {
                 return Ok(());
             }
-            if pending {
-                let current: Option<(String, bool)> = sqlx::query_as(
-                    "SELECT attempt,pending FROM provider_login_fences WHERE scope=?",
-                )
-                .bind(&scope)
-                .fetch_optional(&mut **tx)
+            match &action.operation {
+                ProviderOperation::Selection(path) if remember => {
+                    sqlx::query("INSERT INTO provider_executables VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path")
+                        .bind(&action.scope).bind(id(action.id)).bind(path).execute(&mut **tx).await?;
+                }
+                ProviderOperation::Login => {
+                    let changed = sqlx::query("UPDATE provider_login_fences SET pending=0 WHERE scope=? AND attempt=? AND pending=1")
+                        .bind(&action.scope).bind(id(action.id)).execute(&mut **tx).await?.rows_affected();
+                    if changed != 1 {
+                        return Err(conflict());
+                    }
+                }
+                _ => {}
+            }
+            sqlx::query("UPDATE provider_actions SET completed=1 WHERE id=?")
+                .bind(id(action.id))
+                .execute(&mut **tx)
                 .await?;
-                if current.is_some_and(|(id, active)| active && id != attempt.to_string()) {
-                    return Err(conflict());
-                }
-            }
-            // A late completion cannot replace a different attempt's scope fence.
-            if !pending {
-                let current: Option<String> =
-                    sqlx::query_scalar("SELECT attempt FROM provider_login_fences WHERE scope=?")
-                        .bind(&scope)
-                        .fetch_optional(&mut **tx)
-                        .await?;
-                if current.as_deref() != Some(&id(attempt)) {
-                    return Err(conflict());
-                }
-            }
-            if !pending {
-                sqlx::query("UPDATE provider_actions SET completed=1 WHERE id=?")
-                    .bind(id(attempt))
-                    .execute(&mut **tx)
-                    .await?;
-            }
-            sqlx::query("INSERT INTO provider_login_fences VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET attempt=excluded.attempt,pending=excluded.pending").bind(scope).bind(id(attempt)).bind(pending).execute(&mut **tx).await?;
         }
     }
     Ok(())
@@ -321,24 +301,23 @@ async fn action_identity(
 }
 async fn provider_identity(
     tx: &mut Transaction<'_, Sqlite>,
-    action: uuid::Uuid,
+    action: &ProviderAction,
     payload: &str,
-    completed: bool,
 ) -> Result<Option<bool>> {
-    action_identity(tx, action, "provider", payload).await?;
+    action_identity(tx, action.id, "provider", payload).await?;
     let saved: Option<(String, bool)> =
         sqlx::query_as("SELECT payload,completed FROM provider_actions WHERE id=?")
-            .bind(id(action))
+            .bind(id(action.id))
             .fetch_optional(&mut **tx)
             .await?;
     match saved {
         Some((saved, _)) if saved != payload => Err(conflict()),
         Some((_, completed)) => Ok(Some(completed)),
         None => {
-            sqlx::query("INSERT INTO provider_actions VALUES(?,?,?)")
-                .bind(id(action))
+            sqlx::query("INSERT INTO provider_actions VALUES(?,?,0,?)")
+                .bind(id(action.id))
                 .bind(payload)
-                .bind(completed)
+                .bind(&action.scope)
                 .execute(&mut **tx)
                 .await?;
             Ok(None)
@@ -468,7 +447,7 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
             Read::Repository(_) | Read::CommonDirectory(_) | Read::Repositories { .. } => RecordShape::Repository,
             Read::Workspace(_) | Read::Workspaces { .. } | Read::PendingWorkspaces { .. } | Read::Name { .. } => RecordShape::Workspace,
             Read::WorkspaceAction(_) => RecordShape::WorkspaceAction,
-            Read::Folder { .. } | Read::AllocationCursor(_) | Read::CleanupBlocked(_) | Read::ProviderSelection(_) | Read::ProviderLogin(_) | Read::ProviderAction(_) => RecordShape::Scalar,
+            Read::Folder { .. } | Read::AllocationCursor(_) | Read::CleanupBlocked(_) | Read::ProviderSelection(_) | Read::ProviderPending(_) | Read::ProviderAction(_) => RecordShape::Scalar,
         };
         let (sql, arguments): (&'static str, Vec<String>) = match read {
             Read::Registration(a) => (records_sql!("registration_actions", " WHERE id=?"), vec![id(a.0)]),
@@ -485,8 +464,8 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
             Read::AllocationCursor(a) => ("SELECT id,0,json_object('name',allocation_cursor,'folder',folder_cursor) FROM workspaces WHERE id=?", vec![id(a.0)]),
             Read::CleanupBlocked(a) => ("SELECT '',0,CASE WHEN EXISTS(SELECT 1 FROM workspaces WHERE repository_id=? AND cleanup_unconfirmed=1) THEN 'true' ELSE 'false' END", vec![id(a.0)]),
             Read::ProviderSelection(scope) => ("SELECT action,0,json_array(action,path) FROM provider_executables WHERE scope=?", vec![scope]),
+            Read::ProviderPending(scope) => ("SELECT id,length(CAST(payload AS BLOB)),CASE WHEN length(CAST(payload AS BLOB))<=48000 THEN json_array(json(payload),completed) END FROM provider_actions WHERE scope=? AND completed=0", vec![scope]),
             Read::ProviderAction(action) => ("SELECT id,length(CAST(payload AS BLOB)),CASE WHEN length(CAST(payload AS BLOB))<=48000 THEN json_array(json(payload),completed) END FROM provider_actions WHERE id=?", vec![id(action)]),
-            Read::ProviderLogin(scope) => ("SELECT attempt,0,json_array(attempt,pending) FROM provider_login_fences WHERE scope=?", vec![scope]),
         };
         let mut query = sqlx::query(sql);
         for argument in arguments { query = query.bind(argument); }

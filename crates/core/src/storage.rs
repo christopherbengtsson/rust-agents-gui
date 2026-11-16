@@ -17,12 +17,21 @@ mod operations;
 mod policy;
 use policy::{ITEM_BYTES, PAGE_BYTES, PAGE_ROWS};
 
-// Retained decision seams for provider units; 04 replaces their synchronous consumers.
-pub(crate) trait ProviderLoginPersistence: Send + Sync {
-    fn record(&self, attempt: uuid::Uuid, pending: bool) -> crate::workspaces::Result<()>;
+/// Exact provider request persisted before any configuration/authentication effect.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) struct ProviderAction {
+    pub id: uuid::Uuid,
+    pub scope: String,
+    pub provider: String,
+    pub target: uuid::Uuid,
+    pub revision: u32,
+    pub executable: Option<String>,
+    pub operation: ProviderOperation,
 }
-pub(crate) trait ProviderSelectionPersistence: Send + Sync {
-    fn remember(&self, id: uuid::Uuid, path: &str) -> crate::workspaces::Result<()>;
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) enum ProviderOperation {
+    Selection(String),
+    Login,
 }
 
 type Result<T> = std::result::Result<T, Error>;
@@ -66,7 +75,18 @@ impl From<std::io::Error> for Error {
 }
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self:?}")
+        match self {
+            Self::Invalid(message) => f.write_str(message),
+            Self::Opening {
+                original,
+                faults,
+                retirement_unknown,
+            } => write!(
+                f,
+                "{original}; opening cleanup: {faults:?}; retirement unknown: {retirement_unknown}"
+            ),
+            _ => write!(f, "{self:?}"),
+        }
     }
 }
 impl std::error::Error for Error {
@@ -110,15 +130,10 @@ pub(crate) enum Write {
         workspace_id: WorkspaceId,
         cursor: CandidateCursor,
     },
-    ProviderSelection {
-        scope: String,
-        action: uuid::Uuid,
-        path: String,
-    },
-    ProviderLogin {
-        scope: String,
-        attempt: uuid::Uuid,
-        pending: bool,
+    ProviderIntent(ProviderAction),
+    ProviderFinish {
+        action: ProviderAction,
+        remember: bool,
     },
 }
 impl Write {
@@ -131,8 +146,7 @@ impl Write {
                 .map_or(workspace.creation_action_id.0, |a| a.id().0),
             Self::Reservation(r) => r.workspace.creation_action_id.0,
             Self::AllocationCursor { workspace_id, .. } => workspace_id.0,
-            Self::ProviderSelection { action, .. } => *action,
-            Self::ProviderLogin { attempt, .. } => *attempt,
+            Self::ProviderIntent(action) | Self::ProviderFinish { action, .. } => action.id,
         }
     }
 }
@@ -167,13 +181,13 @@ pub(crate) enum Read {
     AllocationCursor(WorkspaceId),
     CleanupBlocked(RepositoryId),
     ProviderSelection(String),
-    ProviderLogin(String),
+    ProviderPending(String),
     ProviderAction(uuid::Uuid),
 }
 impl Read {
     fn validate(&self) -> Result<()> {
         let text = match self {
-            Self::CommonDirectory(s) | Self::ProviderSelection(s) | Self::ProviderLogin(s) => {
+            Self::CommonDirectory(s) | Self::ProviderSelection(s) | Self::ProviderPending(s) => {
                 Some(s)
             }
             Self::Folder { candidate, .. } | Self::Name { candidate, .. } => Some(candidate),
@@ -214,15 +228,11 @@ pub(crate) struct Delivery {
 /// A decoded page retains its read interest through consumption, including decoded copies.
 #[derive(Debug)]
 pub(crate) struct Records<T> {
-    pub revision: u64,
     pub next: Option<String>,
     records: Vec<T>,
     _slot: OwnedSemaphorePermit,
 }
 impl<T> Records<T> {
-    pub(crate) fn items(&self) -> &[T] {
-        &self.records
-    }
     pub(crate) fn into_items(self) -> Vec<T> {
         self.records
     }
@@ -258,7 +268,6 @@ impl Delivery {
         };
         let records = snapshot.records()?;
         Ok(Records {
-            revision: snapshot.revision,
             next: snapshot.next,
             records,
             _slot: self._slot,
@@ -270,7 +279,7 @@ pub(crate) struct Fault {
     pub action: Option<uuid::Uuid>,
     pub error: Error,
 }
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize)]
 pub(crate) struct Checkpoint {
     pub busy: i64,
     pub log_frames: i64,
@@ -529,6 +538,7 @@ impl Storage {
             .map_err(|_| Error::Capacity)?;
         Ok(result)
     }
+    #[cfg(feature = "qualification")]
     pub(crate) fn faults(&self) -> Vec<Fault> {
         self.shared
             .control

@@ -126,21 +126,30 @@ impl Core {
                     .map_err(workspaces::RepositoryError::storage)?;
                 Ok(workspaces::Workspaces::open(directory, storage))
             },
-            move |journal| runtimes::ProviderConnections::open(journal, &directory),
+            move |journal, storage| async move {
+                runtimes::ProviderConnections::open(
+                    journal,
+                    storage.ok_or_else(|| {
+                        workspaces::RepositoryError::storage("Shared storage is unavailable")
+                    })?,
+                )
+                .await
+            },
         )
         .await
     }
-    async fn start_with<F>(
+    async fn start_with<F, P>(
         lifetime: std::sync::Arc<lifetime::Lifetime>,
         open_workspace: impl FnOnce() -> F + Send + 'static,
-        open_provider: impl FnOnce(
-            std::sync::Arc<observations::Journal>,
-        )
-            -> Result<runtimes::ProviderConnections, workspaces::RepositoryError>
+        open_provider: impl FnOnce(std::sync::Arc<observations::Journal>, Option<storage::Storage>) -> P
         + Send
         + 'static,
     ) -> std::sync::Arc<Self>
     where
+        P: std::future::Future<
+                Output = Result<runtimes::ProviderConnections, workspaces::RepositoryError>,
+            > + Send
+            + 'static,
         F: std::future::Future<
                 Output = Result<workspaces::Workspaces, workspaces::RepositoryError>,
             > + Send
@@ -159,7 +168,8 @@ impl Core {
                     core.storage = workspaces.storage.clone();
                     core.workspaces = Some(workspaces);
                     let journal = core.journal.clone();
-                    match tokio::task::spawn_blocking(move || open_provider(journal)).await {
+                    let storage = core.storage.clone();
+                    match tokio::spawn(open_provider(journal, storage)).await {
                         Ok(Ok(providers)) => {
                             core.providers = Some(std::sync::Arc::new(providers));
                             None
@@ -224,6 +234,12 @@ impl Core {
         }
         if let Some(storage) = &self.storage {
             let report = storage.close().await;
+            if let Some(checkpoint) = &report.checkpoint {
+                eprintln!(
+                    "Storage close checkpoint: {}",
+                    serde_json::to_string(checkpoint).expect("checkpoint serializes")
+                );
+            }
             errors.extend(
                 report
                     .faults
@@ -363,7 +379,7 @@ mod tests {
                             Ok(())
                         }))
                     },
-                    |_| {
+                    |_, _| async {
                         Err(workspaces::RepositoryError::storage(
                             "controlled provider startup failure",
                         ))
@@ -496,5 +512,20 @@ mod tests {
             assert!(snapshot.reset);
             assert_eq!(snapshot.cursor, first.cursor);
         }
+    }
+}
+
+/// Explicit actual-effects entry points; never selected by application unit gates.
+#[cfg(feature = "qualification")]
+pub mod qualification {
+    pub async fn storage(root: &std::path::Path) -> Result<serde_json::Value, String> {
+        crate::storage::qualification::run(root)
+            .await
+            .map_err(|error| error.to_string())
+    }
+    pub async fn workspaces(root: &std::path::Path) -> Result<serde_json::Value, String> {
+        crate::workspaces::qualification::run(root)
+            .await
+            .map_err(|error| error.to_string())
     }
 }

@@ -99,7 +99,13 @@ try:
     owner2 = recovered["cursor"]["owner"]
     assert owner2 != owner
     recorded = exchange(owner2, repository={"operation":"action", "action_id":action})
-    assert recorded["result"]["Ok"]["registration"]["state"] == "completed", recorded
+    settled_action = recorded["result"]["Ok"]["registration"]
+    # Ticket03 revalidates the fence after read-only inspection and before its
+    # next effect. Reopen must retain that exact failure, never invent completion.
+    assert settled_action["action_id"] == action and settled_action["path"] == str(repository), settled_action
+    assert settled_action["state"] == "failed", settled_action
+    assert settled_action["error"]["code"] == "unavailable", settled_action
+    assert "fenced before its next effect" in settled_action["error"]["message"], settled_action
     exchange(owner2, quit="begin")
     wait_for(lambda: exchange(owner2, quit="status")["status"]["complete"])
     exchange(owner2, quit="finish")

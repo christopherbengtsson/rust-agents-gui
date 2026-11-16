@@ -12,7 +12,9 @@ use std::{
 };
 use tokio::task::JoinSet;
 mod login;
+mod persistence;
 mod selection;
+use crate::storage::{ProviderAction, ProviderOperation};
 pub use login::{LoginAttempt, LoginOutcome, LoginPhase};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -205,6 +207,8 @@ pub enum ProviderReply {
 struct Entry {
     snapshot: ProviderObservation,
     scope: String,
+    selection_action: Option<ProviderAction>,
+    login_action: Option<ProviderAction>,
     control: Option<login::LoginControl>,
     launch: Option<codex::Launch>,
 }
@@ -214,8 +218,8 @@ pub struct ProviderConnections {
     journal: Arc<Journal>,
     launch: Option<codex::Launch>,
     cancel: tokio_util::sync::CancellationToken,
-    persistence: Option<Arc<dyn crate::storage::ProviderLoginPersistence>>,
-    selection_store: Option<Arc<dyn crate::storage::ProviderSelectionPersistence>>,
+    persistence: Option<Arc<dyn persistence::Persistence>>,
+    persistence_faults: Mutex<Vec<(ProviderAction, crate::storage::Error)>>,
     failure: Mutex<Vec<String>>,
     finished: tokio::sync::Mutex<Option<Result<(), String>>>,
     reaper: tokio::sync::Mutex<Option<tokio::task::JoinHandle<()>>>,
@@ -223,45 +227,50 @@ pub struct ProviderConnections {
     task_changed: tokio::sync::Notify,
 }
 impl ProviderConnections {
-    pub(crate) fn open(
+    pub(crate) async fn open(
         journal: Arc<Journal>,
-        state: &std::path::Path,
+        storage: crate::storage::Storage,
     ) -> Result<Self, RepositoryError> {
         let (launch, mut target) = codex::Launch::capture();
-        let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
-            state,
-            launch.credential_scope(),
-        )?);
-        let selected = selection_store.selected()?;
+        let (selected, recovered) = persistence::restore(&storage, &launch.credential_scope())
+            .await
+            .map_err(RepositoryError::storage)?;
         if let Some((_, path)) = &selected {
             target.selected_executable = Some(path.clone());
         }
-        let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
-            state,
-            launch.credential_scope(),
-        )?);
-        let recovered = persistence.pending()?;
         Ok(Self {
             records: Mutex::new(BTreeMap::from([(
                 target.id,
                 Entry {
                     snapshot: ProviderObservation {
-                        selection: selected.map(|(id, path)| {
+                        selection: recovered.as_ref().and_then(|action| match &action.operation {
+                            ProviderOperation::Selection(path) => Some(Box::new(ExecutableSelection { id: action.id, path: path.clone(), phase: SelectionPhase::Failed })),
+                            ProviderOperation::Login => None,
+                        }).or_else(|| selected.map(|(id, path)| {
                             Box::new(ExecutableSelection {
                                 id,
                                 path,
                                 phase: SelectionPhase::Remembered,
                             })
-                        }),
+                        })),
                         target,
                         revision: 0,
-                        phase: SetupPhase::Unknown,
+                        phase: if recovered.is_some() {
+                            SetupPhase::CleanupUncertain
+                        } else {
+                            SetupPhase::Unknown
+                        },
                         evidence: None,
-                        problem: None,
-                        diagnostic: None,
-                        login: recovered.map(LoginAttempt::interrupted).map(Box::new),
+                        problem: recovered.as_ref().map(|_| SetupProblem::CleanupUncertain),
+                        diagnostic: recovered.as_ref().map(|action| format!("Provider action {} was interrupted before durable settlement. This credential scope remains fenced; no action was replayed.", action.id)),
+                        login: recovered
+                            .as_ref()
+                            .filter(|action| action.operation == ProviderOperation::Login)
+                            .map(|action| Box::new(LoginAttempt::interrupted(action.id))),
                     },
                     scope: launch.credential_scope(),
+                    selection_action: recovered.as_ref().filter(|action| matches!(action.operation, ProviderOperation::Selection(_))).cloned(),
+                    login_action: recovered.filter(|action| action.operation == ProviderOperation::Login),
                     control: None,
                     launch: None,
                 },
@@ -270,8 +279,8 @@ impl ProviderConnections {
             journal,
             launch: Some(launch),
             cancel: tokio_util::sync::CancellationToken::new(),
-            persistence: Some(persistence),
-            selection_store: Some(selection_store),
+            persistence: Some(Arc::new(storage)),
+            persistence_faults: Mutex::default(),
             failure: Mutex::default(),
             finished: tokio::sync::Mutex::new(None),
             reaper: tokio::sync::Mutex::new(None),
@@ -420,13 +429,25 @@ impl ProviderConnections {
             let entry = records
                 .get(&id)
                 .ok_or_else(|| invalid_target("Unknown provider configuration"))?;
+            if entry
+                .login_action
+                .as_ref()
+                .is_some_and(|login| login.id == *action)
+            {
+                return Err(invalid_target("Action identity already belongs to a login"));
+            }
             if let Some(previous) = entry
                 .snapshot
                 .selection
                 .as_ref()
                 .filter(|previous| previous.id == *action)
             {
-                if previous.path != *path {
+                if previous.path != *path
+                    || entry
+                        .selection_action
+                        .as_ref()
+                        .is_some_and(|action| action.revision != *expected)
+                {
                     return Err(invalid_target(
                         "Selection identity already belongs to another path",
                     ));
@@ -494,7 +515,16 @@ impl ProviderConnections {
         entry.snapshot.revision = revision;
         entry.snapshot.phase = SetupPhase::Checking;
         entry.launch = None;
-        if let Some((id, _, path)) = selection {
+        if let Some((id, expected, path)) = selection {
+            entry.selection_action = Some(ProviderAction {
+                id,
+                scope: entry.scope.clone(),
+                provider: entry.snapshot.target.provider.clone(),
+                target: entry.snapshot.target.id,
+                revision: expected,
+                executable: entry.snapshot.target.selected_executable.clone(),
+                operation: ProviderOperation::Selection(path.clone()),
+            });
             entry.snapshot.selection = Some(Box::new(ExecutableSelection {
                 id,
                 path,
@@ -504,9 +534,17 @@ impl ProviderConnections {
         let snapshot = entry.snapshot.clone();
         let owner = self.clone();
         let future = probe();
+        let action = entry.selection_action.clone().filter(|action| {
+            matches!(action.operation, ProviderOperation::Selection(_))
+                && snapshot
+                    .selection
+                    .as_ref()
+                    .is_some_and(|selection| selection.phase == SelectionPhase::Checking)
+        });
         tasks.spawn(async move {
             use futures_util::FutureExt;
-            let outcome = std::panic::AssertUnwindSafe(future).catch_unwind().await;
+            let execute = owner.execute_check(id, revision, action.as_ref(), future);
+            let outcome = std::panic::AssertUnwindSafe(execute).catch_unwind().await;
             match outcome {
                 Ok(outcome) => owner.complete(id, revision, outcome),
                 Err(_) => owner.worker_panicked(id, None, Some(revision)),
@@ -518,6 +556,49 @@ impl ProviderConnections {
         drop(records);
         self.journal.wake();
         Ok(snapshot)
+    }
+    async fn execute_check(
+        &self,
+        target: uuid::Uuid,
+        revision: u32,
+        action: Option<&ProviderAction>,
+        future: impl Future<Output = Result<SetupEvidence, SetupFailure>>,
+    ) -> Result<SetupEvidence, SetupFailure> {
+        if let Some(action) = action {
+            self.begin_action(action).await?;
+        }
+        let current = self.read(target).is_ok_and(|snapshot| {
+            snapshot.revision == revision && snapshot.phase == SetupPhase::Checking
+        });
+        if !current || self.cancel.is_cancelled() {
+            if let Some(action) = action {
+                self.finish_action(action, false).await?;
+            }
+            return Err(SetupFailure::at(
+                SetupProblem::StatusReadFailed,
+                "Provider setup stopped before execution",
+            ));
+        }
+        let result = future.await;
+        if let Some(action) = action {
+            // accept_validation commits a successful preference. Invalid selection
+            // settles its intent without replacing the previous saved preference.
+            let snapshot = self.read(target).map_err(|_| {
+                SetupFailure::at(
+                    SetupProblem::CleanupUncertain,
+                    "Provider target changed during execution",
+                )
+            })?;
+            let remembered = snapshot.selection.as_ref().is_some_and(|selection| {
+                selection.id == action.id && selection.phase == SelectionPhase::Remembered
+            });
+            let uncertain = snapshot.phase == SetupPhase::CleanupUncertain
+                || matches!(&result, Err(failure) if failure.problem == SetupProblem::CleanupUncertain);
+            if !remembered && !uncertain {
+                self.finish_action(action, false).await?;
+            }
+        }
+        result
     }
     fn complete(
         &self,
@@ -532,6 +613,8 @@ impl ProviderConnections {
         else {
             return;
         };
+        let cleanup_uncertain = entry.snapshot.phase == SetupPhase::CleanupUncertain
+            || matches!(&outcome, Err(failure) if failure.problem == SetupProblem::CleanupUncertain);
         match outcome {
             Ok(evidence) => {
                 entry.snapshot.diagnostic = None;
@@ -555,7 +638,11 @@ impl ProviderConnections {
         {
             selection.phase = SelectionPhase::Failed;
         }
-        entry.snapshot.phase = SetupPhase::Observed;
+        entry.snapshot.phase = if cleanup_uncertain {
+            SetupPhase::CleanupUncertain
+        } else {
+            SetupPhase::Observed
+        };
         entry.snapshot.revision += 1; // start reserves this final revision.
         self.journal
             .publish(vec![Target::Provider { target_id: id }]);
@@ -709,7 +796,13 @@ impl ProviderConnections {
                 Err(error) => self.failure.lock().unwrap().push(error.to_string()),
             }
         }
-        let failures = self.failure.lock().unwrap();
+        let mut failures = self.failure.lock().unwrap();
+        for (action, error) in self.persistence_faults.lock().unwrap().iter() {
+            failures.push(format!(
+                "Provider action {} persistence: {error}",
+                action.id
+            ));
+        }
         let result = if failures.is_empty() {
             Ok(())
         } else {
@@ -727,7 +820,7 @@ impl ProviderConnections {
             launch: None,
             cancel: tokio_util::sync::CancellationToken::new(),
             persistence: None,
-            selection_store: None,
+            persistence_faults: Mutex::default(),
             failure: Mutex::default(),
             finished: tokio::sync::Mutex::new(None),
             reaper: tokio::sync::Mutex::new(None),
@@ -762,6 +855,8 @@ impl ProviderConnections {
                     login: None,
                 },
                 scope: id.to_string(),
+                selection_action: None,
+                login_action: None,
                 control: None,
                 launch: None,
             },
@@ -1024,7 +1119,7 @@ mod tests {
             send.send(Err(SetupProblem::StatusReadFailed.into()))
                 .unwrap();
             owner.join().await.unwrap();
-            assert_eq!(owner.read(a).unwrap().phase, SetupPhase::Observed);
+            assert_eq!(owner.read(a).unwrap().phase, SetupPhase::CleanupUncertain);
         });
     }
     fn run(future: impl Future<Output = ()>) {

@@ -1,0 +1,128 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: field `revision` is never read
+   --> crates/core/src/storage.rs:218:9
+    |
+217 | pub(crate) struct Records<T> {
+    |                   ------- field in this struct
+218 |     pub revision: u64,
+    |         ^^^^^^^^
+    |
+    = note: `Records` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `items` is never used
+   --> crates/core/src/storage.rs:224:19
+    |
+223 | impl<T> Records<T> {
+    | ------------------ method in this implementation
+224 |     pub(crate) fn items(&self) -> &[T] {
+    |                   ^^^^^
+
+warning: fields `busy`, `log_frames`, `checkpointed_frames`, `wal_bytes`, and `elapsed` are never read
+   --> crates/core/src/storage.rs:276:9
+    |
+275 | pub(crate) struct Checkpoint {
+    |                   ---------- fields in this struct
+276 |     pub busy: i64,
+    |         ^^^^
+277 |     pub log_frames: i64,
+    |         ^^^^^^^^^^
+278 |     pub checkpointed_frames: i64,
+    |         ^^^^^^^^^^^^^^^^^^^
+279 |     pub wal_bytes: u64,
+    |         ^^^^^^^^^
+280 |     pub elapsed: Duration,
+    |         ^^^^^^^
+    |
+    = note: `Checkpoint` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `faults` is never used
+   --> crates/core/src/storage.rs:533:19
+    |
+428 | impl Storage {
+    | ------------ method in this implementation
+...
+533 |     pub(crate) fn faults(&self) -> Vec<Fault> {
+    |                   ^^^^^^
+
+warning: constant `PAGE_SIZE` is never used
+   --> crates/core/src/workspaces.rs:114:7
+    |
+114 | const PAGE_SIZE: usize = 32;
+    |       ^^^^^^^^^
+
+warning: `workspace-core` (lib test) generated 5 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.53s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-c1516d2e50257971)
+
+running 15 tests
+test runtimes::provider_connection::tests::diagnostics_retain_source_without_exporting_its_untrusted_message ... ok
+test runtimes::provider_connection::selection::tests::absent_selection_reconciliation_fences_a_delayed_intent ... ok
+test runtimes::provider_connection::tests::login_admission_is_exact_and_fences_checks_and_competing_attempts ... ok
+test runtimes::provider_connection::tests::cancelled_login_retains_last_good_on_failed_verification_and_rejects_stale_cancel ... ok
+test runtimes::provider_connection::login::tests::shutdown_cancels_late_preparation_and_skips_verification_without_replacing_work ... ok
+test runtimes::provider_connection::selection::tests::validated_selection_is_remembered_even_when_authentication_read_fails ... ok
+test runtimes::provider_connection::tests::independent_targets_coalesce_reads_and_reject_late_or_cross_target_evidence ... ok
+test runtimes::provider_connection::selection::tests::failed_selection_intent_never_runs_the_probe ... ok
+test runtimes::provider_connection::selection::tests::selection_admission_is_exact_duplicate_safe_and_excludes_login ... ok
+test runtimes::provider_connection::login::tests::durable_intent_precedes_effects_and_cleanup_failure_preserves_scope_fence ... ok
+test runtimes::provider_connection::tests::same_scope_readiness_cleanup_fences_other_checks_but_unrelated_targets_progress ... ok
+test runtimes::provider_connection::tests::reconciliation_fences_a_late_start_and_uncertain_cleanup_is_scope_local ... ok
+test runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement ... FAILED
+test runtimes::provider_connection::selection::tests::invalid_or_unpersisted_selection_does_not_replace_the_saved_preference ... FAILED
+test runtimes::provider_connection::tests::panic_is_settled_with_exact_target_without_a_later_request ... ok
+
+failures:
+
+---- runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement stdout ----
+
+thread 'runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement' (35793689) panicked at crates/core/src/runtimes/provider_connection.rs:1042:13:
+assertion `left == right` failed
+  left: CleanupUncertain
+ right: Observed
+
+---- runtimes::provider_connection::selection::tests::invalid_or_unpersisted_selection_does_not_replace_the_saved_preference stdout ----
+
+thread 'runtimes::provider_connection::selection::tests::invalid_or_unpersisted_selection_does_not_replace_the_saved_preference' (35793684) panicked at crates/core/src/runtimes/provider_connection/selection.rs:328:17:
+assertion `left == right` failed
+  left: 2
+ right: 1
+
+
+failures:
+    runtimes::provider_connection::selection::tests::invalid_or_unpersisted_selection_does_not_replace_the_saved_preference
+    runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement
+
+test result: FAILED. 13 passed; 2 failed; 0 ignored; 0 measured; 202 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

@@ -1,0 +1,49 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0609]: no field `action` on type `&provider_connection::Entry`
+   --> crates/core/src/runtimes/provider_connection/login.rs:166:18
+    |
+166 |                 .action
+    |                  ^^^^^^ unknown field
+    |
+    = note: available fields are: `snapshot`, `scope`, `selection_action`, `login_action`, `control`, `launch`
+
+error[E0609]: no field `action` on type `&provider_connection::Entry`
+   --> crates/core/src/runtimes/provider_connection.rs:447:26
+    |
+447 |                         .action
+    |                          ^^^^^^ unknown field
+    |
+    = note: available fields are: `snapshot`, `scope`, `selection_action`, `login_action`, `control`, `launch`
+
+For more information about this error, try `rustc --explain E0609`.
+error: could not compile `workspace-core` (lib test) due to 2 previous errors

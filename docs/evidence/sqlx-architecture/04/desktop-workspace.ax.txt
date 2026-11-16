@@ -1,0 +1,83 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/e04150d3-569b-417a-a1ab-bb8b1e2435d6/workspace/4f0f8917-6579-4d07-b020-6e289c5cdd66?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/e04150d3-569b-417a-a1ab-bb8b1e2435d6/workspace/4f0f8917-6579-4d07-b020-6e289c5cdd66?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-sqlx04-2e3s4cnc/repository Available
+							11 button repository, Help: /private/tmp/aw-sqlx04-2e3s4cnc/repository
+							12 button (expanded) Toggle details for repository, Secondary Actions: Collapse
+							13 button Create workspace in repository
+							14 text /private/tmp/aw-sqlx04-2e3s4cnc/repository
+							15 text Available
+							16 content list
+								17 button keisuke-honda, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 heading keisuke-honda, Value: 1
+					24 text keisuke-honda
+				25 button Refresh status
+				26 container Selected repository
+					27 text /private/tmp/aw-sqlx04-2e3s4cnc/repository
+					28 text Repository available
+				29 text Uncommitted changes
+				30 button Refresh changes
+				31 button (expanded) Hide changed files, Secondary Actions: Collapse
+				32 text Compared with HEAD 
+				33 text 3ecac819acc7ef5241ebc58c42bb0d93ae6902b3
+				34 text  · 
+				35 text 0
+				36 text changed files
+				37 text No uncommitted changes.
+				38 tab group (selectable) Workspace views
+					39 tab (selected) Workspace
+					40 tab (selectable) Changes
+				41 container Workspace
+					42 container Selected workspace
+						43 text Workspace ready
+						44 heading Your workspace is ready, Value: 2
+							45 text Your workspace is ready
+						46 text keisuke-honda
+						47 description list
+							48 text Branch
+							49 text workspace/keisuke-honda
+							50 text Workspace folder
+							51 text /private/tmp/aw-sqlx04-2e3s4cnc/state/workspaces/repository/keisuke-honda/checkout
+							52 text Local base
+							53 text refs/heads/main · 3ecac819acc7ef5241ebc58c42bb0d93ae6902b3
+							54 text Branch artifact
+							55 text Created by this action
+							56 text Folder artifact
+							57 text Worktree created
+						58 container
+							59 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+					60 container
+						61 text Ready to set up coding?
+						62 link Check Codex setup, Value: tauri://localhost/settings/providers?provider=codex
+				63 splitter Resize changed files, Value: 68
+				64 container Changed files
+					65 heading Changed files, Value: 2
+						66 text Changed files
+				67 text Local workspace
+				68 text repository
+	69 close button
+	70 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	71 minimize button
+	72 text Agent Workspace
+73 menu bar
+	74 SQLx04
+	75 File
+	76 Edit
+	77 View
+	78 Window
+	79 Help
+
+The focused UI element is 18 pop up button Add repository

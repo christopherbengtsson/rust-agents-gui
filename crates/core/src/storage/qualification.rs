@@ -426,31 +426,34 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
     .await?;
     checks.push(json!({"case":"cross-repository-folder-constraint/settled-next-candidate", "status":"passed"}));
 
-    let selection = uuid::Uuid::from_u128(50);
+    let provider_action = |number, operation| ProviderAction {
+        id: uuid::Uuid::from_u128(number),
+        scope: "fixture".into(),
+        provider: "codex".into(),
+        target: uuid::Uuid::from_u128(49),
+        revision: 0,
+        executable: Some("/synthetic/codex".into()),
+        operation,
+    };
+    let selection = provider_action(50, ProviderOperation::Selection("/synthetic/first".into()));
+    let second = provider_action(51, ProviderOperation::Selection("/synthetic/second".into()));
+    for action in [&selection, &second] {
+        written(&store, Write::ProviderIntent(action.clone())).await?;
+        written(
+            &store,
+            Write::ProviderFinish {
+                action: action.clone(),
+                remember: true,
+            },
+        )
+        .await?;
+    }
+    written(&store, Write::ProviderIntent(selection.clone())).await?;
     written(
         &store,
-        Write::ProviderSelection {
-            scope: "fixture".into(),
-            action: selection,
-            path: "/synthetic/first".into(),
-        },
-    )
-    .await?;
-    written(
-        &store,
-        Write::ProviderSelection {
-            scope: "fixture".into(),
-            action: uuid::Uuid::from_u128(51),
-            path: "/synthetic/second".into(),
-        },
-    )
-    .await?;
-    written(
-        &store,
-        Write::ProviderSelection {
-            scope: "fixture".into(),
-            action: selection,
-            path: "/synthetic/first".into(),
+        Write::ProviderFinish {
+            action: selection.clone(),
+            remember: true,
         },
     )
     .await?;
@@ -461,46 +464,105 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         selected[0].1 == "/synthetic/second",
         "Duplicate selection replayed an old preference",
     )?;
-    let attempt = uuid::Uuid::from_u128(60);
+    let attempt = provider_action(60, ProviderOperation::Login);
+    written(&store, Write::ProviderIntent(attempt.clone())).await?;
     written(
         &store,
-        Write::ProviderLogin {
-            scope: "fixture".into(),
-            attempt,
-            pending: true,
+        Write::ProviderFinish {
+            action: attempt.clone(),
+            remember: false,
         },
     )
     .await?;
-    written(
-        &store,
-        Write::ProviderLogin {
-            scope: "fixture".into(),
-            attempt,
-            pending: false,
-        },
-    )
-    .await?;
-    written(
-        &store,
-        Write::ProviderLogin {
-            scope: "fixture".into(),
-            attempt,
-            pending: true,
-        },
-    )
-    .await?;
-    let login = snapshot(&store, Read::ProviderLogin("fixture".into()))
+    written(&store, Write::ProviderIntent(attempt.clone())).await?;
+    let login = snapshot(&store, Read::ProviderPending("fixture".into()))
         .await?
-        .records::<(uuid::Uuid, i64)>()?;
+        .records::<(ProviderAction, i64)>()?;
     ensure(
-        login[0].1 == 0,
+        login.is_empty(),
         "Duplicate login reopened a completed fence",
     )?;
+    // Same ID with a different configuration is rejected without changing the saved action.
+    let mut changed = attempt.clone();
+    changed.revision = 1;
+    ensure(
+        written(&store, Write::ProviderIntent(changed))
+            .await
+            .is_err(),
+        "Changed provider configuration accepted",
+    )?;
+    let pending = provider_action(61, ProviderOperation::Login);
+    written(&store, Write::ProviderIntent(pending.clone())).await?;
+    let conflicting = provider_action(
+        62,
+        ProviderOperation::Selection("/synthetic/blocked".into()),
+    );
+    ensure(
+        written(&store, Write::ProviderIntent(conflicting))
+            .await
+            .is_err(),
+        "Pending credential scope was replaced",
+    )?;
+    let saved = snapshot(&store, Read::ProviderPending("fixture".into()))
+        .await?
+        .records::<(ProviderAction, i64)>()?;
+    ensure(
+        saved.len() == 1 && saved[0].0 == pending,
+        "Pending scope lost exact provider intent",
+    )?;
+    written(
+        &store,
+        Write::ProviderFinish {
+            action: pending,
+            remember: false,
+        },
+    )
+    .await?;
     ensure(
         store.close().await.faults.is_empty(),
         "Expected domain rejections poisoned storage",
     )?;
-    checks.push(json!({"case":"provider-records-only/exact-action-history/no-duplicate-replay", "status":"passed"}));
+    checks.push(json!({"case":"provider-records-only/exact-action-history/scope-exclusion/no-duplicate-replay", "status":"passed"}));
+
+    // Controlled engine SQLITE_FULL, not a claim of a physically full filesystem.
+    // SQLite documents max_page_count as returning SQLITE_FULL when growth exceeds it.
+    let path = directory(&root, "engine-full")?;
+    let store = owner(&path).await?;
+    let mut connection = store.shared.writer.acquire().await?;
+    let pages: i64 = sqlx::query_scalar("PRAGMA page_count")
+        .fetch_one(&mut *connection)
+        .await?;
+    let maximum: i64 = sqlx::query_scalar("PRAGMA max_page_count=1")
+        .fetch_one(&mut *connection)
+        .await?;
+    ensure(maximum == pages, "Engine page cap did not take effect")?;
+    drop(connection);
+    let mut large = request(70);
+    large.path = format!("/{}", "x".repeat(4000));
+    let full = written(&store, Write::RegistrationIntent(large))
+        .await
+        .expect_err("engine page budget must fail");
+    let original = match &full {
+        Error::Write {
+            original,
+            retirement: None,
+            ..
+        } => original,
+        _ => return Err(Error::Invalid("SQLITE_FULL retirement failed")),
+    };
+    ensure(
+        matches!(original.as_ref(), Error::Sql(error) if matches!(error.as_ref(), sqlx::Error::Database(db) if db.code().as_deref() == Some("13"))),
+        "Expected actual SQLITE_FULL",
+    )?;
+    let report = store.close().await;
+    ensure(
+        report
+            .faults
+            .iter()
+            .any(|fault| fault.action == Some(uuid::Uuid::from_u128(70))),
+        "Close erased engine-full error",
+    )?;
+    checks.push(json!({"case":"controlled-engine-SQLITE_FULL/failed-write-retirement/retained-close-fault", "status":"passed", "error":full.to_string()}));
 
     let path = directory(&root, "bounded-pages")?;
     let store = owner(&path).await?;

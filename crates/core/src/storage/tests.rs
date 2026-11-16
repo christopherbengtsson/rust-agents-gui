@@ -180,7 +180,7 @@ fn bounded_serialization_rejects_before_allocating_an_unbounded_encoded_copy() {
     ));
     assert_eq!(encode(&"abc", 5).unwrap(), "\"abc\"");
     assert!(matches!(
-        Read::ProviderLogin("a".repeat(4097)).validate(),
+        Read::ProviderPending("a".repeat(4097)).validate(),
         Err(Error::Oversized)
     ));
 }

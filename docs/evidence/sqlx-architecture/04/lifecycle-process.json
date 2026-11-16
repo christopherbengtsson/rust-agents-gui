@@ -1,0 +1,12 @@
+{
+  "result": "failed: AssertionError({'kind': 'repository', 'owner': '61956-1794847500205266000', 'result': {'Ok': {'kind': 'action', 'registration': {'create_initial_workspace': False, 'initial_workspace_id': None, 'action_id': '8ca78684-a499-43ca-b021-679145fa7785', 'path': '/private/tmp/aw-core01-ge4i502y/repository', 'state': 'failed', 'error': {'code': 'unavailable', 'message': 'Workspace start was fenced before its next effect; reconcile the saved action explicitly'}}}}})",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "fixture_root": "/private/tmp/aw-core01-ge4i502y",
+  "protocol": 15,
+  "checks": [
+    "actual same-root process exclusion",
+    "lost request retains active Git; repeated Quit pending; admission fenced; lease retained",
+    "whole-core physical drain and process exit"
+  ],
+  "seconds": 0.4975505000911653
+}

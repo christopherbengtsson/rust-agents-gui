@@ -1,0 +1,122 @@
+{
+  "checks": [
+    "concurrent-registration-and-first-continuations",
+    "global-app-folder-collision",
+    "same-repository-distinct-permanent-names",
+    "concurrent-disposable-git-worktrees",
+    "pinned-base-and-original-checkout-protection",
+    "concurrent-sqlx-claim-winner-and-settled-conflict",
+    "explicit-reconcile-retains-pinned-location-and-original-action",
+    "nil-action-identity-creation"
+  ],
+  "desktop": "not run: combined provider conversion remains ticket 04",
+  "providers": "not run",
+  "root": "/private/tmp/aw-ticket04-workspaces-20261116-a",
+  "workspaces": [
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "2648b2ef8b586af35e7636fe5c7cb1184ce080e2",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/dzsenifer-marozsan",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "8f7c3a2c-e35a-4adc-86a5-2307a630f8ac",
+      "id": "a0049ffa-a861-4eea-8361-324a07fb3b21",
+      "legacy": false,
+      "name": "dzsenifer-marozsan",
+      "path": "/private/tmp/aw-ticket04-workspaces-20261116-a/state/workspaces/app/dzsenifer-marozsan/checkout",
+      "repository_id": "72c87204-09ec-45d7-8b36-686c715499d0",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "2648b2ef8b586af35e7636fe5c7cb1184ce080e2",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/angel-di-maria",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "23c808f5-dfbe-4ab9-ace3-2b1927248864",
+      "id": "29311e34-6278-4d0f-bec9-de60e2dcabac",
+      "legacy": false,
+      "name": "angel-di-maria",
+      "path": "/private/tmp/aw-ticket04-workspaces-20261116-a/state/workspaces/app-2/angel-di-maria/checkout",
+      "repository_id": "4e9ffb5f-ddd5-487f-a7cf-ab4b15af71dd",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "2648b2ef8b586af35e7636fe5c7cb1184ce080e2",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/jonas-hector",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "6b3f3374-26f9-4554-9d2f-a4cb9c722c07",
+      "id": "3e47fee5-ce98-4cff-ba1a-590028ef19aa",
+      "legacy": false,
+      "name": "jonas-hector",
+      "path": "/private/tmp/aw-ticket04-workspaces-20261116-a/state/workspaces/app/jonas-hector/checkout",
+      "repository_id": "72c87204-09ec-45d7-8b36-686c715499d0",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "2648b2ef8b586af35e7636fe5c7cb1184ce080e2",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/jose-altafini",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "ea0e20a8-099c-4d01-a0a4-6861c0d32209",
+      "id": "0a9fc250-b69b-4f75-9fed-8c8812184c5b",
+      "legacy": false,
+      "name": "jose-altafini",
+      "path": "/private/tmp/aw-ticket04-workspaces-20261116-a/state/workspaces/app/jose-altafini/checkout",
+      "repository_id": "72c87204-09ec-45d7-8b36-686c715499d0",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "2648b2ef8b586af35e7636fe5c7cb1184ce080e2",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/giacinto-facchetti",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "00000000-0000-0000-0000-000000000000",
+      "id": "7ebbc4cf-bce1-46eb-a4b8-5e4b4fa25b96",
+      "legacy": false,
+      "name": "giacinto-facchetti",
+      "path": "/private/tmp/aw-ticket04-workspaces-20261116-a/state/workspaces/app/giacinto-facchetti/checkout",
+      "repository_id": "72c87204-09ec-45d7-8b36-686c715499d0",
+      "status": {
+        "state": "ready"
+      }
+    }
+  ]
+}

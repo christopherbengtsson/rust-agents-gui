@@ -41,7 +41,7 @@ pub struct LoginAttempt {
 impl LoginAttempt {
     pub(super) fn interrupted(id: uuid::Uuid) -> Self {
         Self { id, phase: LoginPhase::CleanupUncertain, outcome: None, browser_open_failed: false,
-            diagnostic: Some("The previous supervisor lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped.".into()) }
+            diagnostic: Some("The previous core lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped.".into()) }
     }
 }
 pub(super) struct LoginControl {
@@ -114,6 +114,15 @@ impl ProviderConnections {
         // If admission never happened, changing the revision fences a delayed
         // start carrying the old revision. Absence is now authoritative.
         if entry
+            .selection_action
+            .as_ref()
+            .is_some_and(|selection| selection.id == attempt)
+        {
+            return Err(invalid_target(
+                "Action identity already belongs to an executable selection",
+            ));
+        }
+        if entry
             .snapshot
             .login
             .as_ref()
@@ -148,11 +157,29 @@ impl ProviderConnections {
             .get(&target)
             .ok_or_else(|| invalid_target("Unknown provider configuration"))?;
         if entry
+            .selection_action
+            .as_ref()
+            .is_some_and(|selection| selection.id == attempt)
+        {
+            return Err(invalid_target(
+                "Action identity already belongs to an executable selection",
+            ));
+        }
+        if entry
             .snapshot
             .login
             .as_ref()
             .is_some_and(|login| login.id == attempt)
         {
+            if entry
+                .login_action
+                .as_ref()
+                .is_some_and(|action| action.revision != revision)
+            {
+                return Err(invalid_target(
+                    "Login identity already belongs to another configuration revision",
+                ));
+            }
             return Ok(entry.snapshot.clone());
         }
         if entry.snapshot.revision != revision || revision > u32::MAX - 32 {
@@ -194,6 +221,15 @@ impl ProviderConnections {
             ));
         }
         let entry = records.get_mut(&target).expect("validated target retained");
+        entry.login_action = Some(ProviderAction {
+            id: attempt,
+            scope: entry.scope.clone(),
+            provider: entry.snapshot.target.provider.clone(),
+            target,
+            revision,
+            executable: entry.snapshot.target.executable.clone(),
+            operation: ProviderOperation::Login,
+        });
         let (reopen, receiver) = mpsc::channel(1);
         entry.control = Some(LoginControl {
             cancel: self.cancel.child_token(),
@@ -300,7 +336,14 @@ impl ProviderConnections {
         reopen: mpsc::Receiver<()>,
         effects: impl BrowserEffects,
     ) {
-        if let Err(failure) = self.persist_attempt(attempt, true).await {
+        let action = match self.action(target, attempt) {
+            Ok(action) => action,
+            Err(_) => {
+                self.worker_panicked(target, Some(attempt), None);
+                return;
+            }
+        };
+        if let Err(failure) = self.begin_action(&action).await {
             self.update_login(target, attempt, |login| {
                 login.phase = LoginPhase::CleanupUncertain;
                 login.diagnostic = Some(failure.diagnostic);
@@ -315,9 +358,25 @@ impl ProviderConnections {
                 codex::LoginEvent::CleanupUncertain => { login.phase = LoginPhase::CleanupUncertain; login.diagnostic = Some("Owned login cleanup is unconfirmed; this credential scope remains blocked.".into()); },
             });
         });
-        let result = effects
-            .authenticate(cancel.clone(), reopen, notice.clone())
-            .await;
+        let current = self
+            .action(target, attempt)
+            .is_ok_and(|current| current == action);
+        let result = if !current || cancel.is_cancelled() {
+            Ok(LoginOutcome::Cancelled)
+        } else {
+            effects
+                .authenticate(cancel.clone(), reopen, notice.clone())
+                .await
+        };
+        // A process cleanup notice is authoritative. Verification or a successful
+        // storage close must not clear its credential-scope fence.
+        if self.read(target).is_ok_and(|snapshot| {
+            snapshot.login.as_ref().is_some_and(|login| {
+                login.id == attempt && login.phase == LoginPhase::CleanupUncertain
+            })
+        }) {
+            return;
+        }
         let (outcome, failure) = match result {
             Ok(outcome) => (outcome, None),
             Err(failure) => (
@@ -342,7 +401,14 @@ impl ProviderConnections {
         } else {
             effects.verify(self.cancel.clone(), notice).await
         };
-        if let Err(failure) = self.persist_attempt(attempt, false).await {
+        if self.read(target).is_ok_and(|snapshot| {
+            snapshot.login.as_ref().is_some_and(|login| {
+                login.id == attempt && login.phase == LoginPhase::CleanupUncertain
+            })
+        }) {
+            return;
+        }
+        if let Err(failure) = self.finish_action(&action, false).await {
             self.update_login(target, attempt, |login| {
                 login.phase = LoginPhase::CleanupUncertain;
                 login.diagnostic = Some(failure.diagnostic);
@@ -350,29 +416,6 @@ impl ProviderConnections {
             return;
         }
         self.finish_login(target, attempt, outcome, evidence);
-    }
-    async fn persist_attempt(
-        &self,
-        attempt: uuid::Uuid,
-        pending: bool,
-    ) -> Result<(), SetupFailure> {
-        if let Some(store) = self.persistence.clone() {
-            tokio::task::spawn_blocking(move || store.record(attempt, pending))
-                .await
-                .map_err(|_| {
-                    SetupFailure::at(
-                        SetupProblem::CleanupUncertain,
-                        "Login intent storage worker failed",
-                    )
-                })?
-                .map_err(|_| {
-                    SetupFailure::at(
-                        SetupProblem::CleanupUncertain,
-                        "Login intent/cleanup could not be durably recorded",
-                    )
-                })?;
-        }
-        Ok(())
     }
     pub(super) fn finish_login(
         &self,
@@ -494,17 +537,32 @@ mod tests {
         calls: Arc<Mutex<Vec<&'static str>>>,
         fail: Option<bool>,
     }
-    impl crate::storage::ProviderLoginPersistence for MemoryStore {
-        fn record(&self, _: uuid::Uuid, pending: bool) -> Result<(), RepositoryError> {
+    impl MemoryStore {
+        fn record(&self, pending: bool) -> Result<(), crate::storage::Error> {
             self.calls
                 .lock()
                 .unwrap()
                 .push(if pending { "intent" } else { "cleanup" });
             if self.fail == Some(pending) {
-                Err(RepositoryError::storage("controlled storage failure"))
+                Err(crate::storage::Error::Invalid("controlled storage failure"))
             } else {
                 Ok(())
             }
+        }
+    }
+    impl persistence::Persistence for MemoryStore {
+        fn begin<'a>(
+            &'a self,
+            _: &'a ProviderAction,
+        ) -> futures_util::future::BoxFuture<'a, Result<bool, crate::storage::Error>> {
+            Box::pin(async { self.record(true).map(|_| true) })
+        }
+        fn finish<'a>(
+            &'a self,
+            _: &'a ProviderAction,
+            _: bool,
+        ) -> futures_util::future::BoxFuture<'a, Result<(), crate::storage::Error>> {
+            Box::pin(async { self.record(false) })
         }
     }
     struct Evidence {
@@ -613,6 +671,18 @@ mod tests {
                         assert_eq!(snapshot.problem, Some(SetupProblem::StatusReadFailed));
                     }
                 }
+                if fail.is_some() {
+                    assert!(
+                        owner
+                            .finish()
+                            .await
+                            .unwrap_err()
+                            .to_string()
+                            .contains("controlled storage failure")
+                    );
+                } else {
+                    owner.finish().await.unwrap();
+                }
             }
         });
     }
@@ -647,10 +717,7 @@ mod tests {
                     },
                 )
                 .await;
-            assert_eq!(
-                *calls.lock().unwrap(),
-                ["intent", "authenticate", "cleanup"]
-            );
+            assert_eq!(*calls.lock().unwrap(), ["intent", "cleanup"]);
             assert_eq!(
                 owner.read(target).unwrap().login.unwrap().phase,
                 LoginPhase::Cancelled

@@ -111,7 +111,6 @@ fn observe(record: &RepositoryRecord, availability: Availability) -> Repository 
     }
 }
 
-const PAGE_SIZE: usize = 32;
 const PAGE_BYTES: usize = 48 * 1024;
 const CACHE_SIZE: usize = 64;
 const PENDING_LIMIT: usize = 8;

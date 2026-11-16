@@ -6,7 +6,7 @@ use std::{
 };
 
 pub(super) const DATABASE: &str = "metadata.sqlite3";
-const SCHEMA_VERSION: i64 = 3;
+const SCHEMA_VERSION: i64 = 4;
 const APPLICATION_ID: i64 = 0x41575332;
 const SCHEMA: &str = "
 CREATE TABLE storage_revision(id INTEGER PRIMARY KEY CHECK(id=1), revision INTEGER NOT NULL CHECK(revision>=0));
@@ -25,10 +25,11 @@ CREATE UNIQUE INDEX reserved_workspace_paths ON workspaces(path);
 CREATE TABLE workspace_actions(id TEXT PRIMARY KEY NOT NULL, workspace_id TEXT NOT NULL REFERENCES workspaces(id), record TEXT NOT NULL CHECK(length(CAST(record AS BLOB))<=49152));
 CREATE TABLE provider_executables(scope TEXT PRIMARY KEY NOT NULL CHECK(length(CAST(scope AS BLOB))<=4096), action TEXT NOT NULL, path TEXT NOT NULL CHECK(length(CAST(path AS BLOB))<=4096));
 CREATE TABLE provider_login_fences(scope TEXT PRIMARY KEY NOT NULL CHECK(length(CAST(scope AS BLOB))<=4096), attempt TEXT NOT NULL, pending INTEGER NOT NULL CHECK(pending IN(0,1)));
-CREATE TABLE provider_actions(id TEXT PRIMARY KEY NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152), completed INTEGER NOT NULL CHECK(completed IN(0,1)));
+CREATE TABLE provider_actions(id TEXT PRIMARY KEY NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152), completed INTEGER NOT NULL CHECK(completed IN(0,1)), scope TEXT NOT NULL CHECK(length(CAST(scope AS BLOB))<=4096));
+CREATE UNIQUE INDEX pending_provider_scope ON provider_actions(scope) WHERE completed=0;
 CREATE TABLE action_identities(id TEXT PRIMARY KEY NOT NULL, kind TEXT NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152));
 PRAGMA application_id=1096241970;
-PRAGMA user_version=3;";
+PRAGMA user_version=4;";
 
 pub(super) fn inspect(state: &Path, create: bool) -> Result<PathBuf> {
     let canonical = fs::canonicalize(state)?;
