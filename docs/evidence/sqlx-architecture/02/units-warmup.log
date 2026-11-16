@@ -1,0 +1,21 @@
+
+running 16 tests
+test storage::opening::failure_tests::startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup ... ok
+test storage::opening::return_tests::queued_rollback_is_ordered_before_the_reuse_decision ... ok
+test storage::opening::tests::substituted_file_metadata_rejects_aliases_wrong_owner_and_public_modes ... ok
+test storage::policy::tests::responsive_worker_with_unresolved_rollback_is_never_reused ... ok
+test storage::tests::aborted_retirement_cannot_reopen_replacement_admission ... ok
+test storage::tests::bounded_serialization_rejects_before_allocating_an_unbounded_encoded_copy ... ok
+test storage::tests::checkpoint_failure_does_not_skip_either_close_barrier_or_erase_prior_errors ... ok
+test storage::tests::completed_undelivered_result_keeps_its_capacity_until_consumed_or_dropped ... ok
+test storage::tests::current_records_retain_recovery_evidence_and_corruption_is_not_absence ... ok
+test storage::tests::failed_commit_receipt_waits_for_retirement_and_preserves_both_failures ... ok
+test storage::tests::known_retirement_allows_fresh_reconciliation_but_never_grants_write_replay ... ok
+test storage::tests::later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait ... ok
+test storage::tests::lost_requester_keeps_completion_and_status_pending_until_physical_settlement ... ok
+test storage::tests::replacement_waits_for_physical_retirement_and_unknown_close_fences_it ... ok
+test storage::tests::retirement_unknown_fences_fresh_observation_and_retains_exact_action_after_reply_loss ... ok
+test storage::tests::task_panic_is_owned_attributed_and_fenced ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

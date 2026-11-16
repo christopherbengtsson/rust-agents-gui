@@ -598,8 +598,8 @@ async fn run(
     let report = close_barriers(
         &shared.control,
         async { operations::checkpoint(&shared).await.map(Some) },
-        shared.readers.close(),
-        shared.writer.close(),
+        || shared.readers.close(),
+        || shared.writer.close(),
     )
     .await;
     done.send_replace(Some(report));
@@ -748,11 +748,14 @@ pub(crate) mod qualification;
 
 // Pool barriers have no returned error inventory. Retain checkpoint/operation faults
 // separately and always visit both barriers, including after earlier failure.
-async fn close_barriers(
+async fn close_barriers<
+    Reader: std::future::Future<Output = ()>,
+    Writer: std::future::Future<Output = ()>,
+>(
     control: &Control,
     checkpoint: impl std::future::Future<Output = Result<Option<Checkpoint>>>,
-    readers: impl std::future::Future<Output = ()>,
-    writer: impl std::future::Future<Output = ()>,
+    readers: impl FnOnce() -> Reader,
+    writer: impl FnOnce() -> Writer,
 ) -> CloseReport {
     let checkpoint = match checkpoint.await {
         Ok(value) => value,
@@ -761,8 +764,10 @@ async fn close_barriers(
             None
         }
     };
-    readers.await;
-    writer.await;
+    // SQLx closes admission synchronously when close() constructs its future.
+    // Defer those calls themselves, not only polling their returned futures.
+    readers().await;
+    writer().await;
     let faults = control
         .admission
         .lock()

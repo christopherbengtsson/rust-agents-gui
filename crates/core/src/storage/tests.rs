@@ -268,10 +268,10 @@ async fn checkpoint_failure_does_not_skip_either_close_barrier_or_erase_prior_er
             calls.lock().unwrap().push("checkpoint");
             Err(Error::Corrupt)
         },
-        async {
+        || async {
             calls.lock().unwrap().push("readers");
         },
-        async {
+        || async {
             calls.lock().unwrap().push("writer");
         },
     )
@@ -305,4 +305,30 @@ async fn later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait()
             );
         }
     }
+}
+
+#[tokio::test]
+async fn constructing_close_futures_is_deferred_until_after_checkpoint_observation() {
+    let control = Control::new();
+    let closed = std::cell::Cell::new(false);
+    let checkpoint_seen = std::cell::Cell::new(false);
+    close_barriers(
+        &control,
+        async {
+            assert!(!closed.get());
+            checkpoint_seen.set(true);
+            Ok(None)
+        },
+        || {
+            assert!(checkpoint_seen.get());
+            closed.set(true);
+            std::future::ready(())
+        },
+        || {
+            assert!(checkpoint_seen.get());
+            std::future::ready(())
+        },
+    )
+    .await;
+    assert!(closed.get());
 }
