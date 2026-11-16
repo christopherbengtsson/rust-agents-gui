@@ -1,0 +1,5 @@
+{
+  "argv": ["corepack", "pnpm", "build"],
+  "exit": 0,
+  "seconds": 51.32631012506317
+}

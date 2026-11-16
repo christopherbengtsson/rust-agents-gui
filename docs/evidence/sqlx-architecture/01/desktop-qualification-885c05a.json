@@ -1,0 +1,15 @@
+{
+  "result": "passed",
+  "checks": [
+    "private fixture desktop connected",
+    "connection details matched desktop PID 20627 and supervisor PID 20633, owner 20633-1794834327684009000, revision1",
+    "native Cmd+Q invoked owned shutdown",
+    "desktop and admitted supervisor both exited"
+  ],
+  "processes": {
+    "desktop": "exited",
+    "supervisor": "exited"
+  },
+  "no_authentication_or_provider_actions": true,
+  "first_attempt": "accessibility app launch replaced unretained fixture launch; no private-state startup occurred; not qualification"
+}

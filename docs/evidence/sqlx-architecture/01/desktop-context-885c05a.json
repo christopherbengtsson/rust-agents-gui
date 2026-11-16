@@ -1,0 +1,9 @@
+{
+  "root": "/private/tmp/aw-core01-ui-3b0zklmf",
+  "state": "/private/tmp/aw-core01-ui-3b0zklmf/state",
+  "bundle": "/private/tmp/aw-core01-ui-3b0zklmf/Core01 Fixture.app",
+  "pid": 20627,
+  "executable": "/private/tmp/aw-core01-ui-3b0zklmf/Core01 Fixture.app/Contents/MacOS/workspace-desktop",
+  "sha256": "6dd5f52663f8d8733d8667e9a6a6d4671fb6fce31a05e87daf7b4184d314fe61",
+  "supervisor_sha256": "8b041d863435a4474aa820e83a5bed2811306fd8c9ec4b3fd0c3d43cfd2a7714"
+}

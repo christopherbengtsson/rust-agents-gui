@@ -1,5 +1,14 @@
 # Shared mechanisms inside deep observation modules
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A4](../../.scratch/sqlx-architecture/amendments.md) govern
+application socket/framed-peer hosting and transport decisions.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Accepted 2026-11-14; implementation is F04b–F04g, not this documentation publication.
 Amends the transport and observation implementation choices in
 [ADR 0006](0006-routed-observation-presentation.md); its Router/Query/Zustand and

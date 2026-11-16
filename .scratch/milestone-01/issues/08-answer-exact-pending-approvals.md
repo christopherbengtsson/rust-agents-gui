@@ -1,5 +1,15 @@
 # 08: Answer exact pending approvals
 
+## Native core amendment — 2026-11-16
+
+Apply the [accepted native-core/SQLx spec](../../sqlx-architecture/spec.md) and
+[amendments A2/A3/A8](../../sqlx-architecture/amendments.md) before this ticket.
+They replace separate-supervisor/native-crash continuation and single-active
+instructions with native ownership, WebView continuity, durable native-failure
+recovery and the concurrent three-conversation scenario. Preserve exact controls,
+remaining milestone scope and historical evidence. Acceptance remains unchecked;
+this publication authorizes no live-provider or authentication action.
+
 **What to build:** Inspect an actual pending operation and answer allow-once or deny from the desktop, with strict matching and visible uncertainty after a lost reply.
 
 **Blocked by:** 07: Durable streamed chat and uncertain-send recovery
@@ -22,3 +32,9 @@
 - [ ] Unit-test approval decisions for delayed/duplicate requests, stale/conflicting answers, lost replies and storage failures; separately demonstrate desktop approval/error states and retain evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.
+
+## Comments
+
+2026-11-16: Reconciled with the native-core/SQLx spec and amended A8/A10/concurrency
+acceptance. Existing dependency edges remain; milestone 07 now inherits SQLx 08.
+Qualification stays open and no production implementation is claimed.

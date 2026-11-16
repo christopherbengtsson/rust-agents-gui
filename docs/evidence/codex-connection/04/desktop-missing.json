@@ -1,0 +1,123 @@
+{
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 31945,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "31945-1794765993126041000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "observation": {
+    "target": {
+      "id": "d187a16f-d982-4ef3-a161-5aae9a9cae38",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-ready-9j67_g4f/fixture-codex",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-d187a16f-d982-4ef3-a161-5aae9a9cae38",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 6,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "not_required",
+      "billing": "unknown",
+      "account": null,
+      "plan": null,
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": "missing_executable",
+    "diagnostic": "--version: NotFound; OS error Some(2)",
+    "login": null
+  },
+  "events": [
+    {
+      "pid": 31989,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 31990,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 31990,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 31990,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 31990,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 31990,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 31990,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 31990,
+      "event": "exit"
+    },
+    {
+      "pid": 32059,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 32060,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 32060,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 32060,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 32060,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 32060,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 32060,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 32060,
+      "event": "exit"
+    }
+  ],
+  "supervisor_poll": null,
+  "desktop_poll": null
+}

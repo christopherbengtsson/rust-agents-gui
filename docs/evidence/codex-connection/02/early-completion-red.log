@@ -1,0 +1,22 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.03s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-67b7661821e120ff)
+
+running 1 test
+test runtimes::codex::protocol::tests::early_completion_and_success_racing_cancel_preserve_exact_outcome ... FAILED
+
+failures:
+
+---- runtimes::codex::protocol::tests::early_completion_and_success_racing_cancel_preserve_exact_outcome stdout ----
+
+thread 'runtimes::codex::protocol::tests::early_completion_and_success_racing_cancel_preserve_exact_outcome' (33451080) panicked at crates/core/src/runtimes/codex/protocol.rs:601:163:
+called `Result::unwrap()` on an `Err` value: SetupFailure { problem: StatusReadFailed, diagnostic: "EOF before complete provider frame", source: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    runtimes::codex::protocol::tests::early_completion_and_success_racing_cancel_preserve_exact_outcome
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 180 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

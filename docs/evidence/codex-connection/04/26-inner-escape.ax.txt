@@ -1,0 +1,35 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/6039a2e2-08e0-4956-a178-fc23ad1906a9/workspace/5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a?view=changes
+			3 container Repository sidebar
+				4 text Connected
+			5 container
+				6 button
+				7 container Add repository
+					8 heading Add repository, Value: 2
+						9 text Add repository
+					10 text Add an existing local Git repository and create its first isolated workspace from the local default branch. No agent starts.
+					11 container
+						12 text Repository folder
+						13 container
+							14 text field (settable) Repository folder, Placeholder: /Users/you/code/project
+							15 button Browse…
+						16 text Choose a checkout folder, or enter its absolute path.
+						17 button Close
+						18 button (disabled) Register
+					19 button Close
+				20 button
+	21 close button
+	22 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	23 minimize button
+	24 text Agent Workspace
+25 menu bar
+	26 Connection Journey
+	27 File
+	28 Edit
+	29 View
+	30 Window
+	31 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/6039a2e2-08e0-4956-a178-fc23ad1906a9/workspace/5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a?view=changes

@@ -1,0 +1,18 @@
+{
+  "captured_at": "2026-11-15T21:59:46.425927+00:00",
+  "revision": "24390a1e7ba108ca88704fbf73deac92915d3ab6",
+  "initial_dirty": " M docs/IDEAS.md\n?? docs/evidence/milestone-01-storage/\n?? docs/research/milestone-01-storage-evaluation.md\n",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "python": "3.14.3",
+  "cpu": "Apple M4 Pro",
+  "memory_bytes": 51539607552,
+  "files_before": {
+    "Cargo.toml": "b2aca405e934a2f711af3c32f355f7aac7ebca45f5aba052e018b01d0bd9159a",
+    "Cargo.lock": "bcf6869426352e02bcf4a424d9c77331b0a22f72b4dc2928ba86d6c21449aafb",
+    "crates/core/Cargo.toml": "78affc8872a18f107a6cee7999c6ecacd846c33a1400a62827cffd438e073aff",
+    "crates/core/src/storage.rs": "cd4f869869d0887da0931435879c0ee4af6ce3db0774b85e441eaff9a2d840fb",
+    "crates/core/src/workspaces.rs": "856ed97f564a2baa6936c6bd3703f102f8002fd50f9b99be651598f746e38209",
+    "docs/IDEAS.md": "aa64b30e675093d040ce12d8d27bb2ba55d2d7a024ce86ccc09a5e398776e953"
+  },
+  "native_private_root": "/tmp/storage-native-06a.Q45pH4"
+}

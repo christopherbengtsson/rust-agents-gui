@@ -1,0 +1,32 @@
+   Compiling tokio v1.54.1
+   Compiling tokio-stream v0.1.19
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+error[E0603]: function `effective` is private
+  --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:39:14
+   |
+39 |     opening::effective(&mut connection).await?;
+   |              ^^^^^^^^^ private function
+   |
+note: the function `effective` is defined here
+  --> crates/storage-checkpoint/src/../../core/src/storage/opening.rs:68:1
+   |
+68 | async fn effective(connection: &mut SqliteConnection) -> Result<()> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `effective` is private
+  --> crates/storage-checkpoint/src/../../core/src/storage/qualification.rs:50:14
+   |
+50 |     opening::effective(&mut reader).await?;
+   |              ^^^^^^^^^ private function
+   |
+note: the function `effective` is defined here
+  --> crates/storage-checkpoint/src/../../core/src/storage/opening.rs:68:1
+   |
+68 | async fn effective(connection: &mut SqliteConnection) -> Result<()> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `storage-checkpoint` (lib) due to 2 previous errors

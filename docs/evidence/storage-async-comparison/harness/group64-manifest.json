@@ -1,0 +1,69 @@
+{
+  "frozen_before_measurement": true,
+  "scope": "standalone synthetic architecture experiment; no app/provider qualification",
+  "runtime": "one current-thread Tokio 1.54.1 main runtime; async owner awaits maintained library APIs; no block_on per operation",
+  "cohort": {
+    "warmups": 0,
+    "measured": 1,
+    "admission_seconds": 30,
+    "seed_events": 100000
+  },
+  "topology": {
+    "writer_connections": 1,
+    "read_connections": 2,
+    "journal": "WAL",
+    "synchronous": "FULL",
+    "fullfsync": true,
+    "foreign_keys": true,
+    "busy_timeout_ms": 100,
+    "wal_autocheckpoint_pages": 1000,
+    "cache_kib_per_connection": 2048
+  },
+  "workloads": [
+    {
+      "name": "heavy",
+      "workspaces": 20,
+      "roots_per_workspace": 5,
+      "children_per_root": 4,
+      "streams": 500,
+      "base_events_per_second": 2000,
+      "hot_workspace": 0,
+      "hot_burst_events_per_second": 2000,
+      "hot_burst_period_ms": 5000,
+      "hot_burst_duration_ms": 500
+    }
+  ],
+  "trace": "5ms deterministic ticks; 500/2000 base events/s round-robin across streams; heavy adds ten workspace0 events per tick in first500ms of each5s; arrival timestamp is scheduled tick instant, not enqueue time",
+  "payload": "id%100: 0=>64KiB bounded tool; 1..=9=>2KiB; 10=>16KiB; other=>256B; deterministic ASCII byte65+id%26",
+  "admission": {
+    "total_events_including_physical": 1024,
+    "bytes_including_physical": 8388608,
+    "per_workspace_events": 64,
+    "urgent_capacity": 32,
+    "selection": "workspace round robin; urgent checked before each event group",
+    "group_max_events": 64,
+    "group_max_age_ms": 25
+  },
+  "read_load": {
+    "two_reader_tasks_each_hz": 20,
+    "cycle": "recent keyset page, older keyset page, shared-context snapshot, local draft/inbox",
+    "keyset": "explicit stream and seq<cursor; ORDER BY seq DESC LIMIT64; materialize <=256KiB using cumulative byte bound",
+    "trace": "exactly600 scheduled requests per reader, absolute start+k*50ms, k determines query/stream; serial catch-up, no skipped requests; report scheduled-to-completion and execution latency"
+  },
+  "urgent_intents_hz": 5,
+  "future_primitives": [
+    "atomic completion+next intent+context version",
+    "one shared-context snapshot transaction",
+    "editable draft revision+external-operation identity"
+  ],
+  "checkpoints": "PASSIVE samples every2s on writer between groups; tuple busy/log/checkpointed retained; final TRUNCATE with latency and sizes; no pinned-reader claim",
+  "focused_mechanisms": "before and after cohort: dropped reply retains permit until physical work; rejected work absent; drain close; rollback-mode real COMMIT BUSY then same-transaction retry; consistent context and continuation transaction; native private NOFOLLOW alias probe",
+  "budgets": {
+    "private_source_build_data_bytes": 8589934592,
+    "database_lifetime": "fresh private database per run; removed after evidence/hash capture"
+  },
+  "engines": "separate exact pinned bundled engine cohorts; report sourceid/options per result; do not attribute engine differences to driver",
+  "variant": "single paired group64 diagnostic; not five-run qualified capacity",
+  "logical_budget_note": "unchanged8MiB admission including physical original; max physical batch64x64KiB=4MiB; bridge copy additional; no total-RSS guarantee",
+  "source_change": "Only queued<16 and range0..16 changed to64; all trace/SQL/read/admission/urgent logic preserved"
+}

@@ -1,0 +1,857 @@
+{
+  "classification": "real disposable SQLite qualification, not application units",
+  "version": [
+    [
+      "3.54.1",
+      "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76"
+    ]
+  ],
+  "compile_options": [
+    [
+      "ATOMIC_INTRINSICS=1"
+    ],
+    [
+      "COMPILER=clang-21.0.0"
+    ],
+    [
+      "DEFAULT_AUTOVACUUM"
+    ],
+    [
+      "DEFAULT_CACHE_SIZE=-2000"
+    ],
+    [
+      "DEFAULT_FILE_FORMAT=4"
+    ],
+    [
+      "DEFAULT_JOURNAL_SIZE_LIMIT=-1"
+    ],
+    [
+      "DEFAULT_MMAP_SIZE=0"
+    ],
+    [
+      "DEFAULT_PAGE_SIZE=4096"
+    ],
+    [
+      "DEFAULT_PCACHE_INITSZ=20"
+    ],
+    [
+      "DEFAULT_RECURSIVE_TRIGGERS"
+    ],
+    [
+      "DEFAULT_SECTOR_SIZE=4096"
+    ],
+    [
+      "DEFAULT_SYNCHRONOUS=2"
+    ],
+    [
+      "DEFAULT_WAL_AUTOCHECKPOINT=1000"
+    ],
+    [
+      "DEFAULT_WAL_SYNCHRONOUS=2"
+    ],
+    [
+      "DEFAULT_WORKER_THREADS=0"
+    ],
+    [
+      "DIRECT_OVERFLOW_READ"
+    ],
+    [
+      "MALLOC_SOFT_LIMIT=1024"
+    ],
+    [
+      "MAX_ATTACHED=10"
+    ],
+    [
+      "MAX_COLUMN=2000"
+    ],
+    [
+      "MAX_COMPOUND_SELECT=500"
+    ],
+    [
+      "MAX_DEFAULT_PAGE_SIZE=8192"
+    ],
+    [
+      "MAX_EXPR_DEPTH=1000"
+    ],
+    [
+      "MAX_FUNCTION_ARG=1000"
+    ],
+    [
+      "MAX_LENGTH=1000000000"
+    ],
+    [
+      "MAX_LIKE_PATTERN_LENGTH=50000"
+    ],
+    [
+      "MAX_MMAP_SIZE=0x7fff0000"
+    ],
+    [
+      "MAX_PAGE_COUNT=0xfffffffe"
+    ],
+    [
+      "MAX_PAGE_SIZE=65536"
+    ],
+    [
+      "MAX_SCHEMA=10000000"
+    ],
+    [
+      "MAX_SQL_LENGTH=1000000000"
+    ],
+    [
+      "MAX_TRIGGER_DEPTH=1000"
+    ],
+    [
+      "MAX_VARIABLE_NUMBER=32766"
+    ],
+    [
+      "MAX_VDBE_OP=250000000"
+    ],
+    [
+      "MAX_WORKER_THREADS=8"
+    ],
+    [
+      "MUTEX_PTHREADS"
+    ],
+    [
+      "SYSTEM_MALLOC"
+    ],
+    [
+      "TEMP_STORE=1"
+    ],
+    [
+      "THREADSAFE=1"
+    ]
+  ],
+  "settings": {
+    "journal_mode": [
+      [
+        "wal"
+      ]
+    ],
+    "synchronous": [
+      [
+        "2"
+      ]
+    ],
+    "fullfsync": [
+      [
+        "1"
+      ]
+    ],
+    "foreign_keys": [
+      [
+        "1"
+      ]
+    ],
+    "busy_timeout": [
+      [
+        "100"
+      ]
+    ],
+    "page_size": [
+      [
+        "4096"
+      ]
+    ]
+  },
+  "manifest": {
+    "kill_timeout_seconds": 20,
+    "layout_warmups": 1,
+    "layout_measured_runs": 5,
+    "attachment_sizes": [
+      262144,
+      4194304
+    ],
+    "attachment_counts": [
+      16,
+      2
+    ],
+    "cache_diff_count": 1000,
+    "cache_diff_bytes": 4096,
+    "cache_batch": 100,
+    "temporary_data_budget_bytes": 1073741824,
+    "scope": "single SQLite3.54.1 native library via Python ctypes; serial runs; warm OS cache; cache churn sequential, not concurrency evidence"
+  },
+  "crashes": [
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed_after_lost_reply": false,
+      "journal": "DELETE",
+      "sync": "FULL",
+      "kind": "transaction",
+      "kill_point": "after_begin",
+      "pass": true
+    },
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed_after_lost_reply": false,
+      "journal": "DELETE",
+      "sync": "FULL",
+      "kind": "transaction",
+      "kill_point": "after_records",
+      "pass": true
+    },
+    {
+      "counts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "committed_after_lost_reply": true,
+      "journal": "DELETE",
+      "sync": "FULL",
+      "kind": "transaction",
+      "kill_point": "after_commit",
+      "pass": true
+    },
+    {
+      "metadata_present": false,
+      "final_present": false,
+      "temp_present": true,
+      "journal": "DELETE",
+      "sync": "FULL",
+      "kind": "attachment",
+      "kill_point": "after_temp_sync",
+      "pass": true
+    },
+    {
+      "metadata_present": false,
+      "final_present": true,
+      "temp_present": false,
+      "journal": "DELETE",
+      "sync": "FULL",
+      "kind": "attachment",
+      "kill_point": "after_rename",
+      "pass": true
+    },
+    {
+      "metadata_present": true,
+      "final_present": true,
+      "temp_present": false,
+      "journal": "DELETE",
+      "sync": "FULL",
+      "kind": "attachment",
+      "kill_point": "after_commit",
+      "pass": true
+    },
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed_after_lost_reply": false,
+      "journal": "DELETE",
+      "sync": "EXTRA",
+      "kind": "transaction",
+      "kill_point": "after_begin",
+      "pass": true
+    },
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed_after_lost_reply": false,
+      "journal": "DELETE",
+      "sync": "EXTRA",
+      "kind": "transaction",
+      "kill_point": "after_records",
+      "pass": true
+    },
+    {
+      "counts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "committed_after_lost_reply": true,
+      "journal": "DELETE",
+      "sync": "EXTRA",
+      "kind": "transaction",
+      "kill_point": "after_commit",
+      "pass": true
+    },
+    {
+      "metadata_present": false,
+      "final_present": false,
+      "temp_present": true,
+      "journal": "DELETE",
+      "sync": "EXTRA",
+      "kind": "attachment",
+      "kill_point": "after_temp_sync",
+      "pass": true
+    },
+    {
+      "metadata_present": false,
+      "final_present": true,
+      "temp_present": false,
+      "journal": "DELETE",
+      "sync": "EXTRA",
+      "kind": "attachment",
+      "kill_point": "after_rename",
+      "pass": true
+    },
+    {
+      "metadata_present": true,
+      "final_present": true,
+      "temp_present": false,
+      "journal": "DELETE",
+      "sync": "EXTRA",
+      "kind": "attachment",
+      "kill_point": "after_commit",
+      "pass": true
+    },
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed_after_lost_reply": false,
+      "journal": "WAL",
+      "sync": "FULL",
+      "kind": "transaction",
+      "kill_point": "after_begin",
+      "pass": true
+    },
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "committed_after_lost_reply": false,
+      "journal": "WAL",
+      "sync": "FULL",
+      "kind": "transaction",
+      "kill_point": "after_records",
+      "pass": true
+    },
+    {
+      "counts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "committed_after_lost_reply": true,
+      "journal": "WAL",
+      "sync": "FULL",
+      "kind": "transaction",
+      "kill_point": "after_commit",
+      "pass": true
+    },
+    {
+      "metadata_present": false,
+      "final_present": false,
+      "temp_present": true,
+      "journal": "WAL",
+      "sync": "FULL",
+      "kind": "attachment",
+      "kill_point": "after_temp_sync",
+      "pass": true
+    },
+    {
+      "metadata_present": false,
+      "final_present": true,
+      "temp_present": false,
+      "journal": "WAL",
+      "sync": "FULL",
+      "kind": "attachment",
+      "kill_point": "after_rename",
+      "pass": true
+    },
+    {
+      "metadata_present": true,
+      "final_present": true,
+      "temp_present": false,
+      "journal": "WAL",
+      "sync": "FULL",
+      "kind": "attachment",
+      "kill_point": "after_commit",
+      "pass": true
+    }
+  ],
+  "busy_commit": {
+    "commit_code": 5,
+    "active_after_busy_commit": true,
+    "wait_ms": 123.9000839414075,
+    "committed_read_after_rollback": 0
+  },
+  "checkpoint_backup": {
+    "passive": [
+      [
+        "0",
+        "1796",
+        "15"
+      ]
+    ],
+    "passive_ms": 0.4967909771949053,
+    "pinned_wal_bytes": 7399552,
+    "truncate": [
+      [
+        "0",
+        "0",
+        "0"
+      ]
+    ],
+    "truncate_ms": 24.65162507724017,
+    "vacuum_into_ms": 71.30037504248321,
+    "backup_rows": 161,
+    "final_rows": 201,
+    "foreground_commit_ms_all": {
+      "median": 4.974104464054108,
+      "min": 3.8905410328879952,
+      "max": 17.770875012502074,
+      "p95": 11.977374902926385
+    },
+    "commits_overlapping_backup": 7,
+    "foreground_commit_ms_overlapping_backup": {
+      "median": 6.059083039872348,
+      "min": 4.486583988182247,
+      "max": 17.770875012502074,
+      "p95": 17.770875012502074
+    },
+    "backup_consistent": true
+  },
+  "workflow_consistency": {
+    "consistent_snapshot_during_completion": true,
+    "completion_continuation_context_and_external_intent_committed_together": true,
+    "external_effects_performed": 0,
+    "limit": "SQLite primitives on synthetic records, not an implemented coordinator or remote idempotency policy"
+  },
+  "layouts": [
+    {
+      "mode": "blob",
+      "run": 0,
+      "warmup": true,
+      "write_ms": 179.72858296707273,
+      "metadata_scan_ms": 0.11108396574854851,
+      "payload_read_verify_ms": 9.667541948147118,
+      "bytes": 12611584,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "file",
+      "run": 0,
+      "warmup": true,
+      "write_ms": 189.9253340670839,
+      "metadata_scan_ms": 0.2987090265378356,
+      "payload_read_verify_ms": 10.322957998141646,
+      "bytes": 12591104,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "blob",
+      "run": 1,
+      "warmup": false,
+      "write_ms": 164.71858299337327,
+      "metadata_scan_ms": 0.08350005373358727,
+      "payload_read_verify_ms": 9.299458004534245,
+      "bytes": 12611584,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "file",
+      "run": 1,
+      "warmup": false,
+      "write_ms": 195.01554092857987,
+      "metadata_scan_ms": 0.34662499092519283,
+      "payload_read_verify_ms": 10.432458017021418,
+      "bytes": 12591104,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "blob",
+      "run": 2,
+      "warmup": false,
+      "write_ms": 175.89925008360296,
+      "metadata_scan_ms": 0.07774995174258947,
+      "payload_read_verify_ms": 8.749333093874156,
+      "bytes": 12611584,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "file",
+      "run": 2,
+      "warmup": false,
+      "write_ms": 190.82183297723532,
+      "metadata_scan_ms": 0.46725000720471144,
+      "payload_read_verify_ms": 11.015292024239898,
+      "bytes": 12591104,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "blob",
+      "run": 3,
+      "warmup": false,
+      "write_ms": 169.87708397209644,
+      "metadata_scan_ms": 0.0937500735744834,
+      "payload_read_verify_ms": 8.585875038988888,
+      "bytes": 12611584,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "file",
+      "run": 3,
+      "warmup": false,
+      "write_ms": 185.85616594646126,
+      "metadata_scan_ms": 0.3130830591544509,
+      "payload_read_verify_ms": 10.083416942507029,
+      "bytes": 12591104,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "blob",
+      "run": 4,
+      "warmup": false,
+      "write_ms": 176.84054095298052,
+      "metadata_scan_ms": 0.09441608563065529,
+      "payload_read_verify_ms": 8.802333963103592,
+      "bytes": 12611584,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "file",
+      "run": 4,
+      "warmup": false,
+      "write_ms": 192.82841600943357,
+      "metadata_scan_ms": 0.3279999364167452,
+      "payload_read_verify_ms": 12.145208078436553,
+      "bytes": 12591104,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "blob",
+      "run": 5,
+      "warmup": false,
+      "write_ms": 161.77608293946832,
+      "metadata_scan_ms": 0.07299997378140688,
+      "payload_read_verify_ms": 9.422915987670422,
+      "bytes": 12611584,
+      "payload_bytes": 12582912
+    },
+    {
+      "mode": "file",
+      "run": 5,
+      "warmup": false,
+      "write_ms": 188.88525001239032,
+      "metadata_scan_ms": 0.37695805076509714,
+      "payload_read_verify_ms": 11.8530000327155,
+      "bytes": 12591104,
+      "payload_bytes": 12582912
+    }
+  ],
+  "cache": [
+    {
+      "split": false,
+      "run": 0,
+      "warmup": true,
+      "rebuild_ms": 133.01445893011987,
+      "database_pages_bytes": 4620288,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": true,
+      "run": 0,
+      "warmup": true,
+      "rebuild_ms": 133.99716699495912,
+      "database_pages_bytes": 4616192,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": false,
+      "run": 1,
+      "warmup": false,
+      "rebuild_ms": 132.0691250730306,
+      "database_pages_bytes": 4620288,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": true,
+      "run": 1,
+      "warmup": false,
+      "rebuild_ms": 133.10191698838025,
+      "database_pages_bytes": 4616192,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": false,
+      "run": 2,
+      "warmup": false,
+      "rebuild_ms": 130.03179093357176,
+      "database_pages_bytes": 4620288,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": true,
+      "run": 2,
+      "warmup": false,
+      "rebuild_ms": 110.02383404411376,
+      "database_pages_bytes": 4616192,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": false,
+      "run": 3,
+      "warmup": false,
+      "rebuild_ms": 104.9922079546377,
+      "database_pages_bytes": 4620288,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": true,
+      "run": 3,
+      "warmup": false,
+      "rebuild_ms": 108.05695794988424,
+      "database_pages_bytes": 4616192,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": false,
+      "run": 4,
+      "warmup": false,
+      "rebuild_ms": 103.99512492585927,
+      "database_pages_bytes": 4620288,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": true,
+      "run": 4,
+      "warmup": false,
+      "rebuild_ms": 133.00216605421156,
+      "database_pages_bytes": 4616192,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": false,
+      "run": 5,
+      "warmup": false,
+      "rebuild_ms": 130.89849997777492,
+      "database_pages_bytes": 4620288,
+      "authoritative_record_survived_discard": true
+    },
+    {
+      "split": true,
+      "run": 5,
+      "warmup": false,
+      "rebuild_ms": 139.00858303532004,
+      "database_pages_bytes": 4616192,
+      "authoritative_record_survived_discard": true
+    }
+  ],
+  "transcripts": [
+    {
+      "mode": "sqlite",
+      "run": 0,
+      "warmup": true,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 325.67120797466487,
+      "three_pages_ms": 0.7800830062478781,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 540672,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "jsonl",
+      "run": 0,
+      "warmup": true,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 645.0505000539124,
+      "three_pages_ms": 3.33124992903322,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 485546,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "sqlite",
+      "run": 1,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 323.99991690181196,
+      "three_pages_ms": 1.2119580060243607,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 540672,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "jsonl",
+      "run": 1,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 653.0728329671547,
+      "three_pages_ms": 3.369790967553854,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 485546,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "sqlite",
+      "run": 2,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 325.8295829873532,
+      "three_pages_ms": 1.3539999490603805,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 540672,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "jsonl",
+      "run": 2,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 646.5055000735447,
+      "three_pages_ms": 3.980458015576005,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 485546,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "sqlite",
+      "run": 3,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 322.71270803175867,
+      "three_pages_ms": 0.9732079925015569,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 540672,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "jsonl",
+      "run": 3,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 655.2069169702008,
+      "three_pages_ms": 1.8632500432431698,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 485546,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "sqlite",
+      "run": 4,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 320.86466695182025,
+      "three_pages_ms": 0.9617919567972422,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 540672,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "jsonl",
+      "run": 4,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 624.2899160133675,
+      "three_pages_ms": 2.3615839891135693,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 485546,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "sqlite",
+      "run": 5,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 316.71945902053267,
+      "three_pages_ms": 1.0443329811096191,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 540672,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    },
+    {
+      "mode": "jsonl",
+      "run": 5,
+      "warmup": false,
+      "events": 1024,
+      "batch": 16,
+      "write_ms": 627.0398329943419,
+      "three_pages_ms": 2.406707964837551,
+      "three_page_bytes": [
+        43520,
+        43520,
+        43520
+      ],
+      "bytes": 485546,
+      "limits": "short warm history, ctypes/SQL text and JSON decode costs included; file directory first-publication sync not timed; no global layout winner established"
+    }
+  ],
+  "peak_retained_probe_bytes": 201144412,
+  "private_regular_single_link_files": 184
+}

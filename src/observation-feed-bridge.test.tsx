@@ -2,7 +2,7 @@ import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
 import { afterEach, expect, test, vi } from "vitest";
 import { useObservationFeed } from "./hooks/use-observation-feed";
-import corpus from "../contracts/observations-v9.json";
+import corpus from "../contracts/observations-native.json";
 import { object } from "./lib/observation-contracts";
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -25,7 +25,7 @@ test("repository and workspace progress traverses the mounted Tauri channel with
   const acknowledged: number[] = [];
   const acceptance = { connect: vi.fn(), accept: vi.fn() };
   const { result } = renderHook(() =>
-    useObservationFeed("owner-a", acceptance),
+    useObservationFeed("incarnation-a", acceptance),
   );
   vi.mocked(invoke).mockImplementation(async (command, args) => {
     if (command === "observation_subscribe") {
@@ -88,7 +88,7 @@ test("heartbeat acceptance does not render an unchanged feed selection", async (
   let renders = 0;
   renderHook(() => {
     renders++;
-    return useObservationFeed("owner-a", acceptance);
+    return useObservationFeed("incarnation-a", acceptance);
   });
   await act(async () => {});
   const send = (batch_id: number, kind: "resync_required" | "heartbeat") =>
@@ -97,7 +97,7 @@ test("heartbeat acceptance does not render an unchanged feed selection", async (
       batch: {
         subscription_id: subscriptionId,
         batch_id,
-        cursor: { owner: "owner-a", sequence: 1 },
+        cursor: { incarnation: "incarnation-a", sequence: 1 },
         sample: { kind, watermark: 1 },
       },
     });

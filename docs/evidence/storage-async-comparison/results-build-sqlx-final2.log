@@ -1,0 +1,11 @@
+   Compiling storage-async-sqlx v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/storage-async-comparison/harness/sqlx)
+warning: constant `CONFIG` is never used
+  --> src/../../common.rs:17:7
+   |
+17 | const CONFIG: &str = "PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA fullfsync=ON; PRAGMA foreign_keys=ON; PRAGMA busy_tim...
+   |       ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `storage-async-sqlx` (bin "storage-async-sqlx") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 1.48s

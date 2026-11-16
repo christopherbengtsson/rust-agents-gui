@@ -1,0 +1,220 @@
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Checking workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Checking workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+    Checking workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:223:33
+    |
+223 |         assert_ne!(after.cursor.owner, before.cursor.owner);
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:223:54
+    |
+223 |         assert_ne!(after.cursor.owner, before.cursor.owner);
+    |                                                      ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:269:33
+    |
+269 |                 snapshot.cursor.owner.clone(),
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:283:33
+    |
+283 |                 snapshot.cursor.owner.clone(),
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:300:33
+    |
+300 |                 snapshot.cursor.owner.clone(),
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:307:68
+    |
+307 | ...   matches!(connection.start_subscription(snapshot.cursor.owner.clone(), "blocked-replacement".into(), None, |_| Ok(())), Err(Re...
+    |                                                              ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:347:33
+    |
+347 |                 snapshot.cursor.owner.clone(),
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:354:68
+    |
+354 | ...   matches!(connection.start_subscription(snapshot.cursor.owner.clone(), "competitor".into(), None, deliver.clone()), Err(Reques...
+    |                                                              ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:362:33
+    |
+362 |                 snapshot.cursor.owner.clone(),
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:430:33
+    |
+430 |         assert_ne!(after.cursor.owner, before.cursor.owner);
+    |                                 ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:430:54
+    |
+430 |         assert_ne!(after.cursor.owner, before.cursor.owner);
+    |                                                      ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:433:31
+    |
+433 |                 before.cursor.owner,
+    |                               ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:447:54
+    |
+447 |             desktop.snapshot().await.unwrap().cursor.owner,
+    |                                                      ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+error[E0609]: no field `owner` on type `workspace_core::SnapshotCursor`
+   --> crates/supervisor/tests/discovery.rs:448:26
+    |
+448 |             after.cursor.owner
+    |                          ^^^^^ unknown field
+    |
+    = note: available fields are: `incarnation`, `revision`
+
+For more information about this error, try `rustc --explain E0609`.
+error: could not compile `workspace-supervisor` (test "discovery") due to 14 previous errors
+warning: build failed, waiting for other jobs to finish...

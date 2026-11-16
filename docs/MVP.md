@@ -1,5 +1,14 @@
 # Local agent workspace — MVP product contract
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A2/A3/A6/A9](../.scratch/sqlx-architecture/amendments.md) govern
+hosting, native lifetime, storage and concurrent-work requirements.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 2026-11-12 · Product contract. Milestone documents track implementation and qualification against this scope.
 
 ## User, promise, and decision status
@@ -35,21 +44,60 @@ This follows Conductor's documented [workspace loop](https://www.conductor.build
 | Runtime configuration | Use existing runtime authentication and API-key configuration; explicit user actions may initiate the official runtime's own sign-in flow while credentials remain runtime-owned. Identify the billing route when available; otherwise show unknown. Exercise project/user instructions, skills, hooks, and MCP with recorded results. Show unsupported features honestly; preserve external access to native tools. |
 | Safe lifecycle and responsiveness | Archive only after accounting for all affected chats and confirming owned stop. Save code state, including uncommitted changes, as a local archive commit and retain chat history. Restore the saved workspace/code/history even if the original branch has changed. Local branch deletion on archive is configurable and its consequence is visible; snapshot/storage failure retains the original work and reports failure. Under the concurrency scenario, target navigation feedback within 100 ms and opening recent history within one second on the test Mac; record measurements and versions. |
 
-No product account or GitHub login is needed for local coding. Initially use user-installed official runtimes with version checks. Bundled runtime distribution is deferred; packaging the Claude SDK bridge still needs qualification.
+No product account or GitHub login is needed for local coding. Initially use user-installed official runtimes with version checks. Each concrete provider adapter owns its supported-version policy and required capability checks, following that provider’s documented contract. Allow compatible newer stable releases rather than requiring an exact tested version; use exact version/schema cohorts for qualification evidence. Keep unsupported or uncertain operations blocked with actionable observations. Bundled runtime distribution is deferred; packaging the Claude SDK bridge still needs qualification.
 
 Deliberate reductions from Conductor: no cloud/collaboration, built-in PR creation/merge/checks, full embedded terminal, extension manager, or turn-level code rewind. External editor/terminal handoff keeps the coding loop usable. A full TUI is a later independent client, not an MVP prerequisite. Provider child-agent execution remains runtime-owned; rich child-agent inspection/control is deferred, and cleanup must still account for owned child work.
 
-The full-terminal deferral has one narrow exception: an embedded official-runtime
-authentication terminal. [Milestone 01 ticket 06](../.scratch/milestone-01/issues/06-connect-codex-with-actionable-setup-diagnostics.md)
-adds Codex login only; it ends with the login command and exposes no general shell.
-Its renderer and supervisor-owned process plumbing should support later extension
-to a development terminal without implementing workspace terminals or run/test
-controls now. Navigation preserves pending authentication; explicit cancellation
-requests owned cleanup. API-key setup UI and automatic installation remain outside
-that milestone, while existing runtime configuration stays usable. Claude's
-disabled provider presentation there does not implement Claude integration.
+The current [Codex connection scope](../.scratch/codex-connection/spec.md#authentication-scope-amendment--2026-11-15)
+recognizes existing runtime authentication and offers one explicit official-runtime
+browser sign-in action. Navigation preserves pending authentication; cancellation
+requests owned cleanup and completion requires authoritative verification. The
+separate CLI helper and embedded authentication terminal are deferred along with
+terminal emulation, PTY plumbing and command-output viewers. Select those only
+when a concrete workflow needs them. API-key setup UI and automatic installation
+remain outside Milestone 01, while existing runtime configuration stays usable.
+Claude's disabled provider presentation does not implement Claude integration.
 
 Workspace defaults follow Conductor's [fetch-before-create behavior](https://www.conductor.build/docs/concepts/workspaces-and-branches#branches-and-review); Plan Mode and local diff comments follow its [agent controls](https://www.conductor.build/docs/concepts/agent-modes) and [diff feedback](https://www.conductor.build/docs/reference/diff-viewer). Archive commits and restoration follow its [archive-save behavior](https://www.conductor.build/changelog/0.49.0-conductor-allegro-gpt-5-5), [restoration guarantees](https://www.conductor.build/changelog/0.33.5-better-archiving), and [configurable branch cleanup](https://www.conductor.build/docs/reference/settings/reference). Exact folder-removal mechanics are not established by these sources; preserving/restoring saved work governs implementation choices.
+
+## Development compatibility policy
+
+Accepted 2026-11-16 for the entire MVP and every current or future development
+milestone, feature spec and ticket, through final MVP qualification. Backward
+compatibility with our earlier application builds is never a design,
+implementation, testing or acceptance consideration during this development.
+This supersedes older compatibility obligations anywhere in the repository;
+historical results remain evidence of their original checkpoint.
+
+Build only the current intended design. Change application-owned storage schemas,
+serialized records, internal IPC/generated contracts, configuration and presentation
+preferences directly. Remove obsolete readers, migrations, shims, aliases, dual
+formats and fallback implementations whose only purpose is supporting retired
+application builds. Do not retain compatibility-only tests or add replacement
+fixtures for retired formats. A milestone boundary creates no compatibility promise
+to the preceding milestone, and an old implementation never constrains its replacement.
+
+Use fresh private application state when formats change incompatibly and document
+the exact reset/restart procedure. Disposable development metadata, app-owned history
+and preferences need no migration, import or continued readability. Keeping old
+builds or state is optional investigation convenience, not an acceptance obligation.
+Finish the MVP with one clean current implementation and qualify it from newly
+initialized state, without importing earlier development data or requiring retired
+formats/builds. Record this clean-state check in the final MVP completion evidence;
+its publication here does not claim that check has passed.
+
+Current-build durability, normal reopen/restart/crash recovery, exact action identity,
+owner exclusion and physical cleanup remain requirements: create state with the
+current build and verify that same build recovers it. An incompatible old format
+must produce actionable fresh-state guidance, never silent data reinterpretation.
+Support and qualify the selected external provider protocols/dependencies/platforms;
+that external compatibility is distinct from supporting our retired application builds.
+
+A reset must account for and stop owned work before replacing metadata. Preserve
+repository files, branches/worktrees, runtime-owned credentials/native history and
+retained evidence; disposable app metadata does not make those resources disposable.
+Handle a database and its WAL/SHM as one stopped-owner set and retain owner exclusion
+through cleanup. This policy requires no automatic erase and performs no reset.
 
 ## Starting architecture
 
@@ -57,10 +105,7 @@ Workspace defaults follow Conductor's [fetch-before-create behavior](https://www
 
 **Foundation principle:** each milestone adds a usable capability to the intended product architecture. Build production-intended implementations that later milestones extend. Limit capabilities temporarily while retaining the intended ownership, persistence, and execution seams. Avoid known architectural shortcuts that require replacement in the next milestone; allow refactoring when implementation evidence justifies it. Add concrete implementations as needed rather than speculative frameworks.
 
-Milestone 01 follows its [early-development compatibility policy](MILESTONE-01.md#development-compatibility-policy):
-earlier development storage/contracts/preferences need no backward support or
-migration. Current-build durability/recovery and external runtime compatibility
-remain required; use fresh private development state for incompatible changes.
+Every milestone follows the global [development compatibility policy](#development-compatibility-policy).
 
 Keep one Rust core with concrete modules:
 

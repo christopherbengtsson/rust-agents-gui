@@ -1,0 +1,28 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.37s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-67b7661821e120ff)
+
+running 20 tests
+test runtimes::codex::process::tests::cleanup_escalates_only_while_owned_and_retains_uncertainty ... ok
+test runtimes::codex::process::tests::launch_uses_the_captured_executable_environment_and_neutral_directory_without_a_shell ... ok
+test runtimes::codex::protocol::tests::bounded_frames_reject_malformed_truncated_and_oversized_messages ... ok
+test runtimes::codex::protocol::tests::browser_cancel_during_setup_has_no_effect_and_pending_cancel_uses_native_identity ... ok
+test runtimes::codex::protocol::tests::browser_login_matches_exact_completion_and_never_exports_provider_errors ... ok
+test runtimes::codex::protocol::tests::browser_open_failure_reopens_the_same_url_without_another_login ... ok
+test runtimes::codex::protocol::tests::browser_timeout_uses_controlled_time_and_urls_reject_non_browser_schemes ... ok
+test runtimes::codex::protocol::tests::existing_authentication_is_evidence_not_a_login_or_billing_choice ... ok
+test runtimes::codex::protocol::tests::protocol_never_accepts_an_unrelated_reply_or_a_server_request ... ok
+test runtimes::codex::protocol::tests::rpc_failure_diagnostics_keep_codes_and_discard_provider_messages ... ok
+test runtimes::codex::protocol::tests::setup_commands_are_read_only_and_deadline_is_absolute ... ok
+test runtimes::codex::protocol::tests::version_and_configuration_failures_do_not_invent_authentication_or_billing ... ok
+test runtimes::provider_connection::login::tests::durable_intent_precedes_effects_and_cleanup_failure_preserves_scope_fence ... ok
+test runtimes::provider_connection::login::tests::shutdown_cancels_late_preparation_and_skips_verification_without_replacing_work ... ok
+test runtimes::provider_connection::tests::cancelled_login_retains_last_good_on_failed_verification_and_rejects_stale_cancel ... ok
+test runtimes::provider_connection::tests::diagnostics_retain_source_without_exporting_its_untrusted_message ... ok
+test runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement ... ok
+test runtimes::provider_connection::tests::independent_targets_coalesce_reads_and_reject_late_or_cross_target_evidence ... ok
+test runtimes::provider_connection::tests::login_admission_is_exact_and_fences_checks_and_competing_attempts ... ok
+test runtimes::provider_connection::tests::reconciliation_fences_a_late_start_and_uncertain_cleanup_is_scope_local ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 0.01s
+

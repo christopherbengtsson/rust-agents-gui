@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "reason": "Providers does not consume stopped delivery status; retained Checking stays visible after native completion",
+  "native_observation_from_host_snapshot": {
+    "phase": "observed",
+    "revision": 6,
+    "problem": null
+  },
+  "ui_ax": "stopped-feed-attempt1.ax.txt",
+  "scope": "readiness presentation; no authentication or native policy changes"
+}

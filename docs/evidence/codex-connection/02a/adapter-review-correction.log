@@ -1,0 +1,57 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.03s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-f254d87852bf6363)
+
+running 19 tests
+test runtimes::codex::protocol::tests::bounded_frames_reject_malformed_truncated_and_oversized_messages ... ok
+test runtimes::codex::protocol::tests::browser_cancel_during_setup_has_no_effect_and_pending_cancel_uses_native_identity ... ok
+test runtimes::codex::protocol::tests::browser_login_matches_exact_completion_and_never_exports_provider_errors ... ok
+test runtimes::codex::protocol::tests::browser_open_failure_reopens_the_same_url_without_another_login ... ok
+test runtimes::codex::protocol::tests::browser_timeout_uses_controlled_time_and_urls_reject_non_browser_schemes ... ok
+test runtimes::codex::protocol::tests::cancelled_frame_wait_retains_partial_bytes ... ok
+test runtimes::codex::protocol::tests::capability_probe_keeps_absolute_deadlines_and_cancelled_login_has_no_effect ... ok
+test runtimes::codex::protocol::tests::early_completion_and_success_racing_cancel_preserve_exact_outcome ... ok
+test runtimes::codex::protocol::tests::existing_authentication_is_evidence_not_a_login_or_billing_choice ... ok
+test runtimes::codex::protocol::tests::probe_accepts_additive_fields_without_treating_support_as_authentication ... ok
+test runtimes::codex::protocol::tests::protocol_never_accepts_an_unrelated_reply_or_a_server_request ... ok
+test runtimes::codex::protocol::tests::readiness_proves_gateway_capability_before_reading_authentication ... ok
+test runtimes::codex::protocol::tests::repeated_reopen_cannot_starve_the_absolute_login_deadline ... ok
+test runtimes::codex::protocol::tests::required_probe_failures_block_both_readiness_and_browser_effects ... ok
+test runtimes::codex::protocol::tests::rpc_failure_diagnostics_keep_codes_and_discard_provider_messages ... ok
+test runtimes::codex::protocol::tests::setup_commands_are_read_only_and_deadline_is_absolute ... ok
+test runtimes::codex::protocol::tests::stable_releases_after_the_baseline_do_not_need_an_allowlist ... ok
+test runtimes::codex::protocol::tests::unsupported_versions_and_malformed_output_are_rejected ... ok
+test runtimes::codex::protocol::tests::version_and_configuration_failures_do_not_invent_authentication_or_billing ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.01s
+

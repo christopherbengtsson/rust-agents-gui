@@ -1,0 +1,66 @@
+{
+  "source": "3ac0bc5c155cbd4551e9c400c6fdf880fe9707ec",
+  "dirty": " M .scratch/sqlx-architecture/issues/03-admit-concurrent-workspaces-and-atomic-reservations.md\n?? docs/evidence/sqlx-architecture/03/\n",
+  "profile": "worktree-private default target; warm caches; one Rust harness thread",
+  "checks": [
+    {
+      "label": "node26-environment-node",
+      "command": ["node", "--version"],
+      "exit": 0,
+      "seconds": 0.09119970793835819
+    },
+    {
+      "label": "node26-environment-pnpm",
+      "command": ["corepack", "pnpm", "--version"],
+      "exit": 0,
+      "seconds": 0.12409604201093316
+    },
+    {
+      "label": "node26-complete-verify",
+      "command": ["corepack", "pnpm", "verify"],
+      "exit": 1,
+      "seconds": 6.413361291983165
+    },
+    {
+      "label": "node26-typescript",
+      "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+      "exit": 0,
+      "seconds": 0.5576946249930188
+    },
+    {
+      "label": "node26-tooling-units",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "scripts/cargo.test.mjs",
+        "scripts/check.test.mjs",
+        "scripts/development-state.test.mjs",
+        "scripts/frontend-lint.test.mjs",
+        "scripts/prepare-generated.test.mjs",
+        "scripts/prepare-supervisor.test.mjs",
+        "scripts/react-compiler.test.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.9690514999674633
+    },
+    {
+      "label": "node26-ui-units",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "exit": 0,
+      "seconds": 14.16418733401224
+    },
+    {
+      "label": "node26-lint-final",
+      "command": ["corepack", "pnpm", "lint"],
+      "exit": 0,
+      "seconds": 0.10873675008770078
+    }
+  ],
+  "note": "Rust executable measurements/Clippy and physical qualifications remain in verification-corrected.json; same source, no runtime code changes."
+}

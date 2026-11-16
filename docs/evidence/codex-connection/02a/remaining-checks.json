@@ -1,0 +1,41 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "--locked",
+      "-p",
+      "workspace-core",
+      "--lib",
+      "--features",
+      "codegen",
+      "application_corpus_matches_pure_rust_serialization",
+      "--",
+      "--test-threads=1"
+    ],
+    "exit_code": 0,
+    "seconds": 2.159394249902107
+  },
+  {
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "scripts/cargo.test.mjs",
+      "scripts/check.test.mjs",
+      "scripts/development-state.test.mjs",
+      "scripts/frontend-lint.test.mjs",
+      "scripts/prepare-generated.test.mjs",
+      "scripts/prepare-supervisor.test.mjs",
+      "scripts/react-compiler.test.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.9279482079437003
+  },
+  {
+    "command": ["corepack", "pnpm", "test:ui"],
+    "exit_code": 1,
+    "seconds": 13.34216533403378
+  }
+]

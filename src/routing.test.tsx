@@ -1,6 +1,7 @@
 import {
   validateRepositoryRequest,
   validateWorkspaceRequest,
+  validateProviderRequest,
 } from "./generated/contracts/validators";
 import {
   act,
@@ -21,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./components/ui/dialog";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { object } from "./lib/observation-contracts";
 import { PRESENTATION_KEY } from "./lib/presentation-store";
 import type { RepositoryReply, RepositoryRequest } from "./lib/repositories";
@@ -30,6 +31,10 @@ import type {
   WorkspaceRequest,
   Workspace,
 } from "./lib/workspaces";
+import type {
+  ProviderReply,
+  ProviderRequest,
+} from "./generated/contracts/types";
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
@@ -38,6 +43,12 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: vi.fn() }));
+vi.mock("@tauri-apps/api/event", () => ({
+  listen: vi.fn(async () => () => {}),
+}));
+vi.mock("@tauri-apps/plugin-opener", () => ({
+  openUrl: vi.fn(async () => {}),
+}));
 const repositoryId = "00000000-0000-4000-8000-000000000001";
 const workspaceId = "00000000-0000-4000-8000-000000000002";
 const otherId = "00000000-0000-4000-8000-000000000003";
@@ -66,6 +77,26 @@ const workspacePath = `${repositoryPath}/workspace/${workspaceId}`;
 let repositoryRead: (request: RepositoryRequest) => Promise<RepositoryReply>;
 let workspaceRead: (request: WorkspaceRequest) => Promise<WorkspaceReply>;
 let connected: boolean;
+let providerRead: (request: ProviderRequest) => Promise<ProviderReply>;
+const providerTarget = {
+  id: otherId,
+  provider: "codex",
+  executable: "/fixture/codex",
+  selected_executable: null,
+  discovery_source: "fixture",
+  codex_home: "/fixture/home",
+  working_directory: "/fixture/neutral",
+  minimum_supported_version: "0.169.0",
+};
+const providerEvidence = {
+  version: "0.169.0",
+  authentication: "api_key",
+  billing: "api_key",
+  account: null,
+  plan: null,
+  model_provider: "openai",
+  model: null,
+} as const;
 beforeEach(() => {
   localStorage.clear();
   vi.stubGlobal(
@@ -77,6 +108,22 @@ beforeEach(() => {
     },
   );
   connected = true;
+  providerRead = async (request) =>
+    request.operation === "target"
+      ? { kind: "target", target: providerTarget }
+      : {
+          kind: "observation",
+          observation: {
+            target: providerTarget,
+            revision: 2,
+            phase: "observed",
+            evidence: providerEvidence,
+            diagnostic: null,
+            login: null,
+            selection: null,
+            problem: null,
+          },
+        };
   vi.stubGlobal("matchMedia", (media: string) =>
     Object.assign(new EventTarget(), {
       media,
@@ -99,16 +146,16 @@ beforeEach(() => {
       ? { kind: "workspace", workspace }
       : { kind: "workspaces", page: { workspaces: [], next: null } };
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (command, args) => {
-      if (command === "supervisor_status") {
+    incarnationBound(async (command, args) => {
+      if (command === "core_status") {
         if (!connected) throw new Error("Controlled connection unavailable");
         return {
           status: {
             state: "ready",
-            supervisor_pid: 41,
+            native_pid: 41,
             application_version: "0.1.0",
           },
-          cursor: { owner: "owner-41", revision: 1 },
+          cursor: { incarnation: "incarnation-41", revision: 1 },
           reset: true,
         };
       }
@@ -122,6 +169,11 @@ beforeEach(() => {
         validateRepositoryRequest(args.request)
       )
         return repositoryRead(args.request);
+      if (
+        command === "provider_request" &&
+        validateProviderRequest(args.request)
+      )
+        return providerRead(args.request);
       if (
         command === "workspace_request" &&
         validateWorkspaceRequest(args.request)
@@ -391,6 +443,146 @@ test("activating General keeps one Settings history entry and its return destina
   await user.click(screen.getByRole("button", { name: "Back" }));
   await screen.findByRole("heading", { name: "exact repository", level: 1 });
   expect(history.location.pathname).toBe(repositoryPath);
+});
+
+test("Providers and Claude inspection retain one Settings return entry and cause no provider effects", async () => {
+  const user = userEvent.setup();
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  // Enter Claude directly so inspecting it cannot create even Codex interest.
+  await act(async () => history.replace("/settings/providers?provider=claude"));
+  await screen.findByRole("heading", {
+    name: "Claude connection isn't implemented yet",
+  });
+  expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
+  expect(
+    screen
+      .getByRole("button", { name: "Sign in through browser" })
+      .hasAttribute("disabled"),
+  ).toBe(true);
+  expect(
+    screen
+      .getByRole("button", { name: "Run Claude login" })
+      .hasAttribute("disabled"),
+  ).toBe(true);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(0);
+  await user.click(screen.getByRole("link", { name: "General" }));
+  await screen.findByRole("heading", { name: "General", level: 2 });
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(history.location.pathname).toBe(repositoryPath));
+  await waitFor(() =>
+    expect(document.activeElement).toBe(
+      screen.getByRole("link", { name: "Settings" }),
+    ),
+  );
+});
+
+test("Codex verifies on entry, retains stale evidence on failure and offers contextual recovery", async () => {
+  const user = userEvent.setup();
+  const history = mount(repositoryPath);
+  await screen.findByRole("heading", { name: "exact repository", level: 1 });
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(0);
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  await user.click(screen.getByRole("link", { name: "Providers" }));
+  await screen.findByRole("region", { name: "Codex setup" });
+  await screen.findByText("Connected · Using API key");
+  expect(screen.queryByRole("button", { name: /^Refresh$/ })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Check again" })).toBeNull();
+  expect(screen.queryByText("/fixture/codex")).toBeNull();
+  expect(screen.queryByRole("button", { name: "Setup help" })).toBeNull();
+  expect(screen.getByRole("main", { name: "Providers" })).toBeTruthy();
+  providerRead = async (request) =>
+    request.operation === "target"
+      ? { kind: "target", target: providerTarget }
+      : {
+          kind: "observation",
+          observation: {
+            target: providerTarget,
+            revision: 4,
+            phase: "observed",
+            evidence: providerEvidence,
+            diagnostic: null,
+            login: null,
+            selection: null,
+            problem: "status_read_failed",
+          },
+        };
+  await user.click(screen.getByRole("tab", { name: "Claude Code" }));
+  await user.click(screen.getByRole("tab", { name: "Codex" }));
+  await screen.findByText("Couldn’t verify Codex");
+  expect(screen.queryByText("Billing")).toBeNull();
+  expect(screen.queryByText("Connected")).toBeNull();
+  await user.click(screen.getByRole("button", { name: "Technical details" }));
+  expect(screen.getByText("/fixture/codex")).toBeTruthy();
+  await user.click(screen.getByRole("button", { name: "Check again" }));
+  await screen.findByText("Couldn’t verify Codex");
+  const before = vi
+    .mocked(invoke)
+    .mock.calls.filter(([name]) => name === "provider_request").length;
+  await user.click(screen.getByRole("tab", { name: "Claude Code" }));
+  await screen.findByRole("heading", {
+    name: "Claude connection isn't implemented yet",
+  });
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([name]) => name === "provider_request"),
+  ).toHaveLength(before);
+  await user.click(screen.getByRole("link", { name: "General" }));
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(history.location.pathname).toBe(repositoryPath));
+  const requests = vi
+    .mocked(invoke)
+    .mock.calls.filter(([name]) => name === "provider_request")
+    .map(([, args]) => (object(args) ? args.request : undefined));
+  expect(requests).toContainEqual({
+    operation: "observe",
+    target_id: otherId,
+    refresh: true,
+  });
+  expect(
+    requests.every(
+      (request) =>
+        object(request) &&
+        (request.operation === "target" || request.operation === "observe"),
+    ),
+  ).toBe(true);
+});
+
+test("Settings skip link focuses its landmark without replacing return provenance", async () => {
+  const user = userEvent.setup();
+  const history = mount(workspacePath);
+  await screen.findByRole("heading", { name: "exact workspace", level: 1 });
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  await screen.findByRole("heading", { name: "Settings", level: 1 });
+  const href = history.location.href;
+  await user.click(screen.getByRole("link", { name: "Skip to settings" }));
+  expect(document.activeElement).toBe(
+    screen.getByRole("main", { name: "General" }),
+  );
+  expect(history.location.href).toBe(href);
+  await user.click(screen.getByRole("link", { name: "Providers" }));
+  await screen.findByRole("tab", { name: "Claude Code" });
+  await user.click(screen.getByRole("tab", { name: "Claude Code" }));
+  await user.click(screen.getByRole("link", { name: "General" }));
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(history.location.pathname).toBe(workspacePath));
+  await waitFor(() =>
+    expect(document.activeElement).toBe(
+      screen.getByRole("link", { name: "Settings" }),
+    ),
+  );
 });
 
 test("Settings ignores prevented, composing and repeated Escape events", async () => {
@@ -778,11 +970,11 @@ test("route preloading prepares through feature interests without navigation or 
   const { AppObservations } = await import("./lib/app-observations");
   const { createAppRouter } = await import("./router");
   const app = new AppObservations();
-  app.connect("owner-41");
+  app.connect("incarnation-41");
   app.accept({
     subscription_id: "fixture",
     batch_id: 1,
-    cursor: { owner: "owner-41", sequence: 1 },
+    cursor: { incarnation: "incarnation-41", sequence: 1 },
     sample: { kind: "resync_required", watermark: 1 },
   });
   const history = createMemoryHistory({ initialEntries: ["/"] });
@@ -797,7 +989,7 @@ test("route preloading prepares through feature interests without navigation or 
   });
   await waitFor(() =>
     expect(
-      app.workspaces.isCurrent("owner-41", {
+      app.workspaces.isCurrent("incarnation-41", {
         operation: "get",
         id: workspaceId,
       }),
@@ -808,7 +1000,7 @@ test("route preloading prepares through feature interests without navigation or 
   app.accept({
     subscription_id: "fixture",
     batch_id: 2,
-    cursor: { owner: "owner-41", sequence: 2 },
+    cursor: { incarnation: "incarnation-41", sequence: 2 },
     sample: {
       kind: "hints",
       watermark: 2,
@@ -920,7 +1112,7 @@ test("Settings releases collection interests, retains dirty generations and refr
       batch: {
         subscription_id: subscription.subscriptionId,
         batch_id: 2,
-        cursor: { owner: "owner-41", sequence: 2 },
+        cursor: { incarnation: "incarnation-41", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,
@@ -1008,7 +1200,7 @@ test("direct Settings keeps retained action status interested without reading hi
       batch: {
         subscription_id: subscription.subscriptionId,
         batch_id: 2,
-        cursor: { owner: "owner-41", sequence: 2 },
+        cursor: { incarnation: "incarnation-41", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,
@@ -1086,7 +1278,7 @@ test("Settings retains uncertain workspace action lookup without hidden reads or
       batch: {
         subscription_id: subscription.subscriptionId,
         batch_id: 2,
-        cursor: { owner: "owner-41", sequence: 2 },
+        cursor: { incarnation: "incarnation-41", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,

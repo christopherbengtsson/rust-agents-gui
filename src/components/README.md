@@ -1,5 +1,14 @@
 # Component guide
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A4/A5](../../.scratch/sqlx-architecture/amendments.md) govern
+supervisor diagnostics/owner fields and browser-sign-in native-crash lifetime.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Read this guide before choosing, creating, styling, moving, updating, or reviewing
 frontend components. It owns the repository's component conventions. Use the
 [React skill](../../.agents/skills/react-engineering/SKILL.md) for state and lifecycle
@@ -129,9 +138,9 @@ This guide does not authorize regenerating or relocating the foundation.
   preserves selection. Unavailable records remain selectable. Cursor buttons page
   the bounded list. Add repository sits above the connection summary. Ticket 04
   adds workspace children to these groups.
-- **SupervisorConnection** (`blocks/supervisor-connection.tsx`): owns connection
-  summary and diagnostics. Use for supervisor observations, not conversation or
-  runtime status. Receives `Connection`; dialog disclosure stays local and stale
+- **CoreConnection** (`blocks/core-connection.tsx`): owns native core
+  summary and diagnostics. Use for startup/storage/runtime ownership observations;
+  provider readiness and conversation status retain their separate owners. Receives `Connection`; dialog disclosure stays local and stale
   observations remain explicitly labeled. Its sidebar parent owns external
   padding and the divider. `ConnectionDetails` remains private to this block.
 - **WorkspacePanel** (`blocks/workspace-panel.tsx`): owns the main landmark,
@@ -345,7 +354,7 @@ interest while its app-lifetime owner drains work and retains validated context.
   behavior without claiming focus return for the current window.
 - **SettingsLayout** (`blocks/settings-layout.tsx`) owns the Settings header,
   Back control, navigation and main landmark. Use it for routed app settings;
-  use WorkspacePanel for repository/workspace presentation and SupervisorConnection
+  use WorkspacePanel for repository/workspace presentation and CoreConnection
   for transport diagnostics. It receives `onBack: () => void` and route content;
   the General content supplies `settings-general-heading` for the main landmark.
   At the F07 checkpoint, General is the only section and uses Empty with honest
@@ -372,8 +381,9 @@ interest while its app-lifetime owner drains work and retains validated context.
   Their [shared journey](../../.scratch/codex-connection/spec.md#connection-journey)
   owns provider presentation, login controls and progress continuity. Connection 01
   extends Settings landmark labels and return/focus/context behavior; 02 adds
-  browser progress/cancellation; 03 adds the login-terminal renderer under Rust
-  process ownership; 04 qualifies the combined desktop interaction. Each slice
+  browser progress/cancellation; 02a adds runtime compatibility; 04 qualifies the
+  combined desktop interaction. The current connection scope defers 03's
+  CLI/terminal renderer and command-output viewer. Each slice
   uses existing UI/primitives/tokens and documents actual new block contracts
   when implemented. Supervisor diagnostics stay separate. These are planned
   successor contracts; F07 implemented no provider setup.
@@ -382,3 +392,119 @@ interest while its app-lifetime owner drains work and retains validated context.
   setup links explicitly target a provider. All setup/progress consumers use the
   [shared provider observation module](../../.scratch/codex-connection/spec.md#architecture-and-extension-constraints)
   planned on the existing foundation; blocks do not own login attempts or another cache.
+
+### Provider readiness (connection 01)
+
+- **ProviderSetup** (`blocks/provider-setup.tsx`) presents one exact Codex/user
+  configuration's current/retained evidence, contextual Check again, recovery guidance and secondary
+  technical details. Use it for provider setup; CoreConnection remains
+  transport diagnostics and WorkspaceDetails remains workspace identity/recovery.
+  It receives the cohesive `useProviderSetup` view and callback, owns no IPC,
+  cache, retry or process policy, and renders runtime strings as bounded text.
+  Existing Tabs (line variant), Alert, Button and Collapsible retain their Base UI
+  contracts. No toolkit component was added or regenerated. Official documentation actions use the scoped native opener for exactly the
+  two fixed Codex installation/authentication URLs; no provider-return deep link
+  or login flow is added. Opener automatic link interception is disabled.
+- **ClaudeSetup** is an informational section with genuinely disabled connection
+  controls. Its route mounts no provider hook and sends no Claude request.
+- **SettingsLayout** accepts the current `general | providers` section for its
+  landmark label. Section and provider-tab changes replace the current Settings
+  history entry, retaining the initial return/focus provenance. Tab selection
+  lives in Router search; Query owns setup evidence. The workspace's “Check Codex
+  setup” link explicitly targets the Codex user setup without a workspace provider
+  field or automatic provider read on workspace mount.
+- **ProviderObservations** is constructed once by AppObservations and uses its
+  shared Query client, feature freshness, accepted feed and physical scheduler.
+  `useProviderSetup` acquires/releases presentation interests. A committed Codex-tab
+  activation requests one fresh check with the existing targeted refresh operation
+  before attaching readiness interest. Entry intent and attachment markers are scoped
+  by owner/target, so a replacement cannot inherit the previous scope's presentation.
+  Same-scope transport detachment retains the visible readiness interest and its
+  undispatched force flag. Navigation or actual scope replacement releases it.
+  Deferred setup skips disposed mounts; effect identity uses stable target IDs.
+  Query remains the sole evidence cache. Initial entry pending feedback prevents
+  retained healthy evidence from appearing current before the check. Preload reads
+  only the default descriptor; rerenders, feed updates and reconnect do not replay
+  the entry intent. Returning from another tab/route is a new activation. Rust owns
+  probe admission/coalescing, last-good evidence and cleanup fencing. User setup runs from a private neutral
+  directory, with captured executable/environment/Codex home; project overrides
+  and account/profile management are outside this slice.
+
+### Provider presentation refinement
+
+- **StatusIndicator** (`primitives/status-indicator.tsx`) owns the inline decorative
+  light, static success halo and polite atomic text announcement. Use for observed
+  readiness, supplying `tone: success | neutral | error` and a text `label`; use
+  Badge for enclosed labels/tags and Spinner for busy actions. The caller interprets
+  evidence. `className` supplies placement; the primitive owns appearance through
+  shared semantic tokens and has no IPC, hook or process dependency.
+- **ProviderSetup** uses one status line and compact account/billing facts. Healthy
+  setup has no Refresh, including in disclosures. Checking/stale evidence is Last
+  known; recovery offers Check again only when connected and not checking/fenced.
+  Read failures override retained runtime Checking for recovery; an actual retry
+  shows Checking alongside the retained failure and withholds another Check again
+  until that read settles. CodexSetup supplies existing feed availability to the
+  hook; unavailable delivery forces stale/non-pending presentation and visible
+  supervisor-reconnection guidance, without changing interest/intent lifetimes.
+  Cleanup uncertainty still fences retry. Technical details
+  and general Setup help start collapsed. Recovery, help-opening
+  errors and future login controls remain outside the disclosures. The scoped
+  documentation opener and all Settings return/focus contracts are unchanged.
+- The [shared connection journey](../../.scratch/codex-connection/spec.md#presentation-refinement--2026-11-15)
+  supersedes earlier retained-only navigation and permanent-Refresh requirements.
+  02 adds the visible browser sign-in action beneath readiness and coordinates
+  its attempts with checks in Rust; 04 qualifies the combined UI. The current
+  [scope amendment](../../.scratch/codex-connection/spec.md#authentication-scope-amendment--2026-11-15)
+  defers the CLI choice and terminal work formerly assigned to 03.
+
+### Browser sign-in (connection 02)
+
+- **ProviderSignIn** presents the explained ChatGPT browser action, exact-attempt
+  progress, reopening, cancellation and reconciliation. Use below readiness and
+  account facts, outside Setup help. It receives observations and targeted
+  callbacks; it owns no authentication, URL, process or retry policy. Button,
+  Alert and Spinner retain their existing Base UI contracts. CLI controls and
+  ticket 03 are deferred from the current connection scope. A completed browser
+  attempt and current verified readiness are
+  separate facts; verification failure keeps account evidence Last known.
+- **AppRuntime** presents a compact progress link above routed content while
+  authoritative sign-in or uncertain delivery/cleanup is pending. Providers,
+  General and workspace navigation preserve the same attempt and Settings return
+  provenance. Native shutdown progress/failure remains visible here too. Window
+  close hides; explicit Quit requests supervisor-owned cleanup and waits for
+  owner release. A desktop crash leaves the supervisor-owned attempt running.
+- **ProviderObservations** retains identity-only pending-action interests before
+  dispatch, reconciles lost replies without replay and keeps Query as the only
+  observation cache. Pure status reads cannot start readiness checks; committed
+  Codex activation still requests its explicit bounded check. A supervisor
+  snapshot advertises pending provider login so a reopened desktop can recover
+  progress without probing providers on an ordinary workspace mount. The native
+  owner opens and retains the returned URL; JavaScript receives no auth URL or
+  native login ID. Unconfirmed cleanup fences its credential scope.
+
+### Codex connection refinement (05)
+
+ProviderSetup now presents the agreed status/recovery matrix and whole-section
+Skeleton while a check runs. Healthy setup contains only Connected and available
+identity (or Using API key); billing and general help are absent. Pending browser
+sign-in and cleanup/delivery uncertainty remain actionable rather than loading
+placeholders. StatusIndicator adds semantic warning alongside success/error.
+Focus recovery stays within the mounted section and yields to navigation or user
+focus movement. Recovery diagnostics remain collapsed and do not grant retry authority.
+
+Already installed? composes the existing Collapsible and Button. Locate Codex…
+uses the installed native file chooser through useProviderSelection, guarding late
+results by owner/target/view generation. The provider feature owns identity-only
+selection delivery feedback and observation interests; Rust validates, persists
+and reconciles selection. No extra cache or toolkit dependency is added. A saved
+location becoming unavailable never silently selects another runtime. Native
+chooser cancellation changes nothing; selected path and resolved launch are distinct.
+
+### Native core host (SQLx 06)
+
+CoreConnection replaces supervisor diagnostics with native startup/storage/runtime
+status. The persistent runtime attaches only when ready, retains last-good data
+when unavailable, and exposes the existing status refresh control. Provider setup
+and browser progress remain separate. WebView replacement observes the same core
+incarnation; native failure creates a new one and restores interrupted/unknown
+evidence. Explicit Quit uses whole-core drain; hide/navigation release no work.

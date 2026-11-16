@@ -1,0 +1,13 @@
+{
+  "result": "passed",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "fixture_root": "/private/tmp/aw-core01-ynefvz8g",
+  "protocol": 15,
+  "checks": [
+    "actual same-root process exclusion",
+    "lost request retains active Git; repeated Quit pending; admission fenced; lease retained",
+    "whole-core physical drain and process exit",
+    "fresh current-build restart reacquires lease and retains admitted action outcome"
+  ],
+  "seconds": 0.505173375015147
+}

@@ -1,0 +1,326 @@
+{
+  "root": "/private/tmp/aw-native06-q23ckiyu",
+  "bundle": "/private/tmp/aw-native06-q23ckiyu/Native06.app",
+  "repository": "/private/tmp/aw-native06-q23ckiyu/repository",
+  "source": "97265159cbfcc0998df66b861eb119cae1dd910a",
+  "binary_sha256": "121b7152cde9d421d8ed86cad79d36c9a54941e68a2b605b296c356d97e0f9a3",
+  "fixture_sha256": "cfeb46bd02d2cdae024197874c7dfd26a2d1117d4e18075c152cc4748703cf30",
+  "checks": [],
+  "processes": [
+    {
+      "label": "initial",
+      "pid": 93986
+    }
+  ],
+  "records": "/private/tmp/aw-native06-q23ckiyu/webview.jsonl",
+  "limits": [
+    "Synthetic Codex protocol; no real authentication/agent calls",
+    "SIGKILL establishes process-crash recovery, not power loss",
+    "Retained supervisor resource is unreachable; deletion/package audit belongs to ticket 07"
+  ],
+  "outcome": "failed",
+  "error": "TimeoutError(('cancelled', [{'pid': 93986, 'snapshot': {'cursor': {'incarnation': '012e89ae-3f41-4181-8a6b-b8b1b27ab390', 'revision': 1}, 'reset': True, 'status': {'application_version': '0.1.0', 'native_pid': 93986, 'state': 'ready'}}, 'stage': 'startup'}, {'concurrent': [{'action': {'action_id': 'df376e83-90bd-44c6-87de-bdecf8fa2f55', 'operation': 'create', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'unknown', 'folder': 'unknown'}, 'base': None, 'branch': None, 'cleanup_unconfirmed': False, 'creation_action_id': 'df376e83-90bd-44c6-87de-bdecf8fa2f55', 'id': '96d31138-6e5c-499e-884c-899179bae2f3', 'legacy': False, 'name': None, 'path': None, 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0', 'status': {'state': 'queued'}}}, {'action': {'action_id': '22fd6016-9b44-4034-9c6b-3b70b68484f0', 'operation': 'create', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'unknown', 'folder': 'unknown'}, 'base': None, 'branch': None, 'cleanup_unconfirmed': False, 'creation_action_id': '22fd6016-9b44-4034-9c6b-3b70b68484f0', 'id': '2e67656e-66fa-4508-b052-7413af37ec31', 'legacy': False, 'name': None, 'path': None, 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0', 'status': {'state': 'queued'}}}, {'kind': 'changes', 'observation': {'error': None, 'page': None, 'phase': 'queued', 'workspace_id': 'a2512ff8-ad1b-4027-ae5e-81a65fc65080'}}], 'created': [{'action': {'action_id': 'df376e83-90bd-44c6-87de-bdecf8fa2f55', 'operation': 'create', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'owned', 'folder': 'worktree'}, 'base': {'commit': 'abf3061b0bb22a4816c5aff9a116b94d7591a980', 'reference': 'refs/heads/main'}, 'branch': 'workspace/carlos-alberto', 'cleanup_unconfirmed': False, 'creation_action_id': 'df376e83-90bd-44c6-87de-bdecf8fa2f55', 'id': '96d31138-6e5c-499e-884c-899179bae2f3', 'legacy': False, 'name': 'carlos-alberto', 'path': '/private/tmp/aw-native06-q23ckiyu/state/workspaces/repository/carlos-alberto/checkout', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0', 'status': {'state': 'ready'}}}, {'action': {'action_id': '22fd6016-9b44-4034-9c6b-3b70b68484f0', 'operation': 'create', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'owned', 'folder': 'worktree'}, 'base': {'commit': 'abf3061b0bb22a4816c5aff9a116b94d7591a980', 'reference': 'refs/heads/main'}, 'branch': 'workspace/socrates', 'cleanup_unconfirmed': False, 'creation_action_id': '22fd6016-9b44-4034-9c6b-3b70b68484f0', 'id': '2e67656e-66fa-4508-b052-7413af37ec31', 'legacy': False, 'name': 'socrates', 'path': '/private/tmp/aw-native06-q23ckiyu/state/workspaces/repository/socrates/checkout', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0', 'status': {'state': 'ready'}}}], 'initial': {'kind': 'workspace', 'workspace': {'artifacts': {'branch': 'owned', 'folder': 'worktree'}, 'base': {'commit': 'abf3061b0bb22a4816c5aff9a116b94d7591a980', 'reference': 'refs/heads/main'}, 'branch': 'workspace/anja-mittag', 'cleanup_unconfirmed': False, 'creation_action_id': '78283fa3-fdbb-4701-9615-873e9da3fa50', 'id': 'a2512ff8-ad1b-4027-ae5e-81a65fc65080', 'legacy': False, 'name': 'anja-mittag', 'path': '/private/tmp/aw-native06-q23ckiyu/state/workspaces/repository/anja-mittag/checkout', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0', 'status': {'state': 'ready'}}}, 'registration': {'action_id': '1a6e4b4c-d3ce-40a2-9a86-42f40aa70eef', 'create_initial_workspace': True, 'initial_workspace_id': 'a2512ff8-ad1b-4027-ae5e-81a65fc65080', 'path': '/private/tmp/aw-native06-q23ckiyu/repository', 'repository_id': '8b341d7e-ef9e-46af-9222-c0eac4c4e9b0', 'state': 'completed'}, 'stage': 'workspaces'}, {'attempt': '7ddd5e13-b1ed-4a30-bc21-acfb86cd4833', 'incarnation': '012e89ae-3f41-4181-8a6b-b8b1b27ab390', 'observation': {'diagnostic': None, 'evidence': {'account': None, 'authentication': 'unavailable', 'billing': 'unknown', 'model': 'fixture-model', 'model_provider': 'openai', 'plan': None, 'version': '0.169.0'}, 'login': {'browser_open_failed': False, 'diagnostic': None, 'id': '7ddd5e13-b1ed-4a30-bc21-acfb86cd4833', 'outcome': None, 'phase': 'pending'}, 'phase': 'observed', 'problem': 'authentication_unavailable', 'revision': 4, 'selection': None, 'target': {'codex_home': 'Fixture-owned configuration', 'discovery_source': 'fixture', 'executable': '/private/tmp/aw-native06-q23ckiyu/synthetic-codex', 'id': '16589445-9cb9-44a1-b123-3ee9a19cf3c4', 'minimum_supported_version': '0.169.0', 'provider': 'codex', 'selected_executable': None, 'working_directory': '/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-16589445-9cb9-44a1-b123-3ee9a19cf3c4'}}, 'stage': 'replace-ready', 'text': 'Skip to settings\\nCodex sign-in in progress\\nBack\\nSettings\\nGeneral\\nProviders\\nGeneral\\nGeneral settings will be available here.'}]))",
+  "fixture_events": [
+    {
+      "pid": 94938,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 94939,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 94939,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 94939,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 94939,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 94939,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 94939,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 94939,
+      "event": "exit"
+    },
+    {
+      "pid": 94940,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 94941,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 94941,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 94941,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 94941,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 94941,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 94941,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 94941,
+      "event": "login_cancelled",
+      "login_id": "0322b29c-cdf2-4033-a2b5-f866236c623c"
+    },
+    {
+      "pid": 94941,
+      "event": "exit"
+    }
+  ],
+  "webview_records": [
+    {
+      "pid": 93986,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "012e89ae-3f41-4181-8a6b-b8b1b27ab390",
+          "revision": 1
+        },
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 93986,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "concurrent": [
+        {
+          "action": {
+            "action_id": "df376e83-90bd-44c6-87de-bdecf8fa2f55",
+            "operation": "create",
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "base": null,
+            "branch": null,
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "df376e83-90bd-44c6-87de-bdecf8fa2f55",
+            "id": "96d31138-6e5c-499e-884c-899179bae2f3",
+            "legacy": false,
+            "name": null,
+            "path": null,
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0",
+            "status": {
+              "state": "queued"
+            }
+          }
+        },
+        {
+          "action": {
+            "action_id": "22fd6016-9b44-4034-9c6b-3b70b68484f0",
+            "operation": "create",
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "base": null,
+            "branch": null,
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "22fd6016-9b44-4034-9c6b-3b70b68484f0",
+            "id": "2e67656e-66fa-4508-b052-7413af37ec31",
+            "legacy": false,
+            "name": null,
+            "path": null,
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0",
+            "status": {
+              "state": "queued"
+            }
+          }
+        },
+        {
+          "kind": "changes",
+          "observation": {
+            "error": null,
+            "page": null,
+            "phase": "queued",
+            "workspace_id": "a2512ff8-ad1b-4027-ae5e-81a65fc65080"
+          }
+        }
+      ],
+      "created": [
+        {
+          "action": {
+            "action_id": "df376e83-90bd-44c6-87de-bdecf8fa2f55",
+            "operation": "create",
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "owned",
+              "folder": "worktree"
+            },
+            "base": {
+              "commit": "abf3061b0bb22a4816c5aff9a116b94d7591a980",
+              "reference": "refs/heads/main"
+            },
+            "branch": "workspace/carlos-alberto",
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "df376e83-90bd-44c6-87de-bdecf8fa2f55",
+            "id": "96d31138-6e5c-499e-884c-899179bae2f3",
+            "legacy": false,
+            "name": "carlos-alberto",
+            "path": "/private/tmp/aw-native06-q23ckiyu/state/workspaces/repository/carlos-alberto/checkout",
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0",
+            "status": {
+              "state": "ready"
+            }
+          }
+        },
+        {
+          "action": {
+            "action_id": "22fd6016-9b44-4034-9c6b-3b70b68484f0",
+            "operation": "create",
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "owned",
+              "folder": "worktree"
+            },
+            "base": {
+              "commit": "abf3061b0bb22a4816c5aff9a116b94d7591a980",
+              "reference": "refs/heads/main"
+            },
+            "branch": "workspace/socrates",
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "22fd6016-9b44-4034-9c6b-3b70b68484f0",
+            "id": "2e67656e-66fa-4508-b052-7413af37ec31",
+            "legacy": false,
+            "name": "socrates",
+            "path": "/private/tmp/aw-native06-q23ckiyu/state/workspaces/repository/socrates/checkout",
+            "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0",
+            "status": {
+              "state": "ready"
+            }
+          }
+        }
+      ],
+      "initial": {
+        "kind": "workspace",
+        "workspace": {
+          "artifacts": {
+            "branch": "owned",
+            "folder": "worktree"
+          },
+          "base": {
+            "commit": "abf3061b0bb22a4816c5aff9a116b94d7591a980",
+            "reference": "refs/heads/main"
+          },
+          "branch": "workspace/anja-mittag",
+          "cleanup_unconfirmed": false,
+          "creation_action_id": "78283fa3-fdbb-4701-9615-873e9da3fa50",
+          "id": "a2512ff8-ad1b-4027-ae5e-81a65fc65080",
+          "legacy": false,
+          "name": "anja-mittag",
+          "path": "/private/tmp/aw-native06-q23ckiyu/state/workspaces/repository/anja-mittag/checkout",
+          "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0",
+          "status": {
+            "state": "ready"
+          }
+        }
+      },
+      "registration": {
+        "action_id": "1a6e4b4c-d3ce-40a2-9a86-42f40aa70eef",
+        "create_initial_workspace": true,
+        "initial_workspace_id": "a2512ff8-ad1b-4027-ae5e-81a65fc65080",
+        "path": "/private/tmp/aw-native06-q23ckiyu/repository",
+        "repository_id": "8b341d7e-ef9e-46af-9222-c0eac4c4e9b0",
+        "state": "completed"
+      },
+      "stage": "workspaces"
+    },
+    {
+      "attempt": "7ddd5e13-b1ed-4a30-bc21-acfb86cd4833",
+      "incarnation": "012e89ae-3f41-4181-8a6b-b8b1b27ab390",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "7ddd5e13-b1ed-4a30-bc21-acfb86cd4833",
+          "outcome": null,
+          "phase": "pending"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 4,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native06-q23ckiyu/synthetic-codex",
+          "id": "16589445-9cb9-44a1-b123-3ee9a19cf3c4",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-16589445-9cb9-44a1-b123-3ee9a19cf3c4"
+        }
+      },
+      "stage": "replace-ready",
+      "text": "Skip to settings\nCodex sign-in in progress\nBack\nSettings\nGeneral\nProviders\nGeneral\nGeneral settings will be available here."
+    }
+  ],
+  "exit_codes": {
+    "93986": 101
+  }
+}

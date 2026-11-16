@@ -1,0 +1,59 @@
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+   Compiling libsqlite3-sys v0.37.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling workspace-supervisor v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/supervisor)
+    Finished `release` profile [optimized] target(s) in 19.18s
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.6045ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.334792ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.117208ms)
+✔ a failed static gate prevents later application units (0.140292ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.293917ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.114084ms)
+✖ packaging claims the selected Cargo target without a staged executable (19280.642ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19333.545625
+
+✖ failing tests:
+
+test at scripts/check.test.mjs:146:1
+✖ packaging claims the selected Cargo target without a staged executable (19280.642ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target'
+  - '/private/owned-target'
+  
+      at run (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.test.mjs:154:14)
+      at build (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/build.mjs:15:18)
+      at TestContext.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.test.mjs:148:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target',
+    expected: '/private/owned-target',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

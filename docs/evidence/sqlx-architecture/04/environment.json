@@ -1,0 +1,64 @@
+{
+  "commands": [
+    {
+      "command": ["uname", "-a"],
+      "exit": 0,
+      "output": "Darwin Christophers-MacBook-Pro.local 25.2.0 Darwin Kernel Version 25.2.0: Tue Nov 18 21:09:56 PST 2025; root:xnu-12377.61.12~1/RELEASE_ARM64_T6041 arm64\n"
+    },
+    {
+      "command": ["sysctl", "hw.model", "hw.ncpu", "hw.memsize"],
+      "exit": 0,
+      "output": "hw.model: Mac16,8\nhw.ncpu: 12\nhw.memsize: 51539607552\n"
+    },
+    {
+      "command": ["sw_vers"],
+      "exit": 0,
+      "output": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56\n"
+    },
+    {
+      "command": ["rustc", "--version"],
+      "exit": 0,
+      "output": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\n"
+    },
+    {
+      "command": ["cargo", "--version"],
+      "exit": 0,
+      "output": "cargo 1.99.1 (5f94df478 2026-08-27)\n"
+    },
+    {
+      "command": ["node", "--version"],
+      "exit": 0,
+      "output": "v26.13.1\n"
+    },
+    {
+      "command": ["corepack", "pnpm", "--version"],
+      "exit": 0,
+      "output": "12.18.0\n"
+    },
+    {
+      "command": ["git", "--version"],
+      "exit": 0,
+      "output": "git version 2.50.0\n"
+    },
+    {
+      "command": ["git", "rev-parse", "HEAD"],
+      "exit": 0,
+      "output": "f3fd165d7c9c0fc4c327a0ce36555b25e01ebb24\n"
+    },
+    {
+      "command": ["git", "branch", "--show-current"],
+      "exit": 0,
+      "output": "sqlx-storage-cutover\n"
+    }
+  ],
+  "profile": "default worktree-private target; warm cache; serial gate execution",
+  "review_baseline": "f3fd165d7c9c0fc4c327a0ce36555b25e01ebb24",
+  "qualify-storage": {
+    "path": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-storage",
+    "sha256": "a9aab9efeb268e86d1b269b9346eac04ee82191b56fe2f66450dbbc7cc7bf27a"
+  },
+  "qualify-workspaces": {
+    "path": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-workspaces",
+    "sha256": "750a8d6fd44f6294a8c0024a29f656ab480b1ece49170c80079e35b7a281f28f"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "[DEBUG-aw04]-attach": "{\"root\":true,\"viewport\":true}",
+  "[DEBUG-aw04]-scroll": "{\"slot\":\"scroll-area-viewport\",\"top\":1360,\"root\":\"scroll-area\"}",
+  "agent-workspace.presentation": "{\"state\":{\"inspection\":{\"5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a\":{\"id\":\"30ef23f7-e745-4319-9949-b65426298bb0\",\"path\":\"reading.txt\",\"comparison\":\"1b9bc10e-4523-417c-ba5c-894c30b34758\"}},\"contexts\":{\"5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a\":{\"view\":\"changes\",\"filesWidth\":32,\"collapsed\":false}},\"rememberedMain\":{\"kind\":\"workspace\",\"repositoryId\":\"6039a2e2-08e0-4956-a178-fc23ad1906a9\",\"workspaceId\":\"5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a\",\"view\":\"changes\"}},\"version\":2}"
+}

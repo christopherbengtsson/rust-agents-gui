@@ -1,0 +1,28 @@
+   Compiling workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+error: future cannot be sent between threads safely
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/coordinator.rs:74:31
+    |
+ 74 |                         tasks.spawn(async move {
+    |                               ^^^^^ future created by async block is not `Send`
+    |
+    = help: within `{async block@coordinator.rs:74:37}`, the trait `std::marker::Send` is not implemented for `std::sync::MutexGuard<'_, workspaces::OwnerState>`
+note: future is not `Send` as this value is used across an await
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces/coordinator.rs:195:101
+    |
+193 |     if let Err(error) = validate(&*lock_state(&shared)?, action.action_id, generation) {
+    |                                    -------------------- has type `OwnerGuard<'_>` which is not `Send`
+194 |         action.state = RegistrationState::Failed { error };
+195 |         save(store.as_ref(), Write::RegistrationFinish { action, repository: None, initial: None }).await?;
+    |                                                                                                     ^^^^^ await occurs here, with `lock_state(&shared)?` maybe used later
+note: required by a bound in `JoinSet::<T>::spawn`
+   --> /Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.54.1/src/task/join_set.rs:145:12
+    |
+142 |     pub fn spawn<F>(&mut self, task: F) -> AbortHandle
+    |            ----- required by a bound in this associated function
+...
+145 |         F: Send + 'static,
+    |            ^^^^ required by this bound in `JoinSet::<T>::spawn`
+    = note: the full name for the type has been written to '/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_checkpoint-3556478261f8675c.long-type-8782385809540669565.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error: could not compile `workspace-checkpoint` (lib test) due to 1 previous error

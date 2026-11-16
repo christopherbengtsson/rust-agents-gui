@@ -1,0 +1,44 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 link Codex sign-in needs attention, Value: tauri://localhost/settings/providers?provider=codex
+			5 container
+				6 button Back
+				7 heading Settings, Value: 1
+					8 text Settings
+			9 container Settings
+				10 link General, Value: tauri://localhost/settings/general
+				11 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			12 container Providers
+				13 heading Providers, Value: 2
+					14 text Providers
+				15 tab group (selectable) Provider
+					16 tab (selected) Codex
+					17 tab (selectable) Claude Code
+				18 container Codex
+					19 container Codex setup
+						20 text Readiness unknown
+						21 container ChatGPT sign-in
+							22 heading ChatGPT, Value: 3
+								23 text ChatGPT
+							24 text Sign in through your browser.
+							25 text Your existing Codex setup stays in use until the runtime verifies a change.
+							26 text Sign-in cleanup unconfirmed
+							27 text The previous supervisor lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped.
+						28 button (collapsed) Technical details, Secondary Actions: Expand
+						29 button (collapsed) Setup help, Secondary Actions: Expand
+	30 close button
+	31 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	32 minimize button
+	33 text Agent Workspace
+34 menu bar
+	35 Connection Journey
+	36 File
+	37 Edit
+	38 View
+	39 Window
+	40 Help
+
+The focused UI element is 7 heading Settings, Value: 1

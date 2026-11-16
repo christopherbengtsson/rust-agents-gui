@@ -1,0 +1,277 @@
+   Compiling ts-rs-macros v12.0.1
+   Compiling tauri v2.12.5
+   Compiling tauri-macros v2.7.4
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+    Checking workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+    Checking ts-rs v12.0.1
+   Compiling tauri-plugin-fs v2.7.1
+   Compiling tauri-plugin-opener v2.7.3
+    Checking workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Checking storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+   Compiling tauri-plugin-dialog v2.8.4
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error: field `0` is never read
+  --> crates/core/src/storage.rs:45:13
+   |
+45 |     Invalid(&'static str),
+   |     ------- ^^^^^^^^^^^^
+   |     |
+   |     field in this variant
+   |
+   = note: `Error` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `-D dead-code` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+45 -     Invalid(&'static str),
+45 +     Invalid(()),
+   |
+
+error: fields `faults` and `retirement_unknown` are never read
+  --> crates/core/src/storage.rs:53:9
+   |
+51 |     Opening {
+   |     ------- fields in this variant
+52 |         original: Box<Error>,
+53 |         faults: Vec<Fault>,
+   |         ^^^^^^
+54 |         retirement_unknown: bool,
+   |         ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `Error` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+error: variant `ProviderLogin` is never constructed
+   --> crates/core/src/storage.rs:173:5
+    |
+143 | pub(crate) enum Read {
+    |                 ---- variant in this enum
+...
+173 |     ProviderLogin(String),
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `Read` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+error: field `checkpoint` is never read
+   --> crates/core/src/storage.rs:284:9
+    |
+282 | pub(crate) struct CloseReport {
+    |                   ----------- field in this struct
+283 |     pub faults: Vec<Fault>,
+284 |     pub checkpoint: Option<Checkpoint>,
+    |         ^^^^^^^^^^
+    |
+    = note: `CloseReport` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+error: method `faults` is never used
+   --> crates/core/src/storage.rs:533:19
+    |
+427 | impl Storage {
+    | ------------ method in this implementation
+...
+533 |     pub(crate) fn faults(&self) -> Vec<Fault> {
+    |                   ^^^^^^
+
+error: function `directory` is never used
+ --> crates/core/src/storage/qualification.rs:9:4
+  |
+9 | fn directory(root: &Path, name: &str) -> Result<PathBuf> {
+  |    ^^^^^^^^^
+
+error: function `owner` is never used
+  --> crates/core/src/storage/qualification.rs:14:10
+   |
+14 | async fn owner(path: &Path) -> Result<Storage> {
+   |          ^^^^^
+
+error: function `written` is never used
+  --> crates/core/src/storage/qualification.rs:17:10
+   |
+17 | async fn written(store: &Storage, write: Write) -> Result<u64> {
+   |          ^^^^^^^
+
+error: function `snapshot` is never used
+  --> crates/core/src/storage/qualification.rs:28:10
+   |
+28 | async fn snapshot(store: &Storage, read: Read) -> Result<Snapshot> {
+   |          ^^^^^^^^
+
+error: function `request` is never used
+  --> crates/core/src/storage/qualification.rs:34:4
+   |
+34 | fn request(number: u128) -> RegisterRepository {
+   |    ^^^^^^^
+
+error: function `ensure` is never used
+  --> crates/core/src/storage/qualification.rs:41:4
+   |
+41 | fn ensure(value: bool, message: &'static str) -> Result<()> {
+   |    ^^^^^^
+
+error: function `run` is never used
+  --> crates/core/src/storage/qualification.rs:49:21
+   |
+49 | pub(crate) async fn run(root: &Path) -> Result<Value> {
+   |                     ^^^
+
+error: function `ensure` is never used
+  --> crates/core/src/workspaces/qualification.rs:11:4
+   |
+11 | fn ensure(condition: bool, message: &str) -> Result<()> {
+   |    ^^^^^^
+
+error: function `git` is never used
+  --> crates/core/src/workspaces/qualification.rs:18:4
+   |
+18 | fn git(root: &Path, args: &[&str]) -> Result<String> {
+   |    ^^^
+
+error: function `directory` is never used
+  --> crates/core/src/workspaces/qualification.rs:34:4
+   |
+34 | fn directory(path: &Path) -> Result<()> {
+   |    ^^^^^^^^^
+
+error: function `fixture` is never used
+  --> crates/core/src/workspaces/qualification.rs:41:4
+   |
+41 | fn fixture(root: &Path) -> Result<(PathBuf, String)> {
+   |    ^^^^^^^
+
+error: function `registered` is never used
+  --> crates/core/src/workspaces/qualification.rs:73:10
+   |
+73 | async fn registered(owner: &Workspaces, id: ActionId) -> Result<Registration> {
+   |          ^^^^^^^^^^
+
+error: function `ready` is never used
+  --> crates/core/src/workspaces/qualification.rs:88:10
+   |
+88 | async fn ready(owner: &Workspaces, id: WorkspaceId) -> Result<Workspace> {
+   |          ^^^^^
+
+error: function `run` is never used
+   --> crates/core/src/workspaces/qualification.rs:116:21
+    |
+116 | pub(crate) async fn run(root: &Path) -> Result<Value> {
+    |                     ^^^
+
+error: function `cohort` is never used
+   --> crates/core/src/workspaces/qualification.rs:151:10
+    |
+151 | async fn cohort(
+    |          ^^^^^^
+
+error: could not compile `workspace-core` (lib) due to 20 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: method `faults` is never used
+   --> crates/core/src/storage.rs:533:19
+    |
+427 | impl Storage {
+    | ------------ method in this implementation
+...
+533 |     pub(crate) fn faults(&self) -> Vec<Fault> {
+    |                   ^^^^^^
+    |
+    = note: `-D dead-code` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+error: could not compile `workspace-core` (lib test) due to 16 previous errors

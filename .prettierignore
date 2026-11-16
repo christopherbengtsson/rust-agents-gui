@@ -4,5 +4,9 @@ target/
 dist/
 src-tauri/gen/
 docs/evidence/**/*.png
+# Frozen storage-research cohorts: preserve captured bytes and recorded hashes.
+docs/evidence/conductor-private-storage-opening/
+docs/evidence/milestone-01-storage/
+docs/evidence/storage-async-comparison/
 src/generated/contracts/
 src/routeTree.gen.ts

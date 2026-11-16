@@ -1,0 +1,257 @@
+{
+  "source": "c8171718ed1ed2fee45c0400ff82d6c6133432bf",
+  "dirty": "?? docs/evidence/sqlx-architecture/03/\n",
+  "profile": "worktree-private default target; warm caches; one Rust harness thread",
+  "checks": [
+    {
+      "label": "environment-host",
+      "command": ["uname", "-a"],
+      "exit": 0,
+      "seconds": 0.002061333041638136
+    },
+    {
+      "label": "environment-hardware",
+      "command": ["sysctl", "hw.model", "hw.ncpu", "hw.memsize"],
+      "exit": 0,
+      "seconds": 0.002490708022378385
+    },
+    {
+      "label": "environment-macos",
+      "command": ["sw_vers"],
+      "exit": 0,
+      "seconds": 0.0068045000080019236
+    },
+    {
+      "label": "environment-rust",
+      "command": ["rustc", "--version"],
+      "exit": 0,
+      "seconds": 0.033663291949778795
+    },
+    {
+      "label": "environment-cargo",
+      "command": ["cargo", "--version"],
+      "exit": 0,
+      "seconds": 0.030528208008036017
+    },
+    {
+      "label": "environment-node",
+      "command": ["node", "--version"],
+      "exit": 0,
+      "seconds": 0.013209791970439255
+    },
+    {
+      "label": "environment-pnpm",
+      "command": ["corepack", "pnpm", "--version"],
+      "exit": 0,
+      "seconds": 0.04528508405201137
+    },
+    {
+      "label": "environment-git",
+      "command": ["git", "--version"],
+      "exit": 0,
+      "seconds": 0.004369375063106418
+    },
+    {
+      "label": "complete-verify",
+      "command": ["corepack", "pnpm", "verify"],
+      "exit": 1,
+      "seconds": 2.1640927909174934
+    },
+    {
+      "label": "checkpoint-units-measured",
+      "command": ["corepack", "pnpm", "test:workspaces", "--measure"],
+      "exit": 0,
+      "seconds": 3.3569084169575945
+    },
+    {
+      "label": "checkpoint-clippy",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "clippy",
+        "--locked",
+        "-p",
+        "workspace-checkpoint",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 0.2206950830295682
+    },
+    {
+      "label": "core-tests-check-final",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "check",
+        "--locked",
+        "-p",
+        "workspace-core",
+        "--tests",
+        "--features",
+        "codegen"
+      ],
+      "exit": 101,
+      "seconds": 2.6578584579983726
+    },
+    {
+      "label": "typescript",
+      "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+      "exit": 0,
+      "seconds": 0.5268642079317942
+    },
+    {
+      "label": "tooling-units",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "scripts/cargo.test.mjs",
+        "scripts/check.test.mjs",
+        "scripts/development-state.test.mjs",
+        "scripts/frontend-lint.test.mjs",
+        "scripts/prepare-generated.test.mjs",
+        "scripts/prepare-supervisor.test.mjs",
+        "scripts/react-compiler.test.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.9123261249624193
+    },
+    {
+      "label": "ui-units",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "exit": 0,
+      "seconds": 14.621195040992461
+    },
+    {
+      "label": "format-final",
+      "command": ["corepack", "pnpm", "format:check"],
+      "exit": 1,
+      "seconds": 0.10596366692334414
+    },
+    {
+      "label": "lint-final",
+      "command": ["corepack", "pnpm", "lint"],
+      "exit": 0,
+      "seconds": 0.1013065839651972
+    },
+    {
+      "label": "workspace-checkpoint-qualification-build",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "build",
+        "--locked",
+        "-p",
+        "workspace-checkpoint",
+        "--features",
+        "qualification",
+        "--bin",
+        "qualify-workspaces",
+        "--message-format=json-render-diagnostics"
+      ],
+      "exit": 0,
+      "seconds": 2.5403303330531344
+    },
+    {
+      "label": "workspace-checkpoint-qualification",
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-workspaces",
+        "/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4"
+      ],
+      "exit": 0,
+      "seconds": 1.8041680420283228
+    },
+    {
+      "label": "storage-checkpoint-qualification-build",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "build",
+        "--locked",
+        "-p",
+        "storage-checkpoint",
+        "--features",
+        "qualification",
+        "--bin",
+        "qualify-storage",
+        "--message-format=json-render-diagnostics"
+      ],
+      "exit": 0,
+      "seconds": 1.52183804102242
+    },
+    {
+      "label": "storage-checkpoint-qualification",
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-storage",
+        "/tmp/ticket03-storage-checkpoint-7481d74b91244c209705da3c6c7abbd8"
+      ],
+      "exit": 1,
+      "seconds": 1.5807017090264708
+    }
+  ],
+  "workspace-checkpoint": {
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-workspaces",
+    "sha256": "6b0bc9b25f1dd13852c7b0618620ef68ced15c5822352917d53e3dddb825d787",
+    "disposable_root": "/tmp/ticket03-workspace-checkpoint-bc24392e337e4a45aa4e805e105e62b4"
+  },
+  "storage-checkpoint": {
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-storage",
+    "sha256": "822a132e326250f6bc635f1f93cd8e7790d4680846517a4de0e15d25640b47f4",
+    "disposable_root": "/tmp/ticket03-storage-checkpoint-7481d74b91244c209705da3c6c7abbd8"
+  },
+  "source_files": {
+    "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
+    "crates/core/src/codegen.rs": "8942d299dde04dffab052d0f810d3f39c595e8b3b84a1d7ab55220967f00286a",
+    "crates/core/src/connection/admission.rs": "8601765f6dad7233364e189f226b2a1b69127768d54ab3a2c5bd6de7df322707",
+    "crates/core/src/connection/framed_exchange/tests.rs": "dd2d8019369586e607bca27052ed1a84aadca65f02f1e0f57e005a7e55d843a4",
+    "crates/core/src/connection/framed_exchange.rs": "5ef8a5c402214cef52a1ffdbb6fe897733639e27acb60287c8e272f8bf9761d9",
+    "crates/core/src/connection/subscription/tests.rs": "61c2f8220636e7ad31e801dbf7aeb29077d59ef909def1c213b38cba973eba56",
+    "crates/core/src/connection/subscription.rs": "39daad90c39a245df9c6842aa2c09106a8b0251a9cd2869f92027809783e3be7",
+    "crates/core/src/connection/tasks.rs": "d4189b406a4c7e6c57e9c801300b671750b77a448cac3057f1a6fb9fc029531d",
+    "crates/core/src/connection/tests/support.rs": "e4e0959f1a9b21209b9391f740b8b793439b4ce2e15d9f32fcd90f17bcf14f3c",
+    "crates/core/src/connection/tests.rs": "8bf919056e2462af701b5aa087a4a0fa28dfa7a0f17669d0f754b25b32fa121b",
+    "crates/core/src/connection.rs": "1d639112b4b768117ff730e4372a52c7f872aff4a819ce9df222f1c71bced489",
+    "crates/core/src/git/inspection.rs": "beffb7e4757a15d8d00b3e8376b200abdb52d9fcf1f68dfe2ea44964f57ad2fb",
+    "crates/core/src/git.rs": "9ab669eaa3fdea83b92e42fd2f22285eb2738bd96995276f4dd82891aa23cdcd",
+    "crates/core/src/lib.rs": "1c7478c7270681d4c9bd47d92016e6dabd652cd1e2febe8e51d2ea88095135fc",
+    "crates/core/src/lifetime.rs": "78cb0b7a6c51af4e6b39470aca39d13a58ce8075a999fc7032b0f38f20d1a0b2",
+    "crates/core/src/observations.rs": "a3c41684ce06dd447d3493d9794bef6da4fcc1adabb99bfab67709da756968ee",
+    "crates/core/src/private_state.rs": "2548a5507bd7bff07f61cded0091f64850300224614bc6ca9ef971d5828a2b26",
+    "crates/core/src/runtimes/codex/discovery.rs": "163a9f8e07dcdf818897e4d7a90a54c0860ca857cae76ecd972f830fa1a3034a",
+    "crates/core/src/runtimes/codex/process.rs": "bf110936e152b5c4ba660b7d47acbfd77fa3c89d0c017a4f920ce7c50c947a1c",
+    "crates/core/src/runtimes/codex/protocol.rs": "b22b289532b8f5149458d73678ddb9a5625b36ab859fdc620a26cfac9838f382",
+    "crates/core/src/runtimes/codex.rs": "4c0d6a58d7c28cbfdc42804c9e5aedae71be056ddb721a54a6e30a9e4442618c",
+    "crates/core/src/runtimes/provider_connection/login.rs": "1fa370ee80521374da17e9434c2996c6f7baa95bb2aa298f0c1e64fd5e40fd82",
+    "crates/core/src/runtimes/provider_connection/selection.rs": "c83c8f575d82fa2454a9c5b531463d58a0916d7524a0a257cecbe219dc1274c4",
+    "crates/core/src/runtimes/provider_connection.rs": "8bc8d5f93f45b39e6074a45961003df12a4bb4dc862ccf86d12f1700f7793476",
+    "crates/core/src/runtimes.rs": "04df4cfcd76a37a2bfd8011d95b249b741df01458fd79a63fa70f0dd00c3d39e",
+    "crates/core/src/storage/opening.rs": "623b30b9e57a17df7f09d61ab41eb41f5c75454e6e2647cb3ce7eeb13db2c280",
+    "crates/core/src/storage/operations.rs": "ef35542a33b4a07af675fe6a5d81fc3e90aa01c062f80edb1aec60cd3f1791d3",
+    "crates/core/src/storage/policy.rs": "a5c82d09e2d924ba4216d927f872dc556246bf3872df1602d05bf46f71aacf1c",
+    "crates/core/src/storage/qualification.rs": "92528def7ae6b7dd40c6b5f861decaef6eaf0ab9a7bed1749163b8380e417b27",
+    "crates/core/src/storage/tests.rs": "e84ba02025e0fc3c21c64ccce74114a108ef0cba20f56f0397377ad0cf0bb1ee",
+    "crates/core/src/storage.rs": "6d246ce0056d4e545563e5047dcc12d778a9cc4d50ccdaf0ea9d23eb53691fe2",
+    "crates/core/src/supervisor/tests.rs": "b86cd230f23074ea348c1ebb11506c9e75f5f74acecfe8ff035d249e6c732023",
+    "crates/core/src/supervisor.rs": "51e7d4fe12cc340bb46e9cf3cc1b30f9be92e1d7ce7d4d79b5ec0d1929070154",
+    "crates/core/src/workspaces/coordinator.rs": "370dc1ae24ba21144eab1fb9d6b5968e7b406b34aee0b17c85498b8225aea6af",
+    "crates/core/src/workspaces/creation.rs": "1b8f2e0b3b59ac10dc1b9f654cde6c026398922a2100e12e1c89cfa442416239",
+    "crates/core/src/workspaces/inspection/tests.rs": "873dab0dfda4d516c26a88077b700e340478c35a37a4803772d4d3abe646f4f8",
+    "crates/core/src/workspaces/inspection.rs": "848cd133334ad8371a240a025f87e0946f8a0cc4ffebcc2620a2abe1549c6ced",
+    "crates/core/src/workspaces/naming/catalog.rs": "8cd789c921fcc71a3cbf41c7fe424f65e5f96e7afb918512fbcffe0ff7dad2d0",
+    "crates/core/src/workspaces/naming.rs": "c82ef17adb8ffca6ad7266b608fc476e616568803235c506797816de249094a1",
+    "crates/core/src/workspaces/persistence.rs": "e1f5dfb5fae1e86be13f497c3d946295a6be8f01b4b8ce5accc3f1b69cbc8e63",
+    "crates/core/src/workspaces/qualification.rs": "0869ef8e0efb53d767a8522683e132d8dfd398abe20bb700de96780a6b1fa5ea",
+    "crates/core/src/workspaces/records.rs": "11830e0cc910ce6ba480a85e3dd195e3f1e20ca508181c7747b9f8774484ea07",
+    "crates/core/src/workspaces/tests.rs": "0e7260407d16e79886407f6e3b4c6370f83c8b78c8f81c7807c36a9bc2e80241",
+    "crates/core/src/workspaces.rs": "a3309836bdfdbe606e53183d5f62e1ef59c7ee94fc38b75fb513fe954d3c9cf5"
+  }
+}

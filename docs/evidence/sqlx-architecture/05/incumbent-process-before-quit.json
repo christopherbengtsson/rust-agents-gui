@@ -1,0 +1,131 @@
+{
+  "label": "before-quit",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 75463,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "75463-1794849831652894000",
+        "revision": 3
+      },
+      "reset": true
+    }
+  },
+  "provider": {
+    "selection": {
+      "id": "5f70b953-28cc-4f33-9ab8-f0767d179da1",
+      "path": "/private/tmp/aw-sqlx05-8rcrzvpe/synthetic-codex",
+      "phase": "remembered"
+    },
+    "target": {
+      "id": "4c8e60cc-1bfc-4cd5-9e8e-ccc682b6c9b7",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-sqlx05-8rcrzvpe/synthetic-codex",
+      "selected_executable": "/private/tmp/aw-sqlx05-8rcrzvpe/synthetic-codex",
+      "discovery_source": "selected",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-4c8e60cc-1bfc-4cd5-9e8e-ccc682b6c9b7",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 4,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "chatgpt",
+      "billing": "chatgpt",
+      "account": "fixture@example.test",
+      "plan": "pro",
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": null,
+    "diagnostic": null,
+    "login": null
+  },
+  "events": [
+    {
+      "pid": 75464,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 75465,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 75465,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 75465,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 75465,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 75465,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 75465,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 75465,
+      "event": "exit"
+    },
+    {
+      "pid": 75466,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 75469,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 75469,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 75469,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 75469,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 75469,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 75469,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 75469,
+      "event": "exit"
+    }
+  ],
+  "host_exit": null,
+  "desktop_exit": null
+}

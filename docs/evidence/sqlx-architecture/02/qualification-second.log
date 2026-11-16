@@ -1,0 +1,4 @@
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.56s
+     Running `target/debug/qualify-storage /private/tmp/aw-sqlx02-second`
+Storage qualification failed: Ok(Err("Invalid(\"Failed commit did not retire explicitly\")")); retained state: "/private/tmp/aw-sqlx02-second"

@@ -1,7 +1,13 @@
 <!-- LLM's: Ignore this file unless told otherwise -->
 
-# MVP scope ideas
+# Milestone 1 fix
 
+- No fucking migration code or backwards compatibility code. E.g. crates/core/src/workspaces/creation.rs `pub legacy`
+
+# MVP scope ideas
+- Confirm close, e.g. cmd+q -> confirm close dialog
+- Caffeinate - feature to prevent mac from going to sleep
+- Claude support. Make code provider agnostic
 - Auto discovered local repos when user explicitly adding new repo
 - Auto discovered remote repos when user explicitly adding new repo (auto clone)
 

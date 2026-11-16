@@ -1,0 +1,1 @@
+Storage qualification failed: Ok(Err("Write { original: Sql(Database(SqliteError { code: 1, message: \"no such column: excluded.cleanup_unconfirmed\" })), retirement: None, uncertain: false }")); retained state: "/tmp/ticket03-storage-checkpoint-7481d74b91244c209705da3c6c7abbd8"

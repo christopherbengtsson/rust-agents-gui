@@ -1,0 +1,118 @@
+{
+  "completion": {
+    "workload_runs": 15,
+    "measured_runs": 11,
+    "successful_post_close_integrity": true,
+    "successful_live_record_audits": true
+  },
+  "cases": [
+    {
+      "driver": "sqlx-0.9.0",
+      "workload": "baseline",
+      "n": 5,
+      "committed": {
+        "median": 15000,
+        "range": [
+          15000,
+          15000
+        ]
+      },
+      "rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 32.5175,
+        "range": [
+          32.235208,
+          33.083917
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 12.245041,
+        "range": [
+          10.5035,
+          27.124917
+        ]
+      },
+      "sampled_threads": [
+        4
+      ]
+    },
+    {
+      "driver": "sqlx-0.9.0",
+      "workload": "heavy",
+      "n": 1,
+      "committed": {
+        "median": 47739,
+        "range": [
+          47739,
+          47739
+        ]
+      },
+      "rejected": {
+        "median": 18261,
+        "range": [
+          18261,
+          18261
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 873.596583,
+        "range": [
+          873.596583,
+          873.596583
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 37.668542,
+        "range": [
+          37.668542,
+          37.668542
+        ]
+      },
+      "sampled_threads": [
+        4
+      ]
+    },
+    {
+      "driver": "tokio-rusqlite-0.9.0-rusqlite-0.42.0",
+      "workload": "baseline",
+      "n": 5,
+      "committed": {
+        "median": 15000,
+        "range": [
+          15000,
+          15000
+        ]
+      },
+      "rejected": {
+        "median": 0,
+        "range": [
+          0,
+          0
+        ]
+      },
+      "arrival_to_commit_p95_ms": {
+        "median": 32.069916,
+        "range": [
+          31.873458,
+          32.16508399999999
+        ]
+      },
+      "urgent_p95_ms": {
+        "median": 27.218166,
+        "range": [
+          7.865499999999999,
+          29.733875
+        ]
+      },
+      "sampled_threads": [
+        4
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "signal": "SIGSTOP",
+    "owned_supervisor_pid": 84363,
+    "wall_time": 1794745183.60011,
+    "reason": "Controlled stopped-delivery/readiness scenario"
+  },
+  {
+    "signal": "SIGCONT",
+    "owned_supervisor_pid": 84363,
+    "wall_time": 1794745218.04256,
+    "reason": "Restore fixture transport before explicit workspace reconnection"
+  }
+]

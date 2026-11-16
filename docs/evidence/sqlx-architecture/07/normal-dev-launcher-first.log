@@ -1,0 +1,124 @@
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+Native dev state: /private/tmp/aw-native07-normal-5ed3e7zz/dev-override
+   Compiling phf_macros v0.13.1
+   Compiling string_cache v0.9.0
+   Compiling url v2.5.8
+   Compiling tokio v1.54.1
+   Compiling crypto-common v0.1.7
+   Compiling futures-util v0.3.34
+   Compiling serialize-to-javascript v0.1.2
+   Compiling tracing v0.1.44
+   Compiling lazy_static v1.5.1
+   Compiling thread_local v1.1.10
+   Compiling sharded-slab v0.1.7
+   Compiling digest v0.10.7
+   Compiling phf v0.13.1
+   Compiling sha2 v0.10.9
+   Compiling schemars v0.8.22
+   Compiling urlpattern v0.6.0
+   Compiling tao v0.37.2
+   Compiling wry v0.57.2
+   Compiling tracing-subscriber v0.3.23
+   Compiling futures-executor v0.3.34
+   Compiling web_atoms v0.2.6
+   Compiling cssparser v0.37.0
+   Compiling tauri-utils v2.10.2
+   Compiling tokio-stream v0.1.19
+   Compiling tokio-util v0.7.20
+   Compiling markup5ever v0.39.0
+   Compiling selectors v0.38.0
+   Compiling sqlx-core v0.9.0
+   Compiling html5ever v0.39.0
+   Compiling dom_query v0.28.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+   Compiling tauri-runtime v2.12.2
+   Compiling tauri-runtime-wry v2.12.3
+   Compiling tauri-build v2.7.4
+   Compiling tauri-plugin v2.7.2
+   Compiling tauri-codegen v2.7.4
+   Compiling tauri v2.12.5
+   Compiling tauri-plugin-fs v2.7.1
+   Compiling tauri-macros v2.7.4
+   Compiling tauri-plugin-opener v2.7.3
+   Compiling tauri-plugin-dialog v2.8.4
+   Compiling workspace-desktop v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 16.68s
+8:11:11 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+
+  VITE v8.3.8  ready in 237 ms
+
+  ➜  Local:   http://127.0.0.1:1420/
+2026-11-16T19:11:12.802522Z  INFO workspace_core::native: native startup settled incarnation=750d4854-1f53-4986-9a95-9610ae97e50a phase=Some(Ready)
+2026-11-16T19:11:12.815219Z  INFO workspace_core::native: native shutdown fenced incarnation=750d4854-1f53-4986-9a95-9610ae97e50a
+Storage close checkpoint: {"busy":0,"log_frames":33,"checkpointed_frames":33,"wal_bytes":135992,"elapsed":{"secs":0,"nanos":10206875}}
+2026-11-16T19:11:12.828774Z  INFO workspace_core::native: native shutdown settled incarnation=750d4854-1f53-4986-9a95-9610ae97e50a failures=0
+Error: Process exited with 143; native termination requires recovery, not a completed drain
+    at ChildProcess.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:45:13)
+    at ChildProcess.wrapper (node:events:639:12)
+    at ChildProcess.emit (node:events:514:20)
+    at ChildProcess._handle.onexit (node:internal/child_process:323:12)
+AggregateError: Shutdown failed; native recovery is required
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:92:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  [errors]: [
+    Error: Process exited with 143; native termination requires recovery, not a completed drain
+        at ChildProcess.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:45:13)
+        at ChildProcess.wrapper (node:events:639:12)
+        at ChildProcess.emit (node:events:514:20)
+        at ChildProcess._handle.onexit (node:internal/child_process:323:12)
+  ]
+}
+AggregateError: Shutdown failed; native recovery is required
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:92:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  [errors]: [
+    Error: Process exited with 143; native termination requires recovery, not a completed drain
+        at ChildProcess.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:45:13)
+        at ChildProcess.wrapper (node:events:639:12)
+        at ChildProcess.emit (node:events:514:20)
+        at ChildProcess._handle.onexit (node:internal/child_process:323:12)
+  ]
+}
+AggregateError: Shutdown failed; native recovery is required
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:92:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  [errors]: [
+    Error: Process exited with 143; native termination requires recovery, not a completed drain
+        at ChildProcess.<anonymous> (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/start.mjs:45:13)
+        at ChildProcess.wrapper (node:events:639:12)
+        at ChildProcess.emit (node:events:514:20)
+        at ChildProcess._handle.onexit (node:internal/child_process:323:12)
+  ]
+}

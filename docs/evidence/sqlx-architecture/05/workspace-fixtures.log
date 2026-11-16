@@ -1,0 +1,126 @@
+   Compiling tokio-util v0.7.20
+   Compiling workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.28s
+     Running `target/debug/qualify-workspaces /private/tmp/aw-workspace05-first`
+{
+  "checks": [
+    "concurrent-registration-and-first-continuations",
+    "global-app-folder-collision",
+    "same-repository-distinct-permanent-names",
+    "concurrent-disposable-git-worktrees",
+    "pinned-base-and-original-checkout-protection",
+    "concurrent-sqlx-claim-winner-and-settled-conflict",
+    "explicit-reconcile-retains-pinned-location-and-original-action",
+    "nil-action-identity-creation"
+  ],
+  "desktop": "not run: combined provider conversion remains ticket 04",
+  "providers": "not run",
+  "root": "/private/tmp/aw-workspace05-first",
+  "workspaces": [
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "d9e821f57927343d43270bbdda29f67351cb87a4",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/memphis-depay",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "2b176388-4321-4c58-8b29-0af6d973e1ff",
+      "id": "2eaf8e48-d408-4903-bba6-323ed20cef1b",
+      "legacy": false,
+      "name": "memphis-depay",
+      "path": "/private/tmp/aw-workspace05-first/state/workspaces/app/memphis-depay/checkout",
+      "repository_id": "614d4b87-587a-4680-af17-863bb85b1359",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "c8f80632d7c59dbda5d806cca830981d2bd66456",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/gabriel-jesus",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "4fa178ad-7cbf-42d5-9c3f-ab1ac6e04a6d",
+      "id": "21980850-eef9-4f72-9526-81b44cc8ea51",
+      "legacy": false,
+      "name": "gabriel-jesus",
+      "path": "/private/tmp/aw-workspace05-first/state/workspaces/app-2/gabriel-jesus/checkout",
+      "repository_id": "c2bcae65-e9e8-4d97-825b-e4ce0104414e",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "d9e821f57927343d43270bbdda29f67351cb87a4",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/marc-andre-ter-stegen",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "bc22deb0-678f-4a4c-816c-67bca251b97a",
+      "id": "3919630e-afce-495b-8b3c-ca30d5e93973",
+      "legacy": false,
+      "name": "marc-andre-ter-stegen",
+      "path": "/private/tmp/aw-workspace05-first/state/workspaces/app/marc-andre-ter-stegen/checkout",
+      "repository_id": "614d4b87-587a-4680-af17-863bb85b1359",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "d9e821f57927343d43270bbdda29f67351cb87a4",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/arjen-robben",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "7b301a33-c71a-4f31-8eb4-6e7ff22b365f",
+      "id": "cc9d7dad-9b18-4cb7-859d-420854f2acfc",
+      "legacy": false,
+      "name": "arjen-robben",
+      "path": "/private/tmp/aw-workspace05-first/state/workspaces/app/arjen-robben/checkout",
+      "repository_id": "614d4b87-587a-4680-af17-863bb85b1359",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "d9e821f57927343d43270bbdda29f67351cb87a4",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/peter-gulacsi",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "00000000-0000-0000-0000-000000000000",
+      "id": "523a57a4-2b9f-42cc-9ea6-d4a19539b124",
+      "legacy": false,
+      "name": "peter-gulacsi",
+      "path": "/private/tmp/aw-workspace05-first/state/workspaces/app/peter-gulacsi/checkout",
+      "repository_id": "614d4b87-587a-4680-af17-863bb85b1359",
+      "status": {
+        "state": "ready"
+      }
+    }
+  ]
+}

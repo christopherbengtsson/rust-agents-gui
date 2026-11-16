@@ -1,0 +1,75 @@
+{
+  "scope": "Intermediate red/green/compile diagnostics; final qualification has exact dirty source hashes and measured timings in verification.json. These early invocations did not capture source hashes or independent wall timing; no timing/source comparison claim uses them.",
+  "attempts": [
+    {
+      "log": "red-streams.log",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib process_effects --no-default-features",
+      "exit": 101,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "green-streams.log",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib process_effects",
+      "exit": 0,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "compile-first.log",
+      "command": "node scripts/cargo.mjs check --locked -p workspace-core --all-targets --all-features",
+      "exit": 101,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "compile-second.log",
+      "command": "node scripts/cargo.mjs check --locked -p workspace-core --all-targets --all-features",
+      "exit": 101,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "green-shared.log",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib process_effects",
+      "exit": 0,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "units-interim.log",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib",
+      "exit": 0,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "owned-units-first.log",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib process_effects",
+      "exit": 101,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "owned-units-second.log",
+      "command": "node scripts/cargo.mjs test --locked -p workspace-core --lib process_effects",
+      "exit": 0,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "clippy-interim.log",
+      "command": "node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "exit": 101,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    },
+    {
+      "log": "compile-process-qualifier.log",
+      "command": "node scripts/cargo.mjs build --locked -p workspace-core --features qualification --bin qualify-process-effects",
+      "exit": 0,
+      "wall_seconds": null,
+      "source": "intermediate uncommitted edits; no exact hash capture"
+    }
+  ]
+}

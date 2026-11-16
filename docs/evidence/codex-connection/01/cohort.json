@@ -1,0 +1,56 @@
+{
+  "source_revision": "9c770dd326361ee61d8e09d0f39d919ad8645831",
+  "protocol": 11,
+  "sidecar": {
+    "sourceRevision": "9c770dd326361ee61d8e09d0f39d919ad8645831",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "b7df607529e71267a1ac54fe7c17fc0119ca8f55271be4a321741a8256d0fd32"
+  },
+  "desktop_sha256": "4eaca44c8cc0604f77312cfaf422ec6c6c49ed9f1cc9ac86d4a4b9bdeff7ddf5",
+  "bundled_supervisor_sha256": "b7df607529e71267a1ac54fe7c17fc0119ca8f55271be4a321741a8256d0fd32",
+  "installed_codex_sha256": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002",
+  "schema_sha256": {
+    "fixtures/codex-readiness/schema/ConfigReadParams.json": "257c54a423b47c1d209ff1076765a1564d82322fd5161670fd489a2874de1bac",
+    "fixtures/codex-readiness/schema/ConfigReadResponse.json": "3bda115e4295fed371c9acb98685d105a358e5cf92225c2d34dd2ef774436cc2",
+    "fixtures/codex-readiness/schema/GetAccountParams.json": "30b545275f60975b55bd6fbaafd70f15505801d14168ee82d3931b6e93c78aab",
+    "fixtures/codex-readiness/schema/InitializeParams.json": "c608ff6bdd94e661423dca9b44cd1dcea7eac610f74e1310284c61eab64280bc",
+    "fixtures/codex-readiness/schema/GetAccountResponse.json": "588bac1dacbcf8d0676f2c31d9d5750e8baaee5c3062ef820ae4e6ee68687418"
+  },
+  "png_dimensions": {
+    "desktop-ready.png": [4718592, 4292935744],
+    "final-incompatible-version.png": [4718592, 4292935744],
+    "final-workspace-link-return.png": [4718592, 4292935744],
+    "final-ready-minimum.png": [4718592, 4292935744],
+    "final-claude-minimum.png": [4718592, 4292935744],
+    "final-ready-ordinary.png": [4718592, 4292935744],
+    "final-stale-error.png": [4718592, 4292935744],
+    "final-claude-current-build.png": [4718592, 4292935744],
+    "final-minimum-status.png": [4718592, 4292935744],
+    "final-recovered-ready.png": [4718592, 4292935744],
+    "desktop-return-attempt1.png": [4718592, 4292935744],
+    "final-no-auth-guidance.png": [4718592, 4292935744],
+    "desktop-claude.png": [4718592, 4292935744],
+    "final-missing-minimum-details.png": [4718592, 4292935744],
+    "final-skip-landmark.png": [4718592, 4292935744],
+    "final-returned-diff.png": [4718592, 4292935744],
+    "final-missing-executable.png": [4718592, 4292935744],
+    "final-minimum-diagnostics-focus.png": [4718592, 4292935744],
+    "final-checking-minimum.png": [4718592, 4292935744]
+  },
+  "ideas_sha256": "0e27265032591956521df58dedd8c7c3520fcf97f0ffde9cba11bc4fbe2a3fa0",
+  "rust_source_parity_57bd4a6_to_9c770dd": true,
+  "final_desktop_event_count": 55,
+  "runtime_starts_after_reconnect_and_navigation": 0,
+  "last_explicit_refresh_event_increment": 7
+}

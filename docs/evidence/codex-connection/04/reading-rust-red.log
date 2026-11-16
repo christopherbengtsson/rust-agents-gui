@@ -1,0 +1,54 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.77s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-f254d87852bf6363)
+
+running 1 test
+test workspaces::inspection::tests::unchanged_refresh_preserves_comparison_and_selected_preview ... FAILED
+
+failures:
+
+---- workspaces::inspection::tests::unchanged_refresh_preserves_comparison_and_selected_preview stdout ----
+
+thread 'workspaces::inspection::tests::unchanged_refresh_preserves_comparison_and_selected_preview' (34065869) panicked at crates/core/src/workspaces/inspection/tests.rs:775:5:
+assertion `left == right` failed
+  left: ComparisonId(e464bbe0-cd4e-43a8-bbda-8797011f7506)
+ right: ComparisonId(4c00345f-f18a-4ba2-8f14-dabab94b3cb9)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    workspaces::inspection::tests::unchanged_refresh_preserves_comparison_and_selected_preview
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 195 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

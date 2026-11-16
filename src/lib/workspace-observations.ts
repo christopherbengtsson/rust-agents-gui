@@ -33,20 +33,23 @@ export class WorkspaceObservations extends FeatureQueryCache<
             return [`workspace-action:${request.action_id}`];
         }
       },
-      (owner, request) => workspaceRequest(owner, request),
+      (incarnation, request) => workspaceRequest(incarnation, request),
     );
   }
-  recordAction(owner: string, reply: WorkspaceReply) {
+  recordAction(incarnation: string, reply: WorkspaceReply) {
     if (reply.kind !== "action" || !reply.action || !reply.workspace) return;
-    this.recordWorkspace(owner, reply.workspace);
+    this.recordWorkspace(incarnation, reply.workspace);
   }
-  recordWorkspace(owner: string, workspace: import("./workspaces").Workspace) {
+  recordWorkspace(
+    incarnation: string,
+    workspace: import("./workspaces").Workspace,
+  ) {
     const target = { operation: "get", id: workspace.id } as const;
-    const existing = this.peek(owner, target);
+    const existing = this.peek(incarnation, target);
     // Seed a newly admitted/selected identity, never replace a newer detail or
     // erase a cached failure merely because the user selects its list record.
     if (!existing?.data && existing?.status !== "error")
-      this.record(owner, target, { kind: "workspace", workspace });
+      this.record(incarnation, target, { kind: "workspace", workspace });
   }
   invalidate(target: Target) {
     switch (target.kind) {

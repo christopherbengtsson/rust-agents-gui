@@ -1,0 +1,62 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selected) Codex
+					16 tab (selectable) Claude Code
+				17 container Codex
+					18 container Codex setup
+						19 heading Existing Codex setup, Value: 3
+							20 text Existing Codex setup
+						21 text Signed in with ChatGPT
+						22 button Refresh
+						23 text User-level setup. Project overrides are not inspected here. This check starts no conversation.
+						24 description list
+							25 text Authentication
+							26 text Signed in with ChatGPT
+							27 text Account
+							28 text fixture@example.test
+							29 text Plan
+							30 text pro
+							31 text Billing route
+							32 text ChatGPT
+							33 text Model provider
+							34 text openai
+							35 text Model
+							36 text fixture-model
+						37 button (collapsed) Technical setup details, Secondary Actions: Expand
+						38 container Codex setup guidance
+							39 heading Official setup options, Value: 3
+								40 text Official setup options
+							41 container
+								42 text ChatGPT  — Sign in through your browser using the official Codex runtime.
+							43 container
+								44 text CLI  — Use your existing Codex setup, or run codex login  in your terminal and return here to Refresh.
+							45 text Existing API-key configuration stays with Codex. This app does not collect or edit API keys.
+							46 button Open official installation instructions
+							47 button Open official authentication guidance
+	48 close button
+	49 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	50 minimize button
+	51 text Agent Workspace
+52 menu bar
+	53 Agent Workspace
+	54 File
+	55 Edit
+	56 View
+	57 Window
+	58 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex

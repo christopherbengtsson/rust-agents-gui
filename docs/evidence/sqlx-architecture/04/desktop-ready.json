@@ -1,0 +1,88 @@
+{
+  "label": "ready",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 60032,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "60032-1794847220478600000",
+        "revision": 97
+      },
+      "reset": true
+    }
+  },
+  "provider": {
+    "selection": null,
+    "target": {
+      "id": "bcbd60b9-cd3d-4c75-93d1-bd4e4c766694",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-sqlx04-2e3s4cnc/synthetic-codex",
+      "selected_executable": null,
+      "discovery_source": "fixture",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-bcbd60b9-cd3d-4c75-93d1-bd4e4c766694",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 2,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "chatgpt",
+      "billing": "chatgpt",
+      "account": "fixture@example.test",
+      "plan": "pro",
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": null,
+    "diagnostic": null,
+    "login": null
+  },
+  "events": [
+    {
+      "pid": 61421,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 61422,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 61422,
+      "event": "exit"
+    }
+  ],
+  "host_exit": null,
+  "desktop_exit": null
+}

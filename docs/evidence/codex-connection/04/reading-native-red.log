@@ -1,0 +1,4 @@
+{'[DEBUG-aw04]-attach': {'root': True, 'viewport': True}, '[DEBUG-aw04]-scroll': {'slot': 'scroll-area-viewport', 'top': 1360, 'root': 'scroll-area'}, 'agent-workspace.presentation': {'state': {'inspection': {'5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a': {'id': '30ef23f7-e745-4319-9949-b65426298bb0', 'path': 'reading.txt', 'comparison': '467f88af-8775-471b-8b99-bc843d9172b4'}}, 'contexts': {'5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a': {'view': 'changes', 'filesWidth': 32, 'collapsed': False}}, 'rememberedMain': {'kind': 'workspace', 'repositoryId': '6039a2e2-08e0-4956-a178-fc23ad1906a9', 'workspaceId': '5d223d0e-6a1e-443c-8baf-b1f36f1c6d1a', 'view': 'changes'}}, 'version': 2}}
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+AssertionError: Native viewport scroll did not save the reading position

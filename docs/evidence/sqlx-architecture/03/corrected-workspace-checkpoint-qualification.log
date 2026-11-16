@@ -1,0 +1,122 @@
+{
+  "checks": [
+    "concurrent-registration-and-first-continuations",
+    "global-app-folder-collision",
+    "same-repository-distinct-permanent-names",
+    "concurrent-disposable-git-worktrees",
+    "pinned-base-and-original-checkout-protection",
+    "concurrent-sqlx-claim-winner-and-settled-conflict",
+    "explicit-reconcile-retains-pinned-location-and-original-action",
+    "nil-action-identity-creation"
+  ],
+  "desktop": "not run: combined provider conversion remains ticket 04",
+  "providers": "not run",
+  "root": "/private/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd",
+  "workspaces": [
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "cd26eab854299acd327a2752c188288814ef517d",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/andres-iniesta",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "3402f70a-3974-4b80-94a4-9e89a4a50028",
+      "id": "9a67216b-8620-4b72-a86c-b3b10f1fb66b",
+      "legacy": false,
+      "name": "andres-iniesta",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd/state/workspaces/app-2/andres-iniesta/checkout",
+      "repository_id": "fc8c1488-5c9a-429b-816f-764661c9a728",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "cd26eab854299acd327a2752c188288814ef517d",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/abby-wambach",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "5b9c99da-51d1-45f8-b6cb-5dd9e2a0abd1",
+      "id": "5dd10374-4039-4abc-a1ab-5ea1c346ea09",
+      "legacy": false,
+      "name": "abby-wambach",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd/state/workspaces/app/abby-wambach/checkout",
+      "repository_id": "362d462d-355e-4387-a4fb-cee49d723d82",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "cd26eab854299acd327a2752c188288814ef517d",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/sergio-busquets",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "8e7ce2f6-d212-47a1-81f5-98e38fd9a7ff",
+      "id": "d815a0bb-0da8-43f7-92f3-162cc9b0dc70",
+      "legacy": false,
+      "name": "sergio-busquets",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd/state/workspaces/app-2/sergio-busquets/checkout",
+      "repository_id": "fc8c1488-5c9a-429b-816f-764661c9a728",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "cd26eab854299acd327a2752c188288814ef517d",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/marcel-sabitzer",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "6c338b45-eabe-48f0-9ba0-426086b9f083",
+      "id": "b6b1fad2-c89e-4a6d-a618-69bcd479fdec",
+      "legacy": false,
+      "name": "marcel-sabitzer",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd/state/workspaces/app-2/marcel-sabitzer/checkout",
+      "repository_id": "fc8c1488-5c9a-429b-816f-764661c9a728",
+      "status": {
+        "state": "ready"
+      }
+    },
+    {
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "base": {
+        "commit": "cd26eab854299acd327a2752c188288814ef517d",
+        "reference": "refs/heads/main"
+      },
+      "branch": "workspace/jefferson-farfan",
+      "cleanup_unconfirmed": false,
+      "creation_action_id": "00000000-0000-0000-0000-000000000000",
+      "id": "befc4349-197a-4220-9dac-43fb9376ee2d",
+      "legacy": false,
+      "name": "jefferson-farfan",
+      "path": "/private/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd/state/workspaces/app-2/jefferson-farfan/checkout",
+      "repository_id": "fc8c1488-5c9a-429b-816f-764661c9a728",
+      "status": {
+        "state": "ready"
+      }
+    }
+  ]
+}

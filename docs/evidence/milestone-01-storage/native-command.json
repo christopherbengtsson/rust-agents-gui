@@ -1,0 +1,27 @@
+[
+  {
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "python3",
+      "docs/evidence/milestone-01-storage/storage-probes.py",
+      "--library",
+      "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/storage-native-06a-bwy8lf9t/libsqlite3.dylib"
+    ],
+    "exit_code": 0,
+    "source_sha256": "cb89e2e6fbe0b49ac2eab294b8f686b0e63635c5e6a80528d26ea9c0d0dd5f7c"
+  },
+  {
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "python3",
+      "docs/evidence/milestone-01-storage/storage-probes.py",
+      "--library",
+      "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/storage-native-06a-bwy8lf9t/libsqlite3.dylib",
+      "--maintenance-only"
+    ],
+    "exit_code": 0,
+    "source_sha256": "cb89e2e6fbe0b49ac2eab294b8f686b0e63635c5e6a80528d26ea9c0d0dd5f7c"
+  }
+]

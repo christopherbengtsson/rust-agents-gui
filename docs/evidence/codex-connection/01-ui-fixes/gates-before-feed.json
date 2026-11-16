@@ -1,0 +1,32 @@
+[
+  {
+    "gate": "format",
+    "command": ["corepack", "pnpm", "format:check"],
+    "exit_code": 0,
+    "seconds": 0.24521466600708663
+  },
+  {
+    "gate": "lint",
+    "command": ["corepack", "pnpm", "lint"],
+    "exit_code": 0,
+    "seconds": 0.09857354196719825
+  },
+  {
+    "gate": "check",
+    "command": ["corepack", "pnpm", "check"],
+    "exit_code": 0,
+    "seconds": 2.784602583036758
+  },
+  {
+    "gate": "units",
+    "command": ["corepack", "pnpm", "test:measure"],
+    "exit_code": 0,
+    "seconds": 81.73686604201794
+  },
+  {
+    "gate": "build",
+    "command": ["corepack", "pnpm", "build"],
+    "exit_code": 0,
+    "seconds": 45.177113624988124
+  }
+]

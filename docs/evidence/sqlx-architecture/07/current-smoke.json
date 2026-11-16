@@ -1,0 +1,67 @@
+{
+  "root": "/private/tmp/aw-native07-normal-svxu2ku3",
+  "binary_sha256": "bac66c803c2a77f0716907227a283695bc94421161ae4fcb0ce01492e08ae28f",
+  "checks": [
+    "normal frontend excludes retention fixture",
+    "normal native executable excludes WebView qualification driver",
+    "normal package startup ready without supervisor resources",
+    "same-root competitor excluded; ordinary Quit completes",
+    "current-schema same-root handover keeps identical lease inode",
+    "incompatible metadata preserved; failed cleanup retains owner; deliberate recovery kill is not success",
+    "deliberate fresh-root reset initializes schema 4 without deleting prior metadata or worktrees",
+    "actual dev launcher with exact override starts Vite/native and awaits signal-driven completed drain"
+  ],
+  "processes": [
+    {
+      "label": "package",
+      "pid": 32134,
+      "state": "/private/tmp/aw-native07-normal-svxu2ku3/native-schema-4"
+    },
+    {
+      "label": "competing",
+      "pid": 32140,
+      "state": "/private/tmp/aw-native07-normal-svxu2ku3/native-schema-4"
+    },
+    {
+      "label": "handover",
+      "pid": 32147,
+      "state": "/private/tmp/aw-native07-normal-svxu2ku3/native-schema-4"
+    },
+    {
+      "label": "incompatible",
+      "pid": 32162,
+      "state": "/private/tmp/aw-native07-normal-svxu2ku3/incompatible"
+    },
+    {
+      "label": "reset-fresh",
+      "pid": 32265,
+      "state": "/private/tmp/aw-native07-normal-svxu2ku3/reset-rehearsal/native-schema-4"
+    },
+    {
+      "label": "dev-launcher",
+      "pid": 32269,
+      "state": "/private/tmp/aw-native07-normal-svxu2ku3/dev-override"
+    }
+  ],
+  "files": [
+    {
+      "path": "Contents/Info.plist",
+      "bytes": 951,
+      "sha256": "8138f27a6a1b774fdbf441f5de4e169ccf5a7d2bb88a8c8892c441cbfbf66019"
+    },
+    {
+      "path": "Contents/MacOS/workspace-desktop",
+      "bytes": 18265776,
+      "sha256": "bac66c803c2a77f0716907227a283695bc94421161ae4fcb0ce01492e08ae28f"
+    }
+  ],
+  "outcome": "passed",
+  "exits": {
+    "package": 0,
+    "competing": 0,
+    "handover": 0,
+    "incompatible": -9,
+    "reset-fresh": 0,
+    "dev-launcher": 0
+  }
+}

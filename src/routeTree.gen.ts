@@ -9,6 +9,7 @@ import { Route as IndexRouteImport } from "./routes/index";
 import { Route as SettingsRouteImport } from "./routes/settings";
 import { Route as RepositoryRepositoryIdRouteImport } from "./routes/repository.$repositoryId";
 import { Route as SettingsGeneralRouteImport } from "./routes/settings.general";
+import { Route as SettingsProvidersRouteImport } from "./routes/settings.providers";
 import { Route as RepositoryRepositoryIdIndexRouteImport } from "./routes/repository.$repositoryId.index";
 import { Route as RepositoryRepositoryIdWorkspaceWorkspaceIdRouteImport } from "./routes/repository.$repositoryId.workspace.$workspaceId";
 
@@ -32,6 +33,11 @@ const SettingsGeneralRoute = SettingsGeneralRouteImport.update({
   path: "/general",
   getParentRoute: () => SettingsRoute,
 } as any);
+const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
+  id: "/providers",
+  path: "/providers",
+  getParentRoute: () => SettingsRoute,
+} as any);
 const RepositoryRepositoryIdIndexRoute =
   RepositoryRepositoryIdIndexRouteImport.update({
     id: "/",
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   "/settings": typeof SettingsRouteWithChildren;
   "/repository/$repositoryId": typeof RepositoryRepositoryIdRouteWithChildren;
   "/settings/general": typeof SettingsGeneralRoute;
+  "/settings/providers": typeof SettingsProvidersRoute;
   "/repository/$repositoryId/": typeof RepositoryRepositoryIdIndexRoute;
   "/repository/$repositoryId/workspace/$workspaceId": typeof RepositoryRepositoryIdWorkspaceWorkspaceIdRoute;
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/settings": typeof SettingsRouteWithChildren;
   "/settings/general": typeof SettingsGeneralRoute;
+  "/settings/providers": typeof SettingsProvidersRoute;
   "/repository/$repositoryId": typeof RepositoryRepositoryIdIndexRoute;
   "/repository/$repositoryId/workspace/$workspaceId": typeof RepositoryRepositoryIdWorkspaceWorkspaceIdRoute;
 }
@@ -66,6 +74,7 @@ export interface FileRoutesById {
   "/settings": typeof SettingsRouteWithChildren;
   "/repository/$repositoryId": typeof RepositoryRepositoryIdRouteWithChildren;
   "/settings/general": typeof SettingsGeneralRoute;
+  "/settings/providers": typeof SettingsProvidersRoute;
   "/repository/$repositoryId/": typeof RepositoryRepositoryIdIndexRoute;
   "/repository/$repositoryId/workspace/$workspaceId": typeof RepositoryRepositoryIdWorkspaceWorkspaceIdRoute;
 }
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
     | "/settings"
     | "/repository/$repositoryId"
     | "/settings/general"
+    | "/settings/providers"
     | "/repository/$repositoryId/"
     | "/repository/$repositoryId/workspace/$workspaceId";
   fileRoutesByTo: FileRoutesByTo;
@@ -83,6 +93,7 @@ export interface FileRouteTypes {
     | "/"
     | "/settings"
     | "/settings/general"
+    | "/settings/providers"
     | "/repository/$repositoryId"
     | "/repository/$repositoryId/workspace/$workspaceId";
   id:
@@ -91,6 +102,7 @@ export interface FileRouteTypes {
     | "/settings"
     | "/repository/$repositoryId"
     | "/settings/general"
+    | "/settings/providers"
     | "/repository/$repositoryId/"
     | "/repository/$repositoryId/workspace/$workspaceId";
   fileRoutesById: FileRoutesById;
@@ -131,6 +143,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof SettingsGeneralRouteImport;
       parentRoute: typeof SettingsRoute;
     };
+    "/settings/providers": {
+      id: "/settings/providers";
+      path: "/providers";
+      fullPath: "/settings/providers";
+      preLoaderRoute: typeof SettingsProvidersRouteImport;
+      parentRoute: typeof SettingsRoute;
+    };
     "/repository/$repositoryId/": {
       id: "/repository/$repositoryId/";
       path: "/";
@@ -150,10 +169,12 @@ declare module "@tanstack/react-router" {
 
 interface SettingsRouteChildren {
   SettingsGeneralRoute: typeof SettingsGeneralRoute;
+  SettingsProvidersRoute: typeof SettingsProvidersRoute;
 }
 
 const SettingsRouteChildren: SettingsRouteChildren = {
   SettingsGeneralRoute: SettingsGeneralRoute,
+  SettingsProvidersRoute: SettingsProvidersRoute,
 };
 
 const SettingsRouteWithChildren = SettingsRoute._addFileChildren(

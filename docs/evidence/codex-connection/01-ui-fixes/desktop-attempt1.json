@@ -1,0 +1,24 @@
+{
+  "protocol": 11,
+  "root": "/private/tmp/aw-ready-7lc30xby",
+  "owner": "81453-1794744440148194000",
+  "supervisor_pid": 81453,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "supervisor_sha256": "b7df607529e71267a1ac54fe7c17fc0119ca8f55271be4a321741a8256d0fd32",
+  "target": {
+    "id": "0e257b58-41f5-4352-9b8b-aef78fd149e5",
+    "provider": "codex",
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-0e257b58-41f5-4352-9b8b-aef78fd149e5",
+    "supported_version": "0.169.0"
+  },
+  "checks": [],
+  "limits": "Synthetic runtime; no native authentication, login, thread, turn or Claude process.",
+  "desktop": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/MacOS/workspace-desktop",
+  "desktop_sha256": "1d6e8d938adfe5a5e1cbe6d3f1aba5d2d4c5db7aab4341f0ca79ba9de81bccab",
+  "desktop_pid": 81454,
+  "supervisor_exit": -15,
+  "fixture_pids": [81490, 81491, 81568, 81569, 81696, 81697],
+  "remaining_fixture_pids": []
+}

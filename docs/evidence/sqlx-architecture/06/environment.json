@@ -1,0 +1,60 @@
+{
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "commands": {
+    "sw_vers": {
+      "exit": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+      "stderr": ""
+    },
+    "uname -m": {
+      "exit": 0,
+      "stdout": "arm64",
+      "stderr": ""
+    },
+    "sysctl -n hw.model": {
+      "exit": 0,
+      "stdout": "Mac16,8",
+      "stderr": ""
+    },
+    "sysctl -n hw.memsize": {
+      "exit": 0,
+      "stdout": "51539607552",
+      "stderr": ""
+    },
+    "sysctl -n hw.ncpu": {
+      "exit": 0,
+      "stdout": "12",
+      "stderr": ""
+    },
+    "rustc --version": {
+      "exit": 0,
+      "stdout": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+      "stderr": ""
+    },
+    "cargo --version": {
+      "exit": 0,
+      "stdout": "cargo 1.99.1 (5f94df478 2026-08-27)",
+      "stderr": ""
+    },
+    "node --version": {
+      "exit": 0,
+      "stdout": "v26.13.1",
+      "stderr": ""
+    },
+    "corepack pnpm --version": {
+      "exit": 0,
+      "stdout": "12.18.0",
+      "stderr": ""
+    },
+    "git rev-parse HEAD": {
+      "exit": 0,
+      "stdout": "97265159cbfcc0998df66b861eb119cae1dd910a",
+      "stderr": ""
+    },
+    "git branch --show-current": {
+      "exit": 0,
+      "stdout": "sqlx-storage-cutover",
+      "stderr": ""
+    }
+  }
+}

@@ -1,0 +1,48 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0609]: no field `selection_store` on type `provider_connection::ProviderConnections`
+   --> crates/core/src/runtimes/provider_connection/selection.rs:148:17
+    |
+148 |             raw.selection_store = Some(Arc::new(Store { calls: AtomicUsize::new(0), fail: true }));
+    |                 ^^^^^^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `records`, `tasks`, `journal`, `launch`, `cancel` ... and 7 others
+
+error[E0063]: missing field `action` in initializer of `provider_connection::Entry`
+   --> crates/core/src/runtimes/provider_connection.rs:767:13
+    |
+767 |             Entry {
+    |             ^^^^^ missing `action`
+
+Some errors have detailed explanations: E0063, E0609.
+For more information about an error, try `rustc --explain E0063`.
+error: could not compile `workspace-core` (lib test) due to 2 previous errors

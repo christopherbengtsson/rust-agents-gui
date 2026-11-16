@@ -1,69 +1,27 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { developmentEnvironment } from "./development-state.mjs";
-const built = {
-  executable: "/target/debug/workspace-supervisor",
-  applicationVersion: "0.1.0",
-};
-function environment({
-  checkout = "/worktree",
-  protocol = "9\n",
-  version = "0.1.0",
-  env = {},
-} = {}) {
-  const calls = [];
-  const result = developmentEnvironment(
-    { ...built, applicationVersion: version },
-    {
-      env,
-      checkout,
-      home: "/Users/test",
-      canonical: (value) => value.replace("/alias", "/worktree"),
-      run: (exe, args) => {
-        calls.push([exe, args]);
-        return protocol;
-      },
-    },
-  );
-  assert.deepEqual(calls, [[built.executable, ["--protocol-version"]]]);
-  return result;
-}
-test("dev state is persistent, canonical-worktree and compatibility specific", () => {
-  const a = environment();
-  assert.equal(
-    a.AGENT_WORKSPACE_STATE_DIR,
-    environment().AGENT_WORKSPACE_STATE_DIR,
-  );
-  assert.equal(
-    a.AGENT_WORKSPACE_STATE_DIR,
-    environment({ checkout: "/alias" }).AGENT_WORKSPACE_STATE_DIR,
-  );
-  assert.notEqual(
-    a.AGENT_WORKSPACE_STATE_DIR,
-    environment({ checkout: "/other" }).AGENT_WORKSPACE_STATE_DIR,
-  );
-  assert.notEqual(
-    a.AGENT_WORKSPACE_STATE_DIR,
-    environment({ protocol: "8" }).AGENT_WORKSPACE_STATE_DIR,
-  );
-  assert.notEqual(
-    a.AGENT_WORKSPACE_STATE_DIR,
-    environment({ version: "0.2.0" }).AGENT_WORKSPACE_STATE_DIR,
-  );
-  assert.match(
-    a.AGENT_WORKSPACE_STATE_DIR,
-    /\/\.agent-workspace\/dev\/[a-f0-9]{12}\/p9-[a-f0-9]{8}$/,
-  );
-  assert.equal(a.AGENT_WORKSPACE_SUPERVISOR, built.executable);
-});
-test("an explicit state override is honored exactly and stale supervisor overrides are replaced", () => {
-  const a = environment({
-    env: {
-      AGENT_WORKSPACE_STATE_DIR: "../my-state",
-      AGENT_WORKSPACE_SUPERVISOR: "/old/binary",
-    },
+const environment = (checkout = "/worktree", env = {}) =>
+  developmentEnvironment({
+    env,
+    checkout,
+    home: "/Users/test",
+    canonical: (value) => value.replace("/alias", "/worktree"),
   });
-  assert.equal(a.AGENT_WORKSPACE_STATE_DIR, "../my-state");
-  assert.equal(a.AGENT_WORKSPACE_SUPERVISOR, built.executable);
-  assert.throws(() => environment({ protocol: "ready" }), /protocol metadata/);
+test("native dev namespace is stable per canonical worktree and current schema", () => {
+  const state = environment().AGENT_WORKSPACE_STATE_DIR;
+  assert.equal(state, environment("/alias").AGENT_WORKSPACE_STATE_DIR);
+  assert.notEqual(state, environment("/other").AGENT_WORKSPACE_STATE_DIR);
+  assert.match(
+    state,
+    /\/.agent-workspace\/dev\/[a-f0-9]{12}\/native-schema-4$/,
+  );
+  assert.equal(environment().AGENT_WORKSPACE_SUPERVISOR, undefined);
+});
+test("explicit native state override remains exact", () => {
+  assert.equal(
+    environment("/worktree", { AGENT_WORKSPACE_STATE_DIR: "../chosen" })
+      .AGENT_WORKSPACE_STATE_DIR,
+    "../chosen",
+  );
 });

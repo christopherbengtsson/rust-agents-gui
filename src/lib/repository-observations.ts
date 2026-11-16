@@ -33,16 +33,16 @@ export class RepositoryObservations extends FeatureQueryCache<
             return [`registration:${request.action_id}`];
         }
       },
-      (owner, request, refresh) =>
+      (incarnation, request, refresh) =>
         repositoryRequest(
-          owner,
+          incarnation,
           request.operation === "action" ? request : { ...request, refresh },
         ),
       (request) => request.operation !== "action",
     );
   }
   refreshSelection(
-    owner: string,
+    incarnation: string,
     after: string | null,
     selectedId: string | null,
     actionId: string | undefined,
@@ -51,7 +51,7 @@ export class RepositoryObservations extends FeatureQueryCache<
     const targets: Read[] = [{ operation: "list", after }];
     if (selectedId) targets.push({ operation: "get", id: selectedId });
     if (actionId) targets.push({ operation: "action", action_id: actionId });
-    return this.refresh(owner, reprobe, targets);
+    return this.refresh(incarnation, reprobe, targets);
   }
   invalidate(target: Target) {
     switch (target.kind) {

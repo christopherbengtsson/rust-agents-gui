@@ -39,7 +39,7 @@ export type ChangesView = {
   loading: boolean;
 };
 type Context = {
-  owner: string | undefined;
+  incarnation: string | undefined;
   workspaceId: string;
   active: boolean;
   visible: boolean;
@@ -133,13 +133,13 @@ type Event =
 const firstPage = (): Page => ({ comparison_id: null, after: null });
 const eligible = (context: Coordination, freshness: FeatureFreshness) =>
   !!context.desired?.visible &&
-  !!context.desired.owner &&
-  freshness.ready(context.desired.owner);
-const keyFor = (owner: string, request: InspectionRequest): Key =>
+  !!context.desired.incarnation &&
+  freshness.ready(context.desired.incarnation);
+const keyFor = (incarnation: string, request: InspectionRequest): Key =>
   request.operation === "changes"
     ? [
         "inspection",
-        owner,
+        incarnation,
         {
           operation: "changes",
           workspace_id: request.workspace_id,
@@ -149,7 +149,7 @@ const keyFor = (owner: string, request: InspectionRequest): Key =>
       ]
     : [
         "inspection",
-        owner,
+        incarnation,
         { operation: "change_preview", target: request.target },
       ];
 
@@ -181,7 +181,8 @@ function inspectionMachine(
         const previous = context.desired;
         const changed =
           previous?.workspaceId !== event.context.workspaceId ||
-          (!!event.context.owner && previous.owner !== event.context.owner);
+          (!!event.context.incarnation &&
+            previous.incarnation !== event.context.incarnation);
         return {
           desired: event.context,
           restoring:
@@ -362,7 +363,7 @@ export const inspectionTransitions = {
     string)[]
 >;
 
-// One feature owner: actor coordinates; Query owns bodies; Zustand owns selection.
+// One feature incarnation: actor coordinates; Query owns bodies; Zustand owns selection.
 export class WorkspaceChangesReader {
   readonly actor;
   private readonly unsubscribeFreshness;
@@ -518,29 +519,32 @@ export class WorkspaceChangesReader {
     );
   }
   private async read(
-    owner: string,
+    incarnation: string,
     request: InspectionRequest,
     scope: ObservationScope,
     context: Coordination,
   ) {
-    const key = keyFor(owner, request);
+    const key = keyFor(incarnation, request);
     const rejectedGeneration = this.version(context);
     return this.client.query<Cached>({
       queryKey: key,
       staleTime: 0,
       queryFn: async () => {
         try {
-          return await scope.read(["workspace", owner, request], async () => {
-            const generation = this.version(context);
-            try {
-              const reply = await workspaceRequest(owner, request);
-              if (reply.kind !== "changes" && reply.kind !== "change_preview")
-                throw new Error("Unexpected inspection reply");
-              return { reply, generation };
-            } catch (error) {
-              throw new InspectionFailure(generation, error);
-            }
-          });
+          return await scope.read(
+            ["workspace", incarnation, request],
+            async () => {
+              const generation = this.version(context);
+              try {
+                const reply = await workspaceRequest(incarnation, request);
+                if (reply.kind !== "changes" && reply.kind !== "change_preview")
+                  throw new Error("Unexpected inspection reply");
+                return { reply, generation };
+              } catch (error) {
+                throw new InspectionFailure(generation, error);
+              }
+            },
+          );
         } catch (error) {
           throw error instanceof InspectionFailure
             ? error
@@ -557,9 +561,13 @@ export class WorkspaceChangesReader {
     publish: (type: "summary" | "preview", key: Key) => void,
   ) {
     const desired = context.desired;
-    if (!desired?.owner || !current() || !this.freshness.ready(desired.owner))
+    if (
+      !desired?.incarnation ||
+      !current() ||
+      !this.freshness.ready(desired.incarnation)
+    )
       return;
-    const { owner, workspaceId, active } = desired;
+    const { incarnation, workspaceId, active } = desired;
     const selected = this.selected(context);
     const request: InspectionRequest = {
       operation: "changes",
@@ -567,10 +575,10 @@ export class WorkspaceChangesReader {
       refresh,
       ...context.page,
     };
-    const summaryKey = keyFor(owner, request);
+    const summaryKey = keyFor(incarnation, request);
     publish("summary", summaryKey);
     try {
-      const result = await this.read(owner, request, scope, context);
+      const result = await this.read(incarnation, request, scope, context);
       if (!current() || result.reply.kind !== "changes") return;
       const summary = result.reply.observation;
       if (summary.phase !== "ready" || !summary.page) return;
@@ -601,12 +609,16 @@ export class WorkspaceChangesReader {
         load:
           refresh ||
           !this.cached(
-            keyFor(owner, { operation: "change_preview", target, load: false }),
+            keyFor(incarnation, {
+              operation: "change_preview",
+              target,
+              load: false,
+            }),
           )?.data,
       };
-      const previewKey = keyFor(owner, previewRequest);
+      const previewKey = keyFor(incarnation, previewRequest);
       publish("preview", previewKey);
-      await this.read(owner, previewRequest, scope, context);
+      await this.read(incarnation, previewRequest, scope, context);
       if (
         current() &&
         this.selected(context)?.id === selected.id &&

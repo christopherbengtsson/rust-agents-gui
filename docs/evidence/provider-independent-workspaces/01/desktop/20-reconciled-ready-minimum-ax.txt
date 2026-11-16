@@ -1,0 +1,80 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/0407301a-1b3b-45ea-9341-6e306e26b74c/workspace/e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/0407301a-1b3b-45ea-9341-6e306e26b74c/workspace/e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-piw-qv5omkrn/Ambiguous Available
+							11 button Ambiguous, Help: /private/tmp/aw-piw-qv5omkrn/Ambiguous
+							12 button (expanded) Toggle details for Ambiguous, Secondary Actions: Collapse
+							13 button Create workspace in Ambiguous
+							14 text /private/tmp/aw-piw-qv5omkrn/Ambiguous
+							15 text Available
+							16 content list
+								17 button david-de-gea, Help: Workspace ready
+						18 container /private/tmp/aw-piw-qv5omkrn/Alpha Available
+							19 button Alpha, Help: /private/tmp/aw-piw-qv5omkrn/Alpha
+							20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							21 button Create workspace in Alpha
+							22 text /private/tmp/aw-piw-qv5omkrn/Alpha
+							23 text Available
+							24 content list
+								25 button andre-pierre-gignac, Help: Workspace ready
+								26 button julian-brandt, Help: Workspace ready
+				27 pop up button Add repository
+				28 text Connected
+				29 pop up button Connection details
+				30 link Settings, Value: tauri://localhost/settings/general
+			31 container
+				32 heading david-de-gea, Value: 1
+					33 text david-de-gea
+				34 button Refresh status
+				35 container Selected repository
+					36 text /private/tmp/aw-piw-qv5omkrn/Ambiguous
+					37 text Repository available
+				38 text Uncommitted changes
+				39 button Refresh changes
+				40 pop up button Changed files
+				41 text Retrieving inspection status…
+				42 tab group (selectable) Workspace views
+					43 tab (selected) Workspace
+					44 tab (selectable) Changes
+				45 container Workspace
+					46 container Selected workspace
+						47 text Workspace ready
+						48 heading Your workspace is ready, Value: 2
+							49 text Your workspace is ready
+						50 text david-de-gea
+						51 description list
+							52 text Branch
+							53 text workspace/david-de-gea
+							54 text Workspace folder
+							55 text /private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout
+							56 text Local base
+							57 text refs/heads/main · 5dddce1f77f42849780f6ca214fc5104a9539aab
+							58 text Branch artifact
+							59 text Created by this action
+							60 text Folder artifact
+							61 text Worktree created
+						62 container
+							63 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				64 text Local workspace
+				65 text Ambiguous
+	66 close button
+	67 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	68 minimize button
+	69 text Agent Workspace
+70 menu bar
+	71 PIW Qualification
+	72 File
+	73 Edit
+	74 View
+	75 Window
+	76 Help
+
+The focused UI element is 2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/0407301a-1b3b-45ea-9341-6e306e26b74c/workspace/e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2?view=workspace

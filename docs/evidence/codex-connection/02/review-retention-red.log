@@ -1,0 +1,33 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-login.test.tsx (4 tests | 1 failed) 179ms
+   × lost start replies reconcile once and app progress retains interest after the settings view releases it 72ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-login.test.tsx > lost start replies reconcile once and app progress retains interest after the settings view releases it
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/provider-login.test.tsx:118:38
+    116|   await act(async () => { await vi.advanceTimersByTimeAsync(5 * 60 * 1…
+    117|   root.rerender();
+    118|   expect(root.result.current.active).toBe(true);
+       |                                      ^
+    119|   expect(root.result.current.observation?.login?.phase).toBe("pending"…
+    120|   vi.useRealTimers();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  14:36:04
+   Duration  710ms (environment 32%, import 30%, tests 28%, transform 9%, setup 1%)
+

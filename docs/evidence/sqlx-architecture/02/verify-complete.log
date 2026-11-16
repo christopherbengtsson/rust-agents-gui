@@ -1,0 +1,125 @@
+$ node scripts/check.mjs verify
+   Compiling tokio v1.54.1
+   Compiling futures-util v0.3.34
+   Compiling tracing v0.1.44
+   Compiling flume v0.12.0
+   Compiling futures-channel v0.3.34
+   Compiling serde_json v1.0.154
+   Compiling ts-rs v12.0.1
+   Compiling schemars v1.2.3
+   Compiling futures-executor v0.3.34
+   Compiling tokio-stream v0.1.19
+   Compiling tokio-util v0.7.20
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0433]: cannot find `ProviderSelectionStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:231:56
+    |
+231 |         let selection_store = Arc::new(crate::storage::ProviderSelectionStore::open(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^ could not find `ProviderSelectionStore` in `storage`
+
+error[E0433]: cannot find `ProviderLoginStore` in `storage`
+   --> crates/core/src/runtimes/provider_connection.rs:239:52
+    |
+239 |         let persistence = Arc::new(crate::storage::ProviderLoginStore::open(
+    |                                                    ^^^^^^^^^^^^^^^^^^ could not find `ProviderLoginStore` in `storage`
+
+error[E0433]: cannot find `SqliteStore` in `storage`
+   --> crates/core/src/workspaces.rs:270:42
+    |
+270 |             self.store = crate::storage::SqliteStore::open(&self.directory)
+    |                                          ^^^^^^^^^^^ could not find `SqliteStore` in `storage`
+
+error[E0433]: cannot find `SqliteStore` in `storage`
+   --> crates/core/src/workspaces.rs:446:33
+    |
+446 |                 crate::storage::SqliteStore::open(path)
+    |                                 ^^^^^^^^^^^ could not find `SqliteStore` in `storage`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `workspace-core` (lib) due to 4 previous errors
+node:internal/errors:999
+  const err = new Error(message);
+              ^
+
+Error: Command failed: cargo build --locked -p workspace-core --bin export-contracts --features codegen --message-format=json-render-diagnostics
+    at genericNodeError (node:internal/errors:999:15)
+    at wrappedFn (node:internal/errors:544:14)
+    at checkExecSyncError (node:child_process:990:11)
+    at execFileSync (node:child_process:1026:15)
+    at runCommand (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/cargo.mjs:15:10)
+    at prepareGenerated (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.mjs:232:18)
+    at check (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:14:3)
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:59:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26 {
+  status: 101,
+  signal: null,
+  output: [
+    null,
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#proc-macro2@1.0.107","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/proc-macro2-1.0.107/Cargo.toml","target":{"kind":["custom-build"],"crate_types":["bin"],"name":"build-script-build","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/proc-macro2-1.0.107/build.rs","edition":"2021","doc":false,"doctest":false,"test":false},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["default","proc-macro"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/proc-macro2-c30dde7a6b408684/build-script-build"],"executable":null,"fresh":true}\n' +
+      '{"reason":"build-script-executed","package_id":"registry+https://github.com/rust-lang/crates.io-index#proc-macro2@1.0.107","linked_libs":[],"linked_paths":[],"cfgs":["wrap_proc_macro","proc_macro_span_location","proc_macro_span_file"],"env":[],"out_dir":"/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/proc-macro2-3ce1d59d1c2d2831/out"}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#quote@1.0.47","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/quote-1.0.47/Cargo.toml","target":{"kind":["custom-build"],"crate_types":["bin"],"name":"build-script-build","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/quote-1.0.47/build.rs","edition":"2021","doc":false,"doctest":false,"test":false},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["default","proc-macro"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/quote-6225e2c3d7b1f5d1/build-script-build"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#unicode-ident@1.0.27","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/unicode-ident-1.0.27/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"unicode_ident","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/unicode-ident-1.0.27/src/lib.rs","edition":"2021","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libunicode_ident-464c677e3850e5ec.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libunicode_ident-464c677e3850e5ec.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#libc@0.2.191","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.191/Cargo.toml","target":{"kind":["custom-build"],"crate_types":["bin"],"name":"build-script-build","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.191/build.rs","edition":"2021","doc":false,"doctest":false,"test":false},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["default","std"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/libc-daa2108c6995bba2/build-script-build"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#stable_deref_trait@1.2.1","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"stable_deref_trait","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/src/lib.rs","edition":"2015","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libstable_deref_trait-dd88b2bde4272941.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libstable_deref_trait-dd88b2bde4272941.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#cfg-if@1.0.5","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cfg-if-1.0.5/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"cfg_if","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cfg-if-1.0.5/src/lib.rs","edition":"2018","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libcfg_if-d42be05e643b025c.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libcfg_if-d42be05e643b025c.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#writeable@0.6.4","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/writeable-0.6.4/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"writeable","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/writeable-0.6.4/src/lib.rs","edition":"2021","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libwriteable-3148d35f8531fe45.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libwriteable-3148d35f8531fe45.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#version_check@0.9.5","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/version_check-0.9.5/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"version_check","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/version_check-0.9.5/src/lib.rs","edition":"2015","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libversion_check-b27f711fdcf7628f.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libversion_check-b27f711fdcf7628f.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#litemap@0.8.3","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/litemap-0.8.3/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"litemap","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/litemap-0.8.3/src/lib.rs","edition":"2021","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/liblitemap-afaa52beb0014322.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/liblitemap-afaa52beb0014322.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#futures-core@0.3.34","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-core-0.3.34/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"futures_core","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-core-0.3.34/src/lib.rs","edition":"2018","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["alloc","default","std"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libfutures_core-8f775a399a01a7d6.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libfutures_core-8f775a399a01a7d6.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#pin-project-lite@0.2.17","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pin-project-lite-0.2.17/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"pin_project_lite","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pin-project-lite-0.2.17/src/lib.rs","edition":"2018","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libpin_project_lite-47ee5cd1249b6d13.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libpin_project_lite-47ee5cd1249b6d13.rmeta"],"executable":null,"fresh":true}\n' +
+      '{"reason":"compiler-artifact","package_id":"registry+https://github.c'... 118331 more characters,
+    null
+  ],
+  pid: 34386,
+  stdout: '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#proc-macro2@1.0.107","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/proc-macro2-1.0.107/Cargo.toml","target":{"kind":["custom-build"],"crate_types":["bin"],"name":"build-script-build","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/proc-macro2-1.0.107/build.rs","edition":"2021","doc":false,"doctest":false,"test":false},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["default","proc-macro"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/proc-macro2-c30dde7a6b408684/build-script-build"],"executable":null,"fresh":true}\n' +
+    '{"reason":"build-script-executed","package_id":"registry+https://github.com/rust-lang/crates.io-index#proc-macro2@1.0.107","linked_libs":[],"linked_paths":[],"cfgs":["wrap_proc_macro","proc_macro_span_location","proc_macro_span_file"],"env":[],"out_dir":"/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/proc-macro2-3ce1d59d1c2d2831/out"}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#quote@1.0.47","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/quote-1.0.47/Cargo.toml","target":{"kind":["custom-build"],"crate_types":["bin"],"name":"build-script-build","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/quote-1.0.47/build.rs","edition":"2021","doc":false,"doctest":false,"test":false},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["default","proc-macro"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/quote-6225e2c3d7b1f5d1/build-script-build"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#unicode-ident@1.0.27","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/unicode-ident-1.0.27/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"unicode_ident","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/unicode-ident-1.0.27/src/lib.rs","edition":"2021","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libunicode_ident-464c677e3850e5ec.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libunicode_ident-464c677e3850e5ec.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#libc@0.2.191","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.191/Cargo.toml","target":{"kind":["custom-build"],"crate_types":["bin"],"name":"build-script-build","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.191/build.rs","edition":"2021","doc":false,"doctest":false,"test":false},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["default","std"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/build/libc-daa2108c6995bba2/build-script-build"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#stable_deref_trait@1.2.1","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"stable_deref_trait","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/src/lib.rs","edition":"2015","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libstable_deref_trait-dd88b2bde4272941.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libstable_deref_trait-dd88b2bde4272941.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#cfg-if@1.0.5","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cfg-if-1.0.5/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"cfg_if","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cfg-if-1.0.5/src/lib.rs","edition":"2018","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libcfg_if-d42be05e643b025c.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libcfg_if-d42be05e643b025c.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#writeable@0.6.4","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/writeable-0.6.4/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"writeable","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/writeable-0.6.4/src/lib.rs","edition":"2021","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libwriteable-3148d35f8531fe45.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libwriteable-3148d35f8531fe45.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#version_check@0.9.5","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/version_check-0.9.5/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"version_check","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/version_check-0.9.5/src/lib.rs","edition":"2015","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":0,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libversion_check-b27f711fdcf7628f.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libversion_check-b27f711fdcf7628f.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#litemap@0.8.3","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/litemap-0.8.3/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"litemap","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/litemap-0.8.3/src/lib.rs","edition":"2021","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/liblitemap-afaa52beb0014322.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/liblitemap-afaa52beb0014322.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#futures-core@0.3.34","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-core-0.3.34/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"futures_core","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-core-0.3.34/src/lib.rs","edition":"2018","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":["alloc","default","std"],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libfutures_core-8f775a399a01a7d6.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libfutures_core-8f775a399a01a7d6.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#pin-project-lite@0.2.17","manifest_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pin-project-lite-0.2.17/Cargo.toml","target":{"kind":["lib"],"crate_types":["lib"],"name":"pin_project_lite","src_path":"/Users/christopherbengtsson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pin-project-lite-0.2.17/src/lib.rs","edition":"2018","doc":true,"doctest":true,"test":true},"profile":{"opt_level":"0","debuginfo":2,"debug_assertions":true,"overflow_checks":true,"test":false},"features":[],"filenames":["/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libpin_project_lite-47ee5cd1249b6d13.rlib","/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/libpin_project_lite-47ee5cd1249b6d13.rmeta"],"executable":null,"fresh":true}\n' +
+    '{"reason":"compiler-artifact","package_id":"registry+https://github.c'... 118331 more characters,
+  stderr: null
+}
+
+Node.js v26.13.1
+[ELIFECYCLE] Command failed with exit code 1.

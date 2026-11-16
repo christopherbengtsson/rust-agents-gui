@@ -1,0 +1,33 @@
+{
+  "original_fixture_desktop_pid": 81215,
+  "workflow": [
+    "Register exact disposable repository through Add repository dialog",
+    "First workspace michelle-akers became ready on pinned main commit 056270483e9b1e89c7a3be7d946964b093b1afc8",
+    "Write only disposable checkout fixture.txt through filesystem qualification helper",
+    "Refresh changes, Changes tab, fixture.txt unified diff showed original ticket05 fixture and replacement ticket05 disposable changed content",
+    "Settings > Providers > Codex showed Connected and fixture@example.test",
+    "Cmd+Q completed original product-owned shutdown; harness observed original desktop and host exits 0"
+  ],
+  "window": "900x680 logical points; screenshot observed in CUA session, no local PNG export",
+  "screenshot_and_ax": "CUA session observations; key AX text transcribed below",
+  "transcribed_ax": [
+    "button michelle-akers, Help: Workspace ready",
+    "text Workspace ready",
+    "text refs/heads/main \u00b7 056270483e9b1e89c7a3be7d946964b093b1afc8",
+    "text 1 changed files",
+    "heading fixture.txt",
+    "text @@ -1 +1 @@",
+    "text ticket05 fixture",
+    "text ticket05 disposable changed content",
+    "container Codex setup",
+    "text Connected",
+    "text fixture@example.test"
+  ],
+  "observer_relaunch": {
+    "pid": 81986,
+    "excluded_from_owned_quit": true,
+    "description": "A follow-up CUA app observation reopened the copied bundle after original Quit. It displayed unavailable destination; the observer-created instance was terminated with TERM and confirmed absent by CUA inventory. No further readiness/sign-in action was taken in it."
+  },
+  "provider_methods": "Only synthetic readiness; account/login, thread and turn forbidden by harness final invariant",
+  "result": "Original fixture cohort passed; observer relaunch retained as qualification-tool behavior"
+}

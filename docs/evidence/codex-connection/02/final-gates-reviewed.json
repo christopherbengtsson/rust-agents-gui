@@ -1,0 +1,49 @@
+{
+  "source_revision": "a3a7507862746c60bbd0a4a151a742d853287a7f",
+  "generated_preparation": "generated-last.log",
+  "results": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "log": "format-final.log",
+      "exit": 0,
+      "wall_seconds": 0.31164329196326435
+    },
+    {
+      "command": ["corepack", "pnpm", "lint"],
+      "log": "lint-final.log",
+      "exit": 0,
+      "wall_seconds": 0.13040424999780953
+    },
+    {
+      "command": ["corepack", "pnpm", "check"],
+      "log": "check-last.log",
+      "exit": 0,
+      "wall_seconds": 4.729077916010283
+    },
+    {
+      "command": ["corepack", "pnpm", "test:measure"],
+      "log": "units-last.log",
+      "exit": 0,
+      "wall_seconds": 100.69536550005432
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "log": "build-last.log",
+      "exit": 0,
+      "wall_seconds": 54.581901042023674
+    },
+    {
+      "command": [
+        "python3",
+        "fixtures/codex-readiness/qualify.py",
+        "target/release/workspace-supervisor",
+        "docs/evidence/codex-connection/02/process-last.json",
+        "--browser",
+        "--headless"
+      ],
+      "log": "process-last.log",
+      "exit": 0,
+      "wall_seconds": 10.080100000021048
+    }
+  ]
+}

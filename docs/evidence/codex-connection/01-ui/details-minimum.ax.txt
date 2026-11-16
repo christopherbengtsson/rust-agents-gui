@@ -1,0 +1,62 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 container
+				5 button Back
+				6 heading Settings, Value: 1
+					7 text Settings
+			8 container Settings
+				9 link General, Value: tauri://localhost/settings/general
+				10 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			11 container Providers
+				12 heading Providers, Value: 2
+					13 text Providers
+				14 tab group (selectable) Provider
+					15 tab (selected) Codex
+					16 tab (selectable) Claude Code
+				17 container Codex
+					18 container Codex setup
+						19 text Connected
+						20 text Signed in with ChatGPT
+						21 description list
+							22 text Account
+							23 text fixture@example.test
+							24 text Plan
+							25 text Pro
+							26 text Billing
+							27 text ChatGPT
+						28 button (expanded) Technical details, Secondary Actions: Collapse
+						29 text User-level setup. Project overrides are not inspected here.
+						30 description list
+							31 text Model provider
+							32 text openai
+							33 text Model
+							34 text fixture-model
+							35 text Executable
+							36 text /Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py
+							37 text Codex home
+							38 text Fixture-owned configuration
+							39 text Setup directory
+							40 text /var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-d1f34856-9cb0-4a63-87ff-647772d1ba66
+							41 text Supported runtime
+							42 text 0.169.0
+							43 text Observed runtime
+							44 text 0.169.0
+							45 text Diagnostic
+							46 text No setup error observed
+						47 button (collapsed) Setup help, Secondary Actions: Expand
+	48 close button
+	49 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	50 minimize button
+	51 text Agent Workspace
+52 menu bar
+	53 Agent Workspace
+	54 File
+	55 Edit
+	56 View
+	57 Window
+	58 Help
+
+The focused UI element is 28 button (expanded) Technical details, Secondary Actions: Collapse

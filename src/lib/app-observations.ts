@@ -5,6 +5,7 @@ import { FeatureFreshness } from "./feature-freshness";
 import { createObservationQueryClient } from "./feature-query-cache";
 import { RepositoryObservations } from "./repository-observations";
 import { WorkspaceObservations } from "./workspace-observations";
+import { ProviderObservations } from "./provider-observations";
 import { WorkspaceChangesReader } from "./workspace-changes-reader";
 
 export class AppObservations {
@@ -12,9 +13,15 @@ export class AppObservations {
   readonly freshness = new FeatureFreshness();
   readonly repositories: RepositoryObservations;
   readonly workspaces: WorkspaceObservations;
+  readonly providers: ProviderObservations;
   readonly inspection: WorkspaceChangesReader;
   readonly presentation = createPresentationStore();
   constructor(readonly reads = new ObservationCoordinator()) {
+    this.providers = new ProviderObservations(
+      this.client,
+      reads,
+      this.freshness,
+    );
     this.repositories = new RepositoryObservations(
       this.client,
       reads,
@@ -32,18 +39,19 @@ export class AppObservations {
       this.presentation,
     );
   }
-  connect = (owner: string | undefined) => {
-    this.freshness.connect(owner);
+  connect = (incarnation: string | undefined) => {
+    this.freshness.connect(incarnation);
   };
   accept = (batch: FeedBatch) => {
-    if (!this.freshness.matches(batch.cursor.owner)) return;
+    if (!this.freshness.matches(batch.cursor.incarnation)) return;
     if (batch.sample.kind === "resync_required") this.freshness.resync();
     if (batch.sample.kind === "hints")
       for (const target of batch.sample.targets) {
+        this.providers.invalidate(target);
         this.repositories.invalidate(target);
         this.workspaces.invalidate(target);
         this.inspection.invalidate(target);
       }
-    this.freshness.accept(batch.cursor.owner);
+    this.freshness.accept(batch.cursor.incarnation);
   };
 }

@@ -1,14 +1,16 @@
 import { useStore } from "zustand";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { listen } from "@tauri-apps/api/event";
 import {
   Outlet,
+  Link,
   useLocation,
   useRouteContext,
   useRouterState,
 } from "@tanstack/react-router";
 import { useObservationFeed } from "@/hooks/use-observation-feed";
-import { useSupervisorConnection } from "@/hooks/use-supervisor-connection";
+import { useCoreConnection } from "@/hooks/use-core-connection";
 import { useRepositories } from "@/hooks/use-repositories";
 import { useWorkspaces } from "@/hooks/use-workspaces";
 import { RepositorySidebar } from "@/components/blocks/repository-sidebar";
@@ -19,24 +21,25 @@ import {
   type MainDestination,
 } from "@/lib/navigation";
 import type { AppObservations } from "@/lib/app-observations";
+import { useProviderProgress } from "@/hooks/use-provider-progress";
 
 export function targetStatus(
   app: AppObservations,
-  owner: string | undefined,
+  incarnation: string | undefined,
   target: MainDestination | undefined,
 ) {
   if (!target || target.kind === "home") return "valid";
-  if (!owner) return "unavailable";
+  if (!incarnation) return "unavailable";
   const repository = { operation: "get", id: target.repositoryId } as const;
-  const repo = app.repositories.peek(owner, repository);
-  if (!app.repositories.isCurrent(owner, repository)) return "pending";
+  const repo = app.repositories.peek(incarnation, repository);
+  if (!app.repositories.isCurrent(incarnation, repository)) return "pending";
   if (repo?.error) return "unavailable";
   if (repo?.data?.value.kind !== "repository" || !repo.data.value.repository)
     return "missing";
   if (target.kind === "repository") return "valid";
   const workspace = { operation: "get", id: target.workspaceId } as const;
-  const state = app.workspaces.peek(owner, workspace);
-  if (!app.workspaces.isCurrent(owner, workspace)) return "pending";
+  const state = app.workspaces.peek(incarnation, workspace);
+  if (!app.workspaces.isCurrent(incarnation, workspace)) return "pending";
   if (state?.error) return "unavailable";
   return state?.data?.value.kind === "workspace" &&
     state.data.value.workspace?.repository_id === target.repositoryId
@@ -48,24 +51,24 @@ function useRuntime() {
   const location = useLocation();
   const mainVisible = !isSettingsPath(location.pathname);
   const target = mainDestination(location.href);
-  const { connection, refreshStatus } = useSupervisorConnection();
-  const owner =
+  const { connection, refreshStatus } = useCoreConnection();
+  const incarnation =
     connection.state === "connected"
-      ? connection.observation.snapshot.cursor.owner
+      ? connection.observation.snapshot.cursor.incarnation
       : undefined;
-  const feed = useObservationFeed(owner, app);
+  const feed = useObservationFeed(incarnation, app);
   const observedConnection = { ...connection, feed };
   const repositoryId =
     target && target.kind !== "home" ? target.repositoryId : undefined;
   const repositories = useRepositories(
-    owner,
+    incarnation,
     app,
     repositoryId ?? null,
     navigation,
     mainVisible,
   );
   const workspaces = useWorkspaces(
-    owner,
+    incarnation,
     repositoryId,
     repositories.page?.repositories.map((r) => r.id).join(",") ?? "",
     target?.kind === "workspace" ? target.workspaceId : undefined,
@@ -73,7 +76,7 @@ function useRuntime() {
     navigation,
     mainVisible,
   );
-  const status = targetStatus(app, owner, target);
+  const status = targetStatus(app, incarnation, target);
   useEffect(() => {
     navigation.restoreOnce(app.presentation.getState().rememberedMain);
     if (navigation.history.location.href !== location.href) return;
@@ -110,6 +113,40 @@ export function useAppRuntime() {
 }
 export function AppRuntime() {
   const runtime = useRuntime();
+  const providerProgress = useProviderProgress(
+    runtime.app,
+    runtime.connection.state === "connected"
+      ? runtime.connection.observation.snapshot.cursor.incarnation
+      : undefined,
+    runtime.connection.observation?.snapshot.provider_login_pending === true,
+  );
+  const [shutdown, setShutdown] = useState<string>();
+  useEffect(() => {
+    let disposed = false;
+    let release: (() => void) | undefined;
+    void listen<unknown>("owned-shutdown", (event) => {
+      if (
+        !disposed &&
+        typeof event.payload === "string" &&
+        event.payload.length <= 4096
+      )
+        setShutdown(event.payload);
+    })
+      .then((stop) => {
+        if (disposed) stop();
+        else release = stop;
+      })
+      .catch(() => {
+        if (!disposed)
+          setShutdown(
+            "Desktop shutdown updates are unavailable. Keep the app open if Quit cannot confirm owned cleanup.",
+          );
+      });
+    return () => {
+      disposed = true;
+      release?.();
+    };
+  }, []);
   const location = useLocation();
   const settings = isSettingsPath(location.pathname);
   const pending = useRouterState({
@@ -130,6 +167,20 @@ export function AppRuntime() {
         <a
           className="skip-link"
           href={settings ? "#settings-main" : "#workspace"}
+          onClick={(event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            event.preventDefault();
+            document
+              .getElementById(settings ? "settings-main" : "workspace")
+              ?.focus();
+          }}
         >
           {settings ? "Skip to settings" : "Skip to workspace"}
         </a>
@@ -142,6 +193,32 @@ export function AppRuntime() {
           />
         )}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          {shutdown && (
+            <Alert>
+              <AlertTitle>Owned shutdown</AlertTitle>
+              <AlertDescription>{shutdown}</AlertDescription>
+            </Alert>
+          )}
+          {providerProgress.active && (
+            <div className="flex shrink-0 items-center gap-2 border-b px-4 py-2 text-sm">
+              <Link
+                to="/settings/providers"
+                search={{ provider: "codex" }}
+                replace={settings}
+              >
+                Codex sign-in{" "}
+                {providerProgress.observation?.login?.phase ===
+                "cleanup_uncertain"
+                  ? "needs attention"
+                  : "in progress"}
+              </Link>
+              {providerProgress.stale && (
+                <span className="text-muted-foreground">
+                  Last known · status unavailable
+                </span>
+              )}
+            </div>
+          )}
           {storageError && (
             <Alert>
               <AlertTitle>

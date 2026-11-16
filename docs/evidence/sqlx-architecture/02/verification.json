@@ -1,0 +1,167 @@
+{
+  "source": "b4e0f4fc82652f0660b3eda638cb5b16f5a0d809",
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "verify"],
+      "exit": 1,
+      "seconds": 5.6552275830181316,
+      "log": "verify-complete.log"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "clippy",
+        "--locked",
+        "-p",
+        "storage-checkpoint",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 0.5211672080913559,
+      "log": "clippy-final.log"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "test",
+        "--locked",
+        "-p",
+        "storage-checkpoint",
+        "--lib",
+        "--no-run",
+        "--message-format=json-render-diagnostics"
+      ],
+      "exit": 0,
+      "seconds": 0.6532300829421729,
+      "log": "unit-compile-final.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.6596896660048515,
+      "log": "units-warmup.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.01885045797098428,
+      "log": "units-run-1.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.014958375017158687,
+      "log": "units-run-2.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.012528207967989147,
+      "log": "units-run-3.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.014261457952670753,
+      "log": "units-run-4.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.011913000023923814,
+      "log": "units-run-5.log"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "build",
+        "--locked",
+        "-p",
+        "storage-checkpoint",
+        "--features",
+        "qualification",
+        "--bin",
+        "qualify-storage"
+      ],
+      "exit": 0,
+      "seconds": 1.932440958917141,
+      "log": "qualification-build-final.log"
+    },
+    {
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-storage",
+        "/private/tmp/aw-sqlx02-final-b4e0f4f"
+      ],
+      "exit": 1,
+      "seconds": 0.5651376249734312,
+      "log": "qualification-final.log"
+    },
+    {
+      "command": ["corepack", "pnpm", "exec", "tsc", "--noEmit"],
+      "exit": 0,
+      "seconds": 0.5394962499849498,
+      "log": "typescript-final.log"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "scripts/cargo.test.mjs",
+        "scripts/check.test.mjs",
+        "scripts/development-state.test.mjs",
+        "scripts/frontend-lint.test.mjs",
+        "scripts/prepare-generated.test.mjs",
+        "scripts/prepare-supervisor.test.mjs",
+        "scripts/react-compiler.test.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.9750929579604417,
+      "log": "tooling-final.log"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "exit": 0,
+      "seconds": 14.543804542045109,
+      "log": "ui-final.log"
+    }
+  ],
+  "unit_executable_sha256": "8a3411368037280daff27aaf1616696805c6164eb77adeaae5fb70c247039583",
+  "warm_units": {
+    "median_seconds": 0.014261457952670753,
+    "range_seconds": [0.011913000023923814, 0.01885045797098428],
+    "warmup_runs": 1,
+    "measured_runs": 5,
+    "threads": 1
+  }
+}

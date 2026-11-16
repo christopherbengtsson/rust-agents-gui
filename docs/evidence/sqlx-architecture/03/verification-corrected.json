@@ -1,0 +1,177 @@
+{
+  "source": "3ac0bc5c155cbd4551e9c400c6fdf880fe9707ec",
+  "dirty": "?? docs/evidence/sqlx-architecture/03/\n",
+  "profile": "worktree-private default target; warm caches; one Rust harness thread",
+  "checks": [
+    {
+      "label": "corrected-checkpoint-units-measured",
+      "command": ["corepack", "pnpm", "test:workspaces", "--measure"],
+      "exit": 0,
+      "seconds": 1.964325875043869
+    },
+    {
+      "label": "corrected-checkpoint-clippy",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "clippy",
+        "--locked",
+        "-p",
+        "workspace-checkpoint",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 0.8815109999850392
+    },
+    {
+      "label": "corrected-core-tests-check-final",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "check",
+        "--locked",
+        "-p",
+        "workspace-core",
+        "--tests",
+        "--features",
+        "codegen"
+      ],
+      "exit": 101,
+      "seconds": 2.6201357500394806
+    },
+    {
+      "label": "corrected-workspace-checkpoint-qualification-build",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "build",
+        "--locked",
+        "-p",
+        "workspace-checkpoint",
+        "--features",
+        "qualification",
+        "--bin",
+        "qualify-workspaces",
+        "--message-format=json-render-diagnostics"
+      ],
+      "exit": 0,
+      "seconds": 2.509181958041154
+    },
+    {
+      "label": "corrected-workspace-checkpoint-qualification",
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-workspaces",
+        "/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd"
+      ],
+      "exit": 0,
+      "seconds": 2.3765947500942275
+    },
+    {
+      "label": "corrected-storage-checkpoint-qualification-build",
+      "command": [
+        "node",
+        "scripts/cargo.mjs",
+        "build",
+        "--locked",
+        "-p",
+        "storage-checkpoint",
+        "--features",
+        "qualification",
+        "--bin",
+        "qualify-storage",
+        "--message-format=json-render-diagnostics"
+      ],
+      "exit": 0,
+      "seconds": 1.505343916011043
+    },
+    {
+      "label": "corrected-storage-checkpoint-qualification",
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-storage",
+        "/tmp/ticket03-storage-checkpoint-a9875a42712b45dcb44a0c4f89dff0c8"
+      ],
+      "exit": 0,
+      "seconds": 1.8373689169529825
+    }
+  ],
+  "workspace-checkpoint": {
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-workspaces",
+    "sha256": "cbf81e06eb234b7e992c470d569c2c298c127939f03e327c22401ef5cc00213d",
+    "disposable_root": "/tmp/ticket03-workspace-checkpoint-f509663e7efa4b5cb9b59ea4c67a05fd"
+  },
+  "storage-checkpoint": {
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/qualify-storage",
+    "sha256": "760f12d9e7b2ae70aee5d3a0058ff653c661a327baad15c1027dd49312835433",
+    "disposable_root": "/tmp/ticket03-storage-checkpoint-a9875a42712b45dcb44a0c4f89dff0c8"
+  },
+  "source_files": {
+    "crates/core/src/bin/export-contracts.rs": "cd77a914e166051116a4c0098becfc6bdf3ad222a891ba9e0f69486bae32bb63",
+    "crates/core/src/codegen.rs": "8942d299dde04dffab052d0f810d3f39c595e8b3b84a1d7ab55220967f00286a",
+    "crates/core/src/connection/admission.rs": "8601765f6dad7233364e189f226b2a1b69127768d54ab3a2c5bd6de7df322707",
+    "crates/core/src/connection/framed_exchange/tests.rs": "dd2d8019369586e607bca27052ed1a84aadca65f02f1e0f57e005a7e55d843a4",
+    "crates/core/src/connection/framed_exchange.rs": "5ef8a5c402214cef52a1ffdbb6fe897733639e27acb60287c8e272f8bf9761d9",
+    "crates/core/src/connection/subscription/tests.rs": "61c2f8220636e7ad31e801dbf7aeb29077d59ef909def1c213b38cba973eba56",
+    "crates/core/src/connection/subscription.rs": "39daad90c39a245df9c6842aa2c09106a8b0251a9cd2869f92027809783e3be7",
+    "crates/core/src/connection/tasks.rs": "d4189b406a4c7e6c57e9c801300b671750b77a448cac3057f1a6fb9fc029531d",
+    "crates/core/src/connection/tests/support.rs": "e4e0959f1a9b21209b9391f740b8b793439b4ce2e15d9f32fcd90f17bcf14f3c",
+    "crates/core/src/connection/tests.rs": "8bf919056e2462af701b5aa087a4a0fa28dfa7a0f17669d0f754b25b32fa121b",
+    "crates/core/src/connection.rs": "8cd87a380eea1a21dac197ae945e3a709df5b8442482994ab9115fd381b89af8",
+    "crates/core/src/git/inspection.rs": "beffb7e4757a15d8d00b3e8376b200abdb52d9fcf1f68dfe2ea44964f57ad2fb",
+    "crates/core/src/git.rs": "6dde992ae06a86b8c3ad5119d5f49aed2549065ad0bf519114d2c6d4a7ac61c5",
+    "crates/core/src/lib.rs": "1c7478c7270681d4c9bd47d92016e6dabd652cd1e2febe8e51d2ea88095135fc",
+    "crates/core/src/lifetime.rs": "78cb0b7a6c51af4e6b39470aca39d13a58ce8075a999fc7032b0f38f20d1a0b2",
+    "crates/core/src/observations.rs": "a3c41684ce06dd447d3493d9794bef6da4fcc1adabb99bfab67709da756968ee",
+    "crates/core/src/private_state.rs": "2548a5507bd7bff07f61cded0091f64850300224614bc6ca9ef971d5828a2b26",
+    "crates/core/src/runtimes/codex/discovery.rs": "163a9f8e07dcdf818897e4d7a90a54c0860ca857cae76ecd972f830fa1a3034a",
+    "crates/core/src/runtimes/codex/process.rs": "bf110936e152b5c4ba660b7d47acbfd77fa3c89d0c017a4f920ce7c50c947a1c",
+    "crates/core/src/runtimes/codex/protocol.rs": "b22b289532b8f5149458d73678ddb9a5625b36ab859fdc620a26cfac9838f382",
+    "crates/core/src/runtimes/codex.rs": "4c0d6a58d7c28cbfdc42804c9e5aedae71be056ddb721a54a6e30a9e4442618c",
+    "crates/core/src/runtimes/provider_connection/login.rs": "1fa370ee80521374da17e9434c2996c6f7baa95bb2aa298f0c1e64fd5e40fd82",
+    "crates/core/src/runtimes/provider_connection/selection.rs": "c83c8f575d82fa2454a9c5b531463d58a0916d7524a0a257cecbe219dc1274c4",
+    "crates/core/src/runtimes/provider_connection.rs": "8bc8d5f93f45b39e6074a45961003df12a4bb4dc862ccf86d12f1700f7793476",
+    "crates/core/src/runtimes.rs": "04df4cfcd76a37a2bfd8011d95b249b741df01458fd79a63fa70f0dd00c3d39e",
+    "crates/core/src/storage/opening.rs": "26a1967666c0dfba0c7a8d82eb36718f21acc7cb717d142060441f6e14c325bb",
+    "crates/core/src/storage/operations.rs": "2e33b5e828ba1ffd0aa284e92d4416bff3f8f2895958d267bfbdfeb424e0fd51",
+    "crates/core/src/storage/policy.rs": "a5c82d09e2d924ba4216d927f872dc556246bf3872df1602d05bf46f71aacf1c",
+    "crates/core/src/storage/qualification.rs": "e331a9525998fb4632df8378b2998be805f4f7fe7428a46c644d47dab4154a3f",
+    "crates/core/src/storage/tests.rs": "e84ba02025e0fc3c21c64ccce74114a108ef0cba20f56f0397377ad0cf0bb1ee",
+    "crates/core/src/storage.rs": "1e6fd6030feff89401f0ca984145f33224b6b922eb2a4e56c634bf0812ae1816",
+    "crates/core/src/supervisor/tests.rs": "b86cd230f23074ea348c1ebb11506c9e75f5f74acecfe8ff035d249e6c732023",
+    "crates/core/src/supervisor.rs": "51e7d4fe12cc340bb46e9cf3cc1b30f9be92e1d7ce7d4d79b5ec0d1929070154",
+    "crates/core/src/workspaces/coordinator.rs": "f2736c006fc467fa4caa47156e199bb25f77b3148c89ffc9ac9c54b5957456e8",
+    "crates/core/src/workspaces/creation.rs": "1b8f2e0b3b59ac10dc1b9f654cde6c026398922a2100e12e1c89cfa442416239",
+    "crates/core/src/workspaces/inspection/tests.rs": "873dab0dfda4d516c26a88077b700e340478c35a37a4803772d4d3abe646f4f8",
+    "crates/core/src/workspaces/inspection.rs": "848cd133334ad8371a240a025f87e0946f8a0cc4ffebcc2620a2abe1549c6ced",
+    "crates/core/src/workspaces/naming/catalog.rs": "8cd789c921fcc71a3cbf41c7fe424f65e5f96e7afb918512fbcffe0ff7dad2d0",
+    "crates/core/src/workspaces/naming.rs": "2e79a99240f7be0ad77635df1df4296b0e2b53a3279c886c4b8be11ca41e58c6",
+    "crates/core/src/workspaces/persistence.rs": "e1f5dfb5fae1e86be13f497c3d946295a6be8f01b4b8ce5accc3f1b69cbc8e63",
+    "crates/core/src/workspaces/qualification.rs": "947fbcfd76624f4cc5459e1bd2a50efc0189bee99f74c264d243c43655d87738",
+    "crates/core/src/workspaces/records.rs": "11830e0cc910ce6ba480a85e3dd195e3f1e20ca508181c7747b9f8774484ea07",
+    "crates/core/src/workspaces/tests.rs": "0996f548524a25a3329581126f38ea9aa2209a1404b2a6349d77846dcbeebac3",
+    "crates/core/src/workspaces.rs": "ff8179522ad2759bf8919ee67c7710b306b176d05a0be9166f866b8fa6842689"
+  },
+  "unit_executable": {
+    "path": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_checkpoint-3556478261f8675c",
+    "sha256": "099d5f11981b1180a2d9173d7cfa5708fc8ba48d46730d69c9b54f8c02520b3c",
+    "warm_up_seconds": 0.292996
+  },
+  "unit_execution_seconds": {
+    "median": 0.292492,
+    "min": 0.290385,
+    "max": 0.295066,
+    "warm_runs": 5,
+    "harness_threads": 1
+  },
+  "initial_verification": "verification-initial.json",
+  "verification_limits": [
+    "Two provider store callers remain for ticket04; complete gate/generated preparation cannot finish",
+    "Incumbent desktop/package/native-host qualification unperformed",
+    "No live-provider or authentication actions",
+    "No fresh-target compilation or power-loss/disk-full/physical-close-ack fault qualification",
+    "Incumbent outer host connection cap is unchanged; saturated desktop control qualification remains open"
+  ]
+}

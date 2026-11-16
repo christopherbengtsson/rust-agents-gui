@@ -1,0 +1,74 @@
+{
+  "measurement": "literal frozen source sizes; formatting and SQL string layout affect physical lines; not a module depth or quality score",
+  "shared_policy": {
+    "file": "harness/common.rs",
+    "utf8_bytes": 17178,
+    "physical_lines": 439,
+    "nonblank_lines": 439,
+    "sha256": "e6b67d76e1997b48812613154bb1c5fe44085b635c9f5863aca8d6a5bf2823b7",
+    "owned_responsibilities": [
+      "bounded logical count/byte admission including physical batch",
+      "workspace quotas and round robin",
+      "16event/25ms formation",
+      "urgent preference",
+      "fixed offered traces and IDs",
+      "completion timestamps and accounting",
+      "owner drain and retained task handles",
+      "full-record expected hashes and audit comparison",
+      "controlled dropped-reply permit mechanism",
+      "synthetic future-work SQL primitive orchestration"
+    ]
+  },
+  "SQLx_adapter": {
+    "utf8_bytes": 13542,
+    "physical_lines": 323,
+    "nonblank_lines": 323,
+    "sha256": "a429a676bac38efac0943b18caa2da18e8468dc73fad901a77b293cc4a20cd8f",
+    "owned_responsibilities": [
+      "writer1 reader2 pool configuration and effective settings",
+      "bound SQL/binds and native async transactions",
+      "query materialization and context snapshot boundary",
+      "explicit real COMMIT BUSY same-transaction recovery probe",
+      "private-open unsupported-gate reporting",
+      "checkpoint and close acknowledgement"
+    ]
+  },
+  "bridge_adapter": {
+    "utf8_bytes": 11009,
+    "physical_lines": 192,
+    "nonblank_lines": 192,
+    "sha256": "0077d8cc4f5996ea7c777af8c2a4b7d543bcbc396283bd76dd6c72130f7488ab",
+    "owned_responsibilities": [
+      "writer1 and two fixedreader connections with native NOFOLLOW flags",
+      "whole-transaction closures and materialization",
+      "copied batch transfer to closure",
+      "context snapshot boundary",
+      "explicit real COMMIT BUSY same-transaction recovery probe",
+      "private alias rejection probe",
+      "checkpoint and close acknowledgement"
+    ]
+  },
+  "library_owned": {
+    "SQLx": [
+      "dedicated SQLite connection workers and command buffers",
+      "connection pool fair acquisition/caps and explicit close",
+      "transaction-drop rollback dispatch",
+      "cancelled/unacknowledged BEGIN rollback handling",
+      "commit acknowledgement-loss bookkeeping; does not replace core intent/reconciliation policy"
+    ],
+    "tokio-rusqlite": [
+      "dedicated connection threads and closure dispatch",
+      "oneshot async completion for closure results",
+      "dropped-reply delivery ignored after closure executes",
+      "connection close acknowledgement; no exposed OSjoin",
+      "internal closure queue unbounded: shared app admission remains necessary"
+    ]
+  },
+  "not_measured": [
+    "SQLx macro/offline metadata/schema validation workflow",
+    "SQLx migrations adoption",
+    "actual application dependency/binary delta",
+    "explicit OSworkerjoin",
+    "production storage owner migration"
+  ]
+}

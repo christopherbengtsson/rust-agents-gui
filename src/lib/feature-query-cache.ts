@@ -3,7 +3,7 @@ import { ObservationCoordinator } from "./observation-coordinator";
 import { FeatureFreshness } from "./feature-freshness";
 
 export function createObservationQueryClient() {
-  return new QueryClient({
+  const client = new QueryClient({
     defaultOptions: {
       queries: {
         networkMode: "always",
@@ -16,6 +16,28 @@ export function createObservationQueryClient() {
       },
     },
   });
+  // Query owns bodies; this policy adds no result index or serialized copy.
+  // Disabled feature observers still express visible/pending interests.
+  let queued = false;
+  client.getQueryCache().subscribe(() => {
+    if (queued) return;
+    queued = true;
+    queueMicrotask(() => {
+      queued = false;
+      const inactive = client
+        .getQueryCache()
+        .getAll()
+        .filter(
+          (query) =>
+            query.getObserversCount() === 0 &&
+            query.state.fetchStatus === "idle",
+        )
+        .sort((a, b) => a.state.dataUpdatedAt - b.state.dataUpdatedAt);
+      for (const query of inactive.slice(0, Math.max(0, inactive.length - 128)))
+        client.getQueryCache().remove(query);
+    });
+  });
+  return client;
 }
 class ObservationReadFailure extends Error {
   constructor(
@@ -25,9 +47,9 @@ class ObservationReadFailure extends Error {
     super("Observation read failed", { cause });
   }
 }
-type Observed<T> = { value: T; generation: number; owner: string };
+type Observed<T> = { value: T; generation: number; incarnation: string };
 type Interest<Q, R> = {
-  owner: string;
+  incarnation: string;
   request: Q;
   users: number;
   observer: QueryObserver<Observed<R>, Error>;
@@ -42,10 +64,13 @@ export class FeatureQueryCache<Q, R> {
   private interests = new Map<string, Interest<Q, R>>();
   private listeners = new Set<() => void>();
   private revision = 0;
-  private lastOwner?: string;
+  private lastIncarnation?: string;
   // One bounded concrete target set, supplied by the feature for an explicit
   // refresh that crosses temporary connection-interest detachment.
-  private requestedRefresh?: { owner: string; targets: Map<string, boolean> };
+  private requestedRefresh?: {
+    incarnation: string;
+    targets: Map<string, boolean>;
+  };
   constructor(
     private feature: string,
     private readonly client: QueryClient,
@@ -53,7 +78,7 @@ export class FeatureQueryCache<Q, R> {
     private freshness: FeatureFreshness,
     private tags: (request: Q) => string[],
     private request: (
-      owner: string,
+      incarnation: string,
       request: Q,
       reprobe: boolean,
     ) => Promise<R>,
@@ -62,8 +87,8 @@ export class FeatureQueryCache<Q, R> {
     this.freshness.subscribe(() => {
       if (
         this.requestedRefresh &&
-        this.freshness.currentOwner() &&
-        !this.freshness.matches(this.requestedRefresh.owner)
+        this.freshness.currentIncarnation() &&
+        !this.freshness.matches(this.requestedRefresh.incarnation)
       )
         this.requestedRefresh = undefined;
       this.expireRequestedRefresh();
@@ -82,15 +107,15 @@ export class FeatureQueryCache<Q, R> {
     this.revision++;
     this.listeners.forEach((listener) => listener());
   }
-  private key(owner: string, request: Q) {
-    return [this.feature, owner, request] as const;
+  private key(incarnation: string, request: Q) {
+    return [this.feature, incarnation, request] as const;
   }
-  retainedOwner() {
-    return this.lastOwner;
+  retainedIncarnation() {
+    return this.lastIncarnation;
   }
-  observe(owner: string, request: Q) {
-    this.lastOwner = owner;
-    const key = this.key(owner, request);
+  observe(incarnation: string, request: Q) {
+    this.lastIncarnation = incarnation;
+    const key = this.key(incarnation, request);
     const identity = hashKey(key);
     let interest = this.interests.get(identity);
     if (!interest) {
@@ -99,7 +124,7 @@ export class FeatureQueryCache<Q, R> {
         enabled: false,
       });
       interest = {
-        owner,
+        incarnation,
         request,
         users: 0,
         observer,
@@ -117,7 +142,10 @@ export class FeatureQueryCache<Q, R> {
     const current = interest;
     current.users++;
     const requested = this.requestedRefresh;
-    if (requested?.owner === owner && requested.targets.has(identity)) {
+    if (
+      requested?.incarnation === incarnation &&
+      requested.targets.has(identity)
+    ) {
       current.force = true;
       current.reprobe ||= requested.targets.get(identity) === true;
       requested.targets.delete(identity);
@@ -138,10 +166,8 @@ export class FeatureQueryCache<Q, R> {
       void this.client.cancelQueries({ queryKey: key, exact: true });
     };
   }
-  peek(owner: string, request: Q) {
-    const state = this.client.getQueryState<Observed<R>>(
-      this.key(owner, request),
-    );
+  peek(incarnation: string, request: Q) {
+    const state = this.snapshot(incarnation, request);
     return state
       ? {
           ...state,
@@ -152,20 +178,28 @@ export class FeatureQueryCache<Q, R> {
         }
       : undefined;
   }
-  isCurrent(owner: string, request: Q) {
-    if (!this.freshness.ready(owner)) return false;
+  // Query supplies immutable, reference-stable states for React subscriptions.
+  // A discarded revision followed by separate mutable reads is not a reactive
+  // dependency under React Compiler. Keep Query as the sole body incarnation.
+  snapshot(incarnation: string, request: Q) {
+    return this.client.getQueryState<Observed<R>>(
+      this.key(incarnation, request),
+    );
+  }
+  isCurrent(incarnation: string, request: Q) {
+    if (!this.freshness.ready(incarnation)) return false;
     const state = this.client.getQueryState<Observed<R>>(
-      this.key(owner, request),
+      this.key(incarnation, request),
     );
     const version = this.freshness.version(this.tags(request));
     return state?.error instanceof ObservationReadFailure
       ? state.error.generation >= version
       : !!state?.data && state.data.generation >= version;
   }
-  prepare(owner: string, request: Q, signal: AbortSignal): Promise<void> {
-    if (signal.aborted || !this.freshness.matches(owner))
+  prepare(incarnation: string, request: Q, signal: AbortSignal): Promise<void> {
+    if (signal.aborted || !this.freshness.matches(incarnation))
       return Promise.resolve();
-    const release = this.observe(owner, request);
+    const release = this.observe(incarnation, request);
     return new Promise((resolve) => {
       const finish = () => {
         unsubscribe();
@@ -176,8 +210,8 @@ export class FeatureQueryCache<Q, R> {
       const check = () => {
         if (
           signal.aborted ||
-          !this.freshness.matches(owner) ||
-          this.isCurrent(owner, request)
+          !this.freshness.matches(incarnation) ||
+          this.isCurrent(incarnation, request)
         )
           finish();
       };
@@ -186,26 +220,26 @@ export class FeatureQueryCache<Q, R> {
       check();
     });
   }
-  protected record(owner: string, request: Q, value: R) {
-    this.client.setQueryData<Observed<R>>(this.key(owner, request), {
+  protected record(incarnation: string, request: Q, value: R) {
+    this.client.setQueryData<Observed<R>>(this.key(incarnation, request), {
       value,
-      owner,
+      incarnation,
       generation: -1,
     });
   }
-  async refresh(owner: string, reprobe = false, targets?: readonly Q[]) {
+  async refresh(incarnation: string, reprobe = false, targets?: readonly Q[]) {
     const interested = [...this.interests.values()].filter(
-      (interest) => interest.owner === owner,
+      (interest) => interest.incarnation === incarnation,
     );
     const requested = new Map(
       (targets ?? interested.map((interest) => interest.request)).map(
-        (request) => [hashKey(this.key(owner, request)), reprobe],
+        (request) => [hashKey(this.key(incarnation, request)), reprobe],
       ),
     );
-    this.requestedRefresh = { owner, targets: requested };
+    this.requestedRefresh = { incarnation, targets: requested };
     await Promise.all(
       interested.map(async (interest) => {
-        const identity = hashKey(this.key(owner, interest.request));
+        const identity = hashKey(this.key(incarnation, interest.request));
         if (!requested.has(identity)) return;
         interest.force = true;
         interest.reprobe ||= reprobe;
@@ -217,7 +251,7 @@ export class FeatureQueryCache<Q, R> {
   }
   private expireRequestedRefresh() {
     const requested = this.requestedRefresh;
-    if (requested && this.freshness.ready(requested.owner))
+    if (requested && this.freshness.ready(requested.incarnation))
       queueMicrotask(() => {
         // The baseline's attachment wave has finished; hidden/obsolete targets
         // must not resurrect an explicit reprobe on some later navigation.
@@ -232,9 +266,9 @@ export class FeatureQueryCache<Q, R> {
     });
   }
   private async pump(interest: Interest<Q, R>): Promise<void> {
-    const { owner, request } = interest;
-    if (!interest.users || !this.freshness.ready(owner)) return;
-    const key = this.key(owner, request);
+    const { incarnation, request } = interest;
+    if (!interest.users || !this.freshness.ready(incarnation)) return;
+    const key = this.key(incarnation, request);
     const state = this.client.getQueryState<Observed<R>>(key);
     if (state?.fetchStatus === "fetching") return;
     const version = this.freshness.version(this.tags(request));
@@ -271,9 +305,9 @@ export class FeatureQueryCache<Q, R> {
               const generation = this.freshness.version(this.tags(request));
               try {
                 return {
-                  value: await this.request(owner, request, reprobe),
+                  value: await this.request(incarnation, request, reprobe),
                   generation,
-                  owner,
+                  incarnation,
                 };
               } catch (cause) {
                 throw new ObservationReadFailure(generation, cause);

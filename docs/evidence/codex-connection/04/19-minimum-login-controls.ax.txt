@@ -1,0 +1,54 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/settings/providers?provider=codex
+			3 link Skip to settings, Value: tauri://localhost/settings/providers?provider=codex#settings-main
+			4 link Codex sign-in in progress, Value: tauri://localhost/settings/providers?provider=codex
+			5 container
+				6 button Back
+				7 heading Settings, Value: 1
+					8 text Settings
+			9 container Settings
+				10 link General, Value: tauri://localhost/settings/general
+				11 link Providers, Value: tauri://localhost/settings/providers?provider=codex
+			12 container Providers
+				13 heading Providers, Value: 2
+					14 text Providers
+				15 tab group (selectable) Provider
+					16 tab (selected) Codex
+					17 tab (selectable) Claude Code
+				18 container Codex
+					19 container Codex setup
+						20 text Not connected
+						21 text Not signed in
+						22 container
+							23 text Sign in with the official Codex runtime Sign in through your browser below. Codex manages your credentials and the app checks authentication when sign-in finishes.
+							24 button Official sign-in instructions
+						25 text Last known · current readiness unverified
+						26 description list
+							27 text Billing
+							28 text Unknown
+						29 container ChatGPT sign-in
+							30 heading ChatGPT, Value: 3
+								31 text ChatGPT
+							32 text Sign in through your browser.
+							33 text Your existing Codex setup stays in use until the runtime verifies a change.
+							34 container
+								35 text Complete sign-in in your browser
+							36 button Reopen browser
+							37 button Cancel sign-in
+						38 button (collapsed) Technical details, Secondary Actions: Expand
+						39 button (collapsed) Setup help, Secondary Actions: Expand
+	40 close button
+	41 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	42 minimize button
+	43 text Agent Workspace
+44 menu bar
+	45 Connection Journey
+	46 File
+	47 Edit
+	48 View
+	49 Window
+	50 Help
+
+The focused UI element is 34 container

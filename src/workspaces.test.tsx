@@ -1,5 +1,5 @@
 import { AppObservations } from "./lib/app-observations";
-import { ownerBound } from "./test-support/owner-bound-invoke";
+import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import { cleanup, renderHook, act, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
@@ -30,7 +30,7 @@ const w: Workspace = {
 beforeEach(() => {
   localStorage.clear();
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       kind: "workspaces",
       page: { workspaces: [], next: null },
     })),
@@ -50,7 +50,7 @@ test("a restored uncertain action is read without replaying creation", async () 
     }),
   );
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) =>
+    incarnationBound(async (_, args) =>
       (object(args) ? args.request : undefined) &&
       ((object(args) ? args.request : undefined) as { operation: string })
         .operation === "action"
@@ -67,7 +67,12 @@ test("a restored uncertain action is read without replaying creation", async () 
     ),
   );
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, [repository_id].join(","), null),
+    useWorkspaces(
+      "incarnation",
+      repository_id,
+      [repository_id].join(","),
+      null,
+    ),
   );
   await waitFor(() => expect(result.current.pending).toBeNull());
   expect(
@@ -83,7 +88,7 @@ test("a restored uncertain action is read without replaying creation", async () 
 test("explicit creation sends once with a retained action identity", async () => {
   let actions = 0;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
         action_id: string;
@@ -104,7 +109,7 @@ test("explicit creation sends once with a retained action identity", async () =>
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, repository_id, null),
+    useWorkspaces("incarnation", repository_id, repository_id, null),
   );
   await act(async () => {
     await result.current.create(repository_id);
@@ -124,7 +129,7 @@ test.each(["create-first", "lookup-first", "lookup-before-admission"])(
     let accepted = false;
     let saved: unknown;
     vi.mocked(invoke).mockImplementation(
-      ownerBound(async (_, args) => {
+      incarnationBound(async (_, args) => {
         const request = (object(args) ? args.request : undefined) as {
           operation: string;
           action_id: string;
@@ -173,7 +178,12 @@ test.each(["create-first", "lookup-first", "lookup-before-admission"])(
     );
     const { result, rerender } = renderHook(
       ({ repository }) =>
-        useWorkspaces("owner", repository, `${repository_id},${other}`, null),
+        useWorkspaces(
+          "incarnation",
+          repository,
+          `${repository_id},${other}`,
+          null,
+        ),
       { initialProps: { repository: repository_id } },
     );
     await act(async () => {});
@@ -202,10 +212,10 @@ test.each(["create-first", "lookup-first", "lookup-before-admission"])(
   },
 );
 
-test("an old owner's creation reply cannot select a workspace after reconnect", async () => {
+test("an old incarnation's creation reply cannot select a workspace after reconnect", async () => {
   let finish: (() => void) | undefined;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
         action_id: string;
@@ -225,15 +235,16 @@ test("an old owner's creation reply cannot select a workspace after reconnect", 
     }),
   );
   const { result, rerender } = renderHook(
-    ({ owner }) => useWorkspaces(owner, repository_id, repository_id, null),
-    { initialProps: { owner: "old" } },
+    ({ incarnation }) =>
+      useWorkspaces(incarnation, repository_id, repository_id, null),
+    { initialProps: { incarnation: "old" } },
   );
   await act(async () => {});
   let submission: Promise<void>;
   act(() => {
     submission = result.current.create(repository_id);
   });
-  rerender({ owner: "new" });
+  rerender({ incarnation: "new" });
   await act(async () => {
     finish?.();
     await submission;
@@ -246,7 +257,7 @@ test("a lost creation reply retrieves the same action and selects its failed wor
   let createCount = 0;
   let savedAction: unknown;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
         action_id: string;
@@ -281,7 +292,7 @@ test("a lost creation reply retrieves the same action and selects its failed wor
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, repository_id, null),
+    useWorkspaces("incarnation", repository_id, repository_id, null),
   );
   await act(async () => {
     await result.current.create(repository_id);
@@ -295,7 +306,7 @@ test("a lost creation reply retrieves the same action and selects its failed wor
 test("switching selection prevents a late creation reply from stealing context", async () => {
   let finish: ((v: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
         action_id: string;
@@ -319,7 +330,7 @@ test("switching selection prevents a late creation reply from stealing context",
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, repository_id, null),
+    useWorkspaces("incarnation", repository_id, repository_id, null),
   );
   let sending: Promise<void>;
   act(() => {
@@ -334,7 +345,7 @@ test("switching selection prevents a late creation reply from stealing context",
 });
 test("registration's recorded initial workspace is observed without a create request", async () => {
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) =>
+    incarnationBound(async (_, args) =>
       (object(args) ? args.request : (undefined as unknown)) &&
       (object(args) ? (args.request as { operation: string }) : undefined)
         ?.operation === "get"
@@ -344,7 +355,7 @@ test("registration's recorded initial workspace is observed without a create req
   );
   const initial = { repository_id, workspace_id: id };
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, repository_id, initial),
+    useWorkspaces("incarnation", repository_id, repository_id, initial),
   );
   await waitFor(() => expect(result.current.selected?.id).toBe(id));
   expect(
@@ -362,7 +373,7 @@ test("registration's recorded initial workspace is observed without a create req
 test("a delayed initial-workspace lookup cannot override explicit repository selection", async () => {
   let resolveDetail: ((v: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
       };
@@ -375,7 +386,7 @@ test("a delayed initial-workspace lookup cannot override explicit repository sel
   );
   const initial = { repository_id, workspace_id: id };
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, repository_id, initial),
+    useWorkspaces("incarnation", repository_id, repository_id, initial),
   );
   await waitFor(() => expect(resolveDetail).toBeDefined());
   act(() => result.current.selectRepository());
@@ -389,7 +400,7 @@ test("a delayed initial-workspace lookup cannot override explicit repository sel
 
 test("definite admission rejection retains the error but does not block another workspace's recovery", async () => {
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
         action_id: string;
@@ -408,7 +419,7 @@ test("definite admission rejection retains the error but does not block another 
     }),
   );
   const { result } = renderHook(() =>
-    useWorkspaces("owner", repository_id, repository_id, null),
+    useWorkspaces("incarnation", repository_id, repository_id, null),
   );
   await act(async () => {
     await result.current.create(repository_id);
@@ -433,7 +444,7 @@ test("a rejected action retains its error while unrelated workspace progress fol
     status: ready ? w.status : { state: "running", stage: "creating_worktree" },
   });
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
       };
@@ -449,7 +460,7 @@ test("a rejected action retains its error while unrelated workspace progress fol
   );
   try {
     const { result } = renderHook(() =>
-      useWorkspaces("owner", repository_id, repository_id, null, app),
+      useWorkspaces("incarnation", repository_id, repository_id, null, app),
     );
     await act(async () => {});
     act(() =>
@@ -473,7 +484,7 @@ test("a rejected action retains its error while unrelated workspace progress fol
       app.accept({
         subscription_id: "fixture",
         batch_id: 2,
-        cursor: { owner: "owner", sequence: 2 },
+        cursor: { incarnation: "incarnation", sequence: 2 },
         sample: {
           kind: "hints",
           watermark: 2,
@@ -494,7 +505,7 @@ test("a rejected action retains its error while unrelated workspace progress fol
 test("definite rejection follows its pending action across repository navigation", async () => {
   let reject: ((error: unknown) => void) | undefined;
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const request = (object(args) ? args.request : undefined) as {
         operation: string;
       };
@@ -510,7 +521,12 @@ test("definite rejection follows its pending action across repository navigation
   const other = "00000000-0000-4000-8000-000000000009";
   const { result, rerender } = renderHook(
     ({ repository }) =>
-      useWorkspaces("owner", repository, `${repository_id},${other}`, null),
+      useWorkspaces(
+        "incarnation",
+        repository,
+        `${repository_id},${other}`,
+        null,
+      ),
     { initialProps: { repository: repository_id } },
   );
   let submitted: Promise<void>;
@@ -540,24 +556,26 @@ test("pending name allocation is a valid observation, but partial and ready-with
     status: { state: "running", stage: "allocating_name" },
   };
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       kind: "workspace",
       workspace: pending,
     })),
   );
-  expect((await workspaceRequest("owner", request)).kind).toBe("workspace");
+  expect((await workspaceRequest("incarnation", request)).kind).toBe(
+    "workspace",
+  );
   for (const invalid of [
     { ...pending, branch: "workspace/marta" },
     { ...pending, status: { state: "ready" } },
     { ...pending, status: { state: "running", stage: "creating_branch" } },
   ]) {
     vi.mocked(invoke).mockImplementation(
-      ownerBound(async () => ({
+      incarnationBound(async () => ({
         kind: "workspace",
         workspace: invalid,
       })),
     );
-    await expect(workspaceRequest("owner", request)).rejects.toThrow(
+    await expect(workspaceRequest("incarnation", request)).rejects.toThrow(
       "Invalid workspace observation",
     );
   }

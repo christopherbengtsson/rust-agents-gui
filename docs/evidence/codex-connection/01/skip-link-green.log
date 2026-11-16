@@ -1,0 +1,10 @@
+$ vitest run --maxWorkers=1 src/routing.test.tsx
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  11:45:14
+   Duration  2.18s (tests 74%, import 13%, environment 8%, transform 5%)
+

@@ -1,0 +1,22 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.30s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-278ff42e15b22cbe)
+
+running 1 test
+test native::tests::synchronous_quit_callback_uses_the_retained_host_runtime ... FAILED
+
+failures:
+
+---- native::tests::synchronous_quit_callback_uses_the_retained_host_runtime stdout ----
+
+thread 'native::tests::synchronous_quit_callback_uses_the_retained_host_runtime' (36113922) panicked at crates/core/src/native.rs:341:73:
+there is no reactor running, must be called from the context of a Tokio 1.x runtime
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    native::tests::synchronous_quit_callback_uses_the_retained_host_runtime
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 229 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

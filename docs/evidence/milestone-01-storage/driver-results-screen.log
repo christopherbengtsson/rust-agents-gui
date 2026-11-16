@@ -1,0 +1,19 @@
+{"phase": "provenance"}
+{"phase": "seed", "driver": "rusqlite", "label": "10000", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "DELETE-FULL-b1", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "DELETE-EXTRA-b1", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "WAL-FULL-b1", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "WAL-NORMAL-b1", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "DELETE-FULL-b1-reopen", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "WAL-FULL-b16", "exit_code": 0}
+{"phase": "screen", "driver": "rusqlite", "label": "WAL-FULL-b16-readers2", "exit_code": 0}
+{"phase": "lifecycle", "driver": "rusqlite", "label": "queue-drop-drain", "exit_code": 0}
+{"phase": "seed", "driver": "sqlx", "label": "10000", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "DELETE-FULL-b1", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "DELETE-EXTRA-b1", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "WAL-FULL-b1", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "WAL-NORMAL-b1", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "DELETE-FULL-b1-reopen", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "WAL-FULL-b16", "exit_code": 0}
+{"phase": "screen", "driver": "sqlx", "label": "WAL-FULL-b16-readers2", "exit_code": 0}
+{"phase": "lifecycle", "driver": "sqlx", "label": "queue-drop-drain", "exit_code": 0}

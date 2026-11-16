@@ -1,0 +1,41 @@
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+Native dev state: /private/tmp/aw-native07-normal-47lltqug/dev-override
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+
+  VITE v8.3.8  ready in 207 ms
+
+  ➜  Local:   http://127.0.0.1:1420/
+2026-11-16T19:11:47.398941Z  INFO workspace_core::native: native startup settled incarnation=0a1075f1-5399-49ad-b84e-262d512f60b7 phase=Some(Ready)
+2026-11-16T19:11:47.403855Z  INFO workspace_core::native: native shutdown fenced incarnation=0a1075f1-5399-49ad-b84e-262d512f60b7
+Storage close checkpoint: {"busy":0,"log_frames":33,"checkpointed_frames":33,"wal_bytes":135992,"elapsed":{"secs":0,"nanos":14017041}}
+2026-11-16T19:11:47.418846Z  INFO workspace_core::native: native shutdown settled incarnation=0a1075f1-5399-49ad-b84e-262d512f60b7 failures=0

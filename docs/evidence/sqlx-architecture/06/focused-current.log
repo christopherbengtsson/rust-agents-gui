@@ -1,0 +1,55 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+6:59:23 PM [vite] (client) warning: (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts:62:6]
+ 61 |         });
+ 62 |     } finally {
+    :      ^^^^^^^^^
+ 63 |       if (generation.current === current)
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts
+ ❯ src/App.test.tsx (18 tests | 1 failed) 389ms
+   × connection failure stays visible until an explicit status retry; diagnostics never replay work 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > connection failure stays visible until an explicit status retry; diagnostics never replay work
+AssertionError: expected [ 'core_status', 'desktop_pid' ] to deeply equal [ 'desktop_pid', 'core_status' ]
+
+- Expected
++ Received
+
+  [
+-   "desktop_pid",
+    "core_status",
++   "desktop_pid",
+  ]
+
+ ❯ src/App.test.tsx:214:5
+    212|       .map(([command]) => command)
+    213|       .sort(),
+    214|   ).toEqual(["desktop_pid", "core_status"]);
+       |     ^
+    215|
+    216|   await user.click(screen.getByRole("button", { name: "Connection deta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 64 passed (65)
+   Start at  18:59:21
+   Duration  2.93s (environment 34%, tests 26%, import 21%, transform 18%, setup 1%)
+
+    Isolate  6 workers spawned · ~195ms startup each (spawn + environment, per file)
+             at least ~974ms faster with isolate: false — reuses workers across files instead of one per file
+

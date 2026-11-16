@@ -1,0 +1,25 @@
+{
+  "root": "/private/tmp/aw-launcher07-_aimt8zj",
+  "command": ["node", "/private/tmp/aw-launcher07-_aimt8zj/launcher.mjs"],
+  "checks": [
+    "foreground Ctrl-C reaches launcher only",
+    "native receives requested SIGTERM; service remains alive through pending deadline",
+    "no automatic escalation or early service stop",
+    "repeated Ctrl-C observes one drain; released native exits 0 before requested Vite-style service exit 143"
+  ],
+  "limits": [
+    "controlled synthetic native/service children; actual Tauri is qualified separately"
+  ],
+  "children": {
+    "native": {
+      "pid": 34070,
+      "group": 34070
+    },
+    "service": {
+      "pid": 34064,
+      "group": 34064
+    }
+  },
+  "outcome": "passed",
+  "exit": 0
+}

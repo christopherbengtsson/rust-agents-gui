@@ -1,0 +1,53 @@
+{
+  "authentication": "none",
+  "checks": [
+    {
+      "passed": true,
+      "scenario": "finite"
+    },
+    {
+      "passed": true,
+      "scenario": "nonzero"
+    },
+    {
+      "passed": true,
+      "scenario": "stdin"
+    },
+    {
+      "passed": true,
+      "scenario": "saturate"
+    },
+    {
+      "abandoned_waiter": false,
+      "descendant_pid": 70205,
+      "passed": true,
+      "scenario": "leader-exit-with-descendant"
+    },
+    {
+      "abandoned_waiter": true,
+      "descendant_pid": 70225,
+      "passed": true,
+      "scenario": "leader-exit-with-descendant"
+    },
+    {
+      "passed": true,
+      "scenario": "owned-process-drain"
+    },
+    {
+      "limit": "group quiescence did not stop escaped work; release file ended it voluntarily; cleanup stayed unknown",
+      "passed": true,
+      "pid": 70235,
+      "scenario": "escaped-descendant-pipe"
+    },
+    {
+      "limit": "survival observed; no signaling from saved PID; fixture stopped voluntarily",
+      "passed": true,
+      "scenario": "native-parent-loss",
+      "survivor_pid": 70237
+    }
+  ],
+  "containment": "macOS owned groups only; escaped descendants and native parent loss are recovery cases",
+  "fixture": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/process-effects/runtime.py",
+  "provider": "none",
+  "root": "/private/tmp/aw-process05-first"
+}

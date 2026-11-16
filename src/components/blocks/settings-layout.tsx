@@ -6,9 +6,11 @@ import { Button, buttonVariants } from "@/components/ui/button";
 /** Presentation only: the route supplies history behavior, never IPC policy. */
 export function SettingsLayout({
   onBack,
+  section = "general",
   children,
 }: {
   onBack: () => void;
+  section?: "general" | "providers";
   children: ReactNode;
 }) {
   const heading = useRef<HTMLHeadingElement>(null);
@@ -52,6 +54,7 @@ export function SettingsLayout({
         >
           <Link
             to="/settings/general"
+            replace
             className={buttonVariants({
               variant: "ghost",
               size: "sm",
@@ -64,11 +67,28 @@ export function SettingsLayout({
           >
             General
           </Link>
+          <Link
+            to="/settings/providers"
+            search={{ provider: "codex" }}
+            replace
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "justify-start",
+            })}
+            activeOptions={{ includeSearch: false }}
+            activeProps={{
+              "aria-current": "page",
+              className: "bg-accent text-accent-foreground",
+            }}
+          >
+            Providers
+          </Link>
         </nav>
         <main
           id="settings-main"
           tabIndex={-1}
-          aria-labelledby="settings-general-heading"
+          aria-labelledby={`settings-${section}-heading`}
           className="workspace-region flex-1"
         >
           {children}

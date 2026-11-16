@@ -1,5 +1,14 @@
 # Observation and transport engineering
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A4/A8](../../.scratch/sqlx-architecture/amendments.md) govern
+native hosting, core incarnation, application transport deletion and preparation applicability.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Read this when changing or reviewing native IPC, generated contracts, feature observations or
 feed/inspection lifetime. The [frontend spec](../../.scratch/frontend-navigation/spec.md)
 owns behavior/limits/session order; [ADR 0007](../adr/0007-library-backed-observation-modules.md)

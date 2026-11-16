@@ -1,0 +1,493 @@
+$ node scripts/check.mjs verify
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+Gate: corepack pnpm format:check
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json tsr.config.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 17ms on 692 files using 12 threads.
+Gate: corepack pnpm lint
+$ oxlint src --max-warnings 0 --report-unused-disable-directives-severity warn
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.16s
+Gate: node scripts/test-unit.mjs
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.30s
+Unit compilation: 6.339912 s; target /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target; test profile
+
+running 224 tests
+test codegen::parity_tests::input_defaults_do_not_omit_serialized_response_fields ... ok
+test codegen::parity_tests::nullable_omitted_and_default_fields_describe_serialization_separately ... ok
+test codegen::parity_tests::pure_export_is_deterministic_and_uses_uuid_and_json_number_contracts ... ok
+test codegen::tests::serialized_registration_defaults_are_required_and_flattened ... ok
+test connection::framed_exchange::tests::already_cancelled_or_expired_operations_do_no_physical_io ... ok
+test connection::framed_exchange::tests::cancellation_wakes_idle_or_partial_read_and_closes_terminally ... ok
+test connection::framed_exchange::tests::cancelled_or_abandoned_write_closes_without_restarting_partial_io ... ok
+test connection::framed_exchange::tests::codec_bounds_encoding_and_rejects_advertised_oversize_before_body_reservation ... ok
+test connection::framed_exchange::tests::codec_distinguishes_partial_header_and_body_from_clean_boundary_eof ... ok
+test connection::framed_exchange::tests::codec_preserves_split_and_coalesced_frames_and_empty_payloads ... ok
+test connection::framed_exchange::tests::complete_nonzero_header_without_body_is_truncated_even_after_decode_consumes_it ... ok
+test connection::framed_exchange::tests::deadline_timer_wakes_pending_reads_and_writes ... ok
+test connection::framed_exchange::tests::dropped_read_polling_retains_transfer_progress_and_can_finish_before_original_deadline ... ok
+test connection::framed_exchange::tests::eof_decode_and_read_errors_close_the_exchange_once_without_more_io ... ok
+test connection::framed_exchange::tests::exchange_returns_complete_frames_and_keeps_prefetched_next_frame ... ok
+test connection::framed_exchange::tests::first_byte_starts_one_transfer_budget_and_slow_fragments_cannot_extend_it ... ok
+test connection::framed_exchange::tests::handshake_write_preserves_buffered_next_read_and_write_uses_operation_cap ... ok
+test connection::framed_exchange::tests::read_caps_idle_ack_and_buffered_transfer_without_extending_cancelled_polling ... ok
+test connection::framed_exchange::tests::write_deadline_covers_partial_header_body_and_flush_without_fragment_renewal ... ok
+test connection::framed_exchange::tests::write_errors_and_oversize_close_without_retry_or_queued_output ... ok
+test connection::framed_exchange::tests::write_rejects_progress_after_absolute_cap_even_between_timer_ticks ... ok
+test connection::framed_exchange::tests::writes_encode_once_across_partial_progress_and_wait_for_flush ... ok
+test connection::subscription::tests::acknowledgements_match_subscription_batch_and_cursor_exactly ... ok
+test connection::subscription::tests::cancelled_reload_waiter_keeps_old_feed_owned_until_a_later_replacement_joins_it ... ok
+test connection::subscription::tests::completed_error_and_panic_workers_are_joined_before_replacement ... ok
+test connection::subscription::tests::idle_server_and_frontend_ack_wait_are_cancellable_and_ack_cap_is_absolute ... ok
+test connection::subscription::tests::invalid_reload_replacement_cannot_stop_the_current_feed ... ok
+test connection::subscription::tests::native_delivery_waits_for_frontend_acceptance_before_acknowledging ... ok
+test connection::subscription::tests::owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery ... ok
+test connection::subscription::tests::reloaded_frontend_joins_previous_feed_before_replacing_and_bounds_pending_replacements ... ok
+test connection::subscription::tests::server_stops_on_wrong_ack_and_preserves_changes_during_resync ... ok
+test connection::subscription::tests::shared_corpus_matches_rust_feed_serialization_and_delivery_bounds ... ok
+test connection::subscription::tests::sink_failure_and_frontend_stall_close_without_acknowledgement ... ok
+test connection::subscription::tests::stop_joins_late_setup_and_dropped_stop_waiters_fence_replacement ... ok
+test connection::subscription::tests::stopped_before_delivery_cannot_offer_or_acknowledge ... ok
+test connection::tests::absent_owner_starts_once_and_waits_for_readiness ... ok
+test connection::tests::admitted_error_unwind_unstarted_drop_and_server_ceiling_release_capacity ... ok
+test connection::tests::admitted_waiter_drop_retains_capacity_and_allows_status_and_control ... ok
+test connection::tests::application_corpus_matches_pure_rust_serialization ... ok
+test connection::tests::blocking_workers_keep_permits_after_waiter_drop_and_cleanup_awaits_completion ... ok
+test connection::tests::bounded_registration_uses_transport_and_preserves_uncertain_failures ... ok
+test connection::tests::cancellation_closes_pending_request_and_server_handlers_without_effects ... ok
+test connection::tests::client_bad_lost_or_stalled_replies_never_reconnect_or_repeat ... ok
+test connection::tests::client_preserves_versions_cursor_chunked_reply_and_incompatibility_without_retry ... ok
+test connection::tests::client_private_access_and_connect_failure_precede_io_and_never_retry ... ok
+test connection::tests::concurrent_owner_startup_is_waited_for_without_starting_a_competitor ... ok
+test connection::tests::desktop_admission_leaves_status_and_intent_independent_of_stalled_observations ... ok
+test connection::tests::discovering_a_completed_panic_fences_the_same_dispatch ... ok
+test connection::tests::discovery_cancellation_wakes_startup_delay_without_waiting ... ok
+test connection::tests::dropping_desktop_and_reopening_observes_the_same_owner_without_starting ... ok
+test connection::tests::existing_owner_is_discovered_without_lock_probe_or_start ... ok
+test connection::tests::invalid_snapshot_cannot_replace_the_connections_observed_owner ... ok
+test connection::tests::large_chunked_reply_survives_eof_after_payload_and_preserves_buffered_next_frame ... ok
+test connection::tests::lock_probe_and_spawn_failures_remain_failures_without_retry ... ok
+test connection::tests::lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner ... ok
+test connection::tests::malformed_oversized_and_legacy_framing_close_without_dispatch_or_output ... ok
+test connection::tests::non_transient_readiness_failure_is_not_retried ... ok
+test connection::tests::only_one_discovery_is_admitted_and_no_state_lock_spans_effects ... ok
+test connection::tests::oversized_registration_is_a_definite_capacity_rejection_before_transport ... ok
+test connection::tests::oversized_request_rejects_before_private_checks_or_socket_access ... ok
+test connection::tests::provider_transport_rejects_wrong_owner_configuration_and_ambiguous_requests_before_dispatch ... ok
+test connection::tests::quit_before_first_snapshot_reconciles_existing_owner_or_proves_absence_without_starting ... ok
+test connection::tests::quit_does_not_prove_absence_before_admitted_startup_physically_settles ... ok
+test connection::tests::refresh_after_disconnect_retrieves_cursor_without_restart_or_replay ... ok
+test connection::tests::server_routes_workspace_and_repository_errors_without_fabricating_empty_records ... ok
+test connection::tests::spawn_command_preserves_executable_and_single_state_argument ... ok
+test connection::tests::startup_timeout_is_controlled_and_does_not_launch_again ... ok
+test connection::tests::status_exchange_and_version_rejection_use_real_protocol_parsers_without_domain_effects ... ok
+test connection::tests::targeted_client_rejects_replacement_kind_and_target_without_another_exchange ... ok
+test connection::tests::targeted_exchange_reports_delivery_at_physical_boundary_without_replay ... ok
+test connection::tests::two_running_observations_leave_status_and_intent_effects_responsive ... ok
+test connection::tests::unsafe_state_or_incompatible_endpoint_never_starts_an_owner ... ok
+test connection::tests::whole_core_finish_collects_host_panic_and_domain_failure ... ok
+test connection::tests::workspace_variants_share_observation_and_intent_budgets_with_repository_requests ... ok
+test connection::tests::wrong_owner_every_target_and_mixed_context_are_rejected_before_effects ... ok
+test git::inspection::tests::inspection_commands_preserve_literal_raw_paths_and_isolated_environment ... ok
+test git::tests::bare_repository_is_rejected_before_further_git_queries ... ok
+test git::tests::batch_inventory_keeps_nested_refs_missing_worktree_locations_and_occupied_folders ... ok
+test git::tests::nested_alias_resolves_checkout_and_shared_git_identity_without_mutating_queries ... ok
+test lifetime::tests::lease_is_last_and_failed_cleanup_retains_it ... ok
+test lifetime::tests::quit_fences_new_starts_but_waits_for_admitted_transfer ... ok
+test observations::bounds_tests::async_wait_observes_publication_before_wait_and_cancels_idle ... ok
+test observations::bounds_tests::batches_deduplicate_and_retention_has_an_exact_boundary ... ok
+test observations::bounds_tests::exhausted_sequence_never_aliases_an_accepted_cursor ... ok
+test observations::bounds_tests::publication_before_wait_cannot_be_lost_and_idle_does_not_advance_cursor ... ok
+test observations::bounds_tests::tag_overflow_resync_and_new_changes_survive_the_sampled_watermark ... ok
+test observations::tests::baseline_and_expired_or_future_cursors_require_resync ... ok
+test process_effects::tests::abandoned_waiter_keeps_capacity_until_physical_completion_and_reaper_observes_errors ... ok
+test process_effects::tests::cleanup_escalates_only_while_owned_and_retains_uncertainty ... ok
+test process_effects::tests::exact_limit_is_complete_only_at_eof_and_overflow_is_not_truncated ... ok
+test process_effects::tests::panic_runs_cleanup_and_preserves_failure_after_recovery ... ok
+test process_effects::tests::partial_input_timeout_preserves_uncertainty_without_replaying_bytes ... ok
+test process_effects::tests::partial_output_requires_eof_and_keeps_one_absolute_deadline ... ok
+test process_effects::tests::pipe_outliving_quiescent_group_retains_capacity_and_reports_unknown ... ok
+test process_effects::tests::saturated_ordinary_capacity_leaves_cleanup_reserve_and_rejects_before_spawn ... ok
+test process_effects::tests::taken_pipe_keeps_capacity_after_leader_and_async_waiter_complete ... ok
+test runtimes::codex::discovery::tests::check_again_finds_new_installations_and_resolves_updated_links ... ok
+test runtimes::codex::discovery::tests::fresh_shell_lookup_and_symlink_resolution_preserve_credential_scope ... ok
+test runtimes::codex::discovery::tests::missing_saved_selection_never_uses_an_available_automatic_installation ... ok
+test runtimes::codex::process::tests::launch_uses_the_captured_executable_environment_and_neutral_directory_without_a_shell ... ok
+test runtimes::codex::process::tests::shell_path_requires_bounded_framed_path_and_ignores_startup_noise ... ok
+test runtimes::codex::protocol::tests::bounded_frames_reject_malformed_truncated_and_oversized_messages ... ok
+test runtimes::codex::protocol::tests::browser_cancel_during_setup_has_no_effect_and_pending_cancel_uses_native_identity ... ok
+test runtimes::codex::protocol::tests::browser_login_matches_exact_completion_and_never_exports_provider_errors ... ok
+test runtimes::codex::protocol::tests::browser_open_failure_reopens_the_same_url_without_another_login ... ok
+test runtimes::codex::protocol::tests::browser_timeout_uses_controlled_time_and_urls_reject_non_browser_schemes ... ok
+test runtimes::codex::protocol::tests::cancelled_frame_wait_retains_partial_bytes ... ok
+test runtimes::codex::protocol::tests::capability_probe_keeps_absolute_deadlines_and_cancelled_login_has_no_effect ... ok
+test runtimes::codex::protocol::tests::early_completion_and_success_racing_cancel_preserve_exact_outcome ... ok
+test runtimes::codex::protocol::tests::existing_authentication_is_evidence_not_a_login_or_billing_choice ... ok
+test runtimes::codex::protocol::tests::probe_accepts_additive_fields_without_treating_support_as_authentication ... ok
+test runtimes::codex::protocol::tests::protocol_never_accepts_an_unrelated_reply_or_a_server_request ... ok
+test runtimes::codex::protocol::tests::readiness_proves_gateway_capability_before_reading_authentication ... ok
+test runtimes::codex::protocol::tests::repeated_reopen_cannot_starve_the_absolute_login_deadline ... ok
+test runtimes::codex::protocol::tests::required_probe_failures_block_both_readiness_and_browser_effects ... ok
+test runtimes::codex::protocol::tests::rpc_failure_diagnostics_keep_codes_and_discard_provider_messages ... ok
+test runtimes::codex::protocol::tests::setup_commands_are_read_only_and_deadline_is_absolute ... ok
+test runtimes::codex::protocol::tests::stable_releases_after_the_baseline_do_not_need_an_allowlist ... ok
+test runtimes::codex::protocol::tests::unsupported_versions_and_malformed_output_are_rejected ... ok
+test runtimes::codex::protocol::tests::version_and_configuration_failures_do_not_invent_authentication_or_billing ... ok
+test runtimes::provider_connection::login::tests::durable_intent_precedes_effects_and_cleanup_failure_preserves_scope_fence ... ok
+test runtimes::provider_connection::login::tests::shutdown_cancels_late_preparation_and_skips_verification_without_replacing_work ... ok
+test runtimes::provider_connection::persistence::tests::quit_during_storage_acquisition_keeps_status_usable_and_settles_without_effects ... ok
+test runtimes::provider_connection::selection::tests::absent_selection_reconciliation_fences_a_delayed_intent ... ok
+test runtimes::provider_connection::selection::tests::failed_selection_intent_never_runs_the_probe ... ok
+test runtimes::provider_connection::selection::tests::invalid_or_unpersisted_selection_does_not_replace_the_saved_preference ... ok
+test runtimes::provider_connection::selection::tests::selection_admission_is_exact_duplicate_safe_and_excludes_login ... ok
+test runtimes::provider_connection::selection::tests::validated_selection_is_remembered_even_when_authentication_read_fails ... ok
+test runtimes::provider_connection::tests::cancelled_login_retains_last_good_on_failed_verification_and_rejects_stale_cancel ... ok
+test runtimes::provider_connection::tests::diagnostics_retain_source_without_exporting_its_untrusted_message ... ok
+test runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement ... ok
+test runtimes::provider_connection::tests::independent_targets_coalesce_reads_and_reject_late_or_cross_target_evidence ... ok
+test runtimes::provider_connection::tests::login_admission_is_exact_and_fences_checks_and_competing_attempts ... ok
+test runtimes::provider_connection::tests::panic_is_settled_with_exact_target_without_a_later_request ... ok
+test runtimes::provider_connection::tests::reconciliation_fences_a_late_start_and_uncertain_cleanup_is_scope_local ... ok
+test runtimes::provider_connection::tests::same_scope_readiness_cleanup_fences_other_checks_but_unrelated_targets_progress ... ok
+test storage::opening::failure_tests::startup_failure_keeps_original_hook_fault_and_unknown_retirement_after_cleanup ... ok
+test storage::opening::return_tests::queued_rollback_is_ordered_before_the_reuse_decision ... ok
+test storage::opening::tests::substituted_file_metadata_rejects_aliases_wrong_owner_and_public_modes ... ok
+test storage::policy::tests::responsive_worker_with_unresolved_rollback_is_never_reused ... ok
+test storage::tests::aborted_retirement_cannot_reopen_replacement_admission ... ok
+test storage::tests::bounded_serialization_rejects_before_allocating_an_unbounded_encoded_copy ... ok
+test storage::tests::checkpoint_failure_does_not_skip_either_close_barrier_or_erase_prior_errors ... ok
+test storage::tests::completed_undelivered_result_keeps_its_capacity_until_consumed_or_dropped ... ok
+test storage::tests::constructing_close_futures_is_deferred_until_after_checkpoint_observation ... ok
+test storage::tests::current_records_retain_recovery_evidence_and_corruption_is_not_absence ... ok
+test storage::tests::failed_commit_receipt_waits_for_retirement_and_preserves_both_failures ... ok
+test storage::tests::known_retirement_allows_fresh_reconciliation_but_never_grants_write_replay ... ok
+test storage::tests::later_unrelated_write_cannot_extend_an_admitted_reads_settlement_wait ... ok
+test storage::tests::lost_requester_keeps_completion_and_status_pending_until_physical_settlement ... ok
+test storage::tests::replacement_waits_for_physical_retirement_and_unknown_close_fences_it ... ok
+test storage::tests::retirement_unknown_fences_fresh_observation_and_retains_exact_action_after_reply_loss ... ok
+test storage::tests::task_panic_is_owned_attributed_and_fenced ... ok
+test supervisor::tests::admission_stops_on_each_filesystem_failure ... ok
+test supervisor::tests::admitted_owner_alone_may_replace_a_private_stale_socket ... ok
+test supervisor::tests::competing_owner_is_rejected_before_touching_the_endpoint ... ok
+test supervisor::tests::non_contention_lock_failures_preserve_the_original_error_without_touching_the_endpoint ... ok
+test supervisor::tests::owner_lock_must_be_private_owned_regular_and_have_one_link ... ok
+test supervisor::tests::owner_probe_distinguishes_held_lock_from_access_failure ... ok
+test supervisor::tests::state_and_socket_privacy_reject_wrong_owner_public_modes_and_symlinks ... ok
+test supervisor::tests::state_creation_always_validates_existing_or_new_directories ... ok
+test supervisor::tests::unsafe_or_unreadable_socket_is_retained_and_not_replaced ... ok
+test tests::failed_workspace_completion_does_not_skip_provider_cleanup ... ok
+test tests::initial_status_reports_the_execution_owner_without_starting_work ... ok
+test tests::partial_startup_drains_acquired_workspace_and_retains_failed_lease ... ok
+test tests::quit_deadline_and_lost_request_keep_the_same_drain_and_lease ... ok
+test tests::snapshot_catches_up_or_resets_observations_from_another_owner ... ok
+test workspaces::coordinator::tests::cursor_exhaustion_is_checked_and_never_wraps_to_an_old_candidate ... ok
+test workspaces::coordinator::tests::keyed_gate_survives_all_waiters_and_retires_only_after_physical_release ... ok
+test workspaces::coordinator::tests::stale_completion_cannot_retire_new_activity_or_publish_old_fault ... ok
+test workspaces::creation::policy_tests::conflicting_artifacts_and_each_failed_store_boundary_block_following_effects ... ok
+test workspaces::creation::policy_tests::failed_pinned_intent_prevents_every_mutation ... ok
+test workspaces::creation::policy_tests::lost_effect_replies_require_reconciliation_and_skip_existing_artifacts ... ok
+test workspaces::creation::policy_tests::pinned_intent_and_each_stage_precede_their_effect_and_completion_is_durable ... ok
+test workspaces::creation::policy_tests::unconfirmed_lease_blocks_effects_and_explicit_reconciliation_can_observe_release ... ok
+test workspaces::creation::tests::automatic_base_uses_origin_then_only_an_unambiguous_local_default ... ok
+test workspaces::inspection::tests::a_duplicate_active_preview_can_be_selected_again_without_losing_completion ... ok
+test workspaces::inspection::tests::a_hunk_header_does_not_hide_an_individually_oversized_content_row ... ok
+test workspaces::inspection::tests::acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows ... ok
+test workspaces::inspection::tests::binary_marker_words_inside_text_hunks_are_regular_content ... ok
+test workspaces::inspection::tests::escaped_failure_details_rebudget_the_last_good_preview ... ok
+test workspaces::inspection::tests::head_status_and_selected_evidence_changes_reject_obsolete_preview_reads ... ok
+test workspaces::inspection::tests::inspection_panic_is_retained_for_whole_core_quit ... ok
+test workspaces::inspection::tests::inventory_capture_failures_do_not_establish_clean_and_can_recover ... ok
+test workspaces::inspection::tests::line_endings_and_untracked_missing_final_newline_preserve_bytes_and_numbers ... ok
+test workspaces::inspection::tests::list_byte_budget_and_pending_retention_are_bounded ... ok
+test workspaces::inspection::tests::list_pages_expire_and_responses_stay_bounded ... ok
+test workspaces::inspection::tests::manual_inspection_coalesces_and_retains_last_good_after_git_failure ... ok
+test workspaces::inspection::tests::manual_text_add_delete_and_clean_outcomes_are_distinct ... ok
+test workspaces::inspection::tests::previews_bound_rows_and_escaped_bytes_without_diff_pagination ... ok
+test workspaces::inspection::tests::refreshed_comparisons_invalidate_queued_previews_before_effects ... ok
+test workspaces::inspection::tests::refreshed_same_status_keeps_file_identity_and_replaces_selected_content ... ok
+test workspaces::inspection::tests::selected_file_failure_retains_previous_comparison_with_explicit_identity ... ok
+test workspaces::inspection::tests::status_keeps_index_worktree_and_raw_path_identity ... ok
+test workspaces::inspection::tests::supplied_content_outcomes_keep_unsupported_empty_and_net_cancellation_distinct ... ok
+test workspaces::inspection::tests::supplied_read_and_diff_failures_retain_last_good_then_clear_on_success ... ok
+test workspaces::inspection::tests::unchanged_refresh_preserves_comparison_and_selected_preview ... ok
+test workspaces::inspection::tests::unified_rows_keep_source_numbers_and_missing_newline_markers ... ok
+test workspaces::inspection::tests::unsafe_content_labels_and_changed_evidence_do_not_read_text ... ok
+test workspaces::inspection::tests::unsafe_inventory_entries_never_read_or_diff_as_text ... ok
+test workspaces::inspection::tests::unsupported_content_is_not_read_and_failed_diff_is_not_a_prefix ... ok
+test workspaces::inspection::tests::unusual_paths_keep_raw_identity_even_when_display_labels_collide ... ok
+test workspaces::naming::tests::catalog_and_numeric_continuation_are_bounded_and_permanent ... ok
+test workspaces::tests::actual_common_directory_serializes_waiters_and_retains_the_key ... ok
+test workspaces::tests::allocation_lost_ack_reconciles_the_same_saved_location_without_another_claim ... ok
+test workspaces::tests::allocation_turn_persists_cursor_and_does_not_cap_history_or_numeric_tiers ... ok
+test workspaces::tests::byte_bounded_navigation_uses_last_delivered_cursor ... ok
+test workspaces::tests::cancellation_unwinds_provisional_reads_and_fences_unsettled_admission_writes ... ok
+test workspaces::tests::changed_workspace_payload_rejects_and_completed_status_survives_unrelated_fault ... ok
+test workspaces::tests::duplicate_ids_observe_exact_payload_and_cross_kind_ids_reject ... ok
+test workspaces::tests::explicit_reconciliation_executes_under_its_new_action_and_preserves_creation_identity ... ok
+test workspaces::tests::failed_intent_never_dispatches_creation_and_status_does_not_replay ... ok
+test workspaces::tests::global_folder_collisions_do_not_consume_plain_workspace_names ... ok
+test workspaces::tests::immutable_reserved_location_skips_allocation_on_recovery ... ok
+test workspaces::tests::independent_repository_effects_progress_while_another_is_blocked ... ok
+test workspaces::tests::invalid_registration_and_cross_kind_payloads_do_not_write ... ok
+test workspaces::tests::navigation_is_paged_and_running_restore_is_uncertain_without_requeue ... ok
+test workspaces::tests::nil_action_identity_is_retired_as_an_action_without_releasing_inspection ... ok
+test workspaces::tests::pending_capacity_counts_active_identity_once_and_preserves_recovery_admission ... ok
+test workspaces::tests::quit_during_read_only_registration_settles_without_starting_first_creation ... ok
+test workspaces::tests::quit_fences_next_mutation_and_waits_for_physical_work_then_repeats_same_result ... ok
+test workspaces::tests::registration_and_first_creation_are_one_finish_and_duplicate_alias_does_not_create_again ... ok
+test workspaces::tests::requester_loss_keeps_admitted_creation_owned_until_completion ... ok
+test workspaces::tests::utf8_path_budget_and_invalid_locations_reject_without_retargeting ... ok
+
+test result: ok. 224 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+Unit execution 1: 0.978688 s; /Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-c1516d2e50257971 --test-threads=1
+✔ claims an unclaimed target exclusively for this worktree (0.947041ms)
+✔ permits a target already claimed by this worktree (0.102208ms)
+✔ rejects another worktree's target without changing its ownership (0.174667ms)
+✔ rejects a symlinked target before creating or claiming it (0.071042ms)
+✔ rejects a target under a symlinked parent before claiming it (0.067041ms)
+✔ rejects a symlinked ownership marker without following it (0.061833ms)
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/prepare-supervisor.mjs debug
+Gate: corepack pnpm exec vite build
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+Gate: node scripts/test-unit.mjs
+Gate: corepack pnpm format:check
+Gate: corepack pnpm lint
+Gate: corepack pnpm exec tsc --noEmit
+Gate: corepack pnpm exec tsc --noEmit
+Gate: node scripts/cargo.mjs clippy --locked --workspace --all-targets --all-features -- -D warnings
+✔ the complete gate rejects drift before any consumer and never requests write mode (0.613125ms)
+✔ CI checks preparation once, builds assets separately, then selects every retained check once (0.317292ms)
+✔ packaging rejects drift before resource staging or Tauri invocation (0.085042ms)
+✔ a failed static gate prevents later application units (0.114625ms)
+✔ clean-checkout route preparation precedes standalone TypeScript without Vite (0.226625ms)
+✔ stale route output fails CI before TypeScript or bundling can repair it (0.1005ms)
+✔ dev state is persistent, canonical-worktree and compatibility specific (1.006875ms)
+✔ an explicit state override is honored exactly and stale supervisor overrides are replaced (0.162125ms)
+✔ frontend lint accepts typed composition and direct UI imports (33.29925ms)
+✔ frontend lint rejects conditional Hooks and incomplete dependencies (62.19875ms)
+✔ frontend lint surfaces compiler and accessible-name defects (63.678333ms)
+✔ toolkit layers reject static, dynamic, type and re-export Tauri dependencies (338.660875ms)
+✔ native boundary rules cover nested paths, type and namespace exports (31.391208ms)
+✔ warnings fail and native suppression names remain checked (93.037958ms)
+✔ native table-cell compatibility preserves other redundancy checks (31.662875ms)
+✔ read-only drift reports missing/stale/unexpected artifacts without repair (0.692791ms)
+✔ preparation claims the target and uses only Cargo's reported exporter before reconciliation (0.219709ms)
+✔ explicit write mode repairs expected files and removes only obsolete managed outputs (0.06475ms)
+✔ clean checkout checking accepts the complete committed artifact set without writes (0.051208ms)
+✔ preparation build failure cannot reconcile or repair committed files (0.104416ms)
+✔ preparation export failure cannot reconcile or repair committed files (0.048333ms)
+✔ preparation render failure cannot reconcile or repair committed files (0.059084ms)
+✔ preparation missing failure cannot reconcile or repair committed files (0.036ms)
+✔ preparation ambiguous failure cannot reconcile or repair committed files (0.047791ms)
+✔ preparation test-artifact failure cannot reconcile or repair committed files (0.06475ms)
+✔ preparation foreign-artifact failure cannot reconcile or repair committed files (0.041708ms)
+✔ route checking rejects stale output without writes and explicit write repairs it (0.163084ms)
+✔ route rendering invokes the pinned CLI only in an isolated source mirror and cleans it (0.703125ms)
+✔ route rendering cleans its isolated mirror after copy failure (0.095291ms)
+✔ route rendering cleans its isolated mirror after process failure (0.314417ms)
+✔ route rendering cleans its isolated mirror after timeout failure (0.09175ms)
+✔ route rendering cleans its isolated mirror after read failure (0.092333ms)
+✔ generated preparation reconciles contracts before routes with one explicit mode (0.055ms)
+✔ stages Cargo's exact executable from a private target and records its provenance (1.4025ms)
+✔ debug staging records the dev profile and a clean source tree (0.102209ms)
+✔ rejects missing executable without touching staged resources (0.42375ms)
+✔ rejects test executable without touching staged resources (0.066958ms)
+✔ rejects ambiguous executables without touching staged resources (0.062916ms)
+✔ a failed build cannot stage a previously available executable (0.061125ms)
+✔ failCopy preserves the previous published executable and removes temporary bytes (0.079458ms)
+✔ failPublish preserves the previous published executable and removes temporary bytes (0.051292ms)
+✔ installed React compiler accepts lifecycle control flow in src/hooks/use-supervisor-connection.ts (1.482875ms)
+✔ installed React compiler accepts lifecycle control flow in src/hooks/use-repositories.ts (4.136333ms)
+✔ installed React compiler accepts lifecycle control flow in src/hooks/use-workspaces.ts (5.558167ms)
+✔ installed React compiler accepts lifecycle control flow in src/components/blocks/repository-registration.tsx (1.72675ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 921.836208
+Unit execution 1: 0.944763 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node --test --test-concurrency=1 scripts/cargo.test.mjs scripts/check.test.mjs scripts/development-state.test.mjs scripts/frontend-lint.test.mjs scripts/prepare-generated.test.mjs scripts/prepare-supervisor.test.mjs scripts/react-compiler.test.mjs
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  22 passed (22)
+      Tests  260 passed (260)
+   Start at  18:21:44
+   Duration  13.59s (tests 50%, environment 29%, import 20%, transform 1%, setup 1%)
+
+Environment  jsdom was created 22 times · 3.56s total, 29% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+Unit execution 1: 13.889782 s; /Users/christopherbengtsson/.local/share/fnm/node-versions/v26.13.1/installation/bin/node node_modules/vitest/vitest.mjs run --maxWorkers=1

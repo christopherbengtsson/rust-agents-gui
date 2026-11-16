@@ -1,0 +1,13 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+
+ Test Files  22 passed (22)
+      Tests  260 passed (260)
+   Start at  17:15:09
+   Duration  13.70s (tests 50%, environment 29%, import 20%, transform 1%, setup 1%)
+
+Environment  jsdom was created 22 times · 3.60s total, 29% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

@@ -1,0 +1,282 @@
+{
+  "protocol": 12,
+  "root": "/private/tmp/aw-ready-7ou3zc0k",
+  "owner": "13516-1794752200887008000",
+  "supervisor_pid": 13516,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "supervisor_sha256": "50eca894920df840bedbe7c53fdadd4ff7264d8f35669eeeaf769dedd41aead4",
+  "target": {
+    "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+    "provider": "codex",
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+    "supported_version": "0.169.0"
+  },
+  "checks": [
+    {
+      "name": "browser handoff, duplicate exclusion, check fencing and authoritative completion",
+      "passed": true,
+      "seconds": 0.6497224170016125,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 7,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": {
+          "id": "8157448d-7ed7-4870-9dbd-f0a11fac6514",
+          "phase": "completed",
+          "outcome": "completed",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "lost start reply retrieves same attempt and exact runtime cancellation",
+      "passed": true,
+      "seconds": 0.447325833956711,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 13,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "c437e479-3c17-47ae-ad22-281c22a17303",
+          "phase": "cancelled",
+          "outcome": "cancelled",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "browser-open failure and explicit same-attempt reopen",
+      "passed": true,
+      "seconds": 0.4052032500039786,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 20,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "6ab646b1-c890-4c74-8edc-be01f0eb028d",
+          "phase": "cancelled",
+          "outcome": "cancelled",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "cancellation during late version setup stops owned work before authentication",
+      "passed": true,
+      "seconds": 2.3692400829168037,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 24,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "3fd63f6d-13c2-4fb0-837f-560ee3f6b0d6",
+          "phase": "cancelled",
+          "outcome": "cancelled",
+          "browser_open_failed": false,
+          "diagnostic": "Version read exceeded its five-second deadline or was cancelled"
+        }
+      }
+    },
+    {
+      "name": "lost cancel reply and owned descendant cleanup",
+      "passed": true,
+      "seconds": 4.409821458044462,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 30,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "b91017e6-19a8-4ac9-8b40-74f23b31ff79",
+          "phase": "cancelled",
+          "outcome": "cancelled",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "browser_failure",
+      "passed": true,
+      "seconds": 0.4488260829821229,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 35,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "1ee074bf-fd49-4b89-84a5-8d421551ff5e",
+          "phase": "failed",
+          "outcome": "failed",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "browser_verify_failure",
+      "passed": true,
+      "seconds": 0.4732609579805285,
+      "result": {
+        "target": {
+          "id": "5368560c-d8c5-4fcc-887b-c8517badc708",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/fixtures/codex-readiness/runtime.py",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-5368560c-d8c5-4fcc-887b-c8517badc708",
+          "supported_version": "0.169.0"
+        },
+        "revision": 40,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "status_read_failed",
+        "diagnostic": "Setup response 2 rejected; RPC code Some(-32603); expected exact response ID and no server request",
+        "login": {
+          "id": "58779c04-8be0-4376-89a7-7bf925c66ef2",
+          "phase": "completed",
+          "outcome": "completed",
+          "browser_open_failed": true,
+          "diagnostic": null
+        }
+      }
+    },
+    {
+      "name": "owned login shutdown and supervisor completion",
+      "passed": true,
+      "seconds": 0.24978737498167902,
+      "result": {
+        "kind": "shutdown",
+        "complete": true,
+        "diagnostic": null
+      }
+    }
+  ],
+  "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process.",
+  "headless_browser": true,
+  "supervisor_exit": 0,
+  "fixture_pids": [
+    13517, 13518, 13520, 13521, 13522, 13523, 13531, 13536, 13552, 13553, 13554,
+    13556, 13557, 13558, 13559, 13583, 13584, 13585, 13586, 13587, 13611, 13612,
+    13613, 13614, 13615, 13616, 13617, 13618, 13619, 13620, 13621, 13622
+  ],
+  "remaining_fixture_pids": []
+}

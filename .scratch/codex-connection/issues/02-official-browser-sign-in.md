@@ -23,16 +23,16 @@ creating another lifecycle owner or frontend execution state.
 
 ## Acceptance
 
-- [ ] Add the explained ChatGPT choice with browser sign-in emphasized, preserving the existing-authentication-first presentation from 01. Selection changes presentation only. Leave the CLI login action for 03 and keep API-key setup omitted and Claude actions disabled.
-- [ ] Only an explicit action starts official Codex-managed browser authentication. Open the returned URL, present starting/pending/completed/failed/cancelled outcomes, and reopen the same browser attempt when requested without automatically starting another. Keep credentials and effective configuration runtime-owned.
-- [ ] Establish the Rust-owned login-attempt owner that 03 will extend. Bind actions/results to the expected supervisor and exact attempt; reject duplicate/competing starts and stale results. Lost start/cancel replies and reconnect retrieve/reconcile status rather than repeating effects. A selected method or pending UI flag is not evidence of an active login or changed billing route.
-- [ ] Add attempt admission/reconciliation inside 01's provider-connection module. Bind every result to its provider/effective-configuration target as well as owner/attempt; exclude competing authentication within the same credential scope, preserving unrelated targets within resource budgets. Keep supported browser authentication mechanics local to Codex rather than making them mandatory for future providers.
-- [ ] Pending login survives provider-tab, Settings-section and workspace navigation. A compact sign-in-progress status links back to Providers. Navigation/preload has no login effects; explicit Cancel requests runtime cancellation and retains failed/unknown cleanup visibly until reconciled. Cover late setup, desktop reconnect and explicit Quit without competing/replacement work before physical completion.
-- [ ] Retain pending-attempt observation interest above routed content using 01's existing observation composition. Implement and qualify owned shutdown for the browser-login resources introduced here; desktop observation cleanup alone is insufficient. Failed cleanup fences the affected authentication scope while remaining visible.
-- [ ] Recheck authoritative authentication after browser completion; distinguish login success/failure from failed status verification and retained/stale account evidence. Show the result without automatic navigation or agent launch. Preserve Settings return/focus, overlay keyboard precedence and workspace context.
-- [ ] Passing deterministic units cover successful/failed/cancelled attempts, browser-open failure/reopen, unrelated/late notifications, duplicate actions, lost replies, owner changes, timeout and cleanup uncertainty. Verify cancellation and process/time effects through substitutions, and that no tokens are copied into application state/history/logs.
-- [ ] With controlled synthetic targets, prove a late completion for one provider/configuration cannot update another, lost replies do not start another attempt, and uncertain cleanup does not block unrelated targets absent a shared resource conflict. Keep Claude/OpenCode integration and native concurrency qualification out of this slice.
-- [ ] Focused actual fixture-desktop evidence demonstrates handoff, progress return, cancellation, error recovery, status recheck and keyboard/focus behavior through the production supervisor path. Record exact results and the attempt/progress interfaces 03 will reuse in a dated handoff. Record any agreed real-authentication scenario separately, or explicitly leave it unperformed; no agent thread/turn is permitted.
+- [x] Add the explained ChatGPT choice with browser sign-in emphasized, preserving the existing-authentication-first presentation from 01. Selection changes presentation only. Leave the CLI login action for 03 and keep API-key setup omitted and Claude actions disabled.
+- [x] Only an explicit action starts official Codex-managed browser authentication. Open the returned URL, present starting/pending/completed/failed/cancelled outcomes, and reopen the same browser attempt when requested without automatically starting another. Keep credentials and effective configuration runtime-owned.
+- [x] Establish the Rust-owned login-attempt owner that 03 will extend. Bind actions/results to the expected supervisor and exact attempt; reject duplicate/competing starts and stale results. Lost start/cancel replies and reconnect retrieve/reconcile status rather than repeating effects. A selected method or pending UI flag is not evidence of an active login or changed billing route.
+- [x] Add attempt admission/reconciliation inside 01's provider-connection module. Bind every result to its provider/effective-configuration target as well as owner/attempt; exclude competing authentication within the same credential scope, preserving unrelated targets within resource budgets. Keep supported browser authentication mechanics local to Codex rather than making them mandatory for future providers.
+- [x] Pending login survives provider-tab, Settings-section and workspace navigation. A compact sign-in-progress status links back to Providers. Navigation/preload has no login effects; explicit Cancel requests runtime cancellation and retains failed/unknown cleanup visibly until reconciled. Cover late setup, desktop reconnect and explicit Quit without competing/replacement work before physical completion.
+- [x] Retain pending-attempt observation interest above routed content using 01's existing observation composition. Implement and qualify owned shutdown for the browser-login resources introduced here; desktop observation cleanup alone is insufficient. Failed cleanup fences the affected authentication scope while remaining visible.
+- [x] Recheck authoritative authentication after browser completion; distinguish login success/failure from failed status verification and retained/stale account evidence. Show the result without automatic navigation or agent launch. Preserve Settings return/focus, overlay keyboard precedence and workspace context.
+- [x] Passing deterministic units cover successful/failed/cancelled attempts, browser-open failure/reopen, unrelated/late notifications, duplicate actions, lost replies, owner changes, timeout and cleanup uncertainty. Verify cancellation and process/time effects through substitutions, and that no tokens are copied into application state/history/logs.
+- [x] With controlled synthetic targets, prove a late completion for one provider/configuration cannot update another, lost replies do not start another attempt, and uncertain cleanup does not block unrelated targets absent a shared resource conflict. Keep Claude/OpenCode integration and native concurrency qualification out of this slice.
+- [x] Focused actual fixture-desktop evidence demonstrates handoff, progress return, cancellation, error recovery, status recheck and keyboard/focus behavior through the production supervisor path. Record exact results and the attempt/progress interfaces 03 will reuse in a dated handoff. Record any agreed real-authentication scenario separately, or explicitly leave it unperformed; no agent thread/turn is permitted.
 
 ## Handoff boundary
 
@@ -51,3 +51,31 @@ qualification acceptance remain unchecked.
 2026-11-15: Browser authentication now explicitly extends 01's cohesive owner and
 shared observations with provider-scoped identity, admission and cleanup. The
 working browser journey and separately recorded qualification scope are retained.
+
+2026-11-15: The user-approved [presentation refinement](../spec.md#presentation-refinement--2026-11-15)
+supersedes the original permanent Refresh presentation. Add the visible ChatGPT choice beneath readiness, outside collapsed Setup help. Preserve automatic readiness verification on Codex-tab activation and after browser completion. Extend Rust admission so checks cannot compete with active authentication or uncertain cleanup; reconnect retrieves the existing attempt without replay.
+
+
+### 2026-11-15 — implemented, reviewed and fixture-qualified
+
+Delivered the browser sign-in increment through the Rust owner, Codex adapter,
+protocol-12 generated IPC, shared Query observations and packaged desktop.
+[Evidence and ticket-03 handoff](../../../docs/evidence/codex-connection/02.md)
+record implementation `8a9e9a5`, corrections based on `a3a7507`, final source/binary
+hashes, exact commands and measurements, failed attempts and qualification limits.
+Final gates passed **189 Rust / 51 tooling / 252 frontend** units, generated/static/
+type/Clippy checks, formatting/lint and production packaging. Seven browser/process
+scenarios and focused actual desktop handoff/navigation/reconnect/cancel/error/
+verification/minimum-size/focus/owned-Quit checks passed at their recorded
+checkpoints; the final reviewed-code headless process cohort passed eight cases,
+including delayed startup cancellation, with no remaining fixture PIDs. Independent
+Standards and Spec final re-reviews have zero unresolved findings.
+
+The user selected fixture-only qualification. Real authentication and native-agent
+compatibility, screen-reader speech and a hands-on user trial remain unperformed.
+No real credential mutation, agent thread/turn or Claude probing occurred. Required
+fixture acceptance is checked for this allowance; parent milestone and 03/04 stay
+open. An unclean supervisor loss conservatively retains its durable cleanup fence;
+no saved PID is used to claim cleanup. CLI/PTY work must extend the existing attempt
+owner and observation interfaces in the handoff. Concurrent user edits to IDEAS and
+03 were preserved. Stop after 02.

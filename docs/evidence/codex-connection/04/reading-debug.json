@@ -1,0 +1,40 @@
+{
+  "protocol": 13,
+  "root": "/private/tmp/aw-ready-g61k4ppy",
+  "owner": "40903-1794766794767357000",
+  "supervisor_pid": 40903,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "supervisor_sha256": "3500a78e89d046547823e72b83c2d053f7f9a92755cd82f2133e96a63e2dd3a5",
+  "target": {
+    "id": "0e160a2c-53c1-420d-b13e-b3fc6aa0fadb",
+    "provider": "codex",
+    "executable": "/private/tmp/aw-ready-g61k4ppy/fixture-codex",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-0e160a2c-53c1-420d-b13e-b3fc6aa0fadb",
+    "minimum_supported_version": "0.169.0"
+  },
+  "checks": [],
+  "limits": "Synthetic runtime only; no real authentication, thread, turn or Claude process.",
+  "commands": [
+    {
+      "control": "processes",
+      "time": 1794766872.096148
+    },
+    {
+      "control": "stop",
+      "time": 1794766872.096891
+    }
+  ],
+  "headless_browser": false,
+  "bundle": "/private/tmp/aw-ready-g61k4ppy/Connection Journey reading-debug.app",
+  "repository": "/private/tmp/aw-ready-g61k4ppy/Connection Fixture",
+  "desktop": "/private/tmp/aw-ready-g61k4ppy/Connection Journey reading-debug.app/Contents/MacOS/workspace-desktop",
+  "desktop_sha256": "d9bb5e1890bd808a450193073944cb2450a5cd14d9bae42d32c83e348fccb4cc",
+  "desktop_pid": 40904,
+  "supervisor_exit": 0,
+  "fixture_pids": [
+    35471, 35472, 35518, 35519, 37562, 37563, 37684, 37685, 37751, 37753, 37897,
+    37898, 37901, 37902, 38050, 38051, 38052, 38053, 38217, 38218
+  ],
+  "remaining_fixture_pids": []
+}

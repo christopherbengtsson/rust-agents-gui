@@ -25,11 +25,10 @@
   },
   "bundle": {
     "active": true,
-    "macOS": { "minimumSystemVersion": "13.3" },
+    "macOS": {
+      "minimumSystemVersion": "13.3"
+    },
     "targets": ["app"],
-    "icon": [],
-    "resources": {
-      "gen/sidecar/workspace-supervisor": "workspace-supervisor"
-    }
+    "icon": []
   }
 }

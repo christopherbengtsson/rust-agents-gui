@@ -1,0 +1,61 @@
+   Compiling scopeguard v1.2.0
+   Compiling typenum v1.20.1
+   Compiling futures-sink v0.3.34
+   Compiling parking_lot_core v0.9.12
+   Compiling allocator-api2 v0.2.21
+   Compiling futures-io v0.3.34
+   Compiling tokio v1.54.1
+   Compiling tracing-core v0.1.36
+   Compiling form_urlencoded v1.2.2
+   Compiling cpufeatures v0.2.17
+   Compiling parking v2.2.1
+   Compiling crc-catalog v2.5.0
+   Compiling lock_api v0.4.14
+   Compiling num-traits v0.2.19
+   Compiling futures-util v0.3.34
+   Compiling url v2.5.8
+   Compiling event-listener v5.4.2
+   Compiling crc v3.4.0
+   Compiling thiserror v2.0.21
+   Compiling crossbeam-queue v0.3.14
+   Compiling hashbrown v0.16.1
+   Compiling generic-array v0.14.7
+   Compiling parking_lot v0.12.5
+   Compiling spin v0.9.9
+   Compiling tracing v0.1.44
+   Compiling either v1.19.0
+   Compiling base64 v0.22.1
+   Compiling libsqlite3-sys v0.37.0
+   Compiling atoi v2.0.0
+   Compiling flume v0.12.0
+   Compiling hashlink v0.11.1
+   Compiling futures-intrusive v0.5.0
+   Compiling futures-channel v0.3.34
+   Compiling serde_json v1.0.154
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling futures-executor v0.3.34
+   Compiling tokio-stream v0.1.19
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.89s
+     Running unittests src/lib.rs (target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7)
+
+running 10 tests
+test storage::opening::tests::substituted_file_metadata_rejects_aliases_wrong_owner_and_public_modes ... ok
+test storage::policy::tests::responsive_worker_with_unresolved_rollback_is_never_reused ... ok
+test storage::tests::bounded_serialization_rejects_before_allocating_an_unbounded_encoded_copy ... ok
+test storage::tests::completed_undelivered_result_keeps_its_capacity_until_consumed_or_dropped ... ok
+test storage::tests::current_records_retain_recovery_evidence_and_corruption_is_not_absence ... ok
+test storage::tests::failed_commit_receipt_waits_for_retirement_and_preserves_both_failures ... ok
+test storage::tests::known_retirement_allows_fresh_reconciliation_but_never_grants_write_replay ... ok
+test storage::tests::lost_requester_keeps_completion_and_status_pending_until_physical_settlement ... ok
+test storage::tests::retirement_unknown_fences_fresh_observation_and_retains_exact_action_after_reply_loss ... ok
+test storage::tests::task_panic_is_owned_attributed_and_fenced ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

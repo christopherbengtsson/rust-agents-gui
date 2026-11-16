@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { WorkspaceView } from "@/lib/navigation";
 import type { WorkspaceChangesReader } from "@/lib/workspace-changes-reader";
 import { CircleAlert, FolderGit2, RefreshCw } from "lucide-react";
@@ -13,7 +14,7 @@ import {
 import { WorkspaceDetails } from "./workspace-details";
 import { WorkspaceInspection } from "./workspace-changes";
 import type { Workspaces } from "@/hooks/use-workspaces";
-import type { Connection } from "@/hooks/use-supervisor-connection";
+import type { Connection } from "@/hooks/use-core-connection";
 import type { Repositories } from "@/hooks/use-repositories";
 
 export function WorkspacePanel({
@@ -24,6 +25,7 @@ export function WorkspacePanel({
   onRefreshStatus,
   repositories,
   workspaces,
+  setupLink,
 }: {
   view: WorkspaceView;
   onViewChange: (view: WorkspaceView) => void;
@@ -32,15 +34,19 @@ export function WorkspacePanel({
   onRefreshStatus: () => Promise<void>;
   repositories: Repositories;
   workspaces: Workspaces;
+  setupLink?: ReactNode;
 }) {
   const details = workspaces.selected ? (
-    <WorkspaceDetails
-      workspace={workspaces.selected}
-      connected={connection.state === "connected"}
-      stale={connection.state !== "connected" || !!workspaces.error}
-      pending={workspaces.submitting || !!workspaces.pending}
-      onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
-    />
+    <>
+      <WorkspaceDetails
+        workspace={workspaces.selected}
+        connected={connection.state === "connected"}
+        stale={connection.state !== "connected" || !!workspaces.error}
+        pending={workspaces.submitting || !!workspaces.pending}
+        onReconcile={() => void workspaces.reconcile(workspaces.selected!)}
+      />
+      {workspaces.selected.status.state === "ready" && setupLink}
+    </>
   ) : null;
   return (
     <main id="workspace" tabIndex={-1} className="workspace-region flex-1">
@@ -125,7 +131,7 @@ export function WorkspacePanel({
         {connection.state === "error" && (
           <Alert variant="destructive" className="connection-error">
             <CircleAlert aria-hidden="true" />
-            <AlertTitle>Cannot reach the supervisor</AlertTitle>
+            <AlertTitle>Cannot reach the core</AlertTitle>
             <AlertDescription>
               <p className="error-detail">{connection.error}</p>
               <p>
@@ -172,9 +178,9 @@ export function WorkspacePanel({
               key={workspaces.selected.id}
               workspaceId={workspaces.selected.id}
               reader={changeReader}
-              owner={
+              incarnation={
                 connection.state === "connected"
-                  ? connection.observation.snapshot.cursor.owner
+                  ? connection.observation.snapshot.cursor.incarnation
                   : undefined
               }
             >

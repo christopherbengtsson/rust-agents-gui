@@ -1,0 +1,124 @@
+{
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 41501,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "41501-1794705945727486000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  },
+  "tables": {
+    "repositories": [
+      {
+        "id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+        "common_dir": "/private/tmp/aw-piw-qv5omkrn/Ambiguous/.git",
+        "record": "{\"id\":\"0407301a-1b3b-45ea-9341-6e306e26b74c\",\"name\":\"Ambiguous\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/Ambiguous\",\"common_dir\":\"/private/tmp/aw-piw-qv5omkrn/Ambiguous/.git\"}"
+      },
+      {
+        "id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+        "common_dir": "/private/tmp/aw-piw-qv5omkrn/Alpha/.git",
+        "record": "{\"id\":\"3c6bd9df-9cdf-4588-84a7-ecc2b6188a63\",\"name\":\"Alpha\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/Alpha\",\"common_dir\":\"/private/tmp/aw-piw-qv5omkrn/Alpha/.git\"}"
+      }
+    ],
+    "registration_actions": [
+      {
+        "id": "6a5945b4-4787-4026-a8f5-bbdccc2aa15b",
+        "pending": 0,
+        "record": "{\"create_initial_workspace\":true,\"initial_workspace_id\":\"b504a26f-b352-400b-b274-3b718601020e\",\"action_id\":\"6a5945b4-4787-4026-a8f5-bbdccc2aa15b\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/Alpha\",\"state\":\"completed\",\"repository_id\":\"3c6bd9df-9cdf-4588-84a7-ecc2b6188a63\"}"
+      },
+      {
+        "id": "ed167004-5dea-4df0-99e4-012f9064ec29",
+        "pending": 0,
+        "record": "{\"create_initial_workspace\":true,\"initial_workspace_id\":\"e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2\",\"action_id\":\"ed167004-5dea-4df0-99e4-012f9064ec29\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/Ambiguous\",\"state\":\"completed\",\"repository_id\":\"0407301a-1b3b-45ea-9341-6e306e26b74c\"}"
+      }
+    ],
+    "workspaces": [
+      {
+        "id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+        "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+        "queued": 0,
+        "record": "{\"id\":\"2883f63f-3e00-4196-99b2-5ff8c9c53693\",\"repository_id\":\"3c6bd9df-9cdf-4588-84a7-ecc2b6188a63\",\"creation_action_id\":\"c022c5d3-f95d-4908-b4a6-a983f15e2355\",\"name\":\"andre-pierre-gignac\",\"branch\":\"workspace/andre-pierre-gignac\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout\",\"legacy\":false,\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"5dddce1f77f42849780f6ca214fc5104a9539aab\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+        "name": "andre-pierre-gignac",
+        "branch": "workspace/andre-pierre-gignac",
+        "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout"
+      },
+      {
+        "id": "b504a26f-b352-400b-b274-3b718601020e",
+        "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+        "queued": 0,
+        "record": "{\"id\":\"b504a26f-b352-400b-b274-3b718601020e\",\"repository_id\":\"3c6bd9df-9cdf-4588-84a7-ecc2b6188a63\",\"creation_action_id\":\"c49406fe-3fd9-4513-ab45-260f240d617f\",\"name\":\"julian-brandt\",\"branch\":\"workspace/julian-brandt\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout\",\"legacy\":false,\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"5dddce1f77f42849780f6ca214fc5104a9539aab\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+        "name": "julian-brandt",
+        "branch": "workspace/julian-brandt",
+        "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout"
+      },
+      {
+        "id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+        "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+        "queued": 0,
+        "record": "{\"id\":\"e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2\",\"repository_id\":\"0407301a-1b3b-45ea-9341-6e306e26b74c\",\"creation_action_id\":\"3c53ddda-3bf5-4435-bc57-5a5ded4d2e21\",\"name\":\"david-de-gea\",\"branch\":\"workspace/david-de-gea\",\"path\":\"/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout\",\"legacy\":false,\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"5dddce1f77f42849780f6ca214fc5104a9539aab\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+        "name": "david-de-gea",
+        "branch": "workspace/david-de-gea",
+        "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout"
+      }
+    ],
+    "workspace_actions": [
+      {
+        "id": "0aac721e-ae0f-43ed-ab78-d681b6dd148d",
+        "workspace_id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+        "record": "{\"operation\":\"reconcile\",\"action_id\":\"0aac721e-ae0f-43ed-ab78-d681b6dd148d\",\"workspace_id\":\"e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2\"}"
+      },
+      {
+        "id": "3c53ddda-3bf5-4435-bc57-5a5ded4d2e21",
+        "workspace_id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+        "record": "{\"operation\":\"create\",\"action_id\":\"3c53ddda-3bf5-4435-bc57-5a5ded4d2e21\",\"repository_id\":\"0407301a-1b3b-45ea-9341-6e306e26b74c\"}"
+      },
+      {
+        "id": "c022c5d3-f95d-4908-b4a6-a983f15e2355",
+        "workspace_id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+        "record": "{\"operation\":\"create\",\"action_id\":\"c022c5d3-f95d-4908-b4a6-a983f15e2355\",\"repository_id\":\"3c6bd9df-9cdf-4588-84a7-ecc2b6188a63\"}"
+      },
+      {
+        "id": "c49406fe-3fd9-4513-ab45-260f240d617f",
+        "workspace_id": "b504a26f-b352-400b-b274-3b718601020e",
+        "record": "{\"operation\":\"create\",\"action_id\":\"c49406fe-3fd9-4513-ab45-260f240d617f\",\"repository_id\":\"3c6bd9df-9cdf-4588-84a7-ecc2b6188a63\"}"
+      }
+    ],
+    "repository_folders": [
+      {
+        "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+        "folder": "ambiguous"
+      },
+      {
+        "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+        "folder": "alpha"
+      }
+    ]
+  },
+  "processes": {
+    "supervisor": {
+      "pid": 41501,
+      "poll": null,
+      "ps": "41501 36779 /private/tmp/aw-piw-qv5omkrn/PIW Qualification.app/Contents/Resources/workspace-supervisor /private/tmp/aw-piw-qv5omkrn/state\n"
+    },
+    "desktop": {
+      "pid": 39474,
+      "poll": 0,
+      "ps": ""
+    }
+  },
+  "original_files_unchanged": {
+    "/private/tmp/aw-piw-qv5omkrn/Alpha/tracked.txt": true,
+    "/private/tmp/aw-piw-qv5omkrn/Alpha/original-only.txt": true,
+    "/private/tmp/aw-piw-qv5omkrn/Beta/tracked.txt": true,
+    "/private/tmp/aw-piw-qv5omkrn/Beta/original-only.txt": true,
+    "/private/tmp/aw-piw-qv5omkrn/Ambiguous/tracked.txt": true,
+    "/private/tmp/aw-piw-qv5omkrn/Ambiguous/original-only.txt": true
+  }
+}

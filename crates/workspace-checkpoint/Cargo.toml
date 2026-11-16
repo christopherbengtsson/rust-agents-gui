@@ -1,0 +1,33 @@
+[package]
+name = "workspace-checkpoint"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[features]
+qualification = []
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("codegen"))'] }
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+uuid = { version = "1.29.2", features = ["v4", "serde"] }
+libc = "0.2.191"
+tokio = { version = "=1.54.1", default-features = false, features = ["rt", "sync", "time", "macros", "process", "io-util"] }
+tokio-util = { version = "=0.7.20", default-features = false, features = ["rt"] }
+futures-util = { version = "0.3.34", default-features = false, features = ["std"] }
+tracing = "=0.1.44"
+
+[dev-dependencies]
+tokio = { version = "=1.54.1", default-features = false, features = ["test-util"] }
+
+[[bin]]
+name = "qualify-workspaces"
+path = "src/main.rs"
+required-features = ["qualification"]
+test = false

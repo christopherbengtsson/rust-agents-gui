@@ -1,0 +1,52 @@
+{
+  "frozen_v1_sources_still_match_all_as_run_hashes": {
+    "bridge/Cargo.lock": true,
+    "bridge/Cargo.toml": true,
+    "bridge/src/main.rs": true,
+    "common.rs": true,
+    "driver.rs": true,
+    "manifest.json": true,
+    "run.py": true,
+    "sqlx/Cargo.lock": true,
+    "sqlx/Cargo.toml": true,
+    "sqlx/src/main.rs": true
+  },
+  "v1_binary_hashes_still_match_runtime_and_fresh_builds": {
+    "bridge": {
+      "path": "/tmp/storage-async-bridge-target/release/storage-async-bridge",
+      "sha256": "cce84982b9aebaa8b200bf066847b1b31d2b1bd49430dbaed9c865f3525f18f7",
+      "bytes": 2856096
+    },
+    "sqlx": {
+      "path": "/tmp/storage-async-sqlx-target/release/storage-async-sqlx",
+      "sha256": "61a8d1eeb0ce797b6b1ef908cdd5332fce6353bd4aeb1e588a85e62e577d1732",
+      "bytes": 3437632
+    }
+  },
+  "original_workload_runs": 24,
+  "original_measured_workload_runs": 20,
+  "focused_before_after_checks": 4,
+  "group64_diagnostic_workload_runs": 2,
+  "all_successful_runs_pass_final_accounting_and_integrity": true,
+  "v1_private_database_root_removed": true,
+  "failed_construction_private_root_removed": true,
+  "group64_private_database_and_targets_removed": true,
+  "original_private_build_targets_retained": "97284\t/tmp/storage-async-bridge-target\n228736\t/tmp/storage-async-sqlx-target\n",
+  "max_observed_closed_database_bytes": 156180480,
+  "app_source_dependency_status": "",
+  "final_evidence_source_hashes": {
+    "harness/bridge/Cargo.lock": "dcc05302f0273c96f3e12813d4dd47df6fabbc5b413c25186397e95589432312",
+    "harness/bridge/Cargo.toml": "27a93848ed392afff250b5efa351747b8ba7e382562fd8ffdf5a9144ea937788",
+    "harness/bridge/src/main.rs": "f685506ad29ff3d9f96780d9ca012d9ccf33e8ebcdf25ee5fe58b6dd3ea0f7aa",
+    "harness/common.rs": "e6b67d76e1997b48812613154bb1c5fe44085b635c9f5863aca8d6a5bf2823b7",
+    "harness/driver.rs": "5fb223bb7ee285ed3699ce443e3b967d59746630636bc342c163fe83ab19493d",
+    "harness/group64-common.rs": "704c01d3b22b9da4198b40ef1e70b270566ac22e8e5cf97054d61a472832c162",
+    "harness/group64-manifest.json": "537c52a3e6ee02895a645d45affe06a9fd53cea9ff23ebcd84ab20bc92380f03",
+    "harness/manifest.json": "423b5c01367976ce6bbac2a40589e8596498b09cb5257c9b75059d58b382158f",
+    "harness/run-group64.py": "5d815ffe1bc4bad658eb63f428e177eaf4836e6cf9476b9580f5a6a0ade8c33a",
+    "harness/run.py": "dc41b00c5eeb6084c0488c3710fd48c7e09b9160bd2836c64dd74045a3745479",
+    "harness/sqlx/Cargo.lock": "41bc891e7702c82a1f2982302efe3226f1a29f7d41a1c16dff2da0041c7fff93",
+    "harness/sqlx/Cargo.toml": "3f5cd21afd38866c8103501af4543181bf1df01908faa0dcd4e689d775d5db26",
+    "harness/sqlx/src/main.rs": "f685506ad29ff3d9f96780d9ca012d9ccf33e8ebcdf25ee5fe58b6dd3ea0f7aa"
+  }
+}

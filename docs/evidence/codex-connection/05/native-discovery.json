@@ -1,0 +1,33 @@
+{
+  "root": "/private/tmp/aw-discovery-wkpgn7re",
+  "bundle": "/private/tmp/aw-discovery-wkpgn7re/Discovery Refinement.app",
+  "protocol": 14,
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "HOME": "/private/tmp/aw-discovery-wkpgn7re/home",
+    "SHELL": "/bin/zsh",
+    "ZDOTDIR": "/private/tmp/aw-discovery-wkpgn7re/shell",
+    "CODEX_HOME": "/private/tmp/aw-discovery-wkpgn7re/codex-home",
+    "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/aw-discovery-wkpgn7re/state",
+    "AW_FIXTURE_CONTROL": "/private/tmp/aw-discovery-wkpgn7re/control.json"
+  },
+  "desktop_sha256": "e9e836982f643db1beae7b89eb984f26a05296586eaa6896a7bc0e2dfc7483e6",
+  "supervisor_sha256": "22807930d4624a2f91d4c9b327c891fe4069d06f0c049ddf8ef5281bfb65d154",
+  "limits": "Controlled native filesystem/shell/process discovery; synthetic account/protocol evidence. No user credentials, real authentication or agent work.",
+  "commands": [
+    {
+      "command": "capture baseline",
+      "time": 1794776860.7537978
+    },
+    {
+      "command": "check",
+      "time": 1794776860.7557602
+    }
+  ],
+  "captures": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/codex-connection/05/native-discovery-baseline.json"
+  ],
+  "mode": "packaged-supervisor-process",
+  "desktop_pid": 65551,
+  "failure": "TimeoutError('Check did not settle')"
+}

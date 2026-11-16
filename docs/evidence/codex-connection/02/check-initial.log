@@ -1,0 +1,49 @@
+$ node scripts/check.mjs check
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.87s
+file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.mjs:54
+    throw new Error(
+          ^
+
+Error: Generated contract drift; run corepack pnpm generated:write:
+stale: manifest.json
+    at reconcileArtifacts (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.mjs:54:11)
+    at prepareGenerated (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.mjs:259:3)
+    at check (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:14:3)
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/check.mjs:59:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.13.1
+[ELIFECYCLE] Command failed with exit code 1.

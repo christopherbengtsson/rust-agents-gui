@@ -1,0 +1,10 @@
+{
+  "result": "passed",
+  "revision": "c27122d",
+  "checks": [
+    "private desktop connected to expected core incarnation",
+    "details matched desktop 23421, supervisor 23426, owner 23426-1794834635628452000, revision1",
+    "Cmd+Q completed owned Quit; both exact processes exited"
+  ],
+  "no_provider_or_authentication_actions": true
+}

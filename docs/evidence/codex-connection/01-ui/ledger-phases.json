@@ -1,0 +1,40 @@
+[
+  {
+    "phase": "before Settings entry",
+    "events": 0,
+    "starts": 0
+  },
+  {
+    "phase": "first Codex entry, healthy",
+    "events": 7,
+    "starts": 2,
+    "commands": [["--version"], ["app-server"]],
+    "methods": ["initialize", "initialized", "account/read", "config/read"]
+  },
+  {
+    "phase": "resize, disclosures, keyboard and General navigation",
+    "events": 7,
+    "starts": 2
+  },
+  {
+    "phase": "return to Codex after external config failure",
+    "events": 14,
+    "starts": 4
+  },
+  {
+    "phase": "Check again recovered; Claude inspection",
+    "events": 21,
+    "starts": 6
+  },
+  {
+    "phase": "keyboard Codex reentry detects externally selected API-key evidence",
+    "events": 28,
+    "starts": 8
+  },
+  {
+    "phase": "deadline, Check again to missing auth, Escape return",
+    "events": 40,
+    "starts": 12,
+    "allowed_methods_only": true
+  }
+]

@@ -1,0 +1,1003 @@
+{
+  "date": "2026-11-15",
+  "source_commit": "c49eade86568f7c45ed36f6b38a9b5fbc4aa17c3",
+  "root": "/private/tmp/aw-ui-05-xhahqo0p",
+  "bundle": "/private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app",
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "HOME": "/private/tmp/aw-ui-05-xhahqo0p/home",
+    "SHELL": "/bin/zsh",
+    "ZDOTDIR": "/private/tmp/aw-ui-05-xhahqo0p/shell",
+    "CODEX_HOME": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+    "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/aw-ui-05-xhahqo0p/state",
+    "AW_FIXTURE_CONTROL": "/private/tmp/aw-ui-05-xhahqo0p/control.json",
+    "AGENT_WORKSPACE_SUPERVISOR": "/private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor"
+  },
+  "binary_hashes": {
+    "Contents/MacOS/workspace-desktop": "1662c2c58be29f3315e40909cec151d591f7dc39fc930e24c88d14c73b72e6d8",
+    "Contents/Resources/workspace-supervisor": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069"
+  },
+  "original_plist_sha256": "8138f27a6a1b774fdbf441f5de4e169ccf5a7d2bb88a8c8892c441cbfbf66019",
+  "private_plist_sha256": "84e59721299316aa26e9c61706486920d6ce6f332064d772dfaad1ad259d382d",
+  "observations": [],
+  "captures": [
+    {
+      "label": "finder-connected",
+      "time": 1794778246.072344,
+      "owner": "73191-1794778199123683000",
+      "observation": {
+        "selection": null,
+        "target": {
+          "id": "aaec3237-ffb9-4a46-b095-6337716d0925",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v1",
+          "selected_executable": null,
+          "discovery_source": "shell",
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-aaec3237-ffb9-4a46-b095-6337716d0925",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 2,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": null
+      },
+      "processes": [
+        "73183     1 73183 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73191 73183 73191 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "skeleton-navigation",
+      "time": 1794778269.323457,
+      "owner": "73191-1794778199123683000",
+      "observation": {
+        "selection": null,
+        "target": {
+          "id": "aaec3237-ffb9-4a46-b095-6337716d0925",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v1",
+          "selected_executable": null,
+          "discovery_source": "shell",
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-aaec3237-ffb9-4a46-b095-6337716d0925",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 3,
+        "phase": "checking",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": null
+      },
+      "processes": [
+        "73183     1 73183 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73191 73183 73191 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state",
+        "73222 73191 73222 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /private/tmp/aw-ui-05-xhahqo0p/codex-v1 app-server"
+      ]
+    },
+    {
+      "label": "missing-before-chooser",
+      "time": 1794778301.4025521,
+      "owner": "73191-1794778199123683000",
+      "observation": {
+        "selection": null,
+        "target": {
+          "id": "aaec3237-ffb9-4a46-b095-6337716d0925",
+          "provider": "codex",
+          "executable": "/Users/christopherbengtsson/.codex/packages/standalone/releases/0.169.0-aarch64-apple-darwin/bin/codex",
+          "selected_executable": null,
+          "discovery_source": "conventional",
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-aaec3237-ffb9-4a46-b095-6337716d0925",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 8,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": null,
+          "model": null
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": null
+      },
+      "processes": [
+        "73183     1 73183 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73191 73183 73191 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "prepared-private-selection",
+      "time": 1794778330.832618,
+      "owner": "73191-1794778199123683000",
+      "observation": {
+        "selection": {
+          "id": "95648927-a18c-448b-9881-2fae008a86d3",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/manual-codex",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "aaec3237-ffb9-4a46-b095-6337716d0925",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v1",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/manual-codex",
+          "discovery_source": "selected",
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-aaec3237-ffb9-4a46-b095-6337716d0925",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 10,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": null
+      },
+      "processes": [
+        "73183     1 73183 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73191 73183 73191 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "chooser-cancelled",
+      "time": 1794778372.01857,
+      "owner": "73191-1794778199123683000",
+      "observation": {
+        "selection": {
+          "id": "95648927-a18c-448b-9881-2fae008a86d3",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/manual-codex",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "aaec3237-ffb9-4a46-b095-6337716d0925",
+          "provider": "codex",
+          "executable": null,
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/manual-codex",
+          "discovery_source": null,
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-aaec3237-ffb9-4a46-b095-6337716d0925",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 12,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "missing_executable",
+        "diagnostic": "Codex could not be found at the selected location or in the searched executable paths",
+        "login": null
+      },
+      "processes": [
+        "73183     1 73183 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73191 73183 73191 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "chooser-selected",
+      "time": 1794778496.0357811,
+      "owner": "73191-1794778199123683000",
+      "observation": {
+        "selection": {
+          "id": "00e40d4b-79c6-4447-b260-28feb9fd4174",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "aaec3237-ffb9-4a46-b095-6337716d0925",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "discovery_source": "selected",
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-aaec3237-ffb9-4a46-b095-6337716d0925",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 14,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": null
+      },
+      "processes": [
+        "73183     1 73183 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73191 73183 73191 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "remembered-restart",
+      "time": 1794778570.8485131,
+      "owner": "73304-1794778516732458000",
+      "observation": {
+        "selection": {
+          "id": "00e40d4b-79c6-4447-b260-28feb9fd4174",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "771e8866-633f-4bf6-bd9e-8d83ee703579",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "discovery_source": "selected",
+          "codex_home": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-771e8866-633f-4bf6-bd9e-8d83ee703579",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 4,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "chatgpt",
+          "billing": "chatgpt",
+          "account": "fixture@example.test",
+          "plan": "pro",
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": null,
+        "diagnostic": null,
+        "login": null
+      },
+      "processes": [
+        "73299     1 73299 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73304 73299 73304 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "pending-started",
+      "time": 1794778622.3275058,
+      "owner": "73347-1794778602378280000",
+      "observation": {
+        "selection": {
+          "id": "00e40d4b-79c6-4447-b260-28feb9fd4174",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "1e42986f-3df7-4760-8543-287ec48d8558",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "discovery_source": "selected",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-1e42986f-3df7-4760-8543-287ec48d8558",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 5,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "f16c7df4-0063-4ffd-ab0e-7a4aaa87a7a9",
+          "phase": "pending",
+          "outcome": null,
+          "browser_open_failed": false,
+          "diagnostic": null
+        }
+      },
+      "processes": [
+        "73342 73339 73342 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73347 73342 73347 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state",
+        "73361 73347 73361 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /private/tmp/aw-ui-05-xhahqo0p/codex-v2 app-server"
+      ]
+    },
+    {
+      "label": "pending-reopened",
+      "time": 1794778639.606935,
+      "owner": "73347-1794778602378280000",
+      "observation": {
+        "selection": {
+          "id": "00e40d4b-79c6-4447-b260-28feb9fd4174",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "1e42986f-3df7-4760-8543-287ec48d8558",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "discovery_source": "selected",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-1e42986f-3df7-4760-8543-287ec48d8558",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 6,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "f16c7df4-0063-4ffd-ab0e-7a4aaa87a7a9",
+          "phase": "pending",
+          "outcome": null,
+          "browser_open_failed": false,
+          "diagnostic": null
+        }
+      },
+      "processes": [
+        "73342 73339 73342 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73347 73342 73347 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state",
+        "73361 73347 73361 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /private/tmp/aw-ui-05-xhahqo0p/codex-v2 app-server"
+      ]
+    },
+    {
+      "label": "pending-cancelled",
+      "time": 1794778673.0767229,
+      "owner": "73347-1794778602378280000",
+      "observation": {
+        "selection": {
+          "id": "00e40d4b-79c6-4447-b260-28feb9fd4174",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "1e42986f-3df7-4760-8543-287ec48d8558",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "discovery_source": "selected",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-1e42986f-3df7-4760-8543-287ec48d8558",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 9,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "f16c7df4-0063-4ffd-ab0e-7a4aaa87a7a9",
+          "phase": "cancelled",
+          "outcome": "cancelled",
+          "browser_open_failed": false,
+          "diagnostic": null
+        }
+      },
+      "processes": [
+        "73342 73339 73342 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73347 73342 73347 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state"
+      ]
+    },
+    {
+      "label": "pending-before-quit",
+      "time": 1794778680.485142,
+      "owner": "73347-1794778602378280000",
+      "observation": {
+        "selection": {
+          "id": "00e40d4b-79c6-4447-b260-28feb9fd4174",
+          "path": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "phase": "remembered"
+        },
+        "target": {
+          "id": "1e42986f-3df7-4760-8543-287ec48d8558",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "selected_executable": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2",
+          "discovery_source": "selected",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-1e42986f-3df7-4760-8543-287ec48d8558",
+          "minimum_supported_version": "0.169.0"
+        },
+        "revision": 12,
+        "phase": "observed",
+        "evidence": {
+          "version": "0.169.0",
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "account": null,
+          "plan": null,
+          "model_provider": "openai",
+          "model": "fixture-model"
+        },
+        "problem": "authentication_unavailable",
+        "diagnostic": null,
+        "login": {
+          "id": "af67752e-1faa-4fcf-a0bf-665041fc5db9",
+          "phase": "pending",
+          "outcome": null,
+          "browser_open_failed": false,
+          "diagnostic": null
+        }
+      },
+      "processes": [
+        "73342 73339 73342 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/MacOS/workspace-desktop",
+        "73347 73342 73347 /private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor /private/tmp/aw-ui-05-xhahqo0p/state",
+        "73450 73347 73450 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /private/tmp/aw-ui-05-xhahqo0p/codex-v2 app-server"
+      ]
+    }
+  ],
+  "first_ui_quit": {
+    "time": 1794778509.688024,
+    "remaining_processes": [],
+    "socket_present": true
+  },
+  "second_ui_quit": {
+    "remaining_processes": []
+  },
+  "pending_launch": {
+    "pid": 73342,
+    "environment": {
+      "PATH": "/usr/bin:/bin",
+      "HOME": "/private/tmp/aw-ui-05-xhahqo0p/home",
+      "SHELL": "/bin/zsh",
+      "ZDOTDIR": "/private/tmp/aw-ui-05-xhahqo0p/shell",
+      "CODEX_HOME": "/private/tmp/aw-ui-05-xhahqo0p/codex-home",
+      "AGENT_WORKSPACE_STATE_DIR": "/private/tmp/aw-ui-05-xhahqo0p/state",
+      "AW_FIXTURE_CONTROL": "/private/tmp/aw-ui-05-xhahqo0p/control.json",
+      "AGENT_WORKSPACE_SUPERVISOR": "/private/tmp/aw-ui-05-xhahqo0p/Ticket 05 UI.app/Contents/Resources/workspace-supervisor",
+      "AGENT_WORKSPACE_CODEX_FIXTURE": "/private/tmp/aw-ui-05-xhahqo0p/codex-v2"
+    },
+    "launch": "direct executable; not Finder evidence",
+    "landing_port": 62800
+  },
+  "pending_exit": {
+    "desktop_exit": 0,
+    "loopback_hits": [
+      {
+        "time": 1794778618.092235,
+        "path": "/fixture-sign-in"
+      },
+      {
+        "time": 1794778618.5288541,
+        "path": "/favicon.ico"
+      },
+      {
+        "time": 1794778633.282024,
+        "path": "/fixture-sign-in"
+      },
+      {
+        "time": 1794778633.708834,
+        "path": "/favicon.ico"
+      },
+      {
+        "time": 1794778677.823243,
+        "path": "/fixture-sign-in"
+      },
+      {
+        "time": 1794778678.256695,
+        "path": "/favicon.ico"
+      }
+    ],
+    "time": 1794778687.343016
+  },
+  "final_ui_audit": {
+    "time": 1794778698.042339,
+    "remaining_cohort_processes": [],
+    "forbidden_fixture_events": [],
+    "fixture_login_starts": 2,
+    "fixture_login_cancels": 2,
+    "desktop_exit": 0,
+    "installed_runtime_app_server_matches": []
+  },
+  "events": [
+    {
+      "pid": 73203,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73204,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73204,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73204,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73204,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73204,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73204,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73204,
+      "event": "exit"
+    },
+    {
+      "pid": 73221,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73222,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73222,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73222,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73222,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73231,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73232,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73232,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73232,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73232,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73232,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73232,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73232,
+      "event": "exit"
+    },
+    {
+      "pid": 73257,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73258,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73258,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73258,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73258,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73258,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73258,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73258,
+      "event": "exit"
+    },
+    {
+      "pid": 73289,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73290,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73290,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73290,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73290,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73290,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73290,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73290,
+      "event": "exit"
+    },
+    {
+      "pid": 73324,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73325,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73325,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73325,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73325,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73325,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73325,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73325,
+      "event": "exit"
+    },
+    {
+      "pid": 73332,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73333,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73333,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73333,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73333,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73333,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73333,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73333,
+      "event": "exit"
+    },
+    {
+      "pid": 73352,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73356,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73356,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73356,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73356,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73356,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73356,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73356,
+      "event": "exit"
+    },
+    {
+      "pid": 73359,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73361,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73361,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73361,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73361,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73361,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 73361,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 73361,
+      "event": "login_cancelled",
+      "login_id": "5a46fe8a-7f02-495c-ab66-bc2457489387"
+    },
+    {
+      "pid": 73361,
+      "event": "exit"
+    },
+    {
+      "pid": 73378,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73379,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73379,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73379,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73379,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73379,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 73379,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 73379,
+      "event": "exit"
+    },
+    {
+      "pid": 73449,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 73450,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 73450,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 73450,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 73450,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 73450,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 73450,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 73450,
+      "event": "login_cancelled",
+      "login_id": "8dec06f1-15ea-499a-91b4-a78b53b6a200"
+    },
+    {
+      "pid": 73450,
+      "event": "exit"
+    }
+  ],
+  "final_binary_check": {
+    "Contents/MacOS/workspace-desktop": {
+      "expected": "1662c2c58be29f3315e40909cec151d591f7dc39fc930e24c88d14c73b72e6d8",
+      "original": "1662c2c58be29f3315e40909cec151d591f7dc39fc930e24c88d14c73b72e6d8",
+      "private_copy": "1662c2c58be29f3315e40909cec151d591f7dc39fc930e24c88d14c73b72e6d8"
+    },
+    "Contents/Resources/workspace-supervisor": {
+      "expected": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069",
+      "original": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069",
+      "private_copy": "bf5d94f951932720909466c1be8d723f9006d487c2959e3dfda200a66a7bf069"
+    }
+  },
+  "original_plist_unchanged": true,
+  "limits": [
+    "Finder-launched private copy retains user HOME despite LSEnvironment; private CODEX_HOME remained effective. After private automatic symlink removal, conventional discovery performed unauthenticated installed-runtime readiness against that private CODEX_HOME. No real login was requested.",
+    "Native chooser selection resolved symlink to codex-v2. Logical-symlink preservation remains supported by reused controlled native evidence, not this chooser result.",
+    "Native mouse-origin chooser dismissal exposed focused HTML content; immediate Space did not reactivate Locate. Exact chooser focus return is not established.",
+    "VoiceOver speech, exhaustive accessibility, Dock-specific launch, production installation/signature distribution, and participant usability feedback were not performed.",
+    "Screenshots were inspected in the CUA transcript; repository evidence retains observations and process/fixture captures, not screenshot image files."
+  ],
+  "session_ui_observations": [
+    "Finder double-click of private bundle; shell discovery; minimal green Connected and fixture identity at 900x680.",
+    "gateway_delay: entire Codex body skeleton with Checking Codex; Claude tab and General navigation usable; ready fixture restores Connected.",
+    "Prepared initial saved private location via targeted select_executable IPC, removed only its private symlink, restored alternative automatic link; UI Codex not found retained saved selection without fallback.",
+    "Already installed / Locate native Open panel; Escape and Cancel preserve selection; Go to Folder path automation needed retries; choosing recent private directory then replacement-codex and Open succeeds.",
+    "Product Quit menu while idle; no remaining cohort processes; reopen produces new owner with same remembered selection ID/path and automatic Connected.",
+    "Tab focus visibly on Codex; Right then Return activates Claude; Shift-Tab returns to Providers; Escape returns to workspace Settings link; Return reopens Settings.",
+    "Window resized by native drag from 900x680 to 600x480 (retina screenshot 1800x1360 to 1200x960); Connected and pending controls fit; visible Cancel focus ring.",
+    "Fixture-only direct executable launch; synthetic sign-in -> General -> global pending banner -> Reopen browser; same attempt UUID, one login/start before cancel, two loopback sign-in page requests.",
+    "Tab from Reopen focuses Cancel; Return displays Browser sign-in cancelled and focuses status container.",
+    "Second synthetic pending login followed by product Quit menu; desktop exit 0, both fixture login requests cancelled, no retained cohort processes; only three verified fixture browser tabs closed."
+  ]
+}

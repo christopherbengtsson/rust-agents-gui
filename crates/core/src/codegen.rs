@@ -62,6 +62,11 @@ impl Exports {
             &OwnedReply::<WorkspaceReply>::name(&self.config),
         );
         self.schema::<OwnedReply<WorkspaceReply>>("OwnedWorkspaceReply");
+        self.alias(
+            "OwnedProviderReply",
+            &OwnedReply::<crate::runtimes::ProviderReply>::name(&self.config),
+        );
+        self.schema::<OwnedReply<crate::runtimes::ProviderReply>>("OwnedProviderReply");
     }
     pub(crate) fn alias(&mut self, name: &str, ty: &str) {
         assert!(
@@ -82,10 +87,11 @@ pub fn render() -> ContractExport {
         declarations: BTreeMap::new(),
         schemas: BTreeMap::new(),
     };
-    exports.add::<crate::SupervisorState>();
-    exports.add::<crate::SupervisorStatus>();
+    crate::runtimes::export_contracts(&mut exports);
+    exports.add::<crate::CoreState>();
+    exports.add::<crate::CoreStatus>();
     exports.add::<crate::SnapshotCursor>();
-    exports.add::<crate::SupervisorSnapshot>();
+    exports.add::<crate::CoreSnapshot>();
     exports.alias("DesktopPid", &crate::DesktopPid::inline(&exports.config));
     exports.schema::<crate::DesktopPid>("DesktopPid");
     crate::connection::export_contracts(&mut exports);
@@ -145,7 +151,7 @@ mod parity_tests {
         assert!(first.declarations.contains("sequence: number"));
         assert!(first.declarations.contains("OwnedReply<T>"));
         assert_eq!(
-            first.schemas["SupervisorSnapshot"]["$schema"],
+            first.schemas["CoreSnapshot"]["$schema"],
             "https://json-schema.org/draft/2020-12/schema"
         );
     }

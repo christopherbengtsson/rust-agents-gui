@@ -1,0 +1,211 @@
+{
+  "hidden": {
+    "supervisor_alive": true,
+    "desktop_alive": true,
+    "events": [
+      {
+        "pid": 484,
+        "event": "start",
+        "argument": ["--version"]
+      },
+      {
+        "pid": 485,
+        "event": "start",
+        "argument": ["app-server"]
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "initialize"
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "initialized"
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "account/read"
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "config/read"
+      },
+      {
+        "pid": 485,
+        "event": "exit"
+      },
+      {
+        "pid": 487,
+        "event": "start",
+        "argument": ["--version"]
+      },
+      {
+        "pid": 489,
+        "event": "start",
+        "argument": ["app-server"]
+      },
+      {
+        "pid": 489,
+        "event": "request",
+        "method": "initialize"
+      },
+      {
+        "pid": 489,
+        "event": "request",
+        "method": "initialized"
+      },
+      {
+        "pid": 489,
+        "event": "request",
+        "method": "account/login/start"
+      }
+    ]
+  },
+  "predefined_quit": {
+    "supervisor_alive": true,
+    "desktop_alive": false,
+    "events": [
+      {
+        "pid": 484,
+        "event": "start",
+        "argument": ["--version"]
+      },
+      {
+        "pid": 485,
+        "event": "start",
+        "argument": ["app-server"]
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "initialize"
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "initialized"
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "account/read"
+      },
+      {
+        "pid": 485,
+        "event": "request",
+        "method": "config/read"
+      },
+      {
+        "pid": 485,
+        "event": "exit"
+      },
+      {
+        "pid": 487,
+        "event": "start",
+        "argument": ["--version"]
+      },
+      {
+        "pid": 489,
+        "event": "start",
+        "argument": ["app-server"]
+      },
+      {
+        "pid": 489,
+        "event": "request",
+        "method": "initialize"
+      },
+      {
+        "pid": 489,
+        "event": "request",
+        "method": "initialized"
+      },
+      {
+        "pid": 489,
+        "event": "request",
+        "method": "account/login/start"
+      }
+    ]
+  },
+  "owned_quit": {
+    "supervisor_alive": false,
+    "desktop_alive": false,
+    "events": [
+      {
+        "pid": 2155,
+        "event": "start",
+        "argument": ["--version"]
+      },
+      {
+        "pid": 2156,
+        "event": "start",
+        "argument": ["app-server"]
+      },
+      {
+        "pid": 2156,
+        "event": "request",
+        "method": "initialize"
+      },
+      {
+        "pid": 2156,
+        "event": "request",
+        "method": "initialized"
+      },
+      {
+        "pid": 2156,
+        "event": "request",
+        "method": "account/read"
+      },
+      {
+        "pid": 2156,
+        "event": "request",
+        "method": "config/read"
+      },
+      {
+        "pid": 2156,
+        "event": "exit"
+      },
+      {
+        "pid": 2159,
+        "event": "start",
+        "argument": ["--version"]
+      },
+      {
+        "pid": 2160,
+        "event": "start",
+        "argument": ["app-server"]
+      },
+      {
+        "pid": 2160,
+        "event": "request",
+        "method": "initialize"
+      },
+      {
+        "pid": 2160,
+        "event": "request",
+        "method": "initialized"
+      },
+      {
+        "pid": 2160,
+        "event": "request",
+        "method": "account/login/start"
+      },
+      {
+        "pid": 2160,
+        "event": "request",
+        "method": "account/login/cancel"
+      },
+      {
+        "pid": 2160,
+        "event": "login_cancelled",
+        "login_id": "3ba6fbd3-1871-4c57-bf05-755481355d74"
+      },
+      {
+        "pid": 2160,
+        "event": "exit"
+      }
+    ]
+  }
+}

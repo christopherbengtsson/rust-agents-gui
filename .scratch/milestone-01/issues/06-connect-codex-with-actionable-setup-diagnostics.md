@@ -1,8 +1,18 @@
 # 06: Connect Codex with actionable setup diagnostics
 
-**What to build:** Deliver the Codex connection outcome through the four-session
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../sqlx-architecture/spec.md) and
+[supersession amendments A5/A8](../../sqlx-architecture/amendments.md) govern
+host-sensitive connection qualification and the storage/chat successor route.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
+**What to build:** Deliver the Codex connection outcome through the current
 [Codex connection feature](../../codex-connection/spec.md): provider readiness,
-official browser sign-in, embedded CLI login and cumulative qualification.
+official browser sign-in, compatibility checks and cumulative qualification.
+Connection 03's separate CLI/terminal capability is deferred by user decision.
 The separately selected
 [workspace-provider cleanup](../../provider-independent-workspaces/issues/01-retire-workspace-provider.md)
 precedes those sessions; this parent does not implement it.
@@ -27,19 +37,22 @@ The [MVP](../../../docs/MVP.md), [milestone](../../../docs/MILESTONE-01.md) and
 | --- | --- | --- |
 | [Connection 01](../../codex-connection/issues/01-provider-readiness-and-diagnostics.md) | Providers page, existing authentication/status and setup diagnostics | Workspace-provider cleanup 01, Milestone 02a, F08 |
 | [Connection 02](../../codex-connection/issues/02-official-browser-sign-in.md) | Official browser sign-in, retained progress and cancellation/reconciliation | Connection 01 |
-| [Connection 03](../../codex-connection/issues/03-embedded-cli-login.md) | Embedded official CLI login and owned terminal cleanup | Connection 02 |
-| [Connection 04](../../codex-connection/issues/04-qualify-connection-journey.md) | Cumulative desktop, lifecycle and accessibility qualification | Connection 03 |
+| [Connection 02a](../../codex-connection/issues/02a-runtime-compatibility-policy.md) | Minimum stable runtime policy and required capability checks | Connection 02 |
+| [Connection 03](../../codex-connection/issues/03-embedded-cli-login.md) | Deferred CLI/terminal proposal; not part of current acceptance | Not actionable |
+| [Connection 04](../../codex-connection/issues/04-qualify-connection-journey.md) | Cumulative desktop, lifecycle and accessibility qualification | Connection 02a |
 
 ## Aggregate acceptance
 
-- [ ] Connection 01–03 each have verified acceptance, focused unit/fixture-desktop evidence and dated successor handoffs.
-- [ ] Connection 04 records cumulative acceptance/results, real-authentication allowance/results or explicit limits, and the A3 outcome without claiming native-agent execution qualification.
-- [ ] The supported schema/fixture provenance and real/fixture adapter seam remain available to later chat/approval tickets. Claude actions stay disabled; API-key setup and general terminals stay deferred.
-- [ ] The provider-independent workspace prerequisite is verified, and 01–04 record the agreed provider-connection ownership, adapter locality and shared observation design, including synthetic-target isolation evidence and its limits.
+- [x] Connection 01, 02 and 02a each have verified acceptance, focused unit/fixture-desktop evidence and dated successor handoffs. Record 03 as deferred, without claiming implementation or qualification.
+- [x] Connection 04 records cumulative acceptance/results, real-authentication allowance/results or explicit limits, and the A3 outcome without claiming native-agent execution qualification.
+- [x] The supported schema/fixture provenance and real/fixture adapter seam remain available to later chat/approval tickets. Claude actions stay disabled; API-key setup and general terminals stay deferred.
+- [x] The provider-independent workspace prerequisite is verified, and 01, 02, 02a and 04 record the agreed provider-connection ownership, adapter locality and shared observation design, including synthetic-target isolation evidence and its limits.
 
 The next milestone ticket remains [06a — Storage evaluation](06a-evaluate-storage-before-durable-chat.md),
-which waits for connection 04 and this aggregate outcome before 07. Implementation
-and qualification remain open. This documentation split grants no sign-in,
+which waits for connection 04 and this aggregate outcome before 07. The connection fixture aggregate is recorded below; native authentication, the
+hands-on trial and whole-milestone qualification were open at that fixture checkpoint;
+the separate trial below adds existing-authentication readiness and participant
+feedback, with its remaining native limits. This documentation split grants no sign-in,
 installation or provider submission allowance.
 
 ## Comments
@@ -120,3 +133,39 @@ now govern every child. The separately selected
 connection 01; the four connection sessions and existing 06a identifier remain.
 This amendment documents future work only. Historical publication checks and
 completed milestone/foundation evidence above remain checkpoint results.
+
+### 2026-11-15 — browser-only authentication scope
+
+The user approved existing-authentication detection plus one official-runtime
+browser sign-in action. Separate CLI login, embedded terminals, PTY/xterm and a
+read-only command-output replacement are deferred. The current sequence is
+01 -> 02 -> 02a -> 04 / parent 06 -> 06a -> 07. Ticket 03 and its plan retain the
+superseded proposal with unchecked acceptance; they no longer block this aggregate.
+This amendment changes current requirements only. Completed evidence and the
+historical publication comments above remain unchanged; cumulative 04 and parent
+acceptance remain open. No application implementation or qualification occurred.
+
+### 2026-11-15 — connection fixture aggregate recorded
+
+Connection 01, 02, 02a and [04](../../codex-connection/issues/04-qualify-connection-journey.md)
+now have checked fixture acceptance and dated evidence. [Cumulative A3/architecture mapping](../../../docs/evidence/codex-connection/04.md)
+links their supported-schema provenance, concrete adapter seam, shared observation
+module, provider-independent workspace handoff and synthetic-target isolation.
+03 is deferred, not passed. Real authentication and Christopher's hands-on trial
+move to a separate selected session starting with existing authentication; no
+credential replacement, native agent thread/turn or terminal work occurred.
+Whole-milestone/native execution qualification remains open. Existing 06a retains
+its separate storage-evaluation scope before 07; neither successor is implemented.
+
+### 2026-11-15 — separate hands-on trial recorded
+
+[Christopher's existing-authentication trial](../../../docs/evidence/codex-connection/04-trial.md)
+used the qualified unchanged packaged desktop with private app state. Real Codex
+0.169.0 readiness detected existing ChatGPT authentication and billing; Christopher
+reported clear presentation except for the sign-in button remaining visible while
+Connected. He requested recording that finding and fixing it in a separate session.
+No product code changed; normal Quit and process cleanup were observed. Existing
+fixture acceptance/evidence is preserved. Browser sign-in and native-agent execution
+remain unperformed, and whole-milestone qualification remains open. No credential
+replacement or agent thread/turn was performed. Storage evaluation 06a and chat 07
+were not started.

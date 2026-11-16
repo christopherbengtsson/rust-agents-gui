@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { AppObservations } from "./app-observations";
-import { ownerBound } from "@/test-support/owner-bound-invoke";
+import { incarnationBound } from "@/test-support/incarnation-bound-invoke";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { useWorkspaceChanges } from "@/hooks/use-workspace-changes";
 import { object } from "./observation-contracts";
@@ -20,7 +20,7 @@ test("inspection waits for accepted baseline and follows push progress without p
   apps.push(app);
   let phase = "queued";
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async () => ({
+    incarnationBound(async () => ({
       kind: "changes",
       observation: {
         workspace_id: workspaceId,
@@ -30,9 +30,9 @@ test("inspection waits for accepted baseline and follows push progress without p
       },
     })),
   );
-  app.connect("owner-a");
+  app.connect("incarnation-a");
   app.inspection.configure({
-    owner: "owner-a",
+    incarnation: "incarnation-a",
     workspaceId,
     active: false,
     visible: true,
@@ -43,7 +43,7 @@ test("inspection waits for accepted baseline and follows push progress without p
     app.accept({
       subscription_id: "feed",
       batch_id: sequence,
-      cursor: { owner: "owner-a", sequence },
+      cursor: { incarnation: "incarnation-a", sequence },
       sample: {
         kind: "hints",
         watermark: sequence,
@@ -125,14 +125,14 @@ function summary(
 function scenario() {
   const app = new AppObservations();
   apps.push(app);
-  app.connect("owner-a");
+  app.connect("incarnation-a");
   let sequence = 0;
   const hint = (workspace_id = workspaceId) => {
     sequence++;
     app.accept({
       subscription_id: "feed",
       batch_id: sequence,
-      cursor: { owner: "owner-a", sequence },
+      cursor: { incarnation: "incarnation-a", sequence },
       sample: {
         kind: "hints",
         watermark: sequence,
@@ -142,13 +142,13 @@ function scenario() {
   };
   const configure = (workspace = workspaceId, visible = true, active = false) =>
     app.inspection.configure({
-      owner: "owner-a",
+      incarnation: "incarnation-a",
       workspaceId: workspace,
       visible,
       active,
     });
   vi.mocked(invoke).mockImplementation(
-    ownerBound(async (_, args) => {
+    incarnationBound(async (_, args) => {
       const r = request(args);
       return r.operation === "changes"
         ? summary(r.workspace_id)
@@ -177,8 +177,8 @@ test("hints before baseline and during summary reads remain owed after each capt
   const first = deferred<InspectionReply>();
   const second = deferred<InspectionReply>();
   vi.mocked(invoke)
-    .mockImplementationOnce(ownerBound(() => first.promise))
-    .mockImplementationOnce(ownerBound(() => second.promise));
+    .mockImplementationOnce(incarnationBound(() => first.promise))
+    .mockImplementationOnce(incarnationBound(() => second.promise));
   s.configure();
   s.hint();
   await flush();
@@ -196,7 +196,7 @@ test("hidden and released interests drain physical summary work without starting
   const s = scenario();
   const outstanding = deferred<InspectionReply>();
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(() => outstanding.promise),
+    incarnationBound(() => outstanding.promise),
   );
   s.hint();
   s.configure(workspaceId, true, true);
@@ -260,7 +260,7 @@ test("changed comparisons reject saved opaque file and reading context after wor
   s.configure(otherWorkspace);
   await flush();
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(() => summary(workspaceId, nextComparison)),
+    incarnationBound(() => summary(workspaceId, nextComparison)),
   );
   s.app.inspection.release();
   s.configure(workspaceId, true, true);
@@ -278,7 +278,7 @@ test("paging pins comparison identity and explicit refresh returns to First", as
     throw new Error("Fixture summary");
   first.observation.page.next = fileId;
   first.observation.page.total = 2;
-  vi.mocked(invoke).mockImplementationOnce(ownerBound(() => first));
+  vi.mocked(invoke).mockImplementationOnce(incarnationBound(() => first));
   s.hint();
   s.configure();
   await flush();
@@ -306,7 +306,7 @@ test("unrelated presentation and freshness updates do not render inspection cons
   const { result } = renderHook(() => {
     renders++;
     return useWorkspaceChanges(
-      "owner-a",
+      "incarnation-a",
       workspaceId,
       false,
       true,
@@ -321,7 +321,7 @@ test("unrelated presentation and freshness updates do not render inspection cons
       repositoryId: "00000000-0000-4000-8000-000000000009",
     });
     s.app.freshness.mark("repositories");
-    s.app.freshness.accept("owner-a");
+    s.app.freshness.accept("incarnation-a");
     await flush();
   });
   expect(renders).toBe(before);
@@ -332,7 +332,7 @@ test("hiding during the first physical read does not convert disposal into a pau
   const s = scenario();
   const outstanding = deferred<InspectionReply>();
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(() => outstanding.promise),
+    incarnationBound(() => outstanding.promise),
   );
   s.hint();
   s.configure();
@@ -351,7 +351,7 @@ test("paging during drain cannot downgrade a queued explicit refresh", async () 
   const s = scenario();
   const outstanding = deferred<InspectionReply>();
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(() => outstanding.promise),
+    incarnationBound(() => outstanding.promise),
   );
   s.hint();
   s.configure();
@@ -379,7 +379,7 @@ test("unrelated accepted batches cannot postpone the visible two-second external
   for (let tick = 0; tick < 4; tick++) {
     await vi.advanceTimersByTimeAsync(1000);
     s.app.freshness.mark("repositories");
-    s.app.freshness.accept("owner-a");
+    s.app.freshness.accept("incarnation-a");
     await flush();
   }
   expect(invoke).toHaveBeenCalledTimes(3);
@@ -426,7 +426,7 @@ test.each(["pending", "rejected"])(
     if (!original) throw new Error("Scenario IPC double is missing");
     const before = vi.mocked(invoke).mock.calls.length;
     vi.mocked(invoke).mockImplementation(
-      ownerBound(async () => {
+      incarnationBound(async () => {
         if (outcome === "rejected") throw new Error("Summary read unavailable");
         return {
           kind: "changes",
@@ -476,7 +476,7 @@ test("unchanged comparison restores a saved file outside the listed page through
     { ...offPage.observation.page.files[0], id: otherWorkspace, path: "b.txt" },
   ];
   offPage.observation.page.total = 33;
-  vi.mocked(invoke).mockImplementationOnce(ownerBound(() => offPage));
+  vi.mocked(invoke).mockImplementationOnce(incarnationBound(() => offPage));
   s.hint();
   s.configure(workspaceId, true, true);
   await flush();
@@ -508,7 +508,7 @@ test("live comparison revalidation resets reading position without losing the se
     .getState()
     .rememberPosition(workspaceId, comparison, fileId, { top: 37, left: 12 });
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(() => summary(workspaceId, nextComparison)),
+    incarnationBound(() => summary(workspaceId, nextComparison)),
   );
   s.app.inspection.refresh();
   await flush();
@@ -534,14 +534,16 @@ test("late physical drain cannot turn a released selection into a live restorati
   });
   await flush();
   const held = deferred<InspectionReply>();
-  vi.mocked(invoke).mockImplementationOnce(ownerBound(() => held.promise));
+  vi.mocked(invoke).mockImplementationOnce(
+    incarnationBound(() => held.promise),
+  );
   s.app.inspection.refresh();
   await flush();
   s.app.inspection.release();
   held.resolve(summary());
   await flush();
   vi.mocked(invoke).mockImplementationOnce(
-    ownerBound(() => summary(workspaceId, nextComparison)),
+    incarnationBound(() => summary(workspaceId, nextComparison)),
   );
   s.configure(workspaceId, true, true);
   await flush();

@@ -1,0 +1,107 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: field `revision` is never read
+   --> crates/core/src/storage.rs:218:9
+    |
+217 | pub(crate) struct Records<T> {
+    |                   ------- field in this struct
+218 |     pub revision: u64,
+    |         ^^^^^^^^
+    |
+    = note: `Records` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `items` is never used
+   --> crates/core/src/storage.rs:224:19
+    |
+223 | impl<T> Records<T> {
+    | ------------------ method in this implementation
+224 |     pub(crate) fn items(&self) -> &[T] {
+    |                   ^^^^^
+
+warning: fields `busy`, `log_frames`, `checkpointed_frames`, `wal_bytes`, and `elapsed` are never read
+   --> crates/core/src/storage.rs:276:9
+    |
+275 | pub(crate) struct Checkpoint {
+    |                   ---------- fields in this struct
+276 |     pub busy: i64,
+    |         ^^^^
+277 |     pub log_frames: i64,
+    |         ^^^^^^^^^^
+278 |     pub checkpointed_frames: i64,
+    |         ^^^^^^^^^^^^^^^^^^^
+279 |     pub wal_bytes: u64,
+    |         ^^^^^^^^^
+280 |     pub elapsed: Duration,
+    |         ^^^^^^^
+    |
+    = note: `Checkpoint` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `faults` is never used
+   --> crates/core/src/storage.rs:533:19
+    |
+428 | impl Storage {
+    | ------------ method in this implementation
+...
+533 |     pub(crate) fn faults(&self) -> Vec<Fault> {
+    |                   ^^^^^^
+
+warning: constant `PAGE_SIZE` is never used
+   --> crates/core/src/workspaces.rs:114:7
+    |
+114 | const PAGE_SIZE: usize = 32;
+    |       ^^^^^^^^^
+
+warning: `workspace-core` (lib test) generated 5 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.79s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-c1516d2e50257971)
+
+running 1 test
+test runtimes::provider_connection::persistence::tests::quit_during_storage_acquisition_keeps_status_usable_and_settles_without_effects ... FAILED
+
+failures:
+
+---- runtimes::provider_connection::persistence::tests::quit_during_storage_acquisition_keeps_status_usable_and_settles_without_effects stdout ----
+
+thread 'runtimes::provider_connection::persistence::tests::quit_during_storage_acquisition_keeps_status_usable_and_settles_without_effects' (35798656) panicked at crates/core/src/runtimes/provider_connection/persistence.rs:112:13:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    runtimes::provider_connection::persistence::tests::quit_during_storage_acquisition_keeps_status_usable_and_settles_without_effects
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 217 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

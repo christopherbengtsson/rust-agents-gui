@@ -1,0 +1,25 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0599]: no method named `quit_target_with` found for struct `connection::SupervisorConnection` in the current scope
+   --> crates/core/src/connection/tests.rs:31:37
+    |
+ 31 |             let result = connection.quit_target_with(&mut effects).await;
+    |                                     ^^^^^^^^^^^^^^^^ method not found in `connection::SupervisorConnection`
+    |
+   ::: crates/core/src/connection.rs:160:1
+    |
+160 | pub struct SupervisorConnection {
+    | ------------------------------- method `quit_target_with` not found for this struct
+
+error[E0599]: no method named `quit_target_with` found for struct `connection::SupervisorConnection` in the current scope
+   --> crates/core/src/connection/tests.rs:38:31
+    |
+ 38 |         assert_eq!(connection.quit_target_with(&mut effects).await.unwrap(), Some("owner-a".into()));
+    |                               ^^^^^^^^^^^^^^^^ method not found in `connection::SupervisorConnection`
+    |
+   ::: crates/core/src/connection.rs:160:1
+    |
+160 | pub struct SupervisorConnection {
+    | ------------------------------- method `quit_target_with` not found for this struct
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `workspace-core` (lib test) due to 2 previous errors

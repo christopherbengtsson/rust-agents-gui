@@ -1,0 +1,26 @@
+{
+  "checked_at_utc": "2026-11-15T23:17:50.074868+00:00",
+  "native_async_original_workload_runs": 24,
+  "original_measured_workload_runs": 20,
+  "additional_single_diagnostic_runs": 2,
+  "before_after_focused_runs": 4,
+  "all_admitted_event_and_urgent_audits": "passed",
+  "SQLx_NOFOLLOW_adoption_gate": "failed; independent of successful workload execution",
+  "bridge_real_alias_rejection": "passed",
+  "local_links_and_anchors": 101,
+  "python_in_memory_compile": "passed",
+  "frozen_as_run_source_hashes": "matched",
+  "production_inputs_and_user_IDEAS": "unchanged hashes",
+  "HTML_static_structure_and_result_values": "passed",
+  "HTML_browser_preview": "unperformed: CUA browser access host unavailable",
+  "HTML_path": "/private/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/architecture-review-20261116-001549.html",
+  "unperformed": [
+    "production unit/static/preparation/build/package",
+    "fixture desktop/native providers",
+    "arbitrary owner abort/panic and cancelled COMMIT",
+    "power loss, cold-cache and long-soak qualification"
+  ],
+  "scoped_markdown_format_check": "passed seven authored/updated documents",
+  "git_diff_check": "passed",
+  "independent_final_review": "no concrete issues; recommendation, capacity limits and 06b-before-07 sequencing consistent with raw results"
+}

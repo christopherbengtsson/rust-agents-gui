@@ -1,0 +1,203 @@
+{
+  "label": "restored-scope-fenced",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 62640,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "62640-1794847588896501000",
+        "revision": 1
+      },
+      "reset": true,
+      "provider_login_pending": true
+    }
+  },
+  "provider": {
+    "selection": {
+      "id": "3bc1db24-b99d-40db-aa22-2ae5a325e853",
+      "path": "/private/tmp/aw-sqlx04-2waw4euo/synthetic-codex",
+      "phase": "remembered"
+    },
+    "target": {
+      "id": "1a7b4e48-9f22-45d1-94d7-6ddacf8d5a27",
+      "provider": "codex",
+      "executable": null,
+      "selected_executable": "/private/tmp/aw-sqlx04-2waw4euo/synthetic-codex",
+      "discovery_source": null,
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-1a7b4e48-9f22-45d1-94d7-6ddacf8d5a27",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 0,
+    "phase": "cleanup_uncertain",
+    "evidence": null,
+    "problem": "cleanup_uncertain",
+    "diagnostic": "Provider action 8285ca19-a938-4178-b134-711d98b042d5 was interrupted before durable settlement. This credential scope remains fenced; no action was replayed.",
+    "login": {
+      "id": "8285ca19-a938-4178-b134-711d98b042d5",
+      "phase": "cleanup_uncertain",
+      "outcome": null,
+      "browser_open_failed": false,
+      "diagnostic": "The previous core lost ownership before recording physical cleanup. This credential scope remains fenced; restarting or retrying cannot establish that its resources stopped."
+    }
+  },
+  "events": [
+    {
+      "pid": 62569,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 62570,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 62570,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 62570,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 62570,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 62570,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 62570,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 62570,
+      "event": "exit"
+    },
+    {
+      "pid": 62571,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 62572,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 62572,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 62572,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 62572,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 62572,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 62572,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 62572,
+      "event": "exit"
+    },
+    {
+      "pid": 62573,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 62576,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 62576,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 62576,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 62576,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 62576,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 62576,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 62576,
+      "event": "exit"
+    },
+    {
+      "pid": 62581,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 62600,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 62600,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 62600,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 62600,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 62600,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 62600,
+      "event": "exit"
+    }
+  ],
+  "host_exit": null,
+  "desktop_exit": null
+}

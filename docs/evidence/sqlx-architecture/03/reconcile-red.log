@@ -1,0 +1,22 @@
+   Compiling workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.99s
+     Running unittests src/lib.rs (target/debug/deps/workspace_checkpoint-3556478261f8675c)
+
+running 1 test
+test workspaces::tests::explicit_reconciliation_executes_under_its_new_action_and_preserves_creation_identity ... FAILED
+
+failures:
+
+---- workspaces::tests::explicit_reconciliation_executes_under_its_new_action_and_preserves_creation_identity stdout ----
+
+thread 'workspaces::tests::explicit_reconciliation_executes_under_its_new_action_and_preserves_creation_identity' (35543403) panicked at crates/workspace-checkpoint/src/../../core/src/workspaces/tests.rs:358:9:
+Some(RepositoryError { code: Conflict, message: "Action identity, payload or workspace state conflicts; retrieve its exact status" })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    workspaces::tests::explicit_reconciliation_executes_under_its_new_action_and_preserves_creation_identity
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 85 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-checkpoint --lib`

@@ -1,0 +1,3738 @@
+{
+  "excluded_cohort": "driver-results-resources.jsonl raw thread counter included ps header; use resources-corrected cohort",
+  "note": "Run zero excluded for finalists and repeated history scale cases. Screen/active sweep/resource cases are single observations, not warm-five distributions. Per-run percentile distributions are not combined into an end-to-end percentile.",
+  "groups": [
+    {
+      "phase": "finalists",
+      "driver": "rusqlite",
+      "label": "WAL-FULL-b1",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 230.02121826298506,
+          "min": 223.94986456074358,
+          "max": 232.98454790280724
+        },
+        "elapsed_s": {
+          "median": 3.272417916,
+          "min": 3.265784584,
+          "max": 3.273611042
+        },
+        "admitted_transactions": {
+          "median": 753,
+          "min": 733,
+          "max": 762
+        },
+        "rejected_transactions": {
+          "median": 747,
+          "min": 738,
+          "max": 767
+        },
+        "committed_events": {
+          "median": 753,
+          "min": 733,
+          "max": 762
+        },
+        "queue.p50_ms": {
+          "median": 262.497417,
+          "min": 261.45925,
+          "max": 274.62429199999997
+        },
+        "queue.p95_ms": {
+          "median": 309.184125,
+          "min": 307.499916,
+          "max": 310.656916
+        },
+        "queue.p99_ms": {
+          "median": 312.390334,
+          "min": 309.310334,
+          "max": 316.12670799999995
+        },
+        "service.p50_ms": {
+          "median": 3.984166,
+          "min": 3.9764580000000005,
+          "max": 4.0235
+        },
+        "service.p95_ms": {
+          "median": 5.009958,
+          "min": 4.966375,
+          "max": 5.024209
+        },
+        "service.p99_ms": {
+          "median": 5.3685,
+          "min": 5.1566659999999995,
+          "max": 7.762625000000001
+        },
+        "history.p50_ms": {
+          "median": 0.13224999999999998,
+          "min": 0.129084,
+          "max": 0.134916
+        },
+        "history.p95_ms": {
+          "median": 0.236916,
+          "min": 0.227042,
+          "max": 0.24987499999999999
+        },
+        "history.p99_ms": {
+          "median": 0.32887500000000003,
+          "min": 0.27666700000000005,
+          "max": 0.37445799999999996
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 12217848,
+          "min": 12213728,
+          "max": 12217848
+        },
+        "closed_bytes": {
+          "median": 8175616,
+          "min": 8167424,
+          "max": 8187904
+        },
+        "writer_drain_ms": {
+          "median": 271.984083,
+          "min": 265.371334,
+          "max": 273.160208
+        },
+        "writer_close_ms": {
+          "median": 7.871833,
+          "min": 7.210625,
+          "max": 8.296083
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "finalists",
+      "driver": "rusqlite",
+      "label": "WAL-FULL-coalesce25ms",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.65665920596393,
+          "min": 497.308415013113,
+          "max": 497.74804961549773
+        },
+        "elapsed_s": {
+          "median": 3.01412625,
+          "min": 3.013572833,
+          "max": 3.016236916
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.021084,
+          "min": 0.020583,
+          "max": 0.021625000000000002
+        },
+        "queue.p95_ms": {
+          "median": 0.048291999999999995,
+          "min": 0.037375,
+          "max": 0.055708
+        },
+        "queue.p99_ms": {
+          "median": 0.119208,
+          "min": 0.06208299999999999,
+          "max": 0.191459
+        },
+        "service.p50_ms": {
+          "median": 5.27425,
+          "min": 5.178249999999999,
+          "max": 5.348249999999999
+        },
+        "service.p95_ms": {
+          "median": 5.986125,
+          "min": 5.331207999999999,
+          "max": 6.54275
+        },
+        "service.p99_ms": {
+          "median": 7.192875,
+          "min": 6.219917000000001,
+          "max": 11.142166999999999
+        },
+        "history.p50_ms": {
+          "median": 0.211541,
+          "min": 0.20508300000000002,
+          "max": 0.22129100000000002
+        },
+        "history.p95_ms": {
+          "median": 0.35375,
+          "min": 0.326166,
+          "max": 0.399166
+        },
+        "history.p99_ms": {
+          "median": 0.45191600000000004,
+          "min": 0.352292,
+          "max": 0.464167
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.959332999999999,
+          "min": 12.957917,
+          "max": 12.965000000000002
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.200709000000003,
+          "min": 25.197417,
+          "max": 25.203416999999998
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.238833,
+          "min": 25.226,
+          "max": 25.274166
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 11386304,
+          "min": 11361584,
+          "max": 11402784
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "writer_drain_ms": {
+          "median": 13.7075,
+          "min": 13.148750000000001,
+          "max": 15.891084
+        },
+        "writer_close_ms": {
+          "median": 8.427083,
+          "min": 7.858708000000001,
+          "max": 8.803292
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "finalists",
+      "driver": "rusqlite",
+      "label": "WAL-FULL-coalesce25ms-readers2",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 496.43986425348356,
+          "min": 495.864886349654,
+          "max": 496.84588436848827
+        },
+        "elapsed_s": {
+          "median": 3.021514,
+          "min": 3.019044833,
+          "max": 3.025017583
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.019791,
+          "min": 0.017416,
+          "max": 0.020792
+        },
+        "queue.p95_ms": {
+          "median": 0.055125,
+          "min": 0.029625,
+          "max": 0.059125000000000004
+        },
+        "queue.p99_ms": {
+          "median": 0.251375,
+          "min": 0.078583,
+          "max": 27.721083
+        },
+        "service.p50_ms": {
+          "median": 5.025208,
+          "min": 4.355291,
+          "max": 6.528458
+        },
+        "service.p95_ms": {
+          "median": 5.477459,
+          "min": 5.287916999999999,
+          "max": 12.028583000000001
+        },
+        "service.p99_ms": {
+          "median": 7.204999999999999,
+          "min": 7.023625,
+          "max": 18.958083000000002
+        },
+        "reader_history.p95_ms": {
+          "median": 0.682834,
+          "min": 0.631333,
+          "max": 0.706417
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.968,
+          "min": 12.95825,
+          "max": 12.975208
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.201667,
+          "min": 25.199625,
+          "max": 25.20225
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.246707999999998,
+          "min": 25.235583,
+          "max": 25.266042
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 11394544,
+          "min": 11365704,
+          "max": 11411024
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "writer_drain_ms": {
+          "median": 4.891583,
+          "min": 4.235667,
+          "max": 5.3392919999999995
+        },
+        "writer_close_ms": {
+          "median": 0.202334,
+          "min": 0.132833,
+          "max": 0.24350000000000002
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "finalists",
+      "driver": "sqlx",
+      "label": "WAL-FULL-b1",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 218.15771807938413,
+          "min": 215.41430928867086,
+          "max": 225.08940956234255
+        },
+        "elapsed_s": {
+          "median": 3.293033375,
+          "min": 3.278697125,
+          "max": 3.314543042
+        },
+        "admitted_transactions": {
+          "median": 718,
+          "min": 713,
+          "max": 738
+        },
+        "rejected_transactions": {
+          "median": 782,
+          "min": 762,
+          "max": 787
+        },
+        "committed_events": {
+          "median": 718,
+          "min": 713,
+          "max": 738
+        },
+        "queue.p50_ms": {
+          "median": 280.104458,
+          "min": 271.967291,
+          "max": 287.808125
+        },
+        "queue.p95_ms": {
+          "median": 319.07966700000003,
+          "min": 311.764542,
+          "max": 324.733041
+        },
+        "queue.p99_ms": {
+          "median": 321.01045799999997,
+          "min": 312.88775000000004,
+          "max": 329.683833
+        },
+        "service.p50_ms": {
+          "median": 4.156875,
+          "min": 4.002292,
+          "max": 4.6558329999999994
+        },
+        "service.p95_ms": {
+          "median": 5.071334,
+          "min": 5.058,
+          "max": 5.098667000000001
+        },
+        "service.p99_ms": {
+          "median": 8.009333999999999,
+          "min": 7.760333999999999,
+          "max": 9.101750000000001
+        },
+        "history.p50_ms": {
+          "median": 0.10229200000000001,
+          "min": 0.098583,
+          "max": 0.105542
+        },
+        "history.p95_ms": {
+          "median": 0.24091600000000002,
+          "min": 0.22962500000000002,
+          "max": 0.25375000000000003
+        },
+        "history.p99_ms": {
+          "median": 0.33399999999999996,
+          "min": 0.290875,
+          "max": 0.515458
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 12213728,
+          "min": 12213728,
+          "max": 12226088
+        },
+        "closed_bytes": {
+          "median": 8167424,
+          "min": 8159232,
+          "max": 8175616
+        },
+        "writer_drain_ms": {
+          "median": 292.622375,
+          "min": 278.27075,
+          "max": 314.324083
+        },
+        "writer_close_ms": {
+          "median": 7.796583,
+          "min": 7.2762080000000005,
+          "max": 8.963208
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "finalists",
+      "driver": "sqlx",
+      "label": "WAL-FULL-coalesce25ms",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.22845554996286,
+          "min": 496.91698885820085,
+          "max": 497.9156903978401
+        },
+        "elapsed_s": {
+          "median": 3.016721958,
+          "min": 3.012558208,
+          "max": 3.018612834
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.0205,
+          "min": 0.019458,
+          "max": 0.021375
+        },
+        "queue.p95_ms": {
+          "median": 0.037708,
+          "min": 0.028792,
+          "max": 0.045666
+        },
+        "queue.p99_ms": {
+          "median": 0.171708,
+          "min": 0.033374999999999995,
+          "max": 1.7085
+        },
+        "service.p50_ms": {
+          "median": 6.336917,
+          "min": 6.191625,
+          "max": 6.654458
+        },
+        "service.p95_ms": {
+          "median": 8.860958,
+          "min": 8.009417,
+          "max": 8.976125
+        },
+        "service.p99_ms": {
+          "median": 13.110999999999999,
+          "min": 8.948542,
+          "max": 24.275708
+        },
+        "history.p50_ms": {
+          "median": 0.13674999999999998,
+          "min": 0.121709,
+          "max": 0.14975
+        },
+        "history.p95_ms": {
+          "median": 0.369416,
+          "min": 0.339834,
+          "max": 0.40499999999999997
+        },
+        "history.p99_ms": {
+          "median": 0.45404100000000003,
+          "min": 0.37545900000000004,
+          "max": 0.4795
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.966125,
+          "min": 12.956458000000001,
+          "max": 12.970917
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.202083000000002,
+          "min": 25.200084,
+          "max": 25.202708
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.234333,
+          "min": 25.22575,
+          "max": 25.247584
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 11382184,
+          "min": 11361584,
+          "max": 11398664
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "writer_drain_ms": {
+          "median": 16.291542,
+          "min": 12.535041999999999,
+          "max": 18.191708000000002
+        },
+        "writer_close_ms": {
+          "median": 8.063875,
+          "min": 7.608167,
+          "max": 12.351875
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "finalists",
+      "driver": "sqlx",
+      "label": "WAL-FULL-coalesce25ms-readers2",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 496.27478232864473,
+          "min": 494.4081679757446,
+          "max": 498.02011406425595
+        },
+        "elapsed_s": {
+          "median": 3.022519083,
+          "min": 3.011926542,
+          "max": 3.033930459
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.020208,
+          "min": 0.019334,
+          "max": 0.02025
+        },
+        "queue.p95_ms": {
+          "median": 0.03025,
+          "min": 0.026209,
+          "max": 0.034416999999999996
+        },
+        "queue.p99_ms": {
+          "median": 0.06229200000000001,
+          "min": 0.033917,
+          "max": 0.0765
+        },
+        "service.p50_ms": {
+          "median": 5.511875,
+          "min": 5.174459000000001,
+          "max": 6.009125
+        },
+        "service.p95_ms": {
+          "median": 7.764958,
+          "min": 5.650083,
+          "max": 8.385458
+        },
+        "service.p99_ms": {
+          "median": 10.669833,
+          "min": 6.486792,
+          "max": 23.016917000000003
+        },
+        "reader_history.p95_ms": {
+          "median": 0.840375,
+          "min": 0.817542,
+          "max": 0.912
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.964458,
+          "min": 12.962458,
+          "max": 12.965417
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.202459,
+          "min": 25.201292,
+          "max": 25.203333
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.237333,
+          "min": 25.229042,
+          "max": 25.244542
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 11390424,
+          "min": 11390424,
+          "max": 11398664
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "writer_drain_ms": {
+          "median": 5.665583,
+          "min": 5.1715,
+          "max": 7.638125
+        },
+        "writer_close_ms": {
+          "median": 0.263625,
+          "min": 0.231959,
+          "max": 0.332583
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "resources",
+      "driver": "rusqlite",
+      "label": "saturation-b16",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 3879.6831404681784,
+          "min": 3879.6831404681784,
+          "max": 3879.6831404681784
+        },
+        "elapsed_s": {
+          "median": 3.270370167,
+          "min": 3.270370167,
+          "max": 3.270370167
+        },
+        "admitted_transactions": {
+          "median": 793,
+          "min": 793,
+          "max": 793
+        },
+        "rejected_transactions": {
+          "median": 19224011,
+          "min": 19224011,
+          "max": 19224011
+        },
+        "committed_events": {
+          "median": 12688,
+          "min": 12688,
+          "max": 12688
+        },
+        "queue.p50_ms": {
+          "median": 262.128458,
+          "min": 262.128458,
+          "max": 262.128458
+        },
+        "queue.p95_ms": {
+          "median": 273.24654100000004,
+          "min": 273.24654100000004,
+          "max": 273.24654100000004
+        },
+        "queue.p99_ms": {
+          "median": 275.168584,
+          "min": 275.168584,
+          "max": 275.168584
+        },
+        "service.p50_ms": {
+          "median": 3.9806670000000004,
+          "min": 3.9806670000000004,
+          "max": 3.9806670000000004
+        },
+        "service.p95_ms": {
+          "median": 4.201209,
+          "min": 4.201209,
+          "max": 4.201209
+        },
+        "service.p99_ms": {
+          "median": 8.057833,
+          "min": 8.057833,
+          "max": 8.057833
+        },
+        "history.p50_ms": {
+          "median": 0.034084,
+          "min": 0.034084,
+          "max": 0.034084
+        },
+        "history.p95_ms": {
+          "median": 0.07079099999999999,
+          "min": 0.07079099999999999,
+          "max": 0.07079099999999999
+        },
+        "history.p99_ms": {
+          "median": 0.09816699999999999,
+          "min": 0.09816699999999999,
+          "max": 0.09816699999999999
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 21122768,
+          "min": 21122768,
+          "max": 21122768
+        },
+        "closed_bytes": {
+          "median": 17813504,
+          "min": 17813504,
+          "max": 17813504
+        },
+        "writer_drain_ms": {
+          "median": 270.368875,
+          "min": 270.368875,
+          "max": 270.368875
+        },
+        "writer_close_ms": {
+          "median": 8.394083,
+          "min": 8.394083,
+          "max": 8.394083
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "resources",
+      "driver": "sqlx",
+      "label": "saturation-b16",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 3783.7634155173837,
+          "min": 3783.7634155173837,
+          "max": 3783.7634155173837
+        },
+        "elapsed_s": {
+          "median": 3.294074875,
+          "min": 3.294074875,
+          "max": 3.294074875
+        },
+        "admitted_transactions": {
+          "median": 779,
+          "min": 779,
+          "max": 779
+        },
+        "rejected_transactions": {
+          "median": 18866217,
+          "min": 18866217,
+          "max": 18866217
+        },
+        "committed_events": {
+          "median": 12464,
+          "min": 12464,
+          "max": 12464
+        },
+        "queue.p50_ms": {
+          "median": 266.847083,
+          "min": 266.847083,
+          "max": 266.847083
+        },
+        "queue.p95_ms": {
+          "median": 288.182167,
+          "min": 288.182167,
+          "max": 288.182167
+        },
+        "queue.p99_ms": {
+          "median": 295.012,
+          "min": 295.012,
+          "max": 295.012
+        },
+        "service.p50_ms": {
+          "median": 3.9825,
+          "min": 3.9825,
+          "max": 3.9825
+        },
+        "service.p95_ms": {
+          "median": 4.989541999999999,
+          "min": 4.989541999999999,
+          "max": 4.989541999999999
+        },
+        "service.p99_ms": {
+          "median": 8.03225,
+          "min": 8.03225,
+          "max": 8.03225
+        },
+        "history.p50_ms": {
+          "median": 0.068167,
+          "min": 0.068167,
+          "max": 0.068167
+        },
+        "history.p95_ms": {
+          "median": 0.132833,
+          "min": 0.132833,
+          "max": 0.132833
+        },
+        "history.p99_ms": {
+          "median": 0.197959,
+          "min": 0.197959,
+          "max": 0.197959
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 20672232,
+          "min": 20672232,
+          "max": 20672232
+        },
+        "closed_bytes": {
+          "median": 17244160,
+          "min": 17244160,
+          "max": 17244160
+        },
+        "writer_drain_ms": {
+          "median": 294.073833,
+          "min": 294.073833,
+          "max": 294.073833
+        },
+        "writer_close_ms": {
+          "median": 7.321791999999999,
+          "min": 7.321791999999999,
+          "max": 7.321791999999999
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "rusqlite",
+      "label": "active-1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 19.903987589189658,
+          "min": 19.903987589189658,
+          "max": 19.903987589189658
+        },
+        "elapsed_s": {
+          "median": 3.014471333,
+          "min": 3.014471333,
+          "max": 3.014471333
+        },
+        "admitted_transactions": {
+          "median": 60,
+          "min": 60,
+          "max": 60
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 60,
+          "min": 60,
+          "max": 60
+        },
+        "queue.p50_ms": {
+          "median": 0.022416000000000002,
+          "min": 0.022416000000000002,
+          "max": 0.022416000000000002
+        },
+        "queue.p95_ms": {
+          "median": 0.045584,
+          "min": 0.045584,
+          "max": 0.045584
+        },
+        "queue.p99_ms": {
+          "median": 0.079333,
+          "min": 0.079333,
+          "max": 0.079333
+        },
+        "service.p50_ms": {
+          "median": 5.0428749999999996,
+          "min": 5.0428749999999996,
+          "max": 5.0428749999999996
+        },
+        "service.p95_ms": {
+          "median": 7.67425,
+          "min": 7.67425,
+          "max": 7.67425
+        },
+        "service.p99_ms": {
+          "median": 12.5145,
+          "min": 12.5145,
+          "max": 12.5145
+        },
+        "history.p50_ms": {
+          "median": 0.19104100000000002,
+          "min": 0.19104100000000002,
+          "max": 0.19104100000000002
+        },
+        "history.p95_ms": {
+          "median": 0.32075000000000004,
+          "min": 0.32075000000000004,
+          "max": 0.32075000000000004
+        },
+        "history.p99_ms": {
+          "median": 0.35933299999999996,
+          "min": 0.35933299999999996,
+          "max": 0.35933299999999996
+        },
+        "batch_formation.p50_ms": {
+          "median": 29.005083000000003,
+          "min": 29.005083000000003,
+          "max": 29.005083000000003
+        },
+        "batch_formation.p95_ms": {
+          "median": 30.042541999999997,
+          "min": 30.042541999999997,
+          "max": 30.042541999999997
+        },
+        "batch_formation.p99_ms": {
+          "median": 30.076042,
+          "min": 30.076042,
+          "max": 30.076042
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 8551744,
+          "min": 8551744,
+          "max": 8551744
+        },
+        "closed_bytes": {
+          "median": 7958528,
+          "min": 7958528,
+          "max": 7958528
+        },
+        "writer_drain_ms": {
+          "median": 11.464917,
+          "min": 11.464917,
+          "max": 11.464917
+        },
+        "writer_close_ms": {
+          "median": 11.332042000000001,
+          "min": 11.332042000000001,
+          "max": 11.332042000000001
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "rusqlite",
+      "label": "active-3",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 59.82473927843523,
+          "min": 59.82473927843523,
+          "max": 59.82473927843523
+        },
+        "elapsed_s": {
+          "median": 3.008788708,
+          "min": 3.008788708,
+          "max": 3.008788708
+        },
+        "admitted_transactions": {
+          "median": 90,
+          "min": 90,
+          "max": 90
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 180,
+          "min": 180,
+          "max": 180
+        },
+        "queue.p50_ms": {
+          "median": 0.022459,
+          "min": 0.022459,
+          "max": 0.022459
+        },
+        "queue.p95_ms": {
+          "median": 0.038458,
+          "min": 0.038458,
+          "max": 0.038458
+        },
+        "queue.p99_ms": {
+          "median": 0.073042,
+          "min": 0.073042,
+          "max": 0.073042
+        },
+        "service.p50_ms": {
+          "median": 4.835583,
+          "min": 4.835583,
+          "max": 4.835583
+        },
+        "service.p95_ms": {
+          "median": 5.744708,
+          "min": 5.744708,
+          "max": 5.744708
+        },
+        "service.p99_ms": {
+          "median": 7.0141659999999995,
+          "min": 7.0141659999999995,
+          "max": 7.0141659999999995
+        },
+        "history.p50_ms": {
+          "median": 0.212916,
+          "min": 0.212916,
+          "max": 0.212916
+        },
+        "history.p95_ms": {
+          "median": 0.36320800000000003,
+          "min": 0.36320800000000003,
+          "max": 0.36320800000000003
+        },
+        "history.p99_ms": {
+          "median": 0.411041,
+          "min": 0.411041,
+          "max": 0.411041
+        },
+        "batch_formation.p50_ms": {
+          "median": 25.04975,
+          "min": 25.04975,
+          "max": 25.04975
+        },
+        "batch_formation.p95_ms": {
+          "median": 27.142959,
+          "min": 27.142959,
+          "max": 27.142959
+        },
+        "batch_formation.p99_ms": {
+          "median": 27.322917,
+          "min": 27.322917,
+          "max": 27.322917
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 9070864,
+          "min": 9070864,
+          "max": 9070864
+        },
+        "closed_bytes": {
+          "median": 7995392,
+          "min": 7995392,
+          "max": 7995392
+        },
+        "writer_drain_ms": {
+          "median": 7.5003329999999995,
+          "min": 7.5003329999999995,
+          "max": 7.5003329999999995
+        },
+        "writer_close_ms": {
+          "median": 7.317959,
+          "min": 7.317959,
+          "max": 7.317959
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "rusqlite",
+      "label": "active-10",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 199.44425688835796,
+          "min": 199.44425688835796,
+          "max": 199.44425688835796
+        },
+        "elapsed_s": {
+          "median": 3.008359375,
+          "min": 3.008359375,
+          "max": 3.008359375
+        },
+        "admitted_transactions": {
+          "median": 100,
+          "min": 100,
+          "max": 100
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 600,
+          "min": 600,
+          "max": 600
+        },
+        "queue.p50_ms": {
+          "median": 0.01975,
+          "min": 0.01975,
+          "max": 0.01975
+        },
+        "queue.p95_ms": {
+          "median": 0.038083,
+          "min": 0.038083,
+          "max": 0.038083
+        },
+        "queue.p99_ms": {
+          "median": 0.07516600000000001,
+          "min": 0.07516600000000001,
+          "max": 0.07516600000000001
+        },
+        "service.p50_ms": {
+          "median": 4.977958,
+          "min": 4.977958,
+          "max": 4.977958
+        },
+        "service.p95_ms": {
+          "median": 6.167708,
+          "min": 6.167708,
+          "max": 6.167708
+        },
+        "service.p99_ms": {
+          "median": 9.05,
+          "min": 9.05,
+          "max": 9.05
+        },
+        "history.p50_ms": {
+          "median": 0.199416,
+          "min": 0.199416,
+          "max": 0.199416
+        },
+        "history.p95_ms": {
+          "median": 0.37633300000000003,
+          "min": 0.37633300000000003,
+          "max": 0.37633300000000003
+        },
+        "history.p99_ms": {
+          "median": 1.799083,
+          "min": 1.799083,
+          "max": 1.799083
+        },
+        "batch_formation.p50_ms": {
+          "median": 14.379125,
+          "min": 14.379125,
+          "max": 14.379125
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.2485,
+          "min": 25.2485,
+          "max": 25.2485
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.870917,
+          "min": 25.870917,
+          "max": 25.870917
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 9923704,
+          "min": 9923704,
+          "max": 9923704
+        },
+        "closed_bytes": {
+          "median": 8122368,
+          "min": 8122368,
+          "max": 8122368
+        },
+        "writer_drain_ms": {
+          "median": 7.3399160000000006,
+          "min": 7.3399160000000006,
+          "max": 7.3399160000000006
+        },
+        "writer_close_ms": {
+          "median": 7.225333,
+          "min": 7.225333,
+          "max": 7.225333
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "rusqlite",
+      "label": "active-25",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.79787362571847,
+          "min": 497.79787362571847,
+          "max": 497.79787362571847
+        },
+        "elapsed_s": {
+          "median": 3.013271208,
+          "min": 3.013271208,
+          "max": 3.013271208
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.021832999999999998,
+          "min": 0.021832999999999998,
+          "max": 0.021832999999999998
+        },
+        "queue.p95_ms": {
+          "median": 0.030917000000000004,
+          "min": 0.030917000000000004,
+          "max": 0.030917000000000004
+        },
+        "queue.p99_ms": {
+          "median": 0.036666,
+          "min": 0.036666,
+          "max": 0.036666
+        },
+        "service.p50_ms": {
+          "median": 4.5149170000000005,
+          "min": 4.5149170000000005,
+          "max": 4.5149170000000005
+        },
+        "service.p95_ms": {
+          "median": 5.683541,
+          "min": 5.683541,
+          "max": 5.683541
+        },
+        "service.p99_ms": {
+          "median": 7.527792,
+          "min": 7.527792,
+          "max": 7.527792
+        },
+        "history.p50_ms": {
+          "median": 0.19383399999999998,
+          "min": 0.19383399999999998,
+          "max": 0.19383399999999998
+        },
+        "history.p95_ms": {
+          "median": 0.327792,
+          "min": 0.327792,
+          "max": 0.327792
+        },
+        "history.p99_ms": {
+          "median": 0.35825,
+          "min": 0.35825,
+          "max": 0.35825
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.963042,
+          "min": 12.963042,
+          "max": 12.963042
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.202292,
+          "min": 25.202292,
+          "max": 25.202292
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.230791,
+          "min": 25.230791,
+          "max": 25.230791
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 11357464,
+          "min": 11357464,
+          "max": 11357464
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "writer_drain_ms": {
+          "median": 12.838583,
+          "min": 12.838583,
+          "max": 12.838583
+        },
+        "writer_close_ms": {
+          "median": 8.258167,
+          "min": 8.258167,
+          "max": 8.258167
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "rusqlite",
+      "label": "history-100000",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.85133586582015,
+          "min": 497.23701962760265,
+          "max": 498.00900151270235
+        },
+        "elapsed_s": {
+          "median": 3.012947625,
+          "min": 3.01199375,
+          "max": 3.01667
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.02025,
+          "min": 0.018875000000000003,
+          "max": 0.021542000000000002
+        },
+        "queue.p95_ms": {
+          "median": 0.028708,
+          "min": 0.026250000000000002,
+          "max": 0.040958
+        },
+        "queue.p99_ms": {
+          "median": 0.072042,
+          "min": 0.047875,
+          "max": 0.7527910000000001
+        },
+        "service.p50_ms": {
+          "median": 4.903292,
+          "min": 4.6616670000000004,
+          "max": 5.169875
+        },
+        "service.p95_ms": {
+          "median": 6.007083,
+          "min": 5.692917,
+          "max": 6.151333
+        },
+        "service.p99_ms": {
+          "median": 10.975584,
+          "min": 10.528208000000001,
+          "max": 11.30425
+        },
+        "history.p50_ms": {
+          "median": 0.39420900000000003,
+          "min": 0.367,
+          "max": 0.444875
+        },
+        "history.p95_ms": {
+          "median": 0.7119169999999999,
+          "min": 0.6439170000000001,
+          "max": 0.732541
+        },
+        "history.p99_ms": {
+          "median": 0.7771250000000001,
+          "min": 0.738792,
+          "max": 0.807875
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.961041,
+          "min": 12.95875,
+          "max": 12.967042
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.2005,
+          "min": 25.19925,
+          "max": 25.201207999999998
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.231291,
+          "min": 25.21525,
+          "max": 25.261333
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 83930688,
+          "min": 83918328,
+          "max": 83959504
+        },
+        "closed_bytes": {
+          "median": 79822848,
+          "min": 79822848,
+          "max": 79822848
+        },
+        "writer_drain_ms": {
+          "median": 12.685165999999999,
+          "min": 11.568042,
+          "max": 16.201166
+        },
+        "writer_close_ms": {
+          "median": 7.584167,
+          "min": 7.177875,
+          "max": 8.958292
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "rusqlite",
+      "label": "history-1000000",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.5455113030643,
+          "min": 497.38090258554485,
+          "max": 497.9970077292034
+        },
+        "elapsed_s": {
+          "median": 3.014799583,
+          "min": 3.012066291,
+          "max": 3.015797334
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.019792,
+          "min": 0.019416,
+          "max": 0.020583
+        },
+        "queue.p95_ms": {
+          "median": 0.035916,
+          "min": 0.031,
+          "max": 0.043665999999999996
+        },
+        "queue.p99_ms": {
+          "median": 0.080375,
+          "min": 0.075042,
+          "max": 0.134042
+        },
+        "service.p50_ms": {
+          "median": 5.175624999999999,
+          "min": 4.844374999999999,
+          "max": 5.591958
+        },
+        "service.p95_ms": {
+          "median": 6.417541,
+          "min": 5.982165999999999,
+          "max": 9.802167
+        },
+        "service.p99_ms": {
+          "median": 14.262291999999999,
+          "min": 13.6865,
+          "max": 14.943416
+        },
+        "history.p50_ms": {
+          "median": 0.619291,
+          "min": 0.5956670000000001,
+          "max": 0.629375
+        },
+        "history.p95_ms": {
+          "median": 0.974084,
+          "min": 0.8644590000000001,
+          "max": 1.092041
+        },
+        "history.p99_ms": {
+          "median": 1.126542,
+          "min": 0.956458,
+          "max": 1.268542
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.961917,
+          "min": 12.957417000000001,
+          "max": 12.966958
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.201292,
+          "min": 25.200167,
+          "max": 25.202541
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.242458,
+          "min": 25.229958,
+          "max": 25.250958
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 801177368,
+          "min": 801177368,
+          "max": 801181488
+        },
+        "closed_bytes": {
+          "median": 797003776,
+          "min": 797003776,
+          "max": 797003776
+        },
+        "writer_drain_ms": {
+          "median": 14.379416,
+          "min": 11.649291000000002,
+          "max": 15.352915999999999
+        },
+        "writer_close_ms": {
+          "median": 9.449375,
+          "min": 6.508875,
+          "max": 10.811833
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "sqlx",
+      "label": "active-1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 19.93065709175755,
+          "min": 19.93065709175755,
+          "max": 19.93065709175755
+        },
+        "elapsed_s": {
+          "median": 3.010437625,
+          "min": 3.010437625,
+          "max": 3.010437625
+        },
+        "admitted_transactions": {
+          "median": 60,
+          "min": 60,
+          "max": 60
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 60,
+          "min": 60,
+          "max": 60
+        },
+        "queue.p50_ms": {
+          "median": 0.022333000000000002,
+          "min": 0.022333000000000002,
+          "max": 0.022333000000000002
+        },
+        "queue.p95_ms": {
+          "median": 0.09125,
+          "min": 0.09125,
+          "max": 0.09125
+        },
+        "queue.p99_ms": {
+          "median": 0.267833,
+          "min": 0.267833,
+          "max": 0.267833
+        },
+        "service.p50_ms": {
+          "median": 5.872083999999999,
+          "min": 5.872083999999999,
+          "max": 5.872083999999999
+        },
+        "service.p95_ms": {
+          "median": 10.580417,
+          "min": 10.580417,
+          "max": 10.580417
+        },
+        "service.p99_ms": {
+          "median": 13.965959,
+          "min": 13.965959,
+          "max": 13.965959
+        },
+        "history.p50_ms": {
+          "median": 0.128,
+          "min": 0.128,
+          "max": 0.128
+        },
+        "history.p95_ms": {
+          "median": 0.339042,
+          "min": 0.339042,
+          "max": 0.339042
+        },
+        "history.p99_ms": {
+          "median": 0.439458,
+          "min": 0.439458,
+          "max": 0.439458
+        },
+        "batch_formation.p50_ms": {
+          "median": 28.841208,
+          "min": 28.841208,
+          "max": 28.841208
+        },
+        "batch_formation.p95_ms": {
+          "median": 30.038124999999997,
+          "min": 30.038124999999997,
+          "max": 30.038124999999997
+        },
+        "batch_formation.p99_ms": {
+          "median": 30.046209,
+          "min": 30.046209,
+          "max": 30.046209
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 8551744,
+          "min": 8551744,
+          "max": 8551744
+        },
+        "closed_bytes": {
+          "median": 7958528,
+          "min": 7958528,
+          "max": 7958528
+        },
+        "writer_drain_ms": {
+          "median": 6.179583,
+          "min": 6.179583,
+          "max": 6.179583
+        },
+        "writer_close_ms": {
+          "median": 6.124916,
+          "min": 6.124916,
+          "max": 6.124916
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "sqlx",
+      "label": "active-3",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 59.80931214316562,
+          "min": 59.80931214316562,
+          "max": 59.80931214316562
+        },
+        "elapsed_s": {
+          "median": 3.009564791,
+          "min": 3.009564791,
+          "max": 3.009564791
+        },
+        "admitted_transactions": {
+          "median": 90,
+          "min": 90,
+          "max": 90
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 180,
+          "min": 180,
+          "max": 180
+        },
+        "queue.p50_ms": {
+          "median": 0.021875,
+          "min": 0.021875,
+          "max": 0.021875
+        },
+        "queue.p95_ms": {
+          "median": 0.037333000000000005,
+          "min": 0.037333000000000005,
+          "max": 0.037333000000000005
+        },
+        "queue.p99_ms": {
+          "median": 0.043625000000000004,
+          "min": 0.043625000000000004,
+          "max": 0.043625000000000004
+        },
+        "service.p50_ms": {
+          "median": 5.0155829999999995,
+          "min": 5.0155829999999995,
+          "max": 5.0155829999999995
+        },
+        "service.p95_ms": {
+          "median": 5.970542,
+          "min": 5.970542,
+          "max": 5.970542
+        },
+        "service.p99_ms": {
+          "median": 6.2790420000000005,
+          "min": 6.2790420000000005,
+          "max": 6.2790420000000005
+        },
+        "history.p50_ms": {
+          "median": 0.151083,
+          "min": 0.151083,
+          "max": 0.151083
+        },
+        "history.p95_ms": {
+          "median": 0.407875,
+          "min": 0.407875,
+          "max": 0.407875
+        },
+        "history.p99_ms": {
+          "median": 0.784875,
+          "min": 0.784875,
+          "max": 0.784875
+        },
+        "batch_formation.p50_ms": {
+          "median": 25.047209000000002,
+          "min": 25.047209000000002,
+          "max": 25.047209000000002
+        },
+        "batch_formation.p95_ms": {
+          "median": 27.166833,
+          "min": 27.166833,
+          "max": 27.166833
+        },
+        "batch_formation.p99_ms": {
+          "median": 27.37425,
+          "min": 27.37425,
+          "max": 27.37425
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 9070864,
+          "min": 9070864,
+          "max": 9070864
+        },
+        "closed_bytes": {
+          "median": 7995392,
+          "min": 7995392,
+          "max": 7995392
+        },
+        "writer_drain_ms": {
+          "median": 8.238917,
+          "min": 8.238917,
+          "max": 8.238917
+        },
+        "writer_close_ms": {
+          "median": 8.085875,
+          "min": 8.085875,
+          "max": 8.085875
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "sqlx",
+      "label": "active-10",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 199.33265367720037,
+          "min": 199.33265367720037,
+          "max": 199.33265367720037
+        },
+        "elapsed_s": {
+          "median": 3.010043708,
+          "min": 3.010043708,
+          "max": 3.010043708
+        },
+        "admitted_transactions": {
+          "median": 100,
+          "min": 100,
+          "max": 100
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 600,
+          "min": 600,
+          "max": 600
+        },
+        "queue.p50_ms": {
+          "median": 0.02175,
+          "min": 0.02175,
+          "max": 0.02175
+        },
+        "queue.p95_ms": {
+          "median": 0.035334,
+          "min": 0.035334,
+          "max": 0.035334
+        },
+        "queue.p99_ms": {
+          "median": 0.082042,
+          "min": 0.082042,
+          "max": 0.082042
+        },
+        "service.p50_ms": {
+          "median": 5.109500000000001,
+          "min": 5.109500000000001,
+          "max": 5.109500000000001
+        },
+        "service.p95_ms": {
+          "median": 6.099374999999999,
+          "min": 6.099374999999999,
+          "max": 6.099374999999999
+        },
+        "service.p99_ms": {
+          "median": 7.925208,
+          "min": 7.925208,
+          "max": 7.925208
+        },
+        "history.p50_ms": {
+          "median": 0.159,
+          "min": 0.159,
+          "max": 0.159
+        },
+        "history.p95_ms": {
+          "median": 0.445042,
+          "min": 0.445042,
+          "max": 0.445042
+        },
+        "history.p99_ms": {
+          "median": 1.0672920000000001,
+          "min": 1.0672920000000001,
+          "max": 1.0672920000000001
+        },
+        "batch_formation.p50_ms": {
+          "median": 14.395,
+          "min": 14.395,
+          "max": 14.395
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.192667,
+          "min": 25.192667,
+          "max": 25.192667
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.81225,
+          "min": 25.81225,
+          "max": 25.81225
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 9923704,
+          "min": 9923704,
+          "max": 9923704
+        },
+        "closed_bytes": {
+          "median": 8122368,
+          "min": 8122368,
+          "max": 8122368
+        },
+        "writer_drain_ms": {
+          "median": 9.053875,
+          "min": 9.053875,
+          "max": 9.053875
+        },
+        "writer_close_ms": {
+          "median": 7.949707999999999,
+          "min": 7.949707999999999,
+          "max": 7.949707999999999
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "sqlx",
+      "label": "active-25",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.6519536695984,
+          "min": 497.6519536695984,
+          "max": 497.6519536695984
+        },
+        "elapsed_s": {
+          "median": 3.01415475,
+          "min": 3.01415475,
+          "max": 3.01415475
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.022625000000000003,
+          "min": 0.022625000000000003,
+          "max": 0.022625000000000003
+        },
+        "queue.p95_ms": {
+          "median": 0.036834,
+          "min": 0.036834,
+          "max": 0.036834
+        },
+        "queue.p99_ms": {
+          "median": 0.056833,
+          "min": 0.056833,
+          "max": 0.056833
+        },
+        "service.p50_ms": {
+          "median": 5.054459,
+          "min": 5.054459,
+          "max": 5.054459
+        },
+        "service.p95_ms": {
+          "median": 6.702208000000001,
+          "min": 6.702208000000001,
+          "max": 6.702208000000001
+        },
+        "service.p99_ms": {
+          "median": 9.426458,
+          "min": 9.426458,
+          "max": 9.426458
+        },
+        "history.p50_ms": {
+          "median": 0.14183300000000001,
+          "min": 0.14183300000000001,
+          "max": 0.14183300000000001
+        },
+        "history.p95_ms": {
+          "median": 0.330792,
+          "min": 0.330792,
+          "max": 0.330792
+        },
+        "history.p99_ms": {
+          "median": 0.436375,
+          "min": 0.436375,
+          "max": 0.436375
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.964082999999999,
+          "min": 12.964082999999999,
+          "max": 12.964082999999999
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.202375,
+          "min": 25.202375,
+          "max": 25.202375
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.239500000000003,
+          "min": 25.239500000000003,
+          "max": 25.239500000000003
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 11361584,
+          "min": 11361584,
+          "max": 11361584
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "writer_drain_ms": {
+          "median": 13.731333,
+          "min": 13.731333,
+          "max": 13.731333
+        },
+        "writer_close_ms": {
+          "median": 8.625541,
+          "min": 8.625541,
+          "max": 8.625541
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "sqlx",
+      "label": "history-100000",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.8872223763048,
+          "min": 497.04052412780123,
+          "max": 497.9813772115402
+        },
+        "elapsed_s": {
+          "median": 3.012730459,
+          "min": 3.012160833,
+          "max": 3.017862583
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.020874999999999998,
+          "min": 0.019375,
+          "max": 0.022958
+        },
+        "queue.p95_ms": {
+          "median": 0.037417,
+          "min": 0.032499999999999994,
+          "max": 0.044625
+        },
+        "queue.p99_ms": {
+          "median": 0.12570800000000001,
+          "min": 0.044291,
+          "max": 0.18229199999999998
+        },
+        "service.p50_ms": {
+          "median": 5.447125,
+          "min": 4.98175,
+          "max": 5.609833
+        },
+        "service.p95_ms": {
+          "median": 6.6055410000000006,
+          "min": 6.2245,
+          "max": 7.272291999999999
+        },
+        "service.p99_ms": {
+          "median": 11.867583,
+          "min": 10.765500000000001,
+          "max": 12.649917
+        },
+        "history.p50_ms": {
+          "median": 0.468667,
+          "min": 0.4205,
+          "max": 0.506417
+        },
+        "history.p95_ms": {
+          "median": 0.8386669999999999,
+          "min": 0.734833,
+          "max": 0.919042
+        },
+        "history.p99_ms": {
+          "median": 0.958917,
+          "min": 0.9213749999999999,
+          "max": 1.074
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.964500000000001,
+          "min": 12.95825,
+          "max": 12.972667
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.200917,
+          "min": 25.19925,
+          "max": 25.203166999999997
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.239917000000002,
+          "min": 25.233209,
+          "max": 25.255625000000002
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 83918328,
+          "min": 83918328,
+          "max": 83930688
+        },
+        "closed_bytes": {
+          "median": 79822848,
+          "min": 79822848,
+          "max": 79822848
+        },
+        "writer_drain_ms": {
+          "median": 12.280625,
+          "min": 11.639083,
+          "max": 17.766542
+        },
+        "writer_close_ms": {
+          "median": 7.529959,
+          "min": 5.679250000000001,
+          "max": 8.850125
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "scale",
+      "driver": "sqlx",
+      "label": "history-1000000",
+      "samples": 5,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.70984356652457,
+          "min": 497.6386011627741,
+          "max": 497.87795437446493
+        },
+        "elapsed_s": {
+          "median": 3.013804166,
+          "min": 3.012786541,
+          "max": 3.014235625
+        },
+        "admitted_transactions": {
+          "median": 116,
+          "min": 116,
+          "max": 116
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.019875,
+          "min": 0.019,
+          "max": 0.021500000000000002
+        },
+        "queue.p95_ms": {
+          "median": 0.038792,
+          "min": 0.029542,
+          "max": 0.047416
+        },
+        "queue.p99_ms": {
+          "median": 0.071375,
+          "min": 0.04025,
+          "max": 1.584667
+        },
+        "service.p50_ms": {
+          "median": 5.613542,
+          "min": 5.196709,
+          "max": 6.0327910000000005
+        },
+        "service.p95_ms": {
+          "median": 8.770583,
+          "min": 6.768541,
+          "max": 9.641958
+        },
+        "service.p99_ms": {
+          "median": 15.543375,
+          "min": 14.704125,
+          "max": 21.009666
+        },
+        "history.p50_ms": {
+          "median": 0.7260409999999999,
+          "min": 0.697125,
+          "max": 0.749333
+        },
+        "history.p95_ms": {
+          "median": 1.071584,
+          "min": 1.0224170000000001,
+          "max": 1.110417
+        },
+        "history.p99_ms": {
+          "median": 1.1481670000000002,
+          "min": 1.070584,
+          "max": 1.252917
+        },
+        "batch_formation.p50_ms": {
+          "median": 12.960459,
+          "min": 12.957333,
+          "max": 12.965709
+        },
+        "batch_formation.p95_ms": {
+          "median": 25.200833999999997,
+          "min": 25.200166,
+          "max": 25.201958
+        },
+        "batch_formation.p99_ms": {
+          "median": 25.243792000000003,
+          "min": 25.224166999999998,
+          "max": 25.262083
+        },
+        "sampled_main_wal_shm_bytes": {
+          "median": 801181488,
+          "min": 801177368,
+          "max": 801197968
+        },
+        "closed_bytes": {
+          "median": 797003776,
+          "min": 797003776,
+          "max": 797003776
+        },
+        "writer_drain_ms": {
+          "median": 13.569833,
+          "min": 12.353291,
+          "max": 13.795083
+        },
+        "writer_close_ms": {
+          "median": 8.300458,
+          "min": 7.5007090000000005,
+          "max": 8.812458000000001
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "DELETE-FULL-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 71.48850356565187,
+          "min": 71.48850356565187,
+          "max": 71.48850356565187
+        },
+        "elapsed_s": {
+          "median": 3.944690208,
+          "min": 3.944690208,
+          "max": 3.944690208
+        },
+        "admitted_transactions": {
+          "median": 282,
+          "min": 282,
+          "max": 282
+        },
+        "rejected_transactions": {
+          "median": 1218,
+          "min": 1218,
+          "max": 1218
+        },
+        "committed_events": {
+          "median": 282,
+          "min": 282,
+          "max": 282
+        },
+        "queue.p50_ms": {
+          "median": 878.8378329999999,
+          "min": 878.8378329999999,
+          "max": 878.8378329999999
+        },
+        "queue.p95_ms": {
+          "median": 929.933625,
+          "min": 929.933625,
+          "max": 929.933625
+        },
+        "queue.p99_ms": {
+          "median": 937.198375,
+          "min": 937.198375,
+          "max": 937.198375
+        },
+        "service.p50_ms": {
+          "median": 13.770583,
+          "min": 13.770583,
+          "max": 13.770583
+        },
+        "service.p95_ms": {
+          "median": 15.148750000000001,
+          "min": 15.148750000000001,
+          "max": 15.148750000000001
+        },
+        "service.p99_ms": {
+          "median": 16.80825,
+          "min": 16.80825,
+          "max": 16.80825
+        },
+        "history.p50_ms": {
+          "median": 0.20258299999999999,
+          "min": 0.20258299999999999,
+          "max": 0.20258299999999999
+        },
+        "history.p95_ms": {
+          "median": 0.32975000000000004,
+          "min": 0.32975000000000004,
+          "max": 0.32975000000000004
+        },
+        "history.p99_ms": {
+          "median": 0.430958,
+          "min": 0.430958,
+          "max": 0.430958
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 8024064,
+          "min": 8024064,
+          "max": 8024064
+        },
+        "closed_bytes": {
+          "median": 8024064,
+          "min": 8024064,
+          "max": 8024064
+        },
+        "drain_ms": {
+          "median": 944.274625,
+          "min": 944.274625,
+          "max": 944.274625
+        },
+        "close_ms": {
+          "median": 0.24537499999999998,
+          "min": 0.24537499999999998,
+          "max": 0.24537499999999998
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "DELETE-EXTRA-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 68.25788856571542,
+          "min": 68.25788856571542,
+          "max": 68.25788856571542
+        },
+        "elapsed_s": {
+          "median": 3.9116357920000002,
+          "min": 3.9116357920000002,
+          "max": 3.9116357920000002
+        },
+        "admitted_transactions": {
+          "median": 267,
+          "min": 267,
+          "max": 267
+        },
+        "rejected_transactions": {
+          "median": 1233,
+          "min": 1233,
+          "max": 1233
+        },
+        "committed_events": {
+          "median": 267,
+          "min": 267,
+          "max": 267
+        },
+        "queue.p50_ms": {
+          "median": 911.3076249999999,
+          "min": 911.3076249999999,
+          "max": 911.3076249999999
+        },
+        "queue.p95_ms": {
+          "median": 982.453625,
+          "min": 982.453625,
+          "max": 982.453625
+        },
+        "queue.p99_ms": {
+          "median": 988.152166,
+          "min": 988.152166,
+          "max": 988.152166
+        },
+        "service.p50_ms": {
+          "median": 14.127291999999999,
+          "min": 14.127291999999999,
+          "max": 14.127291999999999
+        },
+        "service.p95_ms": {
+          "median": 16.872208,
+          "min": 16.872208,
+          "max": 16.872208
+        },
+        "service.p99_ms": {
+          "median": 18.905124999999998,
+          "min": 18.905124999999998,
+          "max": 18.905124999999998
+        },
+        "history.p50_ms": {
+          "median": 0.232,
+          "min": 0.232,
+          "max": 0.232
+        },
+        "history.p95_ms": {
+          "median": 0.323333,
+          "min": 0.323333,
+          "max": 0.323333
+        },
+        "history.p99_ms": {
+          "median": 0.339,
+          "min": 0.339,
+          "max": 0.339
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 8019968,
+          "min": 8019968,
+          "max": 8019968
+        },
+        "closed_bytes": {
+          "median": 8019968,
+          "min": 8019968,
+          "max": 8019968
+        },
+        "drain_ms": {
+          "median": 911.203584,
+          "min": 911.203584,
+          "max": 911.203584
+        },
+        "close_ms": {
+          "median": 0.13937500000000003,
+          "min": 0.13937500000000003,
+          "max": 0.13937500000000003
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "WAL-FULL-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 222.03317525809476,
+          "min": 222.03317525809476,
+          "max": 222.03317525809476
+        },
+        "elapsed_s": {
+          "median": 3.305812292,
+          "min": 3.305812292,
+          "max": 3.305812292
+        },
+        "admitted_transactions": {
+          "median": 734,
+          "min": 734,
+          "max": 734
+        },
+        "rejected_transactions": {
+          "median": 766,
+          "min": 766,
+          "max": 766
+        },
+        "committed_events": {
+          "median": 734,
+          "min": 734,
+          "max": 734
+        },
+        "queue.p50_ms": {
+          "median": 276.694375,
+          "min": 276.694375,
+          "max": 276.694375
+        },
+        "queue.p95_ms": {
+          "median": 314.305833,
+          "min": 314.305833,
+          "max": 314.305833
+        },
+        "queue.p99_ms": {
+          "median": 318.865666,
+          "min": 318.865666,
+          "max": 318.865666
+        },
+        "service.p50_ms": {
+          "median": 4.043583,
+          "min": 4.043583,
+          "max": 4.043583
+        },
+        "service.p95_ms": {
+          "median": 5.0155,
+          "min": 5.0155,
+          "max": 5.0155
+        },
+        "service.p99_ms": {
+          "median": 5.617458,
+          "min": 5.617458,
+          "max": 5.617458
+        },
+        "history.p50_ms": {
+          "median": 0.172958,
+          "min": 0.172958,
+          "max": 0.172958
+        },
+        "history.p95_ms": {
+          "median": 0.299541,
+          "min": 0.299541,
+          "max": 0.299541
+        },
+        "history.p99_ms": {
+          "median": 0.409209,
+          "min": 0.409209,
+          "max": 0.409209
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 12213728,
+          "min": 12213728,
+          "max": 12213728
+        },
+        "closed_bytes": {
+          "median": 8171520,
+          "min": 8171520,
+          "max": 8171520
+        },
+        "drain_ms": {
+          "median": 305.387708,
+          "min": 305.387708,
+          "max": 305.387708
+        },
+        "close_ms": {
+          "median": 9.613999999999999,
+          "min": 9.613999999999999,
+          "max": 9.613999999999999
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "WAL-NORMAL-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.82910550145647,
+          "min": 497.82910550145647,
+          "max": 497.82910550145647
+        },
+        "elapsed_s": {
+          "median": 3.013082167,
+          "min": 3.013082167,
+          "max": 3.013082167
+        },
+        "admitted_transactions": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.016249999999999997,
+          "min": 0.016249999999999997,
+          "max": 0.016249999999999997
+        },
+        "queue.p95_ms": {
+          "median": 0.045792,
+          "min": 0.045792,
+          "max": 0.045792
+        },
+        "queue.p99_ms": {
+          "median": 8.123459,
+          "min": 8.123459,
+          "max": 8.123459
+        },
+        "service.p50_ms": {
+          "median": 0.096208,
+          "min": 0.096208,
+          "max": 0.096208
+        },
+        "service.p95_ms": {
+          "median": 0.250083,
+          "min": 0.250083,
+          "max": 0.250083
+        },
+        "service.p99_ms": {
+          "median": 0.438291,
+          "min": 0.438291,
+          "max": 0.438291
+        },
+        "history.p50_ms": {
+          "median": 0.123042,
+          "min": 0.123042,
+          "max": 0.123042
+        },
+        "history.p95_ms": {
+          "median": 0.278084,
+          "min": 0.278084,
+          "max": 0.278084
+        },
+        "history.p99_ms": {
+          "median": 0.415875,
+          "min": 0.415875,
+          "max": 0.415875
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 12463632,
+          "min": 12463632,
+          "max": 12463632
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "drain_ms": {
+          "median": 12.8525,
+          "min": 12.8525,
+          "max": 12.8525
+        },
+        "close_ms": {
+          "median": 12.730708,
+          "min": 12.730708,
+          "max": 12.730708
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "DELETE-FULL-b1-reopen",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 68.17890198423785,
+          "min": 68.17890198423785,
+          "max": 68.17890198423785
+        },
+        "elapsed_s": {
+          "median": 3.9308347919999997,
+          "min": 3.9308347919999997,
+          "max": 3.9308347919999997
+        },
+        "admitted_transactions": {
+          "median": 268,
+          "min": 268,
+          "max": 268
+        },
+        "rejected_transactions": {
+          "median": 1232,
+          "min": 1232,
+          "max": 1232
+        },
+        "committed_events": {
+          "median": 268,
+          "min": 268,
+          "max": 268
+        },
+        "queue.p50_ms": {
+          "median": 930.5286659999999,
+          "min": 930.5286659999999,
+          "max": 930.5286659999999
+        },
+        "queue.p95_ms": {
+          "median": 950.571417,
+          "min": 950.571417,
+          "max": 950.571417
+        },
+        "queue.p99_ms": {
+          "median": 952.624584,
+          "min": 952.624584,
+          "max": 952.624584
+        },
+        "service.p50_ms": {
+          "median": 14.392959000000001,
+          "min": 14.392959000000001,
+          "max": 14.392959000000001
+        },
+        "service.p95_ms": {
+          "median": 15.994292,
+          "min": 15.994292,
+          "max": 15.994292
+        },
+        "service.p99_ms": {
+          "median": 17.033583,
+          "min": 17.033583,
+          "max": 17.033583
+        },
+        "history.p50_ms": {
+          "median": 0.24954099999999999,
+          "min": 0.24954099999999999,
+          "max": 0.24954099999999999
+        },
+        "history.p95_ms": {
+          "median": 0.394583,
+          "min": 0.394583,
+          "max": 0.394583
+        },
+        "history.p99_ms": {
+          "median": 0.628583,
+          "min": 0.628583,
+          "max": 0.628583
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 8024064,
+          "min": 8024064,
+          "max": 8024064
+        },
+        "closed_bytes": {
+          "median": 8024064,
+          "min": 8024064,
+          "max": 8024064
+        },
+        "drain_ms": {
+          "median": 930.144375,
+          "min": 930.144375,
+          "max": 930.144375
+        },
+        "close_ms": {
+          "median": 0.058249999999999996,
+          "min": 0.058249999999999996,
+          "max": 0.058249999999999996
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "WAL-FULL-b16",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 498.33302252848324,
+          "min": 498.33302252848324,
+          "max": 498.33302252848324
+        },
+        "elapsed_s": {
+          "median": 3.018062083,
+          "min": 3.018062083,
+          "max": 3.018062083
+        },
+        "admitted_transactions": {
+          "median": 94,
+          "min": 94,
+          "max": 94
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1504,
+          "min": 1504,
+          "max": 1504
+        },
+        "queue.p50_ms": {
+          "median": 0.022375,
+          "min": 0.022375,
+          "max": 0.022375
+        },
+        "queue.p95_ms": {
+          "median": 0.046541,
+          "min": 0.046541,
+          "max": 0.046541
+        },
+        "queue.p99_ms": {
+          "median": 0.08254099999999999,
+          "min": 0.08254099999999999,
+          "max": 0.08254099999999999
+        },
+        "service.p50_ms": {
+          "median": 5.087917,
+          "min": 5.087917,
+          "max": 5.087917
+        },
+        "service.p95_ms": {
+          "median": 7.307209,
+          "min": 7.307209,
+          "max": 7.307209
+        },
+        "service.p99_ms": {
+          "median": 8.075542,
+          "min": 8.075542,
+          "max": 8.075542
+        },
+        "history.p50_ms": {
+          "median": 0.187667,
+          "min": 0.187667,
+          "max": 0.187667
+        },
+        "history.p95_ms": {
+          "median": 0.339875,
+          "min": 0.339875,
+          "max": 0.339875
+        },
+        "history.p99_ms": {
+          "median": 0.5183749999999999,
+          "min": 0.5183749999999999,
+          "max": 0.5183749999999999
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 10595264,
+          "min": 10595264,
+          "max": 10595264
+        },
+        "closed_bytes": {
+          "median": 8388608,
+          "min": 8388608,
+          "max": 8388608
+        },
+        "drain_ms": {
+          "median": 8.526625,
+          "min": 8.526625,
+          "max": 8.526625
+        },
+        "close_ms": {
+          "median": 8.336916,
+          "min": 8.336916,
+          "max": 8.336916
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "rusqlite",
+      "label": "WAL-FULL-b16-readers2",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.0556449491552,
+          "min": 497.0556449491552,
+          "max": 497.0556449491552
+        },
+        "elapsed_s": {
+          "median": 3.025818166,
+          "min": 3.025818166,
+          "max": 3.025818166
+        },
+        "admitted_transactions": {
+          "median": 94,
+          "min": 94,
+          "max": 94
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1504,
+          "min": 1504,
+          "max": 1504
+        },
+        "queue.p50_ms": {
+          "median": 0.0235,
+          "min": 0.0235,
+          "max": 0.0235
+        },
+        "queue.p95_ms": {
+          "median": 0.059500000000000004,
+          "min": 0.059500000000000004,
+          "max": 0.059500000000000004
+        },
+        "queue.p99_ms": {
+          "median": 0.121625,
+          "min": 0.121625,
+          "max": 0.121625
+        },
+        "service.p50_ms": {
+          "median": 5.3788339999999994,
+          "min": 5.3788339999999994,
+          "max": 5.3788339999999994
+        },
+        "service.p95_ms": {
+          "median": 8.054667,
+          "min": 8.054667,
+          "max": 8.054667
+        },
+        "service.p99_ms": {
+          "median": 10.931625,
+          "min": 10.931625,
+          "max": 10.931625
+        },
+        "reader_history.p95_ms": {
+          "median": 0.42562500000000003,
+          "min": 0.42562500000000003,
+          "max": 0.42562500000000003
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 10595264,
+          "min": 10595264,
+          "max": 10595264
+        },
+        "closed_bytes": {
+          "median": 8388608,
+          "min": 8388608,
+          "max": 8388608
+        },
+        "drain_ms": {
+          "median": 0.523042,
+          "min": 0.523042,
+          "max": 0.523042
+        },
+        "close_ms": {
+          "median": 0.349584,
+          "min": 0.349584,
+          "max": 0.349584
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "DELETE-FULL-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 67.57412951914696,
+          "min": 67.57412951914696,
+          "max": 67.57412951914696
+        },
+        "elapsed_s": {
+          "median": 3.966014833,
+          "min": 3.966014833,
+          "max": 3.966014833
+        },
+        "admitted_transactions": {
+          "median": 268,
+          "min": 268,
+          "max": 268
+        },
+        "rejected_transactions": {
+          "median": 1232,
+          "min": 1232,
+          "max": 1232
+        },
+        "committed_events": {
+          "median": 268,
+          "min": 268,
+          "max": 268
+        },
+        "queue.p50_ms": {
+          "median": 957.109458,
+          "min": 957.109458,
+          "max": 957.109458
+        },
+        "queue.p95_ms": {
+          "median": 983.136542,
+          "min": 983.136542,
+          "max": 983.136542
+        },
+        "queue.p99_ms": {
+          "median": 985.891125,
+          "min": 985.891125,
+          "max": 985.891125
+        },
+        "service.p50_ms": {
+          "median": 14.387291999999999,
+          "min": 14.387291999999999,
+          "max": 14.387291999999999
+        },
+        "service.p95_ms": {
+          "median": 16.692917,
+          "min": 16.692917,
+          "max": 16.692917
+        },
+        "service.p99_ms": {
+          "median": 17.737792,
+          "min": 17.737792,
+          "max": 17.737792
+        },
+        "history.p50_ms": {
+          "median": 0.164542,
+          "min": 0.164542,
+          "max": 0.164542
+        },
+        "history.p95_ms": {
+          "median": 0.315083,
+          "min": 0.315083,
+          "max": 0.315083
+        },
+        "history.p99_ms": {
+          "median": 0.41091700000000003,
+          "min": 0.41091700000000003,
+          "max": 0.41091700000000003
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 8019968,
+          "min": 8019968,
+          "max": 8019968
+        },
+        "closed_bytes": {
+          "median": 8019968,
+          "min": 8019968,
+          "max": 8019968
+        },
+        "drain_ms": {
+          "median": 965.5980830000001,
+          "min": 965.5980830000001,
+          "max": 965.5980830000001
+        },
+        "close_ms": {
+          "median": 0.6237499999999999,
+          "min": 0.6237499999999999,
+          "max": 0.6237499999999999
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "DELETE-EXTRA-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 67.27821810993564,
+          "min": 67.27821810993564,
+          "max": 67.27821810993564
+        },
+        "elapsed_s": {
+          "median": 3.968595,
+          "min": 3.968595,
+          "max": 3.968595
+        },
+        "admitted_transactions": {
+          "median": 267,
+          "min": 267,
+          "max": 267
+        },
+        "rejected_transactions": {
+          "median": 1233,
+          "min": 1233,
+          "max": 1233
+        },
+        "committed_events": {
+          "median": 267,
+          "min": 267,
+          "max": 267
+        },
+        "queue.p50_ms": {
+          "median": 946.473667,
+          "min": 946.473667,
+          "max": 946.473667
+        },
+        "queue.p95_ms": {
+          "median": 969.184209,
+          "min": 969.184209,
+          "max": 969.184209
+        },
+        "queue.p99_ms": {
+          "median": 972.0125830000001,
+          "min": 972.0125830000001,
+          "max": 972.0125830000001
+        },
+        "service.p50_ms": {
+          "median": 14.562458,
+          "min": 14.562458,
+          "max": 14.562458
+        },
+        "service.p95_ms": {
+          "median": 16.337625000000003,
+          "min": 16.337625000000003,
+          "max": 16.337625000000003
+        },
+        "service.p99_ms": {
+          "median": 17.066125000000003,
+          "min": 17.066125000000003,
+          "max": 17.066125000000003
+        },
+        "history.p50_ms": {
+          "median": 0.198666,
+          "min": 0.198666,
+          "max": 0.198666
+        },
+        "history.p95_ms": {
+          "median": 0.38620899999999997,
+          "min": 0.38620899999999997,
+          "max": 0.38620899999999997
+        },
+        "history.p99_ms": {
+          "median": 0.569458,
+          "min": 0.569458,
+          "max": 0.569458
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 8024064,
+          "min": 8024064,
+          "max": 8024064
+        },
+        "closed_bytes": {
+          "median": 8024064,
+          "min": 8024064,
+          "max": 8024064
+        },
+        "drain_ms": {
+          "median": 968.3335,
+          "min": 968.3335,
+          "max": 968.3335
+        },
+        "close_ms": {
+          "median": 0.187083,
+          "min": 0.187083,
+          "max": 0.187083
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "WAL-FULL-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 206.1024088219031,
+          "min": 206.1024088219031,
+          "max": 206.1024088219031
+        },
+        "elapsed_s": {
+          "median": 3.333294375,
+          "min": 3.333294375,
+          "max": 3.333294375
+        },
+        "admitted_transactions": {
+          "median": 687,
+          "min": 687,
+          "max": 687
+        },
+        "rejected_transactions": {
+          "median": 813,
+          "min": 813,
+          "max": 813
+        },
+        "committed_events": {
+          "median": 687,
+          "min": 687,
+          "max": 687
+        },
+        "queue.p50_ms": {
+          "median": 301.92529099999996,
+          "min": 301.92529099999996,
+          "max": 301.92529099999996
+        },
+        "queue.p95_ms": {
+          "median": 329.953291,
+          "min": 329.953291,
+          "max": 329.953291
+        },
+        "queue.p99_ms": {
+          "median": 335.9675,
+          "min": 335.9675,
+          "max": 335.9675
+        },
+        "service.p50_ms": {
+          "median": 4.804875,
+          "min": 4.804875,
+          "max": 4.804875
+        },
+        "service.p95_ms": {
+          "median": 5.405125,
+          "min": 5.405125,
+          "max": 5.405125
+        },
+        "service.p99_ms": {
+          "median": 7.734999999999999,
+          "min": 7.734999999999999,
+          "max": 7.734999999999999
+        },
+        "history.p50_ms": {
+          "median": 0.142791,
+          "min": 0.142791,
+          "max": 0.142791
+        },
+        "history.p95_ms": {
+          "median": 0.334167,
+          "min": 0.334167,
+          "max": 0.334167
+        },
+        "history.p99_ms": {
+          "median": 0.55225,
+          "min": 0.55225,
+          "max": 0.55225
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 12217848,
+          "min": 12217848,
+          "max": 12217848
+        },
+        "closed_bytes": {
+          "median": 8155136,
+          "min": 8155136,
+          "max": 8155136
+        },
+        "drain_ms": {
+          "median": 332.79866699999997,
+          "min": 332.79866699999997,
+          "max": 332.79866699999997
+        },
+        "close_ms": {
+          "median": 8.536625,
+          "min": 8.536625,
+          "max": 8.536625
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "WAL-NORMAL-b1",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.6682857295735,
+          "min": 497.6682857295735,
+          "max": 497.6682857295735
+        },
+        "elapsed_s": {
+          "median": 3.014055834,
+          "min": 3.014055834,
+          "max": 3.014055834
+        },
+        "admitted_transactions": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1500,
+          "min": 1500,
+          "max": 1500
+        },
+        "queue.p50_ms": {
+          "median": 0.016125,
+          "min": 0.016125,
+          "max": 0.016125
+        },
+        "queue.p95_ms": {
+          "median": 0.036916,
+          "min": 0.036916,
+          "max": 0.036916
+        },
+        "queue.p99_ms": {
+          "median": 8.925041,
+          "min": 8.925041,
+          "max": 8.925041
+        },
+        "service.p50_ms": {
+          "median": 0.194084,
+          "min": 0.194084,
+          "max": 0.194084
+        },
+        "service.p95_ms": {
+          "median": 0.353708,
+          "min": 0.353708,
+          "max": 0.353708
+        },
+        "service.p99_ms": {
+          "median": 0.609875,
+          "min": 0.609875,
+          "max": 0.609875
+        },
+        "history.p50_ms": {
+          "median": 0.10708400000000001,
+          "min": 0.10708400000000001,
+          "max": 0.10708400000000001
+        },
+        "history.p95_ms": {
+          "median": 0.391959,
+          "min": 0.391959,
+          "max": 0.391959
+        },
+        "history.p99_ms": {
+          "median": 0.46058299999999996,
+          "min": 0.46058299999999996,
+          "max": 0.46058299999999996
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 12463632,
+          "min": 12463632,
+          "max": 12463632
+        },
+        "closed_bytes": {
+          "median": 8409088,
+          "min": 8409088,
+          "max": 8409088
+        },
+        "drain_ms": {
+          "median": 13.5455,
+          "min": 13.5455,
+          "max": 13.5455
+        },
+        "close_ms": {
+          "median": 13.476791,
+          "min": 13.476791,
+          "max": 13.476791
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "DELETE-FULL-b1-reopen",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 63.34051400258774,
+          "min": 63.34051400258774,
+          "max": 63.34051400258774
+        },
+        "elapsed_s": {
+          "median": 4.057434709,
+          "min": 4.057434709,
+          "max": 4.057434709
+        },
+        "admitted_transactions": {
+          "median": 257,
+          "min": 257,
+          "max": 257
+        },
+        "rejected_transactions": {
+          "median": 1243,
+          "min": 1243,
+          "max": 1243
+        },
+        "committed_events": {
+          "median": 257,
+          "min": 257,
+          "max": 257
+        },
+        "queue.p50_ms": {
+          "median": 984.165125,
+          "min": 984.165125,
+          "max": 984.165125
+        },
+        "queue.p95_ms": {
+          "median": 1031.541417,
+          "min": 1031.541417,
+          "max": 1031.541417
+        },
+        "queue.p99_ms": {
+          "median": 1036.3337909999998,
+          "min": 1036.3337909999998,
+          "max": 1036.3337909999998
+        },
+        "service.p50_ms": {
+          "median": 15.499083,
+          "min": 15.499083,
+          "max": 15.499083
+        },
+        "service.p95_ms": {
+          "median": 17.722583,
+          "min": 17.722583,
+          "max": 17.722583
+        },
+        "service.p99_ms": {
+          "median": 18.552167,
+          "min": 18.552167,
+          "max": 18.552167
+        },
+        "history.p50_ms": {
+          "median": 0.36525,
+          "min": 0.36525,
+          "max": 0.36525
+        },
+        "history.p95_ms": {
+          "median": 0.542583,
+          "min": 0.542583,
+          "max": 0.542583
+        },
+        "history.p99_ms": {
+          "median": 0.7362920000000001,
+          "min": 0.7362920000000001,
+          "max": 0.7362920000000001
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 8015872,
+          "min": 8015872,
+          "max": 8015872
+        },
+        "closed_bytes": {
+          "median": 8015872,
+          "min": 8015872,
+          "max": 8015872
+        },
+        "drain_ms": {
+          "median": 1057.017834,
+          "min": 1057.017834,
+          "max": 1057.017834
+        },
+        "close_ms": {
+          "median": 0.191334,
+          "min": 0.191334,
+          "max": 0.191334
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "WAL-FULL-b16",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 497.90684217606974,
+          "min": 497.90684217606974,
+          "max": 497.90684217606974
+        },
+        "elapsed_s": {
+          "median": 3.020645375,
+          "min": 3.020645375,
+          "max": 3.020645375
+        },
+        "admitted_transactions": {
+          "median": 94,
+          "min": 94,
+          "max": 94
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1504,
+          "min": 1504,
+          "max": 1504
+        },
+        "queue.p50_ms": {
+          "median": 0.026875,
+          "min": 0.026875,
+          "max": 0.026875
+        },
+        "queue.p95_ms": {
+          "median": 0.057541999999999996,
+          "min": 0.057541999999999996,
+          "max": 0.057541999999999996
+        },
+        "queue.p99_ms": {
+          "median": 0.257125,
+          "min": 0.257125,
+          "max": 0.257125
+        },
+        "service.p50_ms": {
+          "median": 6.03425,
+          "min": 6.03425,
+          "max": 6.03425
+        },
+        "service.p95_ms": {
+          "median": 6.927583,
+          "min": 6.927583,
+          "max": 6.927583
+        },
+        "service.p99_ms": {
+          "median": 10.61,
+          "min": 10.61,
+          "max": 10.61
+        },
+        "history.p50_ms": {
+          "median": 0.18483400000000003,
+          "min": 0.18483400000000003,
+          "max": 0.18483400000000003
+        },
+        "history.p95_ms": {
+          "median": 0.474458,
+          "min": 0.474458,
+          "max": 0.474458
+        },
+        "history.p99_ms": {
+          "median": 0.5362910000000001,
+          "min": 0.5362910000000001,
+          "max": 0.5362910000000001
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 10595264,
+          "min": 10595264,
+          "max": 10595264
+        },
+        "closed_bytes": {
+          "median": 8388608,
+          "min": 8388608,
+          "max": 8388608
+        },
+        "drain_ms": {
+          "median": 11.183958,
+          "min": 11.183958,
+          "max": 11.183958
+        },
+        "close_ms": {
+          "median": 11.044583,
+          "min": 11.044583,
+          "max": 11.044583
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    },
+    {
+      "phase": "screen",
+      "driver": "sqlx",
+      "label": "WAL-FULL-b16-readers2",
+      "samples": 1,
+      "metrics": {
+        "events_per_s": {
+          "median": 496.6926168292756,
+          "min": 496.6926168292756,
+          "max": 496.6926168292756
+        },
+        "elapsed_s": {
+          "median": 3.028029709,
+          "min": 3.028029709,
+          "max": 3.028029709
+        },
+        "admitted_transactions": {
+          "median": 94,
+          "min": 94,
+          "max": 94
+        },
+        "rejected_transactions": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "committed_events": {
+          "median": 1504,
+          "min": 1504,
+          "max": 1504
+        },
+        "queue.p50_ms": {
+          "median": 0.022167,
+          "min": 0.022167,
+          "max": 0.022167
+        },
+        "queue.p95_ms": {
+          "median": 0.053417,
+          "min": 0.053417,
+          "max": 0.053417
+        },
+        "queue.p99_ms": {
+          "median": 0.13758299999999998,
+          "min": 0.13758299999999998,
+          "max": 0.13758299999999998
+        },
+        "service.p50_ms": {
+          "median": 5.731333,
+          "min": 5.731333,
+          "max": 5.731333
+        },
+        "service.p95_ms": {
+          "median": 6.627875,
+          "min": 6.627875,
+          "max": 6.627875
+        },
+        "service.p99_ms": {
+          "median": 6.939291,
+          "min": 6.939291,
+          "max": 6.939291
+        },
+        "reader_history.p95_ms": {
+          "median": 0.6645000000000001,
+          "min": 0.6645000000000001,
+          "max": 0.6645000000000001
+        },
+        "peak_db_sidecar_bytes": {
+          "median": 10595264,
+          "min": 10595264,
+          "max": 10595264
+        },
+        "closed_bytes": {
+          "median": 8388608,
+          "min": 8388608,
+          "max": 8388608
+        },
+        "drain_ms": {
+          "median": 0.45079199999999997,
+          "min": 0.45079199999999997,
+          "max": 0.45079199999999997
+        },
+        "close_ms": {
+          "median": 0.330916,
+          "min": 0.330916,
+          "max": 0.330916
+        }
+      },
+      "all_integrity_ok": true,
+      "writer_errors": 0,
+      "reader_errors": 0
+    }
+  ],
+  "failed_invocations": [],
+  "lifecycle": [
+    {
+      "command": [
+        "/private/tmp/storage-driver-06a.e28Ggc/fresh-rusqlite/release/storage-bench-rusqlite",
+        "lifecycle",
+        "/private/tmp/storage-driver-06a.e28Ggc/run-rusqlite.db"
+      ],
+      "driver": "rusqlite",
+      "exit_code": 0,
+      "label": "queue-drop-drain",
+      "phase": "lifecycle",
+      "repeat": null,
+      "result": {
+        "admitted_write_committed_after_reply_receiver_drop": true,
+        "physical_worker_joined": true,
+        "rejected_write_absent": true,
+        "saturation_rejected": true
+      },
+      "stderr": "",
+      "wall_s": 0.024074833025224507
+    },
+    {
+      "command": [
+        "/private/tmp/storage-driver-06a.e28Ggc/fresh-sqlx/release/storage-bench-sqlx",
+        "lifecycle",
+        "/private/tmp/storage-driver-06a.e28Ggc/run-sqlx.db"
+      ],
+      "driver": "sqlx",
+      "exit_code": 0,
+      "label": "queue-drop-drain",
+      "phase": "lifecycle",
+      "repeat": null,
+      "result": {
+        "admitted_write_committed_after_reply_receiver_drop": true,
+        "physical_worker_joined": true,
+        "rejected_write_absent": true,
+        "saturation_rejected": true
+      },
+      "stderr": "",
+      "wall_s": 0.025038708932697773
+    }
+  ],
+  "provenance": [
+    {
+      "file": "driver-results-finalists.jsonl",
+      "common_sha256": "eefb786f576def143ac3197c961c0602b6fd92aa2f6ff26d779bab9aba735fa1",
+      "fresh_data_root": "/private/tmp/storage-driver-06a.e28Ggc/data-r_re0u2p",
+      "manifest_sha256": "ba6d1da1f58f1752f0952c6a311b069ca18319062912973083ab5c3ef82e0042",
+      "phase": "provenance",
+      "phase_selected": "finalists",
+      "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+      "private_root": "/private/tmp/storage-driver-06a.e28Ggc",
+      "runner_sha256": "c553236aa6fc86bf6a35febd9fdf2fc27187eae9b2cbdbb1f4addcbf05babf97"
+    },
+    {
+      "file": "driver-results-resources-corrected.jsonl",
+      "common_sha256": "eefb786f576def143ac3197c961c0602b6fd92aa2f6ff26d779bab9aba735fa1",
+      "fresh_data_root": "/private/tmp/storage-driver-06a.e28Ggc/data-6lxxqg07",
+      "manifest_sha256": "ba6d1da1f58f1752f0952c6a311b069ca18319062912973083ab5c3ef82e0042",
+      "phase": "provenance",
+      "phase_selected": "resources",
+      "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+      "private_root": "/private/tmp/storage-driver-06a.e28Ggc",
+      "runner_sha256": "0d5d501e0a44e8f1629df44e5ca910a81ff3c7a4d3b7539524268d387062fe43"
+    },
+    {
+      "file": "driver-results-resources.jsonl",
+      "common_sha256": "eefb786f576def143ac3197c961c0602b6fd92aa2f6ff26d779bab9aba735fa1",
+      "fresh_data_root": "/private/tmp/storage-driver-06a.e28Ggc/data-w0gvovib",
+      "manifest_sha256": "ba6d1da1f58f1752f0952c6a311b069ca18319062912973083ab5c3ef82e0042",
+      "phase": "provenance",
+      "phase_selected": "resources",
+      "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+      "private_root": "/private/tmp/storage-driver-06a.e28Ggc",
+      "runner_sha256": "3103eb09f5f0a2b7acd91d2472f773d2f143a76d10be74a6ba25d00315c74feb"
+    },
+    {
+      "file": "driver-results-scale.jsonl",
+      "common_sha256": "eefb786f576def143ac3197c961c0602b6fd92aa2f6ff26d779bab9aba735fa1",
+      "fresh_data_root": "/private/tmp/storage-driver-06a.e28Ggc/data-lh0zlcn1",
+      "manifest_sha256": "ba6d1da1f58f1752f0952c6a311b069ca18319062912973083ab5c3ef82e0042",
+      "phase": "provenance",
+      "phase_selected": "scale",
+      "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+      "private_root": "/private/tmp/storage-driver-06a.e28Ggc",
+      "runner_sha256": "c553236aa6fc86bf6a35febd9fdf2fc27187eae9b2cbdbb1f4addcbf05babf97"
+    },
+    {
+      "file": "driver-results-screen.jsonl",
+      "common_sha256": "355b4a92d046663fab8d55f327cc4fd91e519788c224f64ed7c1d942ffd1bc27",
+      "manifest_sha256": "73eb7076791b0fdb3a4ab479bbd94b2441c899920888438db5f3f1beb3ce86e5",
+      "phase": "provenance",
+      "phase_selected": "screen",
+      "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+      "private_root": "/private/tmp/storage-driver-06a.e28Ggc"
+    }
+  ]
+}

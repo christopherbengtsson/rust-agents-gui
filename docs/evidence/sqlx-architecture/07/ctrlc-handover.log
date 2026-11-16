@@ -1,0 +1,4 @@
+2026-11-16T19:20:12.530106Z  INFO workspace_core::native: native startup settled incarnation=86d6d7b9-96b2-453d-9622-ebb90442e86b phase=Some(Ready)
+2026-11-16T19:20:12.535907Z  INFO workspace_core::native: native shutdown fenced incarnation=86d6d7b9-96b2-453d-9622-ebb90442e86b
+Storage close checkpoint: {"busy":0,"log_frames":0,"checkpointed_frames":0,"wal_bytes":0,"elapsed":{"secs":0,"nanos":166083}}
+2026-11-16T19:20:12.536556Z  INFO workspace_core::native: native shutdown settled incarnation=86d6d7b9-96b2-453d-9622-ebb90442e86b failures=0

@@ -1,0 +1,101 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-setup.test.tsx (18 tests | 1 failed) 131ms
+   × verified connection shows only status and identity, without setup controls or billing 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-setup.test.tsx > verified connection shows only status and identity, without setup controls or billing
+TestingLibraryElementError: Found multiple elements with the role "alert"
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<p[39m
+  [33mclass[39m=[32m"text-sm text-destructive"[39m
+  [33mrole[39m=[32m"alert"[39m
+[36m>[39m
+  [0mEarlier help failure[0m
+[36m</p>[39m
+
+Ignored nodes: comments, script, style
+[36m<p[39m
+  [33mclass[39m=[32m"text-sm text-destructive"[39m
+  [33mrole[39m=[32m"alert"[39m
+[36m>[39m
+  [0mEarlier chooser failure[0m
+[36m</p>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33maria-busy[39m=[32m"false"[39m
+      [33maria-label[39m=[32m"Codex setup"[39m
+      [33mclass[39m=[32m"provider-setup"[39m
+      [33mtabindex[39m=[32m"-1"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"provider-status"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-atomic[39m=[32m"true"[39m
+          [33maria-live[39m=[32m"polite"[39m
+          [33mclass[39m=[32m"status-indicator"[39m
+          [33mdata-tone[39m=[32m"success"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"status-indicator-light"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0mConnected[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"provider-status-detail"[39m
+        [36m>[39m
+          [0mfixture@example.test[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-destructive"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mEarlier help failure[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-destructive"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mEarlier chooser failure[0m
+      [36m</p>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/provider-setup.test.tsx:77:17
+     75|   expect(screen.queryByText("Plan")).toBeNull();
+     76|   expect(screen.queryByText("Billing")).toBeNull();
+     77|   expect(screen.queryByRole("alert")).toBeNull();
+       |                 ^
+     78| });
+     79|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  22:12:39
+   Duration  509ms (environment 38%, tests 29%, import 26%, transform 6%, setup 1%)
+

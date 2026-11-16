@@ -1,0 +1,8 @@
+{"report": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/06/native-q4-first.json", "outcome": "failed", "root": "/private/tmp/aw-native06-n83dhiia"}
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/06/qualify-native.py", line 50, in <module>
+    replace=wait_stage('replace-ready'); configure('replacement',previousIncarnation=replace['incarnation'],attempt=replace['attempt'])
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/06/qualify-native.py", line 42, in wait_stage
+    if item['stage']=='failed': raise AssertionError(item)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'error': 'Error: Fixture deadline: first workspace', 'stack': '@tauri://localhost:16:20', 'stage': 'failed'}

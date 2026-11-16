@@ -5,14 +5,14 @@ import {
   validateRepositoryError,
   validateRepositoryId,
   validateRequestFailure,
-  validateSupervisorSnapshot,
+  validateCoreSnapshot,
 } from "@/generated/contracts/validators.js";
 import type {
   Delivery,
   RepositoryError,
-  SupervisorSnapshot,
+  CoreSnapshot,
 } from "@/generated/contracts/types";
-export type { Delivery, SupervisorSnapshot } from "@/generated/contracts/types";
+export type { Delivery, CoreSnapshot } from "@/generated/contracts/types";
 export type ObservationError = {
   code: string;
   message: string;
@@ -45,7 +45,7 @@ export function text(value: unknown, bytes: number): value is string {
     new TextEncoder().encode(value).byteLength <= bytes
   );
 }
-export function owner(value: unknown): value is string {
+export function incarnation(value: unknown): value is string {
   return (
     text(value, 128) &&
     value.length > 0 &&
@@ -65,19 +65,17 @@ export function decodeDesktopPid(value: unknown): number {
     );
   return value;
 }
-export function decodeSnapshot(value: unknown): SupervisorSnapshot {
+export function decodeSnapshot(value: unknown): CoreSnapshot {
   if (
-    !validateSupervisorSnapshot(value) ||
+    !validateCoreSnapshot(value) ||
     !bounded(value, 4096) ||
-    !pidRange(value.status.supervisor_pid) ||
+    !pidRange(value.status.native_pid) ||
     !text(value.status.application_version, 128) ||
     !value.status.application_version.length ||
-    !owner(value.cursor.owner) ||
+    !incarnation(value.cursor.incarnation) ||
     !Number.isSafeInteger(value.cursor.revision)
   )
-    throw new Error(
-      "Invalid supervisor snapshot. Refresh using a matching build.",
-    );
+    throw new Error("Invalid core snapshot. Refresh using a matching build.");
   return value;
 }
 export function replyUnavailable(message: string): ObservationError {
@@ -96,9 +94,8 @@ export function decodeRequestFailure(value: unknown): ObservationError {
       const delivery = {
         busy: "not_sent",
         not_connected: "not_sent",
-        owner_changed: "rejected",
+        incarnation_changed: "rejected",
         reply_unavailable: "unknown",
-        incompatible: "rejected",
       }[error.code];
       if (error.delivery === delivery && text(error.message, 2051))
         return { ...error, source: "transport" };
@@ -107,23 +104,23 @@ export function decodeRequestFailure(value: unknown): ObservationError {
   return replyUnavailable(
     value instanceof Error
       ? value.message
-      : "Invalid or unavailable supervisor reply. Refresh recorded action status.",
+      : "Invalid or unavailable core reply. Refresh recorded action status.",
   );
 }
 export function decodeOwnedReply<T>(
-  expectedOwner: string,
+  expectedIncarnation: string,
   value: unknown,
   decode: (value: unknown) => T,
 ): T {
   if (
-    !owner(expectedOwner) ||
+    !incarnation(expectedIncarnation) ||
     !validateOwnedObservation(value) ||
     !bounded(value, 64 * 1024) ||
-    value.owner !== expectedOwner ||
+    value.incarnation !== expectedIncarnation ||
     Object.keys(value.result).length !== 1
   )
     throw replyUnavailable(
-      "Invalid observation or serving owner. Refresh recorded status using a matching build.",
+      "Invalid observation or serving incarnation. Refresh recorded status using a matching build.",
     );
   if ("Err" in value.result) {
     if (!domainError(value.result.Err))

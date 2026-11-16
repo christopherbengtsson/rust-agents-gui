@@ -1,0 +1,7 @@
+{
+  "error": "Qualification host used --protocol-metadata instead of supported --protocol-version; argument was treated as a state path before any UI launch",
+  "owned_pid": 36650,
+  "verified_command": "/private/tmp/aw-piw-uc319c9y/PIW Qualification.app/Contents/Resources/workspace-supervisor --protocol-metadata",
+  "unexpected_state": "--protocol-metadata",
+  "retained_at": "/private/tmp/aw-piw-uc319c9y/initial-argument-state"
+}

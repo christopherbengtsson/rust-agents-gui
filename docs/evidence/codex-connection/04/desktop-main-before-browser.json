@@ -1,0 +1,84 @@
+{
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 32615,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "32615-1794766134392326000",
+        "revision": 140
+      },
+      "reset": true
+    }
+  },
+  "observation": {
+    "target": {
+      "id": "71189390-3e11-4ff5-bb32-3efd1e3b0592",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-ready-g61k4ppy/fixture-codex",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-71189390-3e11-4ff5-bb32-3efd1e3b0592",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 2,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "unavailable",
+      "billing": "unknown",
+      "account": null,
+      "plan": null,
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": "authentication_unavailable",
+    "diagnostic": null,
+    "login": null
+  },
+  "events": [
+    {
+      "pid": 35471,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 35472,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 35472,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 35472,
+      "event": "exit"
+    }
+  ],
+  "supervisor_poll": null,
+  "desktop_poll": null
+}

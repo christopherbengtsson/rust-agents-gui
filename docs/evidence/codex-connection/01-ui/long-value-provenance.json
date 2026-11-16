@@ -1,0 +1,15 @@
+{
+  "runtime_version": "0.169.0",
+  "official_schema_source": "openai/codex d32063f96c2dff1dc96af839b3952abb6acfeda4",
+  "messages": "synthetic; no captured credentials",
+  "source_fixture": "fixtures/codex-readiness/runtime.py",
+  "source_sha256": "d6df7360e14d5e5f2f5564246209ebae011e50bd38e7fbfcf09fb86ede5a2d61",
+  "temporary_fixture": "/private/tmp/aw-ui-longvalue-hdgak6wz/runtime.py",
+  "fixture_sha256": "1a604cbbcee6eecfc638a0f1e8f6311048a9c18867ce759955903333e9211e35",
+  "only_change": {
+    "original_email": "fixture@example.test",
+    "replacement_email": "long-fixture-account-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.test"
+  },
+  "qualifier": "/private/tmp/aw-ui-longvalue-hdgak6wz/qualify.py",
+  "qualifier_sha256": "364fbbd4b64f51a5151a386320b11453c0d98c1175b91dbed69a994d342f6590"
+}

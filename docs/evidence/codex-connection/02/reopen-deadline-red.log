@@ -1,0 +1,22 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.90s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-67b7661821e120ff)
+
+running 1 test
+test runtimes::codex::protocol::tests::repeated_reopen_cannot_starve_the_absolute_login_deadline ... FAILED
+
+failures:
+
+---- runtimes::codex::protocol::tests::repeated_reopen_cannot_starve_the_absolute_login_deadline stdout ----
+
+thread 'runtimes::codex::protocol::tests::repeated_reopen_cannot_starve_the_absolute_login_deadline' (33674974) panicked at crates/core/src/runtimes/codex/protocol.rs:679:21:
+expired login must not reopen again
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    runtimes::codex::protocol::tests::repeated_reopen_cannot_starve_the_absolute_login_deadline
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 184 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p workspace-core --lib`

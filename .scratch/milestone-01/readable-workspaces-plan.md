@@ -1,5 +1,14 @@
 # Readable footballer names and reliable dev startup
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../sqlx-architecture/spec.md) and
+[supersession amendments A7](../sqlx-architecture/amendments.md) govern
+schema migration/legacy-reader and supervisor protocol/hash-derived state requirements.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Approved follow-up to ticket 04, 2026-11-13. Preserve its immediate creation and explicit recovery flow.
 
 - Curate exactly 500 unique ASCII footballer slugs, retaining the corrected original 100 and 12 agreed additions, covering historical/modern men and women with attribution. No runtime download or new dependency.

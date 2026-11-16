@@ -1,0 +1,29 @@
+{
+  "root": "/private/tmp/aw-native06-normal-2yp3sj3_",
+  "binary_sha256": "12c6f12edb4ae7d81fa3b58053a2a8371988b81fb9909497876655047f303244",
+  "checks": [
+    "normal frontend contains no retention fixture",
+    "normal binary contains no qualification replacement driver",
+    "normal packaged core ready on private state without a supervisor socket",
+    "ordinary native signal Quit completes required drain with exit 0"
+  ],
+  "profile": "release, normal features",
+  "provenance": {
+    "sourceRevision": "97265159cbfcc0998df66b861eb119cae1dd910a",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "ce0088cd316a9eee0ba7546692f8315e9d23cfecea389a898a68cb50e07e34a4"
+  },
+  "outcome": "passed",
+  "exit": 0
+}

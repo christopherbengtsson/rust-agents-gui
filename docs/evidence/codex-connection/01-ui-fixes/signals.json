@@ -1,0 +1,14 @@
+[
+  {
+    "signal": "SIGSTOP",
+    "owned_supervisor_pid": 81453,
+    "wall_time": 1794744507.441456,
+    "reason": "Controlled fixture IPC timeout during retained checking"
+  },
+  {
+    "signal": "SIGCONT",
+    "owned_supervisor_pid": 81453,
+    "wall_time": 1794744564.7347999,
+    "reason": "Restore exact owned fixture supervisor after IPC error/retry capture"
+  }
+]

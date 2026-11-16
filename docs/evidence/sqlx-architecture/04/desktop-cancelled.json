@@ -1,0 +1,225 @@
+{
+  "label": "cancelled",
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 60032,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "60032-1794847220478600000",
+        "revision": 97
+      },
+      "reset": true
+    }
+  },
+  "provider": {
+    "selection": {
+      "id": "04fa3038-d580-4ed3-b983-d0e7976764db",
+      "path": "/private/tmp/aw-sqlx04-2e3s4cnc/synthetic-codex",
+      "phase": "remembered"
+    },
+    "target": {
+      "id": "bcbd60b9-cd3d-4c75-93d1-bd4e4c766694",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-sqlx04-2e3s4cnc/synthetic-codex",
+      "selected_executable": "/private/tmp/aw-sqlx04-2e3s4cnc/synthetic-codex",
+      "discovery_source": "selected",
+      "codex_home": "Fixture-owned configuration",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-bcbd60b9-cd3d-4c75-93d1-bd4e4c766694",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 12,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "unavailable",
+      "billing": "unknown",
+      "account": null,
+      "plan": null,
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": "authentication_unavailable",
+    "diagnostic": null,
+    "login": {
+      "id": "bc30c710-ca0d-4eca-8ef3-12a1e1721826",
+      "phase": "cancelled",
+      "outcome": "cancelled",
+      "browser_open_failed": true,
+      "diagnostic": null
+    }
+  },
+  "events": [
+    {
+      "pid": 61421,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 61422,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 61422,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 61422,
+      "event": "exit"
+    },
+    {
+      "pid": 61509,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 61523,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 61524,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 61524,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 61524,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 61524,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 61524,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 61524,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 61524,
+      "event": "exit"
+    },
+    {
+      "pid": 61575,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 61576,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 61576,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 61576,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 61576,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 61576,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 61576,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 61576,
+      "event": "login_cancelled",
+      "login_id": "b749f653-f7d1-4f71-a16b-fa8f9472a647"
+    },
+    {
+      "pid": 61576,
+      "event": "exit"
+    },
+    {
+      "pid": 61669,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 61670,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 61670,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 61670,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 61670,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 61670,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 61670,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 61670,
+      "event": "exit"
+    }
+  ],
+  "host_exit": null,
+  "desktop_exit": null
+}

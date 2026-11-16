@@ -45,6 +45,18 @@
     "title": "Artifacts",
     "type": "object"
   },
+  "Authentication": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "chatgpt",
+      "api_key",
+      "not_required",
+      "unavailable",
+      "unknown"
+    ],
+    "title": "Authentication",
+    "type": "string"
+  },
   "Availability": {
     "$defs": {
       "ErrorCode": {
@@ -121,6 +133,16 @@
       }
     ],
     "title": "Availability"
+  },
+  "BillingRoute": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "chatgpt",
+      "api_key",
+      "unknown"
+    ],
+    "title": "BillingRoute",
+    "type": "string"
   },
   "BranchArtifact": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -477,6 +499,140 @@
     "title": "ComparisonId",
     "type": "string"
   },
+  "CoreSnapshot": {
+    "$defs": {
+      "CoreState": {
+        "enum": [
+          "starting",
+          "recovering",
+          "ready",
+          "failed",
+          "stopping",
+          "stopped"
+        ],
+        "type": "string"
+      },
+      "CoreStatus": {
+        "properties": {
+          "application_version": {
+            "type": "string"
+          },
+          "native_pid": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "state": {
+            "$ref": "#/$defs/CoreState"
+          }
+        },
+        "required": [
+          "state",
+          "native_pid",
+          "application_version"
+        ],
+        "type": "object"
+      },
+      "SnapshotCursor": {
+        "properties": {
+          "incarnation": {
+            "type": "string"
+          },
+          "revision": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "incarnation",
+          "revision"
+        ],
+        "type": "object"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "cursor": {
+        "$ref": "#/$defs/SnapshotCursor"
+      },
+      "diagnostic": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "provider_login_pending": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "reset": {
+        "description": "A full snapshot replaces observations from another incarnation or cursor.",
+        "type": "boolean"
+      },
+      "status": {
+        "$ref": "#/$defs/CoreStatus"
+      }
+    },
+    "required": [
+      "status",
+      "cursor",
+      "reset"
+    ],
+    "title": "CoreSnapshot",
+    "type": "object"
+  },
+  "CoreState": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "starting",
+      "recovering",
+      "ready",
+      "failed",
+      "stopping",
+      "stopped"
+    ],
+    "title": "CoreState",
+    "type": "string"
+  },
+  "CoreStatus": {
+    "$defs": {
+      "CoreState": {
+        "enum": [
+          "starting",
+          "recovering",
+          "ready",
+          "failed",
+          "stopping",
+          "stopped"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "application_version": {
+        "type": "string"
+      },
+      "native_pid": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "state": {
+        "$ref": "#/$defs/CoreState"
+      }
+    },
+    "required": [
+      "state",
+      "native_pid",
+      "application_version"
+    ],
+    "title": "CoreStatus",
+    "type": "object"
+  },
   "CreationStage": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "enum": [
@@ -689,11 +845,43 @@
     "title": "ErrorCode",
     "type": "string"
   },
+  "ExecutableSelection": {
+    "$defs": {
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      },
+      "phase": {
+        "$ref": "#/$defs/SelectionPhase"
+      }
+    },
+    "required": [
+      "id",
+      "path",
+      "phase"
+    ],
+    "title": "ExecutableSelection",
+    "type": "object"
+  },
   "FeedAck": {
     "$defs": {
       "FeedCursor": {
         "properties": {
-          "owner": {
+          "incarnation": {
             "type": "string"
           },
           "sequence": {
@@ -703,7 +891,7 @@
           }
         },
         "required": [
-          "owner",
+          "incarnation",
           "sequence"
         ],
         "type": "object"
@@ -740,7 +928,7 @@
       },
       "FeedCursor": {
         "properties": {
-          "owner": {
+          "incarnation": {
             "type": "string"
           },
           "sequence": {
@@ -750,7 +938,7 @@
           }
         },
         "required": [
-          "owner",
+          "incarnation",
           "sequence"
         ],
         "type": "object"
@@ -827,6 +1015,23 @@
       },
       "Target": {
         "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "provider",
+                "type": "string"
+              },
+              "target_id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "target_id"
+            ],
+            "type": "object"
+          },
           {
             "properties": {
               "kind": {
@@ -979,7 +1184,7 @@
   "FeedCursor": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "sequence": {
@@ -989,7 +1194,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "sequence"
     ],
     "title": "FeedCursor",
@@ -1029,7 +1234,7 @@
       },
       "FeedCursor": {
         "properties": {
-          "owner": {
+          "incarnation": {
             "type": "string"
           },
           "sequence": {
@@ -1039,7 +1244,7 @@
           }
         },
         "required": [
-          "owner",
+          "incarnation",
           "sequence"
         ],
         "type": "object"
@@ -1116,6 +1321,23 @@
       },
       "Target": {
         "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "provider",
+                "type": "string"
+              },
+              "target_id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "target_id"
+            ],
+            "type": "object"
+          },
           {
             "properties": {
               "kind": {
@@ -1424,6 +1646,94 @@
     "title": "InspectionPhase",
     "type": "string"
   },
+  "LoginAttempt": {
+    "$defs": {
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "browser_open_failed": {
+        "type": "boolean"
+      },
+      "diagnostic": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "outcome": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/LoginOutcome"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phase": {
+        "$ref": "#/$defs/LoginPhase"
+      }
+    },
+    "required": [
+      "id",
+      "phase",
+      "outcome",
+      "browser_open_failed",
+      "diagnostic"
+    ],
+    "title": "LoginAttempt",
+    "type": "object"
+  },
+  "LoginOutcome": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "completed",
+      "failed",
+      "cancelled"
+    ],
+    "title": "LoginOutcome",
+    "type": "string"
+  },
+  "LoginPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "starting",
+      "pending",
+      "cancelling",
+      "verifying",
+      "completed",
+      "failed",
+      "cancelled",
+      "cleanup_uncertain"
+    ],
+    "title": "LoginPhase",
+    "type": "string"
+  },
   "OwnedObservation": {
     "$defs": {
       "ErrorCode": {
@@ -1483,7 +1793,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -1491,7 +1801,411 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
+      "result"
+    ],
+    "title": "OwnedReply",
+    "type": "object"
+  },
+  "OwnedProviderReply": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ErrorCode": {
+        "enum": [
+          "invalid_path",
+          "git",
+          "storage",
+          "conflict",
+          "capacity",
+          "not_found",
+          "unavailable",
+          "connection",
+          "cleanup_unconfirmed"
+        ],
+        "type": "string"
+      },
+      "ExecutableSelection": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/$defs/SelectionPhase"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "phase"
+        ],
+        "type": "object"
+      },
+      "LoginAttempt": {
+        "properties": {
+          "browser_open_failed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/LoginPhase"
+          }
+        },
+        "required": [
+          "id",
+          "phase",
+          "outcome",
+          "browser_open_failed",
+          "diagnostic"
+        ],
+        "type": "object"
+      },
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "ProviderObservation": {
+        "properties": {
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "login": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginAttempt"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/SetupPhase"
+          },
+          "problem": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupProblem"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ExecutableSelection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "$ref": "#/$defs/ProviderTarget"
+          }
+        },
+        "required": [
+          "selection",
+          "target",
+          "revision",
+          "phase",
+          "evidence",
+          "problem",
+          "diagnostic",
+          "login"
+        ],
+        "type": "object"
+      },
+      "ProviderReply": {
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "target",
+                "type": "string"
+              },
+              "target": {
+                "$ref": "#/$defs/ProviderTarget"
+              }
+            },
+            "required": [
+              "kind",
+              "target"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "observation",
+                "type": "string"
+              },
+              "observation": {
+                "$ref": "#/$defs/ProviderObservation"
+              }
+            },
+            "required": [
+              "kind",
+              "observation"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ProviderTarget": {
+        "properties": {
+          "codex_home": {
+            "type": "string"
+          },
+          "discovery_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "minimum_supported_version": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "selected_executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "executable",
+          "selected_executable",
+          "discovery_source",
+          "codex_home",
+          "working_directory",
+          "minimum_supported_version"
+        ],
+        "type": "object"
+      },
+      "RepositoryError": {
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/ErrorCode"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "Result_of_ProviderReply_or_RepositoryError": {
+        "oneOf": [
+          {
+            "properties": {
+              "Ok": {
+                "$ref": "#/$defs/ProviderReply"
+              }
+            },
+            "required": [
+              "Ok"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "Err": {
+                "$ref": "#/$defs/RepositoryError"
+              }
+            },
+            "required": [
+              "Err"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "SetupEvidence": {
+        "properties": {
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "$ref": "#/$defs/Authentication"
+          },
+          "billing": {
+            "$ref": "#/$defs/BillingRoute"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "authentication",
+          "billing",
+          "account",
+          "plan",
+          "model_provider",
+          "model"
+        ],
+        "type": "object"
+      },
+      "SetupPhase": {
+        "enum": [
+          "unknown",
+          "checking",
+          "observed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "SetupProblem": {
+        "enum": [
+          "missing_executable",
+          "incompatible_protocol",
+          "authentication_unavailable",
+          "status_read_failed",
+          "cleanup_uncertain",
+          "selection_failed"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Serving identity is returned even when the domain rejected the request.",
+    "properties": {
+      "incarnation": {
+        "type": "string"
+      },
+      "result": {
+        "$ref": "#/$defs/Result_of_ProviderReply_or_RepositoryError"
+      }
+    },
+    "required": [
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -1825,7 +2539,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -1833,7 +2547,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -2586,7 +3300,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "description": "Serving identity is returned even when the domain rejected the request.",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "result": {
@@ -2594,7 +3308,7 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "result"
     ],
     "title": "OwnedReply",
@@ -2870,6 +3584,874 @@
       "file_id"
     ],
     "title": "PreviewTarget",
+    "type": "object"
+  },
+  "ProviderObservation": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ExecutableSelection": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/$defs/SelectionPhase"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "phase"
+        ],
+        "type": "object"
+      },
+      "LoginAttempt": {
+        "properties": {
+          "browser_open_failed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/LoginPhase"
+          }
+        },
+        "required": [
+          "id",
+          "phase",
+          "outcome",
+          "browser_open_failed",
+          "diagnostic"
+        ],
+        "type": "object"
+      },
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "ProviderTarget": {
+        "properties": {
+          "codex_home": {
+            "type": "string"
+          },
+          "discovery_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "minimum_supported_version": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "selected_executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "executable",
+          "selected_executable",
+          "discovery_source",
+          "codex_home",
+          "working_directory",
+          "minimum_supported_version"
+        ],
+        "type": "object"
+      },
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "SetupEvidence": {
+        "properties": {
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "$ref": "#/$defs/Authentication"
+          },
+          "billing": {
+            "$ref": "#/$defs/BillingRoute"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "authentication",
+          "billing",
+          "account",
+          "plan",
+          "model_provider",
+          "model"
+        ],
+        "type": "object"
+      },
+      "SetupPhase": {
+        "enum": [
+          "unknown",
+          "checking",
+          "observed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "SetupProblem": {
+        "enum": [
+          "missing_executable",
+          "incompatible_protocol",
+          "authentication_unavailable",
+          "status_read_failed",
+          "cleanup_uncertain",
+          "selection_failed"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "diagnostic": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "evidence": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SetupEvidence"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "login": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/LoginAttempt"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phase": {
+        "$ref": "#/$defs/SetupPhase"
+      },
+      "problem": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SetupProblem"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "revision": {
+        "format": "uint32",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ExecutableSelection"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "target": {
+        "$ref": "#/$defs/ProviderTarget"
+      }
+    },
+    "required": [
+      "selection",
+      "target",
+      "revision",
+      "phase",
+      "evidence",
+      "problem",
+      "diagnostic",
+      "login"
+    ],
+    "title": "ProviderObservation",
+    "type": "object"
+  },
+  "ProviderReply": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "ExecutableSelection": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/$defs/SelectionPhase"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "phase"
+        ],
+        "type": "object"
+      },
+      "LoginAttempt": {
+        "properties": {
+          "browser_open_failed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/LoginPhase"
+          }
+        },
+        "required": [
+          "id",
+          "phase",
+          "outcome",
+          "browser_open_failed",
+          "diagnostic"
+        ],
+        "type": "object"
+      },
+      "LoginOutcome": {
+        "enum": [
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "type": "string"
+      },
+      "LoginPhase": {
+        "enum": [
+          "starting",
+          "pending",
+          "cancelling",
+          "verifying",
+          "completed",
+          "failed",
+          "cancelled",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "ProviderObservation": {
+        "properties": {
+          "diagnostic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "login": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LoginAttempt"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "$ref": "#/$defs/SetupPhase"
+          },
+          "problem": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SetupProblem"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ExecutableSelection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "$ref": "#/$defs/ProviderTarget"
+          }
+        },
+        "required": [
+          "selection",
+          "target",
+          "revision",
+          "phase",
+          "evidence",
+          "problem",
+          "diagnostic",
+          "login"
+        ],
+        "type": "object"
+      },
+      "ProviderTarget": {
+        "properties": {
+          "codex_home": {
+            "type": "string"
+          },
+          "discovery_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "minimum_supported_version": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "selected_executable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "executable",
+          "selected_executable",
+          "discovery_source",
+          "codex_home",
+          "working_directory",
+          "minimum_supported_version"
+        ],
+        "type": "object"
+      },
+      "SelectionPhase": {
+        "enum": [
+          "checking",
+          "remembered",
+          "failed"
+        ],
+        "type": "string"
+      },
+      "SetupEvidence": {
+        "properties": {
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "$ref": "#/$defs/Authentication"
+          },
+          "billing": {
+            "$ref": "#/$defs/BillingRoute"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "authentication",
+          "billing",
+          "account",
+          "plan",
+          "model_provider",
+          "model"
+        ],
+        "type": "object"
+      },
+      "SetupPhase": {
+        "enum": [
+          "unknown",
+          "checking",
+          "observed",
+          "cleanup_uncertain"
+        ],
+        "type": "string"
+      },
+      "SetupProblem": {
+        "enum": [
+          "missing_executable",
+          "incompatible_protocol",
+          "authentication_unavailable",
+          "status_read_failed",
+          "cleanup_uncertain",
+          "selection_failed"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "target",
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/$defs/ProviderTarget"
+          }
+        },
+        "required": [
+          "kind",
+          "target"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "kind": {
+            "const": "observation",
+            "type": "string"
+          },
+          "observation": {
+            "$ref": "#/$defs/ProviderObservation"
+          }
+        },
+        "required": [
+          "kind",
+          "observation"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "ProviderReply"
+  },
+  "ProviderRequest": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "properties": {
+          "operation": {
+            "const": "target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "operation": {
+            "const": "observe",
+            "type": "string"
+          },
+          "refresh": {
+            "type": "boolean"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "refresh"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "expected_revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "operation": {
+            "const": "start_browser_login",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id",
+          "expected_revision"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "cancel_login",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "reopen_browser",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "reconcile_login",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "attempt_id"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "expected_revision": {
+            "format": "uint32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "operation": {
+            "const": "select_executable",
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "action_id",
+          "expected_revision",
+          "path"
+        ],
+        "type": "object"
+      },
+      {
+        "properties": {
+          "action_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "operation": {
+            "const": "reconcile_selection",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "target_id",
+          "action_id"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "ProviderRequest"
+  },
+  "ProviderTarget": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "codex_home": {
+        "type": "string"
+      },
+      "discovery_source": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "executable": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "minimum_supported_version": {
+        "type": "string"
+      },
+      "provider": {
+        "type": "string"
+      },
+      "selected_executable": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "working_directory": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "provider",
+      "executable",
+      "selected_executable",
+      "discovery_source",
+      "codex_home",
+      "working_directory",
+      "minimum_supported_version"
+    ],
+    "title": "ProviderTarget",
     "type": "object"
   },
   "RegisterRepository": {
@@ -3851,9 +5433,8 @@
         "enum": [
           "busy",
           "not_connected",
-          "owner_changed",
-          "reply_unavailable",
-          "incompatible"
+          "incarnation_changed",
+          "reply_unavailable"
         ],
         "type": "string"
       },
@@ -3941,6 +5522,23 @@
       },
       "Target": {
         "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "provider",
+                "type": "string"
+              },
+              "target_id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "target_id"
+            ],
+            "type": "object"
+          },
           {
             "properties": {
               "kind": {
@@ -4130,10 +5728,113 @@
     ],
     "title": "Sample"
   },
+  "SelectionPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "checking",
+      "remembered",
+      "failed"
+    ],
+    "title": "SelectionPhase",
+    "type": "string"
+  },
+  "SetupEvidence": {
+    "$defs": {
+      "Authentication": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "not_required",
+          "unavailable",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "BillingRoute": {
+        "enum": [
+          "chatgpt",
+          "api_key",
+          "unknown"
+        ],
+        "type": "string"
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "account": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "authentication": {
+        "$ref": "#/$defs/Authentication"
+      },
+      "billing": {
+        "$ref": "#/$defs/BillingRoute"
+      },
+      "model": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "model_provider": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "plan": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "authentication",
+      "billing",
+      "account",
+      "plan",
+      "model_provider",
+      "model"
+    ],
+    "title": "SetupEvidence",
+    "type": "object"
+  },
+  "SetupPhase": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "unknown",
+      "checking",
+      "observed",
+      "cleanup_uncertain"
+    ],
+    "title": "SetupPhase",
+    "type": "string"
+  },
+  "SetupProblem": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "enum": [
+      "missing_executable",
+      "incompatible_protocol",
+      "authentication_unavailable",
+      "status_read_failed",
+      "cleanup_uncertain",
+      "selection_failed"
+    ],
+    "title": "SetupProblem",
+    "type": "string"
+  },
   "SnapshotCursor": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
-      "owner": {
+      "incarnation": {
         "type": "string"
       },
       "revision": {
@@ -4143,117 +5844,10 @@
       }
     },
     "required": [
-      "owner",
+      "incarnation",
       "revision"
     ],
     "title": "SnapshotCursor",
-    "type": "object"
-  },
-  "SupervisorSnapshot": {
-    "$defs": {
-      "SnapshotCursor": {
-        "properties": {
-          "owner": {
-            "type": "string"
-          },
-          "revision": {
-            "format": "uint64",
-            "minimum": 0,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "owner",
-          "revision"
-        ],
-        "type": "object"
-      },
-      "SupervisorState": {
-        "enum": [
-          "ready"
-        ],
-        "type": "string"
-      },
-      "SupervisorStatus": {
-        "properties": {
-          "application_version": {
-            "type": "string"
-          },
-          "state": {
-            "$ref": "#/$defs/SupervisorState"
-          },
-          "supervisor_pid": {
-            "format": "uint32",
-            "minimum": 0,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "state",
-          "supervisor_pid",
-          "application_version"
-        ],
-        "type": "object"
-      }
-    },
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "cursor": {
-        "$ref": "#/$defs/SnapshotCursor"
-      },
-      "reset": {
-        "description": "A full snapshot replaces observations from another owner or cursor.",
-        "type": "boolean"
-      },
-      "status": {
-        "$ref": "#/$defs/SupervisorStatus"
-      }
-    },
-    "required": [
-      "status",
-      "cursor",
-      "reset"
-    ],
-    "title": "SupervisorSnapshot",
-    "type": "object"
-  },
-  "SupervisorState": {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "enum": [
-      "ready"
-    ],
-    "title": "SupervisorState",
-    "type": "string"
-  },
-  "SupervisorStatus": {
-    "$defs": {
-      "SupervisorState": {
-        "enum": [
-          "ready"
-        ],
-        "type": "string"
-      }
-    },
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "properties": {
-      "application_version": {
-        "type": "string"
-      },
-      "state": {
-        "$ref": "#/$defs/SupervisorState"
-      },
-      "supervisor_pid": {
-        "format": "uint32",
-        "minimum": 0,
-        "type": "integer"
-      }
-    },
-    "required": [
-      "state",
-      "supervisor_pid",
-      "application_version"
-    ],
-    "title": "SupervisorStatus",
     "type": "object"
   },
   "Target": {
@@ -4276,6 +5870,23 @@
     },
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "oneOf": [
+      {
+        "properties": {
+          "kind": {
+            "const": "provider",
+            "type": "string"
+          },
+          "target_id": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "target_id"
+        ],
+        "type": "object"
+      },
       {
         "properties": {
           "kind": {
@@ -4399,9 +6010,8 @@
     "enum": [
       "busy",
       "not_connected",
-      "owner_changed",
-      "reply_unavailable",
-      "incompatible"
+      "incarnation_changed",
+      "reply_unavailable"
     ],
     "title": "TransportCode",
     "type": "string"
@@ -4421,9 +6031,8 @@
         "enum": [
           "busy",
           "not_connected",
-          "owner_changed",
-          "reply_unavailable",
-          "incompatible"
+          "incarnation_changed",
+          "reply_unavailable"
         ],
         "type": "string"
       }

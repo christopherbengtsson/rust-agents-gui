@@ -1,5 +1,15 @@
 # 10: Read history and explicitly resume the exact conversation
 
+## Native core amendment — 2026-11-16
+
+Apply the [accepted native-core/SQLx spec](../../sqlx-architecture/spec.md) and
+[amendments A2/A3/A8](../../sqlx-architecture/amendments.md) before this ticket.
+They replace separate-supervisor/native-crash continuation and single-active
+instructions with native ownership, WebView continuity, durable native-failure
+recovery and the concurrent three-conversation scenario. Preserve exact controls,
+remaining milestone scope and historical evidence. Acceptance remains unchecked;
+this publication authorizes no live-provider or authentication action.
+
 **What to build:** Reopen the application to readable local history without starting work, then explicitly resume the saved native conversation or receive a clear exact-resume failure.
 
 **Blocked by:** 09: Interrupt work and quit with owned cleanup
@@ -21,3 +31,9 @@
 - [ ] Unit-test restored records, no-effect history reads, exact mapping, unavailable native history, lost resume replies and storage failures. Separately demonstrate desktop restart/resume states and fixture marker recall; retain distinct unit/desktop evidence.
 
 **Qualification limit:** Use deterministic fixtures and private test state for execution checks. This ticket does not authorize live agent submissions; native results are recorded separately under the agreed cohort.
+
+## Comments
+
+2026-11-16: Reconciled with the native-core/SQLx spec and amended A8/A10/concurrency
+acceptance. Existing dependency edges remain; milestone 07 now inherits SQLx 08.
+Qualification stays open and no production implementation is claimed.

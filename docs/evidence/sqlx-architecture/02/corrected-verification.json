@@ -1,0 +1,132 @@
+{
+  "source": "e4bc30ec7d5fb95152328ede7db8fd569c48039c",
+  "runtime_source_changes_after_review": false,
+  "compile": {
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "test",
+      "--locked",
+      "-p",
+      "storage-checkpoint",
+      "--lib",
+      "--no-run",
+      "--message-format=json-render-diagnostics"
+    ],
+    "exit": 0,
+    "seconds": 0.20236362505238503
+  },
+  "runs": [
+    {
+      "warmup": true,
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.009099374990910292
+    },
+    {
+      "warmup": false,
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.009090208099223673
+    },
+    {
+      "warmup": false,
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.008463416947051883
+    },
+    {
+      "warmup": false,
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.00815133296418935
+    },
+    {
+      "warmup": false,
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.007916999980807304
+    },
+    {
+      "warmup": false,
+      "command": [
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/storage_checkpoint-3f383dbe1b8dd2e7",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "seconds": 0.009033042006194592
+    }
+  ],
+  "median_seconds": 0.008463416947051883,
+  "range_seconds": [0.007916999980807304, 0.009090208099223673],
+  "unit_executable_sha256": "8bd126583676ec0871bd6f343aa43ca43282a786e4b031a3115390109d6c6a89",
+  "qualification_executable_sha256": "8e12a6910010de897d9feb636fa1b86e771595b41577a82940af615b278735da",
+  "source_sha256": {
+    "crates/core/src/storage/opening.rs": "5311979b3fcbd0168d17234a4ea6b6d0597bb938f353cb7fcc483b67c712ce3d",
+    "crates/core/src/storage/operations.rs": "b19cc2b2a67d0d7e224d5d69a2e3d2c6ded3fb303ce515682014743d0f01ba32",
+    "crates/core/src/storage/policy.rs": "a5c82d09e2d924ba4216d927f872dc556246bf3872df1602d05bf46f71aacf1c",
+    "crates/core/src/storage/qualification.rs": "4f641d85a2e7da2d3c24f90a88ae47a09238f12fdbd37d934b8991fc4c52b6fa",
+    "crates/core/src/storage/tests.rs": "e84ba02025e0fc3c21c64ccce74114a108ef0cba20f56f0397377ad0cf0bb1ee",
+    "crates/core/src/storage.rs": "c02b3f8e6a44108c770657ff95e059274b78eaa9c8fe7409f9e84a94e37ddc74",
+    "crates/core/src/workspaces/records.rs": "11830e0cc910ce6ba480a85e3dd195e3f1e20ca508181c7747b9f8774484ea07"
+  },
+  "actual_qualification": {
+    "command": [
+      "node",
+      "scripts/cargo.mjs",
+      "run",
+      "--locked",
+      "-p",
+      "storage-checkpoint",
+      "--features",
+      "qualification",
+      "--bin",
+      "qualify-storage",
+      "--",
+      "/private/tmp/aw-sqlx02-close-order-fixed"
+    ],
+    "exit": 0,
+    "passed_cases": 14,
+    "log": "qualification-close-order.log",
+    "report": "qualification.json",
+    "source_note": "Run used the exact source subsequently committed as e4bc30e; source hashes recorded here."
+  },
+  "reviews": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "fresh_contexts": true,
+    "standards_unresolved": 0,
+    "spec_unresolved": 0,
+    "reviewed_source": "e4bc30ec7d5fb95152328ede7db8fd569c48039c"
+  },
+  "blocked_gates": [
+    "complete app verify stops in generated preparation at four removed-store consumers",
+    "workspace/core compilation and inherited Rust units until 03/04",
+    "generated drift completion",
+    "desktop/package smoke",
+    "combined Q2"
+  ],
+  "physical_fault_limits": [
+    "physical disk-full/I/O fault",
+    "physical rollback/close-ack failure",
+    "process kill points",
+    "power-loss durability",
+    "same-user path-replacement races (excluded contract)",
+    "native host and provider qualification"
+  ]
+}

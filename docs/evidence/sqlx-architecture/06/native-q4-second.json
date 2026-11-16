@@ -1,0 +1,326 @@
+{
+  "root": "/private/tmp/aw-native06-ee21wgve",
+  "bundle": "/private/tmp/aw-native06-ee21wgve/Native06.app",
+  "repository": "/private/tmp/aw-native06-ee21wgve/repository",
+  "source": "97265159cbfcc0998df66b861eb119cae1dd910a",
+  "binary_sha256": "121b7152cde9d421d8ed86cad79d36c9a54941e68a2b605b296c356d97e0f9a3",
+  "fixture_sha256": "cfeb46bd02d2cdae024197874c7dfd26a2d1117d4e18075c152cc4748703cf30",
+  "checks": [],
+  "processes": [
+    {
+      "label": "initial",
+      "pid": 91575
+    }
+  ],
+  "records": "/private/tmp/aw-native06-ee21wgve/webview.jsonl",
+  "limits": [
+    "Synthetic Codex protocol; no real authentication/agent calls",
+    "SIGKILL establishes process-crash recovery, not power loss",
+    "Retained supervisor resource is unreachable; deletion/package audit belongs to ticket 07"
+  ],
+  "outcome": "failed",
+  "error": "TimeoutError(('cancelled', [{'pid': 91575, 'snapshot': {'cursor': {'incarnation': '09865f0e-fdd1-47b6-9f8a-c6362a975421', 'revision': 1}, 'reset': True, 'status': {'application_version': '0.1.0', 'native_pid': 91575, 'state': 'ready'}}, 'stage': 'startup'}, {'concurrent': [{'action': {'action_id': 'f1544d5b-ba20-4a47-abf2-cb2150b3245c', 'operation': 'create', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'unknown', 'folder': 'unknown'}, 'base': None, 'branch': None, 'cleanup_unconfirmed': False, 'creation_action_id': 'f1544d5b-ba20-4a47-abf2-cb2150b3245c', 'id': '1620f387-b4cc-40d0-a841-5ab62a1575ff', 'legacy': False, 'name': None, 'path': None, 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2', 'status': {'state': 'queued'}}}, {'action': {'action_id': 'e5bb2912-6316-41a6-aa6b-6c3fbcdbe234', 'operation': 'create', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'unknown', 'folder': 'unknown'}, 'base': None, 'branch': None, 'cleanup_unconfirmed': False, 'creation_action_id': 'e5bb2912-6316-41a6-aa6b-6c3fbcdbe234', 'id': 'e011269b-e8ae-43a7-b452-65076bee7102', 'legacy': False, 'name': None, 'path': None, 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2', 'status': {'state': 'queued'}}}, {'kind': 'changes', 'observation': {'error': None, 'page': None, 'phase': 'queued', 'workspace_id': '2ce8589d-9f88-472d-b53b-a2eccdfedacc'}}], 'created': [{'action': {'action_id': 'f1544d5b-ba20-4a47-abf2-cb2150b3245c', 'operation': 'create', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'owned', 'folder': 'worktree'}, 'base': {'commit': 'fbfff09bbb0cdd35a3bf71c0a65af0011a018d19', 'reference': 'refs/heads/main'}, 'branch': 'workspace/gianluigi-donnarumma', 'cleanup_unconfirmed': False, 'creation_action_id': 'f1544d5b-ba20-4a47-abf2-cb2150b3245c', 'id': '1620f387-b4cc-40d0-a841-5ab62a1575ff', 'legacy': False, 'name': 'gianluigi-donnarumma', 'path': '/private/tmp/aw-native06-ee21wgve/state/workspaces/repository/gianluigi-donnarumma/checkout', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2', 'status': {'state': 'ready'}}}, {'action': {'action_id': 'e5bb2912-6316-41a6-aa6b-6c3fbcdbe234', 'operation': 'create', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2'}, 'kind': 'action', 'workspace': {'artifacts': {'branch': 'owned', 'folder': 'worktree'}, 'base': {'commit': 'fbfff09bbb0cdd35a3bf71c0a65af0011a018d19', 'reference': 'refs/heads/main'}, 'branch': 'workspace/christian-eriksen', 'cleanup_unconfirmed': False, 'creation_action_id': 'e5bb2912-6316-41a6-aa6b-6c3fbcdbe234', 'id': 'e011269b-e8ae-43a7-b452-65076bee7102', 'legacy': False, 'name': 'christian-eriksen', 'path': '/private/tmp/aw-native06-ee21wgve/state/workspaces/repository/christian-eriksen/checkout', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2', 'status': {'state': 'ready'}}}], 'initial': {'kind': 'workspace', 'workspace': {'artifacts': {'branch': 'owned', 'folder': 'worktree'}, 'base': {'commit': 'fbfff09bbb0cdd35a3bf71c0a65af0011a018d19', 'reference': 'refs/heads/main'}, 'branch': 'workspace/marquinhos', 'cleanup_unconfirmed': False, 'creation_action_id': '89ee15fe-3a8b-4564-aca1-d151493f7b05', 'id': '2ce8589d-9f88-472d-b53b-a2eccdfedacc', 'legacy': False, 'name': 'marquinhos', 'path': '/private/tmp/aw-native06-ee21wgve/state/workspaces/repository/marquinhos/checkout', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2', 'status': {'state': 'ready'}}}, 'registration': {'action_id': '9c115d26-7e77-4ab3-a74c-d32a54473e92', 'create_initial_workspace': True, 'initial_workspace_id': '2ce8589d-9f88-472d-b53b-a2eccdfedacc', 'path': '/private/tmp/aw-native06-ee21wgve/repository', 'repository_id': 'bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2', 'state': 'completed'}, 'stage': 'workspaces'}, {'attempt': '4644ed84-22da-4226-a179-ce15a911ccbc', 'incarnation': '09865f0e-fdd1-47b6-9f8a-c6362a975421', 'observation': {'diagnostic': None, 'evidence': {'account': None, 'authentication': 'unavailable', 'billing': 'unknown', 'model': 'fixture-model', 'model_provider': 'openai', 'plan': None, 'version': '0.169.0'}, 'login': {'browser_open_failed': False, 'diagnostic': None, 'id': '4644ed84-22da-4226-a179-ce15a911ccbc', 'outcome': None, 'phase': 'pending'}, 'phase': 'observed', 'problem': 'authentication_unavailable', 'revision': 4, 'selection': None, 'target': {'codex_home': 'Fixture-owned configuration', 'discovery_source': 'fixture', 'executable': '/private/tmp/aw-native06-ee21wgve/synthetic-codex', 'id': '85bd4517-c498-4c88-a768-a080525b0981', 'minimum_supported_version': '0.169.0', 'provider': 'codex', 'selected_executable': None, 'working_directory': '/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-85bd4517-c498-4c88-a768-a080525b0981'}}, 'stage': 'replace-ready', 'text': 'Skip to settings\\nCodex sign-in in progress\\nBack\\nSettings\\nGeneral\\nProviders\\nGeneral\\nGeneral settings will be available here.'}]))",
+  "fixture_events": [
+    {
+      "pid": 92509,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 92510,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 92510,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 92510,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 92510,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 92510,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 92510,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 92510,
+      "event": "exit"
+    },
+    {
+      "pid": 92511,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 92512,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 92512,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 92512,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 92512,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 92512,
+      "event": "request",
+      "method": "account/login/start"
+    },
+    {
+      "pid": 92512,
+      "event": "request",
+      "method": "account/login/cancel"
+    },
+    {
+      "pid": 92512,
+      "event": "login_cancelled",
+      "login_id": "966819f1-8a42-4f44-ba4b-fda3470299e1"
+    },
+    {
+      "pid": 92512,
+      "event": "exit"
+    }
+  ],
+  "webview_records": [
+    {
+      "pid": 91575,
+      "snapshot": {
+        "cursor": {
+          "incarnation": "09865f0e-fdd1-47b6-9f8a-c6362a975421",
+          "revision": 1
+        },
+        "reset": true,
+        "status": {
+          "application_version": "0.1.0",
+          "native_pid": 91575,
+          "state": "ready"
+        }
+      },
+      "stage": "startup"
+    },
+    {
+      "concurrent": [
+        {
+          "action": {
+            "action_id": "f1544d5b-ba20-4a47-abf2-cb2150b3245c",
+            "operation": "create",
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "base": null,
+            "branch": null,
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "f1544d5b-ba20-4a47-abf2-cb2150b3245c",
+            "id": "1620f387-b4cc-40d0-a841-5ab62a1575ff",
+            "legacy": false,
+            "name": null,
+            "path": null,
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2",
+            "status": {
+              "state": "queued"
+            }
+          }
+        },
+        {
+          "action": {
+            "action_id": "e5bb2912-6316-41a6-aa6b-6c3fbcdbe234",
+            "operation": "create",
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "unknown",
+              "folder": "unknown"
+            },
+            "base": null,
+            "branch": null,
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "e5bb2912-6316-41a6-aa6b-6c3fbcdbe234",
+            "id": "e011269b-e8ae-43a7-b452-65076bee7102",
+            "legacy": false,
+            "name": null,
+            "path": null,
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2",
+            "status": {
+              "state": "queued"
+            }
+          }
+        },
+        {
+          "kind": "changes",
+          "observation": {
+            "error": null,
+            "page": null,
+            "phase": "queued",
+            "workspace_id": "2ce8589d-9f88-472d-b53b-a2eccdfedacc"
+          }
+        }
+      ],
+      "created": [
+        {
+          "action": {
+            "action_id": "f1544d5b-ba20-4a47-abf2-cb2150b3245c",
+            "operation": "create",
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "owned",
+              "folder": "worktree"
+            },
+            "base": {
+              "commit": "fbfff09bbb0cdd35a3bf71c0a65af0011a018d19",
+              "reference": "refs/heads/main"
+            },
+            "branch": "workspace/gianluigi-donnarumma",
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "f1544d5b-ba20-4a47-abf2-cb2150b3245c",
+            "id": "1620f387-b4cc-40d0-a841-5ab62a1575ff",
+            "legacy": false,
+            "name": "gianluigi-donnarumma",
+            "path": "/private/tmp/aw-native06-ee21wgve/state/workspaces/repository/gianluigi-donnarumma/checkout",
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2",
+            "status": {
+              "state": "ready"
+            }
+          }
+        },
+        {
+          "action": {
+            "action_id": "e5bb2912-6316-41a6-aa6b-6c3fbcdbe234",
+            "operation": "create",
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2"
+          },
+          "kind": "action",
+          "workspace": {
+            "artifacts": {
+              "branch": "owned",
+              "folder": "worktree"
+            },
+            "base": {
+              "commit": "fbfff09bbb0cdd35a3bf71c0a65af0011a018d19",
+              "reference": "refs/heads/main"
+            },
+            "branch": "workspace/christian-eriksen",
+            "cleanup_unconfirmed": false,
+            "creation_action_id": "e5bb2912-6316-41a6-aa6b-6c3fbcdbe234",
+            "id": "e011269b-e8ae-43a7-b452-65076bee7102",
+            "legacy": false,
+            "name": "christian-eriksen",
+            "path": "/private/tmp/aw-native06-ee21wgve/state/workspaces/repository/christian-eriksen/checkout",
+            "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2",
+            "status": {
+              "state": "ready"
+            }
+          }
+        }
+      ],
+      "initial": {
+        "kind": "workspace",
+        "workspace": {
+          "artifacts": {
+            "branch": "owned",
+            "folder": "worktree"
+          },
+          "base": {
+            "commit": "fbfff09bbb0cdd35a3bf71c0a65af0011a018d19",
+            "reference": "refs/heads/main"
+          },
+          "branch": "workspace/marquinhos",
+          "cleanup_unconfirmed": false,
+          "creation_action_id": "89ee15fe-3a8b-4564-aca1-d151493f7b05",
+          "id": "2ce8589d-9f88-472d-b53b-a2eccdfedacc",
+          "legacy": false,
+          "name": "marquinhos",
+          "path": "/private/tmp/aw-native06-ee21wgve/state/workspaces/repository/marquinhos/checkout",
+          "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2",
+          "status": {
+            "state": "ready"
+          }
+        }
+      },
+      "registration": {
+        "action_id": "9c115d26-7e77-4ab3-a74c-d32a54473e92",
+        "create_initial_workspace": true,
+        "initial_workspace_id": "2ce8589d-9f88-472d-b53b-a2eccdfedacc",
+        "path": "/private/tmp/aw-native06-ee21wgve/repository",
+        "repository_id": "bb86f949-6b8f-4ad6-8e1a-c45ef42c66b2",
+        "state": "completed"
+      },
+      "stage": "workspaces"
+    },
+    {
+      "attempt": "4644ed84-22da-4226-a179-ce15a911ccbc",
+      "incarnation": "09865f0e-fdd1-47b6-9f8a-c6362a975421",
+      "observation": {
+        "diagnostic": null,
+        "evidence": {
+          "account": null,
+          "authentication": "unavailable",
+          "billing": "unknown",
+          "model": "fixture-model",
+          "model_provider": "openai",
+          "plan": null,
+          "version": "0.169.0"
+        },
+        "login": {
+          "browser_open_failed": false,
+          "diagnostic": null,
+          "id": "4644ed84-22da-4226-a179-ce15a911ccbc",
+          "outcome": null,
+          "phase": "pending"
+        },
+        "phase": "observed",
+        "problem": "authentication_unavailable",
+        "revision": 4,
+        "selection": null,
+        "target": {
+          "codex_home": "Fixture-owned configuration",
+          "discovery_source": "fixture",
+          "executable": "/private/tmp/aw-native06-ee21wgve/synthetic-codex",
+          "id": "85bd4517-c498-4c88-a768-a080525b0981",
+          "minimum_supported_version": "0.169.0",
+          "provider": "codex",
+          "selected_executable": null,
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-85bd4517-c498-4c88-a768-a080525b0981"
+        }
+      },
+      "stage": "replace-ready",
+      "text": "Skip to settings\nCodex sign-in in progress\nBack\nSettings\nGeneral\nProviders\nGeneral\nGeneral settings will be available here."
+    }
+  ],
+  "exit_codes": {
+    "91575": 101
+  }
+}

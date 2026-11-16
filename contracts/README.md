@@ -110,3 +110,10 @@ builds. Use fresh private development state rather than migrating earlier record
 The development launcher selects a new protocol-specific directory automatically;
 explicit state overrides and packaged runs must select a fresh private directory.
 Current-build quit/reopen, persistence and recovery are qualified separately.
+
+## Native core (SQLx 06)
+
+`observations-native.json` is the current synthetic Rust serialization/validator
+corpus. Core incarnation replaces serving-owner fields and native PID replaces
+supervisor PID. There is no peer version field in this current corpus. Earlier
+corpora remain historical evidence; no corpus establishes provider behavior.

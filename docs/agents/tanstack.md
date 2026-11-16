@@ -1,5 +1,14 @@
 # TanStack guidance
 
+## Native core amendment — 2026-11-16
+
+The [accepted native-core/SQLx spec](../../.scratch/sqlx-architecture/spec.md) and
+[supersession amendments A4](../../.scratch/sqlx-architecture/amendments.md) govern
+native owner/transport and bounded inactive observation retention.
+They replace conflicting instructions below for subsequent work. Remaining
+policy and recorded checkpoint results retain their scope; publication claims
+no production change or new qualification pass.
+
 Use the pinned local CLI: `corepack pnpm exec intent list`, then
 `corepack pnpm exec intent load <package>#<skill>`. Repository policy has precedence.
 Package upgrades also upgrade guidance: review skill content and the exact allowlist

@@ -1,0 +1,2 @@
+$ node scripts/qualify.mjs native -- /private/tmp/aw-qualified07-7gw5el44/Qualified07.app /Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/07/native-q4.json
+{"report": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/sqlx-architecture/07/native-q4.json", "outcome": "passed", "root": "/private/tmp/aw-native07-3v_dpyi9"}

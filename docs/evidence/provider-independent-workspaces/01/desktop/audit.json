@@ -1,0 +1,950 @@
+{
+  "result": "pass",
+  "identical_tables_after_desktop_reopen": true,
+  "identical_tables_after_failed_owner_restart": true,
+  "identical_tables_after_recovered_owner_restart": true,
+  "all_original_files_unchanged": true,
+  "ideas_sha256_unchanged": "0e27265032591956521df58dedd8c7c3520fcf97f0ffde9cba11bc4fbe2a3fa0",
+  "same_workspace_reservations_and_creation_actions": true,
+  "counts": {
+    "repositories": 2,
+    "registration_actions": 2,
+    "workspaces": 3,
+    "workspace_actions": 4,
+    "repository_folders": 2
+  },
+  "reservation_indexes": [
+    [
+      "reserved_workspace_branches",
+      "CREATE UNIQUE INDEX reserved_workspace_branches ON workspaces(repository_id,branch)"
+    ],
+    [
+      "reserved_workspace_names",
+      "CREATE UNIQUE INDEX reserved_workspace_names ON workspaces(repository_id,name)"
+    ],
+    [
+      "reserved_workspace_paths",
+      "CREATE UNIQUE INDEX reserved_workspace_paths ON workspaces(path)"
+    ]
+  ],
+  "workspace_observations": {
+    "2883f63f-3e00-4196-99b2-5ff8c9c53693": {
+      "id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+      "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+      "creation_action_id": "c022c5d3-f95d-4908-b4a6-a983f15e2355",
+      "name": "andre-pierre-gignac",
+      "branch": "workspace/andre-pierre-gignac",
+      "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+      "legacy": false,
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    "b504a26f-b352-400b-b274-3b718601020e": {
+      "id": "b504a26f-b352-400b-b274-3b718601020e",
+      "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+      "creation_action_id": "c49406fe-3fd9-4513-ab45-260f240d617f",
+      "name": "julian-brandt",
+      "branch": "workspace/julian-brandt",
+      "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+      "legacy": false,
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    },
+    "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2": {
+      "id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+      "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+      "creation_action_id": "3c53ddda-3bf5-4435-bc57-5a5ded4d2e21",
+      "name": "david-de-gea",
+      "branch": "workspace/david-de-gea",
+      "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+      "legacy": false,
+      "base": {
+        "reference": "refs/heads/main",
+        "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+      },
+      "artifacts": {
+        "branch": "owned",
+        "folder": "worktree"
+      },
+      "status": {
+        "state": "ready"
+      },
+      "cleanup_unconfirmed": false
+    }
+  },
+  "workspace_pages": [
+    {
+      "workspaces": [
+        {
+          "id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+          "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+          "creation_action_id": "3c53ddda-3bf5-4435-bc57-5a5ded4d2e21",
+          "name": "david-de-gea",
+          "branch": "workspace/david-de-gea",
+          "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+          "legacy": false,
+          "base": {
+            "reference": "refs/heads/main",
+            "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+          },
+          "artifacts": {
+            "branch": "owned",
+            "folder": "worktree"
+          },
+          "status": {
+            "state": "ready"
+          },
+          "cleanup_unconfirmed": false
+        }
+      ],
+      "next": null
+    },
+    {
+      "workspaces": [
+        {
+          "id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+          "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+          "creation_action_id": "c022c5d3-f95d-4908-b4a6-a983f15e2355",
+          "name": "andre-pierre-gignac",
+          "branch": "workspace/andre-pierre-gignac",
+          "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+          "legacy": false,
+          "base": {
+            "reference": "refs/heads/main",
+            "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+          },
+          "artifacts": {
+            "branch": "owned",
+            "folder": "worktree"
+          },
+          "status": {
+            "state": "ready"
+          },
+          "cleanup_unconfirmed": false
+        },
+        {
+          "id": "b504a26f-b352-400b-b274-3b718601020e",
+          "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+          "creation_action_id": "c49406fe-3fd9-4513-ab45-260f240d617f",
+          "name": "julian-brandt",
+          "branch": "workspace/julian-brandt",
+          "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+          "legacy": false,
+          "base": {
+            "reference": "refs/heads/main",
+            "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+          },
+          "artifacts": {
+            "branch": "owned",
+            "folder": "worktree"
+          },
+          "status": {
+            "state": "ready"
+          },
+          "cleanup_unconfirmed": false
+        }
+      ],
+      "next": null
+    }
+  ],
+  "git_facts": [
+    {
+      "workspace_id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+      "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+      "branch": "workspace/andre-pierre-gignac",
+      "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab",
+      "status": ""
+    },
+    {
+      "workspace_id": "b504a26f-b352-400b-b274-3b718601020e",
+      "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+      "branch": "workspace/julian-brandt",
+      "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab",
+      "status": "M tracked.txt\n?? new-file.txt"
+    },
+    {
+      "workspace_id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+      "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+      "branch": "workspace/david-de-gea",
+      "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab",
+      "status": ""
+    }
+  ],
+  "screenshots": {
+    "29-final-reopened-new-file.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "05-tracked-diff.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "06-new-file-diff.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "17-failed-after-cold-owner-restart.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "14-minimum-reconcile-focused.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "11-minimum-failed-layout.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "20-reconciled-ready-minimum.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "30-final-recovered-identity.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "19-fixed-base-still-failed-keyboard.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "13-minimum-recovery-keyboard.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "24-minimum-new-file-keyboard.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "02-first-ready.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "28-final-reopen-diff.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "03-second-ready.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "10-retained-failed-after-reopen.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "07-failed-ordinary.jpg": {
+      "width": 1800,
+      "height": 1360
+    },
+    "22-minimum-files-sheet.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "23-minimum-tracked-keyboard.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "25-minimum-escape-focus-return.jpg": {
+      "width": 1200,
+      "height": 960
+    },
+    "01-empty-ordinary.jpg": {
+      "width": 1800,
+      "height": 1360
+    }
+  },
+  "commands": [
+    {
+      "native_request": {
+        "protocol": 9,
+        "application_version": "0.1.0",
+        "after": null
+      },
+      "native_reply": {
+        "kind": "snapshot",
+        "snapshot": {
+          "status": {
+            "state": "ready",
+            "supervisor_pid": 41501,
+            "application_version": "0.1.0"
+          },
+          "cursor": {
+            "owner": "41501-1794705945727486000",
+            "revision": 37
+          },
+          "reset": true
+        }
+      }
+    },
+    {
+      "native_request": {
+        "protocol": 9,
+        "application_version": "0.1.0",
+        "after": null,
+        "expected_owner": "41501-1794705945727486000",
+        "workspace": {
+          "operation": "get",
+          "id": "2883f63f-3e00-4196-99b2-5ff8c9c53693"
+        }
+      },
+      "native_reply": {
+        "kind": "workspace",
+        "owner": "41501-1794705945727486000",
+        "result": {
+          "Ok": {
+            "kind": "workspace",
+            "workspace": {
+              "id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+              "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+              "creation_action_id": "c022c5d3-f95d-4908-b4a6-a983f15e2355",
+              "name": "andre-pierre-gignac",
+              "branch": "workspace/andre-pierre-gignac",
+              "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+              "legacy": false,
+              "base": {
+                "reference": "refs/heads/main",
+                "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+              },
+              "artifacts": {
+                "branch": "owned",
+                "folder": "worktree"
+              },
+              "status": {
+                "state": "ready"
+              },
+              "cleanup_unconfirmed": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "native_request": {
+        "protocol": 9,
+        "application_version": "0.1.0",
+        "after": null,
+        "expected_owner": "41501-1794705945727486000",
+        "workspace": {
+          "operation": "get",
+          "id": "b504a26f-b352-400b-b274-3b718601020e"
+        }
+      },
+      "native_reply": {
+        "kind": "workspace",
+        "owner": "41501-1794705945727486000",
+        "result": {
+          "Ok": {
+            "kind": "workspace",
+            "workspace": {
+              "id": "b504a26f-b352-400b-b274-3b718601020e",
+              "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+              "creation_action_id": "c49406fe-3fd9-4513-ab45-260f240d617f",
+              "name": "julian-brandt",
+              "branch": "workspace/julian-brandt",
+              "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+              "legacy": false,
+              "base": {
+                "reference": "refs/heads/main",
+                "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+              },
+              "artifacts": {
+                "branch": "owned",
+                "folder": "worktree"
+              },
+              "status": {
+                "state": "ready"
+              },
+              "cleanup_unconfirmed": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "native_request": {
+        "protocol": 9,
+        "application_version": "0.1.0",
+        "after": null,
+        "expected_owner": "41501-1794705945727486000",
+        "workspace": {
+          "operation": "get",
+          "id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2"
+        }
+      },
+      "native_reply": {
+        "kind": "workspace",
+        "owner": "41501-1794705945727486000",
+        "result": {
+          "Ok": {
+            "kind": "workspace",
+            "workspace": {
+              "id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+              "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+              "creation_action_id": "3c53ddda-3bf5-4435-bc57-5a5ded4d2e21",
+              "name": "david-de-gea",
+              "branch": "workspace/david-de-gea",
+              "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+              "legacy": false,
+              "base": {
+                "reference": "refs/heads/main",
+                "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+              },
+              "artifacts": {
+                "branch": "owned",
+                "folder": "worktree"
+              },
+              "status": {
+                "state": "ready"
+              },
+              "cleanup_unconfirmed": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "native_request": {
+        "protocol": 9,
+        "application_version": "0.1.0",
+        "after": null,
+        "expected_owner": "41501-1794705945727486000",
+        "workspace": {
+          "operation": "list",
+          "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+          "after": null
+        }
+      },
+      "native_reply": {
+        "kind": "workspace",
+        "owner": "41501-1794705945727486000",
+        "result": {
+          "Ok": {
+            "kind": "workspaces",
+            "page": {
+              "workspaces": [
+                {
+                  "id": "e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2",
+                  "repository_id": "0407301a-1b3b-45ea-9341-6e306e26b74c",
+                  "creation_action_id": "3c53ddda-3bf5-4435-bc57-5a5ded4d2e21",
+                  "name": "david-de-gea",
+                  "branch": "workspace/david-de-gea",
+                  "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+                  "legacy": false,
+                  "base": {
+                    "reference": "refs/heads/main",
+                    "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+                  },
+                  "artifacts": {
+                    "branch": "owned",
+                    "folder": "worktree"
+                  },
+                  "status": {
+                    "state": "ready"
+                  },
+                  "cleanup_unconfirmed": false
+                }
+              ],
+              "next": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "native_request": {
+        "protocol": 9,
+        "application_version": "0.1.0",
+        "after": null,
+        "expected_owner": "41501-1794705945727486000",
+        "workspace": {
+          "operation": "list",
+          "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+          "after": null
+        }
+      },
+      "native_reply": {
+        "kind": "workspace",
+        "owner": "41501-1794705945727486000",
+        "result": {
+          "Ok": {
+            "kind": "workspaces",
+            "page": {
+              "workspaces": [
+                {
+                  "id": "2883f63f-3e00-4196-99b2-5ff8c9c53693",
+                  "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+                  "creation_action_id": "c022c5d3-f95d-4908-b4a6-a983f15e2355",
+                  "name": "andre-pierre-gignac",
+                  "branch": "workspace/andre-pierre-gignac",
+                  "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+                  "legacy": false,
+                  "base": {
+                    "reference": "refs/heads/main",
+                    "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+                  },
+                  "artifacts": {
+                    "branch": "owned",
+                    "folder": "worktree"
+                  },
+                  "status": {
+                    "state": "ready"
+                  },
+                  "cleanup_unconfirmed": false
+                },
+                {
+                  "id": "b504a26f-b352-400b-b274-3b718601020e",
+                  "repository_id": "3c6bd9df-9cdf-4588-84a7-ecc2b6188a63",
+                  "creation_action_id": "c49406fe-3fd9-4513-ab45-260f240d617f",
+                  "name": "julian-brandt",
+                  "branch": "workspace/julian-brandt",
+                  "path": "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+                  "legacy": false,
+                  "base": {
+                    "reference": "refs/heads/main",
+                    "commit": "5dddce1f77f42849780f6ca214fc5104a9539aab"
+                  },
+                  "artifacts": {
+                    "branch": "owned",
+                    "folder": "worktree"
+                  },
+                  "status": {
+                    "state": "ready"
+                  },
+                  "cleanup_unconfirmed": false
+                }
+              ],
+              "next": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+        "symbolic-ref",
+        "--short",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "workspace/andre-pierre-gignac\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "5dddce1f77f42849780f6ca214fc5104a9539aab\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout",
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+        "symbolic-ref",
+        "--short",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "workspace/julian-brandt\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "5dddce1f77f42849780f6ca214fc5104a9539aab\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout",
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "stdout": " M tracked.txt\n?? new-file.txt\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+        "symbolic-ref",
+        "--short",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "workspace/david-de-gea\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "5dddce1f77f42849780f6ca214fc5104a9539aab\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout",
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Alpha",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "stdout": "worktree /private/tmp/aw-piw-qv5omkrn/Alpha\nHEAD 5dddce1f77f42849780f6ca214fc5104a9539aab\nbranch refs/heads/main\n\nworktree /private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/andre-pierre-gignac/checkout\nHEAD 5dddce1f77f42849780f6ca214fc5104a9539aab\nbranch refs/heads/workspace/andre-pierre-gignac\n\nworktree /private/tmp/aw-piw-qv5omkrn/state/workspaces/alpha/julian-brandt/checkout\nHEAD 5dddce1f77f42849780f6ca214fc5104a9539aab\nbranch refs/heads/workspace/julian-brandt\n\n",
+      "stderr": ""
+    },
+    {
+      "argv": ["git", "-C", "/private/tmp/aw-piw-qv5omkrn/Alpha", "show-ref"],
+      "exit_code": 0,
+      "stdout": "5dddce1f77f42849780f6ca214fc5104a9539aab refs/agent-workspace/2883f63f-3e00-4196-99b2-5ff8c9c53693\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/agent-workspace/b504a26f-b352-400b-b274-3b718601020e\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/main\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/workspace/andre-pierre-gignac\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/workspace/julian-brandt\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Alpha",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Beta",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "stdout": "worktree /private/tmp/aw-piw-qv5omkrn/Beta\nHEAD 5dddce1f77f42849780f6ca214fc5104a9539aab\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    },
+    {
+      "argv": ["git", "-C", "/private/tmp/aw-piw-qv5omkrn/Beta", "show-ref"],
+      "exit_code": 0,
+      "stdout": "5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/main\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Beta",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Ambiguous",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "stdout": "worktree /private/tmp/aw-piw-qv5omkrn/Ambiguous\nHEAD 5dddce1f77f42849780f6ca214fc5104a9539aab\nbranch refs/heads/main\n\nworktree /private/tmp/aw-piw-qv5omkrn/state/workspaces/ambiguous/david-de-gea/checkout\nHEAD 5dddce1f77f42849780f6ca214fc5104a9539aab\nbranch refs/heads/workspace/david-de-gea\n\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Ambiguous",
+        "show-ref"
+      ],
+      "exit_code": 0,
+      "stdout": "5dddce1f77f42849780f6ca214fc5104a9539aab refs/agent-workspace/e3afb8c7-c5bd-407d-bbd4-fb1bcf4c81e2\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/fixture-spare\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/main\n5dddce1f77f42849780f6ca214fc5104a9539aab refs/heads/workspace/david-de-gea\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-qv5omkrn/Ambiguous",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files",
+        "src",
+        "src-tauri",
+        "crates",
+        "scripts",
+        "Cargo.toml",
+        "Cargo.lock",
+        "package.json",
+        "pnpm-lock.yaml",
+        "vite.config.ts",
+        "tsconfig.json"
+      ],
+      "exit_code": 0,
+      "stdout": "Cargo.lock\nCargo.toml\ncrates/core/Cargo.toml\ncrates/core/src/bin/export-contracts.rs\ncrates/core/src/codegen.rs\ncrates/core/src/connection.rs\ncrates/core/src/connection/admission.rs\ncrates/core/src/connection/framed_exchange.rs\ncrates/core/src/connection/framed_exchange/tests.rs\ncrates/core/src/connection/subscription.rs\ncrates/core/src/connection/subscription/tests.rs\ncrates/core/src/connection/tasks.rs\ncrates/core/src/connection/tests.rs\ncrates/core/src/connection/tests/support.rs\ncrates/core/src/git.rs\ncrates/core/src/git/inspection.rs\ncrates/core/src/lib.rs\ncrates/core/src/observations.rs\ncrates/core/src/storage.rs\ncrates/core/src/supervisor.rs\ncrates/core/src/supervisor/tests.rs\ncrates/core/src/workspaces.rs\ncrates/core/src/workspaces/creation.rs\ncrates/core/src/workspaces/inspection.rs\ncrates/core/src/workspaces/inspection/tests.rs\ncrates/core/src/workspaces/naming.rs\ncrates/core/src/workspaces/naming/catalog.rs\ncrates/core/src/workspaces/tests.rs\ncrates/supervisor/Cargo.toml\ncrates/supervisor/src/main.rs\ncrates/supervisor/tests/discovery.rs\ncrates/supervisor/tests/startup.rs\npackage.json\npnpm-lock.yaml\nscripts/build.mjs\nscripts/cargo.mjs\nscripts/cargo.test.mjs\nscripts/check.mjs\nscripts/check.test.mjs\nscripts/development-state.mjs\nscripts/development-state.test.mjs\nscripts/frontend-lint.test.mjs\nscripts/prepare-generated.mjs\nscripts/prepare-generated.test.mjs\nscripts/prepare-supervisor.mjs\nscripts/prepare-supervisor.test.mjs\nscripts/qualify-observations.py\nscripts/react-compiler.test.mjs\nscripts/start.mjs\nscripts/test-unit.mjs\nsrc-tauri/Cargo.toml\nsrc-tauri/build.rs\nsrc-tauri/capabilities/main.json\nsrc-tauri/icons/icon.png\nsrc-tauri/src/main.rs\nsrc-tauri/tauri.conf.json\nsrc/App.test.tsx\nsrc/App.tsx\nsrc/app-runtime.tsx\nsrc/components/README.md\nsrc/components/blocks/repository-registration.tsx\nsrc/components/blocks/repository-sidebar.tsx\nsrc/components/blocks/settings-layout.tsx\nsrc/components/blocks/supervisor-connection.tsx\nsrc/components/blocks/workspace-changes.tsx\nsrc/components/blocks/workspace-details.tsx\nsrc/components/blocks/workspace-panel.tsx\nsrc/components/primitives/unified-diff.tsx\nsrc/components/ui/alert.tsx\nsrc/components/ui/badge.tsx\nsrc/components/ui/button.tsx\nsrc/components/ui/code-block.tsx\nsrc/components/ui/collapsible.tsx\nsrc/components/ui/dialog.tsx\nsrc/components/ui/empty.tsx\nsrc/components/ui/field.tsx\nsrc/components/ui/input-group.tsx\nsrc/components/ui/input.tsx\nsrc/components/ui/label.tsx\nsrc/components/ui/resizable.tsx\nsrc/components/ui/scroll-area.tsx\nsrc/components/ui/separator.tsx\nsrc/components/ui/sheet.tsx\nsrc/components/ui/sidebar.tsx\nsrc/components/ui/skeleton.tsx\nsrc/components/ui/spinner.tsx\nsrc/components/ui/tabs.tsx\nsrc/components/ui/textarea.tsx\nsrc/components/ui/tooltip.tsx\nsrc/frontend-scheduling.test.tsx\nsrc/generated-contracts.test.tsx\nsrc/generated/contracts/manifest.json\nsrc/generated/contracts/schemas.json\nsrc/generated/contracts/types.ts\nsrc/generated/contracts/validators.d.ts\nsrc/generated/contracts/validators.js\nsrc/hooks/use-highlighted-code.ts\nsrc/hooks/use-mobile.ts\nsrc/hooks/use-observation-feed.ts\nsrc/hooks/use-repositories.ts\nsrc/hooks/use-supervisor-connection.ts\nsrc/hooks/use-workspace-changes.ts\nsrc/hooks/use-workspaces.ts\nsrc/lib/app-observations.ts\nsrc/lib/changes.ts\nsrc/lib/complete-operation.test.tsx\nsrc/lib/complete-operation.ts\nsrc/lib/feature-freshness.ts\nsrc/lib/feature-observations.test.tsx\nsrc/lib/feature-query-cache.ts\nsrc/lib/highlighter.tsx\nsrc/lib/inspection-actor.test.tsx\nsrc/lib/navigation.test.tsx\nsrc/lib/navigation.ts\nsrc/lib/observation-contracts.ts\nsrc/lib/observation-coordinator.test.tsx\nsrc/lib/observation-coordinator.ts\nsrc/lib/observation-feed.ts\nsrc/lib/presentation-store.test.tsx\nsrc/lib/presentation-store.ts\nsrc/lib/repositories.ts\nsrc/lib/repository-observations.ts\nsrc/lib/workspace-changes-reader.ts\nsrc/lib/workspace-observations.ts\nsrc/lib/workspaces.ts\nsrc/main.tsx\nsrc/observation-contracts.test.tsx\nsrc/observation-feed-bridge.test.tsx\nsrc/observation-feed.test.tsx\nsrc/repositories.test.tsx\nsrc/retained-delivery.test.tsx\nsrc/routeTree.gen.ts\nsrc/router.tsx\nsrc/routes/__root.tsx\nsrc/routes/index.tsx\nsrc/routes/repository.$repositoryId.index.tsx\nsrc/routes/repository.$repositoryId.tsx\nsrc/routes/repository.$repositoryId.workspace.$workspaceId.tsx\nsrc/routes/settings.general.tsx\nsrc/routes/settings.tsx\nsrc/routing.test.tsx\nsrc/screens/invalid-view.tsx\nsrc/screens/main.tsx\nsrc/screens/target-error.tsx\nsrc/style.css\nsrc/test-support/app.tsx\nsrc/test-support/browser-runtime.ts\nsrc/test-support/feature-hooks.ts\nsrc/test-support/owner-bound-invoke.ts\nsrc/vite-env.d.ts\nsrc/workspace-changes.test.tsx\nsrc/workspace-details.test.tsx\nsrc/workspaces.test.tsx\ntsconfig.json\nvite.config.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/29-final-reopened-new-file.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/29-final-reopened-new-file.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/05-tracked-diff.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/05-tracked-diff.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/06-new-file-diff.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/06-new-file-diff.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/17-failed-after-cold-owner-restart.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/17-failed-after-cold-owner-restart.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/14-minimum-reconcile-focused.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/14-minimum-reconcile-focused.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/11-minimum-failed-layout.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/11-minimum-failed-layout.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/20-reconciled-ready-minimum.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/20-reconciled-ready-minimum.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/30-final-recovered-identity.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/30-final-recovered-identity.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/19-fixed-base-still-failed-keyboard.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/19-fixed-base-still-failed-keyboard.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/13-minimum-recovery-keyboard.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/13-minimum-recovery-keyboard.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/24-minimum-new-file-keyboard.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/24-minimum-new-file-keyboard.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/02-first-ready.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/02-first-ready.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/28-final-reopen-diff.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/28-final-reopen-diff.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/03-second-ready.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/03-second-ready.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/10-retained-failed-after-reopen.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/10-retained-failed-after-reopen.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/07-failed-ordinary.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/07-failed-ordinary.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/22-minimum-files-sheet.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/22-minimum-files-sheet.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/23-minimum-tracked-keyboard.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/23-minimum-tracked-keyboard.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/25-minimum-escape-focus-return.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/25-minimum-escape-focus-return.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1200x960, components 3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "file",
+        "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/01-empty-ordinary.jpg"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/provider-independent-workspaces/01/desktop/01-empty-ordinary.jpg: JPEG image data, JFIF standard 1.01, aspect ratio, density 72x72, segment length 16, Exif Standard: [TIFF image data, big-endian, direntries=1], baseline, precision 8, 1800x1360, components 3\n",
+      "stderr": ""
+    }
+  ]
+}

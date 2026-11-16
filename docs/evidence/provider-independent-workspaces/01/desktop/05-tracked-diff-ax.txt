@@ -1,0 +1,83 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/3c6bd9df-9cdf-4588-84a7-ecc2b6188a63/workspace/b504a26f-b352-400b-b274-3b718601020e?view=changes
+			3 link Skip to workspace, Value: tauri://localhost/repository/3c6bd9df-9cdf-4588-84a7-ecc2b6188a63/workspace/b504a26f-b352-400b-b274-3b718601020e?view=changes#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-piw-qv5omkrn/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-piw-qv5omkrn/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-piw-qv5omkrn/Alpha
+							15 text Available
+							16 content list
+								17 button andre-pierre-gignac, Help: Workspace ready
+								18 button julian-brandt, Help: Workspace ready
+				19 pop up button Add repository
+				20 text Connected
+				21 pop up button Connection details
+				22 link Settings, Value: tauri://localhost/settings/general
+			23 container
+				24 heading julian-brandt, Value: 1
+					25 text julian-brandt
+				26 button Refresh status
+				27 container Selected repository
+					28 text /private/tmp/aw-piw-qv5omkrn/Alpha
+					29 text Repository available
+				30 text Uncommitted changes
+				31 button Refresh changes
+				32 button (expanded) Hide changed files, Secondary Actions: Collapse
+				33 text Compared with HEAD 
+				34 text 5dddce1f77f42849780f6ca214fc5104a9539aab
+				35 text  · 
+				36 text 2
+				37 text changed files
+				38 tab group (selectable) Workspace views
+					39 tab (selectable) Workspace
+					40 tab (selected) Changes
+				41 container Changes
+					42 container Selected file changes
+						43 heading tracked.txt, Value: 2
+							44 text tracked.txt
+						45 container Unified file diff
+							46 container
+								47 container Old line
+								48 container New line
+								49 text @@ -1 +1 @@
+								50 container Old line
+									51 text 1
+								52 container New line
+								53 text committed fixture line
+								54 container Old line
+								55 container New line
+									56 text 1
+								57 text workspace tracked edit
+				58 splitter Resize changed files, Value: 68
+				59 container Changed files
+					60 heading Changed files, Value: 2
+						61 text Changed files
+					62 container
+						63 toggle button tracked.txt .M, Help: tracked.txt, Value: on
+						64 toggle button new-file.txt ??, Help: new-file.txt, Value: off
+					65 button First page
+					66 button (disabled) Next files
+				67 text Local workspace
+				68 text Alpha
+	69 close button
+	70 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	71 minimize button
+	72 text Agent Workspace
+73 menu bar
+	74 PIW Qualification
+	75 File
+	76 Edit
+	77 View
+	78 Window
+	79 Help
+
+The focused UI element is 63 toggle button tracked.txt .M, Help: tracked.txt, Value: on

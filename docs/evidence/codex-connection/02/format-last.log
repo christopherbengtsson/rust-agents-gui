@@ -1,0 +1,10 @@
+$ oxfmt --ignore-path .prettierignore --ignore-path .gitignore --check src scripts .github/workflows/ci.yml package.json tsconfig.json tsr.config.json vite.config.ts .oxlintrc.json .oxfmtrc.json components.json index.html src-tauri/tauri.conf.json pnpm-workspace.yaml README.md docs/evidence && cargo fmt --all -- --check
+Checking formatting...
+
+docs/evidence/codex-connection/02/environment.json (0ms)
+docs/evidence/codex-connection/02/final-gates.json (0ms)
+docs/evidence/codex-connection/02/process-late-startup.json (0ms)
+
+Format issues found in above 3 files. Run without `--check` to fix.
+Finished in 11ms on 551 files using 12 threads.
+[ELIFECYCLE] Command failed with exit code 1.

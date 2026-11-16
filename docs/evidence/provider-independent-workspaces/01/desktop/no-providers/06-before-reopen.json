@@ -1,0 +1,91 @@
+{
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 42845,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "42845-1794706144673040000",
+        "revision": 74
+      },
+      "reset": true
+    }
+  },
+  "tables": {
+    "repositories": [
+      {
+        "id": "5c755719-6fe1-4e2c-960e-53d4cc4da560",
+        "common_dir": "/private/tmp/aw-piw-pyinp8re/Alpha/.git",
+        "record": "{\"id\":\"5c755719-6fe1-4e2c-960e-53d4cc4da560\",\"name\":\"Alpha\",\"path\":\"/private/tmp/aw-piw-pyinp8re/Alpha\",\"common_dir\":\"/private/tmp/aw-piw-pyinp8re/Alpha/.git\"}"
+      }
+    ],
+    "registration_actions": [
+      {
+        "id": "c3d8510d-ae33-432b-a0f1-f5d6cf15e850",
+        "pending": 0,
+        "record": "{\"create_initial_workspace\":true,\"initial_workspace_id\":\"9115eb0b-f262-4a49-99e1-efd8a8c52100\",\"action_id\":\"c3d8510d-ae33-432b-a0f1-f5d6cf15e850\",\"path\":\"/private/tmp/aw-piw-pyinp8re/Alpha\",\"state\":\"completed\",\"repository_id\":\"5c755719-6fe1-4e2c-960e-53d4cc4da560\"}"
+      }
+    ],
+    "workspaces": [
+      {
+        "id": "77f1ac30-ba11-4e31-a94f-1270d9d7ad55",
+        "repository_id": "5c755719-6fe1-4e2c-960e-53d4cc4da560",
+        "queued": 0,
+        "record": "{\"id\":\"77f1ac30-ba11-4e31-a94f-1270d9d7ad55\",\"repository_id\":\"5c755719-6fe1-4e2c-960e-53d4cc4da560\",\"creation_action_id\":\"8593fb50-0eb2-4aea-aa6e-401f93232d55\",\"name\":\"giacinto-facchetti\",\"branch\":\"workspace/giacinto-facchetti\",\"path\":\"/private/tmp/aw-piw-pyinp8re/state/workspaces/alpha/giacinto-facchetti/checkout\",\"legacy\":false,\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"75f3276ac368e5da7df9021c42e9dcd7b378ce6e\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+        "name": "giacinto-facchetti",
+        "branch": "workspace/giacinto-facchetti",
+        "path": "/private/tmp/aw-piw-pyinp8re/state/workspaces/alpha/giacinto-facchetti/checkout"
+      },
+      {
+        "id": "9115eb0b-f262-4a49-99e1-efd8a8c52100",
+        "repository_id": "5c755719-6fe1-4e2c-960e-53d4cc4da560",
+        "queued": 0,
+        "record": "{\"id\":\"9115eb0b-f262-4a49-99e1-efd8a8c52100\",\"repository_id\":\"5c755719-6fe1-4e2c-960e-53d4cc4da560\",\"creation_action_id\":\"86764233-0657-4cac-b2d9-0a58500cadb2\",\"name\":\"fernandinho\",\"branch\":\"workspace/fernandinho\",\"path\":\"/private/tmp/aw-piw-pyinp8re/state/workspaces/alpha/fernandinho/checkout\",\"legacy\":false,\"base\":{\"reference\":\"refs/heads/main\",\"commit\":\"75f3276ac368e5da7df9021c42e9dcd7b378ce6e\"},\"artifacts\":{\"branch\":\"owned\",\"folder\":\"worktree\"},\"status\":{\"state\":\"ready\"},\"cleanup_unconfirmed\":false}",
+        "name": "fernandinho",
+        "branch": "workspace/fernandinho",
+        "path": "/private/tmp/aw-piw-pyinp8re/state/workspaces/alpha/fernandinho/checkout"
+      }
+    ],
+    "workspace_actions": [
+      {
+        "id": "8593fb50-0eb2-4aea-aa6e-401f93232d55",
+        "workspace_id": "77f1ac30-ba11-4e31-a94f-1270d9d7ad55",
+        "record": "{\"operation\":\"create\",\"action_id\":\"8593fb50-0eb2-4aea-aa6e-401f93232d55\",\"repository_id\":\"5c755719-6fe1-4e2c-960e-53d4cc4da560\"}"
+      },
+      {
+        "id": "86764233-0657-4cac-b2d9-0a58500cadb2",
+        "workspace_id": "9115eb0b-f262-4a49-99e1-efd8a8c52100",
+        "record": "{\"operation\":\"create\",\"action_id\":\"86764233-0657-4cac-b2d9-0a58500cadb2\",\"repository_id\":\"5c755719-6fe1-4e2c-960e-53d4cc4da560\"}"
+      }
+    ],
+    "repository_folders": [
+      {
+        "repository_id": "5c755719-6fe1-4e2c-960e-53d4cc4da560",
+        "folder": "alpha"
+      }
+    ]
+  },
+  "processes": {
+    "supervisor": {
+      "pid": 42845,
+      "poll": null,
+      "ps": "42845 42822 /private/tmp/aw-piw-pyinp8re/PIW Qualification.app/Contents/Resources/workspace-supervisor /private/tmp/aw-piw-pyinp8re/state\n"
+    },
+    "desktop": {
+      "pid": 42846,
+      "poll": 0,
+      "ps": ""
+    }
+  },
+  "original_files_unchanged": {
+    "/private/tmp/aw-piw-pyinp8re/Alpha/tracked.txt": true,
+    "/private/tmp/aw-piw-pyinp8re/Alpha/original-only.txt": true,
+    "/private/tmp/aw-piw-pyinp8re/Beta/tracked.txt": true,
+    "/private/tmp/aw-piw-pyinp8re/Beta/original-only.txt": true,
+    "/private/tmp/aw-piw-pyinp8re/Ambiguous/tracked.txt": true,
+    "/private/tmp/aw-piw-pyinp8re/Ambiguous/original-only.txt": true
+  }
+}

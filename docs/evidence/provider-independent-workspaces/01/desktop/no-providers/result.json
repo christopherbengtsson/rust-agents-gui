@@ -1,0 +1,12 @@
+{
+  "result": "pass",
+  "identical_tables_after_reopen": true,
+  "two_ready_workspaces_without_provider_commands": true,
+  "original_files_unchanged": true,
+  "path": "/private/tmp/aw-piw-pyinp8re/bin",
+  "providers": {
+    "codex": null,
+    "claude": null,
+    "opencode": null
+  }
+}

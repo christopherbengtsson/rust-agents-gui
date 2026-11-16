@@ -1,0 +1,60 @@
+{
+  "method": "Packaged macOS application driven through cua_repl; AX trees and screenshots inspected in this conversation. No browser DOM connector was available; native browser AX was used.",
+  "checks": [
+    {
+      "name": "newer stable readiness and version details",
+      "passed": true,
+      "observed": [
+        "Connected",
+        "Minimum runtime: 0.169.0",
+        "Observed runtime: 0.170.0"
+      ]
+    },
+    {
+      "name": "unsupported capability recovery",
+      "passed": true,
+      "observed": [
+        "Setup needs attention",
+        "Use a compatible Codex runtime",
+        "Last known \u00b7 current readiness unverified",
+        "Check again"
+      ]
+    },
+    {
+      "name": "explicit Check again after restoring capability",
+      "passed": true,
+      "observed": ["Connected"]
+    },
+    {
+      "name": "browser handoff and synthetic completion",
+      "passed": true,
+      "observed": [
+        "Complete sign-in in your browser",
+        "Fixture Codex browser sign-in",
+        "Synthetic local authentication. No credentials are collected.",
+        "Complete fixture sign-in"
+      ]
+    },
+    {
+      "name": "authoritative recheck after browser completion",
+      "passed": true,
+      "observed": [
+        "Browser sign-in completed",
+        "Connected",
+        "Minimum runtime: 0.169.0",
+        "Observed runtime: 0.170.0"
+      ]
+    },
+    {
+      "name": "owned Quit and cleanup",
+      "passed": true,
+      "observed": [
+        "Original fixture desktop and supervisor exited",
+        "No remaining fixture PIDs"
+      ]
+    }
+  ],
+  "source_commit": "235193c",
+  "process_evidence": "desktop-process.json",
+  "limits": "Ordinary window only; screen-reader speech, new minimum-window qualification and real authentication unperformed. After owned Quit, a further AX read relaunched an idle desktop; only that observer-created PID was terminated separately. Original trial desktop/supervisor had already exited; unrelated supervisors were preserved."
+}

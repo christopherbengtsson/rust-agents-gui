@@ -1,0 +1,18 @@
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-sqlite v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+error[E0425]: cannot find function `collect` in this scope
+   --> crates/core/src/process_effects.rs:171:33
+    |
+171 |         let task = tokio::spawn(collect(receive, 8, deadline));
+    |                                 ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `collect` in this scope
+   --> crates/core/src/process_effects.rs:187:26
+    |
+187 |             let result = collect(receive, limit, Instant::now() + Duration::from_secs(2)).await;
+    |                          ^^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `workspace-core` (lib test) due to 2 previous errors

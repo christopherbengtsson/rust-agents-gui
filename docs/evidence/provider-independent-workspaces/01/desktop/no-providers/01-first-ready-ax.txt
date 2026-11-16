@@ -1,0 +1,80 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/9115eb0b-f262-4a49-99e1-efd8a8c52100?view=workspace
+			3 link Skip to workspace, Value: tauri://localhost/repository/5c755719-6fe1-4e2c-960e-53d4cc4da560/workspace/9115eb0b-f262-4a49-99e1-efd8a8c52100?view=workspace#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-piw-pyinp8re/Alpha Available
+							11 button Alpha, Help: /private/tmp/aw-piw-pyinp8re/Alpha
+							12 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+							13 button Create workspace in Alpha
+							14 text /private/tmp/aw-piw-pyinp8re/Alpha
+							15 text Available
+							16 content list
+								17 button fernandinho, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 heading fernandinho, Value: 1
+					24 text fernandinho
+				25 button Refresh status
+				26 container Selected repository
+					27 text /private/tmp/aw-piw-pyinp8re/Alpha
+					28 text Repository available
+				29 text Uncommitted changes
+				30 button Refresh changes
+				31 button (expanded) Hide changed files, Secondary Actions: Collapse
+				32 text Compared with HEAD 
+				33 text 75f3276ac368e5da7df9021c42e9dcd7b378ce6e
+				34 text  · 
+				35 text 0
+				36 text changed files
+				37 text No uncommitted changes.
+				38 tab group (selectable) Workspace views
+					39 tab (selected) Workspace
+					40 tab (selectable) Changes
+				41 container Workspace
+					42 container Selected workspace
+						43 text Workspace ready
+						44 heading Your workspace is ready, Value: 2
+							45 text Your workspace is ready
+						46 text fernandinho
+						47 description list
+							48 text Branch
+							49 text workspace/fernandinho
+							50 text Workspace folder
+							51 text /private/tmp/aw-piw-pyinp8re/state/workspaces/alpha/fernandinho/checkout
+							52 text Local base
+							53 text refs/heads/main · 75f3276ac368e5da7df9021c42e9dcd7b378ce6e
+							54 text Branch artifact
+							55 text Created by this action
+							56 text Folder artifact
+							57 text Worktree created
+						58 container
+							59 text Isolated checkout created Your workspace uses the pinned local base above. Your original checkout is unchanged. No agent has been started.
+				60 splitter Resize changed files, Value: 68
+				61 container Changed files
+					62 heading Changed files, Value: 2
+						63 text Changed files
+				64 text Local workspace
+				65 text Alpha
+	66 close button
+	67 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	68 minimize button
+	69 text Agent Workspace
+70 menu bar
+	71 PIW Qualification
+	72 File
+	73 Edit
+	74 View
+	75 Window
+	76 Help
+
+The focused UI element is 18 pop up button Add repository

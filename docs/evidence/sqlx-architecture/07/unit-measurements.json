@@ -1,0 +1,51 @@
+{
+  "command": [
+    "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/debug/deps/workspace_core-5bebefa315110a41",
+    "--test-threads=1"
+  ],
+  "executable_sha256": "526709ff573db3d329f5be89e8368120bf1ac7b04b3a437446693de04a70ecd6",
+  "profile": "warm test, codegen enabled; one harness thread",
+  "source": "423c1fd5323a43a52eda6c82bd7f030145a4871c",
+  "runs": [
+    {
+      "warmup": true,
+      "seconds": 0.3574970839545131,
+      "exit": 0,
+      "passed": 172
+    },
+    {
+      "warmup": false,
+      "seconds": 0.3589815410086885,
+      "exit": 0,
+      "passed": 172
+    },
+    {
+      "warmup": false,
+      "seconds": 0.3626360410125926,
+      "exit": 0,
+      "passed": 172
+    },
+    {
+      "warmup": false,
+      "seconds": 0.3648550830548629,
+      "exit": 0,
+      "passed": 172
+    },
+    {
+      "warmup": false,
+      "seconds": 0.3598843340296298,
+      "exit": 0,
+      "passed": 172
+    },
+    {
+      "warmup": false,
+      "seconds": 0.35958645900245756,
+      "exit": 0,
+      "passed": 172
+    }
+  ],
+  "median": 0.3598843340296298,
+  "minimum": 0.3589815410086885,
+  "maximum": 0.3648550830548629,
+  "compilation": "separate complete gate; fresh-private-target compilation not repeated"
+}

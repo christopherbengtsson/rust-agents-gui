@@ -1,0 +1,2615 @@
+    Checking workspace-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/workspace-checkpoint)
+error[E0583]: file not found for module `records`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:10:1
+   |
+10 | mod records;
+   | ^^^^^^^^^^^^
+   |
+   = help: to create the module `records`, create file "crates/workspace-checkpoint/src/../../core/src/records.rs" or "crates/workspace-checkpoint/src/../../core/src/records/mod.rs"
+   = note: if there is a `mod records` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `creation`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:13:1
+   |
+13 | mod creation;
+   | ^^^^^^^^^^^^^
+   |
+   = help: to create the module `creation`, create file "crates/workspace-checkpoint/src/../../core/src/creation.rs" or "crates/workspace-checkpoint/src/../../core/src/creation/mod.rs"
+   = note: if there is a `mod creation` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `inspection`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:14:1
+   |
+14 | mod inspection;
+   | ^^^^^^^^^^^^^^^
+   |
+   = help: to create the module `inspection`, create file "crates/workspace-checkpoint/src/../../core/src/inspection.rs" or "crates/workspace-checkpoint/src/../../core/src/inspection/mod.rs"
+   = note: if there is a `mod inspection` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `naming`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:20:1
+   |
+20 | pub(crate) mod naming;
+   | ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: to create the module `naming`, create file "crates/workspace-checkpoint/src/../../core/src/naming.rs" or "crates/workspace-checkpoint/src/../../core/src/naming/mod.rs"
+   = note: if there is a `mod naming` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `persistence`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:77:1
+   |
+77 | mod persistence;
+   | ^^^^^^^^^^^^^^^^
+   |
+   = help: to create the module `persistence`, create file "crates/workspace-checkpoint/src/../../core/src/persistence.rs" or "crates/workspace-checkpoint/src/../../core/src/persistence/mod.rs"
+   = note: if there is a `mod persistence` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `coordinator`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:78:1
+   |
+78 | mod coordinator;
+   | ^^^^^^^^^^^^^^^^
+   |
+   = help: to create the module `coordinator`, create file "crates/workspace-checkpoint/src/../../core/src/coordinator.rs" or "crates/workspace-checkpoint/src/../../core/src/coordinator/mod.rs"
+   = note: if there is a `mod coordinator` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0583]: file not found for module `inspection`
+  --> crates/workspace-checkpoint/src/../../core/src/git.rs:14:1
+   |
+14 | mod inspection;
+   | ^^^^^^^^^^^^^^^
+   |
+   = help: to create the module `inspection`, create file "crates/workspace-checkpoint/src/../../core/src/inspection.rs" or "crates/workspace-checkpoint/src/../../core/src/inspection/mod.rs"
+   = note: if there is a `mod inspection` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0432]: unresolved imports `crate::workspaces::ErrorCode`, `crate::workspaces::RepositoryError`
+ --> crates/workspace-checkpoint/src/../../core/src/git.rs:2:25
+  |
+2 | use crate::workspaces::{ErrorCode, RepositoryError, Result, ValidatedRepository};
+  |                         ^^^^^^^^^  ^^^^^^^^^^^^^^^ no `RepositoryError` in `workspaces`
+  |                         |
+  |                         no `ErrorCode` in `workspaces`
+  |
+help: a similar name exists in the module
+  |
+2 - use crate::workspaces::{ErrorCode, RepositoryError, Result, ValidatedRepository};
+2 + use crate::workspaces::{ErrorCode, Repository, Result, ValidatedRepository};
+  |
+
+error[E0432]: unresolved imports `crate::workspaces::Artifacts`, `crate::workspaces::BranchArtifact`, `crate::workspaces::CreationEffects`, `crate::workspaces::FolderArtifact`, `crate::workspaces::PinnedBase`, `crate::workspaces::Workspace`
+   --> crates/workspace-checkpoint/src/../../core/src/git.rs:314:5
+    |
+314 |     Artifacts, BranchArtifact, CreationEffects, FolderArtifact, PinnedBase, Workspace,
+    |     ^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^^ no `Workspace` in `workspaces`
+    |     |          |               |                |               |
+    |     |          |               |                |               no `PinnedBase` in `workspaces`
+    |     |          |               |                no `FolderArtifact` in `workspaces`
+    |     |          |               no `CreationEffects` in `workspaces`
+    |     |          no `BranchArtifact` in `workspaces`
+    |     no `Artifacts` in `workspaces`
+    |
+    = help: consider importing one of these variants instead:
+            crate::observations::Target::Workspace
+            crate::storage::Read::Workspace
+note: variant `crate::storage::operations::RecordShape::Workspace` exists but is inaccessible
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:445:5
+    |
+445 |     Workspace,
+    |     ^^^^^^^^^ not accessible
+help: a similar name exists in the module
+    |
+314 |     Artifacts, BranchArtifact, CreationEffects, FolderArtifact, PinnedBase, Workspaces,
+    |                                                                                      +
+
+error[E0432]: unresolved imports `crate::workspaces::ActionId`, `crate::workspaces::RepositoryId`, `crate::workspaces::WorkspaceId`
+ --> crates/workspace-checkpoint/src/../../core/src/observations.rs:2:25
+  |
+2 | use crate::workspaces::{ActionId, RepositoryId, WorkspaceId};
+  |                         ^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^ no `WorkspaceId` in `workspaces`
+  |                         |         |
+  |                         |         no `RepositoryId` in `workspaces`
+  |                         no `ActionId` in `workspaces`
+  |
+help: a similar name exists in the module
+  |
+2 - use crate::workspaces::{ActionId, RepositoryId, WorkspaceId};
+2 + use crate::workspaces::{ActionId, Repository, WorkspaceId};
+  |
+help: a similar name exists in the module
+  |
+2 - use crate::workspaces::{ActionId, RepositoryId, WorkspaceId};
+2 + use crate::workspaces::{ActionId, RepositoryId, Workspaces};
+  |
+
+error[E0433]: cannot find module or crate `tokio_util` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/observations.rs:153:18
+    |
+153 |         cancel: &tokio_util::sync::CancellationToken,
+    |                  ^^^^^^^^^^ use of unresolved module or unlinked crate `tokio_util`
+    |
+    = help: if you wanted to use a crate named `tokio_util`, use `cargo add tokio_util` to add it to your `Cargo.toml`
+
+error[E0422]: cannot find struct, variant or union type `Registration` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:68:26
+   |
+68 |             let action = Registration {
+   |                          ^^^^^^^^^^^^
+   |
+  ::: crates/workspace-checkpoint/src/../../core/src/storage.rs:86:1
+   |
+86 | pub(crate) struct Reservation {
+   | ----------------------------- similarly named struct `Reservation` defined here
+   |
+help: a struct with a similar name exists
+   |
+68 -             let action = Registration {
+68 +             let action = Reservation {
+   |
+help: consider importing one of these variants
+   |
+ 1 + use crate::observations::Target::Registration;
+   |
+ 1 + use crate::storage::Read::Registration;
+   |
+ 1 + use crate::storage::operations::RecordShape::Registration;
+   |
+ 1 + use crate::workspaces::RepositoryReply::Registration;
+   |
+
+error[E0425]: cannot find type `Registration` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:94:24
+   |
+94 |             let saved: Registration = json(&saved)?;
+   |                        ^^^^^^^^^^^^
+   |
+  ::: crates/workspace-checkpoint/src/../../core/src/storage.rs:86:1
+   |
+86 | pub(crate) struct Reservation {
+   | ----------------------------- similarly named struct `Reservation` defined here
+   |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+   |
+94 -             let saved: Registration = json(&saved)?;
+94 +             let saved: crate::observations::Target = json(&saved)?;
+   |
+94 -             let saved: Registration = json(&saved)?;
+94 +             let saved: crate::storage::Read = json(&saved)?;
+   |
+94 -             let saved: Registration = json(&saved)?;
+94 +             let saved: crate::storage::operations::RecordShape = json(&saved)?;
+   |
+94 -             let saved: Registration = json(&saved)?;
+94 +             let saved: crate::workspaces::RepositoryReply = json(&saved)?;
+   |
+help: a struct with a similar name exists
+   |
+94 -             let saved: Registration = json(&saved)?;
+94 +             let saved: Reservation = json(&saved)?;
+   |
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:343:16
+    |
+343 |     workspace: WorkspaceId,
+    |                ^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+343 -     workspace: WorkspaceId,
+343 +     workspace: Workspaces,
+    |
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:363:17
+    |
+363 |     workspace: &Workspace,
+    |                 ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+363 -     workspace: &Workspace,
+363 +     workspace: &crate::observations::Target,
+    |
+363 -     workspace: &Workspace,
+363 +     workspace: &crate::storage::Read,
+    |
+363 -     workspace: &Workspace,
+363 +     workspace: &crate::storage::operations::RecordShape,
+    |
+help: a struct with a similar name exists
+    |
+363 |     workspace: &Workspaces,
+    |                          +
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:364:21
+    |
+364 |     action: Option<&WorkspaceAction>,
+    |                     ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+364 -     action: Option<&WorkspaceAction>,
+364 +     action: Option<&crate::observations::Target>,
+    |
+364 -     action: Option<&WorkspaceAction>,
+364 +     action: Option<&crate::storage::Read>,
+    |
+364 -     action: Option<&WorkspaceAction>,
+364 +     action: Option<&crate::storage::operations::RecordShape>,
+    |
+help: you might be missing a type parameter
+    |
+361 | async fn save_workspace<WorkspaceAction>(
+    |                        +++++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:385:20
+    |
+385 |         let saved: Workspace = json(&saved)?;
+    |                    ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+385 -         let saved: Workspace = json(&saved)?;
+385 +         let saved: crate::observations::Target = json(&saved)?;
+    |
+385 -         let saved: Workspace = json(&saved)?;
+385 +         let saved: crate::storage::Read = json(&saved)?;
+    |
+385 -         let saved: Workspace = json(&saved)?;
+385 +         let saved: crate::storage::operations::RecordShape = json(&saved)?;
+    |
+help: a struct with a similar name exists
+    |
+385 |         let saved: Workspaces = json(&saved)?;
+    |                             +
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:503:55
+    |
+503 |                 RecordShape::Registration => { let _: Registration = json(record)?; },
+    |                                                       ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/storage.rs:86:1
+    |
+ 86 | pub(crate) struct Reservation {
+    | ----------------------------- similarly named struct `Reservation` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+503 -                 RecordShape::Registration => { let _: Registration = json(record)?; },
+503 +                 RecordShape::Registration => { let _: crate::observations::Target = json(record)?; },
+    |
+503 -                 RecordShape::Registration => { let _: Registration = json(record)?; },
+503 +                 RecordShape::Registration => { let _: crate::storage::Read = json(record)?; },
+    |
+503 -                 RecordShape::Registration => { let _: Registration = json(record)?; },
+503 +                 RecordShape::Registration => { let _: crate::storage::operations::RecordShape = json(record)?; },
+    |
+503 -                 RecordShape::Registration => { let _: Registration = json(record)?; },
+503 +                 RecordShape::Registration => { let _: crate::workspaces::RepositoryReply = json(record)?; },
+    |
+help: a struct with a similar name exists
+    |
+503 -                 RecordShape::Registration => { let _: Registration = json(record)?; },
+503 +                 RecordShape::Registration => { let _: Reservation = json(record)?; },
+    |
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:505:60
+    |
+505 | ...   RecordShape::Workspace => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |                                                  ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+505 -                 RecordShape::Workspace => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+505 +                 RecordShape::Workspace => { let workspace: crate::observations::Target = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+505 -                 RecordShape::Workspace => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+505 +                 RecordShape::Workspace => { let workspace: crate::storage::Read = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+505 -                 RecordShape::Workspace => { let workspace: Workspace = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+505 +                 RecordShape::Workspace => { let workspace: crate::storage::operations::RecordShape = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+help: a struct with a similar name exists
+    |
+505 |                 RecordShape::Workspace => { let workspace: Workspaces = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |                                                                     +
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:506:72
+    |
+506 | ...   RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { ret...
+    |                                                              ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+506 -                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+506 +                 RecordShape::WorkspaceAction => { let (_, workspace): (crate::observations::Target, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+506 -                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+506 +                 RecordShape::WorkspaceAction => { let (_, workspace): (crate::storage::Read, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+506 -                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+506 +                 RecordShape::WorkspaceAction => { let (_, workspace): (crate::storage::operations::RecordShape, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:506:89
+    |
+506 | ...   RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { ret...
+    |                                                                               ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+506 -                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+506 +                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, crate::observations::Target) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+506 -                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+506 +                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, crate::storage::Read) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+506 -                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspace) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+506 +                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, crate::storage::operations::RecordShape) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |
+help: a struct with a similar name exists
+    |
+506 |                 RecordShape::WorkspaceAction => { let (_, workspace): (WorkspaceAction, Workspaces) = json(record)?; if workspace.legacy { return Err(Error::Corrupt); } },
+    |                                                                                                  +
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:87:20
+    |
+ 87 |     pub workspace: Workspace,
+    |                    ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+ 87 -     pub workspace: Workspace,
+ 87 +     pub workspace: crate::observations::Target,
+    |
+ 87 -     pub workspace: Workspace,
+ 87 +     pub workspace: crate::storage::Read,
+    |
+ 87 -     pub workspace: Workspace,
+ 87 +     pub workspace: crate::storage::operations::RecordShape,
+    |
+help: a struct with a similar name exists
+    |
+ 87 |     pub workspace: Workspaces,
+    |                             +
+
+error[E0425]: cannot find type `RegisterRepository` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/storage.rs:93:24
+   |
+93 |     RegistrationIntent(RegisterRepository),
+   |                        ^^^^^^^^^^^^^^^^^^
+   |
+  ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:86:1
+   |
+86 | pub(crate) struct ValidatedRepository {
+   | ------------------------------------- similarly named struct `ValidatedRepository` defined here
+   |
+help: a struct with a similar name exists
+   |
+93 -     RegistrationIntent(RegisterRepository),
+93 +     RegistrationIntent(ValidatedRepository),
+   |
+
+error[E0425]: cannot find type `Registration` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/storage.rs:95:17
+   |
+86 | pub(crate) struct Reservation {
+   | ----------------------------- similarly named struct `Reservation` defined here
+...
+95 |         action: Registration,
+   |                 ^^^^^^^^^^^^
+   |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+   |
+95 -         action: Registration,
+95 +         action: crate::observations::Target,
+   |
+95 -         action: Registration,
+95 +         action: crate::storage::Read,
+   |
+95 -         action: Registration,
+95 +         action: crate::storage::operations::RecordShape,
+   |
+95 -         action: Registration,
+95 +         action: crate::workspaces::RepositoryReply,
+   |
+help: a struct with a similar name exists
+   |
+95 -         action: Registration,
+95 +         action: Reservation,
+   |
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:97:25
+    |
+ 97 |         initial: Option<Workspace>,
+    |                         ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+ 97 -         initial: Option<Workspace>,
+ 97 +         initial: Option<crate::observations::Target>,
+    |
+ 97 -         initial: Option<Workspace>,
+ 97 +         initial: Option<crate::storage::Read>,
+    |
+ 97 -         initial: Option<Workspace>,
+ 97 +         initial: Option<crate::storage::operations::RecordShape>,
+    |
+help: a struct with a similar name exists
+    |
+ 97 |         initial: Option<Workspaces>,
+    |                                  +
+help: you might be missing a type parameter
+    |
+ 92 | pub(crate) enum Write<Workspace> {
+    |                      +++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:100:20
+    |
+100 |         workspace: Workspace,
+    |                    ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+100 -         workspace: Workspace,
+100 +         workspace: crate::observations::Target,
+    |
+100 -         workspace: Workspace,
+100 +         workspace: crate::storage::Read,
+    |
+100 -         workspace: Workspace,
+100 +         workspace: crate::storage::operations::RecordShape,
+    |
+help: a struct with a similar name exists
+    |
+100 |         workspace: Workspaces,
+    |                             +
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:101:24
+    |
+101 |         action: Option<WorkspaceAction>,
+    |                        ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+101 -         action: Option<WorkspaceAction>,
+101 +         action: Option<crate::observations::Target>,
+    |
+101 -         action: Option<WorkspaceAction>,
+101 +         action: Option<crate::storage::Read>,
+    |
+101 -         action: Option<WorkspaceAction>,
+101 +         action: Option<crate::storage::operations::RecordShape>,
+    |
+help: you might be missing a type parameter
+    |
+ 92 | pub(crate) enum Write<WorkspaceAction> {
+    |                      +++++++++++++++++
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:105:23
+    |
+105 |         workspace_id: WorkspaceId,
+    |                       ^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+105 -         workspace_id: WorkspaceId,
+105 +         workspace_id: Workspaces,
+    |
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:97:25
+    |
+ 97 |         initial: Option<Workspace>,
+    |                         ^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+ 97 -         initial: Option<Workspace>,
+ 97 +         initial: Option<crate::observations::Target>,
+    |
+ 97 -         initial: Option<Workspace>,
+ 97 +         initial: Option<crate::storage::Read>,
+    |
+ 97 -         initial: Option<Workspace>,
+ 97 +         initial: Option<crate::storage::operations::RecordShape>,
+    |
+help: a struct with a similar name exists
+    |
+ 97 |         initial: Option<Workspaces>,
+    |                                  +
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:101:24
+    |
+101 |         action: Option<WorkspaceAction>,
+    |                        ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+101 -         action: Option<WorkspaceAction>,
+101 +         action: Option<crate::observations::Target>,
+    |
+101 -         action: Option<WorkspaceAction>,
+101 +         action: Option<crate::storage::Read>,
+    |
+101 -         action: Option<WorkspaceAction>,
+101 +         action: Option<crate::storage::operations::RecordShape>,
+    |
+
+error[E0425]: cannot find type `ActionId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:136:18
+    |
+136 |     Registration(ActionId),
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:137:16
+    |
+137 |     Repository(RepositoryId),
+    |                ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:33:1
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+    |
+help: a struct with a similar name exists
+    |
+137 -     Repository(RepositoryId),
+137 +     Repository(Repository),
+    |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:140:23
+    |
+140 |         after: Option<RepositoryId>,
+    |                       ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:33:1
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+    |
+help: a struct with a similar name exists
+    |
+140 -         after: Option<RepositoryId>,
+140 +         after: Option<Repository>,
+    |
+help: you might be missing a type parameter
+    |
+135 | pub(crate) enum Read<RepositoryId> {
+    |                     ++++++++++++++
+
+error[E0425]: cannot find type `ActionId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:143:23
+    |
+143 |         after: Option<ActionId>,
+    |                       ^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+135 | pub(crate) enum Read<ActionId> {
+    |                     ++++++++++
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:145:15
+    |
+145 |     Workspace(WorkspaceId),
+    |               ^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+145 -     Workspace(WorkspaceId),
+145 +     Workspace(Workspaces),
+    |
+
+error[E0425]: cannot find type `ActionId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:146:21
+    |
+146 |     WorkspaceAction(ActionId),
+    |                     ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:148:21
+    |
+148 |         repository: RepositoryId,
+    |                     ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:33:1
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+    |
+help: a struct with a similar name exists
+    |
+148 -         repository: RepositoryId,
+148 +         repository: Repository,
+    |
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:149:23
+    |
+149 |         after: Option<WorkspaceId>,
+    |                       ^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+149 -         after: Option<WorkspaceId>,
+149 +         after: Option<Workspaces>,
+    |
+help: you might be missing a type parameter
+    |
+135 | pub(crate) enum Read<WorkspaceId> {
+    |                     +++++++++++++
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:152:23
+    |
+152 |         after: Option<WorkspaceId>,
+    |                       ^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+152 -         after: Option<WorkspaceId>,
+152 +         after: Option<Workspaces>,
+    |
+help: you might be missing a type parameter
+    |
+135 | pub(crate) enum Read<WorkspaceId> {
+    |                     +++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:155:21
+    |
+155 |         repository: RepositoryId,
+    |                     ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:33:1
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+    |
+help: a struct with a similar name exists
+    |
+155 -         repository: RepositoryId,
+155 +         repository: Repository,
+    |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:159:21
+    |
+159 |         repository: RepositoryId,
+    |                     ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:33:1
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+    |
+help: a struct with a similar name exists
+    |
+159 -         repository: RepositoryId,
+159 +         repository: Repository,
+    |
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:162:22
+    |
+162 |     AllocationCursor(WorkspaceId),
+    |                      ^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:213:1
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+162 -     AllocationCursor(WorkspaceId),
+162 +     AllocationCursor(Workspaces),
+    |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage.rs:163:20
+    |
+163 |     CleanupBlocked(RepositoryId),
+    |                    ^^^^^^^^^^^^
+    |
+   ::: crates/workspace-checkpoint/src/../../core/src/workspaces.rs:33:1
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+    |
+help: a struct with a similar name exists
+    |
+163 -     CleanupBlocked(RepositoryId),
+163 +     CleanupBlocked(Repository),
+    |
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:29:26
+   |
+29 |     Unavailable { error: RepositoryError },
+   |                          ^^^^^^^^^^^^^^^
+...
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+   |
+help: a struct with a similar name exists
+   |
+29 -     Unavailable { error: RepositoryError },
+29 +     Unavailable { error: Repository },
+   |
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:29:26
+   |
+29 |     Unavailable { error: RepositoryError },
+   |                          ^^^^^^^^^^^^^^^
+...
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+   |
+help: a struct with a similar name exists
+   |
+29 -     Unavailable { error: RepositoryError },
+29 +     Unavailable { error: Repository },
+   |
+help: you might be missing a type parameter
+   |
+26 | pub enum Availability<RepositoryError> {
+   |                      +++++++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:34:13
+   |
+34 |     pub id: RepositoryId,
+   |             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:34:13
+   |
+34 |     pub id: RepositoryId,
+   |             ^^^^^^^^^^^^ not found in this scope
+   |
+help: you might be missing a type parameter
+   |
+33 | pub struct Repository<RepositoryId> {
+   |                      ++++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:43:22
+   |
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+...
+43 |     pub next: Option<RepositoryId>,
+   |                      ^^^^^^^^^^^^
+   |
+help: a struct with a similar name exists
+   |
+43 -     pub next: Option<RepositoryId>,
+43 +     pub next: Option<Repository>,
+   |
+help: you might be missing a type parameter
+   |
+41 | pub struct RepositoryPage<RepositoryId> {
+   |                          ++++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:43:22
+   |
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+...
+43 |     pub next: Option<RepositoryId>,
+   |                      ^^^^^^^^^^^^
+   |
+help: a struct with a similar name exists
+   |
+43 -     pub next: Option<RepositoryId>,
+43 +     pub next: Option<Repository>,
+   |
+
+error[E0425]: cannot find type `RegisterRepository` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:51:18
+   |
+51 |         request: RegisterRepository,
+   |                  ^^^^^^^^^^^^^^^^^^
+...
+86 | pub(crate) struct ValidatedRepository {
+   | ------------------------------------- similarly named struct `ValidatedRepository` defined here
+   |
+help: a struct with a similar name exists
+   |
+51 -         request: RegisterRepository,
+51 +         request: ValidatedRepository,
+   |
+
+error[E0425]: cannot find type `ActionId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:54:20
+   |
+54 |         action_id: ActionId,
+   |                    ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:57:23
+   |
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+...
+57 |         after: Option<RepositoryId>,
+   |                       ^^^^^^^^^^^^
+   |
+help: a struct with a similar name exists
+   |
+57 -         after: Option<RepositoryId>,
+57 +         after: Option<Repository>,
+   |
+help: you might be missing a type parameter
+   |
+49 | pub enum RepositoryRequest<RepositoryId> {
+   |                           ++++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:62:13
+   |
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+...
+62 |         id: RepositoryId,
+   |             ^^^^^^^^^^^^
+   |
+help: a struct with a similar name exists
+   |
+62 -         id: RepositoryId,
+62 +         id: Repository,
+   |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:57:23
+   |
+33 | pub struct Repository {
+   | --------------------- similarly named struct `Repository` defined here
+...
+57 |         after: Option<RepositoryId>,
+   |                       ^^^^^^^^^^^^
+   |
+help: a struct with a similar name exists
+   |
+57 -         after: Option<RepositoryId>,
+57 +         after: Option<Repository>,
+   |
+
+error[E0425]: cannot find type `Registration` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:71:34
+   |
+71 |     Registration { registration: Registration },
+   |                                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+   |
+71 -     Registration { registration: Registration },
+71 +     Registration { registration: crate::observations::Target },
+   |
+71 -     Registration { registration: Registration },
+71 +     Registration { registration: crate::storage::operations::RecordShape },
+   |
+71 -     Registration { registration: Registration },
+71 +     Registration { registration: crate::workspaces::Read },
+   |
+71 -     Registration { registration: Registration },
+71 +     Registration { registration: crate::workspaces::RepositoryReply },
+   |
+
+error[E0425]: cannot find type `Registration` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:72:35
+   |
+72 |     Action { registration: Option<Registration> },
+   |                                   ^^^^^^^^^^^^ not found in this scope
+   |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::observations::Target> },
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::storage::operations::RecordShape> },
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::workspaces::Read> },
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::workspaces::RepositoryReply> },
+   |
+help: you might be missing a type parameter
+   |
+70 | pub enum RepositoryReply<Registration> {
+   |                         ++++++++++++++
+
+error[E0425]: cannot find type `Registration` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:72:35
+   |
+72 |     Action { registration: Option<Registration> },
+   |                                   ^^^^^^^^^^^^ not found in this scope
+   |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::observations::Target> },
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::storage::operations::RecordShape> },
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::workspaces::Read> },
+   |
+72 -     Action { registration: Option<Registration> },
+72 +     Action { registration: Option<crate::workspaces::RepositoryReply> },
+   |
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:108:23
+    |
+108 |     workspace: Option<WorkspaceId>,
+    |                       ^^^^^^^^^^^
+...
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+108 -     workspace: Option<WorkspaceId>,
+108 +     workspace: Option<Workspaces>,
+    |
+help: you might be missing a type parameter
+    |
+106 | struct Activity<WorkspaceId> {
+    |                +++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:114:22
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+114 |     cache: VecDeque<(RepositoryId, Availability)>,
+    |                      ^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+114 -     cache: VecDeque<(RepositoryId, Availability)>,
+114 +     cache: VecDeque<(Repository, Availability)>,
+    |
+help: you might be missing a type parameter
+    |
+110 | struct OwnerState<RepositoryId> {
+    |                  ++++++++++++++
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:116:19
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+116 |     fault: Option<RepositoryError>,
+    |                   ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+116 -     fault: Option<RepositoryError>,
+116 +     fault: Option<Repository>,
+    |
+help: you might be missing a type parameter
+    |
+110 | struct OwnerState<RepositoryError> {
+    |                  +++++++++++++++++
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:117:38
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+117 |     cleanup_faults: BTreeMap<String, RepositoryError>,
+    |                                      ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+117 -     cleanup_faults: BTreeMap<String, RepositoryError>,
+117 +     cleanup_faults: BTreeMap<String, Repository>,
+    |
+help: you might be missing a type parameter
+    |
+110 | struct OwnerState<RepositoryError> {
+    |                  +++++++++++++++++
+
+error[E0425]: cannot find type `ActionId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:121:26
+    |
+121 |     activities: BTreeMap<ActionId, Activity>,
+    |                          ^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+110 | struct OwnerState<ActionId> {
+    |                  ++++++++++
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:122:32
+    |
+122 |     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
+    |                                ^^^^^^^^^^^
+...
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+122 -     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
+122 +     workspace_faults: BTreeMap<Workspaces, RepositoryError>,
+    |
+help: you might be missing a type parameter
+    |
+110 | struct OwnerState<WorkspaceId> {
+    |                  +++++++++++++
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:122:45
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+122 |     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
+    |                                             ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+122 -     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
+122 +     workspace_faults: BTreeMap<WorkspaceId, Repository>,
+    |
+help: you might be missing a type parameter
+    |
+110 | struct OwnerState<RepositoryError> {
+    |                  +++++++++++++++++
+
+error[E0425]: cannot find type `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:132:51
+    |
+132 |     fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: RepositoryId) {
+    |                                                   ^^^^^^^^^^^
+...
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: a struct with a similar name exists
+    |
+132 -     fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: RepositoryId) {
+132 +     fn workspace_changed(&mut self, workspace_id: Workspaces, repository_id: RepositoryId) {
+    |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:132:79
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+132 |     fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: RepositoryId) {
+    |                                                                               ^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+132 -     fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: RepositoryId) {
+132 +     fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: Repository) {
+    |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:140:32
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+140 |     fn availability(&self, id: RepositoryId) -> Option<Availability> {
+    |                                ^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+140 -     fn availability(&self, id: RepositoryId) -> Option<Availability> {
+140 +     fn availability(&self, id: Repository) -> Option<Availability> {
+    |
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:143:29
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+143 |     fn cache(&mut self, id: RepositoryId, value: Availability) -> Result<()> {
+    |                             ^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+143 -     fn cache(&mut self, id: RepositoryId, value: Availability) -> Result<()> {
+143 +     fn cache(&mut self, id: Repository, value: Availability) -> Result<()> {
+    |
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:160:52
+    |
+160 |     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+    |                                                    ^^^^^^^^^
+...
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+160 -     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+160 +     fn workspace_observation(&self, mut workspace: crate::observations::Target) -> Workspace {
+    |
+160 -     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+160 +     fn workspace_observation(&self, mut workspace: crate::storage::operations::RecordShape) -> Workspace {
+    |
+160 -     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+160 +     fn workspace_observation(&self, mut workspace: crate::workspaces::Read) -> Workspace {
+    |
+help: a struct with a similar name exists
+    |
+160 |     fn workspace_observation(&self, mut workspace: Workspaces) -> Workspace {
+    |                                                             +
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:160:66
+    |
+160 |     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+    |                                                                  ^^^^^^^^^
+...
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+160 -     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+160 +     fn workspace_observation(&self, mut workspace: Workspace) -> crate::observations::Target {
+    |
+160 -     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+160 +     fn workspace_observation(&self, mut workspace: Workspace) -> crate::storage::operations::RecordShape {
+    |
+160 -     fn workspace_observation(&self, mut workspace: Workspace) -> Workspace {
+160 +     fn workspace_observation(&self, mut workspace: Workspace) -> crate::workspaces::Read {
+    |
+help: a struct with a similar name exists
+    |
+160 |     fn workspace_observation(&self, mut workspace: Workspace) -> Workspaces {
+    |                                                                           +
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:272:45
+    |
+272 |         let (registrations, rnext) = page::<Registration>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+    |                                             ^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+272 -         let (registrations, rnext) = page::<Registration>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+272 +         let (registrations, rnext) = page::<crate::observations::Target>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+    |
+272 -         let (registrations, rnext) = page::<Registration>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+272 +         let (registrations, rnext) = page::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+    |
+272 -         let (registrations, rnext) = page::<Registration>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+272 +         let (registrations, rnext) = page::<crate::workspaces::Read>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+    |
+272 -         let (registrations, rnext) = page::<Registration>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+272 +         let (registrations, rnext) = page::<crate::workspaces::RepositoryReply>(self.store.as_ref(), Read::PendingRegistrations { after: None }).await?;
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<Registration> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:273:42
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+273 |         let (workspaces, wnext) = page::<Workspace>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+    |                                          ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+273 -         let (workspaces, wnext) = page::<Workspace>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+273 +         let (workspaces, wnext) = page::<crate::observations::Target>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+    |
+273 -         let (workspaces, wnext) = page::<Workspace>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+273 +         let (workspaces, wnext) = page::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+    |
+273 -         let (workspaces, wnext) = page::<Workspace>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+273 +         let (workspaces, wnext) = page::<crate::workspaces::Read>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+    |
+help: a struct with a similar name exists
+    |
+273 |         let (workspaces, wnext) = page::<Workspaces>(self.store.as_ref(), Read::PendingWorkspaces { after: None }).await?;
+    |                                                   +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `RegisterRepository` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:280:43
+    |
+ 86 | pub(crate) struct ValidatedRepository {
+    | ------------------------------------- similarly named struct `ValidatedRepository` defined here
+...
+280 |     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+    |                                           ^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+280 -     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+280 +     pub async fn register(&self, request: ValidatedRepository) -> Result<Registration> {
+    |
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:280:73
+    |
+280 |     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+    |                                                                         ^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+280 -     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+280 +     pub async fn register(&self, request: RegisterRepository) -> Result<crate::observations::Target> {
+    |
+280 -     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+280 +     pub async fn register(&self, request: RegisterRepository) -> Result<crate::storage::operations::RecordShape> {
+    |
+280 -     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+280 +     pub async fn register(&self, request: RegisterRepository) -> Result<crate::workspaces::Read> {
+    |
+280 -     pub async fn register(&self, request: RegisterRepository) -> Result<Registration> {
+280 +     pub async fn register(&self, request: RegisterRepository) -> Result<crate::workspaces::RepositoryReply> {
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<Registration> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:282:36
+    |
+282 |         if let Some(saved) = one::<Registration>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+    |                                    ^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+282 -         if let Some(saved) = one::<Registration>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+282 +         if let Some(saved) = one::<crate::observations::Target>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+    |
+282 -         if let Some(saved) = one::<Registration>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+282 +         if let Some(saved) = one::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+    |
+282 -         if let Some(saved) = one::<Registration>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+282 +         if let Some(saved) = one::<crate::workspaces::Read>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+    |
+282 -         if let Some(saved) = one::<Registration>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+282 +         if let Some(saved) = one::<crate::workspaces::RepositoryReply>(self.store.as_ref(), Read::Registration(request.action_id)).await? {
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<Registration> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:287:19
+    |
+287 | ...   if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { retu...
+    |                 ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+287 -         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+287 +         if one::<(crate::observations::Target, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |
+287 -         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+287 +         if one::<(crate::storage::operations::RecordShape, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |
+287 -         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+287 +         if one::<(crate::workspaces::Read, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceAction> Workspaces {
+    |     +++++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:287:36
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+287 |         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { re...
+    |                                    ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+287 -         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+287 +         if one::<(WorkspaceAction, crate::observations::Target)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |
+287 -         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+287 +         if one::<(WorkspaceAction, crate::storage::operations::RecordShape)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |
+287 -         if one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+287 +         if one::<(WorkspaceAction, crate::workspaces::Read)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |
+help: a struct with a similar name exists
+    |
+287 |         if one::<(WorkspaceAction, Workspaces)>(self.store.as_ref(), Read::WorkspaceAction(request.action_id)).await?.is_some() { return Err(conflict()); }
+    |                                             +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:296:27
+    |
+296 |         let saved = one::<Registration>(self.store.as_ref(), Read::Registration(id)).await?;
+    |                           ^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+296 -         let saved = one::<Registration>(self.store.as_ref(), Read::Registration(id)).await?;
+296 +         let saved = one::<crate::observations::Target>(self.store.as_ref(), Read::Registration(id)).await?;
+    |
+296 -         let saved = one::<Registration>(self.store.as_ref(), Read::Registration(id)).await?;
+296 +         let saved = one::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::Registration(id)).await?;
+    |
+296 -         let saved = one::<Registration>(self.store.as_ref(), Read::Registration(id)).await?;
+296 +         let saved = one::<crate::workspaces::Read>(self.store.as_ref(), Read::Registration(id)).await?;
+    |
+296 -         let saved = one::<Registration>(self.store.as_ref(), Read::Registration(id)).await?;
+296 +         let saved = one::<crate::workspaces::RepositoryReply>(self.store.as_ref(), Read::Registration(id)).await?;
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<Registration> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find type `ActionId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:299:36
+    |
+299 |     pub async fn action(&self, id: ActionId) -> Result<Option<Registration>> {
+    |                                    ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:299:63
+    |
+299 |     pub async fn action(&self, id: ActionId) -> Result<Option<Registration>> {
+    |                                                               ^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+299 -     pub async fn action(&self, id: ActionId) -> Result<Option<Registration>> {
+299 +     pub async fn action(&self, id: ActionId) -> Result<Option<crate::observations::Target>> {
+    |
+299 -     pub async fn action(&self, id: ActionId) -> Result<Option<Registration>> {
+299 +     pub async fn action(&self, id: ActionId) -> Result<Option<crate::storage::operations::RecordShape>> {
+    |
+299 -     pub async fn action(&self, id: ActionId) -> Result<Option<Registration>> {
+299 +     pub async fn action(&self, id: ActionId) -> Result<Option<crate::workspaces::Read>> {
+    |
+299 -     pub async fn action(&self, id: ActionId) -> Result<Option<Registration>> {
+299 +     pub async fn action(&self, id: ActionId) -> Result<Option<crate::workspaces::RepositoryReply>> {
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<Registration> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:304:52
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+304 |     pub async fn repositories(&self, after: Option<RepositoryId>, refresh: bool) -> Result<RepositoryPage> {
+    |                                                    ^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+304 -     pub async fn repositories(&self, after: Option<RepositoryId>, refresh: bool) -> Result<RepositoryPage> {
+304 +     pub async fn repositories(&self, after: Option<Repository>, refresh: bool) -> Result<RepositoryPage> {
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<RepositoryId> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find value `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:318:60
+    |
+318 |         result.next = next.map(|s| Uuid::parse_str(&s).map(RepositoryId).map_err(RepositoryError::storage)).transpose()?;
+    |                                                            ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `RepositoryId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:321:40
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+321 |     pub async fn repository(&self, id: RepositoryId, refresh: bool) -> Result<Option<Repository>> {
+    |                                        ^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+321 -     pub async fn repository(&self, id: RepositoryId, refresh: bool) -> Result<Option<Repository>> {
+321 +     pub async fn repository(&self, id: Repository, refresh: bool) -> Result<Option<Repository>> {
+    |
+
+error[E0425]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:326:52
+    |
+326 |     pub async fn workspace_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
+    |                                                    ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:326:80
+    |
+326 |     pub async fn workspace_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
+    |                                                                                ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceReply> Workspaces {
+    |     ++++++++++++++++
+
+error[E0425]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:330:46
+    |
+330 |     async fn workspace_inner(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
+    |                                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:330:74
+    |
+330 |     async fn workspace_inner(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
+    |                                                                          ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceReply> Workspaces {
+    |     ++++++++++++++++
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:336:36
+    |
+336 |                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |                                    ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+336 -                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+336 +                 let saved = one::<(crate::observations::Target, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |
+336 -                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+336 +                 let saved = one::<(crate::storage::operations::RecordShape, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |
+336 -                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+336 +                 let saved = one::<(crate::workspaces::Read, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceAction> Workspaces {
+    |     +++++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:336:53
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+336 |                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |                                                     ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+336 -                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+336 +                 let saved = one::<(WorkspaceAction, crate::observations::Target)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |
+336 -                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+336 +                 let saved = one::<(WorkspaceAction, crate::storage::operations::RecordShape)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |
+336 -                 let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+336 +                 let saved = one::<(WorkspaceAction, crate::workspaces::Read)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |
+help: a struct with a similar name exists
+    |
+336 |                 let saved = one::<(WorkspaceAction, Workspaces)>(self.store.as_ref(), Read::WorkspaceAction(action_id)).await?;
+    |                                                              +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:341:39
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+341 |                 let workspace = one::<Workspace>(self.store.as_ref(), Read::Workspace(id)).await?;
+    |                                       ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+341 -                 let workspace = one::<Workspace>(self.store.as_ref(), Read::Workspace(id)).await?;
+341 +                 let workspace = one::<crate::observations::Target>(self.store.as_ref(), Read::Workspace(id)).await?;
+    |
+341 -                 let workspace = one::<Workspace>(self.store.as_ref(), Read::Workspace(id)).await?;
+341 +                 let workspace = one::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::Workspace(id)).await?;
+    |
+341 -                 let workspace = one::<Workspace>(self.store.as_ref(), Read::Workspace(id)).await?;
+341 +                 let workspace = one::<crate::workspaces::Read>(self.store.as_ref(), Read::Workspace(id)).await?;
+    |
+help: a struct with a similar name exists
+    |
+341 |                 let workspace = one::<Workspaces>(self.store.as_ref(), Read::Workspace(id)).await?;
+    |                                                +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:345:46
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+345 |                 let (records, next) = page::<Workspace>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after })...
+    |                                              ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+345 -                 let (records, next) = page::<Workspace>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+345 +                 let (records, next) = page::<crate::observations::Target>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+    |
+345 -                 let (records, next) = page::<Workspace>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+345 +                 let (records, next) = page::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+    |
+345 -                 let (records, next) = page::<Workspace>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+345 +                 let (records, next) = page::<crate::workspaces::Read>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+    |
+help: a struct with a similar name exists
+    |
+345 |                 let (records, next) = page::<Workspaces>(self.store.as_ref(), Read::Workspaces { repository: repository_id, after }).await?;
+    |                                                       +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0422]: cannot find struct, variant or union type `WorkspacePage` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:347:34
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+347 |                 let mut result = WorkspacePage { workspaces: Vec::new(), next: None };
+    |                                  ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+347 -                 let mut result = WorkspacePage { workspaces: Vec::new(), next: None };
+347 +                 let mut result = Workspaces { workspaces: Vec::new(), next: None };
+    |
+
+error[E0425]: cannot find value `WorkspaceId` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:356:68
+    |
+356 |                 result.next = next.map(|s| Uuid::parse_str(&s).map(WorkspaceId).map_err(RepositoryError::storage)).transpose()?;
+    |                                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:362:45
+    |
+362 |     async fn admit_workspace(&self, action: WorkspaceAction) -> Result<WorkspaceReply> {
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+362 -     async fn admit_workspace(&self, action: WorkspaceAction) -> Result<WorkspaceReply> {
+362 +     async fn admit_workspace(&self, action: crate::observations::Target) -> Result<WorkspaceReply> {
+    |
+362 -     async fn admit_workspace(&self, action: WorkspaceAction) -> Result<WorkspaceReply> {
+362 +     async fn admit_workspace(&self, action: crate::storage::operations::RecordShape) -> Result<WorkspaceReply> {
+    |
+362 -     async fn admit_workspace(&self, action: WorkspaceAction) -> Result<WorkspaceReply> {
+362 +     async fn admit_workspace(&self, action: crate::workspaces::Read) -> Result<WorkspaceReply> {
+    |
+
+error[E0425]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:362:72
+    |
+362 |     async fn admit_workspace(&self, action: WorkspaceAction) -> Result<WorkspaceReply> {
+    |                                                                        ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceReply> Workspaces {
+    |     ++++++++++++++++
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:364:50
+    |
+364 | ...   if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())...
+    |                                                ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+364 -         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+364 +         if let Some((saved, workspace)) = one::<(crate::observations::Target, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |
+364 -         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+364 +         if let Some((saved, workspace)) = one::<(crate::storage::operations::RecordShape, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |
+364 -         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+364 +         if let Some((saved, workspace)) = one::<(crate::workspaces::Read, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceAction> Workspaces {
+    |     +++++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:364:67
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+364 |         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id(...
+    |                                                                   ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+364 -         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+364 +         if let Some((saved, workspace)) = one::<(WorkspaceAction, crate::observations::Target)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |
+364 -         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+364 +         if let Some((saved, workspace)) = one::<(WorkspaceAction, crate::storage::operations::RecordShape)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |
+364 -         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+364 +         if let Some((saved, workspace)) = one::<(WorkspaceAction, crate::workspaces::Read)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |
+help: a struct with a similar name exists
+    |
+364 |         if let Some((saved, workspace)) = one::<(WorkspaceAction, Workspaces)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await? {
+    |                                                                            +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `Registration` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:369:18
+    |
+369 |         if one::<Registration>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::Registration` and 4 others; try using the variant's enum
+    |
+369 -         if one::<Registration>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+369 +         if one::<crate::observations::Target>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+    |
+369 -         if one::<Registration>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+369 +         if one::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+    |
+369 -         if one::<Registration>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+369 +         if one::<crate::workspaces::Read>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+    |
+369 -         if one::<Registration>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+369 +         if one::<crate::workspaces::RepositoryReply>(self.store.as_ref(), Read::Registration(action.id())).await?.is_some() { return Err(conflict()); }
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<Registration> Workspaces {
+    |     ++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:379:35
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+379 |                 let mut w = one::<Workspace>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryErr...
+    |                                   ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+379 -                 let mut w = one::<Workspace>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+379 +                 let mut w = one::<crate::observations::Target>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |
+379 -                 let mut w = one::<Workspace>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+379 +                 let mut w = one::<crate::storage::operations::RecordShape>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |
+379 -                 let mut w = one::<Workspace>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+379 +                 let mut w = one::<crate::workspaces::Read>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |
+help: a struct with a similar name exists
+    |
+379 |                 let mut w = one::<Workspaces>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |                                            +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:387:28
+    |
+387 |         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |                            ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+387 -         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+387 +         let saved = one::<(crate::observations::Target, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |
+387 -         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+387 +         let saved = one::<(crate::storage::operations::RecordShape, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |
+387 -         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+387 +         let saved = one::<(crate::workspaces::Read, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |
+help: you might be missing a type parameter
+    |
+222 | impl<WorkspaceAction> Workspaces {
+    |     +++++++++++++++++
+
+error[E0425]: cannot find type `Workspace` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:387:45
+    |
+213 | pub struct Workspaces {
+    | --------------------- similarly named struct `Workspaces` defined here
+...
+387 |         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |                                             ^^^^^^^^^
+    |
+help: there is an enum variant `crate::observations::Target::Workspace` and 3 others; try using the variant's enum
+    |
+387 -         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+387 +         let saved = one::<(WorkspaceAction, crate::observations::Target)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |
+387 -         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+387 +         let saved = one::<(WorkspaceAction, crate::storage::operations::RecordShape)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |
+387 -         let saved = one::<(WorkspaceAction, Workspace)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+387 +         let saved = one::<(WorkspaceAction, crate::workspaces::Read)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |
+help: a struct with a similar name exists
+    |
+387 |         let saved = one::<(WorkspaceAction, Workspaces)>(self.store.as_ref(), Read::WorkspaceAction(action.id())).await?;
+    |                                                      +
+help: you might be missing a type parameter
+    |
+222 | impl<Workspace> Workspaces {
+    |     +++++++++++
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:393:18
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+393 | fn conflict() -> RepositoryError { RepositoryError::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts...
+    |                  ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+393 - fn conflict() -> RepositoryError { RepositoryError::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts; retrieve its exact status") }
+393 + fn conflict() -> Repository { RepositoryError::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts; retrieve its exact status") }
+    |
+
+error[E0425]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:394:16
+    |
+ 33 | pub struct Repository {
+    | --------------------- similarly named struct `Repository` defined here
+...
+394 | fn fenced() -> RepositoryError { RepositoryError::storage("Workspace admission is fenced") }
+    |                ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+394 - fn fenced() -> RepositoryError { RepositoryError::storage("Workspace admission is fenced") }
+394 + fn fenced() -> Repository { RepositoryError::storage("Workspace admission is fenced") }
+    |
+
+error[E0425]: cannot find function `choose_base` in module `crate::workspaces`
+   --> crates/workspace-checkpoint/src/../../core/src/git.rs:514:32
+    |
+514 |             crate::workspaces::choose_base(origin.as_deref(), main.as_deref(), master.as_deref())?;
+    |                                ^^^^^^^^^^^ not found in `crate::workspaces`
+
+warning: unused import: `records::*`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:11:9
+   |
+11 | pub use records::*;
+   |         ^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `creation::*`
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:21:9
+   |
+21 | pub use creation::*;
+   |         ^^^^^^^^^^^
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:73:24
+   |
+73 |                 state: RegistrationState::Pending,
+   |                        ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:100:31
+    |
+100 |             if saved.state != RegistrationState::Pending {
+    |                               ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:106:32
+    |
+106 |             if action.state == RegistrationState::Pending {
+    |                                ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:111:25
+    |
+111 |                     != (RegistrationState::Completed {
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:140:20
+    |
+140 |             if let RegistrationState::Completed { repository_id } = action.state {
+    |                    ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:157:25
+    |
+157 |                     != (RegistrationState::Completed {
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:163:30
+    |
+163 |                 let create = WorkspaceAction::Create {
+    |                              ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+163 -                 let create = WorkspaceAction::Create {
+163 +                 let create = crate::observations::Target::Create {
+    |
+163 -                 let create = WorkspaceAction::Create {
+163 +                 let create = crate::storage::Read::Create {
+    |
+163 -                 let create = WorkspaceAction::Create {
+163 +                 let create = crate::storage::operations::RecordShape::Create {
+    |
+
+error[E0433]: cannot find type `RegistrationState` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:172:39
+    |
+172 |                 .bind(action.state == RegistrationState::Pending)
+    |                                       ^^^^^^^^^^^^^^^^^ use of undeclared type `RegistrationState`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:380:64
+    |
+380 |         && (workspace.name.is_some() || !matches!(action, Some(WorkspaceAction::Create { .. })))
+    |                                                                ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+380 -         && (workspace.name.is_some() || !matches!(action, Some(WorkspaceAction::Create { .. })))
+380 +         && (workspace.name.is_some() || !matches!(action, Some(crate::observations::Target::Create { .. })))
+    |
+380 -         && (workspace.name.is_some() || !matches!(action, Some(WorkspaceAction::Create { .. })))
+380 +         && (workspace.name.is_some() || !matches!(action, Some(crate::storage::Read::Create { .. })))
+    |
+380 -         && (workspace.name.is_some() || !matches!(action, Some(WorkspaceAction::Create { .. })))
+380 +         && (workspace.name.is_some() || !matches!(action, Some(crate::storage::operations::RecordShape::Create { .. })))
+    |
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:400:137
+    |
+400 | ...tion_id.0)).bind(workspace.status == CreationStatus::Queued).bind(encode(workspace, PAGE_BYTES)?).bind(&workspace.name).bind(&wo...
+    |                                         ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:403:13
+    |
+403 |             WorkspaceAction::Create {
+    |             ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+403 -             WorkspaceAction::Create {
+403 +             crate::observations::Target::Create {
+    |
+403 -             WorkspaceAction::Create {
+403 +             crate::storage::Read::Create {
+    |
+403 -             WorkspaceAction::Create {
+403 +             crate::storage::operations::RecordShape::Create {
+    |
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/storage/operations.rs:408:13
+    |
+408 |             WorkspaceAction::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+    |             ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+408 -             WorkspaceAction::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+408 +             crate::observations::Target::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+    |
+408 -             WorkspaceAction::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+408 +             crate::storage::Read::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+    |
+408 -             WorkspaceAction::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+408 +             crate::storage::operations::RecordShape::Reconcile { workspace_id, .. } if *workspace_id == workspace.id => {}
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:83:39
+   |
+83 |     if path.len() > 4096 { return Err(RepositoryError::new(ErrorCode::Capacity, "Registration path exceeds 4096 UTF-8 bytes")); }
+   |                                       ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+   |
+help: a struct with a similar name exists
+   |
+83 -     if path.len() > 4096 { return Err(RepositoryError::new(ErrorCode::Capacity, "Registration path exceeds 4096 UTF-8 bytes")); }
+83 +     if path.len() > 4096 { return Err(Repository::new(ErrorCode::Capacity, "Registration path exceeds 4096 UTF-8 bytes")); }
+   |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+  --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:83:60
+   |
+83 |     if path.len() > 4096 { return Err(RepositoryError::new(ErrorCode::Capacity, "Registration path exceeds 4096 UTF-8 bytes")); }
+   |                                                            ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:137:68
+    |
+137 | ...   self.revision = self.revision.checked_add(1).ok_or_else(|| RepositoryError::new(ErrorCode::Capacity, "Observation revision ex...
+    |                                                                  ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+137 -         self.revision = self.revision.checked_add(1).ok_or_else(|| RepositoryError::new(ErrorCode::Capacity, "Observation revision exhausted"))?;
+137 +         self.revision = self.revision.checked_add(1).ok_or_else(|| Repository::new(ErrorCode::Capacity, "Observation revision exhausted"))?;
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:137:89
+    |
+137 | ...add(1).ok_or_else(|| RepositoryError::new(ErrorCode::Capacity, "Observation revision exhausted"))?;
+    |                                              ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:152:76
+    |
+152 |         if self.fenced { return self.availability(record.id).ok_or_else(|| RepositoryError::storage("Workspace probes are fenced")); }
+    |                                                                            ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+152 -         if self.fenced { return self.availability(record.id).ok_or_else(|| RepositoryError::storage("Workspace probes are fenced")); }
+152 +         if self.fenced { return self.availability(record.id).ok_or_else(|| Repository::storage("Workspace probes are fenced")); }
+    |
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:161:39
+    |
+161 | ...   if matches!(workspace.status, CreationStatus::Running { .. }) && !self.activities.values().any(|a| a.workspace == Some(worksp...
+    |                                     ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:162:32
+    |
+162 | ...   workspace.status = CreationStatus::Uncertain { error: RepositoryError::new(ErrorCode::Unavailable, "Creation was interrupted;...
+    |                          ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:162:67
+    |
+162 | ...   workspace.status = CreationStatus::Uncertain { error: RepositoryError::new(ErrorCode::Unavailable, "Creation was interrupted;...
+    |                                                             ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+162 -             workspace.status = CreationStatus::Uncertain { error: RepositoryError::new(ErrorCode::Unavailable, "Creation was interrupted; reconcile this exact saved workspace explicitly") };
+162 +             workspace.status = CreationStatus::Uncertain { error: Repository::new(ErrorCode::Unavailable, "Creation was interrupted; reconcile this exact saved workspace explicitly") };
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:162:88
+    |
+162 | ...   workspace.status = CreationStatus::Uncertain { error: RepositoryError::new(ErrorCode::Unavailable, "Creation was interrupted;...
+    |                                                                                  ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:164:92
+    |
+164 | ...(&workspace.id) { workspace.status = CreationStatus::Uncertain { error: error.clone() }; }
+    |                                         ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:197:21
+    |
+197 |         let error = RepositoryError::new(
+    |                     ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+197 -         let error = RepositoryError::new(
+197 +         let error = Repository::new(
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:198:13
+    |
+198 |             ErrorCode::CleanupUnconfirmed,
+    |             ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:248:35
+    |
+248 |         else { state.fault = Some(RepositoryError::storage("Workspace generation exhausted")); }
+    |                                   ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+248 -         else { state.fault = Some(RepositoryError::storage("Workspace generation exhausted")); }
+248 +         else { state.fault = Some(Repository::storage("Workspace generation exhausted")); }
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:255:45
+    |
+255 |             let result = task.await.map_err(RepositoryError::storage).and_then(|r| r);
+    |                                             ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+255 -             let result = task.await.map_err(RepositoryError::storage).and_then(|r| r);
+255 +             let result = task.await.map_err(Repository::storage).and_then(|r| r);
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:276:24
+    |
+276 | ...   return Err(RepositoryError::new(ErrorCode::Capacity, "Eight operations are pending; retrieve status before admitting more"));
+    |                  ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+276 -             return Err(RepositoryError::new(ErrorCode::Capacity, "Eight operations are pending; retrieve status before admitting more"));
+276 +             return Err(Repository::new(ErrorCode::Capacity, "Eight operations are pending; retrieve status before admitting more"));
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:276:45
+    |
+276 | ...   return Err(RepositoryError::new(ErrorCode::Capacity, "Eight operations are pending; retrieve status before admitting more"));
+    |                                       ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:289:96
+    |
+289 | ...st.path.contains('\0') { return Err(RepositoryError::new(ErrorCode::InvalidPath, "Choose an absolute repository path")); }
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+289 -         if !Path::new(&request.path).is_absolute() || request.path.contains('\0') { return Err(RepositoryError::new(ErrorCode::InvalidPath, "Choose an absolute repository path")); }
+289 +         if !Path::new(&request.path).is_absolute() || request.path.contains('\0') { return Err(Repository::new(ErrorCode::InvalidPath, "Choose an absolute repository path")); }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:289:117
+    |
+289 | ...s('\0') { return Err(RepositoryError::new(ErrorCode::InvalidPath, "Choose an absolute repository path")); }
+    |                                              ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:297:71
+    |
+297 |         match saved { Some(saved) => Ok(saved), None => { write?; Err(RepositoryError::storage("Registration intent is absent")) } }
+    |                                                                       ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+297 -         match saved { Some(saved) => Ok(saved), None => { write?; Err(RepositoryError::storage("Registration intent is absent")) } }
+297 +         match saved { Some(saved) => Ok(saved), None => { write?; Err(Repository::storage("Registration intent is absent")) } }
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:311:52
+    |
+311 |             if serde_json::to_vec(&result).map_err(RepositoryError::storage)?.len() > PAGE_BYTES {
+    |                                                    ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+311 -             if serde_json::to_vec(&result).map_err(RepositoryError::storage)?.len() > PAGE_BYTES {
+311 +             if serde_json::to_vec(&result).map_err(Repository::storage)?.len() > PAGE_BYTES {
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:314:55
+    |
+314 | ...   if result.next.is_none() { return Err(RepositoryError::new(ErrorCode::Capacity, "Repository exceeds observation budget")); }
+    |                                             ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+314 -                 if result.next.is_none() { return Err(RepositoryError::new(ErrorCode::Capacity, "Repository exceeds observation budget")); }
+314 +                 if result.next.is_none() { return Err(Repository::new(ErrorCode::Capacity, "Repository exceeds observation budget")); }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:314:76
+    |
+314 | ...   if result.next.is_none() { return Err(RepositoryError::new(ErrorCode::Capacity, "Repository exceeds observation budget")); }
+    |                                                                  ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:318:82
+    |
+318 |         result.next = next.map(|s| Uuid::parse_str(&s).map(RepositoryId).map_err(RepositoryError::storage)).transpose()?;
+    |                                                                                  ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+318 -         result.next = next.map(|s| Uuid::parse_str(&s).map(RepositoryId).map_err(RepositoryError::storage)).transpose()?;
+318 +         result.next = next.map(|s| Uuid::parse_str(&s).map(RepositoryId).map_err(Repository::storage)).transpose()?;
+    |
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:331:30
+    |
+331 | ...   if matches!(request, WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. }) { return self.inspection_requ...
+    |                            ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:331:65
+    |
+331 | ...   if matches!(request, WorkspaceRequest::Changes { .. } | WorkspaceRequest::ChangePreview { .. }) { return self.inspection_requ...
+    |                                                               ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:333:13
+    |
+333 | ...   WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(WorkspaceAction::Create { action_id, repository...
+    |       ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:333:91
+    |
+333 | ...sitory_id } => self.admit_workspace(WorkspaceAction::Create { action_id, repository_id }).await,
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+333 -             WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(WorkspaceAction::Create { action_id, repository_id }).await,
+333 +             WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(crate::observations::Target::Create { action_id, repository_id }).await,
+    |
+333 -             WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(WorkspaceAction::Create { action_id, repository_id }).await,
+333 +             WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(crate::storage::operations::RecordShape::Create { action_id, repository_id }).await,
+    |
+333 -             WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(WorkspaceAction::Create { action_id, repository_id }).await,
+333 +             WorkspaceRequest::Create { action_id, repository_id } => self.admit_workspace(crate::workspaces::Read::Create { action_id, repository_id }).await,
+    |
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:334:13
+    |
+334 | ...   WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(WorkspaceAction::Reconcile { action_id, works...
+    |       ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:334:93
+    |
+334 | ...kspace_id } => self.admit_workspace(WorkspaceAction::Reconcile { action_id, workspace_id }).await,
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+334 -             WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(WorkspaceAction::Reconcile { action_id, workspace_id }).await,
+334 +             WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(crate::observations::Target::Reconcile { action_id, workspace_id }).await,
+    |
+334 -             WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(WorkspaceAction::Reconcile { action_id, workspace_id }).await,
+334 +             WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(crate::storage::operations::RecordShape::Reconcile { action_id, workspace_id }).await,
+    |
+334 -             WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(WorkspaceAction::Reconcile { action_id, workspace_id }).await,
+334 +             WorkspaceRequest::Reconcile { action_id, workspace_id } => self.admit_workspace(crate::workspaces::Read::Reconcile { action_id, workspace_id }).await,
+    |
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:335:13
+    |
+335 |             WorkspaceRequest::Action { action_id } => {
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:338:20
+    |
+338 | ...   Ok(WorkspaceReply::Action { action, workspace: workspace.map(|w| self.state().map(|s| s.workspace_observation(w))).transpose(...
+    |          ^^^^^^^^^^^^^^ use of undeclared type `WorkspaceReply`
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:340:13
+    |
+340 |             WorkspaceRequest::Get { id } => {
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:342:20
+    |
+342 | ...   Ok(WorkspaceReply::Workspace { workspace: workspace.map(|w| self.state().map(|s| s.workspace_observation(w))).transpose()? })
+    |          ^^^^^^^^^^^^^^ use of undeclared type `WorkspaceReply`
+
+error[E0433]: cannot find type `WorkspaceRequest` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:344:13
+    |
+344 |             WorkspaceRequest::List { repository_id, after } => {
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceRequest`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:350:60
+    |
+350 |                     if serde_json::to_vec(&result).map_err(RepositoryError::storage)?.len() > PAGE_BYTES {
+    |                                                            ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+350 -                     if serde_json::to_vec(&result).map_err(RepositoryError::storage)?.len() > PAGE_BYTES {
+350 +                     if serde_json::to_vec(&result).map_err(Repository::storage)?.len() > PAGE_BYTES {
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:352:63
+    |
+352 | ...   if result.next.is_none() { return Err(RepositoryError::new(ErrorCode::Capacity, "Workspace exceeds observation budget")); }
+    |                                             ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+352 -                         if result.next.is_none() { return Err(RepositoryError::new(ErrorCode::Capacity, "Workspace exceeds observation budget")); }
+352 +                         if result.next.is_none() { return Err(Repository::new(ErrorCode::Capacity, "Workspace exceeds observation budget")); }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:352:84
+    |
+352 | ...   if result.next.is_none() { return Err(RepositoryError::new(ErrorCode::Capacity, "Workspace exceeds observation budget")); }
+    |                                                                  ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:353:35
+    |
+353 |                         return Ok(WorkspaceReply::Workspaces { page: result });
+    |                                   ^^^^^^^^^^^^^^ use of undeclared type `WorkspaceReply`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:356:89
+    |
+356 |                 result.next = next.map(|s| Uuid::parse_str(&s).map(WorkspaceId).map_err(RepositoryError::storage)).transpose()?;
+    |                                                                                         ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+356 -                 result.next = next.map(|s| Uuid::parse_str(&s).map(WorkspaceId).map_err(RepositoryError::storage)).transpose()?;
+356 +                 result.next = next.map(|s| Uuid::parse_str(&s).map(WorkspaceId).map_err(Repository::storage)).transpose()?;
+    |
+
+error[E0433]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:357:20
+    |
+357 |                 Ok(WorkspaceReply::Workspaces { page: result })
+    |                    ^^^^^^^^^^^^^^ use of undeclared type `WorkspaceReply`
+
+error[E0433]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:366:23
+    |
+366 | ...   return Ok(WorkspaceReply::Action { action: Some(saved), workspace: Some(self.state()?.workspace_observation(workspace)) });
+    |                 ^^^^^^^^^^^^^^ use of undeclared type `WorkspaceReply`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:371:13
+    |
+371 |             WorkspaceAction::Create { action_id, repository_id } => {
+    |             ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+371 -             WorkspaceAction::Create { action_id, repository_id } => {
+371 +             crate::observations::Target::Create { action_id, repository_id } => {
+    |
+371 -             WorkspaceAction::Create { action_id, repository_id } => {
+371 +             crate::storage::operations::RecordShape::Create { action_id, repository_id } => {
+    |
+371 -             WorkspaceAction::Create { action_id, repository_id } => {
+371 +             crate::workspaces::Read::Create { action_id, repository_id } => {
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:373:128
+    |
+373 | ..._id)).await?.is_none() { return Err(RepositoryError::new(ErrorCode::NotFound, "Repository not found")); }
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+373 -                 if one::<RepositoryRecord>(self.store.as_ref(), Read::Repository(repository_id)).await?.is_none() { return Err(RepositoryError::new(ErrorCode::NotFound, "Repository not found")); }
+373 +                 if one::<RepositoryRecord>(self.store.as_ref(), Read::Repository(repository_id)).await?.is_none() { return Err(Repository::new(ErrorCode::NotFound, "Repository not found")); }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:373:149
+    |
+373 | ..._none() { return Err(RepositoryError::new(ErrorCode::NotFound, "Repository not found")); }
+    |                                              ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:374:127
+    |
+374 | ...wait?.unwrap_or(false) { return Err(RepositoryError::new(ErrorCode::CleanupUnconfirmed, "Reconcile unconfirmed repository cleanu...
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+374 -                 if one::<bool>(self.store.as_ref(), Read::CleanupBlocked(repository_id)).await?.unwrap_or(false) { return Err(RepositoryError::new(ErrorCode::CleanupUnconfirmed, "Reconcile unconfirmed repository cleanup first")); }
+374 +                 if one::<bool>(self.store.as_ref(), Read::CleanupBlocked(repository_id)).await?.unwrap_or(false) { return Err(Repository::new(ErrorCode::CleanupUnconfirmed, "Reconcile unconfirmed repository cleanup first")); }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:374:148
+    |
+374 | ...(false) { return Err(RepositoryError::new(ErrorCode::CleanupUnconfirmed, "Reconcile unconfirmed repository cleanup first")); }
+    |                                              ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `WorkspaceAction` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:377:13
+    |
+377 |             WorkspaceAction::Reconcile { workspace_id, .. } => {
+    |             ^^^^^^^^^^^^^^^ use of undeclared type `WorkspaceAction`
+    |
+help: there is an enum variant `crate::observations::Target::WorkspaceAction` and 3 others; try using the variant's enum
+    |
+377 -             WorkspaceAction::Reconcile { workspace_id, .. } => {
+377 +             crate::observations::Target::Reconcile { workspace_id, .. } => {
+    |
+377 -             WorkspaceAction::Reconcile { workspace_id, .. } => {
+377 +             crate::storage::operations::RecordShape::Reconcile { workspace_id, .. } => {
+    |
+377 -             WorkspaceAction::Reconcile { workspace_id, .. } => {
+377 +             crate::workspaces::Read::Reconcile { workspace_id, .. } => {
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:378:81
+    |
+378 | ...   if self.state()?.activities.len() >= PENDING_LIMIT { return Err(RepositoryError::new(ErrorCode::Capacity, "Workspace executio...
+    |                                                                       ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+378 -                 if self.state()?.activities.len() >= PENDING_LIMIT { return Err(RepositoryError::new(ErrorCode::Capacity, "Workspace execution capacity is occupied")); }
+378 +                 if self.state()?.activities.len() >= PENDING_LIMIT { return Err(Repository::new(ErrorCode::Capacity, "Workspace execution capacity is occupied")); }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:378:102
+    |
+378 | ...G_LIMIT { return Err(RepositoryError::new(ErrorCode::Capacity, "Workspace execution capacity is occupied")); }
+    |                                              ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:379:119
+    |
+379 | ...workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+379 -                 let mut w = one::<Workspace>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+379 +                 let mut w = one::<Workspace>(self.store.as_ref(), Read::Workspace(workspace_id)).await?.ok_or_else(|| Repository::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:379:140
+    |
+379 | ...await?.ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+    |                                              ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:381:104
+    |
+381 | ...= Some(workspace_id)) || w.status == CreationStatus::Ready || (w.status == CreationStatus::Queued && !state.workspace_faults.con...
+    |                                         ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:381:142
+    |
+381 | ...reationStatus::Ready || (w.status == CreationStatus::Queued && !state.workspace_faults.contains_key(&workspace_id)) { return Err...
+    |                                         ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `CreationStatus` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:382:28
+    |
+382 |                 w.status = CreationStatus::Queued; w
+    |                            ^^^^^^^^^^^^^^ use of undeclared type `CreationStatus`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:388:81
+    |
+388 | ...= saved else { written?; return Err(RepositoryError::storage("Workspace intent is absent")); };
+    |                                        ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+388 -         let Some((saved_action, workspace)) = saved else { written?; return Err(RepositoryError::storage("Workspace intent is absent")); };
+388 +         let Some((saved_action, workspace)) = saved else { written?; return Err(Repository::storage("Workspace intent is absent")); };
+    |
+
+error[E0433]: cannot find type `WorkspaceReply` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:390:12
+    |
+390 |         Ok(WorkspaceReply::Action { action: Some(saved_action), workspace: Some(self.state()?.workspace_observation(workspace)) })
+    |            ^^^^^^^^^^^^^^ use of undeclared type `WorkspaceReply`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:393:36
+    |
+393 | fn conflict() -> RepositoryError { RepositoryError::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts...
+    |                                    ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+393 - fn conflict() -> RepositoryError { RepositoryError::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts; retrieve its exact status") }
+393 + fn conflict() -> RepositoryError { Repository::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts; retrieve its exact status") }
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:393:57
+    |
+393 | fn conflict() -> RepositoryError { RepositoryError::new(ErrorCode::Conflict, "Action identity, payload or workspace state conflicts...
+    |                                                         ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:394:34
+    |
+394 | fn fenced() -> RepositoryError { RepositoryError::storage("Workspace admission is fenced") }
+    |                                  ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+394 - fn fenced() -> RepositoryError { RepositoryError::storage("Workspace admission is fenced") }
+394 + fn fenced() -> RepositoryError { Repository::storage("Workspace admission is fenced") }
+    |
+
+error[E0433]: cannot find type `RepositoryError` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:418:13
+    |
+418 |         Err(RepositoryError::new(
+    |             ^^^^^^^^^^^^^^^ use of undeclared type `RepositoryError`
+    |
+help: a struct with a similar name exists
+    |
+418 -         Err(RepositoryError::new(
+418 +         Err(Repository::new(
+    |
+
+error[E0433]: cannot find type `ErrorCode` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:419:13
+    |
+419 |             ErrorCode::CleanupUnconfirmed,
+    |             ^^^^^^^^^ use of undeclared type `ErrorCode`
+
+error[E0425]: cannot find function `allocate` in this scope
+   --> crates/workspace-checkpoint/src/../../core/src/workspaces.rs:375:17
+    |
+375 |                 allocate(repository_id, action_id, &self.state()?.directory)?
+    |                 ^^^^^^^^ not found in this scope
+
+Some errors have detailed explanations: E0422, E0425, E0432, E0433, E0583.
+For more information about an error, try `rustc --explain E0422`.
+warning: `workspace-checkpoint` (lib) generated 2 warnings
+error: could not compile `workspace-checkpoint` (lib) due to 178 previous errors; 2 warnings emitted

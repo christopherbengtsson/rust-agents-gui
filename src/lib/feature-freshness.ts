@@ -3,27 +3,27 @@ export class FeatureFreshness {
   private identities = new Map<string, number>();
   private clock = 0;
   private global = 0;
-  private owner?: string;
+  private incarnation?: string;
   private baseline = false;
   private listeners = new Set<() => void>();
 
-  connect(owner: string | undefined) {
-    if (owner !== this.owner) {
+  connect(incarnation: string | undefined) {
+    if (incarnation !== this.incarnation) {
       this.identities.clear();
       this.global = ++this.clock;
     }
-    this.owner = owner;
+    this.incarnation = incarnation;
     this.baseline = false;
     this.publish();
   }
-  currentOwner() {
-    return this.owner;
+  currentIncarnation() {
+    return this.incarnation;
   }
-  matches(owner: string) {
-    return this.owner === owner;
+  matches(incarnation: string) {
+    return this.incarnation === incarnation;
   }
-  ready(owner: string) {
-    return this.owner === owner && this.baseline;
+  ready(incarnation: string) {
+    return this.incarnation === incarnation && this.baseline;
   }
   mark(identity: string) {
     this.identities.set(identity, ++this.clock);
@@ -39,8 +39,8 @@ export class FeatureFreshness {
       ...identities.map((id) => this.identities.get(id) ?? 0),
     );
   }
-  accept(owner: string) {
-    if (this.owner !== owner) return;
+  accept(incarnation: string) {
+    if (this.incarnation !== incarnation) return;
     this.baseline = true;
     this.publish();
   }

@@ -1,0 +1,66 @@
+   Compiling tokio-util v0.7.20
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.23s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-5bebefa315110a41)
+
+running 27 tests
+test connection::subscription::tests::abandoned_stop_keeps_worker_owned_and_collects_its_completion ... ok
+test connection::subscription::tests::acknowledgements_match_subscription_batch_and_cursor_exactly ... ok
+test connection::subscription::tests::direct_delivery_waits_for_acceptance_and_preserves_changes_during_resync ... ok
+test connection::subscription::tests::direct_sink_failure_and_absolute_ack_deadline_stop_delivery ... ok
+test connection::subscription::tests::native_reload_bounds_replacements_and_retains_late_worker_after_waiter_loss ... ok
+test connection::subscription::tests::owner_batch_cursor_and_delivery_bounds_precede_frontend_delivery ... ok
+test connection::subscription::tests::shared_corpus_matches_rust_feed_serialization_and_delivery_bounds ... ok
+test connection::subscription::tests::stopped_before_delivery_cannot_offer_or_acknowledge ... ok
+test connection::tasks::tests::abandoned_cleanup_keeps_actual_work_until_it_finishes ... ok
+test connection::tasks::tests::discovered_panic_fences_next_dispatch_and_stays_in_cleanup_report ... ok
+test connection::tests::application_corpus_matches_pure_rust_serialization ... ok
+test runtimes::provider_connection::login::tests::durable_intent_precedes_effects_and_cleanup_failure_preserves_scope_fence ... ok
+test runtimes::provider_connection::login::tests::shutdown_cancels_late_preparation_and_skips_verification_without_replacing_work ... ok
+test runtimes::provider_connection::persistence::tests::quit_during_storage_acquisition_keeps_status_usable_and_settles_without_effects ... ok
+test runtimes::provider_connection::selection::tests::absent_selection_reconciliation_fences_a_delayed_intent ... ok
+test runtimes::provider_connection::selection::tests::failed_selection_intent_never_runs_the_probe ... ok
+test runtimes::provider_connection::selection::tests::invalid_or_unpersisted_selection_does_not_replace_the_saved_preference ... ok
+test runtimes::provider_connection::selection::tests::selection_admission_is_exact_duplicate_safe_and_excludes_login ... ok
+test runtimes::provider_connection::selection::tests::validated_selection_is_remembered_even_when_authentication_read_fails ... ok
+test runtimes::provider_connection::tests::cancelled_login_retains_last_good_on_failed_verification_and_rejects_stale_cancel ... ok
+test runtimes::provider_connection::tests::diagnostics_retain_source_without_exporting_its_untrusted_message ... ok
+test runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement ... ok
+test runtimes::provider_connection::tests::independent_targets_coalesce_reads_and_reject_late_or_cross_target_evidence ... ok
+test runtimes::provider_connection::tests::login_admission_is_exact_and_fences_checks_and_competing_attempts ... ok
+test runtimes::provider_connection::tests::panic_is_settled_with_exact_target_without_a_later_request ... ok
+test runtimes::provider_connection::tests::reconciliation_fences_a_late_start_and_uncertain_cleanup_is_scope_local ... ok
+test runtimes::provider_connection::tests::same_scope_readiness_cleanup_fences_other_checks_but_unrelated_targets_progress ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 145 filtered out; finished in 0.02s
+

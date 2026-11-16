@@ -1,0 +1,62 @@
+{
+  "root": "/private/tmp/aw-sqlx04-gsu3dtiz",
+  "bundle": "/private/tmp/aw-sqlx04-gsu3dtiz/SQLx04.app",
+  "repository": "/private/tmp/aw-sqlx04-gsu3dtiz/repository",
+  "runtime": "/private/tmp/aw-sqlx04-gsu3dtiz/synthetic-codex",
+  "protocol": 15,
+  "mode": "fixture-desktop",
+  "checks": ["actual desktop owned Quit exits desktop and host 0"],
+  "captures": [],
+  "binary_hashes": {
+    "/private/tmp/aw-sqlx04-gsu3dtiz/SQLx04.app/Contents/Resources/workspace-supervisor": "84d1edde723a32f2b9eaf8b25fcf1df5e96a8df7ed3809e950127613865f6cfa",
+    "/private/tmp/aw-sqlx04-gsu3dtiz/SQLx04.app/Contents/MacOS/workspace-desktop": "5cf610ba661716ffa93357ebe8ce09c2b63474f5de971dfbc3e88476ca448047",
+    "/private/tmp/aw-sqlx04-gsu3dtiz/synthetic-codex": "cfeb46bd02d2cdae024197874c7dfd26a2d1117d4e18075c152cc4748703cf30"
+  },
+  "schema_source": "Codex 0.169.0 / d32063f96c2dff1dc96af839b3952abb6acfeda4; all peer messages synthetic",
+  "desktop_pid": 66187,
+  "result": "passed",
+  "host_exits": [0],
+  "events": [
+    {
+      "pid": 66219,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 66220,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 66220,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 66220,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 66220,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 66220,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 66220,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 66220,
+      "event": "exit"
+    }
+  ],
+  "forbidden_methods": [],
+  "remaining_fixture_pids": []
+}

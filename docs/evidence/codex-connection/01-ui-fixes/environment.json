@@ -1,0 +1,7 @@
+{
+  "baseline": "30cf4d1a8d00181f65549a4a59dc5c5602e05f5e",
+  "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "node": "v26.13.1",
+  "hardware": "Mac16,8",
+  "qualification": "Readiness corrections only; no live authentication, agent or successor work."
+}

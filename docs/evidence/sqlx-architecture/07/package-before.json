@@ -1,0 +1,21 @@
+{
+  "source_cohort": "ticket06 existing package; provenance in ticket06 evidence",
+  "files": [
+    {
+      "path": "Contents/Info.plist",
+      "bytes": 951,
+      "sha256": "8138f27a6a1b774fdbf441f5de4e169ccf5a7d2bb88a8c8892c441cbfbf66019"
+    },
+    {
+      "path": "Contents/MacOS/workspace-desktop",
+      "bytes": 18300496,
+      "sha256": "12c6f12edb4ae7d81fa3b58053a2a8371988b81fb9909497876655047f303244"
+    },
+    {
+      "path": "Contents/Resources/workspace-supervisor",
+      "bytes": 7706448,
+      "sha256": "ce0088cd316a9eee0ba7546692f8315e9d23cfecea389a898a68cb50e07e34a4"
+    }
+  ],
+  "total_bytes": 26007895
+}

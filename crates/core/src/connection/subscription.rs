@@ -31,20 +31,15 @@ pub enum FeedEvent {
         message: String,
     },
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub(super) struct Subscribe {
-    pub subscription_id: String,
-    pub after: Option<FeedCursor>,
-}
-
 struct NativeSubscription {
     id: String,
     control: Arc<Control>,
     worker: tokio::task::JoinHandle<()>,
 }
 #[derive(Default)]
-pub(super) struct FeedOwner {
+pub(crate) struct FeedOwner {
     current: Mutex<Option<NativeSubscription>>,
+    failure: Mutex<Option<String>>,
     // A new WebView document has no old subscription ID. Admit at most one
     // replacement while its predecessor is physically draining.
     replacement: tokio::sync::Mutex<()>,
@@ -158,13 +153,17 @@ impl FeedOwner {
                 std::task::Poll::Pending => std::task::Poll::Pending,
                 std::task::Poll::Ready(result) => {
                     current.take();
+                    if let Err(error) = &result {
+                        *self.failure.lock().unwrap_or_else(|e| e.into_inner()) =
+                            Some(format!("Native subscription completion failed: {error}"));
+                    }
                     std::task::Poll::Ready(result.map_err(unavailable))
                 }
             }
         })
         .await
     }
-    pub(super) async fn stop_all(&self) -> Result<(), RequestFailure> {
+    pub(crate) async fn stop_all(&self) -> Result<(), RequestFailure> {
         let id = self
             .current
             .lock()
@@ -174,124 +173,47 @@ impl FeedOwner {
         if let Some(id) = id {
             self.stop(&id).await?;
         }
+        if let Some(error) = self
+            .failure
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
+        {
+            return Err(unavailable(error));
+        }
         Ok(())
     }
 }
-impl SupervisorConnection {
-    /// Replace this desktop connection's feed after a WebView document reload.
-    /// The old worker remains owned and joined before the new feed is admitted.
+impl crate::native::NativeHost {
     pub async fn replace_subscription(
         &self,
-        expected_owner: String,
+        expected: String,
         subscription_id: String,
         after: Option<FeedCursor>,
         deliver: impl Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
     ) -> Result<(), RequestFailure> {
-        let client = self.client();
-        self.replace_subscription_with(
-            expected_owner,
-            subscription_id,
-            after,
-            deliver,
-            async move |owner, id, after, control, deliver| {
-                run_client(&client, &owner, &id, after, &control, &*deliver).await
-            },
-        )
-        .await
-    }
-    async fn replace_subscription_with<D, R, F>(
-        &self,
-        expected_owner: String,
-        subscription_id: String,
-        after: Option<FeedCursor>,
-        deliver: D,
-        run: R,
-    ) -> Result<(), RequestFailure>
-    where
-        D: Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
-        R: FnOnce(String, String, Option<FeedCursor>, Arc<Control>, Arc<D>) -> F + Send + 'static,
-        F: Future<Output = io::Result<()>> + Send + 'static,
-    {
         validate_subscription_id(&subscription_id).map_err(unavailable)?;
-        self.require_connection(&expected_owner)?;
+        self.core(&expected)?;
         let _replacement = self.feed.replacement.try_lock().map_err(|_| {
             RequestFailure::transport(
                 TransportCode::Busy,
                 Delivery::NotSent,
-                "Previous frontend subscription replacement is still draining",
+                "Previous native subscription is draining",
             )
         })?;
         self.feed.stop_all().await?;
-        // Revalidate owner and shutdown state after awaiting physical cleanup.
-        self.start_subscription_with(expected_owner, subscription_id, after, deliver, run)
-    }
-    pub fn start_subscription(
-        &self,
-        expected_owner: String,
-        subscription_id: String,
-        after: Option<FeedCursor>,
-        deliver: impl Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
-    ) -> Result<(), RequestFailure> {
-        let client = self.client();
-        self.start_subscription_with(
-            expected_owner,
-            subscription_id,
-            after,
-            deliver,
-            async move |owner, id, after, control, deliver| {
-                run_client(&client, &owner, &id, after, &control, &*deliver).await
-            },
-        )
-    }
-    fn start_subscription_with<D, R, F>(
-        &self,
-        expected_owner: String,
-        subscription_id: String,
-        after: Option<FeedCursor>,
-        deliver: D,
-        run: R,
-    ) -> Result<(), RequestFailure>
-    where
-        D: Fn(FeedEvent) -> io::Result<()> + Send + Sync + 'static,
-        R: FnOnce(String, String, Option<FeedCursor>, Arc<Control>, Arc<D>) -> F + Send + 'static,
-        F: Future<Output = io::Result<()>> + Send + 'static,
-    {
-        if self.tasks.cancel.is_cancelled() {
-            return Err(unavailable("Connection cleanup has begun"));
-        }
-        validate_subscription_id(&subscription_id).map_err(unavailable)?;
-        self.require_connection(&expected_owner)?;
-        let permit = Self::admit(&self.subscription)?;
         let mut current = self.feed.current.lock().map_err(unavailable)?;
-        if self.tasks.cancel.is_cancelled() {
-            return Err(unavailable("Connection cleanup has begun"));
-        }
-        if current.is_some() {
-            return Err(RequestFailure::transport(
-                TransportCode::Busy,
-                Delivery::NotSent,
-                "Stop and await the previous subscription before replacement",
-            ));
-        }
+        let core = self.core(&expected)?;
         let control = Arc::new(Control::default());
-        let owned_control = control.clone();
+        let owned = control.clone();
         let id = subscription_id.clone();
-        let deliver = Arc::new(deliver);
         let worker = tokio::spawn(async move {
-            let _permit = permit;
-            let result = run(
-                expected_owner,
-                id.clone(),
-                after,
-                owned_control.clone(),
-                deliver.clone(),
-            )
-            .await;
-            owned_control.stop();
+            let result = run_direct(&core.journal, &expected, &id, after, &owned, &deliver).await;
+            owned.stop();
             let message = match result {
                 Ok(()) => "Observation delivery stopped".into(),
                 Err(error) => {
-                    format!("Observation delivery stopped: {error}. Refresh connection explicitly.")
+                    format!("Observation delivery stopped: {error}. Refresh core status.")
                 }
             };
             let _ = deliver(FeedEvent::Stopped {
@@ -311,13 +233,56 @@ impl SupervisorConnection {
         current
             .as_ref()
             .filter(|s| s.id == acknowledgement.subscription_id)
-            .ok_or_else(|| unavailable("Unknown subscription acknowledgement"))?
+            .ok_or_else(|| unavailable("Unknown native subscription"))?
             .control
             .acknowledge(&acknowledgement)
             .map_err(unavailable)
     }
     pub async fn stop_subscription(&self, id: &str) -> Result<(), RequestFailure> {
         self.feed.stop(id).await
+    }
+    pub(crate) async fn stop_delivery(&self) -> Result<(), RequestFailure> {
+        let _replacement = self.feed.replacement.lock().await;
+        self.feed.stop_all().await
+    }
+}
+async fn run_direct(
+    journal: &crate::observations::Journal,
+    incarnation: &str,
+    id: &str,
+    after: Option<FeedCursor>,
+    control: &Control,
+    deliver: &(impl Fn(FeedEvent) -> io::Result<()> + Sync),
+) -> io::Result<()> {
+    let mut after = after
+        .filter(|cursor| cursor.incarnation == incarnation)
+        .map(|cursor| cursor.sequence);
+    let mut batch_id = 0u64;
+    loop {
+        let sample = journal
+            .wait_async(after, HEARTBEAT, &control.cancel)
+            .await?;
+        batch_id = batch_id
+            .checked_add(1)
+            .filter(|id| *id <= MAX_SEQUENCE)
+            .ok_or_else(|| io::Error::other("Batch sequence exhausted"))?;
+        let acknowledgement = FeedAck {
+            subscription_id: id.into(),
+            batch_id,
+            cursor: FeedCursor {
+                incarnation: incarnation.into(),
+                sequence: sample.watermark(),
+            },
+        };
+        let batch = FeedBatch {
+            acknowledgement: acknowledgement.clone(),
+            sample,
+        };
+        validate_batch(&batch, incarnation, id, batch_id - 1, after)?;
+        control.offer(acknowledgement.clone())?;
+        deliver(FeedEvent::Batch { batch })?;
+        control.wait_accepted(Instant::now() + ACK_TIMEOUT).await?;
+        after = Some(acknowledgement.cursor.sequence);
     }
 }
 fn validate_subscription_id(id: &str) -> io::Result<()> {
@@ -335,75 +300,9 @@ fn validate_subscription_id(id: &str) -> io::Result<()> {
         Ok(())
     }
 }
-fn request(owner: String, subscription_id: String, after: Option<FeedCursor>) -> Request {
-    Request {
-        protocol: PROTOCOL_VERSION,
-        application_version: env!("CARGO_PKG_VERSION").into(),
-        after: None,
-        expected_owner: Some(owner),
-        repository: None,
-        workspace: None,
-        subscribe: Some(Subscribe {
-            subscription_id,
-            after,
-        }),
-    }
-}
-async fn run_client(
-    client: &SupervisorClient,
-    owner: &str,
-    id: &str,
-    after: Option<FeedCursor>,
-    control: &Control,
-    deliver: &(impl Fn(FeedEvent) -> io::Result<()> + Sync),
-) -> io::Result<()> {
-    let socket = open_stream(&client.state, &mut client.effects(), &control.cancel).await?;
-    let mut exchange = FramedExchange::new(socket);
-    write_json(
-        &mut exchange,
-        &request(owner.into(), id.into(), after.clone()),
-        Instant::now() + IO_TIMEOUT,
-        &control.cancel,
-    )
-    .await?;
-    run_subscribed(&mut exchange, owner, id, after, control, deliver).await
-}
-async fn run_subscribed<S: AsyncRead + AsyncWrite + Unpin + 'static>(
-    exchange: &mut FramedExchange<S>,
-    owner: &str,
-    id: &str,
-    after: Option<FeedCursor>,
-    control: &Control,
-    deliver: &(impl Fn(FeedEvent) -> io::Result<()> + Sync),
-) -> io::Result<()> {
-    let mut previous_batch = 0;
-    let mut previous_cursor = after
-        .filter(|cursor| cursor.owner == owner)
-        .map(|cursor| cursor.sequence);
-    loop {
-        let response: Response = read_json(
-            exchange,
-            Instant::now() + HEARTBEAT + IO_TIMEOUT,
-            &control.cancel,
-        )
-        .await?;
-        let Response::Feed { batch } = response else {
-            return Err(io::Error::other("Subscription rejected or incompatible"));
-        };
-        validate_batch(&batch, owner, id, previous_batch, previous_cursor)?;
-        let deadline = Instant::now() + ACK_TIMEOUT;
-        let acknowledgement = batch.acknowledgement.clone();
-        control.offer(acknowledgement.clone())?;
-        deliver(FeedEvent::Batch { batch })?;
-        control.wait_accepted(deadline).await?;
-        write_json(exchange, &acknowledgement, deadline, &control.cancel).await?;
-        previous_batch = acknowledgement.batch_id;
-        previous_cursor = Some(acknowledgement.cursor.sequence);
-    }
-}
 fn validate_batch(
     batch: &FeedBatch,
-    owner: &str,
+    incarnation: &str,
     id: &str,
     previous: u64,
     cursor: Option<u64>,
@@ -420,7 +319,7 @@ fn validate_batch(
         Sample::ResyncRequired { .. } => true,
     };
     if ack.subscription_id != id
-        || ack.cursor.owner != owner
+        || ack.cursor.incarnation != incarnation
         || Some(ack.batch_id) != previous.checked_add(1)
         || ack.batch_id > MAX_SEQUENCE
         || sequence == 0
@@ -437,57 +336,6 @@ fn validate_batch(
     Ok(())
 }
 
-pub(super) async fn serve<S: AsyncRead + AsyncWrite + Unpin + 'static>(
-    owner: &str,
-    journal: &crate::observations::Journal,
-    subscribe: Subscribe,
-    exchange: &mut FramedExchange<S>,
-    cancel: &CancellationToken,
-) -> io::Result<()> {
-    validate_subscription_id(&subscribe.subscription_id)?;
-    let mut after = subscribe
-        .after
-        .filter(|cursor| cursor.owner == owner)
-        .map(|cursor| cursor.sequence);
-    let mut batch_id: u64 = 0;
-    loop {
-        let sample = journal.wait_async(after, HEARTBEAT, cancel).await?;
-        batch_id = batch_id
-            .checked_add(1)
-            .filter(|id| *id <= MAX_SEQUENCE)
-            .ok_or_else(|| io::Error::other("Subscription batch sequence exhausted"))?;
-        let acknowledgement = FeedAck {
-            subscription_id: subscribe.subscription_id.clone(),
-            batch_id,
-            cursor: FeedCursor {
-                owner: owner.into(),
-                sequence: sample.watermark(),
-            },
-        };
-        let batch = FeedBatch {
-            acknowledgement: acknowledgement.clone(),
-            sample,
-        };
-        if serde_json::to_vec(&batch)?.len() > DELIVERY_BYTES {
-            return Err(io::Error::other("Subscription batch exceeds byte budget"));
-        }
-        write_json(
-            exchange,
-            &Response::Feed { batch },
-            Instant::now() + IO_TIMEOUT,
-            cancel,
-        )
-        .await?;
-        let ack: FeedAck = read_json(exchange, Instant::now() + ACK_TIMEOUT, cancel).await?;
-        if ack != acknowledgement {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                "Mismatched subscription acknowledgement",
-            ));
-        }
-        after = Some(ack.cursor.sequence);
-    }
-}
 #[cfg(test)]
 mod tests;
 

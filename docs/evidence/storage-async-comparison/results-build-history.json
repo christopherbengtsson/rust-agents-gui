@@ -1,0 +1,85 @@
+[
+  {
+    "log": "results-build-bridge-attempt1.log",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--manifest-path",
+      "docs/evidence/storage-async-comparison/harness/bridge/Cargo.toml"
+    ],
+    "CARGO_TARGET_DIR": "/tmp/storage-async-bridge-target",
+    "exit": 0,
+    "role": "construction compile; final frozen runtime binary hashes are in results-environment/results entries; final-source fresh-target costs are separate",
+    "cargo_reported_wall": [
+      "Finished `release` profile [optimized] target(s) in 15.26s"
+    ]
+  },
+  {
+    "log": "results-build-bridge-final.log",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "docs/evidence/storage-async-comparison/harness/bridge/Cargo.toml"
+    ],
+    "CARGO_TARGET_DIR": "/tmp/storage-async-bridge-target",
+    "exit": 0,
+    "role": "construction compile; final frozen runtime binary hashes are in results-environment/results entries; final-source fresh-target costs are separate",
+    "cargo_reported_wall": [
+      "Finished `release` profile [optimized] target(s) in 1.30s"
+    ]
+  },
+  {
+    "log": "results-build-sqlx-attempt1.log",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--manifest-path",
+      "docs/evidence/storage-async-comparison/harness/sqlx/Cargo.toml"
+    ],
+    "CARGO_TARGET_DIR": "/tmp/storage-async-sqlx-target",
+    "exit": 0,
+    "role": "construction compile; final frozen runtime binary hashes are in results-environment/results entries; final-source fresh-target costs are separate",
+    "cargo_reported_wall": [
+      "Finished `release` profile [optimized] target(s) in 17.46s"
+    ]
+  },
+  {
+    "log": "results-build-sqlx-final.log",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "docs/evidence/storage-async-comparison/harness/sqlx/Cargo.toml"
+    ],
+    "CARGO_TARGET_DIR": "/tmp/storage-async-sqlx-target",
+    "exit": 0,
+    "role": "construction compile; final frozen runtime binary hashes are in results-environment/results entries; final-source fresh-target costs are separate",
+    "cargo_reported_wall": [
+      "Finished `release` profile [optimized] target(s) in 1.44s"
+    ]
+  },
+  {
+    "log": "results-build-sqlx-final2.log",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "docs/evidence/storage-async-comparison/harness/sqlx/Cargo.toml"
+    ],
+    "CARGO_TARGET_DIR": "/tmp/storage-async-sqlx-target",
+    "exit": 0,
+    "role": "construction compile; final frozen runtime binary hashes are in results-environment/results entries; final-source fresh-target costs are separate",
+    "cargo_reported_wall": [
+      "Finished `release` profile [optimized] target(s) in 1.48s"
+    ]
+  }
+]

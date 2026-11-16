@@ -1,0 +1,39 @@
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.15
+   Compiling pkg-config v0.3.34
+   Compiling vcpkg v0.2.15
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling foldhash v0.2.0
+   Compiling serde_json v1.0.154
+   Compiling fallible-streaming-iterator v0.1.9
+   Compiling fallible-iterator v0.3.0
+   Compiling bitflags v2.13.2
+   Compiling smallvec v1.16.5
+   Compiling memchr v2.8.3
+   Compiling cc v1.11.2
+   Compiling hashbrown v0.17.1
+   Compiling itoa v1.0.19
+   Compiling hashlink v0.12.2
+   Compiling libsqlite3-sys v0.40.0
+   Compiling rusqlite v0.42.0
+   Compiling storage-bench-rusqlite v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/docs/evidence/milestone-01-storage/driver-bench/rusqlite)
+    Finished `release` profile [optimized] target(s) in 12.98s
+       13.04 real        17.66 user         1.01 sys
+           597147648  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              377447  page reclaims
+                6431  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  40  signals received
+                 861  voluntary context switches
+               16018  involuntary context switches
+           853030828  instructions retired
+           410891580  cycles elapsed
+            13206056  peak memory footprint

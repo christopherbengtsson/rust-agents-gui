@@ -1,0 +1,28 @@
+$ node scripts/prepare-generated.mjs --write
+error: cannot update the lock file /Users/christopherbengtsson/Documents/dev/rust-agents-gui/Cargo.lock because --locked was passed to prevent this
+help: to generate the lock file without accessing the network, remove the --locked flag and use --offline instead.
+node:internal/errors:999
+  const err = new Error(message);
+              ^
+
+Error: Command failed: cargo build --locked -p workspace-core --bin export-contracts --features codegen --message-format=json-render-diagnostics
+    at genericNodeError (node:internal/errors:999:15)
+    at wrappedFn (node:internal/errors:544:14)
+    at checkExecSyncError (node:child_process:990:11)
+    at execFileSync (node:child_process:1026:15)
+    at runCommand (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/cargo.mjs:15:10)
+    at prepareGenerated (file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.mjs:232:18)
+    at file:///Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/prepare-generated.mjs:269:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {
+  status: 101,
+  signal: null,
+  output: [ null, '', null ],
+  pid: 84143,
+  stdout: '',
+  stderr: null
+}
+
+Node.js v26.13.1
+[ELIFECYCLE] Command failed with exit code 1.

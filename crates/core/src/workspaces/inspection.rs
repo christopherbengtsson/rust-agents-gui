@@ -382,6 +382,9 @@ fn expired() -> RepositoryError {
     )
 }
 impl Inspections {
+    pub(super) fn has_pending(&self) -> bool {
+        !self.pending.is_empty()
+    }
     fn record(&mut self, id: WorkspaceId) -> Result<&mut Inspection> {
         if !self.records.iter().any(|r| r.workspace_id == id) {
             if self.records.len() >= RETAINED_WORKSPACES {
@@ -620,7 +623,7 @@ fn display_path(path: &[u8]) -> String {
 fn capture(
     workspace: &Workspace,
     repository: &RepositoryRecord,
-    effects: &mut impl InspectionEffects,
+    effects: &mut (impl InspectionEffects + ?Sized),
 ) -> Result<Comparison> {
     effects.validate(workspace, repository)?;
     let root = Path::new(workspace.path()?);
@@ -652,7 +655,7 @@ fn acquire_preview(
     target: &PreviewTarget,
     comparison: &Comparison,
     file: &FileEntry,
-    effects: &mut impl InspectionEffects,
+    effects: &mut (impl InspectionEffects + ?Sized),
 ) -> Result<PreviewObservation> {
     effects.validate(workspace, repository)?;
     let root = Path::new(workspace.path()?);
@@ -840,7 +843,7 @@ fn bound_failed_preview(observation: &mut PreviewObservation) {
 
 pub(super) fn process_inspection(
     shared: &Mutex<OwnerState>,
-    effects: &mut impl InspectionEffects,
+    effects: &mut (impl InspectionEffects + ?Sized),
 ) -> bool {
     let job = {
         let Ok(mut state) = lock_state(shared) else {
@@ -872,8 +875,17 @@ pub(super) fn process_inspection(
             workspace,
             repository,
         } => {
-            let result = capture(workspace, repository, effects);
+            let result = catch_effect(|| capture(workspace, repository, effects));
             if let Ok(mut state) = lock_state(shared) {
+                if let Err(error) = &result
+                    && error.code == ErrorCode::CleanupUnconfirmed
+                {
+                    state.workspace_faults.insert(workspace.id, error.clone());
+                    state.fenced = true;
+                    state
+                        .cleanup_faults
+                        .insert(format!("inspection {}", workspace.id.0), error.clone());
+                }
                 if result.is_ok() {
                     state.inspections.pending.retain(|pending| {
                         !matches!(pending, Job::Preview { workspace: queued, .. } if queued.id == workspace.id)
@@ -882,7 +894,22 @@ pub(super) fn process_inspection(
                 if let Ok(record) = state.inspections.record(workspace.id) {
                     match result {
                         Ok(mut comparison) => {
+                            // Polling unchanged evidence must not expire reading context.
+                            // Status alone is insufficient: edits can retain the same XY.
+                            let unchanged = record.comparison.as_ref().is_some_and(|old| {
+                                old.head == comparison.head
+                                    && old.status == comparison.status
+                                    && old.files.len() == comparison.files.len()
+                                    && old.files.iter().zip(&comparison.files).all(|(a, b)| {
+                                        a.path == b.path
+                                            && a.evidence == b.evidence
+                                            && a.unsupported == b.unsupported
+                                    })
+                            });
                             if let Some(old) = &record.comparison {
+                                if unchanged {
+                                    comparison.id = old.id;
+                                }
                                 for file in &mut comparison.files {
                                     if let Some(previous) =
                                         old.files.iter().find(|f| f.path == file.path)
@@ -892,8 +919,12 @@ pub(super) fn process_inspection(
                                 }
                             }
                             if let Some(preview) = &mut record.preview {
-                                preview.phase = InspectionPhase::Failed;
-                                preview.error = Some(expired());
+                                preview.phase = if unchanged {
+                                    InspectionPhase::Idle
+                                } else {
+                                    InspectionPhase::Failed
+                                };
+                                preview.error = if unchanged { None } else { Some(expired()) };
                                 bound_failed_preview(preview);
                             }
                             record.comparison = Some(comparison);
@@ -920,8 +951,19 @@ pub(super) fn process_inspection(
             comparison,
             file,
         } => {
-            let result = acquire_preview(workspace, repository, target, comparison, file, effects);
+            let result = catch_effect(|| {
+                acquire_preview(workspace, repository, target, comparison, file, effects)
+            });
             if let Ok(mut state) = lock_state(shared) {
+                if let Err(error) = &result
+                    && error.code == ErrorCode::CleanupUnconfirmed
+                {
+                    state.workspace_faults.insert(workspace.id, error.clone());
+                    state.fenced = true;
+                    state
+                        .cleanup_faults
+                        .insert(format!("inspection {}", workspace.id.0), error.clone());
+                }
                 if let Ok(record) = state.inspections.record(workspace.id)
                     && record
                         .comparison
@@ -950,27 +992,40 @@ pub(super) fn process_inspection(
 }
 
 impl Workspaces {
-    pub(super) fn inspection_request(&self, request: WorkspaceRequest) -> Result<WorkspaceReply> {
-        let mut state = self.state()?;
+    pub(super) async fn inspection_request(
+        &self,
+        request: WorkspaceRequest,
+    ) -> Result<WorkspaceReply> {
+        let _gate = self.decision.lock().await;
+        if self.state()?.fenced {
+            return Err(fenced());
+        }
         let id = match &request {
             WorkspaceRequest::Changes { workspace_id, .. } => *workspace_id,
             WorkspaceRequest::ChangePreview { target, .. } => target.workspace_id,
             _ => unreachable!(),
         };
-        let workspace = state
-            .store()?
-            .workspace(id)?
-            .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found."))?;
-        if state.workspace_observation(workspace.clone()).status != CreationStatus::Ready {
+        let workspace = one::<Workspace>(self.store.as_ref(), Read::Workspace(id))
+            .await?
+            .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Workspace not found"))?;
+        if self
+            .state()?
+            .workspace_observation(workspace.clone())
+            .status
+            != CreationStatus::Ready
+        {
             return Err(RepositoryError::new(
                 ErrorCode::Unavailable,
-                "Inspect changes after the workspace is ready.",
+                "Inspect changes after the workspace is ready",
             ));
         }
-        let repository = state
-            .store()?
-            .repository(workspace.repository_id)?
-            .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Repository not found."))?;
+        let repository = one::<RepositoryRecord>(
+            self.store.as_ref(),
+            Read::Repository(workspace.repository_id),
+        )
+        .await?
+        .ok_or_else(|| RepositoryError::new(ErrorCode::NotFound, "Repository not found"))?;
+        let mut state = self.state()?;
         let before = state.inspections.generation;
         let reply = match request {
             WorkspaceRequest::Changes {
@@ -1003,6 +1058,7 @@ impl Workspaces {
 }
 
 #[cfg(test)]
+#[path = "inspection/tests.rs"]
 mod tests;
 
 #[cfg(feature = "codegen")]

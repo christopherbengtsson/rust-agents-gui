@@ -1,0 +1,2 @@
+{"driver": "rusqlite", "exit_code": 0, "wall_s": 13.047365332953632}
+{"driver": "sqlx", "exit_code": 0, "wall_s": 15.929503374965861}

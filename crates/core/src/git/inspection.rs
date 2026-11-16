@@ -15,7 +15,7 @@ use std::{
     },
 };
 
-pub(crate) struct LocalInspection;
+pub(crate) struct LocalInspection(pub(crate) Processes);
 
 fn inspection_command(root: &Path, args: &[&str], path: Option<&[u8]>) -> Command {
     let mut command = base_command(root);
@@ -60,8 +60,8 @@ fn diff_command(root: &Path, head: &str, path: &[u8]) -> Command {
         Some(path),
     )
 }
-fn bytes(command: Command) -> Result<Vec<u8>> {
-    let (success, output) = run_output(command, None)?;
+fn bytes(processes: &Processes, command: Command) -> Result<Vec<u8>> {
+    let (success, output) = run_output(processes, command, None)?;
     if success {
         Ok(output)
     } else {
@@ -191,7 +191,7 @@ fn open_regular(root: &Path, path: &[u8]) -> Result<std::result::Result<File, Fi
 }
 impl InspectionEffects for LocalInspection {
     fn validate(&mut self, workspace: &Workspace, repository: &RepositoryRecord) -> Result<()> {
-        let actual = inspect(workspace.path()?)?;
+        let actual = inspect(&self.0, workspace.path()?)?;
         if actual.path != workspace.path()? || actual.common_dir != repository.common_dir {
             return Err(fs_error(
                 "Saved workspace target no longer matches its registered Git identity",
@@ -200,11 +200,14 @@ impl InspectionEffects for LocalInspection {
         Ok(())
     }
     fn head(&mut self, path: &Path) -> Result<String> {
-        let output = bytes(inspection_command(
-            path,
-            &["rev-parse", "--verify", "--end-of-options", "HEAD^{commit}"],
-            None,
-        ))?;
+        let output = bytes(
+            &self.0,
+            inspection_command(
+                path,
+                &["rev-parse", "--verify", "--end-of-options", "HEAD^{commit}"],
+                None,
+            ),
+        )?;
         let text = std::str::from_utf8(&output)
             .map_err(fs_error)?
             .trim_end_matches('\n');
@@ -214,18 +217,21 @@ impl InspectionEffects for LocalInspection {
         Ok(text.into())
     }
     fn status(&mut self, path: &Path) -> Result<Vec<u8>> {
-        bytes(inspection_command(
-            path,
-            &[
-                "status",
-                "--porcelain=v2",
-                "-z",
-                "--untracked-files=all",
-                "--ignore-submodules=none",
-                "--no-renames",
-            ],
-            None,
-        ))
+        bytes(
+            &self.0,
+            inspection_command(
+                path,
+                &[
+                    "status",
+                    "--porcelain=v2",
+                    "-z",
+                    "--untracked-files=all",
+                    "--ignore-submodules=none",
+                    "--no-renames",
+                ],
+                None,
+            ),
+        )
     }
     fn evidence(&mut self, root: &Path, path: &[u8]) -> Result<FileEvidence> {
         Ok(match open_regular(root, path)? {
@@ -248,7 +254,7 @@ impl InspectionEffects for LocalInspection {
         Ok(data)
     }
     fn diff(&mut self, root: &Path, head: &str, path: &[u8]) -> Result<Vec<u8>> {
-        bytes(diff_command(root, head, path))
+        bytes(&self.0, diff_command(root, head, path))
     }
 }
 

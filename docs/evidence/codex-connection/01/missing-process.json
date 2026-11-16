@@ -1,0 +1,40 @@
+{
+  "root": "/private/tmp/aw-ready-bvkuln0x",
+  "owner": "59281-1794737971226315000",
+  "supervisor_pid": 59281,
+  "supervisor": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+  "supervisor_sha256": "73ae85aa29dac16eb8d5d265bc2096ec19b4854ab0bdb6870fceb7145797f993",
+  "target": {
+    "id": "99a5debb-2556-4798-8a11-5eb371c02374",
+    "provider": "codex",
+    "executable": "/private/tmp/aw-ready-bvkuln0x/missing-codex",
+    "codex_home": "Fixture-owned configuration",
+    "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-99a5debb-2556-4798-8a11-5eb371c02374",
+    "supported_version": "0.169.0"
+  },
+  "checks": [
+    {
+      "name": "missing executable without fallback or authentication effects",
+      "passed": true,
+      "seconds": 0.02962675003800541,
+      "result": {
+        "target": {
+          "id": "99a5debb-2556-4798-8a11-5eb371c02374",
+          "provider": "codex",
+          "executable": "/private/tmp/aw-ready-bvkuln0x/missing-codex",
+          "codex_home": "Fixture-owned configuration",
+          "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-99a5debb-2556-4798-8a11-5eb371c02374",
+          "supported_version": "0.169.0"
+        },
+        "revision": 2,
+        "phase": "observed",
+        "evidence": null,
+        "problem": "missing_executable"
+      }
+    }
+  ],
+  "limits": "Synthetic runtime; no native authentication, login, thread, turn or Claude process.",
+  "supervisor_exit": -15,
+  "fixture_pids": [],
+  "remaining_fixture_pids": []
+}

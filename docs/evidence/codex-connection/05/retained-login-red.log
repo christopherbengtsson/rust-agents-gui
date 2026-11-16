@@ -1,0 +1,25 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-setup.test.tsx (18 tests | 1 failed) 131ms
+   × a failed current verification outranks a retained failed login 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-setup.test.tsx > a failed current verification outranks a retained failed login
+AssertionError: expected 'Codex needs attention' to be 'Couldn’t verify Codex' // Object.is equality
+
+Expected: "Couldn’t verify Codex"
+Received: "Codex needs attention"
+
+ ❯ src/provider-setup.test.tsx:308:50
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  22:03:22
+   Duration  486ms (environment 37%, tests 30%, import 26%, transform 6%, setup 1%)
+

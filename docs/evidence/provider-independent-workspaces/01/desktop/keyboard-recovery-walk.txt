@@ -1,0 +1,17 @@
+There has been no change in the accessibility tree for Window: "Agent Workspace".
+The focused UI element is 20 button (expanded) Toggle details for Alpha, Secondary Actions: Collapse
+
+There has been no change in the accessibility tree for Window: "Agent Workspace".
+The focused UI element is 27 pop up button Add repository
+
+There has been no change in the accessibility tree for Window: "Agent Workspace".
+The focused UI element is 29 pop up button Connection details
+
+There has been no change in the accessibility tree for Window: "Agent Workspace".
+The focused UI element is 30 link Settings, Value: tauri://localhost/settings/general
+
+There has been no change in the accessibility tree for Window: "Agent Workspace".
+The focused UI element is 34 button Refresh status
+
+There has been no change in the accessibility tree for Window: "Agent Workspace".
+The focused UI element is 56 button Reconcile workspace

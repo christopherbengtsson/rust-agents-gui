@@ -1,0 +1,11 @@
+{
+  "result": "failed: KeyError('Ok')",
+  "binary": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/bundle/macos/Agent Workspace.app/Contents/Resources/workspace-supervisor",
+  "fixture_root": "/private/tmp/aw-core01-gzrd6isr",
+  "protocol": 15,
+  "checks": [
+    "actual same-root process exclusion",
+    "lost request retains active Git; repeated Quit pending; admission fenced; lease retained"
+  ],
+  "seconds": 0.43347333394922316
+}

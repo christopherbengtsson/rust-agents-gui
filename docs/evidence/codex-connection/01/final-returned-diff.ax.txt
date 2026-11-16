@@ -1,0 +1,89 @@
+Window: "Agent Workspace", App: Agent Workspace.
+0 standard window Agent Workspace, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Agent Workspace, URL: tauri://localhost/repository/29a33e2c-03b1-4351-a6ba-b12cdc54f332/workspace/9bbec681-eb5d-4571-85c5-e6873dfb99d2?view=changes
+			3 link Skip to workspace, Value: tauri://localhost/repository/29a33e2c-03b1-4351-a6ba-b12cdc54f332/workspace/9bbec681-eb5d-4571-85c5-e6873dfb99d2?view=changes#workspace
+			4 container Repository sidebar
+				5 text Agent Workspace
+				6 container Repositories
+					7 heading Repositories, Value: 2
+						8 text Repositories
+					9 content list
+						10 container /private/tmp/aw-ready-e08mjem_/Repository Available
+							11 button Repository, Help: /private/tmp/aw-ready-e08mjem_/Repository
+							12 button (expanded) Toggle details for Repository, Secondary Actions: Collapse
+							13 button Create workspace in Repository
+							14 text /private/tmp/aw-ready-e08mjem_/Repository
+							15 text Available
+							16 content list
+								17 button davinson-sanchez, Help: Workspace ready
+				18 pop up button Add repository
+				19 text Connected
+				20 pop up button Connection details
+				21 link Settings, Value: tauri://localhost/settings/general
+			22 container
+				23 heading davinson-sanchez, Value: 1
+					24 text davinson-sanchez
+				25 button Refresh status
+				26 container Selected repository
+					27 text /private/tmp/aw-ready-e08mjem_/Repository
+					28 text Repository available
+				29 text Uncommitted changes
+				30 button Refresh changes
+				31 button (expanded) Hide changed files, Secondary Actions: Collapse
+				32 text Compared with HEAD 
+				33 text e6f5552e96bd8ef2457bcfa7fd71425243038c07
+				34 text  · 
+				35 text 1
+				36 text changed files
+				37 tab group (selectable) Workspace views
+					38 tab (selectable) Workspace
+					39 tab (selected) Changes
+				40 container Changes
+					41 container Selected file changes
+						42 heading sample.txt, Value: 2
+							43 text sample.txt
+						44 container Unified file diff
+							45 container
+								46 container Old line
+								47 container New line
+								48 text @@ -1,2 +1,3 @@
+								49 container Old line
+									50 text 1
+								51 container New line
+									52 text 1
+								53 text first line
+								54 container Old line
+									55 text 2
+								56 container New line
+								57 text second line
+								58 container Old line
+								59 container New line
+									60 text 2
+								61 text changed second line
+								62 container Old line
+								63 container New line
+									64 text 3
+								65 text third line
+				66 splitter Resize changed files, Value: 68
+				67 container Changed files
+					68 heading Changed files, Value: 2
+						69 text Changed files
+					70 toggle button sample.txt .M, Help: sample.txt, Value: on
+					71 button First page
+					72 button (disabled) Next files
+				73 text Local workspace
+				74 text Repository
+	75 close button
+	76 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	77 minimize button
+	78 text Agent Workspace
+79 menu bar
+	80 Agent Workspace
+	81 File
+	82 Edit
+	83 View
+	84 Window
+	85 Help
+
+The focused UI element is 21 link Settings, Value: tauri://localhost/settings/general

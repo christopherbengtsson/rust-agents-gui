@@ -20,18 +20,7 @@ fn fixture() -> (Workspace, RepositoryRecord) {
     (workspace, repository)
 }
 fn shared() -> Mutex<OwnerState> {
-    Mutex::new(OwnerState {
-        inspections: Inspections::default(),
-        directory: "/unused".into(),
-        store: Err(RepositoryError::storage("No real storage in units")),
-        cache: VecDeque::new(),
-        probes: VecDeque::new(),
-        fault: None,
-        revision: 1,
-        journal: Arc::new(crate::observations::Journal::default()),
-        active_workspace: None,
-        workspace_faults: BTreeMap::new(),
-    })
+    Mutex::new(OwnerState::new("/unused".into()))
 }
 struct Effects<'a> {
     shared: &'a Mutex<OwnerState>,
@@ -39,6 +28,7 @@ struct Effects<'a> {
     contents: Vec<u8>,
     patch: Vec<u8>,
     fail: bool,
+    panic: bool,
     reads: usize,
     file: FileEvidence,
     heads: VecDeque<Result<String>>,
@@ -56,6 +46,7 @@ impl<'a> Effects<'a> {
             contents: b"new\n".to_vec(),
             patch: b"@@ -1 +1 @@\n-old\n+new\n".to_vec(),
             fail: false,
+            panic: false,
             reads: 0,
             heads: VecDeque::new(),
             statuses: VecDeque::new(),
@@ -75,6 +66,7 @@ impl<'a> Effects<'a> {
 }
 impl InspectionEffects for Effects<'_> {
     fn validate(&mut self, workspace: &Workspace, repository: &RepositoryRecord) -> Result<()> {
+        assert!(!self.panic, "controlled inspection panic");
         assert_eq!(workspace.repository_id, repository.id);
         assert_eq!(workspace.path()?, "/private/workspace/checkout");
         let state = self
@@ -283,6 +275,7 @@ fn list_pages_expire_and_responses_stay_bounded() {
         .unwrap();
     assert!(serde_json::to_vec(&reply).unwrap().len() <= RESPONSE_BYTES);
     assert_eq!(observation(reply).page.unwrap().files.len(), 32);
+    effects.status.extend_from_slice(b"? added-later\0");
     refreshed(&shared, &workspace, &repository, &mut effects);
     assert!(
         shared
@@ -367,21 +360,6 @@ fn unsupported_content_is_not_read_and_failed_diff_is_not_a_prefix() {
     process_inspection(&shared, &mut effects);
     assert_eq!(effects.reads, 0);
     assert!(parse_diff(b"@@ -1,2 +1,2 @@\n-old\n+new\n").is_err());
-}
-
-#[test]
-fn existing_jobs_and_inspection_take_fair_turns() {
-    let mut next = 0;
-    let mut order = Vec::new();
-    for _ in 0..9 {
-        assert!(worker_cycle(&mut next, |kind| {
-            order.push(kind);
-            true
-        }));
-    }
-    assert_eq!(order, vec![0, 1, 2, 0, 1, 2, 0, 1, 2]);
-    assert!(worker_cycle(&mut next, |kind| kind == 2));
-    assert_eq!(next, 0);
 }
 
 #[test]
@@ -707,6 +685,7 @@ fn refreshed_comparisons_invalidate_queued_previews_before_effects() {
         comparison_id: page.comparison_id,
         file_id: page.files[0].id,
     };
+    effects.status = b"1 .D N... 100644 100644 000000 a b text.txt\0".to_vec();
     {
         let mut state = shared.lock().unwrap();
         state
@@ -757,6 +736,35 @@ fn load_preview(
         panic!("preview observation expected")
     };
     observation
+}
+
+#[test]
+fn unchanged_refresh_preserves_comparison_and_selected_preview() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    let first = refreshed(&shared, &workspace, &repository, &mut effects);
+    let target = PreviewTarget {
+        workspace_id: workspace.id,
+        comparison_id: first.comparison_id,
+        file_id: first.files[0].id,
+    };
+    let old = load_preview(&shared, &workspace, &repository, &target, &mut effects);
+    let next = refreshed(&shared, &workspace, &repository, &mut effects);
+    assert_eq!(next.comparison_id, first.comparison_id);
+    assert_eq!(next.files[0].id, first.files[0].id);
+    let WorkspaceReply::ChangePreview { observation } = shared
+        .lock()
+        .unwrap()
+        .inspections
+        .preview(workspace, repository, target, false)
+        .unwrap()
+    else {
+        panic!("preview observation expected")
+    };
+    assert_eq!(observation.phase, InspectionPhase::Idle);
+    assert!(observation.error.is_none());
+    assert_eq!(observation.preview.unwrap().rows, old.preview.unwrap().rows);
 }
 
 #[test]
@@ -1233,5 +1241,28 @@ fn acquired_oversized_content_is_unsupported_and_valid_hunks_limit_complete_rows
         .unwrap()
         .len()
             <= RESPONSE_BYTES
+    );
+}
+
+#[test]
+fn inspection_panic_is_retained_for_whole_core_quit() {
+    let shared = shared();
+    let (workspace, repository) = fixture();
+    let mut effects = Effects::new(&shared);
+    effects.panic = true;
+    shared
+        .lock()
+        .unwrap()
+        .inspections
+        .pending
+        .push_back(Job::Refresh {
+            workspace: workspace.clone(),
+            repository,
+        });
+    assert!(process_inspection(&shared, &mut effects));
+    let state = shared.lock().unwrap();
+    assert_eq!(
+        state.workspace_faults[&workspace.id].code,
+        ErrorCode::CleanupUnconfirmed
     );
 }

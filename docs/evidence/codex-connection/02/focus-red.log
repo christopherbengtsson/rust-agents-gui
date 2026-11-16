@@ -1,0 +1,75 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+ ❯ src/provider-login.test.tsx (4 tests | 1 failed) 185ms
+   × mount and explained ChatGPT presentation have no login effect; reopen and cancel target the existing attempt 62ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/provider-login.test.tsx > mount and explained ChatGPT presentation have no login effect; reopen and cancel target the existing attempt
+AssertionError: expected <body><div>…(1)</div></body> to be <p role="status" …(2)></p> // Object.is equality
+
+- Expected
++ Received
+
++ <body>
++   <div>
++     <section
++       aria-label="ChatGPT sign-in"
++       class="flex flex-col gap-3"
++     >
++       <div>
++         <h3
++           class="font-medium"
++         >
++           ChatGPT
++         </h3>
++         <p
++           class="text-sm text-muted-foreground"
++         >
++           Sign in through your browser.
++         </p>
++         <p
++           class="text-sm text-muted-foreground"
++         >
++           Your existing Codex setup stays in use until the runtime verifies a change.
++         </p>
++       </div>
++       <div
++         class="flex flex-col gap-2"
++       >
+          <p
+            aria-atomic="true"
+            aria-live="polite"
+            role="status"
+          >
+            Browser sign-in cancelled
+          </p>
++       </div>
++       <div
++         class="flex flex-wrap gap-2"
++       >
++         <button
++           class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2"
++           data-slot="button"
++           tabindex="0"
++           type="button"
++         >
++           Sign in through browser
++         </button>
++       </div>
++     </section>
++   </div>
++ </body>
+
+ ❯ src/provider-login.test.tsx:222:34
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  14:11:50
+   Duration  647ms (tests 31%, environment 30%, import 30%, transform 7%, setup 1%)
+

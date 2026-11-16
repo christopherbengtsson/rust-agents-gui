@@ -1,0 +1,77 @@
+   Compiling storage-checkpoint v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/storage-checkpoint)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.38s
+     Running `target/debug/qualify-storage /private/tmp/aw-sqlx02-fourth`
+{
+  "checks": [
+    {
+      "case": "fresh-open/replacement/effective-settings/settled-read",
+      "status": "passed"
+    },
+    {
+      "case": "read-only-engine-rejection",
+      "error": "Database(SqliteError { code: 8, message: \"attempt to write a readonly database\" })",
+      "status": "passed"
+    },
+    {
+      "case": "requester-cancellation-keeps-write-and-fresh-status",
+      "status": "passed"
+    },
+    {
+      "busy": 0,
+      "case": "pinned-reader/checkpoint-pressure",
+      "checkpointed_frames": 43,
+      "log_frames": 49,
+      "status": "passed",
+      "wal_bytes": 201912
+    },
+    {
+      "case": "close/repeated-close/current-build-reopen",
+      "status": "passed"
+    },
+    {
+      "case": "acquisition-timeout/close-retains-failure",
+      "status": "passed"
+    },
+    {
+      "case": "real-deferred-foreign-key-commit-fault/retirement/fresh-absence",
+      "status": "passed"
+    },
+    {
+      "case": "atomic-registration/initial-continuation/reservation/immutable-location/identity",
+      "status": "passed"
+    },
+    {
+      "case": "provider-records-only/exact-action-history/no-duplicate-replay",
+      "status": "passed"
+    },
+    {
+      "case": "row-and-byte-keyset-pagination",
+      "records": 36,
+      "status": "passed"
+    },
+    {
+      "case": "symlink",
+      "status": "passed"
+    },
+    {
+      "case": "hardlink",
+      "status": "passed"
+    },
+    {
+      "case": "public-mode",
+      "status": "passed"
+    }
+  ],
+  "limits": "SQL fixture establishes commit-failure retirement, not disk-fault durability; pool barriers are not literal OS-thread joins",
+  "not_performed": [
+    "physical disk-full/I/O fault",
+    "physical rollback/close-ack failure",
+    "process kill points",
+    "power-loss durability",
+    "same-user path-replacement races (excluded contract)",
+    "native host and provider qualification"
+  ],
+  "root": "/private/tmp/aw-sqlx02-fourth",
+  "sqlite_source_id": "2026-03-13 10:38:09 737ae4a34738ffa0c3ff7f9bb18df914dd1cad163f28fd6b6e114a344fe6d618",
+  "sqlite_version": "3.51.3"
+}

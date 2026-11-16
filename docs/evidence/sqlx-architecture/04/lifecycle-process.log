@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/scripts/qualify-core-lifecycle.py", line 102, in <module>
+    assert recorded["result"]["Ok"]["registration"]["state"] == "completed", recorded
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'kind': 'repository', 'owner': '61956-1794847500205266000', 'result': {'Ok': {'kind': 'action', 'registration': {'create_initial_workspace': False, 'initial_workspace_id': None, 'action_id': '8ca78684-a499-43ca-b021-679145fa7785', 'path': '/private/tmp/aw-core01-ge4i502y/repository', 'state': 'failed', 'error': {'code': 'unavailable', 'message': 'Workspace start was fenced before its next effect; reconcile the saved action explicitly'}}}}}

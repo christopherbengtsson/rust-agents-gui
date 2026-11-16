@@ -1,0 +1,166 @@
+{
+  "label": "verification-failed",
+  "owner": "66874-1794777031709347000",
+  "observation": {
+    "selection": null,
+    "target": {
+      "id": "14f1c00e-a4a5-4baf-bf21-0a9e096e7d38",
+      "provider": "codex",
+      "executable": "/private/tmp/aw-discovery-ji14c4_l/codex-v2",
+      "selected_executable": null,
+      "discovery_source": "shell",
+      "codex_home": "/private/tmp/aw-discovery-ji14c4_l/codex-home",
+      "working_directory": "/var/folders/rz/kbp845ws6kl3hd237p2_4n7m0000gn/T/agent-workspace-setup-14f1c00e-a4a5-4baf-bf21-0a9e096e7d38",
+      "minimum_supported_version": "0.169.0"
+    },
+    "revision": 8,
+    "phase": "observed",
+    "evidence": {
+      "version": "0.169.0",
+      "authentication": "chatgpt",
+      "billing": "chatgpt",
+      "account": "fixture@example.test",
+      "plan": "pro",
+      "model_provider": "openai",
+      "model": "fixture-model"
+    },
+    "problem": "status_read_failed",
+    "diagnostic": "Setup response 3 rejected; RPC code Some(-32603); expected exact response ID and no server request",
+    "login": null
+  },
+  "events": [
+    {
+      "pid": 66930,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 66931,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 66931,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 66931,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 66931,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 66931,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 66931,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 66931,
+      "event": "exit"
+    },
+    {
+      "pid": 66935,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 66936,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 66936,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 66936,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 66936,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 66936,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 66936,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 66936,
+      "event": "exit"
+    },
+    {
+      "pid": 66940,
+      "event": "start",
+      "argument": ["--version"]
+    },
+    {
+      "pid": 66941,
+      "event": "start",
+      "argument": ["app-server"]
+    },
+    {
+      "pid": 66941,
+      "event": "request",
+      "method": "initialize"
+    },
+    {
+      "pid": 66941,
+      "event": "request",
+      "method": "initialized"
+    },
+    {
+      "pid": 66941,
+      "event": "request",
+      "method": "account/gatewayOAuth/read"
+    },
+    {
+      "pid": 66941,
+      "event": "request",
+      "method": "account/read"
+    },
+    {
+      "pid": 66941,
+      "event": "request",
+      "method": "config/read"
+    },
+    {
+      "pid": 66941,
+      "event": "exit"
+    }
+  ],
+  "desktop_exit": null,
+  "snapshot": {
+    "kind": "snapshot",
+    "snapshot": {
+      "status": {
+        "state": "ready",
+        "supervisor_pid": 66874,
+        "application_version": "0.1.0"
+      },
+      "cursor": {
+        "owner": "66874-1794777031709347000",
+        "revision": 1
+      },
+      "reset": true
+    }
+  }
+}

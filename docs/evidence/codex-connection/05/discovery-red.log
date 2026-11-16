@@ -1,0 +1,116 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+error[E0609]: no field `fixture` on type `&runtimes::codex::process::Launch`
+  --> crates/core/src/runtimes/codex/discovery.rs:20:15
+   |
+20 |     if launch.fixture {
+   |               ^^^^^^^ unknown field
+
+error[E0616]: field `program` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:21:40
+   |
+21 |         return resolve(launch, &launch.program, "fixture", search).await;
+   |                                        ^^^^^^^ private field
+
+error[E0616]: field `environment` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:23:32
+   |
+23 |     if let Some(path) = launch.environment.iter().find(|(key, _)| key == "PATH").map(|(_, value)| value) {
+   |                                ^^^^^^^^^^^ private field
+
+error[E0616]: field `environment` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:29:23
+   |
+29 |     let home = launch.environment.iter().find(|(key, _)| key == "HOME").map(|(_, value)| PathBuf::from(value));
+   |                       ^^^^^^^^^^^ private field
+
+error[E0277]: the size for values of type `[u8]` cannot be known at compilation time
+    --> crates/core/src/runtimes/codex/discovery.rs:30:5
+     |
+  30 | /     for path in [Some(PathBuf::from("/opt/homebrew/bin/codex")), Some(PathBuf::from("/usr/local/bin/codex")), home.map(|home| ho...
+  31 | |         if let Ok(found) = resolve(launch, &path, "conventional", search).await { return Ok(found); }
+  32 | |     }
+     | |_____^ doesn't have a size known at compile-time
+     |
+     = help: within `std::path::Path`, the trait `Sized` is not implemented for `[u8]`
+note: required because it appears within the type `std::path::Path`
+    --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/std/src/path.rs:2356:12
+     |
+2356 | pub struct Path {
+     |            ^^^^
+note: required by an implicit `Sized` bound in `std::option::Option`
+    --> /Users/christopherbengtsson/.rustup/toolchains/1.99.1-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/option.rs:598:17
+     |
+ 598 | pub enum Option<T> {
+     |                 ^ required by the implicit `Sized` requirement on this type parameter in `Option`
+
+error[E0616]: field `environment` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:39:19
+   |
+39 |             found.environment.retain(|(name, _)| name != "PATH");
+   |                   ^^^^^^^^^^^ private field
+
+error[E0616]: field `environment` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:40:19
+   |
+40 |             found.environment.push(("PATH".into(), paths.to_os_string()));
+   |                   ^^^^^^^^^^^ private field
+
+error[E0616]: field `program` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:49:11
+   |
+49 |     found.program = program;
+   |           ^^^^^^^ private field
+
+error[E0560]: struct `runtimes::codex::process::Launch` has no field named `fixture`
+  --> crates/core/src/runtimes/codex/discovery.rs:68:190
+   |
+68 | ...to(), "/credentials".into())], fixture: false } }
+   |                                   ^^^^^^^ `runtimes::codex::process::Launch` does not have this field
+   |
+   = note: all struct fields are already assigned
+
+error[E0616]: field `program` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:80:59
+   |
+80 |             assert_eq!(source, "shell"); assert_eq!(found.program, Path::new("/version-two/codex"));
+   |                                                           ^^^^^^^ private field
+
+error[E0616]: field `environment` of struct `runtimes::codex::process::Launch` is private
+  --> crates/core/src/runtimes/codex/discovery.rs:82:27
+   |
+82 |             assert!(found.environment.contains(&("PATH".into(), "/shell".into())));
+   |                           ^^^^^^^^^^^ private field
+
+Some errors have detailed explanations: E0277, E0560, E0609, E0616.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `workspace-core` (lib test) due to 11 previous errors

@@ -1,0 +1,325 @@
+{
+  "root": "/private/tmp/aw-piw-pyinp8re",
+  "state": "/private/tmp/aw-piw-pyinp8re/state",
+  "bundle": "/private/tmp/aw-piw-pyinp8re/PIW Qualification.app",
+  "repositories": [
+    {
+      "name": "Alpha",
+      "path": "/private/tmp/aw-piw-pyinp8re/Alpha",
+      "base": "75f3276ac368e5da7df9021c42e9dcd7b378ce6e"
+    },
+    {
+      "name": "Beta",
+      "path": "/private/tmp/aw-piw-pyinp8re/Beta",
+      "base": "75f3276ac368e5da7df9021c42e9dcd7b378ce6e"
+    },
+    {
+      "name": "Ambiguous",
+      "path": "/private/tmp/aw-piw-pyinp8re/Ambiguous",
+      "base": "75f3276ac368e5da7df9021c42e9dcd7b378ce6e"
+    }
+  ],
+  "original_files": {
+    "/private/tmp/aw-piw-pyinp8re/Alpha/tracked.txt": "7b60b931ee92e46f739f9b4649adcdedf1d955ac1414f0607b4fb33cb21c4cf8",
+    "/private/tmp/aw-piw-pyinp8re/Alpha/original-only.txt": "67fb5e10fb259a6456344166cc9209db9cad7a0495dbfeae12b6ce2d8911c6a6",
+    "/private/tmp/aw-piw-pyinp8re/Beta/tracked.txt": "7b60b931ee92e46f739f9b4649adcdedf1d955ac1414f0607b4fb33cb21c4cf8",
+    "/private/tmp/aw-piw-pyinp8re/Beta/original-only.txt": "67fb5e10fb259a6456344166cc9209db9cad7a0495dbfeae12b6ce2d8911c6a6",
+    "/private/tmp/aw-piw-pyinp8re/Ambiguous/tracked.txt": "7b60b931ee92e46f739f9b4649adcdedf1d955ac1414f0607b4fb33cb21c4cf8",
+    "/private/tmp/aw-piw-pyinp8re/Ambiguous/original-only.txt": "67fb5e10fb259a6456344166cc9209db9cad7a0495dbfeae12b6ce2d8911c6a6"
+  },
+  "processes": [
+    {
+      "kind": "supervisor",
+      "pid": 42845,
+      "argv": [
+        "/private/tmp/aw-piw-pyinp8re/PIW Qualification.app/Contents/Resources/workspace-supervisor",
+        "/private/tmp/aw-piw-pyinp8re/state"
+      ]
+    },
+    {
+      "kind": "desktop",
+      "pid": 42846,
+      "argv": [
+        "/private/tmp/aw-piw-pyinp8re/PIW Qualification.app/Contents/MacOS/workspace-desktop"
+      ]
+    },
+    {
+      "kind": "desktop",
+      "pid": 43446,
+      "argv": [
+        "/private/tmp/aw-piw-pyinp8re/PIW Qualification.app/Contents/MacOS/workspace-desktop"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "--initial-branch=main",
+        "/private/tmp/aw-piw-pyinp8re/Alpha"
+      ],
+      "returncode": 0,
+      "stdout": "Initialized empty Git repository in /private/tmp/aw-piw-pyinp8re/Alpha/.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": ["git", "-C", "/private/tmp/aw-piw-pyinp8re/Alpha", "add", "."],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Alpha",
+        "-c",
+        "user.name=Fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--no-gpg-sign",
+        "-m",
+        "Disposable provider-independent base"
+      ],
+      "returncode": 0,
+      "stdout": "[main (root-commit) 75f3276] Disposable provider-independent base\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Alpha",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "75f3276ac368e5da7df9021c42e9dcd7b378ce6e\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "init",
+        "--initial-branch=main",
+        "/private/tmp/aw-piw-pyinp8re/Beta"
+      ],
+      "returncode": 0,
+      "stdout": "Initialized empty Git repository in /private/tmp/aw-piw-pyinp8re/Beta/.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": ["git", "-C", "/private/tmp/aw-piw-pyinp8re/Beta", "add", "."],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Beta",
+        "-c",
+        "user.name=Fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--no-gpg-sign",
+        "-m",
+        "Disposable provider-independent base"
+      ],
+      "returncode": 0,
+      "stdout": "[main (root-commit) 75f3276] Disposable provider-independent base\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Beta",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "75f3276ac368e5da7df9021c42e9dcd7b378ce6e\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "init",
+        "--initial-branch=main",
+        "/private/tmp/aw-piw-pyinp8re/Ambiguous"
+      ],
+      "returncode": 0,
+      "stdout": "Initialized empty Git repository in /private/tmp/aw-piw-pyinp8re/Ambiguous/.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Ambiguous",
+        "add",
+        "."
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Ambiguous",
+        "-c",
+        "user.name=Fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "--no-gpg-sign",
+        "-m",
+        "Disposable provider-independent base"
+      ],
+      "returncode": 0,
+      "stdout": "[main (root-commit) 75f3276] Disposable provider-independent base\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked.txt\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Ambiguous",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "75f3276ac368e5da7df9021c42e9dcd7b378ce6e\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/private/tmp/aw-piw-pyinp8re/Ambiguous",
+        "branch",
+        "master"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "control": {
+        "op": "capture",
+        "label": "03-two-created"
+      },
+      "time": 1794706181.345506
+    },
+    {
+      "control": {
+        "op": "edit-workspace",
+        "id": "9115eb0b-f262-4a49-99e1-efd8a8c52100"
+      },
+      "time": 1794706181.3553421
+    },
+    {
+      "control": {
+        "op": "join-desktop"
+      },
+      "time": 1794706211.084388
+    },
+    {
+      "join": "desktop",
+      "pid": 42846,
+      "returncode": 0,
+      "verified_before_signal": false
+    },
+    {
+      "control": {
+        "op": "capture",
+        "label": "06-before-reopen"
+      },
+      "time": 1794706211.085978
+    },
+    {
+      "control": {
+        "op": "launch-desktop"
+      },
+      "time": 1794706211.096438
+    },
+    {
+      "control": {
+        "op": "join-desktop"
+      },
+      "time": 1794706232.911974
+    },
+    {
+      "join": "desktop",
+      "pid": 43446,
+      "returncode": 0,
+      "verified_before_signal": false
+    },
+    {
+      "control": {
+        "op": "capture",
+        "label": "08-after-reopen"
+      },
+      "time": 1794706232.9135182
+    },
+    {
+      "control": {
+        "op": "cleanup"
+      },
+      "time": 1794706232.9249809
+    },
+    {
+      "join": "desktop",
+      "pid": 43446,
+      "returncode": 0,
+      "verified_before_signal": true
+    },
+    {
+      "join": "supervisor",
+      "pid": 42845,
+      "returncode": -15,
+      "verified_before_signal": true
+    }
+  ],
+  "hashes": {
+    "Contents/MacOS/workspace-desktop": "a134bb2bcf9e489d82db49d00ae5ad03780e85857d1db1d5a25c969fa0fec55f",
+    "Contents/Resources/workspace-supervisor": "c495d3b1d487099819d3cbf271cfde79af87da3ae39cff30f506910b2609ff46"
+  },
+  "revision": "f0885d6cb211b404a0daa8c59ccfc3cd8ba4a5da",
+  "sidecar_provenance": {
+    "sourceRevision": "f0885d6cb211b404a0daa8c59ccfc3cd8ba4a5da",
+    "applicationVersion": "0.1.0",
+    "dirty": true,
+    "targetDirectory": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target",
+    "profile": "release",
+    "cargoProfile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": false
+    },
+    "executable": "/Users/christopherbengtsson/Documents/dev/rust-agents-gui/target/release/workspace-supervisor",
+    "sha256": "c495d3b1d487099819d3cbf271cfde79af87da3ae39cff30f506910b2609ff46"
+  },
+  "protocol": 9,
+  "runtime_path": "/private/tmp/aw-piw-pyinp8re/bin",
+  "provider_commands": {
+    "codex": null,
+    "claude": null,
+    "opencode": null
+  }
+}

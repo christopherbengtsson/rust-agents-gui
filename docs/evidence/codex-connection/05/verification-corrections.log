@@ -1,0 +1,28 @@
+
+ RUN  v5.1.0 /Users/christopherbengtsson/Documents/dev/rust-agents-gui
+
+10:02:35 PM [vite] (client) warning: (BuildHIR::lowerStatement) Handle TryStatement with a finalizer ('finally') clause
+
+  > react-compiler(Todo): (BuildHIR::lowerStatement) Handle TryStatement with
+  | a finalizer ('finally') clause
+    ,-[/Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts:59:6]
+ 58 |         });
+ 59 |     } finally {
+    :      ^^^^^^^^^
+ 60 |       if (generation.current === current)
+    `----
+  help: Rewrite the highlighted code using syntax supported by React
+        Compiler
+  note: React Compiler skipped optimizing this component or hook
+
+  Plugin: vite:react-compiler
+  File: /Users/christopherbengtsson/Documents/dev/rust-agents-gui/src/hooks/use-provider-selection.ts
+
+ Test Files  3 passed (3)
+      Tests  21 passed (21)
+   Start at  22:02:34
+   Duration  1.22s (environment 49%, import 22%, tests 21%, transform 7%, setup 1%)
+
+    Isolate  3 workers spawned · ~222ms startup each (spawn + environment, per file)
+             at least ~444ms faster with isolate: false — reuses workers across files instead of one per file
+
