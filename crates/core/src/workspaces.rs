@@ -198,12 +198,23 @@ impl OwnerState {
         self.journal.publish(targets);
     }
     fn workspace_changed(&mut self, workspace_id: WorkspaceId, repository_id: RepositoryId) {
-        self.publish(vec![
+        let mut targets = vec![
             crate::observations::Target::Workspace { workspace_id },
             crate::observations::Target::Workspaces {
                 repository_id: Some(repository_id),
             },
-        ]);
+        ];
+        targets.extend(
+            self.activities
+                .iter()
+                .filter(|(_, activity)| activity.workspace == Some(workspace_id))
+                .map(
+                    |(action_id, _)| crate::observations::Target::WorkspaceAction {
+                        action_id: *action_id,
+                    },
+                ),
+        );
+        self.publish(targets);
     }
     fn change(&mut self) -> Result<()> {
         self.revision = self.revision.checked_add(1).ok_or_else(|| {
@@ -767,6 +778,10 @@ impl Workspaces {
                 w
             }
         };
+        self.state()?
+            .publish(vec![crate::observations::Target::WorkspaceAction {
+                action_id: action.id(),
+            }]);
         self.state()?
             .workspace_changed(workspace.id, workspace.repository_id);
         if activity.owned

@@ -246,7 +246,7 @@ async fn apply(tx: &mut Transaction<'_, Sqlite>, write: Write) -> Result<()> {
             {
                 return Ok(());
             }
-            sqlx::query("INSERT INTO provider_executables VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path,cleanup_unconfirmed=excluded.cleanup_unconfirmed").bind(scope).bind(id(action)).bind(path).execute(&mut **tx).await?;
+            sqlx::query("INSERT INTO provider_executables VALUES(?,?,?) ON CONFLICT(scope) DO UPDATE SET action=excluded.action,path=excluded.path").bind(scope).bind(id(action)).bind(path).execute(&mut **tx).await?;
         }
         Write::ProviderLogin {
             scope,
@@ -348,15 +348,18 @@ async fn provider_identity(
 async fn set_cursor(
     tx: &mut Transaction<'_, Sqlite>,
     workspace: WorkspaceId,
-    cursor: u64,
+    cursor: CandidateCursor,
 ) -> Result<()> {
-    let cursor = i64::try_from(cursor).map_err(|_| Error::Oversized)?;
+    let name = i64::try_from(cursor.name).map_err(|_| Error::Oversized)?;
+    let folder = i64::try_from(cursor.folder).map_err(|_| Error::Oversized)?;
     let changed = sqlx::query(
-        "UPDATE workspaces SET allocation_cursor=? WHERE id=? AND allocation_cursor<=?",
+        "UPDATE workspaces SET allocation_cursor=?,folder_cursor=? WHERE id=? AND allocation_cursor<=? AND folder_cursor<=?",
     )
-    .bind(cursor)
+    .bind(name)
+    .bind(folder)
     .bind(id(workspace.0))
-    .bind(cursor)
+    .bind(name)
+    .bind(folder)
     .execute(&mut **tx)
     .await?
     .rows_affected();
@@ -479,7 +482,7 @@ pub(super) async fn read(shared: &Shared, read: Read) -> Result<Snapshot> {
             Read::WorkspaceAction(a) => ("SELECT a.id,length(CAST(a.record AS BLOB))+length(CAST(w.record AS BLOB)),CASE WHEN length(CAST(a.record AS BLOB))+length(CAST(w.record AS BLOB))<=48000 THEN json_array(json(a.record),json(w.record)) END FROM workspace_actions a JOIN workspaces w ON w.id=a.workspace_id WHERE a.id=?", vec![id(a.0)]),
             Read::Folder { repository, candidate } => ("SELECT repository_id,0,json_array(folder,repository_id) FROM repository_folders WHERE repository_id=? OR folder=? LIMIT 2", vec![id(repository.0),candidate]),
             Read::Name { repository, candidate } => (records_sql!("workspaces", " WHERE repository_id=? AND name=? LIMIT 1"), vec![id(repository.0),candidate]),
-            Read::AllocationCursor(a) => ("SELECT id,0,CAST(allocation_cursor AS TEXT) FROM workspaces WHERE id=?", vec![id(a.0)]),
+            Read::AllocationCursor(a) => ("SELECT id,0,json_object('name',allocation_cursor,'folder',folder_cursor) FROM workspaces WHERE id=?", vec![id(a.0)]),
             Read::CleanupBlocked(a) => ("SELECT '',0,CASE WHEN EXISTS(SELECT 1 FROM workspaces WHERE repository_id=? AND cleanup_unconfirmed=1) THEN 'true' ELSE 'false' END", vec![id(a.0)]),
             Read::ProviderSelection(scope) => ("SELECT action,0,json_array(action,path) FROM provider_executables WHERE scope=?", vec![scope]),
             Read::ProviderAction(action) => ("SELECT id,length(CAST(payload AS BLOB)),CASE WHEN length(CAST(payload AS BLOB))<=48000 THEN json_array(json(payload),completed) END FROM provider_actions WHERE id=?", vec![id(action)]),

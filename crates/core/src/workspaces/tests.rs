@@ -15,7 +15,7 @@ struct Data {
     workspaces: BTreeMap<WorkspaceId, Workspace>,
     actions: BTreeMap<ActionId, WorkspaceAction>,
     folders: BTreeMap<RepositoryId, String>,
-    cursors: BTreeMap<WorkspaceId, u64>,
+    cursors: BTreeMap<WorkspaceId, crate::storage::CandidateCursor>,
     claims: usize,
     claim_conflicts: usize,
     lost_claim: bool,
@@ -111,7 +111,7 @@ impl Metadata for Store {
                     false,
                 ),
                 Read::AllocationCursor(id) => (
-                    vec![json!(data.cursors.get(&id).copied().unwrap_or(0))],
+                    vec![json!(data.cursors.get(&id).copied().unwrap_or_default())],
                     false,
                 ),
                 Read::CleanupBlocked(repository) => (
@@ -267,8 +267,12 @@ impl coordinator::Effects for Effects {
         _: &str,
         _: &str,
         _: bool,
-    ) -> Result<bool> {
-        Ok(self.occupied)
+    ) -> Result<naming::Occupancy> {
+        Ok(if self.occupied {
+            naming::Occupancy::WorkspaceName
+        } else {
+            naming::Occupancy::Available
+        })
     }
     fn creation(&self) -> Box<dyn CreationEffects + Send> {
         Box::new(Creation {
@@ -355,6 +359,11 @@ fn owner(store: Arc<Store>, effects: Arc<Effects>) -> Workspaces {
 }
 async fn ready(service: &Workspaces, id: WorkspaceId) {
     loop {
+        assert!(
+            service.state().unwrap().fault.is_none(),
+            "{:?}",
+            service.state().unwrap().fault
+        );
         if let WorkspaceReply::Workspace { workspace: Some(w) } = service
             .workspace_request(WorkspaceRequest::Get { id })
             .await
@@ -510,16 +519,29 @@ async fn allocation_turn_persists_cursor_and_does_not_cap_history_or_numeric_tie
         let mut d = store.0.lock().unwrap();
         d.repositories.insert(repo.id, repo);
         d.workspaces.insert(w.id, w.clone());
-        d.claim_conflicts = 33;
-        d.cursors.insert(w.id, 1_000_000);
+        d.cursors.insert(
+            w.id,
+            crate::storage::CandidateCursor {
+                name: 1_000_000,
+                folder: 0,
+            },
+        );
+        for n in 0..33 {
+            let mut historical = queued(w.repository_id, n + 100);
+            historical.name = Some(
+                naming::candidate(1_000_000 + u64::try_from(n).unwrap(), w.id.0.as_u128()).unwrap(),
+            );
+            historical.status = CreationStatus::Ready;
+            d.workspaces.insert(historical.id, historical);
+        }
     }
     let service = owner(store.clone(), effects);
     ready(&service, w.id).await;
     service.finish().await.unwrap();
     let d = store.0.lock().unwrap();
-    assert_eq!(d.claims, 34);
+    assert_eq!(d.claims, 1);
     assert!(d.writes.contains(&"cursor"));
-    assert!(d.cursors[&w.id] >= 1_000_032);
+    assert!(d.cursors[&w.id].name >= 1_000_032);
 }
 #[tokio::test]
 async fn immutable_reserved_location_skips_allocation_on_recovery() {
@@ -947,4 +969,82 @@ async fn cancellation_unwinds_provisional_reads_and_fences_unsettled_admission_w
             );
         }
     }
+}
+
+#[tokio::test]
+async fn explicit_reconciliation_executes_under_its_new_action_and_preserves_creation_identity() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let mut w = queued(repo.id, 11);
+    w.name = Some("marta".into());
+    w.branch = Some("workspace/marta".into());
+    w.path = Some("/state/app/marta/checkout".into());
+    w.status = CreationStatus::Failed {
+        error: RepositoryError::new(ErrorCode::Git, "partial effect"),
+    };
+    w.base = Some(PinnedBase {
+        reference: "refs/heads/main".into(),
+        commit: "pinned-before-interruption".into(),
+    });
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+    }
+    let service = owner(store.clone(), effects);
+    service
+        .admit_workspace(WorkspaceAction::Reconcile {
+            action_id: ActionId(Uuid::from_u128(22)),
+            workspace_id: w.id,
+        })
+        .await
+        .unwrap();
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+    let d = store.0.lock().unwrap();
+    assert_eq!(d.workspaces[&w.id].creation_action_id, w.creation_action_id);
+    assert_eq!(d.workspaces[&w.id].base, w.base);
+    assert_eq!(d.workspaces[&w.id].path, w.path);
+    assert!(service.state().unwrap().activities.is_empty());
+}
+#[tokio::test]
+async fn nil_action_identity_is_retired_as_an_action_without_releasing_inspection() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let w = queued(repo.id, 0);
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+    }
+    let service = owner(store, effects);
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+    assert!(service.state().unwrap().activities.is_empty());
+}
+#[tokio::test]
+async fn global_folder_collisions_do_not_consume_plain_workspace_names() {
+    let (store, effects, _) = dependencies();
+    let repo = repository(1);
+    let w = queued(repo.id, 11);
+    {
+        let mut d = store.0.lock().unwrap();
+        d.repositories.insert(repo.id, repo);
+        d.workspaces.insert(w.id, w.clone());
+        for n in 1..=500 {
+            d.folders.insert(
+                RepositoryId(Uuid::from_u128(u128::from(n) + 100)),
+                naming::numbered("app", n),
+            );
+        }
+    }
+    let service = owner(store.clone(), effects);
+    ready(&service, w.id).await;
+    service.finish().await.unwrap();
+    let d = store.0.lock().unwrap();
+    assert_eq!(
+        d.workspaces[&w.id].name.as_deref(),
+        Some(naming::candidate(0, w.id.0.as_u128()).unwrap().as_str())
+    );
+    assert_eq!(d.folders[&w.repository_id], "app-501");
 }

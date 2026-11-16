@@ -291,7 +291,7 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         Write::Reservation(Reservation {
             workspace: workspace.clone(),
             folder: "app".into(),
-            continuation: 1,
+            continuation: crate::storage::CandidateCursor { name: 1, folder: 0 },
         }),
     )
     .await?;
@@ -406,7 +406,7 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         .write(Write::Reservation(Reservation {
             workspace: other_workspace.clone(),
             folder: "app".into(),
-            continuation: 1,
+            continuation: crate::storage::CandidateCursor { name: 1, folder: 0 },
         }))?
         .await
         .map_err(|_| Error::Panic)?
@@ -420,7 +420,7 @@ pub(crate) async fn run(root: &Path) -> Result<Value> {
         Write::Reservation(Reservation {
             workspace: other_workspace,
             folder: "app-2".into(),
-            continuation: 2,
+            continuation: crate::storage::CandidateCursor { name: 2, folder: 0 },
         }),
     )
     .await?;

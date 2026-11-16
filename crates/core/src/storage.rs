@@ -82,11 +82,16 @@ impl std::error::Error for Error {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) struct CandidateCursor {
+    pub folder: u64,
+    pub name: u64,
+}
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub(crate) struct Reservation {
     pub workspace: Workspace,
     pub folder: String,
-    pub continuation: u64,
+    pub continuation: CandidateCursor,
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) enum Write {
@@ -103,7 +108,7 @@ pub(crate) enum Write {
     Reservation(Reservation),
     AllocationCursor {
         workspace_id: WorkspaceId,
-        cursor: u64,
+        cursor: CandidateCursor,
     },
     ProviderSelection {
         scope: String,

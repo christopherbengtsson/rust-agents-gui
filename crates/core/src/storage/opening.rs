@@ -6,7 +6,7 @@ use std::{
 };
 
 pub(super) const DATABASE: &str = "metadata.sqlite3";
-const SCHEMA_VERSION: i64 = 2;
+const SCHEMA_VERSION: i64 = 3;
 const APPLICATION_ID: i64 = 0x41575332;
 const SCHEMA: &str = "
 CREATE TABLE storage_revision(id INTEGER PRIMARY KEY CHECK(id=1), revision INTEGER NOT NULL CHECK(revision>=0));
@@ -15,7 +15,7 @@ CREATE TABLE repositories(id TEXT PRIMARY KEY NOT NULL, common_dir TEXT UNIQUE N
 CREATE TABLE registration_actions(id TEXT PRIMARY KEY NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152), pending INTEGER NOT NULL CHECK(pending IN(0,1)), record TEXT NOT NULL CHECK(length(CAST(record AS BLOB))<=49152));
 CREATE INDEX pending_registrations ON registration_actions(pending,id);
 CREATE TABLE repository_folders(repository_id TEXT PRIMARY KEY NOT NULL REFERENCES repositories(id), folder TEXT UNIQUE NOT NULL CHECK(length(CAST(folder AS BLOB))<=4096));
-CREATE TABLE workspaces(id TEXT PRIMARY KEY NOT NULL, repository_id TEXT NOT NULL REFERENCES repositories(id), creation_action_id TEXT UNIQUE NOT NULL, queued INTEGER NOT NULL CHECK(queued IN(0,1)), record TEXT NOT NULL CHECK(length(CAST(record AS BLOB))<=49152), name TEXT, branch TEXT, path TEXT, cleanup_unconfirmed INTEGER NOT NULL CHECK(cleanup_unconfirmed IN(0,1)), allocation_cursor INTEGER NOT NULL DEFAULT 0 CHECK(allocation_cursor>=0), CHECK((name IS NULL AND branch IS NULL AND path IS NULL) OR (name IS NOT NULL AND branch IS NOT NULL AND path IS NOT NULL)));
+CREATE TABLE workspaces(id TEXT PRIMARY KEY NOT NULL, repository_id TEXT NOT NULL REFERENCES repositories(id), creation_action_id TEXT UNIQUE NOT NULL, queued INTEGER NOT NULL CHECK(queued IN(0,1)), record TEXT NOT NULL CHECK(length(CAST(record AS BLOB))<=49152), name TEXT, branch TEXT, path TEXT, cleanup_unconfirmed INTEGER NOT NULL CHECK(cleanup_unconfirmed IN(0,1)), allocation_cursor INTEGER NOT NULL DEFAULT 0 CHECK(allocation_cursor>=0), folder_cursor INTEGER NOT NULL DEFAULT 0 CHECK(folder_cursor>=0), CHECK((name IS NULL AND branch IS NULL AND path IS NULL) OR (name IS NOT NULL AND branch IS NOT NULL AND path IS NOT NULL)));
 CREATE INDEX workspace_navigation ON workspaces(repository_id,id);
 CREATE INDEX queued_workspaces ON workspaces(queued,id);
 CREATE INDEX workspace_cleanup ON workspaces(repository_id,cleanup_unconfirmed);
@@ -28,7 +28,7 @@ CREATE TABLE provider_login_fences(scope TEXT PRIMARY KEY NOT NULL CHECK(length(
 CREATE TABLE provider_actions(id TEXT PRIMARY KEY NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152), completed INTEGER NOT NULL CHECK(completed IN(0,1)));
 CREATE TABLE action_identities(id TEXT PRIMARY KEY NOT NULL, kind TEXT NOT NULL, payload TEXT NOT NULL CHECK(length(CAST(payload AS BLOB))<=49152));
 PRAGMA application_id=1096241970;
-PRAGMA user_version=2;";
+PRAGMA user_version=3;";
 
 pub(super) fn inspect(state: &Path, create: bool) -> Result<PathBuf> {
     let canonical = fs::canonicalize(state)?;

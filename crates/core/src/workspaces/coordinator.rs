@@ -14,7 +14,7 @@ pub(super) trait Effects: Send + Sync {
         folder: &str,
         name: &str,
         folder_saved: bool,
-    ) -> Result<bool>;
+    ) -> Result<naming::Occupancy>;
     fn creation(&self) -> Box<dyn CreationEffects + Send>;
 }
 pub(super) struct LocalEffects;
@@ -30,7 +30,7 @@ impl Effects for LocalEffects {
         folder: &str,
         name: &str,
         folder_saved: bool,
-    ) -> Result<bool> {
+    ) -> Result<naming::Occupancy> {
         crate::git::candidate_occupied(repository, root, directory, folder, name, folder_saved)
     }
     fn creation(&self) -> Box<dyn CreationEffects + Send> {
@@ -44,6 +44,7 @@ struct WorkspaceExecution {
     decision: Gate,
     store: Arc<dyn Metadata>,
     effects: Arc<dyn Effects>,
+    action: ActionId,
 }
 type Gate = Arc<AsyncMutex<()>>;
 #[derive(Default)]
@@ -103,10 +104,16 @@ fn retain(state: &mut OwnerState, id: ActionId, workspace: Option<WorkspaceId>) 
     );
     Ok(generation)
 }
+enum CompletedWork {
+    Activity {
+        id: ActionId,
+        generation: u64,
+        workspace: Option<WorkspaceId>,
+    },
+    ReadOnly,
+}
 struct Completion {
-    id: ActionId,
-    generation: u64,
-    workspace: Option<WorkspaceId>,
+    work: CompletedWork,
     result: Result<()>,
 }
 
@@ -170,9 +177,11 @@ pub(super) async fn run(
                             .await
                             .unwrap_or_else(|_| Err(panicked()));
                             Completion {
-                                id,
-                                generation,
-                                workspace: None,
+                                work: CompletedWork::Activity {
+                                    id,
+                                    generation,
+                                    workspace: None,
+                                },
                                 result,
                             }
                         });
@@ -190,7 +199,14 @@ pub(super) async fn run(
                         if tasks.len() == PENDING_LIMIT {
                             break;
                         }
-                        let id = workspace.creation_action_id;
+                        let id = {
+                            let state = lock_state(&shared)?;
+                            state
+                                .activities
+                                .iter()
+                                .find(|(_, a)| a.workspace == Some(workspace.id))
+                                .map_or(workspace.creation_action_id, |(id, _)| *id)
+                        };
                         let generation = {
                             let mut state = lock_state(&shared)?;
                             if state.workspace_faults.contains_key(&workspace.id)
@@ -216,9 +232,11 @@ pub(super) async fn run(
                                 settle(
                                     &shared,
                                     Ok(Completion {
-                                        id,
-                                        generation,
-                                        workspace: Some(workspace.id),
+                                        work: CompletedWork::Activity {
+                                            id,
+                                            generation,
+                                            workspace: Some(workspace.id),
+                                        },
                                         result,
                                     }),
                                     &mut inspection_active,
@@ -241,6 +259,7 @@ pub(super) async fn run(
                                     decision: gate,
                                     store: storage,
                                     effects,
+                                    action: id,
                                 },
                                 workspace,
                                 repository,
@@ -251,9 +270,11 @@ pub(super) async fn run(
                             .await
                             .unwrap_or_else(|_| Err(panicked()));
                             Completion {
-                                id,
-                                generation,
-                                workspace: Some(workspace_id),
+                                work: CompletedWork::Activity {
+                                    id,
+                                    generation,
+                                    workspace: Some(workspace_id),
+                                },
                                 result,
                             }
                         });
@@ -283,9 +304,7 @@ pub(super) async fn run(
                         Ok(())
                     });
                     Completion {
-                        id: ActionId(Uuid::nil()),
-                        generation: 0,
-                        workspace: None,
+                        work: CompletedWork::ReadOnly,
                         result,
                     }
                 });
@@ -299,9 +318,7 @@ pub(super) async fn run(
                 tasks.spawn_blocking(move || {
                     let result = probe(&shared, record, effects.as_ref());
                     Completion {
-                        id: ActionId(Uuid::nil()),
-                        generation: 0,
-                        workspace: None,
+                        work: CompletedWork::ReadOnly,
                         result,
                     }
                 });
@@ -366,41 +383,55 @@ fn settle(
     let mut state = shared.lock().unwrap_or_else(|e| e.into_inner());
     match joined {
         Ok(completion) => {
-            if completion.id.0.is_nil() {
-                *inspection_active = false;
-            } else if state
-                .activities
-                .get(&completion.id)
-                .is_some_and(|a| a.generation == completion.generation)
-            {
-                state.activities.remove(&completion.id);
-            } else {
-                return;
-            } // An older completion has no authority over a new activity.
+            let (action, workspace) = match completion.work {
+                CompletedWork::ReadOnly => {
+                    *inspection_active = false;
+                    (None, None)
+                }
+                CompletedWork::Activity {
+                    id,
+                    generation,
+                    workspace,
+                } => {
+                    if !state
+                        .activities
+                        .get(&id)
+                        .is_some_and(|a| a.generation == generation)
+                    {
+                        return;
+                    }
+                    state.activities.remove(&id);
+                    (Some(id), workspace)
+                }
+            };
             if let Err(error) = completion.result {
-                // A fence stopping a not-yet-admitted mutation is an interrupted
-                // operation, not permission to redispatch its durable queued record.
-                if let Some(id) = completion.workspace {
+                if let Some(id) = workspace {
                     state.workspace_faults.insert(id, error.clone());
                 }
                 if error.code == ErrorCode::CleanupUnconfirmed {
                     state
                         .cleanup_faults
-                        .insert(format!("action {}", completion.id.0), error.clone());
+                        .insert(format!("work {action:?}"), error.clone());
                 }
                 state.fault = Some(error);
                 state.fenced = true;
             }
             let _ = state.change();
-            state.publish(vec![
+            let mut targets = vec![
                 crate::observations::Target::Repositories,
                 crate::observations::Target::Workspaces {
                     repository_id: None,
                 },
-                crate::observations::Target::Registration {
-                    action_id: completion.id,
-                },
-            ]);
+            ];
+            if let Some(action_id) = action {
+                if let Some(workspace_id) = workspace {
+                    targets.push(crate::observations::Target::Workspace { workspace_id });
+                    targets.push(crate::observations::Target::WorkspaceAction { action_id });
+                } else {
+                    targets.push(crate::observations::Target::Registration { action_id });
+                }
+            }
+            state.publish(targets);
         }
         Err(error) => {
             state.fault = Some(RepositoryError::storage(error));
@@ -411,6 +442,7 @@ fn settle(
     drop(state);
     journal.wake();
 }
+
 fn probe(
     shared: &Mutex<OwnerState>,
     record: RepositoryRecord,
@@ -554,7 +586,7 @@ async fn creation(
         ..
     } = execution.clone();
     let workspace_id = workspace.id;
-    let action_id = workspace.creation_action_id;
+    let action_id = execution.action;
     let result = creation_inner(
         execution,
         workspace,
@@ -603,40 +635,32 @@ async fn creation_inner(
         shared,
         decision,
         store,
-        effects,
+        effects: _,
+        action,
     } = execution.clone();
     while workspace.name.is_none() {
-        workspace = match allocate_turn(
-            &shared,
-            &decision,
-            store.as_ref(),
-            workspace.clone(),
-            &repository,
-            generation,
-            effects.clone(),
-        )
-        .await
-        {
-            Ok(workspace) => workspace,
-            Err(error)
-                if matches!(
-                    error.code,
-                    ErrorCode::Git | ErrorCode::Conflict | ErrorCode::InvalidPath
-                ) =>
-            {
-                workspace.status = CreationStatus::Failed { error };
-                save(
-                    store.as_ref(),
-                    Write::WorkspaceSave {
-                        workspace,
-                        action: None,
-                    },
-                )
-                .await?;
-                return Ok(());
-            }
-            Err(error) => return Err(error),
-        };
+        workspace =
+            match allocate_turn(&execution, workspace.clone(), &repository, generation).await {
+                Ok(workspace) => workspace,
+                Err(error)
+                    if matches!(
+                        error.code,
+                        ErrorCode::Git | ErrorCode::Conflict | ErrorCode::InvalidPath
+                    ) =>
+                {
+                    workspace.status = CreationStatus::Failed { error };
+                    save(
+                        store.as_ref(),
+                        Write::WorkspaceSave {
+                            workspace,
+                            action: None,
+                        },
+                    )
+                    .await?;
+                    return Ok(());
+                }
+                Err(error) => return Err(error),
+            };
         if workspace.name.is_none() {
             tokio::task::yield_now().await;
         }
@@ -645,11 +669,7 @@ async fn creation_inner(
     let repository_guard = repository_gate.lock_owned().await;
     {
         let _gate = decision.lock().await;
-        validate(
-            &*lock_state(&shared)?,
-            workspace.creation_action_id,
-            generation,
-        )?;
+        validate(&*lock_state(&shared)?, action, generation)?;
     }
     if !workspace.cleanup_unconfirmed
         && one::<bool>(store.as_ref(), Read::CleanupBlocked(repository.id))
@@ -682,19 +702,20 @@ async fn creation_inner(
     .await
 }
 async fn allocate_turn(
-    shared: &Mutex<OwnerState>,
-    decision: &AsyncMutex<()>,
-    store: &dyn Metadata,
+    execution: &WorkspaceExecution,
     mut workspace: Workspace,
     repository: &RepositoryRecord,
     generation: u64,
-    effects: Arc<dyn Effects>,
 ) -> Result<Workspace> {
-    let id = workspace.creation_action_id;
+    let shared = execution.shared.as_ref();
+    let decision = execution.decision.as_ref();
+    let store = execution.store.as_ref();
+    let id = execution.action;
     let root = lock_state(shared)?.directory.join("workspaces");
-    let mut cursor = one::<u64>(store, Read::AllocationCursor(workspace.id))
-        .await?
-        .unwrap_or(0);
+    let mut cursor =
+        one::<crate::storage::CandidateCursor>(store, Read::AllocationCursor(workspace.id))
+            .await?
+            .unwrap_or_default();
     for _ in 0..ATTEMPTS_PER_TURN {
         {
             let _gate = decision.lock().await;
@@ -702,7 +723,7 @@ async fn allocate_turn(
         }
         let folder_candidate = naming::numbered(
             &naming::slug(&repository.name),
-            cursor.checked_add(1).ok_or_else(|| {
+            cursor.folder.checked_add(1).ok_or_else(|| {
                 RepositoryError::new(ErrorCode::Capacity, "Folder cursor exhausted")
             })?,
         );
@@ -720,10 +741,10 @@ async fn allocate_turn(
             .map(|(folder, _)| folder.clone());
         let folder = existing.clone().unwrap_or(folder_candidate);
         if existing.is_none() && !folders.is_empty() {
-            cursor = advance(cursor)?;
+            cursor.folder = advance(cursor.folder)?;
             continue;
         }
-        let name = naming::candidate(cursor, workspace.id.0.as_u128())?;
+        let name = naming::candidate(cursor.name, workspace.id.0.as_u128())?;
         if one::<Workspace>(
             store,
             Read::Name {
@@ -734,7 +755,7 @@ async fn allocate_turn(
         .await?
         .is_some()
         {
-            cursor = advance(cursor)?;
+            cursor.name = advance(cursor.name)?;
             continue;
         }
         let directory = root.join(&folder);
@@ -745,7 +766,7 @@ async fn allocate_turn(
             name.clone(),
             folder.clone(),
         );
-        let effects = effects.clone();
+        let effects = execution.effects.clone();
         let occupied = tokio::task::spawn_blocking(move || {
             catch_effect(|| {
                 effects.candidate(
@@ -760,9 +781,16 @@ async fn allocate_turn(
         })
         .await
         .map_err(RepositoryError::storage)??;
-        if occupied {
-            cursor = advance(cursor)?;
-            continue;
+        match occupied {
+            naming::Occupancy::RepositoryFolder => {
+                cursor.folder = advance(cursor.folder)?;
+                continue;
+            }
+            naming::Occupancy::WorkspaceName => {
+                cursor.name = advance(cursor.name)?;
+                continue;
+            }
+            naming::Occupancy::Available => {}
         }
         let mut candidate = workspace.clone();
         candidate.name = Some(name.clone());
@@ -806,7 +834,8 @@ async fn allocate_turn(
                 if !matches!(error, crate::storage::Error::CandidateConflict) {
                     return Err(RepositoryError::storage(error));
                 }
-                cursor = advance(cursor)?;
+                // The next indexed reads identify which namespace changed.
+                // Never consume an unrelated name or folder candidate here.
             }
         }
     }
@@ -846,6 +875,7 @@ async fn drive_owned(
         decision,
         store,
         effects,
+        action,
     } = execution;
     let (send, mut receive) = mpsc::channel::<Persist>(1);
     // This worker keeps its physical completion handle, repository guard (in the
@@ -878,7 +908,7 @@ async fn drive_owned(
                 let Some(request) = request else { return creation_outcome(worker.await.map_err(RepositoryError::storage)?); };
                 let result = std::panic::AssertUnwindSafe(async {
                     let _gate = decision.lock().await;
-                    if request.before_effect { validate(&*lock_state(&shared)?, request.workspace.creation_action_id, generation)?; }
+                    if request.before_effect { validate(&*lock_state(&shared)?, action, generation)?; }
                     let result = save(store.as_ref(), Write::WorkspaceSave { workspace: request.workspace.clone(), action: None }).await;
                     if let Err(error) = result {
                         let saved = one::<Workspace>(store.as_ref(), Read::Workspace(request.workspace.id)).await?;
@@ -920,9 +950,11 @@ mod tests {
         settle(
             &shared,
             Ok(Completion {
-                id,
-                generation: 1,
-                workspace: None,
+                work: CompletedWork::Activity {
+                    id,
+                    generation: 1,
+                    workspace: None,
+                },
                 result: Err(panicked()),
             }),
             &mut false,

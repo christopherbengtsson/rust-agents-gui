@@ -44,6 +44,12 @@ pub(crate) fn numbered(base: &str, tier: u64) -> String {
         format!("{base}-{tier}")
     }
 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Occupancy {
+    Available,
+    RepositoryFolder,
+    WorkspaceName,
+}
 #[derive(Default)]
 pub(crate) struct Occupied {
     pub names: HashSet<String>,

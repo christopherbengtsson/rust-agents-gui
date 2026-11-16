@@ -438,13 +438,13 @@ pub(crate) fn candidate_occupied(
     folder: &str,
     name: &str,
     folder_saved: bool,
-) -> Result<bool> {
+) -> Result<crate::workspaces::naming::Occupancy> {
     validate_repository(repository)?;
     if !folder_saved && location(&root.join(folder))?.is_some() {
-        return Ok(true);
+        return Ok(crate::workspaces::naming::Occupancy::RepositoryFolder);
     }
     if location(&directory.join(name))?.is_some() {
-        return Ok(true);
+        return Ok(crate::workspaces::naming::Occupancy::WorkspaceName);
     }
     let path = Path::new(&repository.path);
     let reference = format!("refs/heads/workspace/{name}");
@@ -468,11 +468,18 @@ pub(crate) fn candidate_occupied(
         ));
     }
     let wrapper = directory.join(name);
-    Ok(occupied.names.contains(name)
-        || occupied
-            .worktrees
-            .iter()
-            .any(|p| p.starts_with(&wrapper) || wrapper.starts_with(p)))
+    Ok(
+        if occupied.names.contains(name)
+            || occupied
+                .worktrees
+                .iter()
+                .any(|p| p.starts_with(&wrapper) || wrapper.starts_with(p))
+        {
+            crate::workspaces::naming::Occupancy::WorkspaceName
+        } else {
+            crate::workspaces::naming::Occupancy::Available
+        },
+    )
 }
 impl CreationEffects for LocalCreation {
     fn quiescent(&mut self, workspace: &Workspace) -> Result<bool> {

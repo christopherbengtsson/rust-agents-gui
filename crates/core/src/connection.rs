@@ -1162,6 +1162,7 @@ pub struct ConnectionServer {
     core: Arc<Core>,
     tasks: Arc<Tasks>,
     blocking: ConnectionSlots,
+    status: ConnectionSlots,
 }
 impl ConnectionServer {
     pub fn is_ready(&self) -> bool {
@@ -1177,6 +1178,7 @@ impl ConnectionServer {
             core,
             tasks: Arc::new(Tasks::default()),
             blocking: ConnectionSlots::new(8),
+            status: ConnectionSlots::new(8),
         }
     }
     pub async fn serve(&self, stream: UnixStream, cancel: &CancellationToken) -> io::Result<()> {
@@ -1187,7 +1189,31 @@ impl ConnectionServer {
             core.journal.clone(),
             cancel,
             async |request| {
-                let permit = self.blocking.try_acquire().ok_or_else(|| {
+                // Preserve the incumbent direct provider/Quit control path. Native
+                // host connection admission is replaced in the later host cutover.
+                if request.provider.is_some()
+                    || request.quit.is_some()
+                    || (request.workspace.is_none() && request.repository.is_none())
+                {
+                    return Ok(route_request(&core, request).await);
+                }
+                let status = matches!(
+                    request.workspace,
+                    Some(
+                        crate::workspaces::WorkspaceRequest::Action { .. }
+                            | crate::workspaces::WorkspaceRequest::Get { .. }
+                            | crate::workspaces::WorkspaceRequest::List { .. }
+                    )
+                ) || matches!(
+                    request.repository,
+                    Some(
+                        crate::workspaces::RepositoryRequest::Action { .. }
+                            | crate::workspaces::RepositoryRequest::Get { refresh: false, .. }
+                            | crate::workspaces::RepositoryRequest::List { refresh: false, .. }
+                    )
+                );
+                let slots = if status { &self.status } else { &self.blocking };
+                let permit = slots.try_acquire().ok_or_else(|| {
                     io::Error::new(io::ErrorKind::WouldBlock, "Request dispatch is busy")
                 })?;
                 let core = core.clone();

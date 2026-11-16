@@ -225,7 +225,41 @@ async fn cohort(
         folder(&first) == folder(&wa) && folder(&second) == folder(&wa),
         "Same repository changed its saved folder",
     )?;
-    for w in [&wa, &wb, &first, &second] {
+    // Reconcile an already owned partial-effect record under a new action,
+    // preserving its original creation identity, pinned base and physical target.
+    let mut interrupted = first.clone();
+    interrupted.status = CreationStatus::Uncertain {
+        error: RepositoryError::new(ErrorCode::Git, "qualification lost reply"),
+    };
+    save(
+        storage,
+        Write::WorkspaceSave {
+            workspace: interrupted,
+            action: None,
+        },
+    )
+    .await?;
+    owner
+        .workspace_request(WorkspaceRequest::Reconcile {
+            action_id: ActionId(Uuid::new_v4()),
+            workspace_id: first.id,
+        })
+        .await?;
+    let reconciled = ready(owner, first.id).await?;
+    ensure(
+        reconciled.path == first.path
+            && reconciled.base == first.base
+            && reconciled.creation_action_id == first.creation_action_id,
+        "Reconciliation retargeted saved work",
+    )?;
+    let nil = owner
+        .workspace_request(WorkspaceRequest::Create {
+            action_id: ActionId(Uuid::nil()),
+            repository_id: wa.repository_id,
+        })
+        .await?;
+    let nil = ready(owner, extract(nil)?).await?;
+    for w in [&wa, &wb, &first, &second, &nil] {
         ensure(
             git(Path::new(w.path()?), &["rev-parse", "HEAD"])? == w.base.as_ref().unwrap().commit,
             "Created worktree differs from its pinned base",
@@ -284,7 +318,7 @@ async fn cohort(
         Write::Reservation(crate::storage::Reservation {
             workspace: w,
             folder: existing_folder.clone(),
-            continuation: 0,
+            continuation: crate::storage::CandidateCursor { name: 0, folder: 0 },
         })
     };
     let (rx, ry) = (
@@ -313,6 +347,6 @@ async fn cohort(
     // either pending record. Fencing prevents their later dispatch during close.
     owner.fence().await;
     Ok(
-        json!({"root":root,"checks":["concurrent-registration-and-first-continuations","global-app-folder-collision","same-repository-distinct-permanent-names","concurrent-disposable-git-worktrees","pinned-base-and-original-checkout-protection","concurrent-sqlx-claim-winner-and-settled-conflict"],"workspaces":[wa,wb,first,second],"desktop":"not run: combined provider conversion remains ticket 04","providers":"not run"}),
+        json!({"root":root,"checks":["concurrent-registration-and-first-continuations","global-app-folder-collision","same-repository-distinct-permanent-names","concurrent-disposable-git-worktrees","pinned-base-and-original-checkout-protection","concurrent-sqlx-claim-winner-and-settled-conflict","explicit-reconcile-retains-pinned-location-and-original-action","nil-action-identity-creation"],"workspaces":[wa,wb,first,second,nil],"desktop":"not run: combined provider conversion remains ticket 04","providers":"not run"}),
     )
 }
