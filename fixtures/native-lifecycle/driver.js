@@ -220,6 +220,16 @@
         concurrent,
         created,
       });
+      history.pushState(null, "", `/repository/${repository_id}/workspace/${initial.workspace.id}?view=workspace`);
+      dispatchEvent(new PopStateEvent("popstate"));
+      const facts = await until(
+        async () => document.querySelector(".workspace-details")?.textContent,
+        (text) => text?.includes(initial.workspace.path) && text.includes(initial.workspace.branch),
+        "visible current branch and workspace folder",
+      );
+      if (document.body.innerText.includes("Show saved branch and folder"))
+        throw new Error("Retired location disclosure remains");
+      await record("current-workspace-facts", { facts });
     }
     // The fixture is captured at launch. No real provider or authentication is used.
     history.pushState(null, "", "/settings/providers?provider=codex");
