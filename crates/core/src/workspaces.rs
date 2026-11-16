@@ -4,11 +4,7 @@ use std::fmt;
 use std::{
     collections::{BTreeMap, VecDeque},
     path::{Path, PathBuf},
-    sync::{
-        Arc, Mutex, MutexGuard,
-        mpsc::{self, SyncSender},
-    },
-    thread::JoinHandle,
+    sync::{Arc, Mutex, MutexGuard},
 };
 use uuid::Uuid;
 
@@ -178,7 +174,11 @@ pub enum RepositoryReply {
     Repository { repository: Option<Repository> },
 }
 
+pub(crate) type StoreClose = std::result::Result<(), (Box<dyn RepositoryStore>, RepositoryError)>;
 pub(crate) trait RepositoryStore: CreationStore {
+    fn close(self: Box<Self>) -> StoreClose {
+        Ok(())
+    }
     fn action(&mut self, id: ActionId) -> Result<Option<Registration>>;
     fn intent(&mut self, request: &RegisterRepository) -> Result<Registration>;
     fn pending(&mut self) -> Result<Option<Registration>>;
@@ -324,6 +324,7 @@ struct OwnerState {
     cache: VecDeque<(RepositoryId, Availability)>,
     probes: VecDeque<RepositoryRecord>,
     fault: Option<RepositoryError>,
+    fenced: bool,
     revision: u64,
     active_workspace: Option<WorkspaceId>,
     workspace_faults: BTreeMap<WorkspaceId, RepositoryError>,
@@ -348,6 +349,7 @@ impl OwnerState {
             cache: VecDeque::new(),
             probes: VecDeque::new(),
             fault: None,
+            fenced: false,
             revision: 1,
             journal: Arc::new(crate::observations::Journal::default()),
             active_workspace: None,
@@ -482,8 +484,8 @@ fn lock_state(shared: &Mutex<OwnerState>) -> Result<OwnerGuard<'_>> {
 /// One supervisor-owned worker; requests never create per-repository runtimes.
 pub struct Workspaces {
     shared: Arc<Mutex<OwnerState>>,
-    wake: Option<SyncSender<()>>,
-    worker: Option<JoinHandle<()>>,
+    wake: Mutex<Option<tokio::sync::mpsc::Sender<()>>>,
+    worker: tokio::sync::Mutex<Option<tokio::task::JoinHandle<Result<()>>>>,
 }
 impl Workspaces {
     pub fn request(&self, request: RepositoryRequest) -> Result<RepositoryReply> {
@@ -519,34 +521,95 @@ impl Workspaces {
             },
         )?;
         let shared = Arc::new(Mutex::new(state));
-        let (wake, receiver) = mpsc::sync_channel(1);
+        let (wake, mut receiver) = tokio::sync::mpsc::channel(1);
         let worker_state = shared.clone();
-        let worker = std::thread::spawn(move || {
+        let worker = tokio::spawn(async move {
             let mut next = 0;
+            let mut operations = tokio::task::JoinSet::new();
             loop {
-                if matches!(receiver.try_recv(), Err(mpsc::TryRecvError::Disconnected)) {
-                    break;
+                let state = worker_state.clone();
+                operations.spawn_blocking(move || {
+                    let worked = worker_cycle(&mut next, |kind| match kind {
+                        0 => process_creation(&state, &mut crate::git::LocalCreation),
+                        1 => process_one(&state, crate::git::inspect),
+                        _ => {
+                            inspection::process_inspection(&state, &mut crate::git::LocalInspection)
+                        }
+                    });
+                    (worked, next)
+                });
+                match operations.join_next().await {
+                    Some(Ok((worked, cursor))) => {
+                        next = cursor;
+                        if worked {
+                            continue;
+                        }
+                    }
+                    Some(Err(error)) => {
+                        let failure =
+                            RepositoryError::storage(format!("Workspace worker failed: {error}"));
+                        let mut state = worker_state.lock().unwrap_or_else(|e| e.into_inner());
+                        state.fenced = true;
+                        state.fault = Some(failure.clone());
+                        return Err(failure);
+                    }
+                    None => unreachable!("one owned workspace cycle"),
                 }
-                if worker_cycle(&mut next, |kind| match kind {
-                    0 => process_creation(&worker_state, &mut crate::git::LocalCreation),
-                    1 => process_one(&worker_state, crate::git::inspect),
-                    _ => inspection::process_inspection(
-                        &worker_state,
-                        &mut crate::git::LocalInspection,
-                    ),
-                }) {
-                    continue;
-                }
-                if receiver.recv().is_err() {
+                if receiver.recv().await.is_none() {
                     break;
                 }
             }
+            tokio::task::spawn_blocking(move || {
+                let mut state = lock_state(&worker_state)?;
+                let mut errors = Vec::new();
+                if let Some(error) = &state.fault {
+                    errors.push(error.message.clone());
+                }
+                errors.extend(
+                    state
+                        .workspace_faults
+                        .iter()
+                        .map(|(id, error)| format!("Workspace {}: {}", id.0, error.message)),
+                );
+                let store = std::mem::replace(
+                    &mut state.store,
+                    Err(RepositoryError::storage("Workspace storage is closed")),
+                );
+                if let Ok(store) = store
+                    && let Err((store, error)) = store.close()
+                {
+                    errors.push(error.message.clone());
+                    state.store = Ok(store);
+                }
+                if errors.is_empty() {
+                    Ok(())
+                } else {
+                    Err(RepositoryError::storage(errors.join("; ")))
+                }
+            })
+            .await
+            .map_err(RepositoryError::storage)?
         });
         Ok(Self {
             shared,
-            wake: Some(wake),
-            worker: Some(worker),
+            wake: Mutex::new(Some(wake)),
+            worker: tokio::sync::Mutex::new(Some(worker)),
         })
+    }
+    pub(crate) fn fence(&self) {
+        self.shared.lock().unwrap_or_else(|e| e.into_inner()).fenced = true;
+    }
+    pub(crate) async fn finish(&self) -> Result<()> {
+        self.fence();
+        self.wake.lock().unwrap_or_else(|e| e.into_inner()).take();
+        let mut worker = self.worker.lock().await;
+        if let Some(task) = worker.as_mut() {
+            let result = task.await.map_err(RepositoryError::storage)?;
+            worker.take();
+            result
+        } else {
+            Ok(())
+        }
     }
     fn state(&self) -> Result<OwnerGuard<'_>> {
         lock_state(&self.shared)
@@ -559,7 +622,7 @@ impl Workspaces {
             .clone()
     }
     fn notify(&self) {
-        if let Some(wake) = &self.wake {
+        if let Some(wake) = &*self.wake.lock().unwrap_or_else(|e| e.into_inner()) {
             let _ = wake.try_send(());
         }
     }
@@ -568,6 +631,9 @@ impl Workspaces {
     }
     pub fn register(&self, request: RegisterRepository) -> Result<Registration> {
         let mut state = self.state()?;
+        if state.fenced {
+            return Err(RepositoryError::storage("Workspace admission is fenced"));
+        }
         let result = state.store().and_then(|store| admit(store, &request));
         state.publish(vec![
             crate::observations::Target::Registration {
@@ -629,14 +695,6 @@ fn worker_cycle(next: &mut usize, mut run: impl FnMut(usize) -> bool) -> bool {
     }
     false
 }
-impl Drop for Workspaces {
-    fn drop(&mut self) {
-        self.wake.take();
-        if let Some(worker) = self.worker.take() {
-            let _ = worker.join();
-        }
-    }
-}
 
 fn process_one(
     shared: &Mutex<OwnerState>,
@@ -653,7 +711,7 @@ fn process_one(
         match state.store().and_then(|store| store.pending()) {
             Ok(Some(action)) => Work::Register(action),
             Ok(None) => {
-                if state.fault.take().is_some() {
+                if state.fault.is_some() {
                     state.publish(vec![crate::observations::Target::Repositories]);
                 }
                 match state.probes.pop_front() {
@@ -669,9 +727,11 @@ fn process_one(
         }
     };
     // Never hold storage/observation locks during filesystem or Git execution.
-    let validation = inspect(match &work {
-        Work::Register(action) => &action.path,
-        Work::Probe(record) => &record.path,
+    let validation = catch_effect(|| {
+        inspect(match &work {
+            Work::Register(action) => &action.path,
+            Work::Probe(record) => &record.path,
+        })
     });
     let Ok(mut state) = lock_state(shared) else {
         return false;
@@ -749,7 +809,7 @@ fn process_one(
 }
 
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;
 
 #[cfg(feature = "codegen")]
 pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
@@ -767,4 +827,13 @@ pub(crate) fn export_contracts(exports: &mut crate::codegen::Exports) {
     exports.add::<RepositoryReply>();
     creation::export_contracts(exports);
     inspection::export_contracts(exports);
+}
+
+/// A panic means uncertain effects, never an invitation to retry.
+fn catch_effect<T>(work: impl FnOnce() -> Result<T>) -> Result<T> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(work)).unwrap_or_else(|_| {
+        Err(RepositoryError::storage(
+            "Owned effect panicked; reconcile physical cleanup",
+        ))
+    })
 }

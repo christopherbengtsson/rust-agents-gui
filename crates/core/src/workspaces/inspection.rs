@@ -872,7 +872,7 @@ pub(super) fn process_inspection(
             workspace,
             repository,
         } => {
-            let result = capture(workspace, repository, effects);
+            let result = catch_effect(|| capture(workspace, repository, effects));
             if let Ok(mut state) = lock_state(shared) {
                 if result.is_ok() {
                     state.inspections.pending.retain(|pending| {
@@ -939,7 +939,9 @@ pub(super) fn process_inspection(
             comparison,
             file,
         } => {
-            let result = acquire_preview(workspace, repository, target, comparison, file, effects);
+            let result = catch_effect(|| {
+                acquire_preview(workspace, repository, target, comparison, file, effects)
+            });
             if let Ok(mut state) = lock_state(shared) {
                 if let Ok(record) = state.inspections.record(workspace.id)
                     && record

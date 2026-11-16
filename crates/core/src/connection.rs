@@ -30,7 +30,7 @@ use tokio::{
 use tokio_util::sync::CancellationToken;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(2);
-pub const PROTOCOL_VERSION: u32 = 14;
+pub const PROTOCOL_VERSION: u32 = 15;
 
 /// Evidence about this exchange only, never the outcome of an earlier attempt.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -110,8 +110,18 @@ fn unavailable(message: impl std::fmt::Display) -> RequestFailure {
     )
 }
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum QuitRequest {
+    Begin,
+    Status,
+    Finish,
+}
+
 #[derive(Serialize, Deserialize)]
 struct Request {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    quit: Option<QuitRequest>,
     protocol: u32,
     application_version: String,
     after: Option<SnapshotCursor>,
@@ -129,6 +139,10 @@ struct Request {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
+    Quit {
+        owner: String,
+        status: crate::QuitStatus,
+    },
     Provider {
         owner: String,
         result: Result<crate::runtimes::ProviderReply, RepositoryError>,
@@ -226,7 +240,6 @@ impl SupervisorConnection {
             request,
             crate::runtimes::ProviderRequest::Target
                 | crate::runtimes::ProviderRequest::Observe { .. }
-                | crate::runtimes::ProviderRequest::ShutdownStatus
         ) {
             &self.observations
         } else {
@@ -294,7 +307,6 @@ impl SupervisorConnection {
 
     /// Explicit Quit never invokes discovery or starts a replacement supervisor.
     pub async fn quit_owned(&self) -> Result<(), RequestFailure> {
-        use crate::runtimes::{ProviderReply, ProviderRequest};
         let mut effects = LocalDiscovery::new(self.client());
         let Some(owner) = self
             .quit_target_with(&mut effects)
@@ -304,29 +316,21 @@ impl SupervisorConnection {
             return self.stop_observations().await;
         };
         let first = self
-            .prepare_provider_request(owner.clone(), ProviderRequest::BeginShutdown)?
-            .run()
+            .client()
+            .quit_request(&owner, QuitRequest::Begin)
             .await?;
-        first
-            .result
-            .map_err(|error| RequestFailure::Rejected { error })?;
+        let _ = first;
         let deadline = Instant::now() + Duration::from_secs(30);
         loop {
             let reply = self
-                .prepare_provider_request(owner.clone(), ProviderRequest::ShutdownStatus)?
-                .run()
+                .client()
+                .quit_request(&owner, QuitRequest::Status)
                 .await?;
-            match reply
-                .result
-                .map_err(|error| RequestFailure::Rejected { error })?
-            {
-                ProviderReply::Shutdown { complete: true, .. } => break,
-                ProviderReply::Shutdown {
-                    diagnostic: Some(message),
-                    ..
-                } => return Err(unavailable(message)),
-                ProviderReply::Shutdown { .. } => {}
-                _ => return Err(unavailable("Invalid owned shutdown status")),
+            if reply.complete {
+                break;
+            }
+            if let Some(message) = reply.diagnostic {
+                return Err(unavailable(message));
             }
             if Instant::now() >= deadline {
                 return Err(unavailable(
@@ -336,8 +340,8 @@ impl SupervisorConnection {
             tokio::time::sleep(Duration::from_millis(100)).await;
         }
         let _ = self
-            .prepare_provider_request(owner.clone(), ProviderRequest::FinishShutdown)?
-            .run()
+            .client()
+            .quit_request(&owner, QuitRequest::Finish)
             .await;
         // The final response precedes releasing the supervisor lock. Observe
         // actual release without signalling a saved PID or invoking discovery.
@@ -522,6 +526,39 @@ impl SupervisorClient {
         })
         .await
     }
+    async fn quit_request(
+        &self,
+        owner: &str,
+        action: QuitRequest,
+    ) -> Result<crate::QuitStatus, RequestFailure> {
+        let request = Request {
+            quit: Some(action),
+            protocol: PROTOCOL_VERSION,
+            application_version: env!("CARGO_PKG_VERSION").into(),
+            expected_owner: Some(owner.into()),
+            after: None,
+            repository: None,
+            workspace: None,
+            provider: None,
+            subscribe: None,
+        };
+        match exchange_target(
+            &self.state,
+            &request,
+            &mut LocalClient {
+                tasks: self.tasks.clone(),
+                blocking: self.blocking.clone(),
+            },
+        )
+        .await?
+        {
+            Response::Quit {
+                owner: actual,
+                status,
+            } if actual == owner => Ok(status),
+            response => Err(response_failure(response)),
+        }
+    }
     async fn provider_request_with(
         &self,
         expected_owner: &str,
@@ -531,6 +568,7 @@ impl SupervisorClient {
         let response = exchange(
             &self.state,
             &Request {
+                quit: None,
                 protocol: PROTOCOL_VERSION,
                 application_version: env!("CARGO_PKG_VERSION").into(),
                 after: None,
@@ -576,6 +614,7 @@ impl SupervisorClient {
         let response = exchange(
             &self.state,
             &Request {
+                quit: None,
                 provider: None,
                 protocol: PROTOCOL_VERSION,
                 application_version: env!("CARGO_PKG_VERSION").into(),
@@ -623,6 +662,7 @@ impl SupervisorClient {
         let response = exchange(
             &self.state,
             &Request {
+                quit: None,
                 provider: None,
                 protocol: PROTOCOL_VERSION,
                 application_version: env!("CARGO_PKG_VERSION").into(),
@@ -699,6 +739,7 @@ impl SupervisorClient {
     ) -> io::Result<SupervisorSnapshot> {
         let cancel = self.tasks.cancel.clone();
         let request = Request {
+            quit: None,
             provider: None,
             protocol,
             subscribe: None,
@@ -782,7 +823,6 @@ fn provider_target(
 ) -> bool {
     use crate::runtimes::{ProviderReply as R, ProviderRequest as Q};
     match (request, reply) {
-        (Q::BeginShutdown | Q::ShutdownStatus | Q::FinishShutdown, R::Shutdown { .. }) => true,
         (Q::Target, R::Target { target }) => target.provider == "codex",
         (
             Q::Observe { target_id, .. }
@@ -1126,9 +1166,8 @@ pub struct ConnectionServer {
 impl ConnectionServer {
     pub fn shutdown_complete(&self) -> bool {
         self.core
-            .providers
-            .as_ref()
-            .is_some_and(|providers| providers.exit_requested())
+            .exit_requested
+            .load(std::sync::atomic::Ordering::SeqCst)
     }
     pub fn new(core: Arc<Core>) -> Self {
         Self {
@@ -1145,7 +1184,7 @@ impl ConnectionServer {
             core.journal.clone(),
             cancel,
             async |request| {
-                if request.provider.is_some() {
+                if request.provider.is_some() || request.quit.is_some() {
                     return Ok(route_request(&core, request));
                 }
                 self.tasks
@@ -1156,41 +1195,62 @@ impl ConnectionServer {
         .await
     }
     pub async fn finish(&self) -> io::Result<()> {
-        self.tasks.close_and_wait().await?;
-        if let Some(providers) = &self.core.providers {
-            providers.finish().await?;
+        self.core.begin_quit();
+        let requests = self.tasks.close_and_wait().await;
+        loop {
+            let status = self.core.quit_status();
+            if let Some(error) = status.diagnostic {
+                return Err(io::Error::other(error));
+            }
+            if status.complete {
+                break;
+            }
+            tokio::task::yield_now().await;
         }
+        requests?;
+        self.core.release_lease();
         Ok(())
     }
 }
-fn route_request(core: &Core, request: Request) -> Response {
-    if core
-        .providers
-        .as_ref()
-        .is_some_and(|providers| providers.is_shutting_down())
-        && request.provider.is_none()
-    {
-        return Response::Transport {
-            error: transport_failure(
-                TransportCode::Busy,
-                Delivery::Rejected,
-                "Supervisor is shutting down; no new work admitted",
-            ),
+fn route_request(core: &Arc<Core>, request: Request) -> Response {
+    if let Some(action) = request.quit {
+        let status = match action {
+            QuitRequest::Begin => core.begin_quit(),
+            QuitRequest::Status => core.quit_status(),
+            QuitRequest::Finish => {
+                let status = core.quit_status();
+                if status.complete {
+                    core.exit_requested
+                        .store(true, std::sync::atomic::Ordering::SeqCst);
+                }
+                status
+            }
+        };
+        return Response::Quit {
+            owner: core.owner.clone(),
+            status,
         };
     }
     if let Some(request) = request.provider {
-        Response::Provider {
-            owner: core.owner.clone(),
-            result: core
-                .providers
+        let result = (|| {
+            let effect = matches!(
+                request,
+                crate::runtimes::ProviderRequest::Observe { refresh: true, .. }
+                    | crate::runtimes::ProviderRequest::SelectExecutable { .. }
+                    | crate::runtimes::ProviderRequest::StartBrowserLogin { .. }
+                    | crate::runtimes::ProviderRequest::ReopenBrowser { .. }
+            );
+            let _start = effect.then(|| core.lifetime.admit()).transpose()?;
+            core.providers
                 .as_ref()
                 .ok_or_else(|| {
-                    RepositoryError::new(
-                        ErrorCode::Connection,
-                        "Provider setup has not been opened by the supervisor",
-                    )
-                })
-                .and_then(|providers| providers.request(request)),
+                    RepositoryError::new(ErrorCode::Connection, "Provider setup is unavailable")
+                })?
+                .request(request)
+        })();
+        Response::Provider {
+            owner: core.owner.clone(),
+            result,
         }
     } else if let Some(request) = request.workspace {
         Response::Workspace {
@@ -1208,6 +1268,7 @@ fn route_request(core: &Core, request: Request) -> Response {
         }
     }
 }
+
 async fn serve_stream<S: AsyncRead + AsyncWrite + Unpin + 'static>(
     stream: S,
     owner: &str,
@@ -1260,6 +1321,7 @@ fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>
         + usize::from(request.repository.is_some())
         + usize::from(request.subscribe.is_some())
         + usize::from(request.provider.is_some())
+        + usize::from(request.quit.is_some())
         > 1
     {
         return Err(io::Error::new(
@@ -1270,7 +1332,8 @@ fn reject_request(request: &Request, owner: &str) -> io::Result<Option<Response>
     let targeted = request.workspace.is_some()
         || request.repository.is_some()
         || request.subscribe.is_some()
-        || request.provider.is_some();
+        || request.provider.is_some()
+        || request.quit.is_some();
     if (targeted && request.after.is_some()) || (!targeted && request.expected_owner.is_some()) {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,

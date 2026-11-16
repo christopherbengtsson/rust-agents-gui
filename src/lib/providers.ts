@@ -97,13 +97,6 @@ export function decodeProviderReply(
     )
       return value;
   }
-  if (
-    (request.operation === "begin_shutdown" ||
-      request.operation === "shutdown_status" ||
-      request.operation === "finish_shutdown") &&
-    value.kind === "shutdown"
-  )
-    return value;
   throw replyUnavailable(
     "Provider setup has the wrong configuration target. Refresh its recorded status.",
   );

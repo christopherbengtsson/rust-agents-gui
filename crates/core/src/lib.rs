@@ -4,6 +4,7 @@
 pub mod codegen;
 pub mod connection;
 mod git;
+mod lifetime;
 pub mod observations;
 pub mod runtimes;
 mod storage;
@@ -19,7 +20,12 @@ pub type DesktopPid = u32;
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum SupervisorState {
+    Starting,
+    Recovering,
     Ready,
+    Failed,
+    Stopping,
+    Stopped,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -49,7 +55,16 @@ pub struct SupervisorSnapshot {
     pub provider_login_pending: Option<bool>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct QuitStatus {
+    pub complete: bool,
+    pub diagnostic: Option<String>,
+}
+
 pub struct Core {
+    keepalive: std::sync::Mutex<Option<std::sync::Arc<Self>>>,
+    lifetime: std::sync::Arc<lifetime::Lifetime>,
+    exit_requested: std::sync::atomic::AtomicBool,
     owner: String,
     pid: u32,
     providers: Option<std::sync::Arc<runtimes::ProviderConnections>>,
@@ -66,6 +81,9 @@ impl Default for Core {
 impl Core {
     pub fn new() -> Self {
         Self {
+            keepalive: std::sync::Mutex::new(None),
+            lifetime: std::sync::Arc::default(),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
             owner: format!(
                 "{}-{}",
                 std::process::id(),
@@ -81,23 +99,121 @@ impl Core {
         }
     }
 
-    /// Called only by the admitted supervisor owner, never by presentation clients.
-    pub fn with_state(directory: &std::path::Path) -> Result<Self, workspaces::RepositoryError> {
-        let workspaces = workspaces::Workspaces::open(directory)?;
-        let journal = workspaces.journal();
-        let providers = runtimes::ProviderConnections::open(journal.clone(), directory)?;
-        Ok(Self {
-            providers: Some(std::sync::Arc::new(providers)),
-            journal,
-            workspaces: Some(workspaces),
-            ..Self::new()
-        })
+    /// Startup and any partial cleanup are retained independently of the requesting host.
+    pub async fn start(
+        directory: std::path::PathBuf,
+        lease: supervisor::StateLease,
+    ) -> std::sync::Arc<Self> {
+        let lifetime = std::sync::Arc::new(lifetime::Lifetime::starting(lease));
+        let task = tokio::spawn(async move {
+            let mut core = Self {
+                lifetime,
+                ..Self::new()
+            };
+            let workspace_directory = directory.clone();
+            let opened = tokio::task::spawn_blocking(move || {
+                workspaces::Workspaces::open(&workspace_directory)
+            })
+            .await;
+            let failure = match opened {
+                Ok(Ok(workspaces)) => {
+                    core.journal = workspaces.journal();
+                    core.workspaces = Some(workspaces);
+                    let journal = core.journal.clone();
+                    match tokio::task::spawn_blocking(move || {
+                        runtimes::ProviderConnections::open(journal, &directory)
+                    })
+                    .await
+                    {
+                        Ok(Ok(providers)) => {
+                            core.providers = Some(std::sync::Arc::new(providers));
+                            None
+                        }
+                        Ok(Err(error)) => Some(error.message),
+                        Err(error) => Some(format!("Provider startup worker failed: {error}")),
+                    }
+                }
+                Ok(Err(error)) => Some(error.message),
+                Err(error) => Some(format!("Workspace startup worker failed: {error}")),
+            };
+            let core = std::sync::Arc::new(core);
+            *core.keepalive.lock().unwrap() = Some(core.clone());
+            if let Some(error) = failure {
+                core.lifetime.fence();
+                core.drain(vec![error]).await;
+            } else {
+                core.lifetime.ready();
+            }
+            core
+        });
+        task.await
+            .expect("startup coordinator must retain its core")
     }
-
+    pub fn begin_quit(self: &std::sync::Arc<Self>) -> QuitStatus {
+        if self.lifetime.fence() {
+            if let Some(workspaces) = &self.workspaces {
+                workspaces.fence();
+            }
+            if let Some(providers) = &self.providers {
+                providers.fence();
+            }
+            let core = self.clone();
+            tokio::spawn(async move {
+                core.drain(Vec::new()).await;
+            });
+        }
+        self.quit_status()
+    }
+    async fn drain(&self, mut errors: Vec<String>) {
+        self.lifetime.transferred().await;
+        use futures_util::FutureExt;
+        if let Some(workspaces) = &self.workspaces {
+            match std::panic::AssertUnwindSafe(workspaces.finish())
+                .catch_unwind()
+                .await
+            {
+                Ok(Ok(())) => {}
+                Ok(Err(error)) => errors.push(format!("Workspaces: {error}")),
+                Err(_) => errors.push("Workspace completion panicked; ownership retained".into()),
+            }
+        }
+        if let Some(providers) = &self.providers {
+            match std::panic::AssertUnwindSafe(providers.finish())
+                .catch_unwind()
+                .await
+            {
+                Ok(Ok(())) => {}
+                Ok(Err(error)) => errors.push(format!("Providers: {error}")),
+                Err(_) => errors.push("Provider completion panicked; ownership retained".into()),
+            }
+        }
+        self.lifetime.settle(errors);
+        self.journal.wake();
+    }
+    pub fn quit_status(&self) -> QuitStatus {
+        self.lifetime.report()
+    }
+    pub fn release_lease(&self) {
+        if self.quit_status().complete {
+            self.lifetime.release();
+            self.keepalive
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .take();
+        }
+    }
     pub fn repository_request(
         &self,
         request: workspaces::RepositoryRequest,
     ) -> Result<workspaces::RepositoryReply, workspaces::RepositoryError> {
+        let _start = matches!(
+            request,
+            workspaces::RepositoryRequest::Register { .. }
+                | workspaces::RepositoryRequest::List { refresh: true, .. }
+                | workspaces::RepositoryRequest::Get { refresh: true, .. }
+        )
+        .then(|| self.lifetime.admit())
+        .transpose()?;
         self.workspaces
             .as_ref()
             .ok_or_else(|| {
@@ -112,6 +228,14 @@ impl Core {
         &self,
         request: workspaces::WorkspaceRequest,
     ) -> Result<workspaces::WorkspaceReply, workspaces::RepositoryError> {
+        let _start = (!matches!(
+            request,
+            workspaces::WorkspaceRequest::Action { .. }
+                | workspaces::WorkspaceRequest::Get { .. }
+                | workspaces::WorkspaceRequest::List { .. }
+        ))
+        .then(|| self.lifetime.admit())
+        .transpose()?;
         self.workspaces
             .as_ref()
             .ok_or_else(|| {
@@ -124,7 +248,7 @@ impl Core {
 
     pub fn status(&self) -> SupervisorStatus {
         SupervisorStatus {
-            state: SupervisorState::Ready,
+            state: self.lifetime.phase(),
             supervisor_pid: self.pid,
             application_version: env!("CARGO_PKG_VERSION").into(),
         }
@@ -156,6 +280,9 @@ mod tests {
 
     fn core() -> Core {
         Core {
+            keepalive: std::sync::Mutex::new(None),
+            lifetime: std::sync::Arc::default(),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
             owner: "test-owner".into(),
             pid: 42,
             workspaces: None,
@@ -164,6 +291,84 @@ mod tests {
         }
     }
 
+    #[test]
+    fn quit_deadline_and_lost_request_keep_the_same_drain_and_lease() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .start_paused(true)
+            .build()
+            .unwrap()
+            .block_on(async {
+                use std::sync::{
+                    Arc,
+                    atomic::{AtomicBool, Ordering},
+                };
+                let released = Arc::new(AtomicBool::new(false));
+                let lifetime = Arc::new(lifetime::Lifetime::starting(
+                    supervisor::StateLease::controlled(released.clone()),
+                ));
+                lifetime.ready();
+                let (finish, finished) = tokio::sync::oneshot::channel();
+                let core = Arc::new(Core {
+                    lifetime,
+                    workspaces: Some(workspaces::tests::controlled_completion(async move {
+                        finished.await.unwrap();
+                        Ok(())
+                    })),
+                    ..Core::new()
+                });
+                let guard = core.lifetime.admit().unwrap();
+                core.begin_quit();
+                assert_eq!(core.status().state, SupervisorState::Stopping);
+                assert!(core.lifetime.admit().is_err());
+                core.release_lease();
+                assert!(!released.load(Ordering::SeqCst));
+                drop(guard);
+                assert!(
+                    tokio::time::timeout(std::time::Duration::from_secs(1), async {
+                        while !core.quit_status().complete {
+                            tokio::time::sleep(std::time::Duration::from_millis(1)).await;
+                        }
+                    })
+                    .await
+                    .is_err()
+                );
+                assert!(!core.begin_quit().complete);
+                finish.send(()).unwrap();
+                while !core.quit_status().complete {
+                    tokio::task::yield_now().await;
+                }
+                assert!(!released.load(Ordering::SeqCst));
+                core.release_lease();
+                assert!(released.load(Ordering::SeqCst));
+            });
+    }
+    #[test]
+    fn failed_workspace_completion_does_not_skip_provider_cleanup() {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(async {
+                let providers = std::sync::Arc::new(runtimes::ProviderConnections::test_owner());
+                let core = std::sync::Arc::new(Core {
+                    providers: Some(providers.clone()),
+                    workspaces: Some(workspaces::tests::controlled_completion(async {
+                        panic!("controlled workspace completion panic")
+                    })),
+                    ..Core::new()
+                });
+                core.begin_quit();
+                while core.quit_status().diagnostic.is_none() {
+                    tokio::task::yield_now().await;
+                }
+                assert!(providers.is_fenced());
+                assert_eq!(core.status().state, SupervisorState::Failed);
+                let status = core.begin_quit();
+                assert!(!status.complete);
+                assert!(status.diagnostic.unwrap().contains("Workspaces"));
+            });
+    }
     #[test]
     fn initial_status_reports_the_execution_owner_without_starting_work() {
         let status = core().status();

@@ -122,16 +122,47 @@ fn probe_owner(state: &Path, effects: &mut impl OwnerEffects) -> io::Result<bool
     }
 }
 
+/// Socket-free exclusive state ownership; never unlink the lease inode.
+pub struct StateLease {
+    _file: Option<File>,
+    #[cfg(test)]
+    released: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
+}
+#[cfg(test)]
+impl StateLease {
+    pub(crate) fn controlled(released: std::sync::Arc<std::sync::atomic::AtomicBool>) -> Self {
+        Self {
+            _file: None,
+            released: Some(released),
+        }
+    }
+}
+#[cfg(test)]
+impl Drop for StateLease {
+    fn drop(&mut self) {
+        if let Some(released) = &self.released {
+            released.store(true, std::sync::atomic::Ordering::SeqCst);
+        }
+    }
+}
+
 pub struct SupervisorOwner {
     // Never delete the lock file: contenders must always lock the same inode.
-    _lock: File,
+    lease: StateLease,
     pub listener: UnixListener,
 }
 impl SupervisorOwner {
+    pub fn into_parts(self) -> (StateLease, UnixListener) {
+        (self.lease, self.listener)
+    }
     pub fn bind(state: &Path) -> io::Result<Self> {
         let (lock, listener) = admit_owner(state, &mut LocalOwner)?;
         Ok(Self {
-            _lock: lock,
+            lease: StateLease {
+                _file: Some(lock),
+                #[cfg(test)]
+                released: None,
+            },
             listener,
         })
     }

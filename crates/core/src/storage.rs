@@ -272,6 +272,13 @@ fn transaction<T>(
 }
 
 impl RepositoryStore for SqliteStore {
+    fn close(self: Box<Self>) -> crate::workspaces::StoreClose {
+        let Self { connection, path } = *self;
+        match connection.close() {
+            Ok(()) => Ok(()),
+            Err((connection, error)) => Err((Box::new(Self { connection, path }), storage(error))),
+        }
+    }
     fn action(&mut self, id: ActionId) -> Result<Option<Registration>> {
         self.ensure_committed()?;
         self.read(

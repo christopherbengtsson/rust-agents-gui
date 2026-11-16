@@ -29,16 +29,19 @@ fn main() -> io::Result<()> {
     // Set the process-wide mask before any threads or socket creation.
     workspace_core::supervisor::restrict_creation_permissions();
     let owner = SupervisorOwner::bind(&state)?;
-    let core = Arc::new(Core::with_state(&state).map_err(io::Error::other)?);
     let runtime = tokio::runtime::Builder::new_current_thread()
         .enable_io()
         .enable_time()
         .build()?;
-    runtime.block_on(run(owner, core))
+    runtime.block_on(async move {
+        let (lease, listener) = owner.into_parts();
+        let core = Core::start(state, lease).await;
+        run(listener, core).await
+    })
 }
-async fn run(owner: SupervisorOwner, core: Arc<Core>) -> io::Result<()> {
-    owner.listener.set_nonblocking(true)?;
-    let listener = tokio::net::UnixListener::from_std(owner.listener.try_clone()?)?;
+async fn run(listener: std::os::unix::net::UnixListener, core: Arc<Core>) -> io::Result<()> {
+    listener.set_nonblocking(true)?;
+    let listener = tokio::net::UnixListener::from_std(listener)?;
     let server = Arc::new(ConnectionServer::new(core));
     let cancel = tokio_util::sync::CancellationToken::new();
     let slots = ConnectionSlots::new(8);
@@ -89,7 +92,10 @@ async fn run(owner: SupervisorOwner, core: Arc<Core>) -> io::Result<()> {
     };
     cancel.cancel();
     while handlers.join_next().await.is_some() {}
-    server.finish().await?;
-    drop(owner); // Exclusive owner lock remains held through handler/blocking completion.
+    if let Err(error) = server.finish().await {
+        eprintln!("Core cleanup failed; state ownership retained: {error}");
+        std::future::pending::<()>().await;
+    }
+
     outcome
 }

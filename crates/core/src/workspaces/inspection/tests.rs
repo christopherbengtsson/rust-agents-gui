@@ -27,6 +27,7 @@ fn shared() -> Mutex<OwnerState> {
         cache: VecDeque::new(),
         probes: VecDeque::new(),
         fault: None,
+        fenced: false,
         revision: 1,
         journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,

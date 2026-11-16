@@ -264,6 +264,7 @@ fn state(store: Store) -> Mutex<OwnerState> {
         cache: VecDeque::new(),
         probes: VecDeque::new(),
         fault: None,
+        fenced: false,
         revision: 1,
         journal: Arc::new(crate::observations::Journal::default()),
         active_workspace: None,
@@ -285,8 +286,8 @@ fn inspection_requests_admit_only_the_exact_ready_workspace_without_writes() {
     store.workspaces.insert(workspace.id, workspace.clone());
     let service = Workspaces {
         shared: Arc::new(state(store)),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let request = |id| WorkspaceRequest::Changes {
         workspace_id: id,
@@ -734,8 +735,8 @@ fn unrelated_recovery_and_completion_preserve_a_failed_write_fence() {
     store.fail_reconcile_once = Some(a.id);
     let service = Workspaces {
         shared: Arc::new(state(store)),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let mut effects = CreationProbe::default();
     assert!(!process_creation(&service.shared, &mut effects));
@@ -823,8 +824,8 @@ fn multiple_faults_are_skipped_and_explicit_recovery_releases_only_its_target() 
     }
     let service = Workspaces {
         shared: Arc::new(shared),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let mut effects = CreationProbe::default();
     assert!(process_creation(&service.shared, &mut effects));
@@ -1097,8 +1098,8 @@ fn creation_keeps_pending_observations_readable_during_every_effect() {
     store.save_workspace(&w, None).unwrap();
     let service = Workspaces {
         shared: Arc::new(state(store)),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     struct Reading<'a> {
         service: &'a Workspaces,
@@ -1203,8 +1204,8 @@ fn workspace_pages_use_byte_cursors_without_a_storage_cardinality_limit() {
     assert_eq!(store.workspace_count_pending().unwrap(), 0);
     let service = Workspaces {
         shared: Arc::new(state(store)),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let mut after = None;
     let mut seen = vec![];
@@ -1267,8 +1268,8 @@ fn failed_workspace_intent_blocks_admission_and_replay_does_not_clear_a_write_fa
     );
     let service = Workspaces {
         shared,
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let WorkspaceAction::Reconcile {
         action_id,
@@ -1336,8 +1337,8 @@ fn admissions_and_ambiguous_failures_publish_without_claiming_action_success() {
             fail_intent: true,
             ..Store::default()
         })),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let journal = service.journal();
     let before = journal.watermark();
@@ -1376,8 +1377,8 @@ fn registration_completion_and_availability_publish_targeted_hints_after_owner_u
     admit(&mut store, &req).unwrap();
     let service = Workspaces {
         shared: Arc::new(state(store)),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let journal = service.journal();
     let before = journal.watermark();
@@ -1434,8 +1435,8 @@ fn failed_creation_publishes_active_admission_write_attempt_and_fault_overlay() 
     store.fail_workspace_stage_once = Some((workspace.id, CreationStage::AllocatingName));
     let service = Workspaces {
         shared: Arc::new(state(store)),
-        wake: None,
-        worker: None,
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(None),
     };
     let journal = service.journal();
     let before = journal.watermark();
@@ -1464,4 +1465,112 @@ fn failed_creation_publishes_active_admission_write_attempt_and_fault_overlay() 
         journal.watermark() >= before + 3,
         "active admission, write attempt and fault overlay each publish"
     );
+}
+
+#[test]
+fn explicit_finish_awaits_physical_completion_and_retains_worker_failure() {
+    tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(async {
+            let (complete, completed) = tokio::sync::oneshot::channel();
+            let service = Workspaces {
+                shared: Arc::new(state(Store::default())),
+                wake: Mutex::new(None),
+                worker: tokio::sync::Mutex::new(Some(tokio::spawn(async move {
+                    completed.await.unwrap();
+                    Err(RepositoryError::storage("controlled worker failure"))
+                }))),
+            };
+            let finish = service.finish();
+            tokio::pin!(finish);
+            std::future::poll_fn(|cx| {
+                use std::future::Future;
+                assert!(finish.as_mut().poll(cx).is_pending());
+                std::task::Poll::Ready(())
+            })
+            .await;
+            assert!(
+                service
+                    .register(RegisterRepository {
+                        action_id: ActionId(Uuid::new_v4()),
+                        path: "/repo".into(),
+                        create_initial_workspace: false
+                    })
+                    .is_err()
+            );
+            complete.send(()).unwrap();
+            assert!(
+                finish
+                    .await
+                    .unwrap_err()
+                    .message
+                    .contains("controlled worker failure")
+            );
+        });
+}
+#[test]
+fn panicking_creation_retains_exact_workspace_and_blocks_replay() {
+    let mut store = Store::default();
+    let repository = record(1);
+    store.repositories.insert(repository.id, repository.clone());
+    let directory = Path::new("/state");
+    let workspace = admit_workspace(
+        &mut store,
+        directory,
+        &WorkspaceAction::Create {
+            action_id: ActionId(Uuid::new_v4()),
+            repository_id: repository.id,
+        },
+        None,
+    )
+    .unwrap();
+    let shared = state(store);
+    struct PanicEffects;
+    impl CreationEffects for PanicEffects {
+        fn repository_folders(&mut self, _: &Path) -> Result<std::collections::HashSet<String>> {
+            panic!("controlled effect panic")
+        }
+        fn occupied(&mut self, _: &RepositoryRecord, _: &Path) -> Result<naming::Occupied> {
+            panic!("controlled effect panic")
+        }
+        fn base(&mut self, _: &RepositoryRecord) -> Result<PinnedBase> {
+            panic!("controlled effect panic")
+        }
+        fn inspect(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<Artifacts> {
+            panic!("controlled effect panic")
+        }
+        fn reserve(&mut self, _: &Workspace) -> Result<()> {
+            panic!("controlled effect panic")
+        }
+        fn branch(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<()> {
+            panic!("controlled effect panic")
+        }
+        fn worktree(&mut self, _: &RepositoryRecord, _: &Workspace) -> Result<()> {
+            panic!("controlled effect panic")
+        }
+        fn quiescent(&mut self, _: &Workspace) -> Result<bool> {
+            panic!("controlled effect panic")
+        }
+    }
+    assert!(!process_creation(&shared, &mut PanicEffects));
+    assert!(
+        shared
+            .lock()
+            .unwrap()
+            .workspace_faults
+            .contains_key(&workspace.id)
+    );
+    assert!(!process_creation(&shared, &mut PanicEffects));
+}
+
+pub(crate) fn controlled_completion(
+    work: impl std::future::Future<Output = Result<()>> + Send + 'static,
+) -> Workspaces {
+    Workspaces {
+        shared: Arc::new(state(Store::default())),
+        wake: Mutex::new(None),
+        worker: tokio::sync::Mutex::new(Some(tokio::spawn(work))),
+    }
 }

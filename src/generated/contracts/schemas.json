@@ -1891,29 +1891,6 @@
               "observation"
             ],
             "type": "object"
-          },
-          {
-            "properties": {
-              "complete": {
-                "type": "boolean"
-              },
-              "diagnostic": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "kind": {
-                "const": "shutdown",
-                "type": "string"
-              }
-            },
-            "required": [
-              "kind",
-              "complete",
-              "diagnostic"
-            ],
-            "type": "object"
           }
         ]
       },
@@ -4101,29 +4078,6 @@
           "observation"
         ],
         "type": "object"
-      },
-      {
-        "properties": {
-          "complete": {
-            "type": "boolean"
-          },
-          "diagnostic": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "kind": {
-            "const": "shutdown",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "complete",
-          "diagnostic"
-        ],
-        "type": "object"
       }
     ],
     "title": "ProviderReply"
@@ -4309,42 +4263,6 @@
           "operation",
           "target_id",
           "action_id"
-        ],
-        "type": "object"
-      },
-      {
-        "properties": {
-          "operation": {
-            "const": "begin_shutdown",
-            "type": "string"
-          }
-        },
-        "required": [
-          "operation"
-        ],
-        "type": "object"
-      },
-      {
-        "properties": {
-          "operation": {
-            "const": "shutdown_status",
-            "type": "string"
-          }
-        },
-        "required": [
-          "operation"
-        ],
-        "type": "object"
-      },
-      {
-        "properties": {
-          "operation": {
-            "const": "finish_shutdown",
-            "type": "string"
-          }
-        },
-        "required": [
-          "operation"
         ],
         "type": "object"
       }
@@ -5820,7 +5738,12 @@
       },
       "SupervisorState": {
         "enum": [
-          "ready"
+          "starting",
+          "recovering",
+          "ready",
+          "failed",
+          "stopping",
+          "stopped"
         ],
         "type": "string"
       },
@@ -5876,7 +5799,12 @@
   "SupervisorState": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "enum": [
-      "ready"
+      "starting",
+      "recovering",
+      "ready",
+      "failed",
+      "stopping",
+      "stopped"
     ],
     "title": "SupervisorState",
     "type": "string"
@@ -5885,7 +5813,12 @@
     "$defs": {
       "SupervisorState": {
         "enum": [
-          "ready"
+          "starting",
+          "recovering",
+          "ready",
+          "failed",
+          "stopping",
+          "stopped"
         ],
         "type": "string"
       }

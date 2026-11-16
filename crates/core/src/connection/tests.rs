@@ -12,6 +12,9 @@ pub(super) fn run<T>(future: impl Future<Output = T>) -> T {
 }
 fn snapshot() -> SupervisorSnapshot {
     Core {
+        keepalive: Mutex::new(None),
+        lifetime: Arc::default(),
+        exit_requested: std::sync::atomic::AtomicBool::new(false),
         owner: "owner-a".into(),
         pid: 42,
         workspaces: None,
@@ -360,6 +363,9 @@ fn lost_owner_never_restarts_on_refresh_but_reopen_can_admit_a_new_owner() {
     run(async {
         let before = snapshot();
         let after = Core {
+            keepalive: Mutex::new(None),
+            lifetime: Arc::default(),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
             owner: "owner-b".into(),
             pid: 43,
             workspaces: None,
@@ -657,13 +663,16 @@ fn application_corpus_matches_pure_rust_serialization() {
         let workspace_id = WorkspaceId(uuid::Uuid::from_u128(3));
         let comparison_id = ComparisonId(uuid::Uuid::from_u128(4));
         let file_id = FileId(uuid::Uuid::from_u128(5));
-        let core = Core {
+        let core = Arc::new(Core {
+            keepalive: Mutex::new(None),
+            lifetime: Arc::default(),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
             owner: owner.into(),
             pid: 41,
             workspaces: None,
             providers: None,
             journal: Arc::new(crate::observations::Journal::default()),
-        };
+        });
         assert_eq!(corpus["protocol"], PROTOCOL_VERSION);
         assert_eq!(
             corpus["snapshot"],
@@ -996,6 +1005,7 @@ fn workspace_variants_share_observation_and_intent_budgets_with_repository_reque
 
 fn envelope() -> Request {
     Request {
+        quit: None,
         provider: None,
         protocol: PROTOCOL_VERSION,
         application_version: env!("CARGO_PKG_VERSION").into(),
@@ -1070,6 +1080,7 @@ fn status_exchange_and_version_rejection_use_real_protocol_parsers_without_domai
             (9, "99.0.0"),
         ] {
             let request = Request {
+                quit: None,
                 provider: None,
                 protocol,
                 application_version: version.into(),
@@ -1260,6 +1271,7 @@ fn client_private_access_and_connect_failure_precede_io_and_never_retry() {
 fn targeted_exchange_reports_delivery_at_physical_boundary_without_replay() {
     run(async {
         let request = Request {
+            quit: None,
             provider: None,
             expected_owner: Some("owner-a".into()),
             repository: Some(RepositoryRequest::List {
@@ -1556,13 +1568,16 @@ fn blocking_workers_keep_permits_after_waiter_drop_and_cleanup_awaits_completion
 #[test]
 fn server_routes_workspace_and_repository_errors_without_fabricating_empty_records() {
     run(async {
-        let core = Core {
+        let core = Arc::new(Core {
+            keepalive: Mutex::new(None),
+            lifetime: Arc::default(),
+            exit_requested: std::sync::atomic::AtomicBool::new(false),
             owner: "owner-a".into(),
             pid: 42,
             workspaces: None,
             providers: None,
             journal: Arc::default(),
-        };
+        });
         for workspace in [false, true] {
             let mut request = envelope();
             request.expected_owner = Some("owner-a".into());
@@ -1628,6 +1643,7 @@ fn cancellation_closes_pending_request_and_server_handlers_without_effects() {
         assert_eq!(future.await.unwrap_err().kind(), io::ErrorKind::Interrupted);
         assert_eq!(trace.0.lock().unwrap().drops, 1);
         let request = Request {
+            quit: None,
             provider: None,
             expected_owner: Some("owner-a".into()),
             repository: Some(RepositoryRequest::List {

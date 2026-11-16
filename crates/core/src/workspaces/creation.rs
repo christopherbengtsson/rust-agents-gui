@@ -1009,6 +1009,14 @@ impl Workspaces {
             return self.inspection_request(request);
         }
         let mut state = self.state()?;
+        if state.fenced
+            && matches!(
+                request,
+                WorkspaceRequest::Create { .. } | WorkspaceRequest::Reconcile { .. }
+            )
+        {
+            return Err(RepositoryError::storage("Workspace admission is fenced"));
+        }
         let invalidation = match &request {
             WorkspaceRequest::Create {
                 action_id,
@@ -1178,7 +1186,7 @@ pub(super) fn process_creation(
         _ => return false,
     };
     let id = workspace.id;
-    let result = (|| {
+    let result = catch_effect(|| {
         let (directory, naming) = {
             let mut state = lock_state(shared)?;
             let directory = state.directory.clone();
@@ -1221,7 +1229,7 @@ pub(super) fn process_creation(
             }
             state.change()
         })
-    })();
+    });
     if let Ok(mut state) = lock_state(shared) {
         state.active_workspace = None;
         state.workspace_changed(id, repository.id);

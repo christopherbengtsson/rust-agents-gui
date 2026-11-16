@@ -192,25 +192,14 @@ pub enum ProviderRequest {
         target_id: uuid::Uuid,
         action_id: uuid::Uuid,
     },
-    BeginShutdown,
-    ShutdownStatus,
-    FinishShutdown,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "codegen", derive(ts_rs::TS, schemars::JsonSchema))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum ProviderReply {
-    Target {
-        target: ProviderTarget,
-    },
-    Observation {
-        observation: ProviderObservation,
-    },
-    Shutdown {
-        complete: bool,
-        diagnostic: Option<String>,
-    },
+    Target { target: ProviderTarget },
+    Observation { observation: ProviderObservation },
 }
 
 struct Entry {
@@ -227,8 +216,11 @@ pub struct ProviderConnections {
     cancel: tokio_util::sync::CancellationToken,
     persistence: Option<Arc<dyn crate::storage::ProviderLoginPersistence>>,
     selection_store: Option<Arc<dyn crate::storage::ProviderSelectionPersistence>>,
-    shutdown: Mutex<Option<Result<(), String>>>,
-    exit_requested: std::sync::atomic::AtomicBool,
+    failure: Mutex<Vec<String>>,
+    finished: tokio::sync::Mutex<Option<Result<(), String>>>,
+    reaper: tokio::sync::Mutex<Option<tokio::task::JoinHandle<()>>>,
+    reaping: std::sync::atomic::AtomicBool,
+    task_changed: tokio::sync::Notify,
 }
 impl ProviderConnections {
     pub(crate) fn open(
@@ -280,8 +272,11 @@ impl ProviderConnections {
             cancel: tokio_util::sync::CancellationToken::new(),
             persistence: Some(persistence),
             selection_store: Some(selection_store),
-            shutdown: Mutex::new(None),
-            exit_requested: std::sync::atomic::AtomicBool::new(false),
+            failure: Mutex::default(),
+            finished: tokio::sync::Mutex::new(None),
+            reaper: tokio::sync::Mutex::new(None),
+            reaping: std::sync::atomic::AtomicBool::new(false),
+            task_changed: tokio::sync::Notify::new(),
         })
     }
     pub(crate) fn request(
@@ -361,19 +356,6 @@ impl ProviderConnections {
                 target_id,
                 attempt_id,
             } => self.reconcile_login(target_id, attempt_id),
-            ProviderRequest::BeginShutdown => {
-                self.begin_shutdown();
-                Ok(self.shutdown_status())
-            }
-            ProviderRequest::ShutdownStatus => Ok(self.shutdown_status()),
-            ProviderRequest::FinishShutdown => {
-                if !self.shutdown_complete() {
-                    return Err(invalid_target("Owned shutdown is not complete"));
-                }
-                self.exit_requested
-                    .store(true, std::sync::atomic::Ordering::SeqCst);
-                Ok(self.shutdown_status())
-            }
             ProviderRequest::Target => {
                 let records = self.records.lock().expect("provider records poisoned");
                 let target = records
@@ -428,7 +410,11 @@ impl ProviderConnections {
         selection: Option<(uuid::Uuid, u32, String)>,
         probe: impl FnOnce() -> F,
     ) -> Result<ProviderObservation, RepositoryError> {
+        self.ensure_reaper();
         let mut tasks = self.tasks.lock().expect("provider tasks poisoned");
+        if !self.failure.lock().unwrap().is_empty() {
+            return Err(invalid_target("Provider worker cleanup is fenced"));
+        }
         let mut records = self.records.lock().expect("provider records poisoned");
         if let Some((action, expected, path)) = &selection {
             let entry = records
@@ -516,20 +502,17 @@ impl ProviderConnections {
             }));
         }
         let snapshot = entry.snapshot.clone();
-        while let Some(result) = tasks.try_join_next() {
-            // Probe tasks contain no unchecked external panics. A panic is an
-            // invariant failure; keep failed work visibly fenced rather than replay.
-            if result.is_err() {
-                return Err(invalid_target(
-                    "Provider worker failed; restart the supervisor after owned cleanup.",
-                ));
-            }
-        }
         let owner = self.clone();
         let future = probe();
         tasks.spawn(async move {
-            owner.complete(id, revision, future.await);
+            use futures_util::FutureExt;
+            let outcome = std::panic::AssertUnwindSafe(future).catch_unwind().await;
+            match outcome {
+                Ok(outcome) => owner.complete(id, revision, outcome),
+                Err(_) => owner.worker_panicked(id, None, Some(revision)),
+            }
         });
+        self.task_changed.notify_one();
         self.journal
             .publish(vec![Target::Provider { target_id: id }]);
         drop(records);
@@ -595,51 +578,148 @@ impl ProviderConnections {
         drop(records);
         self.journal.wake();
     }
+    #[cfg(test)]
     async fn join(&self) -> io::Result<()> {
-        std::future::poll_fn(|cx| {
-            let mut tasks = self.tasks.lock().expect("provider tasks poisoned");
+        while !self.tasks.lock().unwrap().is_empty() {
+            tokio::task::yield_now().await;
+        }
+        let failures = self.failure.lock().unwrap();
+        if failures.is_empty() {
+            Ok(())
+        } else {
+            Err(io::Error::other(failures.join("; ")))
+        }
+    }
+    fn ensure_reaper(self: &Arc<Self>) {
+        if self.reaping.swap(true, std::sync::atomic::Ordering::SeqCst) {
+            return;
+        }
+        let owner = self.clone();
+        let task = tokio::spawn(async move {
             loop {
-                match tasks.poll_join_next(cx) {
-                    std::task::Poll::Ready(Some(Ok(()))) => {}
-                    std::task::Poll::Ready(Some(Err(error))) => {
-                        return std::task::Poll::Ready(Err(io::Error::other(error.to_string())));
-                    }
-                    std::task::Poll::Ready(None) => return std::task::Poll::Ready(Ok(())),
-                    std::task::Poll::Pending => return std::task::Poll::Pending,
+                let changed = owner.task_changed.notified();
+                let result = std::future::poll_fn(|cx| {
+                    owner
+                        .tasks
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .poll_join_next(cx)
+                })
+                .await;
+                match result {
+                    Some(Ok(())) => {}
+                    Some(Err(error)) => owner
+                        .failure
+                        .lock()
+                        .unwrap()
+                        .push(format!("Provider task {}: {error}", error.id())),
+                    None if owner.cancel.is_cancelled() => break,
+                    None => changed.await,
                 }
             }
-        })
-        .await
+        });
+        *self.reaper.try_lock().expect("reaper installed once") = Some(task);
+    }
+    fn worker_panicked(
+        &self,
+        target: uuid::Uuid,
+        attempt: Option<uuid::Uuid>,
+        revision: Option<u32>,
+    ) {
+        let diagnostic = format!(
+            "Provider worker panicked: target {target}, attempt {attempt:?}, revision {revision:?}; cleanup is uncertain"
+        );
+        self.failure.lock().unwrap().push(diagnostic.clone());
+        let mut records = self.records.lock().unwrap_or_else(|e| e.into_inner());
+        if let Some(entry) = records.get_mut(&target) {
+            entry.snapshot.phase = SetupPhase::CleanupUncertain;
+            entry.snapshot.problem = Some(SetupProblem::CleanupUncertain);
+            entry.snapshot.diagnostic = Some(diagnostic);
+            if let Some(login) = entry
+                .snapshot
+                .login
+                .as_mut()
+                .filter(|login| Some(login.id) == attempt)
+            {
+                login.phase = LoginPhase::CleanupUncertain;
+            }
+        }
+        drop(records);
+        self.changed(target);
+    }
+    #[cfg(test)]
+    pub(crate) fn is_fenced(&self) -> bool {
+        self.cancel.is_cancelled()
+    }
+    pub(crate) fn fence(&self) {
+        // The task gate serializes the final effect admission with the fence.
+        let _tasks = self.tasks.lock().unwrap_or_else(|e| e.into_inner());
+        self.cancel.cancel();
+        self.task_changed.notify_one();
     }
     pub(crate) async fn finish(&self) -> io::Result<()> {
-        self.cancel.cancel();
-        self.join().await?;
+        let mut finished = self.finished.lock().await;
+        if let Some(result) = &*finished {
+            return result.clone().map_err(io::Error::other);
+        }
+        self.fence();
+        if let Some(task) = self.reaper.lock().await.as_mut() {
+            if let Err(error) = task.await {
+                self.failure.lock().unwrap().push(error.to_string());
+            }
+        } else {
+            std::future::poll_fn(|cx| {
+                let mut tasks = self.tasks.lock().unwrap_or_else(|e| e.into_inner());
+                loop {
+                    match tasks.poll_join_next(cx) {
+                        std::task::Poll::Ready(Some(Err(error))) => {
+                            self.failure.lock().unwrap().push(error.to_string())
+                        }
+                        std::task::Poll::Ready(Some(Ok(()))) => {}
+                        std::task::Poll::Ready(None) => return std::task::Poll::Ready(()),
+                        std::task::Poll::Pending => return std::task::Poll::Pending,
+                    }
+                }
+            })
+            .await;
+        }
         if self
             .records
             .lock()
-            .expect("provider records poisoned")
+            .unwrap_or_else(|e| e.into_inner())
             .values()
             .any(|entry| {
-                entry
-                    .snapshot
-                    .login
-                    .as_ref()
-                    .is_some_and(|login| login.phase.active())
+                entry.snapshot.phase == SetupPhase::CleanupUncertain
+                    || entry
+                        .snapshot
+                        .login
+                        .as_ref()
+                        .is_some_and(|login| login.phase.active())
             })
         {
-            return Err(io::Error::other(
-                "A retained sign-in has unconfirmed cleanup",
-            ));
+            self.failure
+                .lock()
+                .unwrap()
+                .push("A retained provider operation has unconfirmed cleanup".into());
         }
         if let Some(launch) = self.launch.clone() {
-            tokio::task::spawn_blocking(move || launch.remove_neutral_directory())
-                .await
-                .map_err(|error| io::Error::other(error.to_string()))??;
+            match tokio::task::spawn_blocking(move || launch.remove_neutral_directory()).await {
+                Ok(Ok(())) => {}
+                Ok(Err(error)) => self.failure.lock().unwrap().push(error.to_string()),
+                Err(error) => self.failure.lock().unwrap().push(error.to_string()),
+            }
         }
-        Ok(())
+        let failures = self.failure.lock().unwrap();
+        let result = if failures.is_empty() {
+            Ok(())
+        } else {
+            Err(failures.join("; "))
+        };
+        *finished = Some(result.clone());
+        result.map_err(io::Error::other)
     }
     #[cfg(test)]
-    fn test_owner() -> Self {
+    pub(crate) fn test_owner() -> Self {
         Self {
             records: Mutex::default(),
             tasks: Mutex::default(),
@@ -648,8 +728,11 @@ impl ProviderConnections {
             cancel: tokio_util::sync::CancellationToken::new(),
             persistence: None,
             selection_store: None,
-            shutdown: Mutex::new(None),
-            exit_requested: std::sync::atomic::AtomicBool::new(false),
+            failure: Mutex::default(),
+            finished: tokio::sync::Mutex::new(None),
+            reaper: tokio::sync::Mutex::new(None),
+            reaping: std::sync::atomic::AtomicBool::new(false),
+            task_changed: tokio::sync::Notify::new(),
         }
     }
     #[cfg(test)]

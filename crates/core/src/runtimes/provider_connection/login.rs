@@ -102,13 +102,6 @@ impl ProviderConnections {
                     .is_some_and(|login| login.phase.active())
             })
     }
-    pub(crate) fn is_shutting_down(&self) -> bool {
-        self.cancel.is_cancelled()
-    }
-    pub(crate) fn exit_requested(&self) -> bool {
-        self.exit_requested
-            .load(std::sync::atomic::Ordering::SeqCst)
-    }
     pub(super) fn reconcile_login(
         &self,
         target: uuid::Uuid,
@@ -253,7 +246,11 @@ impl ProviderConnections {
         attempt: uuid::Uuid,
         revision: u32,
     ) -> Result<ProviderReply, RepositoryError> {
+        self.ensure_reaper();
         let mut tasks = self.tasks.lock().expect("provider tasks poisoned");
+        if !self.failure.lock().unwrap().is_empty() {
+            return Err(invalid_target("Provider worker cleanup is fenced"));
+        }
         let launch = self
             .records
             .lock()
@@ -261,13 +258,6 @@ impl ProviderConnections {
             .get(&target)
             .and_then(|entry| entry.launch.clone())
             .ok_or_else(|| invalid_target("Check and validate Codex before signing in"))?;
-        while let Some(result) = tasks.try_join_next() {
-            if result.is_err() {
-                return Err(invalid_target(
-                    "An owned provider worker failed. Reconcile owned cleanup before another sign-in.",
-                ));
-            }
-        }
         let observation = self.admit_login(target, attempt, revision)?;
         let control = {
             let mut records = self.records.lock().expect("provider records poisoned");
@@ -282,12 +272,24 @@ impl ProviderConnections {
         if let Some((cancel, reopen)) = control {
             let owner = self.clone();
             tasks.spawn(async move {
-                owner
-                    .execute_browser(target, attempt, cancel, reopen, CodexBrowser(launch))
-                    .await;
+                use futures_util::FutureExt;
+                if std::panic::AssertUnwindSafe(owner.execute_browser(
+                    target,
+                    attempt,
+                    cancel,
+                    reopen,
+                    CodexBrowser(launch),
+                ))
+                .catch_unwind()
+                .await
+                .is_err()
+                {
+                    owner.worker_panicked(target, Some(attempt), None);
+                }
             });
         }
 
+        self.task_changed.notify_one();
         Ok(ProviderReply::Observation { observation })
     }
     async fn execute_browser(
@@ -479,37 +481,6 @@ impl ProviderConnections {
         Ok(ProviderReply::Observation {
             observation: entry.snapshot.clone(),
         })
-    }
-    pub(super) fn begin_shutdown(self: &Arc<Self>) {
-        if self.cancel.is_cancelled() {
-            return;
-        }
-        self.cancel.cancel();
-        let owner = self.clone();
-        // The shutdown task is separate from the JoinSet it drains.
-        tokio::spawn(async move {
-            let result = owner.finish().await.map_err(|_| {
-                "Owned provider shutdown failed; keep the app open and reconcile status."
-                    .to_string()
-            });
-            *owner.shutdown.lock().expect("shutdown state poisoned") = Some(result);
-            owner.journal.wake();
-        });
-    }
-    pub(crate) fn shutdown_complete(&self) -> bool {
-        matches!(
-            *self.shutdown.lock().expect("shutdown state poisoned"),
-            Some(Ok(()))
-        )
-    }
-    pub(super) fn shutdown_status(&self) -> ProviderReply {
-        let state = self.shutdown.lock().expect("shutdown state poisoned");
-        ProviderReply::Shutdown {
-            complete: matches!(*state, Some(Ok(()))),
-            diagnostic: state
-                .as_ref()
-                .and_then(|result| result.as_ref().err().cloned()),
-        }
     }
 }
 
