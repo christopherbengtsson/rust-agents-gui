@@ -216,6 +216,7 @@ export function WorkspacePanel({
                 disabled={
                   connection.state !== "connected" ||
                   repositories.selected.availability.state !== "available" ||
+                  workspaces.blocked ||
                   workspaces.submitting ||
                   !!workspaces.pending
                 }

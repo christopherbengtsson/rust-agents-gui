@@ -19,6 +19,6 @@ export function readPendingRecord<T>(
   return {
     pending: null,
     error:
-      "The desktop could not read pending action evidence. Use fresh private development state: stop owned work, deliberately clear the app's pending record, then reopen. The saved record has been preserved; no action was submitted.",
+      "The desktop could not read pending action evidence. Use fresh private development state: stop owned work, deliberately clear the app's pending record, then reopen. The saved record has been preserved. The earlier action's outcome is unknown; no new action will be submitted here.",
   };
 }

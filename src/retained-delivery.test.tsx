@@ -393,6 +393,7 @@ test.each([
     expect(result.current.preferenceError).toMatch(
       /fresh private development state/,
     );
+    expect(result.current.preferenceError).toMatch(/earlier action.*unknown/);
     await act(async () => {
       await result.current.register("/fixture");
     });
@@ -436,6 +437,7 @@ test.each([
     expect(result.current.preferenceError).toMatch(
       /fresh private development state/,
     );
+    expect(result.current.preferenceError).toMatch(/earlier action.*unknown/);
     await act(async () => {
       await result.current.create(repositoryId);
     });

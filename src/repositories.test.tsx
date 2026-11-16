@@ -1,3 +1,4 @@
+import { WORKSPACE_PENDING } from "./lib/workspaces";
 import { createPresentationStore } from "./lib/presentation-store";
 import { incarnationBound } from "./test-support/incarnation-bound-invoke";
 import {
@@ -850,4 +851,35 @@ test("Refresh status retains explicit reprobe through a delayed connection check
     resolveStatus?.(snapshot);
   });
   await waitFor(() => expect(refreshes.some(Boolean)).toBe(true));
+});
+
+test("unreadable workspace evidence disables both creation controls", async () => {
+  localStorage.setItem(WORKSPACE_PENDING, "{");
+  createPresentationStore()
+    .getState()
+    .rememberMain({ kind: "repository", repositoryId: id });
+  replies(async (request) =>
+    request.operation === "get"
+      ? { kind: "repository", repository }
+      : {
+          kind: "repositories",
+          page: { repositories: [repository], next: null },
+        },
+  );
+  render(<App />);
+  await screen.findByRole("heading", { level: 1, name: "one" });
+  expect(
+    (
+      await screen.findByRole("button", { name: "Create workspace" })
+    ).hasAttribute("disabled"),
+  ).toBe(true);
+  expect(
+    screen
+      .getByRole("button", { name: "Create workspace in one" })
+      .hasAttribute("disabled"),
+  ).toBe(true);
+  expect(
+    screen.getByText(/could not read pending action evidence/),
+  ).toBeDefined();
+  expect(localStorage.getItem(WORKSPACE_PENDING)).toBe("{");
 });
