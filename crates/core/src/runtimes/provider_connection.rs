@@ -231,7 +231,11 @@ impl ProviderConnections {
         journal: Arc<Journal>,
         storage: crate::storage::Storage,
     ) -> Result<Self, RepositoryError> {
-        let (launch, mut target) = codex::Launch::capture();
+        // Startup retains this join through completion; launch capture includes
+        // canonical filesystem inspection, unlike async SQLx restoration below.
+        let (launch, mut target) = tokio::task::spawn_blocking(codex::Launch::capture)
+            .await
+            .map_err(RepositoryError::storage)?;
         let (selected, recovered) = persistence::restore(&storage, &launch.credential_scope())
             .await
             .map_err(RepositoryError::storage)?;
@@ -613,21 +617,27 @@ impl ProviderConnections {
         else {
             return;
         };
-        let cleanup_uncertain = entry.snapshot.phase == SetupPhase::CleanupUncertain
+        let already_fenced = entry.snapshot.phase == SetupPhase::CleanupUncertain;
+        let cleanup_uncertain = already_fenced
             || matches!(&outcome, Err(failure) if failure.problem == SetupProblem::CleanupUncertain);
-        match outcome {
-            Ok(evidence) => {
-                entry.snapshot.diagnostic = None;
-                entry.snapshot.problem = if evidence.authentication == Authentication::Unavailable {
-                    Some(SetupProblem::AuthenticationUnavailable)
-                } else {
-                    None
-                };
-                entry.snapshot.evidence = Some(evidence);
-            }
-            Err(failure) => {
-                entry.snapshot.problem = Some(failure.problem);
-                entry.snapshot.diagnostic = Some(failure.diagnostic);
+        // A late probe cannot replace cleanup evidence with an observation that
+        // violates phase/problem validation or hides the original cleanup failure.
+        if !already_fenced {
+            match outcome {
+                Ok(evidence) => {
+                    entry.snapshot.diagnostic = None;
+                    entry.snapshot.problem =
+                        if evidence.authentication == Authentication::Unavailable {
+                            Some(SetupProblem::AuthenticationUnavailable)
+                        } else {
+                            None
+                        };
+                    entry.snapshot.evidence = Some(evidence);
+                }
+                Err(failure) => {
+                    entry.snapshot.problem = Some(failure.problem);
+                    entry.snapshot.diagnostic = Some(failure.diagnostic);
+                }
             }
         }
         if let Some(selection) = entry
@@ -1120,6 +1130,18 @@ mod tests {
                 .unwrap();
             owner.join().await.unwrap();
             assert_eq!(owner.read(a).unwrap().phase, SetupPhase::CleanupUncertain);
+            assert_eq!(
+                owner.read(a).unwrap().problem,
+                Some(SetupProblem::CleanupUncertain)
+            );
+            assert!(
+                owner
+                    .read(a)
+                    .unwrap()
+                    .diagnostic
+                    .unwrap()
+                    .contains("process-group/pipe cleanup")
+            );
         });
     }
     fn run(future: impl Future<Output = ()>) {

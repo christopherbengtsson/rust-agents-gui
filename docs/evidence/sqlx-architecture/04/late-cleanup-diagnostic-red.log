@@ -1,0 +1,54 @@
+   Compiling workspace-core v0.1.0 (/Users/christopherbengtsson/Documents/dev/rust-agents-gui/crates/core)
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | deserialize_with = "deserialize_workspace_path"
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+warning: failed to parse serde attribute
+  | 
+  | transparent 
+  | 
+  = note: ts-rs failed to parse this attribute. It will be ignored.
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.25s
+     Running unittests src/lib.rs (target/debug/deps/workspace_core-c1516d2e50257971)
+
+running 1 test
+test runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement ... FAILED
+
+failures:
+
+---- runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement stdout ----
+
+thread 'runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement' (35880602) panicked at crates/core/src/runtimes/provider_connection.rs:1123:13:
+assertion `left == right` failed
+  left: Some(StatusReadFailed)
+ right: Some(CleanupUncertain)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    runtimes::provider_connection::tests::failed_refresh_retains_last_good_and_cleanup_uncertainty_fences_replacement
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 217 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p workspace-core --lib`
