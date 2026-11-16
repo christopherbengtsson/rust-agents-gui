@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Actual native Tauri/WebView Q4 driver. Synthetic Codex only; no credentials.
+"""Actual native Tauri/WebView lifecycle driver. Synthetic Codex only; no credentials.
 Creates and retains a disposable app/state/repository and a loopback fixture page.
 """
 import fcntl, hashlib, http.server, json, os, pathlib, plistlib, shutil, signal, subprocess, sys, tempfile, threading, time
@@ -8,12 +8,12 @@ OUT = pathlib.Path(sys.argv[2]).resolve().parent
 source = pathlib.Path(sys.argv[1]).resolve(strict=True)
 report_path = pathlib.Path(sys.argv[2]).resolve()
 assert not report_path.exists(), 'Preserve prior qualification attempts'
-root = pathlib.Path(tempfile.mkdtemp(prefix='aw-native07-', dir='/private/tmp')); root.chmod(0o700)
+root = pathlib.Path(tempfile.mkdtemp(prefix='aw-native-lifecycle-', dir='/private/tmp')); root.chmod(0o700)
 state = root/'state'; state.mkdir(mode=0o700)
 home = root/'codex-home'; home.mkdir(mode=0o700)
 runtime = root/'synthetic-codex'; shutil.copyfile(REPO/'fixtures/codex-readiness/runtime.py', runtime); runtime.chmod(0o700)
-bundle = root/'Native07.app'; shutil.copytree(source, bundle)
-plist = bundle/'Contents/Info.plist'; info = plistlib.loads(plist.read_bytes()); info['CFBundleIdentifier'] = 'dev.christopherbengtsson.native07.'+root.name; plist.write_bytes(plistlib.dumps(info))
+bundle = root/'NativeLifecycle.app'; shutil.copytree(source, bundle)
+plist = bundle/'Contents/Info.plist'; info = plistlib.loads(plist.read_bytes()); info['CFBundleIdentifier'] = 'dev.christopherbengtsson.native-lifecycle.'+root.name; plist.write_bytes(plistlib.dumps(info))
 executable = bundle/'Contents/MacOS/workspace-desktop'
 repository = root/'repository'; repository.mkdir()
 def git(*args): return subprocess.run(['git','-C',str(repository),*args], check=True, capture_output=True)

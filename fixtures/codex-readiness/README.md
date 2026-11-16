@@ -3,8 +3,9 @@
 Current native-host qualification uses `corepack pnpm qualify:native`; see
 [development-state instructions](../../docs/development-state.md#separate-qualification-commands).
 `runtime.py` and the official schemas remain current provider fixtures. The
-unselected `qualify.py` supervisor driver and its instructions below are retained
-historical checkpoint material, not an alternate supported qualification path.
+unselected `qualify.py` and `qualify-discovery.py` supervisor drivers, including
+their original usage instructions, are retained historical checkpoint material.
+Neither is a supported current qualification path.
 
 Selected 2026-11-15, before adapter implementation: installed `codex-cli 0.169.0`,
 Apple Silicon standalone executable SHA-256
@@ -98,7 +99,6 @@ it neither resets data nor clears cleanup fences. Raw events remain cumulative.
 `GetAccountResponse.json`, source **d32063f96c2dff1dc96af839b3952abb6acfeda4**.
 It establishes unknown billing/account presentation, not a captured account or
 native provider behavior. All journey faults and runtime messages remain synthetic.
-
 
 ## Discovery refinement — 2026-11-15
 

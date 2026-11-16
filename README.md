@@ -91,8 +91,8 @@ and registration performs read-only Git inspection without starting agents.
 Desktop preferences remember the last selection and an uncertain registration's
 action ID. Refresh retrieves authoritative status; edited paths are separate explicit
 requests after the pending action is resolved. No repository relocation or removal
-workflow is implemented. Current metadata uses schema 4. Incompatible metadata is rejected;
-select fresh private development state deliberately rather than migrating retired builds.
+workflow is implemented. The [development-state guide](docs/development-state.md) defines the current metadata
+namespace and fresh-state procedure. Incompatible metadata is rejected.
 
 Adding a new repository records its first-workspace continuation atomically with
 registration. The repository's + creates another immediately. Generated footballer
